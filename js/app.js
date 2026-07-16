@@ -1,0 +1,2241 @@
+/**
+ * Moonrise Studio shell - SiteDrop-style sidebar layout.
+ */
+(function (global) {
+  const MENU = [
+    { id: "dashboard", href: "dashboard.html", label: "Dashboard", icon: "grid" },
+    { id: "leads", href: "leads.html", label: "Business Finder", icon: "search" },
+    { id: "builder", href: "builder.html", label: "Builder", icon: "hammer" },
+    { id: "clients", href: "clients.html", label: "My Clients", icon: "users" },
+    {
+      id: "donate",
+      href: "donate.html",
+      label: "Support",
+      icon: "heart",
+      pages: ["donate", "store"],
+    },
+  ];
+
+  const OWNER_MENU = [
+    {
+      id: "admin-console",
+      href: "admin-console.html",
+      label: "Admin Console",
+      icon: "key",
+      ownerOnly: true,
+    },
+  ];
+
+  const ACCOUNT = [
+    { id: "settings", href: "settings.html", label: "Settings", icon: "gear" },
+    { id: "course", href: "course.html", label: "Course", icon: "grad" },
+    { id: "help", href: "help.html", label: "Help", icon: "help" },
+    {
+      id: "telegram",
+      href: (window.SITE_CONFIG && window.SITE_CONFIG.telegramUrl) || "https://t.me/c/3541685239/1",
+      label: "Telegram",
+      icon: "telegram",
+      external: true,
+    },
+    {
+      id: "discord",
+      href: (window.SITE_CONFIG && window.SITE_CONFIG.discordUrl) || "https://discord.gg/gdbA3gEVY",
+      label: "Discord",
+      icon: "discord",
+      external: true,
+    },
+    {
+      id: "download-app",
+      href: "download.html",
+      label: "Download app",
+      icon: "download",
+      download: true,
+    },
+  ];
+
+  const SIDEBAR_LEGAL = [
+    { id: "guide", href: "guide.html", label: "Guide" },
+    { id: "designer-tips", href: "designer-tips.html", label: "Designer Tips" },
+    { id: "privacy", href: "legal.html#privacy", label: "Privacy", legalHash: "privacy" },
+    { id: "terms", href: "legal.html#terms", label: "Terms", legalHash: "terms" },
+  ];
+
+  const ICONS = {
+    grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>',
+    hammer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.73-4.24-4.24"/><path d="m14.5 7.5 3.5-3.5a2.12 2.12 0 0 1 3 3L17.5 10.5"/></svg>',
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="3.5"/><path d="M10.5 13.5 21 3"/><path d="M16 8h5"/><path d="M18 6v4"/></svg>',
+    dollar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+    grad: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+    help: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+    gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+    telegram: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 4.3 3.7 11.1c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.8 5.4c.2.6.4.8 1 .8.5 0 .8-.2 1.1-.5l2.7-2.6 4.5 3.3c.8.5 1.4.2 1.6-.8L23 5.5c.3-1.2-.5-1.8-1.5-1.2zM9.4 14.5l9.7-6.1c.5-.3.9 0 .5.3l-7.9 7.1-.3 3.2-2-4.5z"/></svg>',
+    discord: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.8 19.8 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.3 18.3 0 0 0-5.487 0 12.6 12.6 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.7 19.7 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.08.08 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.8 19.8 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>',
+    spark: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.2 6.3L19 10l-5.8 1.7L12 18l-1.2-6.3L5 10l5.8-1.7L12 2z"/></svg>',
+    logout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+    refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>',
+    layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>',
+    user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    bag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+    heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
+    external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
+    download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>',
+    menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="7" x2="19" y2="7"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="17" x2="19" y2="17"/></svg>',
+    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.2V16"/><circle cx="12" cy="8" r="0.8" fill="currentColor" stroke="none"/></svg>',
+    close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>',
+  };
+
+  const OWNER_NAV_KEY = "ms_owner_nav_v2";
+
+  function ownerHandles() {
+    return (window.SITE_CONFIG?.ownerHandles || ["moonrise"]).map((h) =>
+      String(h || "")
+        .replace(/^@/, "")
+        .trim()
+        .toLowerCase()
+    );
+  }
+
+  function normalizeHandle(raw) {
+    return String(raw || "")
+      .replace(/^@/, "")
+      .trim()
+      .toLowerCase();
+  }
+
+  function readOwnerNavCache() {
+    try {
+      const raw = localStorage.getItem(OWNER_NAV_KEY);
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      if (!data || !data.owner) return false;
+      // Stale after 30 days - re-check via auth
+      if (data.at && Date.now() - Number(data.at) > 30 * 24 * 60 * 60 * 1000) {
+        return false;
+      }
+      const handle = normalizeHandle(data.handle);
+      return !!(data.owner && handle && ownerHandles().includes(handle));
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function peekAuthStorageRaw() {
+    if (typeof window.SiteSupabase?.readStoredAuthRaw === "function") {
+      return window.SiteSupabase.readStoredAuthRaw();
+    }
+    try {
+      const remember = localStorage.getItem("ms_auth_autosave_enabled") !== "0";
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /** Sync peek at persisted auth so owner nav can paint without a flash. */
+  function syncOwnerFromAuthStorage() {
+    try {
+      const raw = peekAuthStorageRaw();
+      if (!raw) return false;
+      const parsed = JSON.parse(raw);
+      const user = parsed?.user || parsed?.currentSession?.user || parsed?.session?.user;
+      const handle = normalizeHandle(
+        user?.user_metadata?.handle || user?.user_metadata?.username || ""
+      );
+      if (handle && ownerHandles().includes(handle)) return true;
+    } catch (_) {
+      /* ignore */
+    }
+    return false;
+  }
+
+  function shouldIncludeOwnerNav() {
+    return readOwnerNavCache() || syncOwnerFromAuthStorage();
+  }
+
+  function writeOwnerNavCache(isOwner, handle) {
+    try {
+      if (!isOwner) {
+        localStorage.removeItem(OWNER_NAV_KEY);
+        return;
+      }
+      localStorage.setItem(
+        OWNER_NAV_KEY,
+        JSON.stringify({
+          owner: true,
+          handle: normalizeHandle(handle),
+          at: Date.now(),
+        })
+      );
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  async function isSiteOwner(handleHint) {
+    const allowed = ownerHandles();
+    if (handleHint && allowed.includes(normalizeHandle(handleHint))) return true;
+    try {
+      const profile = await window.StudioAuth?.getProfile?.();
+      if (profile?.handle && allowed.includes(normalizeHandle(profile.handle))) {
+        return true;
+      }
+      const user = await window.StudioAuth?.getUser?.();
+      const meta = normalizeHandle(user?.user_metadata?.handle || "");
+      if (meta && allowed.includes(meta)) return true;
+    } catch (_) {
+      /* ignore */
+    }
+    return false;
+  }
+
+  function gateOwnerPage(fallback) {
+    return isSiteOwner().then((ok) => {
+      if (ok) return true;
+      window.location.replace(fallback || "dashboard.html");
+      return false;
+    });
+  }
+
+  window.StudioOwner = { isSiteOwner, gateOwnerPage, ownerHandles };
+
+  function menuItems() {
+    const items = MENU.slice();
+    if (shouldIncludeOwnerNav()) {
+      items.push(...OWNER_MENU);
+    }
+    return items;
+  }
+
+  function removeOwnerNav() {
+    document.querySelectorAll('[data-admin="true"]').forEach((el) => el.remove());
+  }
+
+  function injectOwnerNav(page) {
+    if (!shouldIncludeOwnerNav()) {
+      removeOwnerNav();
+      return;
+    }
+    const nav = document.querySelector(".ms-sidebar-scroll .ms-nav-group nav.ms-nav");
+    if (!nav) return;
+    let added = false;
+    OWNER_MENU.forEach((item) => {
+      if (document.querySelector('[data-nav="' + item.id + '"]')) return;
+      nav.insertAdjacentHTML("beforeend", navLink(item, page || document.body?.dataset?.page || ""));
+      added = true;
+    });
+    if (added) ensureNavPills({ animate: false });
+  }
+
+  function brandLogo() {
+    const c = window.SITE_CONFIG || {};
+    return (
+      c.brandLogoUrl ||
+      "assets/MoonriseLogo.png"
+    );
+  }
+
+  function defaultAvatarUrl() {
+    const c = window.SITE_CONFIG || {};
+    return (
+      c.defaultAvatarUrl ||
+      "assets/profilepicture.jpg?v=20261006-blue"
+    );
+  }
+
+  function isLegacyDefaultAvatar(url) {
+    return /(?:^|\/)doc\/pfp\.png(?:\?.*)?$/i.test(String(url || "").trim());
+  }
+
+  function isCustomAvatarUrl(url) {
+    const raw = String(url || "").trim();
+    if (!raw || isLegacyDefaultAvatar(raw)) return false;
+    return raw !== defaultAvatarUrl();
+  }
+
+  function resolveAvatarUrl(url) {
+    const raw = String(url || "").trim();
+    if (!raw || isLegacyDefaultAvatar(raw)) return defaultAvatarUrl();
+    return raw;
+  }
+
+  function companyName() {
+    return (window.SITE_CONFIG && window.SITE_CONFIG.companyName) || "Moonrise Studio";
+  }
+
+  function navLink(item, page) {
+    if (item.soon) {
+      return (
+        '<span class="ms-nav-link is-soon" data-nav="' +
+        item.id +
+        '" aria-disabled="true">' +
+        '<span class="ms-nav-ico" aria-hidden="true">' +
+        (ICONS[item.icon] || "") +
+        "</span>" +
+        '<span class="ms-nav-label"><s>' +
+        item.label +
+        "</s></span>" +
+        '<span class="ms-nav-soon">Soon!</span>' +
+        "</span>"
+      );
+    }
+
+    const activeIds = item.pages || [item.id];
+    const active = !item.external && activeIds.includes(page) ? " is-active" : "";
+    const externalAttrs = item.external
+      ? ' data-external-redirect="true" data-external-url="' +
+        String(item.href || "").replace(/"/g, "&quot;") +
+        '" data-external-label="' +
+        String(item.label || "external site").replace(/"/g, "&quot;") +
+        '"'
+      : "";
+    const href = item.external || item.download ? "#" : item.href;
+    const downloadAttrs = item.download ? ' data-download-app="true"' : "";
+    const externalMark = item.external
+      ? '<span class="ms-nav-external" aria-hidden="true" title="Opens externally">' +
+        ICONS.external +
+        "</span>"
+      : "";
+    const cancelMark =
+      item.id === "builder"
+        ? '<button type="button" class="ms-nav-cancel" data-nav-cancel="' +
+          item.id +
+          '" hidden aria-label="Cancel website generation" title="Cancel generation">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>' +
+          "</button>"
+        : "";
+    const adminMark = item.ownerOnly
+      ? '<span class="ms-nav-admin-dot" title="Admin channel" aria-label="Admin channel"></span>'
+      : "";
+    return (
+      '<a class="ms-nav-link' +
+      (item.external ? " is-external" : "") +
+      (item.ownerOnly ? " is-admin" : "") +
+      active +
+      '" href="' +
+      href +
+      '" data-nav="' +
+      item.id +
+      '"' +
+      (item.ownerOnly ? ' data-admin="true"' : "") +
+      downloadAttrs +
+      externalAttrs +
+      ">" +
+      '<span class="ms-nav-ico" aria-hidden="true">' +
+      (ICONS[item.icon] || "") +
+      "</span>" +
+      '<span class="ms-nav-label">' +
+      item.label +
+      adminMark +
+      "</span>" +
+      externalMark +
+      cancelMark +
+      '<span class="ms-nav-progress" aria-hidden="true"></span>' +
+      "</a>"
+    );
+  }
+
+  /** Live-only flag - never restore from storage (stale markers looked like "still generating"). */
+  let channelGeneratingId = null;
+  let channelGeneratingCancellable = false;
+
+  function applyChannelGenerating() {
+    const id = channelGeneratingId;
+    document.querySelectorAll(".ms-nav-link[data-nav]").forEach((el) => {
+      const on = !!id && el.getAttribute("data-nav") === id;
+      el.classList.toggle("is-generating", on);
+      const cancelBtn = el.querySelector("[data-nav-cancel]");
+      if (cancelBtn) {
+        cancelBtn.hidden = !(
+          on &&
+          channelGeneratingCancellable &&
+          (el.getAttribute("data-nav") === "builder")
+        );
+      }
+      if (on) {
+        el.setAttribute("aria-busy", "true");
+        el.setAttribute(
+          "title",
+          channelGeneratingCancellable ? "Generating website..." : "Looking up business..."
+        );
+      } else {
+        el.removeAttribute("aria-busy");
+        const title = el.getAttribute("title");
+        if (title === "Generating website..." || title === "Looking up business...") {
+          el.removeAttribute("title");
+        }
+      }
+    });
+  }
+
+  function setChannelGenerating(navId, busy, opts) {
+    channelGeneratingId = busy && navId ? String(navId) : null;
+    // /generate keeps cancel; Maps lookup passes { cancellable: false }.
+    channelGeneratingCancellable = !!(channelGeneratingId && opts?.cancellable !== false);
+    // Clear any legacy session marker from older builds
+    try {
+      sessionStorage.removeItem("ms_channel_generating");
+    } catch {
+      /* ignore */
+    }
+    applyChannelGenerating();
+    try {
+      ensureNavPills({ animate: true });
+    } catch (_) {
+      /* ignore until shell helpers exist */
+    }
+  }
+
+  function cancelChannelGenerating() {
+    const nav = channelGeneratingId || "builder";
+    setChannelGenerating(null, false);
+    document.dispatchEvent(new CustomEvent("ms:cancel-generation", { detail: { nav } }));
+  }
+
+  function bindNavCancel() {
+    document.getElementById("ms-sidebar")?.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-nav-cancel]");
+      if (!btn) return;
+      event.preventDefault();
+      event.stopPropagation();
+      cancelChannelGenerating();
+      window.StudioToast?.success?.("Generation canceled.");
+    });
+  }
+
+  window.StudioShell = Object.assign(window.StudioShell || {}, {
+    setChannelGenerating,
+    applyChannelGenerating,
+    cancelChannelGenerating,
+  });
+
+  function navSection(label, icon) {
+    return (
+      '<p class="ms-nav-section">' +
+      '<span class="ms-nav-section-ico" aria-hidden="true">' +
+      (ICONS[icon] || "") +
+      "</span>" +
+      '<span class="ms-nav-section-label">' +
+      label +
+      "</span></p>"
+    );
+  }
+
+  function formatLastUpdated(iso) {
+    const then = new Date(iso).getTime();
+    if (!Number.isFinite(then)) return "";
+    const sec = Math.max(0, Math.floor((Date.now() - then) / 1000));
+    const plural = (n, unit) => (n === 1 ? "1 " + unit + " ago" : n + " " + unit + "s ago");
+    if (sec < 45) return "just now";
+    const min = Math.floor(sec / 60);
+    if (min < 60) return plural(Math.max(1, min), "minute");
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return plural(hr, "hour");
+    const day = Math.floor(hr / 24);
+    if (day < 7) return plural(day, "day");
+    const week = Math.floor(day / 7);
+    if (week < 5) return plural(week, "week");
+    const month = Math.floor(day / 30);
+    if (month < 12) return plural(Math.max(1, month), "month");
+    return plural(Math.max(1, Math.floor(day / 365)), "year");
+  }
+
+  function githubRepoSlug() {
+    const cfg = window.SITE_CONFIG || {};
+    const fromCfg = String(cfg.githubRepo || cfg.studioGithubRepo || "").trim();
+    if (fromCfg) return fromCfg.replace(/^https?:\/\/github\.com\//i, "").replace(/\.git$/i, "");
+    return "trymoonrise/moonrise";
+  }
+
+  async function resolveLastCommitAt() {
+    const repo = githubRepoSlug();
+    const branch = String(
+      (window.SITE_CONFIG && (window.SITE_CONFIG.githubBranch || window.SITE_CONFIG.studioGithubBranch)) ||
+        "main"
+    ).trim() || "main";
+
+    // 1) Same-origin worker (bypasses CSP / uses server GitHub token when set).
+    try {
+      const bases = [];
+      try {
+        if (typeof window.workerUrlCandidates === "function") {
+          bases.push(...window.workerUrlCandidates());
+        }
+      } catch (_) {
+        /* ignore */
+      }
+      bases.push("");
+      for (const base of bases) {
+        const url = String(base || "").replace(/\/$/, "") + "/studio-last-commit";
+        try {
+          const res = await fetch(url, { cache: "no-store", credentials: "omit" });
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data?.committedAt) return String(data.committedAt);
+        } catch (_) {
+          /* try next */
+        }
+      }
+    } catch (_) {
+      /* fall through */
+    }
+
+    // 2) Direct GitHub API (requires api.github.com in CSP connect-src).
+    try {
+      const api = await fetch(
+        "https://api.github.com/repos/" +
+          repo +
+          "/commits?sha=" +
+          encodeURIComponent(branch) +
+          "&per_page=1",
+        {
+          headers: { Accept: "application/vnd.github+json" },
+          cache: "no-store",
+        }
+      );
+      if (api.ok) {
+        const rows = await api.json();
+        const iso =
+          rows?.[0]?.commit?.committer?.date ||
+          rows?.[0]?.commit?.author?.date ||
+          "";
+        if (iso) return iso;
+      }
+    } catch (_) {
+      /* private repo, rate limit, or blocked - fall through */
+    }
+
+    // 3) Static fallback shipped with the deploy.
+    try {
+      const local = await fetch("assets/last-commit.json?v=" + Date.now(), { cache: "no-store" });
+      if (local.ok) {
+        const data = await local.json();
+        if (data?.committedAt) return String(data.committedAt);
+      }
+    } catch (_) {
+      /* ignore */
+    }
+    return "";
+  }
+
+  function paintSidebarLastUpdated(iso) {
+    const el = document.getElementById("ms-sidebar-updated");
+    if (!el) return;
+    const rel = formatLastUpdated(iso);
+    if (!rel) {
+      el.hidden = true;
+      return;
+    }
+    el.hidden = false;
+    el.textContent = "Last updated: " + rel;
+    el.title = "GitHub · " + new Date(iso).toLocaleString();
+    el.dataset.committedAt = iso;
+  }
+
+  function bootSidebarLastUpdated() {
+    resolveLastCommitAt().then((iso) => {
+      if (!iso) return;
+      paintSidebarLastUpdated(iso);
+      // Keep relative wording fresh ("just now" -> "5 minutes ago") without another network trip.
+      if (bootSidebarLastUpdated._timer) clearInterval(bootSidebarLastUpdated._timer);
+      bootSidebarLastUpdated._timer = setInterval(() => {
+        const kept = document.getElementById("ms-sidebar-updated")?.dataset?.committedAt;
+        if (kept) paintSidebarLastUpdated(kept);
+      }, 60000);
+    });
+  }
+
+  function navGroup(label, icon, itemsHtml, ariaLabel) {
+    return (
+      '<div class="ms-nav-group">' +
+      navSection(label, icon) +
+      '<nav class="ms-nav" aria-label="' +
+      ariaLabel +
+      '">' +
+      itemsHtml +
+      "</nav></div>"
+    );
+  }
+
+  function sidebarLegal(page) {
+    const hash = String(location.hash || "")
+      .replace(/^#/, "")
+      .toLowerCase();
+    const links = SIDEBAR_LEGAL.map((item) => {
+      let active = "";
+      if (item.id === "guide" && page === "guide") active = " is-active";
+      if (item.legalHash && page === "legal") {
+        const on =
+          hash === item.legalHash || (!hash && item.legalHash === "privacy");
+        if (on) active = " is-active";
+      }
+      return (
+        '<a class="ms-sidebar-legal-link' +
+        active +
+        '" href="' +
+        item.href +
+        '">' +
+        item.label +
+        "</a>"
+      );
+    });
+    return (
+      '<nav class="ms-sidebar-legal" aria-label="Help and legal">' +
+      links.join('<span class="ms-sidebar-legal-sep" aria-hidden="true">·</span>') +
+      "</nav>"
+    );
+  }
+
+  function syncLegalNavActive() {
+    const page = document.body?.dataset?.page || "";
+    const hash = String(location.hash || "")
+      .replace(/^#/, "")
+      .toLowerCase();
+    const nav = document.querySelector(".ms-sidebar-legal");
+    if (!nav) return;
+    nav.querySelectorAll(".ms-sidebar-legal-link").forEach((link) => {
+      const href = String(link.getAttribute("href") || "");
+      let on = false;
+      if (href.indexOf("guide.html") !== -1) on = page === "guide";
+      else if (href.indexOf("designer-tips.html") !== -1) on = page === "designer-tips";
+      else if (href.indexOf("#privacy") !== -1)
+        on = page === "legal" && (hash === "privacy" || !hash);
+      else if (href.indexOf("#terms") !== -1) on = page === "legal" && hash === "terms";
+      link.classList.toggle("is-active", on);
+    });
+  }
+
+  function initialFrom(text) {
+    const s = String(text || "M").trim();
+    return (s.charAt(0) || "M").toUpperCase();
+  }
+
+  function stripHardRefreshParam() {
+    try {
+      const url = new URL(location.href);
+      if (!url.searchParams.has("_ms_r")) return;
+      url.searchParams.delete("_ms_r");
+      const next = url.pathname + url.search + url.hash;
+      history.replaceState({}, "", next);
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  /** Keys that must survive a deep hard reset so the user stays signed in. */
+  const DEEP_RESET_KEEP_KEYS = new Set([
+    "ms_auth_autosave_enabled",
+    "ms_auth_autosave_email",
+    "ms_auth_autosave_handle",
+  ]);
+
+  function clearStorageDeep(storage) {
+    if (!storage) return;
+    try {
+      const keep = [];
+      for (let i = 0; i < storage.length; i++) {
+        const key = storage.key(i);
+        if (key && DEEP_RESET_KEEP_KEYS.has(key)) {
+          keep.push([key, storage.getItem(key)]);
+        }
+      }
+      storage.clear();
+      keep.forEach(([key, value]) => {
+        try {
+          if (value != null) storage.setItem(key, value);
+        } catch (_) {
+          /* ignore */
+        }
+      });
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function clearOriginCookies() {
+    try {
+      const raw = String(document.cookie || "");
+      if (!raw) return;
+      const host = String(location.hostname || "");
+      const parts = host.split(".").filter(Boolean);
+      const domains = [""];
+      if (parts.length >= 2) {
+        domains.push(parts.slice(-2).join("."));
+        domains.push("." + parts.slice(-2).join("."));
+      }
+      raw.split(";").forEach((piece) => {
+        const name = piece.split("=")[0].trim();
+        if (!name) return;
+        domains.forEach((domain) => {
+          const domainPart = domain ? "; domain=" + domain : "";
+          document.cookie =
+            name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + domainPart;
+        });
+      });
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function deleteAllIndexedDatabases() {
+    if (!("indexedDB" in window)) return Promise.resolve();
+    const finishDelete = (name) =>
+      new Promise((resolve) => {
+        try {
+          const req = indexedDB.deleteDatabase(name);
+          req.onsuccess = req.onerror = req.onblocked = () => resolve();
+        } catch (_) {
+          resolve();
+        }
+      });
+    try {
+      if (typeof indexedDB.databases === "function") {
+        return indexedDB
+          .databases()
+          .then((dbs) =>
+            Promise.all((dbs || []).map((db) => (db?.name ? finishDelete(db.name) : null)))
+          )
+          .catch(() => undefined);
+      }
+    } catch (_) {
+      /* ignore */
+    }
+    return Promise.resolve();
+  }
+
+  /** Deep hard reset: wipe SW, Cache Storage, IndexedDB, cookies, and non-auth storage, then reload. */
+  function hardRefreshSite() {
+    const btn = document.getElementById("ms-hard-refresh");
+    if (btn) {
+      btn.disabled = true;
+      btn.classList.add("is-spinning");
+    }
+    const reload = () => {
+      try {
+        const url = new URL(location.href);
+        url.searchParams.set("_ms_r", String(Date.now()));
+        // Bypass bfcache / soft reload - always hit the network for HTML.
+        location.replace(url.pathname + url.search + url.hash);
+      } catch (_) {
+        location.reload();
+      }
+    };
+    const jobs = [];
+    try {
+      if ("serviceWorker" in navigator) {
+        jobs.push(
+          navigator.serviceWorker.getRegistrations().then((regs) =>
+            Promise.all(
+              (regs || []).map(async (reg) => {
+                try {
+                  if (reg.active) reg.active.postMessage({ type: "SKIP_WAITING" });
+                } catch (_) {
+                  /* ignore */
+                }
+                try {
+                  await reg.unregister();
+                } catch (_) {
+                  /* ignore */
+                }
+              })
+            )
+          )
+        );
+      }
+      if ("caches" in window) {
+        jobs.push(
+          caches.keys().then((keys) => Promise.all((keys || []).map((key) => caches.delete(key))))
+        );
+      }
+      jobs.push(deleteAllIndexedDatabases());
+    } catch (_) {
+      /* ignore */
+    }
+    try {
+      clearStorageDeep(window.localStorage);
+      clearStorageDeep(window.sessionStorage);
+      clearOriginCookies();
+    } catch (_) {
+      /* ignore */
+    }
+    Promise.allSettled(jobs).then(reload, reload);
+  }
+
+  /** Deep hard reset lives in the Settings session card. */
+  function ensureHardRefreshButton() {
+    stripHardRefreshParam();
+    if (!document.body) return;
+    const page = document.body.dataset?.page || "";
+    const btn = document.getElementById("ms-hard-refresh");
+    if (page !== "settings") {
+      if (btn) btn.remove();
+      return;
+    }
+    if (!btn || btn.dataset.bound === "1") return;
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      hardRefreshSite();
+    });
+  }
+
+  function buildShell(opts) {
+    const page = document.body?.dataset?.page || "";
+    if (page === "index" || page === "home" || page === "login" || page === "apply" || page === "orders") return;
+
+    const shell = document.getElementById("shell");
+    if (!shell) return;
+
+    const menuHtml = menuItems()
+      .map((item) => navLink(item, page))
+      .join("");
+    const accountHtml = ACCOUNT.map((item) => navLink(item, page)).join("");
+    const bootProfile = readProfileCache();
+    const bootAuth = peekAuthUser();
+    const bootHandle = String(bootProfile?.handle || bootAuth?.handle || "")
+      .replace(/^@/, "")
+      .trim();
+    const bootName = String(bootProfile?.displayName || bootAuth?.displayName || bootHandle || "").trim();
+    const bootAvatar = resolveAvatarUrl(bootProfile?.avatarUrl || cachedAvatarUrl() || "");
+    const bootIncome = readIncomeCache();
+    const bootIncomeLabel =
+      bootIncome != null
+        ? global.StudioIncome?.formatIncome?.(bootIncome) ??
+          "$" +
+            Number(bootIncome).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+        : "$0.00";
+    const avatarBusy =
+      !bootAvatar || bootAvatar === defaultAvatarUrl() ? " is-loading" : " has-photo";
+
+    shell.innerHTML =
+      '<aside class="ms-sidebar" id="ms-sidebar">' +
+      '<div class="ms-sidebar-scroll">' +
+      navGroup("Workspace", "layers", menuHtml, "Main") +
+      navGroup("Account", "user", accountHtml, "Account") +
+      '<p class="ms-sidebar-updated" id="ms-sidebar-updated" hidden>Last updated: ...</p>' +
+      "</div>" +
+      '<a class="ms-credits-tag ms-income-tag" id="ms-user-income" href="dashboard.html" title="View income on Dashboard">' +
+      '<span class="ms-credits-tag-label">Income</span>' +
+      '<strong class="ms-credits-tag-value" id="ms-user-income-value">' +
+      bootIncomeLabel +
+      "</strong>" +
+      "</a>" +
+      sidebarLegal(page) +
+      '<div class="ms-sidebar-foot">' +
+      '<div class="ms-user-row">' +
+      '<a class="ms-user-profile" href="settings.html" aria-label="Open settings">' +
+      '<div class="ms-user-avatar-wrap">' +
+      '<div class="ms-user-avatar' +
+      avatarBusy +
+      '" id="ms-user-avatar" aria-hidden="true">' +
+      '<span class="ms-user-avatar-spin" id="ms-user-avatar-spin" aria-hidden="true"></span>' +
+      '<span id="ms-user-avatar-initial" hidden>M</span>' +
+      '<img id="ms-user-avatar-img" src="' +
+      bootAvatar +
+      '" alt="" width="38" height="38" decoding="async" fetchpriority="high">' +
+      "</div>" +
+      '<span class="ms-user-status" title="Online" aria-hidden="true"></span>' +
+      "</div>" +
+      '<div class="ms-user-meta">' +
+      '<strong class="ms-user-name" id="ms-user-name">' +
+      (bootName || "") +
+      "</strong>" +
+      "</div>" +
+      "</a>" +
+      '<button type="button" class="ms-user-logout" id="ms-signout" aria-label="Sign out">' +
+      ICONS.logout +
+      "</button>" +
+      "</div>" +
+      '</div></aside>' +
+      '<div class="ms-sidebar-resizer" id="ms-sidebar-resizer" role="separator" aria-orientation="vertical" aria-label="Resize sidebar" tabindex="0"></div>';
+
+    // Mount menu on body so overflow/stacking on #shell cannot hide it.
+    let menuToggle = document.getElementById("ms-menu-toggle");
+    if (!menuToggle) {
+      menuToggle = document.createElement("button");
+      menuToggle.type = "button";
+      menuToggle.id = "ms-menu-toggle";
+      menuToggle.className = "ms-menu-toggle";
+      document.body.appendChild(menuToggle);
+    } else if (menuToggle.parentElement !== document.body) {
+      document.body.appendChild(menuToggle);
+    }
+    menuToggle.setAttribute("aria-label", "Open menu");
+    menuToggle.innerHTML = ICONS.menu;
+
+    ensureQuickNav();
+    ensureTabBar(page);
+
+    document.getElementById("ms-signout")?.addEventListener("click", async () => {
+      await window.StudioAuth?.signOut?.();
+      location.href = "index.html";
+    });
+
+    const sidebar = document.getElementById("ms-sidebar");
+
+    function setNavOpen(open) {
+      document.body.classList.toggle("ms-nav-open", open);
+      menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      // Do not set aria-hidden on the toggle - it retains focus on click and Chromium warns.
+      // tabIndex keeps it out of the tab order while the sidebar is open.
+      if (open && document.activeElement === menuToggle) menuToggle.blur();
+      menuToggle.removeAttribute("aria-hidden");
+      menuToggle.tabIndex = open ? -1 : 0;
+    }
+
+    // Belt-and-suspenders: strip aria-hidden if any stale script re-adds it.
+    try {
+      new MutationObserver(() => {
+        if (menuToggle.hasAttribute("aria-hidden")) menuToggle.removeAttribute("aria-hidden");
+      }).observe(menuToggle, { attributes: true, attributeFilter: ["aria-hidden"] });
+    } catch (_) {
+      /* ignore */
+    }
+
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.onclick = () => {
+      setNavOpen(!document.body.classList.contains("ms-nav-open"));
+    };
+
+    document.addEventListener("click", (event) => {
+      if (!window.matchMedia("(max-width: 900px)").matches) return;
+      if (!document.body.classList.contains("ms-nav-open")) return;
+      const redirect = document.getElementById("ms-redirect-modal");
+      if (redirect && !redirect.hidden && redirect.contains(event.target)) return;
+      const finderMenu = document.getElementById("lf-menu-toggle");
+      if (
+        sidebar?.contains(event.target) ||
+        menuToggle?.contains(event.target) ||
+        finderMenu?.contains(event.target)
+      ) {
+        return;
+      }
+      setNavOpen(false);
+    });
+
+    sidebar?.addEventListener("click", (event) => {
+      if (!window.matchMedia("(max-width: 900px)").matches) return;
+      const link = event.target.closest?.("a[href]");
+      if (link?.dataset.externalRedirect === "true" || link?.hasAttribute("data-download-app")) {
+        event.preventDefault();
+        return;
+      }
+      if (
+        !link ||
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        link.target === "_blank"
+      ) {
+        return;
+      }
+
+      const href = link.getAttribute("href");
+      if (!href || href === "#") return;
+      event.preventDefault();
+      setNavOpen(false);
+      window.setTimeout(() => {
+        location.href = href;
+      }, 280);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !document.body.classList.contains("ms-nav-open")) return;
+      if (document.body.classList.contains("ms-redirect-open")) return;
+      setNavOpen(false);
+      menuToggle?.focus();
+    });
+
+    paintSidebarFromCache();
+    bootSidebarLastUpdated();
+    bindSidebarScrollChrome();
+
+    bindExternalRedirects();
+    initSidebarResize();
+    ensureNavPills({ animate: false });
+    bindNavPillResize();
+  }
+
+  function prefersNavMotionReduce() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function syncNavPill(nav, link, { animate = true } = {}) {
+    if (!nav || !link || !nav.contains(link)) return;
+    let pill = nav.querySelector(":scope > .ms-nav-pill");
+    if (!pill) {
+      pill = document.createElement("span");
+      pill.className = "ms-nav-pill";
+      pill.setAttribute("aria-hidden", "true");
+      nav.insertBefore(pill, nav.firstChild);
+    }
+    // Match the active link box exactly (offset* already includes nav padding).
+    const left = link.offsetLeft;
+    const top = link.offsetTop;
+    const width = Math.max(link.offsetWidth, 1);
+    const height = Math.max(link.offsetHeight, 1);
+    const reduce = prefersNavMotionReduce();
+    const snap = !animate || reduce || !pill.classList.contains("is-ready");
+    if (snap) pill.classList.add("is-snap");
+    else pill.classList.remove("is-snap");
+    pill.style.width = width + "px";
+    pill.style.height = height + "px";
+    pill.style.transform = "translate3d(" + left + "px, " + top + "px, 0)";
+    pill.classList.add("is-ready");
+    if (snap) {
+      void pill.offsetWidth;
+      pill.classList.remove("is-snap");
+    }
+  }
+
+  function ensureNavPills({ animate = false } = {}) {
+    document.querySelectorAll(".ms-sidebar .ms-nav").forEach((nav) => {
+      const active =
+        nav.querySelector("a.ms-nav-link.is-active") ||
+        nav.querySelector("a.ms-nav-link[aria-current='page']");
+      if (!active) {
+        const pill = nav.querySelector(":scope > .ms-nav-pill");
+        if (pill) pill.classList.remove("is-ready");
+        return;
+      }
+      syncNavPill(nav, active, { animate });
+    });
+  }
+
+  function bindNavPillResize() {
+    if (window.__msNavPillResize) return;
+    window.__msNavPillResize = true;
+    let timer = 0;
+    window.addEventListener(
+      "resize",
+      () => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => ensureNavPills({ animate: false }), 80);
+      },
+      { passive: true }
+    );
+  }
+
+  function syncNavPillForLink(link, opts) {
+    if (!link) return;
+    const nav = link.closest(".ms-nav");
+    if (!nav) return;
+    syncNavPill(nav, link, opts);
+  }
+
+  window.StudioShell = Object.assign(window.StudioShell || {}, {
+    ensureNavPills,
+    syncNavPill,
+    syncNavPillForLink,
+  });
+
+  function bindSidebarScrollChrome() {
+    const scroller = document.querySelector(".ms-sidebar-scroll");
+    if (!scroller || scroller.dataset.scrollChromeBound === "1") return;
+    scroller.dataset.scrollChromeBound = "1";
+    let hideTimer = 0;
+    const markScrolling = () => {
+      scroller.classList.add("is-scrolling");
+      window.clearTimeout(hideTimer);
+      hideTimer = window.setTimeout(() => {
+        scroller.classList.remove("is-scrolling");
+      }, 700);
+    };
+    scroller.addEventListener("scroll", markScrolling, { passive: true });
+  }
+
+  const TELEGRAM_LOGO =
+    '<svg class="ms-telegram-logo" viewBox="0 0 240 240" aria-hidden="true" focusable="false">' +
+    '<circle cx="120" cy="120" r="120" fill="#2AABEE"/>' +
+    '<path fill="#FFF" d="M54.6 117.4c35.5-15.5 59.2-25.7 71-30.7 33.6-14 40.6-16.4 45.1-16.5 1 0 3.2.2 4.7 1.4 1.2 1 1.6 2.3 1.7 3.3.2 1 .4 3.3.2 5.1-1.9 20.1-10.1 68.9-14.3 91.4-1.8 9.5-5.3 12.7-8.7 13-7.4.6-13-4.9-20.2-9.6-11.2-7.3-17.5-11.9-28.4-19.1-12.6-8.3-4.4-12.8 2.8-20.3 1.9-1.9 34.4-31.5 35-33.4.1-.2.1-1.1-.4-1.5-.5-.4-1.2-.3-1.7-.2-.7.2-12.2 7.8-34.5 22.8-3.3 2.2-6.2 3.3-8.9 3.3-2.9 0-8.6-1.7-12.8-3.1-5.1-1.7-9.2-2.6-8.8-5.5.2-1.5 2.2-3.1 6.1-4.8z"/>' +
+    "</svg>";
+
+  const DISCORD_LOGO =
+    '<svg class="ms-discord-logo" viewBox="0 0 240 240" aria-hidden="true" focusable="false">' +
+    '<circle cx="120" cy="120" r="120" fill="#5865F2"/>' +
+    '<g transform="translate(52.5 66) scale(1.06)">' +
+    '<path fill="#FFF" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.5 0A72.37 72.37 0 0 0 45.25 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.92-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.45-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/>' +
+    "</g></svg>";
+
+  function telegramUrl() {
+    return (
+      (window.SITE_CONFIG && window.SITE_CONFIG.telegramUrl) ||
+      "https://t.me/c/3541685239/1"
+    );
+  }
+
+  function discordUrl() {
+    return (
+      (window.SITE_CONFIG && window.SITE_CONFIG.discordUrl) ||
+      "https://discord.gg/gdbA3gEVY"
+    );
+  }
+
+  function ensureRedirectModal() {
+    let el = document.getElementById("ms-redirect-modal");
+    if (el) return el;
+    el = document.createElement("div");
+    el.id = "ms-redirect-modal";
+    el.className = "ms-redirect";
+    el.hidden = true;
+    el.setAttribute("aria-hidden", "true");
+    el.innerHTML =
+      '<div class="ms-redirect-card" role="dialog" aria-modal="true" aria-labelledby="ms-redirect-title">' +
+      '<header class="ms-redirect-head">' +
+      '<div class="ms-redirect-icon ms-redirect-icon--telegram" id="ms-redirect-icon" aria-hidden="true">' +
+      TELEGRAM_LOGO +
+      "</div>" +
+      '<h2 id="ms-redirect-title">Open Telegram?</h2>' +
+      '<p class="ms-redirect-copy">You are about to open <strong>Telegram</strong> in a new tab. You will leave Moonrise Studio temporarily.</p>' +
+      "</header>" +
+      '<footer class="ms-redirect-actions">' +
+      '<button type="button" class="ms-btn ms-redirect-go" id="ms-redirect-go" style="margin-left:0">Continue to Telegram</button>' +
+      '<button type="button" class="ms-redirect-cancel" id="ms-redirect-cancel" style="margin-left:auto">Stay here</button>' +
+      "</footer>" +
+      "</div>";
+    document.body.appendChild(el);
+    return el;
+  }
+
+  let pendingRedirectUrl = "";
+  let pendingRedirectKind = "external";
+  let redirectBound = false;
+
+  function setRedirectOpen(open) {
+    const el = ensureRedirectModal();
+    el.hidden = !open;
+    el.classList.toggle("is-open", open);
+    el.setAttribute("aria-hidden", open ? "false" : "true");
+    document.body.classList.toggle("ms-redirect-open", open);
+    if (open) {
+      document.getElementById("ms-redirect-go")?.focus();
+    } else {
+      pendingRedirectUrl = "";
+      pendingRedirectKind = "external";
+    }
+  }
+
+  function downloadLogoHtml() {
+    const src = String(brandLogo() || "assets/MoonriseLogo.png").replace(/"/g, "");
+    return (
+      '<img class="ms-download-logo" src="' +
+      src +
+      '" alt="" width="68" height="68">'
+    );
+  }
+
+  function openDownloadConfirm() {
+    ensureRedirectModal();
+    ensureInstallHintScript();
+    pendingRedirectKind = "download";
+    pendingRedirectUrl = "download.html";
+    const installed = !!window.MoonriseInstall?.isStandalone?.();
+    const title = document.getElementById("ms-redirect-title");
+    const copy = document.querySelector("#ms-redirect-modal .ms-redirect-copy");
+    const goBtn = document.getElementById("ms-redirect-go");
+    const icon = document.getElementById("ms-redirect-icon");
+    if (icon) {
+      icon.className = "ms-redirect-icon ms-redirect-icon--download";
+      icon.innerHTML = downloadLogoHtml();
+    }
+    if (title) title.textContent = installed ? "App installed" : "Download the app?";
+    if (copy) {
+      copy.innerHTML = installed
+        ? "You're already using the installed <strong>Moonrise</strong> app. Open it from your home screen anytime."
+        : "Install <strong>Moonrise</strong> on this phone or computer. It opens from your home screen, the same way as any other app.";
+    }
+    if (goBtn) goBtn.textContent = installed ? "Done" : "Download app";
+    setRedirectOpen(true);
+  }
+
+  function calLogoHtml() {
+    return '<img class="ms-cal-logo" src="assets/Cal.png" alt="" width="68" height="68">';
+  }
+
+  function redirectBrand(url, label) {
+    const name = String(label || "");
+    const href = String(url || "");
+    if (/discord/i.test(name) || /discord\.gg/i.test(href)) return "discord";
+    if (/cal\.com/i.test(name) || /cal\.com/i.test(href)) return "cal";
+    if (/instagram/i.test(name) || /instagram\.com/i.test(href)) return "instagram";
+    return "telegram";
+  }
+
+  function openRedirectConfirm(url, label) {
+    ensureRedirectModal();
+    const name = String(label || "Telegram").trim() || "Telegram";
+    const brand = redirectBrand(url, name);
+    pendingRedirectUrl =
+      String(url || "").trim() || (brand === "discord" ? discordUrl() : telegramUrl());
+    const title = document.getElementById("ms-redirect-title");
+    const copy = document.querySelector("#ms-redirect-modal .ms-redirect-copy");
+    const goBtn = document.getElementById("ms-redirect-go");
+    const icon = document.getElementById("ms-redirect-icon");
+    const logos = {
+      discord: DISCORD_LOGO,
+      cal: calLogoHtml(),
+      instagram: '<img class="ms-instagram-logo" src="assets/Instagram.svg" alt="" width="68" height="68">',
+      telegram: TELEGRAM_LOGO,
+    };
+    if (icon) {
+      icon.className = "ms-redirect-icon ms-redirect-icon--" + brand;
+      icon.innerHTML = logos[brand] || TELEGRAM_LOGO;
+    }
+    if (title) title.textContent = "Open " + name + "?";
+    if (copy) {
+      copy.innerHTML =
+        "You're about to open <strong>" +
+        name.replace(/</g, "&lt;") +
+        "</strong> in a new tab. You'll leave Moonrise Studio temporarily.";
+    }
+    if (goBtn) goBtn.textContent = "Continue to " + name;
+    setRedirectOpen(true);
+  }
+
+  function bindExternalRedirects() {
+    ensureRedirectModal();
+    if (redirectBound) return;
+    redirectBound = true;
+
+    document.addEventListener("click", (e) => {
+      const download = e.target.closest?.("[data-download-app]");
+      if (download) {
+        e.preventDefault();
+        openDownloadConfirm();
+        return;
+      }
+      const link = e.target.closest?.("[data-external-redirect]");
+      if (!link) return;
+      e.preventDefault();
+      pendingRedirectKind = "external";
+      const url = link.getAttribute("data-external-url") || telegramUrl();
+      const label = link.getAttribute("data-external-label") || "Telegram";
+      openRedirectConfirm(url, label);
+    });
+
+    document.getElementById("ms-redirect-cancel")?.addEventListener("click", () => {
+      setRedirectOpen(false);
+    });
+
+    document.getElementById("ms-redirect-go")?.addEventListener("click", async () => {
+      const kind = pendingRedirectKind;
+      const url = pendingRedirectUrl || telegramUrl();
+      setRedirectOpen(false);
+      if (kind === "download") {
+        const install = window.MoonriseInstall;
+        if (install?.isStandalone?.()) return;
+        if (install?.canPrompt?.()) {
+          await install.promptInstall();
+          return;
+        }
+        location.href = url || "download.html";
+        return;
+      }
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+
+    document.getElementById("ms-redirect-modal")?.addEventListener("click", (e) => {
+      if (e.target.id === "ms-redirect-modal") setRedirectOpen(false);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      const el = document.getElementById("ms-redirect-modal");
+      if (el && !el.hidden) setRedirectOpen(false);
+    });
+  }
+
+  const SIDEBAR_KEY = "ms-sidebar-w";
+  const SIDEBAR_MIN = 220;
+  const SIDEBAR_MAX = 420;
+  const SIDEBAR_DEFAULT = 268;
+
+  function clampSidebar(w) {
+    const n = Math.round(Number(w) || SIDEBAR_DEFAULT);
+    return Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, n));
+  }
+
+  function applySidebarWidth(px) {
+    const w = clampSidebar(px);
+    document.documentElement.style.setProperty("--ms-sidebar-w", w + "px");
+    const resizer = document.getElementById("ms-sidebar-resizer");
+    if (resizer) {
+      resizer.setAttribute("aria-valuenow", String(w));
+      resizer.setAttribute("aria-valuemin", String(SIDEBAR_MIN));
+      resizer.setAttribute("aria-valuemax", String(SIDEBAR_MAX));
+    }
+    return w;
+  }
+
+  function isMobileShell() {
+    return window.matchMedia("(max-width: 900px)").matches;
+  }
+
+  function syncSidebarForViewport() {
+    if (isMobileShell()) {
+      document.documentElement.style.setProperty("--ms-sidebar-w", "0px");
+      document.documentElement.style.setProperty("--ms-content-scale", "1");
+      return;
+    }
+    document.documentElement.style.removeProperty("--ms-content-scale");
+    loadSidebarWidth();
+  }
+
+  function loadSidebarWidth() {
+    if (isMobileShell()) {
+      document.documentElement.style.setProperty("--ms-sidebar-w", "0px");
+      return 0;
+    }
+    try {
+      const saved = localStorage.getItem(SIDEBAR_KEY);
+      if (saved) return applySidebarWidth(saved);
+    } catch (e) {
+      /* ignore */
+    }
+    return applySidebarWidth(SIDEBAR_DEFAULT);
+  }
+
+  function saveSidebarWidth(px) {
+    try {
+      localStorage.setItem(SIDEBAR_KEY, String(clampSidebar(px)));
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  function initSidebarResize() {
+    const resizer = document.getElementById("ms-sidebar-resizer");
+    syncSidebarForViewport();
+    window.addEventListener("resize", syncSidebarForViewport);
+    if (!resizer) return;
+
+    let dragging = false;
+    let startX = 0;
+    let startW = SIDEBAR_DEFAULT;
+
+    function onMove(clientX) {
+      const next = startW + (clientX - startX);
+      applySidebarWidth(next);
+    }
+
+    function stopDrag() {
+      if (!dragging) return;
+      dragging = false;
+      document.body.classList.remove("ms-sidebar-resizing");
+      const current = getComputedStyle(document.documentElement)
+        .getPropertyValue("--ms-sidebar-w")
+        .trim();
+      saveSidebarWidth(parseFloat(current) || SIDEBAR_DEFAULT);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+    }
+
+    function onPointerMove(e) {
+      if (!dragging) return;
+      onMove(e.clientX);
+    }
+
+    function onPointerUp() {
+      stopDrag();
+    }
+
+    resizer.addEventListener("pointerdown", (e) => {
+      if (isMobileShell()) return;
+      e.preventDefault();
+      dragging = true;
+      startX = e.clientX;
+      startW =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue("--ms-sidebar-w")
+        ) || SIDEBAR_DEFAULT;
+      document.body.classList.add("ms-sidebar-resizing");
+      resizer.setPointerCapture?.(e.pointerId);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
+    });
+
+    resizer.addEventListener("keydown", (e) => {
+      if (isMobileShell()) return;
+      const step = e.shiftKey ? 24 : 12;
+      const current =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue("--ms-sidebar-w")
+        ) || SIDEBAR_DEFAULT;
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        saveSidebarWidth(applySidebarWidth(current - step));
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        saveSidebarWidth(applySidebarWidth(current + step));
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        saveSidebarWidth(applySidebarWidth(SIDEBAR_MIN));
+      } else if (e.key === "End") {
+        e.preventDefault();
+        saveSidebarWidth(applySidebarWidth(SIDEBAR_MAX));
+      }
+    });
+
+    resizer.addEventListener("dblclick", () => {
+      if (isMobileShell()) return;
+      saveSidebarWidth(applySidebarWidth(SIDEBAR_DEFAULT));
+    });
+  }
+
+  const AVATAR_CACHE_KEY = "ms_avatar_url_v1";
+  const PROFILE_CACHE_KEY = "ms_sidebar_profile_v1";
+  const INCOME_CACHE_KEY = "ms_sidebar_income_v1";
+
+  function readProfileCache() {
+    try {
+      const raw = sessionStorage.getItem(PROFILE_CACHE_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      return data && typeof data === "object" ? data : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function rememberProfileCache(handle, avatarUrl, extras) {
+    try {
+      const clean = String(handle || "")
+        .replace(/^@/, "")
+        .trim();
+      if (!clean) return;
+      sessionStorage.setItem(
+        PROFILE_CACHE_KEY,
+        JSON.stringify({
+          handle: clean,
+          displayName: String(extras?.displayName || "").trim(),
+          avatarUrl: String(avatarUrl || "").trim(),
+          mvpPlus: !!(extras && extras.mvpPlus),
+          at: Date.now(),
+        })
+      );
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function clearLegacyProfileCosmetics() {
+    document.querySelectorAll(".ms-user-hat, .set-avatar-hat").forEach((el) => el.remove());
+    const nameEl = document.getElementById("ms-user-name");
+    if (nameEl) nameEl.style.removeProperty("color");
+  }
+
+  function readIncomeCache() {
+    try {
+      const raw = sessionStorage.getItem(INCOME_CACHE_KEY);
+      if (raw == null) return null;
+      const data = JSON.parse(raw);
+      if (data && typeof data === "object" && data.income != null) {
+        return Number(data.income) || 0;
+      }
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function rememberIncomeCache(income) {
+    try {
+      sessionStorage.setItem(
+        INCOME_CACHE_KEY,
+        JSON.stringify({ income: Number(income) || 0, at: Date.now() })
+      );
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function peekAuthUser() {
+    try {
+      const cached = readProfileCache();
+      if (cached?.handle) {
+        return {
+          handle: String(cached.handle).replace(/^@/, "").trim(),
+          avatarUrl: String(cached.avatarUrl || "").trim(),
+        };
+      }
+      const raw = peekAuthStorageRaw();
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      const user = parsed?.user || parsed?.currentSession?.user || parsed?.session?.user;
+      if (!user) return null;
+      const handle = String(
+        user.user_metadata?.handle || user.user_metadata?.username || user.email?.split("@")[0] || ""
+      )
+        .replace(/^@/, "")
+        .trim();
+      const displayName = String(
+        user.user_metadata?.display_name || user.user_metadata?.full_name || ""
+      ).trim();
+      if (!handle && !displayName) return null;
+      return { handle, displayName, avatarUrl: "" };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function paintSidebarFromCache() {
+    const cached = readProfileCache();
+    const auth = peekAuthUser();
+    const handle = String(cached?.handle || auth?.handle || "")
+      .replace(/^@/, "")
+      .trim();
+    const displayName = String(cached?.displayName || auth?.displayName || "").trim();
+    const nameEl = document.getElementById("ms-user-name");
+    if (nameEl && (displayName || handle)) nameEl.textContent = displayName || handle;
+
+    const avatar = cached?.avatarUrl || cachedAvatarUrl() || auth?.avatarUrl || "";
+    setSidebarAvatar(avatar, handle || "M");
+
+    const income = readIncomeCache();
+    if (income != null) setSidebarIncome(income);
+    clearLegacyProfileCosmetics();
+  }
+
+  function cachedAvatarUrl() {
+    try {
+      return String(sessionStorage.getItem(AVATAR_CACHE_KEY) || "").trim();
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function rememberAvatarUrl(url) {
+    try {
+      const v = String(url || "").trim();
+      if (!isCustomAvatarUrl(v)) {
+        sessionStorage.removeItem(AVATAR_CACHE_KEY);
+        return;
+      }
+      sessionStorage.setItem(AVATAR_CACHE_KEY, v);
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function setSidebarAvatar(url, handle) {
+    const initialEl = document.getElementById("ms-user-avatar-initial");
+    const imgEl = document.getElementById("ms-user-avatar-img");
+    const avatarEl = document.getElementById("ms-user-avatar");
+    if (!avatarEl) return;
+    window.clearTimeout(avatarEl._msRevealTimer);
+    avatarEl.classList.remove("is-avatar-ready");
+
+    const initial = initialFrom(handle);
+    if (initialEl) {
+      initialEl.textContent = initial;
+      initialEl.hidden = true;
+    }
+
+    const resolved = resolveAvatarUrl(url);
+    rememberAvatarUrl(url);
+
+    if (!imgEl) return;
+
+    const paintMenuAvatar = (photoUrl) => {
+      const menuImg = document.getElementById("ms-menu-avatar-img");
+      const menuInitial = document.getElementById("ms-menu-avatar-initial");
+      const menuAvatar = document.getElementById("ms-menu-avatar");
+      if (menuInitial) menuInitial.textContent = initial;
+      if (!menuImg || !menuAvatar) return;
+      if (photoUrl) {
+        menuImg.hidden = false;
+        menuImg.onerror = () => {
+          menuImg.hidden = true;
+          menuAvatar.classList.remove("has-photo");
+          if (menuInitial) menuInitial.hidden = false;
+        };
+        if (menuImg.getAttribute("src") !== photoUrl) menuImg.src = photoUrl;
+        menuAvatar.classList.add("has-photo");
+        if (menuInitial) menuInitial.hidden = true;
+      } else {
+        menuImg.hidden = true;
+        menuImg.removeAttribute("src");
+        menuAvatar.classList.remove("has-photo");
+        if (menuInitial) menuInitial.hidden = false;
+      }
+    };
+
+    const markLoaded = () => {
+      avatarEl.classList.remove("is-loading");
+      avatarEl.classList.add("has-photo", "is-avatar-ready");
+      imgEl.hidden = false;
+      if (initialEl) initialEl.hidden = true;
+      paintMenuAvatar(imgEl.currentSrc || imgEl.src);
+      avatarEl._msRevealTimer = window.setTimeout(() => {
+        avatarEl.classList.remove("is-avatar-ready");
+      }, 650);
+    };
+
+    const markError = () => {
+      avatarEl.classList.remove("is-loading", "has-photo");
+      imgEl.hidden = true;
+      if (initialEl) initialEl.hidden = false;
+      paintMenuAvatar("");
+    };
+
+    imgEl.hidden = false;
+    imgEl.alt = "";
+    imgEl.decoding = "async";
+    imgEl.setAttribute("fetchpriority", "high");
+    paintMenuAvatar(resolved);
+
+    // Already showing this exact image (cached) - no spinner flash
+    if (imgEl.getAttribute("src") === resolved && imgEl.complete && imgEl.naturalWidth > 0) {
+      markLoaded();
+      return;
+    }
+
+    avatarEl.classList.add("is-loading", "has-photo");
+
+    let settled = false;
+    const finish = async (ok) => {
+      if (settled) return;
+      settled = true;
+      imgEl.onload = null;
+      imgEl.onerror = null;
+      if (!ok) {
+        markError();
+        return;
+      }
+      try {
+        await imgEl.decode?.();
+      } catch (_) {
+        /* load event is enough when decode() is unavailable or rejects */
+      }
+      markLoaded();
+    };
+
+    imgEl.onload = () => finish(true);
+    imgEl.onerror = () => {
+      // Fall back to default local avatar once
+      if (resolved !== defaultAvatarUrl() && imgEl.getAttribute("src") !== defaultAvatarUrl()) {
+        settled = false;
+        imgEl.src = defaultAvatarUrl();
+        return;
+      }
+      finish(false);
+    };
+
+    imgEl.src = resolved;
+
+    // Cached by browser and already decoded
+    if (imgEl.complete && imgEl.naturalWidth > 0) {
+      finish(true);
+    }
+  }
+
+  async function fetchCreditBalanceDetailed() {
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      return { error: "offline" };
+    }
+    try {
+      const session = await window.StudioAuth?.getSession?.();
+      if (!session?.access_token) {
+        return { error: "auth" };
+      }
+      const base =
+        typeof window.resolveWorkerUrl === "function"
+          ? window.resolveWorkerUrl()
+          : String(window.SITE_CONFIG?.workerUrl || "").replace(/\/$/, "");
+      if (!base) {
+        return { error: "unavailable" };
+      }
+      let res;
+      try {
+        res = await fetch(base + "/credits/balance", {
+          headers: { Authorization: "Bearer " + session.access_token },
+        });
+      } catch (_) {
+        if (typeof navigator !== "undefined" && navigator.onLine === false) {
+          return { error: "offline" };
+        }
+        return { error: "network" };
+      }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        if (res.status >= 500) return { error: "server" };
+        return { error: "network" };
+      }
+      return { data };
+    } catch (_) {
+      if (typeof navigator !== "undefined" && navigator.onLine === false) {
+        return { error: "offline" };
+      }
+      return { error: "network" };
+    }
+  }
+
+  function generationBlockMessage(reason) {
+    switch (reason) {
+      case "offline":
+        return "You're offline. Connect to Wi-Fi or mobile data, then try again.";
+      case "network":
+      case "server":
+        return window.isLocalDevHost?.()
+          ? "Can't reach the local Moonrise worker. Start it with: cd moonrise/worker && npm run dev"
+          : "Can't reach Moonrise right now. Check your internet connection and try again.";
+      case "auth":
+        return "Sign in to generate a website.";
+      case "unavailable":
+        return "Moonrise services aren't available right now. Try again in a moment.";
+      case "no_credits":
+        return "Generation is free - try again in a moment.";
+      default:
+        return "Can't generate right now. Check your connection and try again.";
+    }
+  }
+
+  async function fetchCreditBalance() {
+    const result = await fetchCreditBalanceDetailed();
+    return result.data || null;
+  }
+
+  async function canAffordGeneration() {
+    return { ok: true, totalCredits: null, cost: 0 };
+  }
+
+  async function hydrateCredits() {
+    try {
+      return await fetchCreditBalance();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function setSidebarIncome(income) {
+    const valueEl = document.getElementById("ms-user-income-value");
+    const tag = document.getElementById("ms-user-income");
+    const formatted =
+      global.StudioIncome?.formatIncome?.(income) ??
+      "$" +
+        Number(income || 0).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+    if (valueEl) valueEl.textContent = formatted;
+    if (tag) {
+      tag.title = "Your 90% share from paid client sites - @moonrise keeps 10%. Open Dashboard.";
+    }
+    rememberIncomeCache(income);
+  }
+
+  async function hydrateIncome() {
+    const valueEl = document.getElementById("ms-user-income-value");
+    if (!valueEl || !global.StudioIncome?.fetchUserIncome) return null;
+    try {
+      const data = await global.StudioIncome.fetchUserIncome();
+      setSidebarIncome(data.income);
+      return data;
+    } catch (_) {
+      setSidebarIncome(0);
+      return null;
+    }
+  }
+
+  async function hydrateUser() {
+    const nameEl = document.getElementById("ms-user-name");
+    if (!nameEl) return { handle: "", avatarUrl: "" };
+
+    try {
+      if (!window.StudioAuth?.getUser) return { handle: "", avatarUrl: "" };
+      const user = await window.StudioAuth.getUser();
+      if (!user) {
+        nameEl.textContent = "Guest";
+        setSidebarAvatar("", "Guest");
+        return { handle: "", avatarUrl: "" };
+      }
+
+      let handle =
+        user.user_metadata?.handle ||
+        user.email?.split("@")[0] ||
+        "moonrise";
+      let displayName = String(
+        user.user_metadata?.display_name || user.user_metadata?.full_name || ""
+      ).trim();
+      let avatarUrl = "";
+
+      try {
+        const client = window.SiteSupabase?.getClient?.();
+        if (client) {
+          const { data } = await client
+            .from("profiles")
+            .select("handle, display_name, avatar_url, mvp_plus")
+            .eq("id", user.id)
+            .maybeSingle();
+          if (data?.handle) handle = data.handle;
+          if (data?.display_name) displayName = String(data.display_name).trim();
+          avatarUrl = String(data?.avatar_url || "").trim();
+
+          const clean = String(handle).replace(/^@/, "").trim() || "moonrise";
+          const label = displayName || clean;
+          const isOwner = ownerHandles().includes(
+            normalizeHandle(data?.handle || user.user_metadata?.handle || "")
+          );
+          writeOwnerNavCache(isOwner, isOwner ? data?.handle || user.user_metadata?.handle : "");
+          if (!isOwner) removeOwnerNav();
+          const mvpPlus = !!data?.mvp_plus || isOwner;
+          nameEl.textContent = label;
+          setSidebarAvatar(avatarUrl, label);
+          clearLegacyProfileCosmetics();
+          rememberProfileCache(clean, avatarUrl, { mvpPlus, displayName: label });
+          injectOwnerNav(document.body?.dataset?.page || "");
+          return { handle: clean, avatarUrl };
+        } else {
+          void hydrateIncome();
+        }
+      } catch (e) {
+        /* keep metadata fallback */
+        void hydrateIncome();
+      }
+
+      const clean = String(handle).replace(/^@/, "").trim() || "moonrise";
+      const label = displayName || clean;
+      const isOwner = ownerHandles().includes(normalizeHandle(user.user_metadata?.handle || ""));
+      writeOwnerNavCache(isOwner, isOwner ? user.user_metadata?.handle : "");
+      if (!isOwner) removeOwnerNav();
+      nameEl.textContent = label;
+      setSidebarAvatar(avatarUrl, label);
+      rememberProfileCache(clean, avatarUrl, { displayName: label });
+      injectOwnerNav(document.body?.dataset?.page || "");
+      return { handle: clean, avatarUrl };
+    } catch (e) {
+      nameEl.textContent = "Account";
+      setSidebarAvatar("", "Account");
+      return { handle: "", avatarUrl: "" };
+    }
+  }
+
+  function bindShellListeners() {
+    document.addEventListener("ms:avatar-changed", (e) => {
+      const nameEl = document.getElementById("ms-user-name");
+      const handle = e.detail?.handle || nameEl?.textContent || "M";
+      const label = String(e.detail?.displayName || e.detail?.handle || "").trim();
+      if (nameEl && label) nameEl.textContent = label;
+      setSidebarAvatar(e.detail?.url || "", label || handle);
+      if (e.detail?.handle) {
+        rememberProfileCache(e.detail.handle, e.detail?.url || "", { displayName: label || e.detail.handle });
+      }
+    });
+    document.addEventListener("ms:income-changed", (e) => {
+      if (e.detail?.income != null) setSidebarIncome(e.detail.income);
+      else void hydrateIncome();
+    });
+  }
+
+  function releaseStudioHold() {
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-boot");
+    window.__msStudioBoot = 0;
+    document.getElementById("ms-boot")?.remove();
+    if (window.__msReleaseBoot) window.__msReleaseBoot();
+  }
+
+  function paintApp() {
+    if (document.body.dataset.msShellPainted === "1") return;
+    document.body.dataset.msShellPainted = "1";
+    try {
+      buildShell();
+      syncLegalNavActive();
+      window.addEventListener("hashchange", syncLegalNavActive);
+      ensureHardRefreshButton();
+      bindNavCancel();
+      bindShellListeners();
+      try {
+        sessionStorage.removeItem("ms_channel_generating");
+      } catch {
+        /* ignore */
+      }
+      setChannelGenerating(null, false);
+      document.body.classList.add("ms-ready");
+      releaseStudioHold();
+      document.dispatchEvent(new Event("ms:shell-ready"));
+      // Let scripts that load after app.js subscribe before the page starts fetching.
+      setTimeout(function () {
+        document.body.dataset.msAuthFired = "1";
+        document.dispatchEvent(new Event("ms:auth-ready"));
+      }, 0);
+
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {
+          window.StudioMotion?.playPageMotion?.();
+        });
+      });
+      clearLegacyProfileCosmetics();
+
+      void hydrateUser().catch(() => ({ handle: "", avatarUrl: "" }));
+      void hydrateIncome();
+
+      ensureInstallHintScript();
+      ensureGenerationAnnounceScript();
+    } catch (err) {
+      console.warn(err);
+      releaseStudioHold();
+      throw err;
+    }
+  }
+
+  async function finishSession(session) {
+    if (!session || !window.StudioAuth?.ensureStudioOnboarding) return;
+    try {
+      await window.StudioAuth.ensureStudioOnboarding(session);
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  let authWait = 0;
+
+  async function allowThisPage() {
+    const page = document.body?.dataset?.page || "";
+    if (page !== "admin-console") return true;
+    const owner = await window.StudioOwner?.isSiteOwner?.();
+    if (owner) return true;
+    window.location.replace("dashboard.html");
+    return false;
+  }
+
+  function failStudioBoot() {
+    if (window.__msAuthRedirecting || document.prerendering) return;
+    window.__msAuthRedirecting = true;
+    location.replace("404.html");
+  }
+
+  async function boot() {
+    ensureTabBar(document.body?.dataset?.page || "");
+    if (window.__msAuthRedirecting) return;
+    // This file runs before auth.js. Wait briefly, then fail to 404 instead of
+    // sitting on the moonrise loader for tens of seconds.
+    if (!window.StudioAuth?.requireAuth) {
+      if (authWait < 20) {
+        authWait += 1;
+        setTimeout(() => {
+          void boot();
+        }, 50);
+      } else if (document.documentElement.classList.contains("ms-auth-gating")) {
+        failStudioBoot();
+      }
+      return;
+    }
+
+    let session = null;
+    try {
+      session = await window.StudioAuth.requireAuth();
+    } catch (e) {
+      console.warn(e);
+    }
+    if (!session) {
+      if (window.__msAuthRedirecting || document.prerendering) return;
+      // Public pages release the gate and return no session. Protected pages
+      // retry briefly while the worker recovers, then show 404.
+      if (
+        document.documentElement.classList.contains("ms-auth-gating") &&
+        authWait < 12
+      ) {
+        authWait += 1;
+        setTimeout(() => {
+          void boot();
+        }, 200);
+        return;
+      }
+      if (document.documentElement.classList.contains("ms-auth-gating")) {
+        failStudioBoot();
+      }
+      return;
+    }
+
+    if (!(await allowThisPage())) return;
+    paintApp();
+    await finishSession(session);
+  }
+
+  function ensureGenerationAnnounceScript() {
+    if (window.MsGenerationAnnounce) {
+      window.MsGenerationAnnounce.init?.();
+      return;
+    }
+    if (document.querySelector('script[src*="generation-announce.js"]')) return;
+    const s = document.createElement("script");
+    s.src = "js/generation-announce.js?v=20260721-float";
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+
+  function ensureQuickNav() {
+    // Top app bar removed: menu lives in the bottom tab bar.
+    document.getElementById("ms-quick-nav")?.remove();
+    try {
+      let theme = document.querySelector('meta[name="theme-color"]');
+      if (!theme) {
+        theme = document.createElement("meta");
+        theme.name = "theme-color";
+        document.head.appendChild(theme);
+      }
+      theme.content =
+        (window.MoonriseAppearance && window.MoonriseAppearance.chromeColor()) ||
+        "#ffffff";
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function placeMenuInTabBar(nav) {
+    if (!nav) return;
+    const menuToggle = document.getElementById("ms-menu-toggle");
+    if (!menuToggle) return;
+    menuToggle.classList.add("ms-tab-menu");
+    if (menuToggle.parentElement !== nav) nav.appendChild(menuToggle);
+  }
+
+  const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings"];
+  const TAB_SWITCH_KEY = "ms_tab_switch";
+
+  function prefersTabMotionReduce() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function syncTabPill(nav, tab, { animate = true } = {}) {
+    if (!nav || !tab) return;
+    const pill = nav.querySelector(".ms-tab-pill");
+    if (!pill) return;
+    const width = tab.offsetWidth;
+    const left = tab.offsetLeft;
+    if (!animate) {
+      const prev = pill.style.transition;
+      pill.style.transition = "none";
+      pill.style.width = width + "px";
+      pill.style.transform = "translate3d(" + left + "px, 0, 0)";
+      void pill.offsetWidth;
+      pill.style.transition = prev;
+      return;
+    }
+    pill.style.width = width + "px";
+    pill.style.transform = "translate3d(" + left + "px, 0, 0)";
+  }
+
+  function setActiveTab(nav, tab) {
+    if (!nav || !tab) return;
+    nav.querySelectorAll(".ms-tab").forEach((el) => {
+      el.classList.remove("is-active");
+      el.removeAttribute("aria-current");
+    });
+    tab.classList.add("is-active");
+    tab.setAttribute("aria-current", "page");
+  }
+
+  function readTabSwitch() {
+    try {
+      const raw = sessionStorage.getItem(TAB_SWITCH_KEY);
+      sessionStorage.removeItem(TAB_SWITCH_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (!data || typeof data.from !== "string" || typeof data.to !== "string") return null;
+      return data;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function writeTabSwitch(from, to) {
+    try {
+      sessionStorage.setItem(TAB_SWITCH_KEY, JSON.stringify({ from, to }));
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function bindTabBarSwitch(nav, page) {
+    if (!nav || nav.__msTabSwitchBound) return;
+    nav.__msTabSwitchBound = true;
+    nav.addEventListener("click", (event) => {
+      const link = event.target.closest("a.ms-tab[href]");
+      if (!link || !nav.contains(link)) return;
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (link.target === "_blank") return;
+
+      const toId = link.getAttribute("data-tab") || "";
+      let url;
+      try {
+        url = new URL(link.href, location.href);
+      } catch (_) {
+        return;
+      }
+      if (url.origin !== location.origin) return;
+
+      const samePage =
+        (toId && toId === page) ||
+        url.pathname === location.pathname ||
+        link.classList.contains("is-active");
+      if (samePage) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      if (nav.classList.contains("is-switching")) return;
+      nav.classList.add("is-switching");
+
+      writeTabSwitch(page, toId || "leads");
+      setActiveTab(nav, link);
+      syncTabPill(nav, link, { animate: false });
+
+      try {
+        sessionStorage.removeItem("ms_channel_hop");
+      } catch (_) {
+        /* ignore */
+      }
+
+      location.href = link.href;
+    });
+
+    window.addEventListener(
+      "resize",
+      () => {
+        const active = nav.querySelector(".ms-tab.is-active");
+        if (active) syncTabPill(nav, active, { animate: false });
+      },
+      { passive: true }
+    );
+  }
+
+  function ensureTabBar(page) {
+    if (!TAB_BAR_PAGES.includes(page)) {
+      document.getElementById("ms-tabbar")?.remove();
+      const orphanMenu = document.getElementById("ms-menu-toggle");
+      if (orphanMenu) {
+        orphanMenu.classList.remove("ms-tab-menu");
+        if (orphanMenu.parentElement !== document.body) document.body.appendChild(orphanMenu);
+      }
+      return;
+    }
+    const items = [
+      { id: "dashboard", href: "dashboard.html", label: "Dashboard", icon: "grid" },
+      { id: "builder", href: "builder.html", label: "Builder", icon: "hammer" },
+      {
+        id: "leads",
+        href: "leads.html",
+        label: "Finder",
+        aria: "Business Finder",
+        icon: "search",
+      },
+      { id: "clients", href: "clients.html", label: "Clients", aria: "My Clients", icon: "users" },
+    ];
+    let nav = document.getElementById("ms-tabbar");
+    if (!nav) {
+      nav = document.createElement("nav");
+      nav.id = "ms-tabbar";
+      nav.className = "ms-tabbar";
+      nav.setAttribute("aria-label", "Main pages");
+      document.body.appendChild(nav);
+    }
+    const switchAnim = readTabSwitch();
+    const tabCount = nav.querySelectorAll("a.ms-tab").length;
+    const alreadyMounted =
+      nav.dataset.mounted === "1" &&
+      tabCount === items.length &&
+      !!nav.querySelector(".ms-tab-ico svg");
+    if (!alreadyMounted) {
+      const menuToggle = document.getElementById("ms-menu-toggle");
+      if (menuToggle && menuToggle.parentElement === nav) document.body.appendChild(menuToggle);
+      nav.innerHTML =
+        '<span class="ms-tab-pill" aria-hidden="true"></span>' +
+        items
+          .map((item) => {
+            const active = page === item.id;
+            const icon = ICONS[item.icon] || "";
+            const mark = '<span class="ms-tab-ico" aria-hidden="true">' + icon + "</span>";
+            return (
+              '<a class="ms-tab' +
+              (active ? " is-active" : "") +
+              '" href="' +
+              item.href +
+              '" data-tab="' +
+              item.id +
+              '" aria-label="' +
+              (item.aria || item.label) +
+              '"' +
+              (active ? ' aria-current="page"' : "") +
+              ">" +
+              mark +
+              '<span class="ms-tab-label">' +
+              item.label +
+              "</span></a>"
+            );
+          })
+          .join("");
+    }
+    nav.dataset.mounted = "1";
+
+    placeMenuInTabBar(nav);
+    bindTabBarSwitch(nav, page);
+
+    const activeTab = nav.querySelector(".ms-tab.is-active");
+    const fromTab =
+      switchAnim && switchAnim.to === page
+        ? nav.querySelector('.ms-tab[data-tab="' + switchAnim.from + '"]')
+        : null;
+
+    requestAnimationFrame(() => {
+      if (
+        fromTab &&
+        activeTab &&
+        fromTab !== activeTab &&
+        !prefersTabMotionReduce() &&
+        window.matchMedia("(max-width: 900px)").matches
+      ) {
+        syncTabPill(nav, fromTab, { animate: false });
+        nav.classList.add("is-pill-ready");
+        requestAnimationFrame(() => syncTabPill(nav, activeTab, { animate: true }));
+      } else if (activeTab) {
+        syncTabPill(nav, activeTab, { animate: false });
+        nav.classList.add("is-pill-ready");
+      }
+    });
+  }
+
+  function ensureInstallHintScript() {
+    if (window.__msInstallHintBooted) return;
+    if (document.querySelector('script[src*="install-hint.js"]')) return;
+    // Only load on pages that offer Install - avoids Chromium's
+    // "Banner not shown: preventDefault()" warning everywhere else.
+    const page = String(document.body?.dataset?.page || "").toLowerCase();
+    if (page && !/^(settings|download|login|onboarding)$/.test(page)) return;
+    const path = String(window.location.pathname || "").toLowerCase();
+    if (!page && !/(?:^|\/)(settings|download|login|onboarding)(?:\.html)?$/i.test(path)) {
+      return;
+    }
+    const s = document.createElement("script");
+    s.src = "js/install-hint.js?v=20260924-perf1";
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+
+  window.StudioCredits = {
+    fetchBalance: fetchCreditBalance,
+    canAffordGeneration,
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})(window);

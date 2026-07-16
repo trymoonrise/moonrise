@@ -1,0 +1,55 @@
+# Moonrise Studio - https://trymoonrise.com
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /login.html
+Allow: /orders.html
+Allow: /contact.html
+Allow: /legal.html
+Allow: /report.html
+Allow: /download.html
+Allow: /designer-tips.html
+Allow: /assets/
+
+Disallow: /dashboard.html
+Disallow: /builder.html
+Disallow: /editor.html
+Disallow: /onboarding.html
+Disallow: /projects.html
+Disallow: /settings.html
+Disallow: /clients.html
+Disallow: /leads.html
+Disallow: /pricing.html
+Disallow: /help.html
+Disallow: /guide.html
+Disallow: /course.html
+Disallow: /donate.html
+Disallow: /leaderboard.html
+Disallow: /api/
+
+# AI / answer-engine crawlers
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Disallow: /dashboard.html
+Disallow: /builder.html
+Disallow: /editor.html
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /llms.txt
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /llms.txt
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+
+User-agent: Google-Extended
+Allow: /
+Allow: /llms.txt
+
+Sitemap: https://trymoonrise.com/sitemap.xml

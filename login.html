@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html.ms-hold body{visibility:hidden!important}.ms-auth-autosave[hidden]{display:none!important}</style>
+<script>
+document.documentElement.classList.add("ms-hold");
+window.__msRevealLogin = function () {
+  document.documentElement.classList.remove("ms-hold");
+};
+// Stay blank until the session check finishes. A signed-in visit goes
+// straight to the next page and never paints this card.
+setTimeout(function () {
+  if (document.documentElement.classList.contains("ms-hold")) window.__msRevealLogin();
+}, 2500);
+</script>
+  <script>
+    (function () {
+      var BUILD = "20261106-mono";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <title>Login - Moonrise Studio</title>
+  <meta name="description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
+  <link rel="canonical" href="https://trymoonrise.com/login.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Moonrise Studio">
+  <meta property="og:title" content="Login - Moonrise Studio">
+  <meta property="og:description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
+  <meta property="og:url" content="https://trymoonrise.com/login.html">
+  <meta property="og:image" content="https://trymoonrise.com/assets/embed.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Login - Moonrise Studio">
+  <meta name="twitter:description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
+  <meta name="twitter:image" content="https://trymoonrise.com/assets/embed.png">
+  <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
+  <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
+<link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+  <meta name="color-scheme" content="light">
+  <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
+  <script defer src="js/config.js?v=20261106-mono"></script>
+  <script defer src="js/site-branding.js?v=20260719-seo"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+</head>
+<body data-page="login">
+  <a class="ms-skip" href="#main">Skip to content</a>
+  <header class="ms-home-nav">
+    <a class="ms-home-brand" href="index.html">
+      <img src="assets/MoonriseLogo.png" alt="" width="40" height="40">
+      <strong>moonrise.</strong>
+    </a>
+    <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
+      <i></i><i></i><i></i>
+    </button>
+  </header>
+  <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
+    <nav class="ms-home-bloom-nav" aria-label="Primary">
+      <a href="index.html" style="--nav-i:0">Home</a>
+      <a href="login.html" style="--nav-i:1">Start earning</a>
+      <a href="index.html#method" style="--nav-i:2">Learn More</a>
+      <a href="download.html" style="--nav-i:3">Download app</a>
+      <a href="orders.html" style="--nav-i:4">Locate my order</a>
+      <a href="designer-tips.html" style="--nav-i:5">Designer Tips</a>
+      <a href="login.html" style="--nav-i:6">Sign in</a>
+    </nav>
+  </div>
+  <p class="ms-auth-file-warning" id="auth-file-warning" hidden role="alert">
+    This page was opened as a local file, so sign-in cannot connect to Moonrise.
+    <a href="https://trymoonrise.com/login.html">Open the live login page</a> instead.
+  </p>
+  <main id="main" class="ms-auth-card">
+    <div class="ms-auth-brand">
+      <img src="assets/MoonriseLogo.png" alt="" width="36" height="36">
+      <div>
+        <strong>Moonrise Studio</strong>
+        <p class="ms-muted" style="margin:0.15rem 0 0;font-size:0.88rem;line-height:1.4">Build websites. Get paid when clients go live.</p>
+      </div>
+    </div>
+
+    <p class="ms-muted" id="auth-locate-lead" hidden style="margin:0 0 0.85rem;font-size:0.9rem;line-height:1.4">
+      Looking for a published website? Browse the public order list - no account needed.
+    </p>
+
+    <div id="email-verified" class="ms-email-verified" hidden>
+      <h1>Email verified</h1>
+      <p class="ms-muted">You can return to the app.</p>
+      <p class="ms-error" id="email-verified-error" hidden></p>
+      <button type="button" class="ms-btn" id="email-verified-return">Return to the app</button>
+    </div>
+
+    <div class="ms-auth-tabs" role="tablist" id="auth-tabs">
+      <button type="button" class="ms-auth-tab is-active" data-mode="signin">Sign in</button>
+      <button type="button" class="ms-auth-tab" data-mode="signup">Sign up</button>
+    </div>
+
+    <form id="auth-form" method="post" action="#" novalidate>
+      <div class="ms-field" id="handle-field" hidden>
+        <label class="ms-label" for="handle">Handle</label>
+        <input class="ms-input" id="handle" name="handle" placeholder="yourname" autocomplete="username">
+      </div>
+      <div class="ms-field" id="email-field">
+        <label class="ms-label" for="email">Email</label>
+        <input class="ms-input" id="email" name="email" type="email" inputmode="email" required autocomplete="email">
+      </div>
+      <div class="ms-field" id="auth-code-field" hidden>
+        <label class="ms-label" for="auth-code">Employee ID</label>
+        <input
+          class="ms-input"
+          id="auth-code"
+          name="employee_id"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="6"
+          minlength="6"
+          spellcheck="false"
+          autocapitalize="off"
+          placeholder="6-digit Employee ID"
+          aria-describedby="auth-code-hint"
+        >
+        <p class="ms-muted" id="auth-code-hint" style="margin:0.4rem 0 0;font-size:0.8rem;line-height:1.35">
+          Ask your admin for this. You only need it once, and it expires 6 hours after they give it to you.
+        </p>
+      </div>
+      <div class="ms-field" id="age-confirm-field" hidden>
+        <label class="ms-check" for="age-confirm">
+          <input type="checkbox" id="age-confirm" name="age_confirm" value="1">
+          <span class="ms-check-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>I confirm I am an adult</span>
+        </label>
+      </div>
+      <div class="ms-auth-autosave" id="autosave-wrap">
+        <div class="ms-auth-autosave-copy">
+          <span class="ms-auth-autosave-title">Auto save</span>
+          <span class="ms-auth-autosave-hint">Stay signed in on this device</span>
+        </div>
+        <label class="ms-switch" title="Stay signed in on this device">
+          <input type="checkbox" id="auth-autosave" role="switch" aria-checked="true" aria-label="Stay signed in on this device" checked>
+          <span class="ms-switch-track" aria-hidden="true"></span>
+        </label>
+      </div>
+      <p class="ms-auth-forgot-wrap" id="resend-wrap" hidden>
+        <button type="button" class="ms-auth-forgot" id="resend-confirm-link">Resend confirmation email</button>
+      </p>
+      <button class="ms-btn" type="submit" id="auth-submit" style="width:100%">Continue with Email</button>
+      <div id="passkey-wrap">
+        <p class="ms-auth-or"><span>or</span></p>
+        <button type="button" class="ms-btn ms-btn-secondary" id="auth-passkey" style="width:100%">Sign in with a passkey</button>
+        <p class="ms-muted ms-auth-passkey-hint">Optional. Use a passkey you saved in Settings, or keep using the email link.</p>
+      </div>
+      <p class="ms-auth-home-wrap">
+        <a class="ms-auth-home" href="index.html">Back to home</a>
+      </p>
+      <p class="ms-error" id="auth-error" hidden></p>
+      <p class="ms-muted" id="auth-hint" style="margin-top:0.75rem;font-size:0.85rem"></p>
+      <p class="ms-auth-back-wrap" id="back-wrap" hidden>
+        <button type="button" class="ms-auth-forgot" id="back-to-signin">Back to sign in</button>
+      </p>
+    </form>
+  </main>
+
+  <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
+  <script defer src="js/segment-switch.js"></script>
+  <script defer src="js/ui-motion.js?v=20261106-mono"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer src="js/handles.js"></script>
+  <script defer src="js/auth-security.js?v=20261003-session"></script>
+  <script defer src="js/supabase-client.js?v=20261106-mono"></script>
+  <script defer src="js/auth.js?v=20261106-mono"></script>
+  <script defer>
+    (async function () {
+      window.StudioAuth?.warmAuthService?.();
+      if (location.protocol === "file:") {
+        const fileWarning = document.getElementById("auth-file-warning");
+        if (fileWarning) fileWarning.hidden = false;
+      }
+      const params = new URLSearchParams(location.search);
+      const PENDING_KEY = "ms_auth_email_pending";
+      function readLocalPendingId() {
+        try {
+          return JSON.parse(sessionStorage.getItem(PENDING_KEY) || "")?.id || "";
+        } catch (_) {
+          return "";
+        }
+      }
+      const linkPendingId = params.get("pending") || "";
+      const foreignEmailLink = !!(linkPendingId && readLocalPendingId() !== linkPendingId);
+      if (foreignEmailLink) window.SiteSupabase?.setSessionCookieSyncHeld?.(true);
+      const nextUrl =
+        (typeof window.StudioAuth?.safeNextPath === "function"
+          ? window.StudioAuth.safeNextPath(params.get("next"), "dashboard.html")
+          : "dashboard.html");
+      const isLocate = params.get("intent") === "locate";
+      if (isLocate) {
+        location.replace("orders.html");
+        return;
+      }
+      async function continueAfterAuth(opts) {
+        if (isLocate) {
+          location.replace("orders.html");
+          return;
+        }
+        try {
+          // Show the install-app banner on the next authenticated page.
+          sessionStorage.setItem("ms_prompt_install_after_login", "1");
+        } catch (_) {
+          /* ignore */
+        }
+        // Wait until the session is readable so auth-gate-head does not bounce us back.
+        await waitForAuthSession(20);
+        const sessionReady = await window.StudioAuth?.getSession?.();
+        if (!sessionReady) {
+          throw new Error("Signed in, but the session did not stick. Refresh and try again.");
+        }
+        if (opts?.email && opts?.password) {
+          try {
+            await window.StudioAuth.offerPasswordManagerSave?.(opts.email, opts.password);
+          } catch (_) {
+            /* ignore - password managers may refuse this origin */
+          }
+        }
+        window.StudioAuth.setFinanceOnboardingSoftSkip?.(false);
+        const destination = await window.StudioAuth.studioOnboardingRedirect(nextUrl);
+        location.replace(destination);
+      }
+
+      let mode = params.get("mode") === "signup" ? "signup" : "signin";
+      const hashParams = new URLSearchParams(location.hash.replace(/^#/, ""));
+      const hashType = String(hashParams.get("type") || params.get("type") || "").toLowerCase();
+      const emailConfirmPending =
+        params.get("confirmed") === "1"
+        || params.get("check_email") === "1"
+        || hashType === "signup"
+        || hashType === "email"
+        || hashType === "magiclink"
+        || hashType === "invite"
+        || hashType === "email_change"
+        || !!params.get("code")
+        || !!params.get("token_hash")
+        || !!hashParams.get("access_token");
+
+      function cleanAuthCallbackUrl() {
+        window.StudioAuth?.clearAuthCallbackFromUrl?.();
+      }
+
+      let pendingPollGen = 0;
+
+      function savePendingSignIn(payload) {
+        if (!payload?.pendingId || !payload?.pendingSecret) return false;
+        try {
+          sessionStorage.setItem(
+            PENDING_KEY,
+            JSON.stringify({ id: payload.pendingId, secret: payload.pendingSecret })
+          );
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function readPendingSignIn() {
+        try {
+          const saved = JSON.parse(sessionStorage.getItem(PENDING_KEY) || "");
+          if (!saved?.id || !saved?.secret) return null;
+          return saved;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function clearPendingSignIn() {
+        try {
+          sessionStorage.removeItem(PENDING_KEY);
+        } catch (_) {
+          /* ignore */
+        }
+      }
+
+      async function watchPendingSignIn() {
+        const saved = readPendingSignIn();
+        if (!saved || !window.StudioAuth?.claimEmailHandoff) return false;
+        const gen = ++pendingPollGen;
+        const tick = async () => {
+          if (gen !== pendingPollGen || !readPendingSignIn()) return;
+          try {
+            const result = await window.StudioAuth.claimEmailHandoff(saved.id, saved.secret);
+            if (gen !== pendingPollGen) return;
+            if (result?.pending) {
+              setTimeout(tick, 2000);
+              return;
+            }
+            clearPendingSignIn();
+            window.StudioToast?.success?.("Email verified! Signing you in...");
+            await continueAfterAuth();
+          } catch (ex) {
+            if (gen !== pendingPollGen) return;
+            clearPendingSignIn();
+            showAuthError(ex);
+          }
+        };
+        setTimeout(tick, 1500);
+        return true;
+      }
+
+      async function waitForAuthSession(maxAttempts) {
+        for (let i = 0; i < maxAttempts && !(await window.StudioAuth?.getSession?.()); i++) {
+          await new Promise((r) => setTimeout(r, 150));
+        }
+      }
+
+      const form = document.getElementById("auth-form");
+      const err = document.getElementById("auth-error");
+      if (params.get("frozen") === "1" && err) {
+        err.hidden = false;
+        err.textContent = "This account is frozen. Ask the studio owner to turn it back on.";
+      }
+      const hint = document.getElementById("auth-hint");
+      const submit = document.getElementById("auth-submit");
+      const handleField = document.getElementById("handle-field");
+      const passwordField = document.getElementById("password-field");
+      const passwordConfirmField = document.getElementById("password-confirm-field");
+      const passwordInput = document.getElementById("password");
+      const passwordConfirm = document.getElementById("password-confirm");
+      const emailInput = document.getElementById("email");
+      const pwMeter = document.getElementById("pw-meter");
+      const pwFill = document.getElementById("pw-fill");
+      const pwLabel = document.getElementById("pw-strength-label");
+      const authTabs = document.getElementById("auth-tabs");
+      const forgotWrap = document.getElementById("forgot-wrap");
+      const resendWrap = document.getElementById("resend-wrap");
+      const resendConfirmLink = document.getElementById("resend-confirm-link");
+      const backWrap = document.getElementById("back-wrap");
+      const autosaveWrap = document.getElementById("autosave-wrap");
+      const autosaveToggle = document.getElementById("auth-autosave");
+      const passkeyWrap = document.getElementById("passkey-wrap");
+      const passkeyButton = document.getElementById("auth-passkey");
+      const authCodeField = document.getElementById("auth-code-field");
+      const authCodeInput = document.getElementById("auth-code");
+      const handleInput = document.getElementById("handle");
+      const AUTOSAVE_ENABLED_KEY = "ms_auth_autosave_enabled";
+      const AUTOSAVE_EMAIL_KEY = "ms_auth_autosave_email";
+      const AUTOSAVE_HANDLE_KEY = "ms_auth_autosave_handle";
+      const CHECK_EMAIL_FLAG = "ms_auth_check_email";
+      let autosaveTimer = null;
+      const COMMON = new Set([
+        "password", "password1", "12345678", "qwerty123", "moonrise", "admin123",
+        "letmein1", "welcome1", "iloveyou", "abc12345", "passw0rd",
+      ]);
+
+      function isAutosaveEnabled() {
+        return !!autosaveToggle?.checked;
+      }
+
+      function readAutosaveEnabled() {
+        // Use window. - bare SiteSupabase throws ReferenceError if the script failed to load.
+        const sb = window.SiteSupabase;
+        if (typeof sb?.isRememberLoginEnabled === "function") {
+          return sb.isRememberLoginEnabled();
+        }
+        try {
+          return localStorage.getItem(AUTOSAVE_ENABLED_KEY) !== "0";
+        } catch (_) {
+          return true;
+        }
+      }
+
+      function writeAutosaveEnabled(on) {
+        const sb = window.SiteSupabase;
+        if (typeof sb?.setRememberLoginEnabled === "function") {
+          sb.setRememberLoginEnabled(on);
+          return;
+        }
+        try {
+          localStorage.setItem(AUTOSAVE_ENABLED_KEY, on ? "1" : "0");
+        } catch (_) {
+          /* ignore */
+        }
+      }
+
+      function clearAutosavedFields() {
+        try {
+          localStorage.removeItem(AUTOSAVE_EMAIL_KEY);
+          localStorage.removeItem(AUTOSAVE_HANDLE_KEY);
+        } catch (_) {
+          /* ignore */
+        }
+      }
+
+      function persistAutosavedFields() {
+        if (!isAutosaveEnabled()) return;
+        try {
+          const email = String(emailInput?.value || "").trim();
+          const handle = String(handleInput?.value || "").trim();
+          // An empty read must not wipe a saved email. Autofill and the
+          // toggle can run before the field is filled.
+          if (email) localStorage.setItem(AUTOSAVE_EMAIL_KEY, email);
+          if (handle) localStorage.setItem(AUTOSAVE_HANDLE_KEY, handle);
+        } catch (_) {
+          /* ignore */
+        }
+      }
+
+      function scheduleAutosave() {
+        clearTimeout(autosaveTimer);
+        autosaveTimer = setTimeout(() => {
+          if (!isAutosaveEnabled()) return;
+          const email = String(emailInput?.value || "").trim();
+          const handle = String(handleInput?.value || "").trim();
+          try {
+            if (email) localStorage.setItem(AUTOSAVE_EMAIL_KEY, email);
+            else localStorage.removeItem(AUTOSAVE_EMAIL_KEY);
+            if (handle) localStorage.setItem(AUTOSAVE_HANDLE_KEY, handle);
+            else localStorage.removeItem(AUTOSAVE_HANDLE_KEY);
+          } catch (_) {
+            /* ignore */
+          }
+        }, 200);
+      }
+
+      function restoreAutosavedFields() {
+        if (!readAutosaveEnabled()) return;
+        try {
+          const email = localStorage.getItem(AUTOSAVE_EMAIL_KEY) || "";
+          const handle = localStorage.getItem(AUTOSAVE_HANDLE_KEY) || "";
+          if (email && emailInput && !emailInput.value) emailInput.value = email;
+          if (handle && handleInput && !handleInput.value) handleInput.value = handle;
+        } catch (_) {
+          /* ignore */
+        }
+      }
+
+      function syncAutosaveToggleUi() {
+        if (!autosaveToggle) return;
+        const on = readAutosaveEnabled();
+        autosaveToggle.checked = on;
+        autosaveToggle.setAttribute("aria-checked", on ? "true" : "false");
+      }
+
+      syncAutosaveToggleUi();
+      restoreAutosavedFields();
+      // If Auto save is off, scrub any leftover durable session from older builds.
+      if (!readAutosaveEnabled()) {
+        try {
+          localStorage.removeItem("moonrise-studio-auth");
+        } catch (_) {
+          /* ignore */
+        }
+      }
+      autosaveToggle?.addEventListener("change", () => {
+        const on = !!autosaveToggle.checked;
+        autosaveToggle.setAttribute("aria-checked", on ? "true" : "false");
+        writeAutosaveEnabled(on);
+        if (on) {
+          persistAutosavedFields();
+        } else {
+          clearAutosavedFields();
+          try {
+            localStorage.removeItem("moonrise-studio-auth");
+          } catch (_) {
+            /* ignore */
+          }
+        }
+      });
+      emailInput?.addEventListener("input", scheduleAutosave);
+      emailInput?.addEventListener("change", scheduleAutosave);
+      handleInput?.addEventListener("input", scheduleAutosave);
+      handleInput?.addEventListener("change", scheduleAutosave);
+
+      function bindTogglePassword(input, button) {
+        if (!input || !button) return;
+        const eye = button.querySelector(".is-eye");
+        const eyeOff = button.querySelector(".is-eye-off");
+
+        function setVisible(visible) {
+          input.type = visible ? "text" : "password";
+          button.classList.toggle("is-visible", visible);
+          button.setAttribute("aria-pressed", visible ? "true" : "false");
+          button.setAttribute("aria-label", visible ? "Hide password" : "Show password");
+          button.title = visible ? "Hide password" : "Show password";
+          if (eye) eye.hidden = !!visible;
+          if (eyeOff) eyeOff.hidden = !visible;
+        }
+
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          setVisible(input.type === "password");
+        });
+        setVisible(false);
+      }
+
+      bindTogglePassword(passwordInput, document.getElementById("password-reveal"));
+      bindTogglePassword(passwordConfirm, document.getElementById("password-confirm-reveal"));
+
+      function showAuthError(errOrMsg) {
+        if (errOrMsg === "" || errOrMsg == null) {
+          err.hidden = true;
+          err.textContent = "";
+          window.StudioToast?.clear?.();
+          return;
+        }
+        let text = "";
+        if (typeof errOrMsg === "string") {
+          text = errOrMsg.trim();
+        } else if (errOrMsg && typeof errOrMsg === "object") {
+          text = window.StudioAuth?.formatAuthError?.(errOrMsg, "") || String(errOrMsg.message || "").trim();
+        }
+        if (!text || text === "[object Object]" || text === "{}") {
+          text = "Something went wrong. Please try again.";
+        }
+        const friendly =
+          window.StudioAuth?.friendlyNetworkMessage?.({ message: text }, text) || text;
+        err.hidden = !friendly;
+        err.textContent = friendly || "";
+        if (friendly) window.StudioToast?.error?.(friendly);
+      }
+
+      document.querySelectorAll(".ms-auth-tab").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (btn.dataset.mode === "signin") clearSignupEmailPrompt();
+          setMode(btn.dataset.mode);
+        });
+      });
+      document.getElementById("forgot-link")?.addEventListener("click", () => {
+        setMode("signin");
+      });
+      document.getElementById("back-to-signin")?.addEventListener("click", () => {
+        setMode("signin");
+      });
+      resendConfirmLink?.addEventListener("click", async () => {
+        const email = String(form.email.value || "").trim();
+        if (!email) {
+          showAuthError("Enter your email first");
+          form.email.focus();
+          return;
+        }
+        resendConfirmLink.disabled = true;
+        try {
+          await window.StudioAuth.resendConfirmationEmail(email);
+          hint.textContent =
+            "We sent another confirmation email. Tap the link in your inbox to verify and sign in automatically.";
+          window.StudioToast?.success?.("Confirmation email sent");
+        } catch (ex) {
+          showAuthError(ex);
+        } finally {
+          resendConfirmLink.disabled = false;
+        }
+      });
+
+      authCodeInput?.addEventListener("input", () => {
+        const cleaned = String(authCodeInput.value || "")
+          .replace(/\D/g, "")
+          .slice(0, 6);
+        if (authCodeInput.value !== cleaned) authCodeInput.value = cleaned;
+      });
+      setMode(mode, true);
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        showAuthError("");
+        if (mode !== "forgot" && mode !== "signin") hint.textContent = "";
+        if (mode === "signin") clearSignupEmailPrompt();
+
+        const email = String(form.email?.value || "").trim();
+        if (!email) {
+          showAuthError("Enter your email");
+          form.email?.focus();
+          return;
+        }
+
+        if (mode === "signup") {
+          const authCode = String(authCodeInput?.value || "").trim();
+          if (!/^\d{6}$/.test(authCode)) {
+            showAuthError("Enter the 6-digit Employee ID from your admin.");
+            authCodeInput?.focus();
+            return;
+          }
+          const ageOk = document.getElementById("age-confirm")?.checked;
+          if (!ageOk) {
+            showAuthError("Confirm you are an adult to create an account.");
+            document.getElementById("age-confirm")?.focus();
+            return;
+          }
+        }
+        submit.disabled = true;
+        if (mode === "signin") submit.textContent = "Sending link...";
+        else if (mode === "signup") submit.textContent = "Sending link...";
+        try {
+          if (mode === "signin") writeAutosaveEnabled(isAutosaveEnabled());
+          if (mode === "signup") {
+            const handleVal = form.handle.value;
+            const authCode = String(authCodeInput?.value || "").trim();
+            const signedUp = await window.StudioAuth.signUp(email, handleVal, authCode, {
+              ageConfirmed: true,
+            });
+            savePendingSignIn(signedUp);
+            window.StudioToast?.info?.("We sent a confirmation email - open it to finish signing up");
+            void watchPendingSignIn();
+            try {
+              sessionStorage.setItem(CHECK_EMAIL_FLAG, "1");
+            } catch (_) {
+              /* ignore */
+            }
+          } else {
+            if (!window.StudioAuth?.signIn) {
+              throw new Error("Sign-in is still loading. Refresh and try again.");
+            }
+            const signedIn = await window.StudioAuth.signIn(email);
+            persistAutosavedFields();
+            savePendingSignIn(signedIn);
+            window.StudioToast?.info?.("We sent a sign-in email - open it to continue");
+            void watchPendingSignIn();
+          }
+        } catch (ex) {
+          if (ex.code === "email_not_confirmed") {
+            hint.textContent = "Check your email and open the verification link.";
+            if (resendWrap) resendWrap.hidden = false;
+            window.StudioToast?.info?.(ex.message || "Verify your email first");
+          } else if (ex.code === "signup_exists") {
+            window.StudioToast?.info?.(ex.message || "An account with this email already exists.");
+            setMode("signin");
+          } else if (ex.code === "no_account") {
+            showAuthError(ex);
+            form.email?.focus();
+          } else if (ex.code === "invalid_auth_code" || ex.code === "signup_disabled" || ex.code === "auth_code_used") {
+            showAuthError(ex);
+            authCodeInput?.focus();
+          } else if (ex.code === "auth_failed" || ex.code === "auth_locked") {
+            showAuthError(ex);
+          } else {
+            showAuthError(ex);
+          }
+        } finally {
+          submit.disabled = false;
+          submit.textContent = mode === "signup" ? "Continue" : "Continue with Email";
+        }
+      });
+
+      async function waitForStudioAuth(maxAttempts) {
+        const max = Math.max(1, Number(maxAttempts) || 40);
+        for (let i = 0; i < max; i++) {
+          if (window.StudioAuth?.getSession) return window.StudioAuth;
+          await new Promise((r) => setTimeout(r, 50));
+        }
+        return window.StudioAuth || null;
+      }
+
+      function revealLoginForm() {
+        window.__msRevealLogin?.();
+        if (mode === "signin" && emailInput && !emailInput.value) emailInput.focus();
+      }
+
+      let emailVerifiedCanEnter = false;
+
+      function showEmailVerified(canEnterApp) {
+        emailVerifiedCanEnter = !!canEnterApp;
+        if (authTabs) authTabs.hidden = true;
+        if (form) form.hidden = true;
+        const panel = document.getElementById("email-verified");
+        if (panel) panel.hidden = false;
+        window.__msRevealLogin?.();
+      }
+
+      async function saveVerifiedSession() {
+        window.SiteSupabase?.setSessionCookieSyncHeld?.(false);
+        let saved = null;
+        try {
+          saved = await window.SiteSupabase?.flushSessionCookie?.();
+        } catch (_) {
+          saved = null;
+        }
+        if (saved?.access_token && saved?.refresh_token) {
+          try {
+            await window.StudioAuth?.applySessionTokens?.(saved);
+          } catch (_) {
+            /* Cookie already has this session */
+          }
+        }
+        return saved || null;
+      }
+
+      async function finishForeignEmailLink(session) {
+        const pendingId = params.get("pending");
+        if (!session?.access_token || !session?.refresh_token) {
+          window.SiteSupabase?.setSessionCookieSyncHeld?.(false);
+          showAuthError(new Error("This link could not be verified. Request a new email and try again."));
+          revealLoginForm();
+          return;
+        }
+        const saved = await saveVerifiedSession();
+        const publishSession =
+          saved?.access_token && saved?.refresh_token
+            ? saved
+            : await window.StudioAuth?.getSession?.();
+        try {
+          if (pendingId && publishSession?.access_token && publishSession?.refresh_token) {
+            await window.StudioAuth.publishEmailHandoff(pendingId, publishSession);
+          }
+        } catch (_) {
+          /* This tab already has the verified session */
+        }
+        cleanAuthCallbackUrl();
+        showEmailVerified(true);
+      }
+
+      async function keepSessionOnRequestingDevice() {
+        const saved = readPendingSignIn();
+        if (!linkPendingId || saved?.id !== linkPendingId) return;
+        clearPendingSignIn();
+        try {
+          await window.StudioAuth.abandonEmailHandoff?.(saved.id, saved.secret);
+        } catch (_) {
+          /* this device already has the session */
+        }
+      }
+
+      async function bootstrapAuthSession() {
+        await waitForStudioAuth(60);
+        const hasAuthCallback =
+          emailConfirmPending
+          || params.get("code")
+          || hashParams.get("access_token")
+          || params.get("token_hash");
+        let sessionFromCallback = null;
+        if (hasAuthCallback) {
+          sessionFromCallback = await window.StudioAuth?.completeAuthCallbackFromUrl?.();
+        }
+        if (foreignEmailLink) {
+          if (sessionFromCallback) {
+            await finishForeignEmailLink(sessionFromCallback);
+            return;
+          }
+          window.SiteSupabase?.setSessionCookieSyncHeld?.(false);
+          revealLoginForm();
+          return;
+        }
+
+        if (sessionFromCallback) {
+          await keepSessionOnRequestingDevice();
+          await saveVerifiedSession();
+          cleanAuthCallbackUrl();
+          showEmailVerified(true);
+          return;
+        }
+
+        const session = await window.StudioAuth?.getSession?.();
+        if (
+          emailConfirmPending
+          && !session
+          && (params.get("code") || hashParams.get("access_token") || emailConfirmPending)
+        ) {
+          await waitForAuthSession(emailConfirmPending ? 24 : 12);
+        }
+        const sessionNow = await window.StudioAuth?.getSession?.();
+        if (sessionNow && emailConfirmPending) {
+          await keepSessionOnRequestingDevice();
+          await saveVerifiedSession();
+          cleanAuthCallbackUrl();
+          showEmailVerified(true);
+          return;
+        }
+        if (sessionNow && !emailConfirmPending && params.get("check_email") !== "1") {
+          await continueAfterAuth();
+          return;
+        }
+        if (
+          params.get("check_email") === "1"
+          && mode === "signin"
+          && sessionStorage.getItem(CHECK_EMAIL_FLAG) === "1"
+        ) {
+          window.StudioToast?.info?.("We sent a confirmation email - open it to continue");
+          sessionStorage.removeItem(CHECK_EMAIL_FLAG);
+        }
+        await watchPendingSignIn();
+        revealLoginForm();
+      }
+
+      void bootstrapAuthSession().catch(() => revealLoginForm());
+
+      function clearSignupEmailPrompt() {
+        try {
+          sessionStorage.removeItem(CHECK_EMAIL_FLAG);
+          const qs = new URLSearchParams(location.search);
+          qs.delete("check_email");
+          qs.delete("confirmed");
+          const next = qs.get("next") || "dashboard.html";
+          qs.delete("next");
+          const kept = new URLSearchParams();
+          if (next !== "dashboard.html") kept.set("next", next);
+          if (qs.get("mode") === "signup") kept.set("mode", "signup");
+          const suffix = kept.toString() ? "?" + kept.toString() : "";
+          history.replaceState(null, "", location.pathname + suffix);
+        } catch (_) {
+          /* ignore */
+        }
+        hint.textContent = "";
+        if (resendWrap) resendWrap.hidden = true;
+      }
+
+      function passwordBits(value) {
+        let pool = 0;
+        if (/[a-z]/.test(value)) pool += 26;
+        if (/[A-Z]/.test(value)) pool += 26;
+        if (/\d/.test(value)) pool += 10;
+        if (/[^A-Za-z0-9]/.test(value)) pool += 32;
+        if (!pool) pool = 10;
+
+        let effective = 0;
+        for (let i = 0; i < value.length; ) {
+          let run = 1;
+          while (i + run < value.length && value[i + run] === value[i]) run += 1;
+          effective += 1 + Math.log2(run) * 0.35;
+          i += run;
+        }
+
+        let seq = 0;
+        for (let j = 2; j < value.length; j += 1) {
+          const a = value.charCodeAt(j - 2);
+          const b = value.charCodeAt(j - 1);
+          const c = value.charCodeAt(j);
+          if ((b - a === 1 && c - b === 1) || (a - b === 1 && b - c === 1)) seq += 1;
+        }
+
+        let bits = effective * Math.log2(pool);
+        if (seq) bits -= Math.min(bits * 0.28, seq * 1.4);
+        const unique = new Set(value).size / value.length;
+        if (unique < 0.5) bits *= 0.8;
+        if (value.length >= 16) bits += 6;
+        if (value.length >= 20) bits += 6;
+        return Math.max(0, bits);
+      }
+
+      function mostlyCommonPassword(value) {
+        const raw = value.toLowerCase();
+        if (COMMON.has(raw)) return true;
+        const norm = raw
+          .replace(/@/g, "a")
+          .replace(/0/g, "o")
+          .replace(/[1!|]/g, "i")
+          .replace(/3/g, "e")
+          .replace(/\$/g, "s")
+          .replace(/[^a-z]/g, "");
+        const words = ["password", "moonrise", "admin", "welcome", "letmein", "qwerty", "iloveyou", "sunshine", "football", "dragon", "master", "login", "abc123", "passw0rd"];
+        return words.some((word) => norm === word || (norm.includes(word) && norm.length - word.length <= 2));
+      }
+
+      function scorePassword(pw) {
+        const value = String(pw || "");
+        const rules = {
+          length: value.length >= 8,
+          case: /[a-z]/.test(value) && /[A-Z]/.test(value),
+          number: /\d/.test(value),
+          symbol: /[^A-Za-z0-9]/.test(value),
+        };
+        const ruleOrder = ["length", "case", "number", "symbol"];
+        const score = ruleOrder.filter((key) => rules[key]).length;
+        if (!value) return { score, level: "empty", rules, ok: false, percent: 0 };
+
+        let bits = passwordBits(value);
+        const common = mostlyCommonPassword(value);
+        if (common) bits = Math.min(bits, 20);
+
+        const level = common || bits < 28
+          ? "weak"
+          : bits < 42
+            ? "fair"
+            : bits < 58
+              ? "good"
+              : bits < 78
+                ? "strong"
+                : "impenetrable";
+        let percent = 0;
+        if (level === "weak") percent = Math.min(28, 10 + bits * 0.55);
+        else if (level === "fair") percent = 34 + Math.min(20, (bits - 28) * 1.3);
+        else if (level === "good") percent = 58 + Math.min(18, (bits - 42) * 1.1);
+        else if (level === "strong") percent = 78 + Math.min(12, (bits - 58) * 0.6);
+        else percent = Math.min(100, 94 + (bits - 78) * 0.45);
+
+        const ok = score === ruleOrder.length && !common && bits >= 42;
+        return { score, level, rules, ok, percent };
+      }
+
+      function updatePasswordMeter() {
+        if (mode !== "signup" && mode !== "recover") return;
+        const result = scorePassword(passwordInput.value);
+        pwFill.style.width = (passwordInput.value ? result.percent : 0) + "%";
+        pwMeter.dataset.level = result.level === "guessable" ? "weak" : result.level;
+        const labels = {
+          empty: "Enter a password",
+          weak: "Too weak",
+          fair: "Fair",
+          good: "Good",
+          strong: "Strong",
+          impenetrable: "Impenetrable",
+          guessable: "Too easy to guess",
+        };
+        pwLabel.textContent = labels[result.level];
+        const ruleOrder = ["length", "case", "number", "symbol"];
+        const nextRule = ruleOrder.find((key) => !result.rules[key]) || "";
+        document.querySelectorAll("#pw-rules [data-rule]").forEach((li) => {
+          li.classList.toggle("is-current", li.dataset.rule === nextRule);
+        });
+        return result;
+      }
+
+      const AUTH_GROW_MS = 560;
+      const AUTH_GROW_EASE = "cubic-bezier(0.25, 0.1, 0.25, 1)";
+
+      function setOpen(el, open, instant) {
+        if (!el) return;
+        const want = !!open;
+        const reduce =
+          !!instant || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        el.classList.add("ms-auth-collapse");
+        el._authGrow = (el._authGrow || 0) + 1;
+        const gen = el._authGrow;
+
+        function settleOpen() {
+          el.hidden = false;
+          el.classList.add("is-open");
+          el.style.height = "";
+          el.style.overflow = "";
+          el.style.transition = "";
+          el.style.boxSizing = "";
+        }
+
+        function settleClosed() {
+          el.classList.remove("is-open");
+          el.hidden = true;
+          el.style.height = "";
+          el.style.overflow = "";
+          el.style.transition = "";
+          el.style.boxSizing = "";
+        }
+
+        if (reduce) {
+          if (want) settleOpen();
+          else settleClosed();
+          return;
+        }
+
+        const settledOpen = el.classList.contains("is-open") && !el.hidden && !el.style.height;
+        if (want === settledOpen) return;
+
+        const wasHidden = el.hidden;
+        el.hidden = false;
+        el.style.boxSizing = "border-box";
+        el.style.overflow = "hidden";
+        el.style.transition = "none";
+        const from = wasHidden ? 0 : el.offsetHeight;
+        el.style.height = from + "px";
+        void el.offsetHeight;
+        const hadOpen = el.classList.contains("is-open");
+        if (want) el.classList.add("is-open");
+        else el.classList.remove("is-open");
+        el.style.height = "auto";
+        const target = want ? el.offsetHeight : 0;
+        if (hadOpen) el.classList.add("is-open");
+        else el.classList.remove("is-open");
+        el.style.height = from + "px";
+        void el.offsetHeight;
+        el.style.transition =
+          "height " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE +
+          ", margin-top " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE +
+          ", margin-bottom " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE +
+          ", padding-top " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE +
+          ", padding-bottom " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE +
+          ", border-top-width " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE +
+          ", border-bottom-width " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE +
+          ", opacity " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE;
+        void el.offsetHeight;
+        if (want) el.classList.add("is-open");
+        else el.classList.remove("is-open");
+        el.style.height = target + "px";
+
+        const done = (e) => {
+          if (e.target !== el || e.propertyName !== "height" || gen !== el._authGrow) return;
+          el.removeEventListener("transitionend", done);
+          if (want) settleOpen();
+          else settleClosed();
+        };
+        el.addEventListener("transitionend", done);
+      }
+
+      function setMode(next, instant) {
+        mode = next;
+        document.querySelectorAll(".ms-auth-tab").forEach((b) =>
+          b.classList.toggle("is-active", b.dataset.mode === mode)
+        );
+        const showSignup = mode === "signup";
+        const showTabs = mode === "signin" || mode === "signup";
+
+        authTabs.hidden = !showTabs;
+        if (forgotWrap) setOpen(forgotWrap, false, instant);
+        if (resendWrap) resendWrap.hidden = true;
+        backWrap.hidden = true;
+        if (autosaveWrap) {
+          // Auto save is sign-in only; signup uses the authorization code instead.
+          setOpen(autosaveWrap, mode === "signin", instant);
+        }
+        setOpen(authCodeField, showSignup, instant);
+        if (authCodeInput) {
+          authCodeInput.disabled = !showSignup;
+          authCodeInput.required = showSignup;
+          if (!showSignup) authCodeInput.value = "";
+        }
+        const ageField = document.getElementById("age-confirm-field");
+        const ageInput = document.getElementById("age-confirm");
+        if (ageField) setOpen(ageField, showSignup, instant);
+        if (ageInput) {
+          ageInput.disabled = !showSignup;
+          ageInput.required = showSignup;
+          if (!showSignup) ageInput.checked = false;
+        }
+        if (emailInput) {
+          emailInput.type = "email";
+          emailInput.autocomplete = "email";
+        }
+
+        setOpen(handleField, showSignup, instant);
+        if (passwordField) setOpen(passwordField, false, instant);
+        if (passwordConfirmField) setOpen(passwordConfirmField, false, instant);
+        if (pwMeter) setOpen(pwMeter, false, instant);
+
+        if (handleInput) {
+          handleInput.disabled = !showSignup;
+          handleInput.required = showSignup;
+        }
+        emailInput.required = true;
+        emailInput.closest(".ms-field").hidden = false;
+        if (passwordInput) {
+          passwordInput.required = false;
+          passwordInput.disabled = true;
+        }
+        if (passwordConfirm) {
+          passwordConfirm.required = false;
+          passwordConfirm.disabled = true;
+        }
+
+        if (showSignup) submit.textContent = "Continue";
+        else submit.textContent = "Continue with Email";
+
+        if (passkeyWrap) setOpen(passkeyWrap, mode === "signin", instant);
+
+        err.hidden = true;
+        if (!readPendingSignIn()) hint.textContent = "";
+
+        }
+
+      document.getElementById("email-verified-return")?.addEventListener("click", async () => {
+        const button = document.getElementById("email-verified-return");
+        const panelError = document.getElementById("email-verified-error");
+        if (button) button.disabled = true;
+        if (panelError) panelError.hidden = true;
+        try {
+          await saveVerifiedSession();
+          await continueAfterAuth();
+        } catch (ex) {
+          if (button) button.disabled = false;
+          showAuthError(ex);
+          if (panelError) {
+            const text = window.StudioAuth?.formatAuthError?.(ex, "") || ex?.message || "Could not sign you in. Request a new email and try again.";
+            panelError.textContent = text;
+            panelError.hidden = !text;
+          }
+        }
+      });
+
+      passkeyButton?.addEventListener("click", async () => {
+        showAuthError("");
+        if (mode === "signin") clearSignupEmailPrompt();
+        if (!window.StudioAuth?.signInWithPasskey) {
+          showAuthError("Sign-in is still loading. Refresh and try again.");
+          return;
+        }
+        passkeyButton.disabled = true;
+        submit.disabled = true;
+        const idle = passkeyButton.textContent;
+        passkeyButton.textContent = "Waiting for passkey...";
+        try {
+          await window.StudioAuth.signInWithPasskey();
+          window.StudioToast?.success?.("Signed in");
+          await continueAfterAuth();
+        } catch (ex) {
+          if (ex?.code === "passkey_cancelled") {
+            showAuthError("");
+          } else if (ex?.code === "passkey_missing") {
+            showAuthError("No passkey is saved yet. Continue with email, then add one in Settings.");
+          } else {
+            showAuthError(ex);
+          }
+        } finally {
+          passkeyButton.disabled = false;
+          submit.disabled = false;
+          passkeyButton.textContent = idle;
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>

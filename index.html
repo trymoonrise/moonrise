@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#ffffff;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
+html[data-ms-mode=dark] #ms-boot{background:#111111;color:#f5f5f5}
+html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
+#ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .2s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
+  try{window.scrollTo(0,0)}catch(e){}
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","progressbar");
+  boot.setAttribute("aria-label","Loading");
+  boot.setAttribute("aria-valuemin","0");
+  boot.setAttribute("aria-valuemax","100");
+  boot.setAttribute("aria-valuenow","0");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  var bar=boot.querySelector(".ms-boot-bar span");
+  var progress=0;
+  var appReady=false;
+  var assetsReady=false;
+  var ready=false;
+  var done=false;
+  var started=performance.now();
+  var readyAt=0;
+  var minMs=180;
+  var maxMs=2500;
+  var failMs=5000;
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+
+  function gating(){
+    return document.documentElement.classList.contains("ms-auth-gating");
+  }
+
+  function studioPending(){
+    return !!window.__msStudioBoot && !(document.body && document.body.dataset.msShellPainted==="1");
+  }
+
+  function forceReveal(){
+    document.documentElement.classList.remove("ms-boot");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msStudioBoot=0;
+    window.__msBootReleased=1;
+    var el=document.getElementById("ms-boot");
+    if(el)el.remove();
+  }
+
+  function failTo404(){
+    if(window.__msAuthRedirecting)return;
+    window.__msAuthRedirecting=true;
+    forceReveal();
+    location.replace("404.html");
+  }
+
+  function setProgress(p){
+    progress=Math.max(0,Math.min(100,p));
+    if(bar) bar.style.transform="scaleX("+(progress/100).toFixed(4)+")";
+    boot.setAttribute("aria-valuenow",String(Math.round(progress)));
+    boot.setAttribute("aria-label","Loading "+Math.round(progress)+"%");
+  }
+
+  function finish(){
+    if(done)return true;
+    // Keep the moonrise bar up until the studio shell paints.
+    if(gating() || studioPending()){
+      setProgress(Math.max(progress, 92));
+      return false;
+    }
+    done=true;
+    window.__msBootReleased=1;
+    setProgress(100);
+    var hide=function(){
+      document.documentElement.classList.remove("ms-boot");
+      document.documentElement.classList.remove("ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    if(reduce){
+      hide();
+      return true;
+    }
+    boot.classList.add("is-leaving");
+    setTimeout(hide, 220);
+    return true;
+  }
+
+  function markReady(){
+    if(ready||done)return;
+    if(!(appReady&&assetsReady))return;
+    ready=true;
+    readyAt=performance.now();
+  }
+
+  function tick(now){
+    if(done)return;
+    var elapsed=now-started;
+    // Absolute escape: never sit on a blank/hold screen past failMs.
+    if(elapsed>=failMs && (gating() || studioPending() || document.getElementById("ms-boot"))){
+      failTo404();
+      return;
+    }
+    if(ready){
+      if(reduce){
+        setProgress(100);
+        if(finish()) return;
+      }else{
+        var sinceReady=Math.max(0,now-readyAt);
+        var minLeft=Math.max(0,minMs-elapsed);
+        var fillMs=Math.max(100,minLeft);
+        var t=Math.min(1,sinceReady/fillMs);
+        var eased=1-Math.pow(1-t,3);
+        var from=Math.max(progress, 82);
+        setProgress(from+((100-from)*eased));
+        if(t>=1 && progress>=99.4){
+          setProgress(100);
+          if(finish()) return;
+        }
+      }
+    }else{
+      var tWait=Math.min(1,elapsed/1200);
+      var target=84*(1-Math.pow(1-tWait,2.4));
+      setProgress(progress+(target-progress)*0.18);
+      if(elapsed>=maxMs){
+        if(gating() || studioPending()){
+          setProgress(Math.max(progress, 92));
+        }else{
+          appReady=true;
+          assetsReady=true;
+          markReady();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  window.__msReleaseBoot=function(){
+    appReady=true;
+    assetsReady=true;
+    markReady();
+    if(ready && !done && !gating() && !studioPending()) finish();
+  };
+
+  function markAssets(){
+    assetsReady=true;
+    markReady();
+  }
+
+  function releasePublicApp(){
+    if(gating() || window.__msStudioBoot) return;
+    appReady=true;
+    markReady();
+  }
+
+  function onDomReady(){
+    markAssets();
+    releasePublicApp();
+  }
+
+  if(document.readyState==="interactive"||document.readyState==="complete") onDomReady();
+  else document.addEventListener("DOMContentLoaded", onDomReady, { once:true });
+  setTimeout(markAssets, maxMs);
+  setTimeout(function(){
+    if(done) return;
+    if(gating() || studioPending()) return;
+    if(window.__msReleaseBoot) window.__msReleaseBoot();
+  }, maxMs);
+  // Wall-clock backup if rAF is throttled/frozen.
+  setTimeout(function(){
+    if(done || window.__msAuthRedirecting) return;
+    if(gating() || studioPending() || document.getElementById("ms-boot")) failTo404();
+  }, failMs + 250);
+})();
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function () {
+      // Home-screen / installed app opens the site root. If a session is saved,
+      // continue to the dashboard before the landing page paints. A normal browser
+      // visit stays on this page, including when an old token is sitting in storage.
+      var params;
+      try {
+        params = new URLSearchParams(location.search);
+      } catch (e) {
+        return;
+      }
+      if (params.get("go") === "app") {
+        location.replace("dashboard.html");
+        return;
+      }
+
+      function installedLaunch() {
+        if (params.get("launch") === "app") return true;
+        try {
+          if (navigator.standalone === true) return true;
+          var mq = window.matchMedia;
+          if (!mq) return false;
+          return (
+            mq("(display-mode: standalone)").matches ||
+            mq("(display-mode: fullscreen)").matches ||
+            mq("(display-mode: minimal-ui)").matches ||
+            mq("(display-mode: window-controls-overlay)").matches
+          );
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function signedIn() {
+        try {
+          localStorage.removeItem("moonrise-studio-auth");
+          sessionStorage.removeItem("moonrise-studio-auth");
+        } catch (e) {}
+        return /(?:^|;\s*)ms_on=1(?:;|$)/.test(document.cookie || "");
+      }
+
+      if (installedLaunch() && signedIn()) {
+        location.replace("dashboard.html");
+        return;
+      }
+
+      if (params.get("launch") === "app") {
+        params.delete("launch");
+        var qs = params.toString();
+        try {
+          history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+        } catch (e) {}
+      }
+    })();
+  </script>
+  <title>trymoonrise.com - Build websites. Get paid.</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#232427">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
+  <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <meta name="description" content="Moonrise is an AI-powered platform that lets you create professional websites with 1 click for local business owners, creators, and more! It's designed to make website creation fast, simple, effortless, and get paid.">
+  <link rel="canonical" href="https://trymoonrise.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Moonrise Studio">
+  <meta property="og:title" content="trymoonrise.com - Build websites. Get paid.">
+  <meta property="og:description" content="Moonrise is an AI-powered platform that lets you create professional websites with 1 click for local business owners, creators, and more! It's designed to make website creation fast, simple, effortless, and get paid.">
+  <meta property="og:url" content="https://trymoonrise.com/">
+  <meta property="og:image" content="https://trymoonrise.com/assets/embed.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="trymoonrise.com - Build websites. Get paid.">
+  <meta name="twitter:description" content="Moonrise is an AI-powered platform that lets you create professional websites with 1 click for local business owners, creators, and more! It's designed to make website creation fast, simple, effortless, and get paid.">
+  <meta name="twitter:image" content="https://trymoonrise.com/assets/embed.png">
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261106-mono">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
+  <link rel="stylesheet" href="css/home.css?v=20261107-center">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+  <meta name="color-scheme" content="light">
+  <script defer src="js/config.js?v=20261106-mono"></script>
+  <script defer src="js/site-branding.js?v=20260719-seo"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://trymoonrise.com/#organization",
+        "name": "Moonrise Studio",
+        "url": "https://trymoonrise.com/",
+        "logo": "https://trymoonrise.com/assets/MoonriseLogo.png",
+        "email": "trymoonrise@gmail.com",
+        "description": "Moonrise is an AI-powered platform that helps creators build professional websites for local businesses and get paid when clients go live."
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://trymoonrise.com/#website",
+        "url": "https://trymoonrise.com/",
+        "name": "Moonrise Studio",
+        "publisher": { "@id": "https://trymoonrise.com/#organization" },
+        "inLanguage": "en-US"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Moonrise Studio",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "url": "https://trymoonrise.com/",
+        "description": "AI-powered website builder for creators who sell sites to local businesses."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Moonrise?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A simple way to build websites for local businesses and get paid when they go live."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I get paid?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Publish the watermarked site, send the link, and earn when the owner pays to unlock it. You keep 90%."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do owners need an account?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. They pay on the live site through secure checkout."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-page="home">
+  <a class="ms-skip" href="#main">Skip to content</a>
+  <div class="ms-scroll-line" aria-hidden="true"></div>
+
+  <div class="ms-home-shell">
+    <header class="ms-home-nav">
+      <div class="ms-home-nav-inner">
+        <a class="ms-home-brand" href="index.html">
+          <img src="assets/MoonriseLogo.png" alt="" width="28" height="28">
+          <strong>moonrise.</strong>
+        </a>
+        <nav class="ms-home-topnav" aria-label="Primary">
+          <a href="#product">Product</a>
+          <a href="#how">How it works</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <div class="ms-home-nav-end">
+          <a class="ms-home-nav-cta" href="login.html">Start earning</a>
+          <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
+            <i></i><i></i><i></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
+      <nav class="ms-home-bloom-nav" aria-label="Primary">
+        <a href="index.html" style="--nav-i:0">Home</a>
+        <a href="login.html" style="--nav-i:1">Start earning</a>
+        <a href="#product" style="--nav-i:2">Product</a>
+        <a href="#how" style="--nav-i:3">How it works</a>
+        <a href="#faq" style="--nav-i:4">FAQ</a>
+        <a href="download.html" style="--nav-i:5">Download app</a>
+        <a href="orders.html" style="--nav-i:6">Locate my order</a>
+        <a href="designer-tips.html" style="--nav-i:7">Designer Tips</a>
+        <a href="login.html" style="--nav-i:8">Sign in</a>
+      </nav>
+    </div>
+
+    <main id="main">
+      <section class="ms-home-hero" aria-label="Moonrise">
+        <div class="ms-home-hero-glow" aria-hidden="true"></div>
+        <a class="ms-home-live" href="login.html">Now open</a>
+        <h1>Build websites.<br>Get paid.</h1>
+        <p class="ms-home-hero-lead">Create a site for a local business. Earn when they go live — no design degree required.</p>
+        <a class="ms-home-cta" href="login.html">Start earning</a>
+        <ul class="ms-home-hero-points">
+          <li>
+            <span class="ms-home-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h10M4 17h14"/></svg>
+            </span>
+            Sites in minutes
+          </li>
+          <li>
+            <span class="ms-home-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 1.5"/></svg>
+            </span>
+            Paid when they unlock
+          </li>
+          <li>
+            <span class="ms-home-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M7 8h7a3 3 0 010 6H9a3 3 0 000 6h8"/></svg>
+            </span>
+            You keep 90%
+          </li>
+        </ul>
+        <div class="ms-home-hero-stage" aria-hidden="true">
+          <div class="ms-home-glass ms-home-glass-a">
+            <span class="ms-home-glass-kicker">Preview</span>
+            <strong>Northside Cafe</strong>
+            <em>Live watermark · Ready to send</em>
+          </div>
+          <div class="ms-home-glass ms-home-glass-b">
+            <span class="ms-home-glass-kicker">Payout</span>
+            <strong>$450</strong>
+            <em>Unlocked · Your cut $405</em>
+          </div>
+        </div>
+      </section>
+
+      <section class="ms-home-band" id="why" aria-labelledby="why-heading">
+        <div class="ms-home-wrap ms-home-band-head">
+          <h2 id="why-heading">A clear path<br>from lead to payout.</h2>
+          <p>Find a business, ship a site, send the link. Activate from anywhere.</p>
+        </div>
+        <ul class="ms-home-wrap ms-home-features">
+          <li class="ms-home-feature" style="--feat:linear-gradient(180deg,#e8ecef 0%,#f3f5f7 100%)">
+            <div class="ms-home-feature-visual ms-home-feature-price">
+              <span>Creator cut</span>
+              <strong>90%</strong>
+              <em>All inclusive</em>
+            </div>
+            <h3>Simple</h3>
+            <p>One flow from lead to live site — without a long agency process.</p>
+          </li>
+          <li class="ms-home-feature" style="--feat:linear-gradient(180deg,#eaeff3 0%,#f4f6f8 100%)">
+            <div class="ms-home-feature-visual ms-home-feature-scan" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            <h3>Fast</h3>
+            <p>Generate a polished preview in minutes, then refine the details.</p>
+          </li>
+          <li class="ms-home-feature" style="--feat:linear-gradient(180deg,#edf1f4 0%,#f5f7f9 100%)">
+            <div class="ms-home-feature-visual ms-home-feature-status">
+              <div><b>Cafe</b><i>Live</i></div>
+              <div><b>Dental</b><i>Draft</i></div>
+              <div><b>Gym</b><i>Sent</i></div>
+            </div>
+            <h3>Borderless</h3>
+            <p>Work local or remote. Businesses unlock from the live link.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="ms-home-product" id="product" aria-labelledby="product-heading">
+        <div class="ms-home-wrap">
+          <h2 id="product-heading">One flow<br>that does it all.</h2>
+          <div class="ms-home-panels">
+            <article class="ms-home-panel">
+              <h3>Build</h3>
+              <p>Pick a local business, generate their site, and polish the copy and look.</p>
+              <a href="login.html">Open studio <span aria-hidden="true">→</span></a>
+              <div class="ms-home-panel-art ms-home-panel-build" aria-hidden="true">
+                <div></div><div></div><div></div>
+              </div>
+            </article>
+            <article class="ms-home-panel">
+              <h3>Earn</h3>
+              <p>Publish a watermarked preview. When they unlock, you get paid.</p>
+              <a href="#how">See how it works <span aria-hidden="true">→</span></a>
+              <div class="ms-home-panel-art ms-home-panel-earn" aria-hidden="true">
+                <strong>$405</strong>
+                <span>Paid to you</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="ms-home-steps" id="how" aria-labelledby="how-title">
+        <div class="ms-home-wrap">
+          <h2 id="how-title">Online in three steps.</h2>
+          <p class="ms-home-steps-lead">No design skills needed. Keep 90% when a business goes live.</p>
+          <ol class="ms-home-steps-list">
+            <li>
+              <span>1</span>
+              <div>
+                <strong>Find a local business</strong>
+                <p>Pick a shop that still needs a real website.</p>
+              </div>
+            </li>
+            <li>
+              <span>2</span>
+              <div>
+                <strong>Build in one swipe</strong>
+                <p>Generate their site, then refine the details.</p>
+              </div>
+            </li>
+            <li>
+              <span>3</span>
+              <div>
+                <strong>Send the link and earn</strong>
+                <p>They unlock at checkout. You get paid.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="ms-home-faq" id="faq" aria-labelledby="faq-title">
+        <div class="ms-home-wrap">
+          <h2 id="faq-title">Got questions?<br>Here’s the answers.</h2>
+          <div class="ms-home-faq-list">
+            <details class="ms-home-faq-item" open>
+              <summary>What is Moonrise?</summary>
+              <p>A simple way to build websites for local businesses and get paid when they go live.</p>
+            </details>
+            <details class="ms-home-faq-item">
+              <summary>How do I get paid?</summary>
+              <p>Publish the watermarked site, send the link, and earn when the owner pays to unlock it. You keep 90%.</p>
+            </details>
+            <details class="ms-home-faq-item">
+              <summary>Do owners need an account?</summary>
+              <p>No. They pay on the live site through secure checkout.</p>
+            </details>
+            <details class="ms-home-faq-item">
+              <summary>Do I need design skills?</summary>
+              <p>No. Start from a generated site, then tweak copy, photos, and layout until it feels right.</p>
+            </details>
+            <details class="ms-home-faq-item">
+              <summary>Can I cancel anytime?</summary>
+              <p>Yes. There’s no long contract — use Moonrise when you have a business ready to go live.</p>
+            </details>
+          </div>
+          <a class="ms-home-text-link" href="help.html">Read more help</a>
+        </div>
+      </section>
+
+      <section class="ms-home-close" aria-labelledby="close-title">
+        <div class="ms-home-wrap ms-home-close-grid">
+          <div class="ms-home-close-card">
+            <h2 id="close-title">Get started in minutes.</h2>
+            <ol>
+              <li><span>1</span> Sign up</li>
+              <li><span>2</span> Build a site</li>
+              <li><span>3</span> Send &amp; earn</li>
+            </ol>
+          </div>
+          <div class="ms-home-close-card ms-home-close-price">
+            <h3>One cut. Clear rules.</h3>
+            <p class="ms-home-close-stat">90%</p>
+            <p>Yours when a business unlocks. They pay on the live site.</p>
+            <a class="ms-home-cta" href="login.html">Start earning</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="ms-home-site-footer">
+      <div class="ms-home-wrap ms-home-footer-grid">
+        <div>
+          <p class="ms-home-footer-label">Product</p>
+          <a href="login.html">Start earning</a>
+          <a href="#how">How it works</a>
+          <a href="download.html">Download app</a>
+          <a href="designer-tips.html">Designer Tips</a>
+        </div>
+        <div>
+          <p class="ms-home-footer-label">Account</p>
+          <a href="login.html">Sign in</a>
+          <a href="login.html?mode=signup">Sign up</a>
+          <a href="orders.html">Locate order</a>
+        </div>
+        <div>
+          <p class="ms-home-footer-label">Help</p>
+          <a href="help.html">Help</a>
+          <a href="contact.html">Contact</a>
+          <a href="legal.html">Legal</a>
+          <a href="report.html">Report</a>
+        </div>
+      </div>
+      <div class="ms-home-wrap">
+        <p class="ms-home-footer-note"><strong>moonrise.</strong> Build websites for local businesses and get paid when they go live. Questions: <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script defer src="js/home-bloom-nav.js?v=20261028-minimal-stage"></script>
+  <script defer src="js/ui-motion.js?v=20261106-mono"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer>
+    (function () {
+      if (window.__msReleaseBoot) window.__msReleaseBoot();
+      document.body.classList.add("is-home-ready");
+
+      var line = document.querySelector(".ms-scroll-line");
+      function syncScrollLine() {
+        if (!line) return;
+        var doc = document.documentElement;
+        var max = Math.max(1, doc.scrollHeight - window.innerHeight);
+        line.style.transform = "scaleX(" + Math.min(1, window.scrollY / max).toFixed(4) + ")";
+      }
+      window.addEventListener("scroll", syncScrollLine, { passive: true });
+      window.addEventListener("resize", syncScrollLine, { passive: true });
+      syncScrollLine();
+    })();
+  </script>
+</body>
+</html>

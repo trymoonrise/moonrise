@@ -1,0 +1,190 @@
+/* Studio-wide premium motion - onboarding-style rise reveals (no blur on interactive UI) */
+
+:root {
+  --ms-motion-ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ms-motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ms-motion-dur-fast: 0.34s;
+  --ms-motion-dur-med: 0.48s;
+  --ms-motion-dur-slow: 0.62s;
+  --ms-motion-dur-panel: 0.44s;
+  --ms-motion-base-delay: 0.06s;
+  --ms-motion-stagger: 0.052s;
+  --ms-motion-rise: 14px;
+}
+
+/* Subtle ambient wash on app pages (matches onboarding/home drift) */
+body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-page="home"]):not([data-page="orders"]):not([data-page="leads"]):not([data-page="leaderboard"]):not(.ms-onboard-page):not(.ms-legal-site):not(.ms-contact-public):not(.ms-ldb-site)::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -20%, rgba(37, 99, 235, 0.07), transparent 58%),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgba(99, 102, 241, 0.05), transparent 55%);
+  animation: ms-st-bg-drift 20s ease-in-out infinite alternate;
+}
+
+body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-page="home"]):not([data-page="orders"]):not(.ms-onboard-page):not(.ms-legal-site):not(.ms-contact-public) #page-body,
+body[data-page="login"]::before {
+  content: none;
+  animation: none;
+}
+
+body[data-page="login"] .ms-auth-card,
+body[data-page="orders"] .ms-orders-main,
+body.ms-legal-site .ms-legal-wrap,
+body.ms-contact-public .ms-contact-main {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes ms-st-bg-drift {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.02) translate3d(0, -0.6%, 0);
+  }
+}
+
+/* Page items stay visible - no rise/stagger enter easing */
+.ms-motion-item {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+@media (min-width: 901px) {
+  .ms-sidebar.ms-motion-sidebar {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Ready class retained for callers; no animated reveal */
+body.ms-page-motion-ready .ms-motion-item {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+@media (min-width: 901px) {
+  body.ms-page-motion-ready .ms-sidebar.ms-motion-sidebar {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Mobile drawer uses transform for off-canvas - never the desktop sidebar entrance */
+@media (max-width: 900px) {
+  .ms-sidebar.ms-motion-sidebar,
+  body.ms-page-motion-ready .ms-sidebar.ms-motion-sidebar {
+    opacity: 1 !important;
+    /* Defer transform/transition to studio.css drawer rules (open ease-in). */
+    transition:
+      transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  body:not(.ms-nav-open) .ms-sidebar.ms-motion-sidebar {
+    transform: translate3d(calc(-100% - 12px), 0, 0) !important;
+    transition:
+      transform 0.32s cubic-bezier(0.4, 0, 0.7, 0.2),
+      box-shadow 0.28s ease !important;
+  }
+
+  body.ms-nav-open .ms-sidebar,
+  body.ms-nav-open .ms-sidebar.ms-motion-sidebar {
+    transform: translate3d(0, 0, 0) !important;
+    transition:
+      transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @media (max-width: 900px) {
+    .ms-sidebar,
+    .ms-sidebar.ms-motion-sidebar,
+    body.ms-nav-open .ms-sidebar,
+    body::after,
+    body.ms-nav-open::after,
+    .ms-menu-toggle {
+      transition: none !important;
+    }
+  }
+}
+
+/* Skip motion for explicitly opted-out nodes */
+.ms-motion-skip {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* ── Channel switch: static (no leave/enter easing) ─────────────────────── */
+html.ms-channel-hop #page-body,
+html.ms-channel-hop body.ms-page-motion-ready #page-body,
+html.ms-channel-hop.ms-channel-entered #page-body,
+body.ms-channel-leaving #page-body {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+  will-change: auto;
+}
+
+html.ms-channel-hop .ms-motion-item,
+body.ms-channel-leaving .ms-motion-item {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+@media (min-width: 901px) {
+  html.ms-channel-hop .ms-sidebar.ms-motion-sidebar,
+  html.ms-channel-hop body.ms-page-motion-ready .ms-sidebar.ms-motion-sidebar {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+body.ms-channel-leaving {
+  pointer-events: none;
+}
+
+body.ms-channel-leaving .ms-quick-nav,
+body.ms-channel-leaving .ms-menu-toggle {
+  opacity: 1;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-page="home"]):not([data-page="orders"]):not([data-page="leads"]):not([data-page="leaderboard"]):not(.ms-onboard-page):not(.ms-legal-site):not(.ms-contact-public):not(.ms-ldb-site)::before {
+    animation: none;
+  }
+
+  .ms-motion-item,
+  .ms-sidebar.ms-motion-sidebar {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  html.ms-channel-hop #page-body,
+  body.ms-channel-leaving #page-body {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  body.ms-channel-leaving .ms-quick-nav,
+  body.ms-channel-leaving .ms-menu-toggle {
+    opacity: 1 !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: moonrise-studio-worker
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        value: anthropic/claude-sonnet-4.5
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_SALE_CHAT_ID
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_ID
+        sync: false
+      - key: STRIPE_AMOUNT_CENTS
+        value: "50000"
+      - key: STRIPE_MVP_PRICE_ID
+        sync: false
+      - key: STRIPE_MVP_AMOUNT_CENTS
+        value: "500"
+      - key: VERCEL_TOKEN
+        sync: false
+      - key: PUBLIC_APP_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: WORKER_PUBLIC_URL
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: WEBSITE_PRESETS_SOURCE
+        value: github

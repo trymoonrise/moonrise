@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#ffffff;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
+html[data-ms-mode=dark] #ms-boot{background:#111111;color:#f5f5f5}
+html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
+#ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .2s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
+</style>
+<script>
+(function(){
+  var tabHop=false;
+  try{tabHop=!!sessionStorage.getItem("ms_tab_switch")}catch(e){}
+  if(tabHop){
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msBootReleased=1;
+    window.__msTabHop=1;
+    return;
+  }
+  document.documentElement.classList.add("ms-boot");
+  try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
+  try{window.scrollTo(0,0)}catch(e){}
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","progressbar");
+  boot.setAttribute("aria-label","Loading");
+  boot.setAttribute("aria-valuemin","0");
+  boot.setAttribute("aria-valuemax","100");
+  boot.setAttribute("aria-valuenow","0");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  var bar=boot.querySelector(".ms-boot-bar span");
+  var progress=0;
+  var appReady=false;
+  var assetsReady=false;
+  var ready=false;
+  var done=false;
+  var started=performance.now();
+  var readyAt=0;
+  var minMs=0;
+  var maxMs=2500;
+  var failMs=5000;
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+
+  function gating(){
+    return document.documentElement.classList.contains("ms-auth-gating");
+  }
+
+  function studioPending(){
+    return !!window.__msStudioBoot && !(document.body && document.body.dataset.msShellPainted==="1");
+  }
+
+  function forceReveal(){
+    document.documentElement.classList.remove("ms-boot");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msStudioBoot=0;
+    window.__msBootReleased=1;
+    var el=document.getElementById("ms-boot");
+    if(el)el.remove();
+  }
+
+  function failTo404(){
+    if(window.__msAuthRedirecting)return;
+    window.__msAuthRedirecting=true;
+    forceReveal();
+    location.replace("404.html");
+  }
+
+  function setProgress(p){
+    progress=Math.max(0,Math.min(100,p));
+    if(bar) bar.style.transform="scaleX("+(progress/100).toFixed(4)+")";
+    boot.setAttribute("aria-valuenow",String(Math.round(progress)));
+    boot.setAttribute("aria-label","Loading "+Math.round(progress)+"%");
+  }
+
+  function finish(){
+    if(done)return true;
+    // Keep the moonrise bar up until the studio shell paints.
+    if(gating() || studioPending()){
+      setProgress(Math.max(progress, 92));
+      return false;
+    }
+    done=true;
+    window.__msBootReleased=1;
+    setProgress(100);
+    var hide=function(){
+      document.documentElement.classList.remove("ms-boot");
+      document.documentElement.classList.remove("ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    if(reduce){
+      hide();
+      return true;
+    }
+    boot.classList.add("is-leaving");
+    setTimeout(hide, 220);
+    return true;
+  }
+
+  function markReady(){
+    if(ready||done)return;
+    if(!(appReady&&assetsReady))return;
+    ready=true;
+    readyAt=performance.now();
+  }
+
+  function tick(now){
+    if(done)return;
+    var elapsed=now-started;
+    // Absolute escape: never sit on a blank/hold screen past failMs.
+    if(elapsed>=failMs && (gating() || studioPending() || document.getElementById("ms-boot"))){
+      failTo404();
+      return;
+    }
+    if(ready){
+      if(reduce){
+        setProgress(100);
+        if(finish()) return;
+      }else{
+        var sinceReady=Math.max(0,now-readyAt);
+        var minLeft=Math.max(0,minMs-elapsed);
+        var fillMs=Math.max(100,minLeft);
+        var t=Math.min(1,sinceReady/fillMs);
+        var eased=1-Math.pow(1-t,3);
+        var from=Math.max(progress, 82);
+        setProgress(from+((100-from)*eased));
+        if(t>=1 && progress>=99.4){
+          setProgress(100);
+          if(finish()) return;
+        }
+      }
+    }else{
+      var tWait=Math.min(1,elapsed/1200);
+      var target=84*(1-Math.pow(1-tWait,2.4));
+      setProgress(progress+(target-progress)*0.18);
+      if(elapsed>=maxMs){
+        if(gating() || studioPending()){
+          setProgress(Math.max(progress, 92));
+        }else{
+          appReady=true;
+          assetsReady=true;
+          markReady();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  window.__msReleaseBoot=function(){
+    appReady=true;
+    assetsReady=true;
+    markReady();
+    if(ready && !done && !gating() && !studioPending()) finish();
+  };
+
+  function markAssets(){
+    assetsReady=true;
+    markReady();
+  }
+
+  function releasePublicApp(){
+    if(gating() || window.__msStudioBoot) return;
+    appReady=true;
+    markReady();
+  }
+
+  function onDomReady(){
+    markAssets();
+    releasePublicApp();
+  }
+
+  if(document.readyState==="interactive"||document.readyState==="complete") onDomReady();
+  else document.addEventListener("DOMContentLoaded", onDomReady, { once:true });
+  setTimeout(markAssets, maxMs);
+  setTimeout(function(){
+    if(done) return;
+    if(gating() || studioPending()) return;
+    if(window.__msReleaseBoot) window.__msReleaseBoot();
+  }, maxMs);
+  // Wall-clock backup if rAF is throttled/frozen.
+  setTimeout(function(){
+    if(done || window.__msAuthRedirecting) return;
+    if(gating() || studioPending() || document.getElementById("ms-boot")) failTo404();
+  }, failMs + 250);
+})();
+</script>
+  <script>
+    (function () {
+      var BUILD = "20261107-accent-btn";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <script src="js/auth-gate-head.js?v=20261107-compact-ui"></script>
+  <title>Dashboard - Moonrise Studio</title>
+  <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
+<link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-compact-ui6">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+</head>
+<body data-page="dashboard">
+  <div id="shell"></div>
+  <div id="page-body" class="ms-dash-page ms-settings-page">
+    <header class="ms-page-head">
+      <div class="ms-page-head-copy">
+        <h1>Dashboard</h1>
+        <p class="lead">Income, sales, and recent posts.</p>
+      </div>
+    </header>
+
+    <div class="ms-settings-stack ms-dash-stack">
+      <section class="ms-card ms-settings-card ms-dash-card ms-dash-progress-card is-skel-loading" id="dash-overview-card" aria-label="Overview">
+        <h2 class="ms-settings-card-title">Overview</h2>
+        <div class="ms-skel-block" id="dash-overview-skel" aria-hidden="true">
+          <div class="ms-skel ms-skel-line ms-skel-line--md"></div>
+          <div class="ms-skel ms-skel-metric"></div>
+          <div class="ms-skel ms-skel-line ms-skel-line--lg"></div>
+          <div class="ms-dash-overview-grid">
+            <div class="ms-skel ms-skel-metric"></div>
+            <div class="ms-skel ms-skel-metric"></div>
+            <div class="ms-skel ms-skel-metric"></div>
+          </div>
+        </div>
+        <div class="ms-dash-overview-live" id="dash-overview-live" hidden>
+          <div class="ms-dash-hero">
+            <div class="ms-dash-hero-copy">
+              <p class="ms-dash-hero-label">Income</p>
+              <p class="ms-dash-hero-value" id="stat-commission">$0.00</p>
+              <p class="ms-dash-hero-hint">Your 90% share</p>
+            </div>
+            <div class="ms-dash-hero-pct">
+              <p class="ms-dash-ring-progress">
+                <span class="ms-dash-ring-value" id="stat-goal-pct">0%</span>
+              </p>
+              <p class="ms-dash-ring-kicker">of goal</p>
+            </div>
+          </div>
+          <div class="ms-dash-bar ms-dash-ring" role="img" aria-label="0 percent of income goal">
+            <span class="ms-dash-bar-fill" id="stat-goal-ring"></span>
+          </div>
+          <p class="ms-dash-ring-sub ms-dash-bar-caption">
+            <span id="stat-goal-left">$1,000.00</span>
+            <span id="stat-goal-left-label">left</span>
+          </p>
+          <div class="ms-dash-overview">
+            <div class="ms-dash-overview-grid" aria-label="Key metrics">
+              <div class="ms-dash-metric ms-dash-metric--goal" id="stat-goal-wrap">
+                <span class="ms-dash-metric-label">Goal <span class="ms-dash-metric-edit">Edit</span></span>
+                <button type="button" class="ms-dash-metric-value ms-dash-goal-display" id="stat-goal" title="Click to edit income goal" aria-label="Income goal $1,000, click to edit">$1,000</button>
+                <input class="ms-dash-goal-input" id="stat-goal-input" type="number" inputmode="numeric" min="1" max="1000000" step="1" value="1000" aria-label="Edit income goal" hidden>
+                <span class="ms-dash-metric-hint">Lifetime target</span>
+              </div>
+              <div class="ms-dash-metric ms-dash-metric--sales">
+                <span class="ms-dash-metric-label">Sales</span>
+                <strong class="ms-dash-metric-value" id="dash-sales-progress">0</strong>
+                <span class="ms-dash-metric-hint">Paid sites</span>
+              </div>
+              <div class="ms-dash-metric ms-dash-metric--avg">
+                <span class="ms-dash-metric-label">Average</span>
+                <strong class="ms-dash-metric-value" id="stat-avg-sale">-</strong>
+                <span class="ms-dash-metric-hint">Per paid site</span>
+              </div>
+            </div>
+            <a class="ms-btn ms-dash-tool" href="leads.html">Find a lead</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="ms-card ms-settings-card ms-dash-card ms-dash-posts" id="recent-projects" aria-label="Recent posts">
+        <button
+          type="button"
+          class="ms-dash-projects-toggle"
+          id="dash-projects-toggle"
+          aria-expanded="false"
+          aria-controls="dash-projects-reveal"
+        >
+          <span class="ms-dash-projects-toggle-main">
+            <span class="ms-dash-projects-title">Recent posts</span>
+            <span class="ms-dash-projects-toggle-meta">
+              <span class="ms-dash-count-badge" id="dash-projects-count">0 projects</span>
+              <svg class="ms-dash-projects-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </span>
+          </span>
+        </button>
+        <div class="ms-dash-posts-reveal" id="dash-projects-reveal" hidden>
+          <div class="ms-dash-projects-body" id="dash-projects-panel">
+            <div class="ms-dash-projects-search" id="dash-projects-search-wrap">
+              <label class="ms-sr-only" for="dash-projects-search">Search projects</label>
+              <div class="ms-dash-projects-search-row">
+                <div class="ms-dash-projects-search-field">
+                  <input
+                    type="search"
+                    id="dash-projects-search"
+                    class="ms-dash-projects-search-input"
+                    placeholder="Search name, location, category, phone, domain..."
+                    autocomplete="off"
+                    spellcheck="false"
+                    aria-autocomplete="list"
+                    aria-controls="dash-projects-suggest"
+                    aria-expanded="false"
+                  >
+                  <button type="button" class="ms-dash-projects-search-clear" id="dash-projects-search-clear" hidden aria-label="Clear search">�</button>
+                </div>
+                <button type="button" class="ms-dash-filter-btn" id="dash-projects-filter-open" aria-expanded="false" aria-controls="dash-projects-filters" aria-label="Filter posts">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6.2 7.4V19l-3.6 1.6v-8.2L4 5z"/></svg>
+                </button>
+              </div>
+              <div class="ms-dash-projects-filters" id="dash-projects-filters" role="group" aria-label="Filter by live status">
+                <button type="button" class="ms-dash-projects-filter is-active" data-live-filter="all" aria-pressed="true">All</button>
+                <button type="button" class="ms-dash-projects-filter" data-live-filter="live" aria-pressed="false">Live</button>
+                <button type="button" class="ms-dash-projects-filter" data-live-filter="not-live" aria-pressed="false">Not live</button>
+              </div>
+              <ul class="ms-dash-projects-suggest" id="dash-projects-suggest" role="listbox" hidden></ul>
+              <p class="ms-dash-projects-search-hint" id="dash-projects-search-hint" hidden></p>
+            </div>
+          </div>
+          <div class="ms-dash-previews" id="dash-projects-list">
+            <div class="ms-skel-block" data-ms-skel="1" aria-hidden="true">
+              <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--md"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+              <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--lg"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+              <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--md"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <dialog class="ms-clients-dialog" id="dash-project-delete-dialog" aria-labelledby="dash-project-delete-title">
+    <div class="ms-clients-dialog-panel ms-clients-dialog-panel--compact">
+      <header class="ms-clients-dialog-head">
+        <h2 class="ms-clients-dialog-title" id="dash-project-delete-title">Delete project</h2>
+      </header>
+      <p class="ms-clients-dialog-warning" id="dash-project-delete-message" aria-live="polite"></p>
+      <p class="ms-clients-dialog-error" id="dash-project-delete-error" hidden role="alert"></p>
+      <div class="ms-clients-dialog-actions">
+        <button type="button" class="ms-clients-dialog-back" id="dash-project-delete-cancel">Cancel</button>
+        <button type="button" class="ms-btn ms-btn-danger ms-clients-dialog-next" id="dash-project-delete-submit">Delete</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script defer src="js/config.js?v=20261107-accent-btn"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+  <script defer src="js/site-branding.js"></script>
+  <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
+  <script defer src="js/auth.js?v=20261107-accent-btn"></script>
+  <script defer src="js/app.js?v=20261107-accent-btn"></script>
+  
+  <script defer src="js/segment-switch.js"></script>
+  <script defer src="js/ui-motion.js?v=20261107-accent-btn"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer src="js/income.js?v=20260718-income"></script>
+  <script defer src="js/project-lifecycle.js?v=20261028-paid-delete"></script>
+  <script defer src="js/preview-thumb.js?v=20260924-console"></script>
+  <script defer src="js/dashboard.js?v=20261107-compact-ui"></script>
+</body>
+</html>

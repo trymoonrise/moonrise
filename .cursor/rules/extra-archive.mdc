@@ -1,0 +1,18 @@
+---
+description: Keep the Moonrise root for product code only; archive unused work into extra/
+alwaysApply: true
+---
+
+# Extra archive
+
+`D:\MasterVault\Moonrise` is the Moonrise product root (trymoonrise.com). Only keep files and folders the live site, studio, worker, presets, or deploy path actually uses.
+
+Anything else belongs in `extra/` (local archive, gitignored). Examples: sibling experiments, old project copies, design references (Angie's site, MindWell), one-off labs, deploy stubs, and tools that are not wired into Moonrise.
+
+## Rules
+
+- Before adding a new top-level folder or loose root file, ask: does Moonrise import, serve, deploy, or document this as part of the product? If no, put it in `extra/`.
+- When you discover unused root items, move them into `extra/` (do not delete unless the user asks). Use a clear name; if `extra/<name>` already exists, use a distinct suffix.
+- Do not move product paths: `css/`, `js/`, `worker/`, `api/`, `supabase/`, `brain/`, `assets/`, `docs/`, `presets/`, `watermark/`, `scripts/`, `tests/`, public HTML pages the app links to, or deploy/config at the root (`.git`, `.cursor`, `.agents`, `package.json`, `vercel.json`, etc.).
+- Prefer lowercase `extra/` to match the existing archive folder. Keep `Extra/` / `extra/` listed in `.gitignore`.
+- Never commit secrets from archived projects. Never mention other product brands in Moonrise UI or release notes just because they live under `extra/`.

@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#ffffff;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
+html[data-ms-mode=dark] #ms-boot{background:#111111;color:#f5f5f5}
+html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
+#ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .2s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
+  try{window.scrollTo(0,0)}catch(e){}
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","progressbar");
+  boot.setAttribute("aria-label","Loading");
+  boot.setAttribute("aria-valuemin","0");
+  boot.setAttribute("aria-valuemax","100");
+  boot.setAttribute("aria-valuenow","0");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  var bar=boot.querySelector(".ms-boot-bar span");
+  var progress=0;
+  var appReady=false;
+  var assetsReady=false;
+  var ready=false;
+  var done=false;
+  var started=performance.now();
+  var readyAt=0;
+  var minMs=180;
+  var maxMs=2500;
+  var failMs=5000;
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+
+  function gating(){
+    return document.documentElement.classList.contains("ms-auth-gating");
+  }
+
+  function studioPending(){
+    return !!window.__msStudioBoot && !(document.body && document.body.dataset.msShellPainted==="1");
+  }
+
+  function forceReveal(){
+    document.documentElement.classList.remove("ms-boot");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msStudioBoot=0;
+    window.__msBootReleased=1;
+    var el=document.getElementById("ms-boot");
+    if(el)el.remove();
+  }
+
+  function failTo404(){
+    if(window.__msAuthRedirecting)return;
+    window.__msAuthRedirecting=true;
+    forceReveal();
+    location.replace("404.html");
+  }
+
+  function setProgress(p){
+    progress=Math.max(0,Math.min(100,p));
+    if(bar) bar.style.transform="scaleX("+(progress/100).toFixed(4)+")";
+    boot.setAttribute("aria-valuenow",String(Math.round(progress)));
+    boot.setAttribute("aria-label","Loading "+Math.round(progress)+"%");
+  }
+
+  function finish(){
+    if(done)return true;
+    // Keep the moonrise bar up until the studio shell paints.
+    if(gating() || studioPending()){
+      setProgress(Math.max(progress, 92));
+      return false;
+    }
+    done=true;
+    window.__msBootReleased=1;
+    setProgress(100);
+    var hide=function(){
+      document.documentElement.classList.remove("ms-boot");
+      document.documentElement.classList.remove("ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    if(reduce){
+      hide();
+      return true;
+    }
+    boot.classList.add("is-leaving");
+    setTimeout(hide, 220);
+    return true;
+  }
+
+  function markReady(){
+    if(ready||done)return;
+    if(!(appReady&&assetsReady))return;
+    ready=true;
+    readyAt=performance.now();
+  }
+
+  function tick(now){
+    if(done)return;
+    var elapsed=now-started;
+    // Absolute escape: never sit on a blank/hold screen past failMs.
+    if(elapsed>=failMs && (gating() || studioPending() || document.getElementById("ms-boot"))){
+      failTo404();
+      return;
+    }
+    if(ready){
+      if(reduce){
+        setProgress(100);
+        if(finish()) return;
+      }else{
+        var sinceReady=Math.max(0,now-readyAt);
+        var minLeft=Math.max(0,minMs-elapsed);
+        var fillMs=Math.max(100,minLeft);
+        var t=Math.min(1,sinceReady/fillMs);
+        var eased=1-Math.pow(1-t,3);
+        var from=Math.max(progress, 82);
+        setProgress(from+((100-from)*eased));
+        if(t>=1 && progress>=99.4){
+          setProgress(100);
+          if(finish()) return;
+        }
+      }
+    }else{
+      var tWait=Math.min(1,elapsed/1200);
+      var target=84*(1-Math.pow(1-tWait,2.4));
+      setProgress(progress+(target-progress)*0.18);
+      if(elapsed>=maxMs){
+        if(gating() || studioPending()){
+          setProgress(Math.max(progress, 92));
+        }else{
+          appReady=true;
+          assetsReady=true;
+          markReady();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  window.__msReleaseBoot=function(){
+    appReady=true;
+    assetsReady=true;
+    markReady();
+    if(ready && !done && !gating() && !studioPending()) finish();
+  };
+
+  function markAssets(){
+    assetsReady=true;
+    markReady();
+  }
+
+  function releasePublicApp(){
+    if(gating() || window.__msStudioBoot) return;
+    appReady=true;
+    markReady();
+  }
+
+  function onDomReady(){
+    markAssets();
+    releasePublicApp();
+  }
+
+  if(document.readyState==="interactive"||document.readyState==="complete") onDomReady();
+  else document.addEventListener("DOMContentLoaded", onDomReady, { once:true });
+  setTimeout(markAssets, maxMs);
+  setTimeout(function(){
+    if(done) return;
+    if(gating() || studioPending()) return;
+    if(window.__msReleaseBoot) window.__msReleaseBoot();
+  }, maxMs);
+  // Wall-clock backup if rAF is throttled/frozen.
+  setTimeout(function(){
+    if(done || window.__msAuthRedirecting) return;
+    if(gating() || studioPending() || document.getElementById("ms-boot")) failTo404();
+  }, failMs + 250);
+})();
+</script>
+  <script>
+    (function () {
+      var BUILD = "20261107-accent-btn";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <meta name="robots" content="noindex">
+  <script src="js/auth-gate-head.js?v=20261107-soft-radius"></script>
+  <title>Admin Console - Moonrise Studio</title>
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
+<link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+  <style>
+    body[data-page="admin-console"] #page-body {
+      min-width: 0;
+      box-sizing: border-box;
+      overflow-x: clip;
+    }
+    body[data-page="admin-console"] .ms-page-head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.85rem;
+      text-align: center;
+    }
+    body[data-page="admin-console"] .ms-page-head-copy {
+      width: 100%;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    body[data-page="admin-console"] .ms-page-head h1,
+    body[data-page="admin-console"] .ms-page-head p {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+    body[data-page="admin-console"] #admin-playtest {
+      align-self: center;
+      width: auto;
+    }
+    .ms-admin-playtest {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin: 0 0 1rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      color: #9a3412;
+    }
+    .ms-admin-playtest[hidden],
+    #admin-playtest[hidden] {
+      display: none !important;
+    }
+    body[data-page="admin-console"].is-playtest-scramble .ms-admin-overview,
+    body[data-page="admin-console"].is-playtest-scramble .ms-admin-employee-list,
+    body[data-page="admin-console"].is-playtest-scramble .ms-admin-website-list,
+    body[data-page="admin-console"].is-playtest-scramble .ms-admin-charts,
+    body[data-page="admin-console"].is-playtest-scramble .ms-payouts-list,
+    body[data-page="admin-console"].is-playtest-scramble .ms-admin-attention {
+      animation: ms-admin-scramble 0.16s steps(2, end) infinite;
+    }
+    @keyframes ms-admin-scramble {
+      0% { filter: blur(0.6px); opacity: 0.45; transform: translateY(1px); }
+      100% { filter: blur(0); opacity: 1; transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      body[data-page="admin-console"].is-playtest-scramble .ms-admin-overview,
+      body[data-page="admin-console"].is-playtest-scramble .ms-admin-employee-list,
+      body[data-page="admin-console"].is-playtest-scramble .ms-admin-website-list,
+      body[data-page="admin-console"].is-playtest-scramble .ms-admin-charts,
+      body[data-page="admin-console"].is-playtest-scramble .ms-payouts-list,
+      body[data-page="admin-console"].is-playtest-scramble .ms-admin-attention {
+        animation: none;
+      }
+    }
+    .ms-admin-playtest p {
+      margin: 0;
+    }
+    #admin-playtest[aria-pressed="true"] {
+      background: #9a3412;
+      color: #fff;
+    }
+    .ms-admin-attention {
+      display: grid;
+      gap: 0.45rem;
+      margin: 0 0 0.9rem;
+    }
+    .ms-admin-attention-item {
+      padding: 0.7rem 0.85rem;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #e8edf3;
+    }
+    .ms-admin-attention-item strong {
+      display: block;
+    }
+    .ms-admin-attention-item span {
+      color: #64748b;
+      font-size: 0.84rem;
+    }
+    .ms-admin-top {
+      display: grid;
+      grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
+      gap: 1.15rem;
+      align-items: start;
+      margin-bottom: 1.25rem;
+    }
+    .ms-admin-code-card {
+      max-width: none;
+      display: grid;
+      justify-items: center;
+      gap: 0.85rem;
+      padding: 1.25rem 1rem 1.1rem;
+      text-align: center;
+      margin: 0;
+    }
+    .ms-admin-code-card h2 {
+      margin: 0;
+      font-size: 0.78rem;
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+    .ms-admin-ring {
+      --ms-admin-progress: 0;
+      width: 7.5rem;
+      height: 7.5rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(#0f172a calc(var(--ms-admin-progress) * 1turn), #e2e8f0 0);
+    }
+    .ms-admin-ring span {
+      width: 6.15rem;
+      height: 6.15rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 1.35rem;
+    }
+    .ms-admin-seconds.is-tick {
+      animation: ms-admin-tick 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes ms-admin-tick {
+      from { transform: translateY(0.35em); opacity: 0.2; }
+      to { transform: none; opacity: 1; }
+    }
+    .ms-admin-code {
+      margin: 0;
+      max-width: 100%;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: clamp(1.55rem, 8vw, 2.6rem);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-indent: 0.14em;
+      color: #0f172a;
+      font-variant-numeric: tabular-nums;
+    }
+    .ms-admin-digit {
+      display: inline-block;
+      min-width: 0.62em;
+    }
+    .ms-admin-digit.is-scrambling {
+      animation: ms-admin-scramble 0.12s ease-out;
+    }
+    @keyframes ms-admin-scramble {
+      from { transform: translateY(0.08em); }
+      to { transform: none; }
+    }
+    .ms-admin-code.is-used {
+      opacity: 0.45;
+    }
+    .ms-admin-status {
+      margin: 0;
+      max-width: 22rem;
+      color: #64748b;
+      font-size: 0.92rem;
+      line-height: 1.4;
+    }
+    .ms-admin-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    html[data-ms-mode="dark"] .ms-admin-ring {
+      background: conic-gradient(#93c5fd calc(var(--ms-admin-progress) * 1turn), #243044 0);
+    }
+    html[data-ms-mode="dark"] .ms-admin-ring span,
+    html[data-ms-mode="dark"] .ms-admin-code {
+      background: #171e2e;
+      color: #f8fafc;
+    }
+    html[data-ms-mode="dark"] .ms-admin-ring span {
+      background: #121826;
+    }
+    html[data-ms-mode="dark"] .ms-admin-status,
+    html[data-ms-mode="dark"] .ms-admin-code-card h2 {
+      color: #94a3b8;
+    }
+    .ms-admin-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr));
+      gap: 0.85rem;
+      min-width: 0;
+    }
+    body[data-page="admin-console"] .ms-payouts-stat {
+      min-width: 0;
+      padding: 1rem 1.05rem 0.95rem;
+    }
+    body[data-page="admin-console"] .ms-payouts-stat-label {
+      font-size: 0.74rem;
+      letter-spacing: 0.035em;
+      line-height: 1.35;
+    }
+    body[data-page="admin-console"] .ms-payouts-stat-value {
+      margin-top: 0.45rem;
+      font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+    .ms-admin-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.28rem;
+      margin: 0 0 1.15rem;
+      padding: 0.32rem;
+      border-radius: 14px;
+      background: #eef2f7;
+      border: 1px solid #e2e8f0;
+      position: relative;
+      isolation: isolate;
+    }
+    .ms-admin-tabs .ms-payouts-tab {
+      min-width: 0;
+      width: 100%;
+      min-height: 2.65rem;
+      border-radius: 10px;
+      padding: 0.65rem 0.7rem;
+      text-align: center;
+      line-height: 1.25;
+      white-space: nowrap;
+      font-size: 0.92rem;
+      font-weight: 650;
+      position: relative;
+      z-index: 1;
+    }
+    .ms-admin-tabs.seg-switch > .seg-switch-indicator {
+      border-radius: 10px;
+    }
+    .ms-admin-tabs.seg-switch.is-ready > .ms-payouts-tab,
+    .ms-admin-tabs.seg-switch.is-ready > .ms-payouts-tab:hover,
+    .ms-admin-tabs.seg-switch.is-ready > .ms-payouts-tab.is-active {
+      background: transparent;
+      box-shadow: none;
+    }
+    .ms-admin-tabs.seg-switch.is-ready > .ms-payouts-tab.is-active {
+      color: #0f172a;
+    }
+    .ms-admin-employee-list {
+      display: grid;
+      gap: 0.65rem;
+    }
+    .ms-admin-employee {
+      border: 1px solid #e8edf3;
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .ms-admin-employee-head {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(4.75rem, 1fr));
+      gap: 0.85rem 1rem;
+      align-items: center;
+      padding: 1rem 1.15rem;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      color: inherit;
+      font: inherit;
+    }
+    .ms-admin-employee-person {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+    .ms-admin-employee-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 auto;
+      background: #f8fafc;
+      border: 1px solid #e8edf3;
+    }
+    .ms-admin-employee-name {
+      display: grid;
+      gap: 0.1rem;
+      min-width: 0;
+    }
+    .ms-admin-employee-name strong,
+    .ms-admin-employee-name span {
+      overflow-wrap: anywhere;
+    }
+    .ms-admin-employee-name strong {
+      font-size: 1.02rem;
+      line-height: 1.3;
+    }
+    .ms-admin-employee-name span,
+    .ms-admin-metric span {
+      color: #64748b;
+      font-size: 0.78rem;
+      line-height: 1.3;
+    }
+    .ms-admin-metric {
+      display: grid;
+      gap: 0.18rem;
+    }
+    .ms-admin-metric b {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.95rem;
+    }
+    .ms-admin-sites {
+      border-top: 1px solid #e8edf3;
+      padding: 0.45rem 0.55rem 0.65rem;
+    }
+    .ms-admin-site {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) auto auto auto;
+      gap: 0.55rem 0.9rem;
+      align-items: center;
+      padding: 0.7rem 0.75rem;
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+    .ms-admin-site > * {
+      min-width: 0;
+    }
+    .ms-admin-site a,
+    .ms-admin-site strong {
+      overflow-wrap: anywhere;
+    }
+    .ms-admin-site a {
+      color: inherit;
+      font-weight: 600;
+    }
+    .ms-admin-website-marks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: center;
+    }
+    .ms-admin-uptime {
+      padding: 0.12rem 0.45rem;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #64748b;
+      font-size: 0.72rem;
+      font-weight: 650;
+    }
+    .ms-admin-uptime.is-up {
+      background: #ecfdf5;
+      color: #047857;
+    }
+    .ms-admin-uptime.is-down {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+    .ms-admin-badge {
+      justify-self: start;
+      padding: 0.12rem 0.45rem;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 0.72rem;
+      font-weight: 650;
+      text-transform: capitalize;
+    }
+    .ms-admin-badge.is-paid,
+    .ms-admin-badge.is-published,
+    .ms-admin-badge.is-paying {
+      background: #ecfdf5;
+      color: #047857;
+    }
+    .ms-admin-badge.is-canceling,
+    .ms-admin-badge.is-past_due {
+      background: #fff7ed;
+      color: #c2410c;
+    }
+    .ms-admin-badge.is-canceled,
+    .ms-admin-badge.is-frozen {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+    .ms-admin-employee-name strong .ms-admin-badge {
+      margin-left: 0.35rem;
+      vertical-align: 1px;
+    }
+    .ms-admin-employee-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0.15rem 0.75rem 0.85rem;
+    }
+    .ms-admin-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .ms-admin-toolbar .ms-clients-search-field {
+      flex: 1 1 16rem;
+      align-self: center;
+      width: auto;
+      max-width: 28rem;
+      height: 2.75rem;
+      min-height: 2.75rem;
+      max-height: 2.75rem;
+      min-width: 0;
+    }
+    .ms-admin-toolbar .ms-clients-search {
+      height: 2.5rem;
+      min-height: 0;
+      max-height: 2.5rem;
+      padding-top: 0;
+      padding-bottom: 0;
+      line-height: 2.5rem;
+    }
+    body[data-page="admin-console"] .ms-clients-card,
+    body[data-page="admin-console"] .ms-payouts-item,
+    body[data-page="admin-console"] .ms-payouts-item-meta,
+    body[data-page="admin-console"] .ms-payouts-item-title,
+    body[data-page="admin-console"] .ms-clients-link {
+      min-width: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+    body[data-page="admin-console"] .ms-payouts-tabs,
+    body[data-page="admin-console"] .ms-clients-section-head,
+    body[data-page="admin-console"] .ms-payouts-item-action,
+    body[data-page="admin-console"] .ms-payouts-item-top,
+    body[data-page="admin-console"] .ms-payouts-item-pay {
+      flex-wrap: wrap;
+    }
+    body[data-page="admin-console"] .ms-payouts-mark-paid,
+    body[data-page="admin-console"] .ms-payouts-remove {
+      white-space: normal;
+    }
+    body[data-page="admin-console"] .ms-payouts-modal {
+      padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+    }
+    body[data-page="admin-console"] .ms-payouts-modal-card {
+      max-height: min(90dvh, 40rem);
+      overflow: auto;
+    }
+    .ms-admin-note {
+      margin: 0 0 1rem;
+      color: #64748b;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      max-width: 68rem;
+    }
+    html[data-ms-mode="dark"] .ms-admin-tabs {
+      background: #121826;
+      border-color: #243044;
+    }
+    html[data-ms-mode="dark"] .ms-admin-tabs.seg-switch > .seg-switch-indicator {
+      background: #243044;
+      box-shadow: none;
+    }
+    html[data-ms-mode="dark"] .ms-admin-tabs.seg-switch.is-ready > .ms-payouts-tab.is-active {
+      color: #f8fafc;
+    }
+    html[data-ms-mode="dark"] .ms-admin-employee-avatar {
+      background: #121826;
+      border-color: #243044;
+    }
+    html[data-ms-mode="dark"] .ms-admin-employee,
+    html[data-ms-mode="dark"] .ms-payouts-stat {
+      background: #171e2e;
+      border-color: #243044;
+    }
+    html[data-ms-mode="dark"] .ms-admin-sites {
+      border-top-color: #243044;
+    }
+    html[data-ms-mode="dark"] .ms-payouts-stat-value,
+    html[data-ms-mode="dark"] .ms-admin-employee-name strong,
+    html[data-ms-mode="dark"] .ms-admin-metric b {
+      color: #f8fafc;
+    }
+    html[data-ms-mode="dark"] .ms-admin-uptime {
+      background: #243044;
+      color: #cbd5e1;
+    }
+    html[data-ms-mode="dark"] .ms-admin-uptime.is-up {
+      background: #064e3b;
+      color: #a7f3d0;
+    }
+    html[data-ms-mode="dark"] .ms-admin-uptime.is-down {
+      background: #450a0a;
+      color: #fecaca;
+    }
+    html[data-ms-mode="dark"] .ms-admin-badge {
+      background: #243044;
+      color: #cbd5e1;
+    }
+    html[data-ms-mode="dark"] .ms-admin-badge.is-paid,
+    html[data-ms-mode="dark"] .ms-admin-badge.is-published,
+    html[data-ms-mode="dark"] .ms-admin-badge.is-paying {
+      background: #064e3b;
+      color: #a7f3d0;
+    }
+    html[data-ms-mode="dark"] .ms-admin-badge.is-canceling,
+    html[data-ms-mode="dark"] .ms-admin-badge.is-past_due {
+      background: #431407;
+      color: #fdba74;
+    }
+    html[data-ms-mode="dark"] .ms-admin-badge.is-canceled,
+    html[data-ms-mode="dark"] .ms-admin-badge.is-frozen {
+      background: #450a0a;
+      color: #fecaca;
+    }
+    html[data-ms-mode="dark"] .ms-admin-playtest {
+      background: #3b2414;
+      border-color: #9a3412;
+      color: #fed7aa;
+    }
+    html[data-ms-mode="dark"] .ms-admin-attention-item {
+      background: #121826;
+      border-color: #243044;
+    }
+    html[data-ms-mode="dark"] .ms-admin-attention-item span {
+      color: #94a3b8;
+    }
+    .ms-admin-charts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+      gap: 0.9rem;
+      margin: 0 0 1.1rem;
+    }
+    .ms-admin-chart {
+      min-width: 0;
+      border: 1px solid #e8edf3;
+      border-radius: 14px;
+      background: #fff;
+      padding: 1rem 1.05rem 0.9rem;
+    }
+    .ms-admin-chart h2 {
+      margin: 0 0 0.85rem;
+      font-size: 0.98rem;
+      line-height: 1.3;
+    }
+    .ms-admin-bars {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 0.3rem;
+      align-items: end;
+      height: 7.2rem;
+    }
+    .ms-admin-bar {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      height: 100%;
+      min-width: 0;
+      align-items: end;
+      justify-items: center;
+      gap: 0.28rem;
+    }
+    .ms-admin-bar i {
+      display: block;
+      width: min(100%, 1.35rem);
+      border-radius: 6px 6px 3px 3px;
+      background: #0f172a;
+      min-height: 2px;
+    }
+    .ms-admin-bar em {
+      font-style: normal;
+      font-size: 0.68rem;
+      line-height: 1.2;
+      color: #64748b;
+      text-align: center;
+    }
+    .ms-admin-status-row {
+      display: grid;
+      grid-template-columns: 6.6rem minmax(0, 1fr) 1.8rem;
+      gap: 0.55rem;
+      align-items: center;
+      margin-top: 0.55rem;
+      font-size: 0.86rem;
+      line-height: 1.3;
+    }
+    .ms-admin-status-track {
+      height: 0.45rem;
+      border-radius: 999px;
+      background: #f1f5f9;
+      overflow: hidden;
+    }
+    .ms-admin-status-track i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: #0f172a;
+    }
+    .ms-admin-filter {
+      box-sizing: border-box;
+      flex: 0 1 12rem;
+      min-width: 0;
+      height: 2.75rem;
+      min-height: 2.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background-color: #fff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      color: inherit;
+      font: inherit;
+      font-size: 0.92rem;
+      line-height: 2.75rem;
+      padding: 0 2.2rem 0 0.9rem;
+      appearance: none;
+    }
+    .ms-admin-website-list {
+      display: grid;
+      gap: 0.6rem;
+    }
+    .ms-admin-website {
+      min-width: 0;
+      border: 1px solid #e8edf3;
+      border-radius: 14px;
+      background: #fff;
+      padding: 0.8rem 0.95rem 0.85rem;
+    }
+    .ms-admin-website-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ms-admin-website-head strong {
+      font-size: 1rem;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+    .ms-admin-website-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 0.55rem 1.35rem;
+      margin: 0.7rem 0 0;
+    }
+    .ms-admin-website-grid div {
+      min-width: 0;
+    }
+    .ms-admin-website-grid .is-wide {
+      flex: 1 0 100%;
+    }
+    .ms-admin-website-grid dt {
+      font-size: 0.68rem;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      line-height: 1.2;
+    }
+    .ms-admin-website-grid dd {
+      margin: 0.08rem 0 0;
+      font-size: 0.9rem;
+      line-height: 1.35;
+      white-space: nowrap;
+    }
+    .ms-admin-website-grid .is-wide dd {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    html[data-ms-mode="dark"] .ms-admin-chart,
+    html[data-ms-mode="dark"] .ms-admin-website {
+      background: #171e2e;
+      border-color: #243044;
+      color: #f8fafc;
+    }
+    html[data-ms-mode="dark"] .ms-admin-filter {
+      background-color: #171e2e;
+      border-color: #243044;
+      color: #f8fafc;
+    }
+    html[data-ms-mode="dark"] .ms-admin-bar i,
+    html[data-ms-mode="dark"] .ms-admin-status-track i {
+      background: #93c5fd;
+    }
+    html[data-ms-mode="dark"] .ms-admin-status-track {
+      background: #243044;
+    }
+    @media (max-width: 720px) {
+      .ms-admin-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .ms-admin-filter {
+        flex-basis: 100%;
+        width: 100%;
+      }
+      .ms-admin-bars {
+        height: 6.4rem;
+      }
+      .ms-admin-website-grid {
+        gap: 0.5rem 1rem;
+      }
+      .ms-admin-website-grid dd {
+        white-space: normal;
+      }
+      .ms-admin-status-row {
+        grid-template-columns: 6.2rem minmax(0, 1fr) 1.6rem;
+      }
+    }
+    @media (max-width: 1180px) {
+      .ms-admin-top {
+        grid-template-columns: 1fr;
+      }
+      .ms-admin-employee-head {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .ms-admin-employee-person {
+        grid-column: 1 / -1;
+      }
+    }
+    @media (max-width: 900px) {
+      body[data-page="admin-console"] #page-body {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-bottom: max(4.5rem, calc(3.5rem + env(safe-area-inset-bottom)));
+      }
+      .ms-admin-site {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+      .ms-admin-site > :first-child {
+        grid-column: 1 / -1;
+      }
+      .ms-admin-site > b {
+        justify-self: end;
+      }
+    }
+    @media (max-width: 640px) {
+      body[data-page="admin-console"] .ms-page-head {
+        align-items: center;
+      }
+      #admin-playtest-off,
+      #admin-audit-refresh,
+      body[data-page="admin-console"] .ms-clients-export-btn {
+        width: 100%;
+      }
+      .ms-admin-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .ms-admin-toolbar .ms-clients-search-field {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: none;
+        height: 2.75rem;
+        min-height: 2.75rem;
+        max-height: 2.75rem;
+      }
+      .ms-admin-employee-head {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 0.85rem 0.85rem;
+      }
+      .ms-admin-ring {
+        width: 6.25rem;
+        height: 6.25rem;
+      }
+      .ms-admin-ring span {
+        width: 5.05rem;
+        height: 5.05rem;
+        font-size: 1.15rem;
+      }
+      .ms-admin-playtest {
+        align-items: stretch;
+      }
+      .ms-admin-playtest .ms-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body data-page="admin-console">
+  <div id="shell"></div>
+  <div id="page-body" class="ms-clients-page">
+    <header class="ms-page-head">
+      <div class="ms-page-head-copy">
+        <h1>Admin Console</h1>
+        <p class="ms-muted">Owner view. Employee access, company totals, and creator payouts.</p>
+      </div>
+      <button type="button" class="ms-btn ms-btn-secondary" id="admin-playtest" aria-pressed="false">Playtest</button>
+    </header>
+    <div class="ms-admin-playtest" id="admin-playtest-banner" hidden>
+      <p>Playtest is on. These names, sales, and payouts are fake for this screen only. Nothing is saved.</p>
+      <button type="button" class="ms-btn ms-btn-secondary" id="admin-playtest-off">Turn off</button>
+    </div>
+    <div class="ms-admin-top">
+    <section class="ms-card ms-admin-code-card" aria-live="polite">
+      <h2>Employee ID</h2>
+      <div class="ms-admin-ring" id="admin-ring" style="--ms-admin-progress: 1">
+        <span><b class="ms-admin-seconds" id="admin-seconds">?</b></span>
+      </div>
+      <p class="ms-admin-code" id="admin-code" aria-label="Employee ID"></p>
+      <p class="ms-admin-status" id="admin-status">Copy this ID. It works once and expires in 6 hours if unused.</p>
+      <div class="ms-admin-actions">
+        <button type="button" class="ms-btn" id="admin-copy">Copy Employee ID</button>
+      </div>
+    </section>
+    <section class="ms-admin-overview" id="admin-overview" aria-label="Company totals">
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Employees</span><strong class="ms-payouts-stat-value" id="admin-stat-employees">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Websites</span><strong class="ms-payouts-stat-value" id="admin-stat-sites">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Live</span><strong class="ms-payouts-stat-value" id="admin-stat-live">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Sales</span><strong class="ms-payouts-stat-value" id="admin-stat-sales">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Moonrise share</span><strong class="ms-payouts-stat-value" id="admin-stat-platform">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Owed to employees</span><strong class="ms-payouts-stat-value" id="admin-stat-owed">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Close rate</span><strong class="ms-payouts-stat-value" id="admin-stat-close">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Average sale</span><strong class="ms-payouts-stat-value" id="admin-stat-average">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">In progress</span><strong class="ms-payouts-stat-value" id="admin-stat-pipeline">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">This month</span><strong class="ms-payouts-stat-value" id="admin-stat-month">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Hosting collected</span><strong class="ms-payouts-stat-value" id="admin-stat-hosting">?</strong></article>
+      <article class="ms-payouts-stat"><span class="ms-payouts-stat-label">Paying now</span><strong class="ms-payouts-stat-value" id="admin-stat-subscribers">?</strong></article>
+    </section>
+    </div>
+
+    <div class="ms-admin-tabs" role="tablist" aria-label="Admin sections">
+      <button type="button" class="ms-payouts-tab is-active" id="admin-tab-employees" data-admin-tab="employees" aria-selected="true">Employees</button>
+      <button type="button" class="ms-payouts-tab" id="admin-tab-websites" data-admin-tab="websites" aria-selected="false">Websites</button>
+      <button type="button" class="ms-payouts-tab" id="admin-tab-subscribers" data-admin-tab="subscribers" aria-selected="false">Subscribers</button>
+      <button type="button" class="ms-payouts-tab" id="admin-tab-payouts" data-admin-tab="payouts" aria-selected="false">Payouts</button>
+    </div>
+
+    <section id="admin-panel-employees" aria-label="Employee audit">
+      <p class="ms-admin-note">Sales are paid go-live checkouts. Their share is 90%. Open an employee to rename, freeze, or delete them. The owner account stays as it is.</p>
+      <div class="ms-admin-attention" id="admin-attention" hidden></div>
+      <div class="ms-admin-toolbar">
+        <div class="ms-clients-search-field">
+          <label class="ms-sr-only" for="admin-employee-search">Search employees</label>
+          <input type="search" id="admin-employee-search" class="ms-clients-search" placeholder="Search employee or website" autocomplete="off" spellcheck="false">
+        </div>
+        <button type="button" class="ms-btn ms-btn-secondary" id="admin-audit-refresh">Refresh</button>
+      </div>
+      <div class="ms-admin-employee-list" id="admin-employees"></div>
+      <div class="ms-clients-empty" id="admin-employees-empty" hidden>
+        <p class="ms-clients-empty-title">No employees yet</p>
+        <p class="ms-clients-empty-desc">Accounts created with an Employee ID show up here.</p>
+      </div>
+    </section>
+
+    <section id="admin-panel-websites" hidden aria-label="All websites">
+      <p class="ms-admin-note">Every website in Moonrise, who made it, when it was made, and whether the business paid to go live.</p>
+      <div class="ms-admin-charts" id="admin-charts"></div>
+      <div class="ms-admin-toolbar">
+        <div class="ms-clients-search-field">
+          <label class="ms-sr-only" for="admin-site-search">Search websites</label>
+          <input type="search" id="admin-site-search" class="ms-clients-search" placeholder="Search website, employee, or category" autocomplete="off" spellcheck="false">
+        </div>
+        <label class="ms-sr-only" for="admin-site-filter">Filter websites</label>
+        <select id="admin-site-filter" class="ms-admin-filter">
+          <option value="all">All websites</option>
+          <option value="paid">Paid</option>
+          <option value="unpaid">Not paid</option>
+          <option value="draft">Draft</option>
+          <option value="preview">Preview</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
+      <div class="ms-admin-website-list" id="admin-sites"></div>
+      <div class="ms-clients-empty" id="admin-sites-empty" hidden>
+        <p class="ms-clients-empty-title">No websites yet</p>
+        <p class="ms-clients-empty-desc">Sites employees create in the Builder show up here.</p>
+      </div>
+    </section>
+
+    <section id="admin-panel-subscribers" hidden aria-label="Hosting subscribers">
+      <p class="ms-admin-note">Business owners paying monthly hosting. Each renewal is kept as its own payment. The website purchase stays in Sales.</p>
+      <div class="ms-admin-charts" id="admin-subscriber-charts"></div>
+      <div class="ms-admin-toolbar">
+        <div class="ms-clients-search-field">
+          <label class="ms-sr-only" for="admin-subscriber-search">Search subscribers</label>
+          <input type="search" id="admin-subscriber-search" class="ms-clients-search" placeholder="Search owner, email, or business" autocomplete="off" spellcheck="false">
+        </div>
+        <label class="ms-sr-only" for="admin-subscriber-filter">Filter subscribers</label>
+        <select id="admin-subscriber-filter" class="ms-admin-filter">
+          <option value="all">All subscribers</option>
+          <option value="paying">Paying</option>
+          <option value="canceling">Cancels soon</option>
+          <option value="past_due">Past due</option>
+          <option value="canceled">Canceled</option>
+        </select>
+      </div>
+      <div class="ms-admin-website-list" id="admin-subscribers"></div>
+      <div class="ms-clients-empty" id="admin-subscribers-empty" hidden>
+        <p class="ms-clients-empty-title">No subscribers yet</p>
+        <p class="ms-clients-empty-desc">Business owners who pay hosting show up here.</p>
+      </div>
+    </section>
+
+    <section id="admin-panel-payouts" hidden aria-label="Creator payouts">
+      <section class="ms-payouts-summary" aria-label="Payout totals">
+        <article class="ms-payouts-stat">
+          <span class="ms-payouts-stat-label">Pending sales</span>
+          <strong class="ms-payouts-stat-value" id="ms-payouts-pending-count">0</strong>
+        </article>
+        <article class="ms-payouts-stat">
+          <span class="ms-payouts-stat-label">Total owed to creators</span>
+          <strong class="ms-payouts-stat-value" id="ms-payouts-pending-total">$0.00</strong>
+        </article>
+      </section>
+      <section class="ms-card ms-clients-card">
+        <header class="ms-clients-section-head">
+          <div class="ms-clients-section-copy">
+            <div class="ms-payouts-tabs" role="tablist" aria-label="Payout views">
+              <button type="button" class="ms-payouts-tab is-active" id="ms-payouts-tab-pending" data-payout-view="pending" aria-selected="true">Pending</button>
+              <button type="button" class="ms-payouts-tab" id="ms-payouts-tab-paid" data-payout-view="paid" aria-selected="false">Paid out</button>
+            </div>
+            <span class="ms-clients-count" id="ms-payouts-count" aria-live="polite"></span>
+          </div>
+          <div class="ms-clients-toolbar">
+            <button type="button" class="ms-btn ms-btn-secondary ms-clients-export-btn" id="ms-payouts-download-csv">Export CSV</button>
+          </div>
+        </header>
+        <div class="ms-clients-table-wrap ms-payouts-list-wrap">
+          <div class="ms-clients-table-toolbar">
+            <label class="ms-clients-search-label ms-sr-only" for="ms-payouts-search">Search payouts</label>
+            <div class="ms-clients-search-field">
+              <input type="search" id="ms-payouts-search" class="ms-clients-search" placeholder="Search business, creator, payout method..." autocomplete="off" spellcheck="false">
+              <button type="button" id="ms-payouts-search-clear" class="ms-clients-search-clear" hidden aria-label="Clear search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="ms-payouts-list" id="ms-payouts-body" role="list"></div>
+        </div>
+        <div class="ms-clients-empty" id="ms-payouts-empty" hidden>
+          <p class="ms-clients-empty-title">Nothing pending</p>
+          <p class="ms-clients-empty-desc">When a business pays to go live, the creator payout shows up here until you mark it paid.</p>
+        </div>
+        <div class="ms-clients-status" id="ms-payouts-status" hidden role="status"></div>
+      </section>
+    </section>
+  </div>
+
+  <div class="ms-payouts-modal" id="admin-employee-modal" hidden>
+    <div class="ms-payouts-modal-card" role="dialog" aria-modal="true" aria-labelledby="admin-employee-modal-title">
+      <header class="ms-payouts-modal-head">
+        <h2 id="admin-employee-modal-title">Employee</h2>
+        <p class="ms-payouts-modal-lead" id="admin-employee-modal-lead"></p>
+      </header>
+      <div id="admin-employee-rename-fields">
+        <label class="ms-field" for="admin-employee-name">
+          <span class="ms-payouts-modal-label">Name</span>
+          <input id="admin-employee-name" class="ms-input" type="text" maxlength="60" autocomplete="off">
+        </label>
+        <label class="ms-field" for="admin-employee-handle">
+          <span class="ms-payouts-modal-label">Username</span>
+          <input id="admin-employee-handle" class="ms-input" type="text" maxlength="24" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+      <footer class="ms-payouts-modal-actions">
+        <button type="button" class="ms-redirect-cancel" id="admin-employee-cancel">Cancel</button>
+        <button type="button" class="ms-btn" id="admin-employee-confirm">Save</button>
+      </footer>
+    </div>
+  </div>
+  <div class="ms-payouts-modal" id="ms-payouts-note-modal" hidden>
+    <div class="ms-payouts-modal-card" role="dialog" aria-modal="true" aria-labelledby="ms-payouts-note-title">
+      <header class="ms-payouts-modal-head">
+        <h2 id="ms-payouts-note-title">Mark payout as paid</h2>
+        <p class="ms-payouts-modal-lead" id="ms-payouts-note-lead">Confirm this creator payout. Add an optional note for your records.</p>
+      </header>
+      <div class="ms-payouts-modal-summary" id="ms-payouts-note-summary" aria-live="polite"></div>
+      <label class="ms-field ms-payouts-modal-field" for="ms-payouts-note-input">
+        <span class="ms-payouts-modal-label">Note <span class="ms-muted">(optional)</span></span>
+        <textarea id="ms-payouts-note-input" class="ms-textarea ms-payouts-modal-textarea" rows="3" maxlength="500" placeholder="Reference number, date sent, Cash App confirmation..."></textarea>
+      </label>
+      <footer class="ms-payouts-modal-actions">
+        <button type="button" class="ms-redirect-cancel" id="ms-payouts-note-cancel">Cancel</button>
+        <button type="button" class="ms-btn ms-payouts-modal-confirm" id="ms-payouts-note-confirm">Mark paid</button>
+      </footer>
+    </div>
+  </div>
+  <div class="ms-payouts-modal" id="ms-payouts-remove-modal" hidden>
+    <div class="ms-payouts-modal-card" role="dialog" aria-modal="true" aria-labelledby="ms-payouts-remove-title">
+      <header class="ms-payouts-modal-head">
+        <h2 id="ms-payouts-remove-title">Remove this payout?</h2>
+        <p class="ms-payouts-modal-lead">It leaves the pending queue and will not come back. Use this for mistakes or test sales. The business payment stays as it is.</p>
+      </header>
+      <div class="ms-payouts-modal-summary" id="ms-payouts-remove-summary" aria-live="polite"></div>
+      <footer class="ms-payouts-modal-actions">
+        <button type="button" class="ms-redirect-cancel" id="ms-payouts-remove-cancel">Cancel</button>
+        <button type="button" class="ms-btn ms-btn-danger ms-payouts-modal-confirm" id="ms-payouts-remove-confirm">Remove</button>
+      </footer>
+    </div>
+  </div>
+  <script defer src="js/config.js?v=20261107-accent-btn"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+  <script defer src="js/site-branding.js"></script>
+  <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
+  <script defer src="js/auth.js?v=20261107-accent-btn"></script>
+  <script defer src="js/app.js?v=20261107-accent-btn"></script>
+  
+  <script defer src="js/segment-switch.js?v=20261002-admin-toggle"></script>
+  <script defer src="js/ui-motion.js?v=20261107-accent-btn"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer src="js/income.js?v=20260718-income"></script>
+  <script defer src="js/payout-profile.js"></script>
+  <script defer src="js/admin-console.js?v=20261003-code"></script>
+  <script defer src="js/pending-payouts.js?v=20261002-playtest"></script>
+  <script defer src="js/admin-audit.js?v=20261003-avatar"></script>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#ffffff;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
+html[data-ms-mode=dark] #ms-boot{background:#111111;color:#f5f5f5}
+html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
+#ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .2s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
+  try{window.scrollTo(0,0)}catch(e){}
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","progressbar");
+  boot.setAttribute("aria-label","Loading");
+  boot.setAttribute("aria-valuemin","0");
+  boot.setAttribute("aria-valuemax","100");
+  boot.setAttribute("aria-valuenow","0");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  var bar=boot.querySelector(".ms-boot-bar span");
+  var progress=0;
+  var appReady=false;
+  var assetsReady=false;
+  var ready=false;
+  var done=false;
+  var started=performance.now();
+  var readyAt=0;
+  var minMs=180;
+  var maxMs=2500;
+  var failMs=5000;
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+
+  function gating(){
+    return document.documentElement.classList.contains("ms-auth-gating");
+  }
+
+  function studioPending(){
+    return !!window.__msStudioBoot && !(document.body && document.body.dataset.msShellPainted==="1");
+  }
+
+  function forceReveal(){
+    document.documentElement.classList.remove("ms-boot");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msStudioBoot=0;
+    window.__msBootReleased=1;
+    var el=document.getElementById("ms-boot");
+    if(el)el.remove();
+  }
+
+  function failTo404(){
+    if(window.__msAuthRedirecting)return;
+    window.__msAuthRedirecting=true;
+    forceReveal();
+    location.replace("404.html");
+  }
+
+  function setProgress(p){
+    progress=Math.max(0,Math.min(100,p));
+    if(bar) bar.style.transform="scaleX("+(progress/100).toFixed(4)+")";
+    boot.setAttribute("aria-valuenow",String(Math.round(progress)));
+    boot.setAttribute("aria-label","Loading "+Math.round(progress)+"%");
+  }
+
+  function finish(){
+    if(done)return true;
+    // Keep the moonrise bar up until the studio shell paints.
+    if(gating() || studioPending()){
+      setProgress(Math.max(progress, 92));
+      return false;
+    }
+    done=true;
+    window.__msBootReleased=1;
+    setProgress(100);
+    var hide=function(){
+      document.documentElement.classList.remove("ms-boot");
+      document.documentElement.classList.remove("ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    if(reduce){
+      hide();
+      return true;
+    }
+    boot.classList.add("is-leaving");
+    setTimeout(hide, 220);
+    return true;
+  }
+
+  function markReady(){
+    if(ready||done)return;
+    if(!(appReady&&assetsReady))return;
+    ready=true;
+    readyAt=performance.now();
+  }
+
+  function tick(now){
+    if(done)return;
+    var elapsed=now-started;
+    // Absolute escape: never sit on a blank/hold screen past failMs.
+    if(elapsed>=failMs && (gating() || studioPending() || document.getElementById("ms-boot"))){
+      failTo404();
+      return;
+    }
+    if(ready){
+      if(reduce){
+        setProgress(100);
+        if(finish()) return;
+      }else{
+        var sinceReady=Math.max(0,now-readyAt);
+        var minLeft=Math.max(0,minMs-elapsed);
+        var fillMs=Math.max(100,minLeft);
+        var t=Math.min(1,sinceReady/fillMs);
+        var eased=1-Math.pow(1-t,3);
+        var from=Math.max(progress, 82);
+        setProgress(from+((100-from)*eased));
+        if(t>=1 && progress>=99.4){
+          setProgress(100);
+          if(finish()) return;
+        }
+      }
+    }else{
+      var tWait=Math.min(1,elapsed/1200);
+      var target=84*(1-Math.pow(1-tWait,2.4));
+      setProgress(progress+(target-progress)*0.18);
+      if(elapsed>=maxMs){
+        if(gating() || studioPending()){
+          setProgress(Math.max(progress, 92));
+        }else{
+          appReady=true;
+          assetsReady=true;
+          markReady();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  window.__msReleaseBoot=function(){
+    appReady=true;
+    assetsReady=true;
+    markReady();
+    if(ready && !done && !gating() && !studioPending()) finish();
+  };
+
+  function markAssets(){
+    assetsReady=true;
+    markReady();
+  }
+
+  function releasePublicApp(){
+    if(gating() || window.__msStudioBoot) return;
+    appReady=true;
+    markReady();
+  }
+
+  function onDomReady(){
+    markAssets();
+    releasePublicApp();
+  }
+
+  if(document.readyState==="interactive"||document.readyState==="complete") onDomReady();
+  else document.addEventListener("DOMContentLoaded", onDomReady, { once:true });
+  setTimeout(markAssets, maxMs);
+  setTimeout(function(){
+    if(done) return;
+    if(gating() || studioPending()) return;
+    if(window.__msReleaseBoot) window.__msReleaseBoot();
+  }, maxMs);
+  // Wall-clock backup if rAF is throttled/frozen.
+  setTimeout(function(){
+    if(done || window.__msAuthRedirecting) return;
+    if(gating() || studioPending() || document.getElementById("ms-boot")) failTo404();
+  }, failMs + 250);
+})();
+</script>
+  <script>
+    (function () {
+      var BUILD = "20261106-mono";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <script src="js/auth-gate-head.js?v=20261107-soft-radius"></script>
+  <title>Creator Guide - Moonrise Studio</title>
+  <meta name="description" content="Complete Moonrise creator guide: Business Finder, Builder, publishing, watermark checkout, payouts, MVP+, contact forms, domains, and getting paid.">
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
+<link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+</head>
+<body data-page="guide">
+  <div id="shell"></div>
+  <div id="page-body" class="ms-content-page ms-help-guide-page">
+    <header class="ms-page-head">
+      <div class="ms-page-head-copy">
+        <h1>Creator Guide</h1>
+        <p class="lead">
+          Everything you need to build websites for local businesses on Moonrise, publish a live preview, and get paid
+          when the owner unlocks the site. This guide is detailed on purpose - read it once, then keep it as your
+          reference while you work.
+        </p>
+      </div>
+    </header>
+
+    <nav class="ms-help-toc" aria-label="On this page">
+      <a href="#what">What Moonrise is</a>
+      <a href="#who">Who this is for</a>
+      <a href="#rules">Golden rules</a>
+      <a href="#loop">Creator loop</a>
+      <a href="#payments">How you get paid</a>
+      <a href="#finder">Business Finder</a>
+      <a href="#builder">Builder &amp; Editor</a>
+      <a href="#price">Website Price</a>
+      <a href="#widgets">Contact form &amp; domain</a>
+      <a href="#publish">Publish &amp; watermark</a>
+      <a href="#clients">Clients &amp; go-live</a>
+      <a href="#payouts">Payouts</a>
+      <a href="#donate">Donate &amp; MVP+</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#account">Account &amp; security</a>
+      <a href="#community">Course &amp; community</a>
+      <a href="#tips">Tips &amp; troubleshooting</a>
+      <a href="#legal">Policies</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="ms-help-guide">
+      <section class="ms-card ms-settings-card" id="what">
+        <h2 class="ms-settings-card-title">What Moonrise is</h2>
+        <p class="ms-settings-hint">
+          Moonrise Studio is an AI-powered platform that helps creators build professional websites for local businesses
+          and earn when those businesses go live. You find a business that needs a site, generate a polished preview,
+          customize it, publish it with a Moonrise watermark, and share the live link. The business owner pays on the
+          watermark checkout. When they pay, the watermark is removed automatically and you earn your creator share.
+        </p>
+        <ul class="ms-help-list">
+          <li><strong>Free to build</strong> - create, preview, redesign, and publish watermarked sites without charging the owner up front.</li>
+          <li><strong>They pay on the watermark</strong> - the live site stays watermarked until the owner completes Moonrise checkout.</li>
+          <li><strong>You never charge them for go-live</strong> - no cash, Venmo, invoices, or off-platform payment for the same unlock.</li>
+          <li><strong>You keep 90%</strong> - Moonrise keeps 10% of each go-live payment to run checkout, hosting, and the platform (before processor fees and adjustments).</li>
+          <li><strong>Paid clients appear under</strong> <a href="clients.html">My Clients</a>; income tracks on the <a href="dashboard.html">Dashboard</a>.</li>
+        </ul>
+        <p class="ms-settings-hint">
+          Moonrise is a software tool. You still own your sales conversations, how you present the preview, and any
+          extra services you offer beyond go-live unlock. The platform handles hosting the preview, watermark checkout,
+          and splitting the go-live payment.
+        </p>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="who">
+        <h2 class="ms-settings-card-title">Who this is for</h2>
+        <ul class="ms-help-list">
+          <li><strong>Creators / sellers</strong> - people who find local businesses, build sites in Moonrise, and earn when owners unlock.</li>
+          <li><strong>Business owners</strong> - people who receive a live preview link and can pay on the watermark to go live. They usually do not need a creator account to pay.</li>
+          <li><strong>New users</strong> - if you are just starting, follow the creator loop below in order. You do not need to be a developer.</li>
+        </ul>
+        <p class="ms-settings-hint">
+          Typical customers for creators include plumbers, salons, restaurants, cleaners, contractors, clinics, and other
+          local service businesses that are hard to find online or have no modern website.
+        </p>
+      </section>
+
+      <section class="ms-card ms-settings-card ms-creator-policy-card" id="rules">
+        <h2 class="ms-settings-card-title">Golden rules (read before you sell)</h2>
+        <div class="ms-creator-policy-notice">
+          <p><strong>1. Creators do not charge business owners for go-live.</strong> Build, publish, and share the live site link. The owner pays only through the Moonrise watermark on the deployed website.</p>
+          <p><strong>2. Set Website Price before you publish.</strong> That is what the owner sees at checkout. You keep 90%; Moonrise keeps 10% of that go-live amount (subject to processor fees and Terms).</p>
+          <p><strong>3. Do not remove or hide the watermark</strong> before the owner pays. Do not tell them to pay you instead of Moonrise checkout.</p>
+          <p><strong>4. Contact form and custom domain are optional.</strong> They stay off until you turn them on and save. They are not required to publish.</p>
+          <p>Breaking the payment rules can lead to permanent ban, withheld payouts, site removal, and other consequences described in the <a href="legal.html#terms">Terms of Service</a>.</p>
+        </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="loop">
+        <h2 class="ms-settings-card-title">Your creator loop</h2>
+        <p class="ms-settings-hint">Most successful creators repeat this same loop every day.</p>
+        <ol class="ms-help-steps">
+          <li>
+            <strong>Find</strong>
+            <span>Open <a href="leads.html">Business Finder</a> and search by city and category, or paste a Google Maps link in <a href="builder.html">Builder</a>. Pick businesses that look active and under-served online.</span>
+          </li>
+          <li>
+            <strong>Generate</strong>
+            <span>Use slide-to-generate in Finder, or fill business details in Builder and generate. Watch progress until the preview appears. Generation is free for creators.</span>
+          </li>
+          <li>
+            <strong>Polish</strong>
+            <span>Open the project in Editor. Fix names, phone, hours, services, and photos if needed. Preview desktop and mobile. Optionally enable contact form or custom domain (manual toggles).</span>
+          </li>
+          <li>
+            <strong>Price</strong>
+            <span>Set Website Price to what the owner will pay at watermark checkout. Be clear and fair - this is the unlock price, not a fee you collect yourself.</span>
+          </li>
+          <li>
+            <strong>Publish &amp; share</strong>
+            <span>Publish the watermarked live site. Send the link to the owner (text, call follow-up, or in-person). Explain that paying on the site removes the watermark and keeps the site live.</span>
+          </li>
+          <li>
+            <strong>Get paid</strong>
+            <span>When they pay through the watermark, Moonrise removes the watermark and credits your 90% share. Track it on the Dashboard and keep payout details current in Settings.</span>
+          </li>
+        </ol>
+      </section>
+
+      <section class="ms-card ms-settings-card ms-creator-policy-card" id="payments">
+        <h2 class="ms-settings-card-title">How you get paid (important)</h2>
+        <div class="ms-creator-policy-notice">
+          <p><strong>Creators do not charge business owners.</strong> Your job is to build, publish, and share the live site link. The owner pays only through the Moonrise watermark on the deployed website - that is the sole checkout for going live.</p>
+          <p>When they pay, the watermark is removed automatically, the site stays live, and you receive <strong>90%</strong> of the go-live sale (Moonrise keeps <strong>10%</strong>). Set the unlock price in the editor before you publish.</p>
+          <p>Charging the owner directly - or asking them to pay outside the watermark - violates Moonrise Terms and may result in <strong>permanent ban, withheld payouts, site removal, and other severe consequences</strong>. See <a href="legal.html#terms">Terms of Service</a>.</p>
+        </div>
+        <ul class="ms-help-list">
+          <li>Checkout is powered by Stripe on the live watermark page.</li>
+          <li>Owners do not need a Moonrise creator account to pay.</li>
+          <li>Go-live checkout may also describe hosting or recurring charges - show those details to the owner if they ask.</li>
+          <li>Optional creator purchases (MVP+, Store, donations) are separate from the owner&rsquo;s unlock payment.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="finder">
+        <h2 class="ms-settings-card-title">Business Finder</h2>
+        <p class="ms-settings-hint">
+          Finder is your lead engine. Search by place and category, review ratings and contact details, organize statuses,
+          then send strong businesses into Builder.
+        </p>
+        <ul class="ms-help-list">
+          <li>Search local businesses and review ratings, categories, addresses, and phone numbers when available.</li>
+          <li><strong>Slide to generate</strong> opens Builder and starts a site for that lead using their facts. Keep the slide held until it completes - do not refresh mid-drag.</li>
+          <li>While a site is generating, the Builder item in the sidebar can show that a job is running.</li>
+          <li>Use lead statuses (pending, complete, and similar) to keep your pipeline organized.</li>
+          <li>Lead data can come from public or third-party sources. Always verify phone and business name before you publish or call.</li>
+        </ul>
+        <div class="ms-settings-actions">
+          <a class="ms-btn" href="leads.html">Open Business Finder</a>
+        </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="builder">
+        <h2 class="ms-settings-card-title">Builder &amp; Editor</h2>
+        <p class="ms-settings-hint">
+          Builder is where sites are started. Editor is where you refine, price, publish, and manage optional features.
+          You can start from Finder, a Maps URL, manual business details, or an uploaded / GitHub site where available.
+        </p>
+        <ul class="ms-help-list">
+          <li><strong>Generate</strong> builds a full site from business details and Website Presets. Wait for the progress UI until the preview appears.</li>
+          <li><strong>Edit modes</strong> - switch Preview / Edit / Code (Code may require MVP+ or a paid plan). On mobile, the mode switch sits beside Back.</li>
+          <li><strong>Edit with prompts or fields</strong> - adjust copy and business fields, then regenerate sections as needed.</li>
+          <li><strong>Redesign</strong> creates a fresh visual direction on an existing project. Generation and redesign are free for creators.</li>
+          <li><strong>Device previews</strong> - check desktop, tablet, and phone before you share with an owner.</li>
+          <li><strong>View code / Download HTML</strong> require MVP+ (Donate) or an active Starter, Pro, or Business plan where offered.</li>
+          <li><strong>Watermark widget</strong> - unpaid live sites show the Moonrise watermark until the owner pays.</li>
+        </ul>
+        <div class="ms-settings-actions">
+          <a class="ms-btn" href="builder.html">Open Builder</a>
+          <a class="ms-btn ms-btn-secondary" href="projects.html">My Projects</a>
+        </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="price">
+        <h2 class="ms-settings-card-title">Website Price</h2>
+        <p class="ms-settings-hint">
+          Website Price is the amount the business owner pays at watermark checkout to unlock the site. It is not a fee
+          you collect personally.
+        </p>
+        <ul class="ms-help-list">
+          <li>Set the price in the editor before you publish so the owner sees the correct amount.</li>
+          <li>After payment, you keep 90% and Moonrise keeps 10% of that go-live amount (before processor fees and any adjustments under the Terms).</li>
+          <li>Choose a price that matches the value of the site and what similar local businesses will actually pay.</li>
+          <li>If you change the price after publishing, save and update/publish again so checkout stays accurate.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="widgets">
+        <h2 class="ms-settings-card-title">Site features &amp; custom domain</h2>
+        <p class="ms-settings-hint">
+          These features stay off until you turn them on. They do not auto-enable just because a site has a form section
+          or a domain name saved from earlier work.
+        </p>
+        <ul class="ms-help-list">
+          <li><strong>Contact form</strong> - enable the toggle, choose Auto (email notifications) or Custom (your own endpoint), enter details, then Save &amp; apply. Republish/update if the site is already live so delivery activates.</li>
+          <li><strong>Send test email</strong> - available after Auto mode is enabled and saved with a valid notification email.</li>
+          <li><strong>Booking, payments, quote, maps, reviews, social, messaging, ordering, and newsletter</strong> - if the site already has a phone, address, map, or a link to one of these services, that feature turns on with those details filled in. You can still change them. Turning a feature on or off saves it, and Save &amp; apply does the same. If the site is already live, that update publishes immediately.</li>
+          <li><strong>Payments</strong> on the website tells customers how they can pay the business. It does not replace Website Price checkout.</li>
+          <li><strong>Custom domain</strong> - enable the toggle, pick where the domain is managed (Squarespace, GoDaddy, Namecheap, Cloudflare, etc.), enter the hostname, save, then follow the DNS steps and Check status.</li>
+          <li>Publish the site first before connecting a domain. DNS changes can take a few minutes (sometimes longer) to verify.</li>
+          <li>Turning a feature off and saving disconnects delivery or domain connection according to the product flow.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="publish">
+        <h2 class="ms-settings-card-title">Publish &amp; watermark</h2>
+        <p class="ms-settings-hint">
+          Publishing deploys a live URL you can share. Until the owner pays, the site displays a Moonrise watermark with
+          checkout.
+        </p>
+        <ul class="ms-help-list">
+          <li>Use Publish / Update in the editor or site settings when you are ready to go live with the preview.</li>
+          <li>Share the live link, not only a local preview. Owners need the deployed URL to pay.</li>
+          <li>After successful payment, Moonrise removes the watermark and redeploys a clean site automatically.</li>
+          <li>You can unpublish from site settings if you need to take a preview down (subject to product rules and any paid hosting state).</li>
+          <li>Do not instruct owners to screenshot around the watermark or use developer tools to hide it - that violates Terms.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="clients">
+        <h2 class="ms-settings-card-title">Clients &amp; go-live</h2>
+        <p class="ms-settings-hint">
+          When an owner pays through the watermark, they become a paid client on Moonrise. Your Dashboard income and
+          My Clients list update from those successful checkouts.
+        </p>
+        <ul class="ms-help-list">
+          <li>Set Website Price, publish, and share the live site link.</li>
+          <li>Walk the owner through paying on the site if they are unsure - stay on the watermark checkout path.</li>
+          <li>After payment, the project appears under <a href="clients.html">My Clients</a> and counts toward Dashboard income.</li>
+          <li>Set an income goal on the <a href="dashboard.html">Dashboard</a> to track how you are pacing.</li>
+          <li>Extra custom work beyond go-live should be scoped clearly and must never replace watermark payment for the same unlock.</li>
+        </ul>
+        <div class="ms-settings-actions">
+          <a class="ms-btn ms-btn-secondary" href="dashboard.html">Dashboard</a>
+          <a class="ms-btn" href="clients.html">My Clients</a>
+        </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="payouts">
+        <h2 class="ms-settings-card-title">Payouts</h2>
+        <p class="ms-settings-hint">
+          Creators typically add a payment method during onboarding (a small temporary authorization may be used to
+          validate the method). Commission tracking lives on your Dashboard. Payout fulfillment may be processed
+          according to current platform practice (including manual payout outside the app where noted in product copy).
+        </p>
+        <ul class="ms-help-list">
+          <li>Keep payout details accurate in <a href="settings.html">Settings</a>.</li>
+          <li>Income on the Dashboard reflects your 90% creator share after Moonrise&rsquo;s 10% platform fee (before any processor or dispute adjustments).</li>
+          <li>Chargebacks, refunds, or Terms violations can delay or reverse amounts - see the Terms for details.</li>
+          <li>You are responsible for taxes on your earnings.</li>
+        </ul>
+        <div class="ms-settings-actions">
+          <a class="ms-btn" href="settings.html">Open Settings</a>
+          <a class="ms-btn ms-btn-secondary" href="admin-console.html#payouts">Pending payouts</a>
+        </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="donate">
+        <h2 class="ms-settings-card-title">Donate &amp; MVP+</h2>
+        <p class="ms-settings-hint">
+          <a href="https://trymoonrise.com" target="_blank" rel="noopener noreferrer">trymoonrise.com</a> is free for
+          creators to build and earn. Donations are optional and help keep generation free - and unlock MVP+ perks.
+        </p>
+        <ul class="ms-help-list">
+          <li><strong>Free platform</strong> - build sites, use Business Finder, and get paid when clients go live.</li>
+          <li><strong>MVP+ perks</strong> - View code and download HTML in Builder. One donation of any amount keeps MVP+ for life.</li>
+          <li><strong>How to donate</strong> - MVP+ from about <strong>$5/mo</strong>, or choose a one-time amount (amounts may appear on the leaderboard).</li>
+          <li>Open the <a href="donate.html">Donate</a> page for current options and the <a href="donate.html#store">Store</a>.</li>
+        </ul>
+        <div class="ms-settings-actions">
+          <a class="ms-btn" href="donate.html">Donate � unlock MVP+</a>
+        </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="dashboard">
+        <h2 class="ms-settings-card-title">Dashboard &amp; projects</h2>
+        <ul class="ms-help-list">
+          <li><a href="dashboard.html">Dashboard</a> - income, goals, and a snapshot of your creator activity.</li>
+          <li><a href="projects.html">Projects</a> - all sites you have generated or imported; open any project to keep editing.</li>
+          <li><a href="orders.html">Orders</a> - locate order-related information when you need it for a client payment.</li>
+          <li><a href="leaderboard.html">Leaderboard</a> - community standings where donations and activity may appear.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="account">
+        <h2 class="ms-settings-card-title">Account &amp; security</h2>
+        <ul class="ms-help-list">
+          <li>Update handle, display name, and photo in <a href="settings.html">Settings</a>.</li>
+          <li>Change password or passkey under Security where available.</li>
+          <li>Creator contact details you save may appear on watermarked sites so owners can reach you about edits.</li>
+          <li>Sign out from the arrow icon next to your name, or from Settings -> Session.</li>
+          <li>Use a unique password and keep your email inbox accessible for recovery and payment notices.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="community">
+        <h2 class="ms-settings-card-title">Course &amp; community</h2>
+        <ul class="ms-help-list">
+          <li>Watch the creator walkthrough on the <a href="course.html">Course</a> page.</li>
+          <li>Join Telegram and Discord from the Account section in the sidebar for updates and creator chat.</li>
+          <li>Browse the <a href="donate.html#store">Store</a> to purchase creator tools. The store is separate from donations and MVP+.</li>
+        </ul>
+        <div class="ms-settings-actions">
+          <a class="ms-btn" href="course.html">Open Course</a>
+        </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="tips">
+        <h2 class="ms-settings-card-title">Tips &amp; troubleshooting</h2>
+        <ul class="ms-help-list">
+          <li><strong>Generation stuck?</strong> Wait for the progress UI to finish. Avoid refreshing mid-job. If it fails, try again with clearer business details or a redesign.</li>
+          <li><strong>Slide-to-generate reset?</strong> Keep holding until the threshold completes; list refreshes are deferred while you slide.</li>
+          <li><strong>Owner cannot pay?</strong> Confirm they opened the live published URL (not a screenshot or local file) and that Website Price is set.</li>
+          <li><strong>Contact form not emailing?</strong> Confirm the toggle is on, Auto mode has a valid email, you clicked Save &amp; apply, and you updated the live site after saving.</li>
+          <li><strong>Domain still pending?</strong> Remove conflicting A/CNAME records at your DNS host, add the records Moonrise shows, wait a few minutes, then Check status.</li>
+          <li><strong>Code button locked?</strong> Unlock with MVP+ or an eligible plan - see Donate / Store.</li>
+          <li><strong>Mobile chrome cramped?</strong> Preview / Edit / Code stretch beside Back on phones; scroll the tools row if device icons overflow.</li>
+          <li><strong>Want UI pattern ideas?</strong> Browse the interactive <a href="designer-tips.html">Designer Tips</a> dictionary — loaders, buttons, forms, menus, and more.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="legal">
+        <h2 class="ms-settings-card-title">Policies</h2>
+        <p class="ms-settings-hint">
+          Using Moonrise means you agree to the platform rules. The Guide explains how the product works; the legal pages
+          control rights and obligations.
+        </p>
+        <ul class="ms-help-list">
+          <li><a href="legal.html#terms">Terms of Service</a> - payment rules, acceptable use, bans, liability limits.</li>
+          <li><a href="legal.html#privacy">Privacy Policy</a> - what we collect, how we use it, and your choices.</li>
+          <li><a href="help.html">Help / Contact</a> - reach the team for billing, access, or product issues.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="contact">
+        <h2 class="ms-settings-card-title">Contact</h2>
+        <p class="ms-settings-hint">
+          Stuck on billing, a failed generate, domain DNS, or account access? Reach Moonrise from Help - phone, email,
+          Discord, and more.
+        </p>
+        <ul class="ms-help-list">
+          <li>Email: <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a></li>
+          <li>Phone: <a href="tel:+14013000957">(401) 300-0957</a></li>
+        </ul>
+        <div class="ms-settings-actions">
+          <a class="ms-btn" href="help.html">Contact us</a>
+        </div>
+        <p class="ms-help-legal">
+          <a href="legal.html#privacy">Privacy</a>
+          <span aria-hidden="true">�</span>
+          <a href="legal.html#terms">Terms</a>
+          <span aria-hidden="true">�</span>
+          <a href="legal.html#refunds">Refunds</a>
+          <span aria-hidden="true">�</span>
+          <a href="report.html">Report</a>
+          <span aria-hidden="true">�</span>
+          <a href="settings.html">Settings</a>
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <script defer src="js/config.js?v=20261106-mono"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+  <script defer src="js/site-branding.js"></script>
+  <script defer src="js/supabase-client.js?v=20261106-mono"></script>
+  <script defer src="js/auth.js?v=20261106-mono"></script>
+  <script defer src="js/app.js?v=20261106-mono"></script>
+  
+  <script defer src="js/segment-switch.js"></script>
+  <script defer src="js/ui-motion.js?v=20261106-mono"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer src="js/income.js?v=20260718-income"></script>
+</body>
+</html>

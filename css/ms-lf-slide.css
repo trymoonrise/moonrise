@@ -1,0 +1,205 @@
+/* Slide-to-generate - thumb stays inside the track (CSS clamp + fixed size). */
+.ms-lf-slide {
+  --ms-lf-slide-x: 0px;
+  --ms-lf-slide-max: 0px;
+  --ms-lf-slide-thumb: 44px;
+  --ms-lf-slide-pad: 4px;
+  --ms-lf-slide-radius: 12px;
+  --ms-lf-slide-fill-ratio: 0;
+  --ms-lf-slide-fill: calc(var(--ms-lf-slide-pad) + var(--ms-lf-slide-thumb));
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ms-lf-slide-track {
+  position: relative !important;
+  display: block !important;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: calc(var(--ms-lf-slide-thumb) + var(--ms-lf-slide-pad) * 2);
+  height: calc(var(--ms-lf-slide-thumb) + var(--ms-lf-slide-pad) * 2);
+  padding: var(--ms-lf-slide-pad);
+  border-radius: var(--ms-lf-slide-radius) !important;
+  overflow: hidden !important;
+  cursor: grab;
+  touch-action: pan-y;
+  isolation: isolate;
+  -webkit-user-select: none;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+.ms-lf-slide.is-dragging .ms-lf-slide-track {
+  touch-action: none;
+}
+
+.ms-lf-slide-fill {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 100%;
+  max-width: 100%;
+  border-radius: var(--ms-lf-slide-radius) !important;
+  pointer-events: none;
+  opacity: 0;
+  transform: scaleX(var(--ms-lf-slide-fill-ratio, 0));
+  transform-origin: left center;
+  will-change: transform;
+  transition: opacity 0.16s ease;
+}
+
+.ms-lf-slide.is-dragging .ms-lf-slide-fill,
+.ms-lf-slide.is-completing .ms-lf-slide-fill,
+.ms-lf-slide.is-returning .ms-lf-slide-fill {
+  opacity: 1;
+}
+
+.ms-lf-slide.is-dragging .ms-lf-slide-fill {
+  transition: none;
+}
+
+.ms-lf-slide.is-returning .ms-lf-slide-fill,
+.ms-lf-slide.is-completing .ms-lf-slide-fill {
+  transition:
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.16s ease;
+}
+
+.ms-lf-slide-label {
+  position: absolute !important;
+  inset: 0 !important;
+  box-sizing: border-box;
+  padding-left: calc(var(--ms-lf-slide-pad) + var(--ms-lf-slide-thumb) + 0.65rem);
+  padding-right: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0.96;
+  transition: opacity 0.2s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ms-lf-slide.is-dragging .ms-lf-slide-label,
+.ms-lf-slide.is-completing .ms-lf-slide-label {
+  opacity: 0.45;
+}
+
+/*
+ * Thumb travel uses --ms-lf-slide-x (0 -> max) on the compositor.
+ * The track clips anything past the end.
+ */
+.ms-lf-slide-thumb {
+  position: absolute !important;
+  top: 50% !important;
+  left: var(--ms-lf-slide-pad) !important;
+  z-index: 2;
+  box-sizing: border-box !important;
+  width: var(--ms-lf-slide-thumb) !important;
+  height: var(--ms-lf-slide-thumb) !important;
+  min-width: var(--ms-lf-slide-thumb) !important;
+  max-width: var(--ms-lf-slide-thumb) !important;
+  min-height: var(--ms-lf-slide-thumb) !important;
+  max-height: var(--ms-lf-slide-thumb) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 10px !important;
+  display: grid !important;
+  place-items: center !important;
+  flex: none !important;
+  background: #fafafa;
+  color: #232427;
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  transform: translate3d(var(--ms-lf-slide-x, 0px), -50%, 0);
+  will-change: transform;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 4px 12px rgba(0, 0, 0, 0.16);
+  -webkit-tap-highlight-color: transparent;
+  backface-visibility: hidden;
+}
+
+.ms-lf-slide.is-dragging .ms-lf-slide-track,
+.ms-lf-slide.is-dragging .ms-lf-slide-thumb {
+  cursor: grabbing;
+}
+
+.ms-lf-slide.is-dragging .ms-lf-slide-thumb {
+  transition: none !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.ms-lf-slide.is-returning .ms-lf-slide-thumb,
+.ms-lf-slide.is-completing .ms-lf-slide-thumb {
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ms-lf-slide-thumb:hover,
+.ms-lf-slide-thumb:focus {
+  background: #fafafa;
+}
+
+.ms-lf-slide-thumb:focus-visible {
+  outline: 2px solid #232427;
+  outline-offset: 2px;
+}
+
+.ms-lf-slide-thumb .ms-lf-pro-ico,
+.ms-lf-slide-thumb svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+body.ms-lf-slide-dragging {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+body.ms-lf-slide-dragging .ms-lf-map-results,
+body.ms-lf-slide-dragging #lf-results,
+body.ms-lf-slide-dragging .ms-lf-map-card {
+  overflow: hidden !important;
+  touch-action: none !important;
+  overscroll-behavior: none;
+}
+
+.ms-lf-slide.is-disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.ms-lf-slide.is-done .ms-lf-slide-track {
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-lf-slide.is-returning .ms-lf-slide-thumb,
+  .ms-lf-slide.is-completing .ms-lf-slide-thumb,
+  .ms-lf-slide.is-returning .ms-lf-slide-fill,
+  .ms-lf-slide.is-completing .ms-lf-slide-fill {
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#ffffff;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
+html[data-ms-mode=dark] #ms-boot{background:#111111;color:#f5f5f5}
+html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
+#ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .2s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
+  try{window.scrollTo(0,0)}catch(e){}
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","progressbar");
+  boot.setAttribute("aria-label","Loading");
+  boot.setAttribute("aria-valuemin","0");
+  boot.setAttribute("aria-valuemax","100");
+  boot.setAttribute("aria-valuenow","0");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  var bar=boot.querySelector(".ms-boot-bar span");
+  var progress=0;
+  var appReady=false;
+  var assetsReady=false;
+  var ready=false;
+  var done=false;
+  var started=performance.now();
+  var readyAt=0;
+  var minMs=180;
+  var maxMs=2500;
+  var failMs=5000;
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+
+  function gating(){
+    return document.documentElement.classList.contains("ms-auth-gating");
+  }
+
+  function studioPending(){
+    return !!window.__msStudioBoot && !(document.body && document.body.dataset.msShellPainted==="1");
+  }
+
+  function forceReveal(){
+    document.documentElement.classList.remove("ms-boot");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msStudioBoot=0;
+    window.__msBootReleased=1;
+    var el=document.getElementById("ms-boot");
+    if(el)el.remove();
+  }
+
+  function failTo404(){
+    if(window.__msAuthRedirecting)return;
+    window.__msAuthRedirecting=true;
+    forceReveal();
+    location.replace("404.html");
+  }
+
+  function setProgress(p){
+    progress=Math.max(0,Math.min(100,p));
+    if(bar) bar.style.transform="scaleX("+(progress/100).toFixed(4)+")";
+    boot.setAttribute("aria-valuenow",String(Math.round(progress)));
+    boot.setAttribute("aria-label","Loading "+Math.round(progress)+"%");
+  }
+
+  function finish(){
+    if(done)return true;
+    // Keep the moonrise bar up until the studio shell paints.
+    if(gating() || studioPending()){
+      setProgress(Math.max(progress, 92));
+      return false;
+    }
+    done=true;
+    window.__msBootReleased=1;
+    setProgress(100);
+    var hide=function(){
+      document.documentElement.classList.remove("ms-boot");
+      document.documentElement.classList.remove("ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    if(reduce){
+      hide();
+      return true;
+    }
+    boot.classList.add("is-leaving");
+    setTimeout(hide, 220);
+    return true;
+  }
+
+  function markReady(){
+    if(ready||done)return;
+    if(!(appReady&&assetsReady))return;
+    ready=true;
+    readyAt=performance.now();
+  }
+
+  function tick(now){
+    if(done)return;
+    var elapsed=now-started;
+    // Absolute escape: never sit on a blank/hold screen past failMs.
+    if(elapsed>=failMs && (gating() || studioPending() || document.getElementById("ms-boot"))){
+      failTo404();
+      return;
+    }
+    if(ready){
+      if(reduce){
+        setProgress(100);
+        if(finish()) return;
+      }else{
+        var sinceReady=Math.max(0,now-readyAt);
+        var minLeft=Math.max(0,minMs-elapsed);
+        var fillMs=Math.max(100,minLeft);
+        var t=Math.min(1,sinceReady/fillMs);
+        var eased=1-Math.pow(1-t,3);
+        var from=Math.max(progress, 82);
+        setProgress(from+((100-from)*eased));
+        if(t>=1 && progress>=99.4){
+          setProgress(100);
+          if(finish()) return;
+        }
+      }
+    }else{
+      var tWait=Math.min(1,elapsed/1200);
+      var target=84*(1-Math.pow(1-tWait,2.4));
+      setProgress(progress+(target-progress)*0.18);
+      if(elapsed>=maxMs){
+        if(gating() || studioPending()){
+          setProgress(Math.max(progress, 92));
+        }else{
+          appReady=true;
+          assetsReady=true;
+          markReady();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  window.__msReleaseBoot=function(){
+    appReady=true;
+    assetsReady=true;
+    markReady();
+    if(ready && !done && !gating() && !studioPending()) finish();
+  };
+
+  function markAssets(){
+    assetsReady=true;
+    markReady();
+  }
+
+  function releasePublicApp(){
+    if(gating() || window.__msStudioBoot) return;
+    appReady=true;
+    markReady();
+  }
+
+  function onDomReady(){
+    markAssets();
+    releasePublicApp();
+  }
+
+  if(document.readyState==="interactive"||document.readyState==="complete") onDomReady();
+  else document.addEventListener("DOMContentLoaded", onDomReady, { once:true });
+  setTimeout(markAssets, maxMs);
+  setTimeout(function(){
+    if(done) return;
+    if(gating() || studioPending()) return;
+    if(window.__msReleaseBoot) window.__msReleaseBoot();
+  }, maxMs);
+  // Wall-clock backup if rAF is throttled/frozen.
+  setTimeout(function(){
+    if(done || window.__msAuthRedirecting) return;
+    if(gating() || studioPending() || document.getElementById("ms-boot")) failTo404();
+  }, failMs + 250);
+})();
+</script>
+  <script>
+    (function () {
+      var BUILD = "20261106-mono";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <script src="js/auth-gate-head.js?v=20261107-soft-radius"></script>
+  <title>Help - Moonrise Studio</title>
+  <meta name="description" content="Help for Moonrise Studio creators: accounts, websites, payouts, and how to reach support.">
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
+<link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+</head>
+<body data-page="help">
+  <div id="shell"></div>
+  <div id="page-body" class="ms-content-page">
+    <header class="ms-page-head ms-help-contact-head">
+      <div class="ms-page-head-copy">
+        <h1>Help</h1>
+        <p class="lead ms-muted">Save our contact card or reach out directly.</p>
+      </div>
+    </header>
+
+    <section class="ms-help-vcard" aria-label="Moonrise contact card">
+      <div class="ms-help-vcard-hero">
+        <div class="ms-help-vcard-top">
+          <span class="ms-help-vcard-brand">moonrise</span>
+          <button type="button" class="ms-help-vcard-share" id="help-share-contact" aria-label="Share contact" title="Share contact">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="ms-help-vcard-body">
+        <div class="ms-help-vcard-avatar">
+          <img src="assets/MoonriseLogo.png" alt="" width="88" height="88">
+        </div>
+
+        <div class="ms-help-vcard-identity">
+          <h2 class="ms-help-vcard-name">Moonrise</h2>
+          <p class="ms-help-vcard-role"><a href="https://trymoonrise.com" target="_blank" rel="noopener">trymoonrise.com</a></p>
+        </div>
+
+        <button type="button" class="ms-help-vcard-save" id="help-save-contact">Save Contact</button>
+
+        <ul class="ms-help-vcard-links">
+          <li>
+            <a class="ms-help-vcard-link" href="tel:+14013000957">
+              <span class="ms-help-vcard-icon ms-help-vcard-icon--phone" aria-hidden="true">
+                <img src="assets/iMessages.jpg" alt="" width="46" height="46" loading="lazy" decoding="async">
+              </span>
+              <span class="ms-help-vcard-link-text">
+                <strong>Number</strong>
+                <em>(401) 300-0957</em>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="ms-help-vcard-link" href="mailto:trymoonrise@gmail.com">
+              <span class="ms-help-vcard-icon ms-help-vcard-icon--email" aria-hidden="true">
+                <img src="assets/Gmail.jpg" alt="" width="46" height="46" loading="lazy" decoding="async">
+              </span>
+              <span class="ms-help-vcard-link-text">
+                <strong>Email</strong>
+                <em>trymoonrise@gmail.com</em>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="ms-help-vcard-link"
+              href="https://discord.gg/gdbA3gEVY"
+              data-external-redirect="true"
+              data-external-url="https://discord.gg/gdbA3gEVY"
+              data-external-label="Discord"
+            >
+              <span class="ms-help-vcard-icon ms-help-vcard-icon--discord" aria-hidden="true">
+                <img src="assets/Discord.jpg" alt="" width="46" height="46" loading="lazy" decoding="async">
+              </span>
+              <span class="ms-help-vcard-link-text">
+                <strong>Discord</strong>
+                <em>Join the community</em>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="ms-help-vcard-link"
+              href="https://www.instagram.com/trymoonrise/"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-external-redirect="true"
+              data-external-url="https://www.instagram.com/trymoonrise/"
+              data-external-label="Instagram"
+            >
+              <span class="ms-help-vcard-icon ms-help-vcard-icon--instagram" aria-hidden="true">
+                <img src="assets/Instagram.svg" alt="" width="46" height="46" loading="lazy" decoding="async">
+              </span>
+              <span class="ms-help-vcard-link-text">
+                <strong>Instagram</strong>
+                <em>@trymoonrise</em>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="ms-help-vcard-link"
+              href="https://cal.com/moonrise"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-external-redirect="true"
+              data-external-url="https://cal.com/moonrise"
+              data-external-label="Cal.com"
+            >
+              <span class="ms-help-vcard-icon ms-help-vcard-icon--cal" aria-hidden="true">
+                <img src="assets/Cal.png" alt="" width="46" height="46" loading="lazy" decoding="async">
+              </span>
+              <span class="ms-help-vcard-link-text">
+                <strong>Book a meeting</strong>
+                <em>cal.com/moonrise</em>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="ms-help-guide-section" aria-label="Creator guide">
+      <a class="ms-help-guide-card" href="guide.html">
+        <span class="ms-help-vcard-icon ms-help-vcard-icon--guide" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </span>
+        <span class="ms-help-vcard-link-text">
+          <strong>Creator guide</strong>
+          <em>How to find leads &amp; get paid</em>
+        </span>
+        <svg class="ms-help-guide-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+      </a>
+    </section>
+  </div>
+
+  <script defer src="js/config.js?v=20261106-mono"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+  <script defer src="js/site-branding.js"></script>
+  <script defer src="js/supabase-client.js?v=20261106-mono"></script>
+  <script defer src="js/auth.js?v=20261106-mono"></script>
+  <script defer src="js/app.js?v=20261106-mono"></script>
+  
+  <script defer src="js/segment-switch.js"></script>
+  <script defer src="js/ui-motion.js?v=20261106-mono"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer src="js/income.js?v=20260718-income"></script>
+  <script>
+    (async function () {
+      const saveBtn = document.getElementById("help-save-contact");
+      const shareBtn = document.getElementById("help-share-contact");
+
+      const CONTACT = {
+        name: "Moonrise",
+        org: "Moonrise Studio",
+        title: "trymoonrise.com",
+        phone: "+14013000957",
+        phoneDisplay: "(401) 300-0957",
+        email: "trymoonrise@gmail.com",
+        url: "https://trymoonrise.com",
+        instagram: "https://www.instagram.com/trymoonrise/",
+      };
+
+      function buildVCard() {
+        return [
+          "BEGIN:VCARD",
+          "VERSION:3.0",
+          "N:Moonrise;;;;",
+          "FN:" + CONTACT.name,
+          "ORG:" + CONTACT.org,
+          "TITLE:" + CONTACT.title,
+          "TEL;TYPE=CELL,VOICE:" + CONTACT.phone,
+          "EMAIL;TYPE=INTERNET:" + CONTACT.email,
+          "URL:" + CONTACT.url,
+          "URL;TYPE=Instagram:" + CONTACT.instagram,
+          "NOTE:trymoonrise.com ? Moonrise Studio",
+          "END:VCARD",
+        ].join("\r\n");
+      }
+
+      function downloadVCard() {
+        const blob = new Blob([buildVCard()], { type: "text/vcard;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Moonrise.vcf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        window.StudioToast?.success?.("Contact saved");
+      }
+
+      saveBtn?.addEventListener("click", downloadVCard);
+
+      shareBtn?.addEventListener("click", async () => {
+        const shareData = {
+          title: "Moonrise",
+          text: "Moonrise ? trymoonrise.com\n" + CONTACT.phoneDisplay + "\n" + CONTACT.email + "\n" + CONTACT.instagram,
+          url: location.href.split("#")[0],
+        };
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+            return;
+          }
+        } catch (e) {
+          if (e?.name === "AbortError") return;
+        }
+        try {
+          await navigator.clipboard.writeText(
+            shareData.title + "\n" + shareData.text + "\n" + shareData.url
+          );
+          window.StudioToast?.success?.("Contact copied");
+        } catch (_) {
+          downloadVCard();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#ffffff;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
+html[data-ms-mode=dark] #ms-boot{background:#111111;color:#f5f5f5}
+html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
+#ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .2s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
+  try{window.scrollTo(0,0)}catch(e){}
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","progressbar");
+  boot.setAttribute("aria-label","Loading");
+  boot.setAttribute("aria-valuemin","0");
+  boot.setAttribute("aria-valuemax","100");
+  boot.setAttribute("aria-valuenow","0");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  var bar=boot.querySelector(".ms-boot-bar span");
+  var progress=0;
+  var appReady=false;
+  var assetsReady=false;
+  var ready=false;
+  var done=false;
+  var started=performance.now();
+  var readyAt=0;
+  var minMs=180;
+  var maxMs=2500;
+  var failMs=5000;
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+
+  function gating(){
+    return document.documentElement.classList.contains("ms-auth-gating");
+  }
+
+  function studioPending(){
+    return !!window.__msStudioBoot && !(document.body && document.body.dataset.msShellPainted==="1");
+  }
+
+  function forceReveal(){
+    document.documentElement.classList.remove("ms-boot");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msStudioBoot=0;
+    window.__msBootReleased=1;
+    var el=document.getElementById("ms-boot");
+    if(el)el.remove();
+  }
+
+  function failTo404(){
+    if(window.__msAuthRedirecting)return;
+    window.__msAuthRedirecting=true;
+    forceReveal();
+    location.replace("404.html");
+  }
+
+  function setProgress(p){
+    progress=Math.max(0,Math.min(100,p));
+    if(bar) bar.style.transform="scaleX("+(progress/100).toFixed(4)+")";
+    boot.setAttribute("aria-valuenow",String(Math.round(progress)));
+    boot.setAttribute("aria-label","Loading "+Math.round(progress)+"%");
+  }
+
+  function finish(){
+    if(done)return true;
+    // Keep the moonrise bar up until the studio shell paints.
+    if(gating() || studioPending()){
+      setProgress(Math.max(progress, 92));
+      return false;
+    }
+    done=true;
+    window.__msBootReleased=1;
+    setProgress(100);
+    var hide=function(){
+      document.documentElement.classList.remove("ms-boot");
+      document.documentElement.classList.remove("ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    if(reduce){
+      hide();
+      return true;
+    }
+    boot.classList.add("is-leaving");
+    setTimeout(hide, 220);
+    return true;
+  }
+
+  function markReady(){
+    if(ready||done)return;
+    if(!(appReady&&assetsReady))return;
+    ready=true;
+    readyAt=performance.now();
+  }
+
+  function tick(now){
+    if(done)return;
+    var elapsed=now-started;
+    // Absolute escape: never sit on a blank/hold screen past failMs.
+    if(elapsed>=failMs && (gating() || studioPending() || document.getElementById("ms-boot"))){
+      failTo404();
+      return;
+    }
+    if(ready){
+      if(reduce){
+        setProgress(100);
+        if(finish()) return;
+      }else{
+        var sinceReady=Math.max(0,now-readyAt);
+        var minLeft=Math.max(0,minMs-elapsed);
+        var fillMs=Math.max(100,minLeft);
+        var t=Math.min(1,sinceReady/fillMs);
+        var eased=1-Math.pow(1-t,3);
+        var from=Math.max(progress, 82);
+        setProgress(from+((100-from)*eased));
+        if(t>=1 && progress>=99.4){
+          setProgress(100);
+          if(finish()) return;
+        }
+      }
+    }else{
+      var tWait=Math.min(1,elapsed/1200);
+      var target=84*(1-Math.pow(1-tWait,2.4));
+      setProgress(progress+(target-progress)*0.18);
+      if(elapsed>=maxMs){
+        if(gating() || studioPending()){
+          setProgress(Math.max(progress, 92));
+        }else{
+          appReady=true;
+          assetsReady=true;
+          markReady();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  window.__msReleaseBoot=function(){
+    appReady=true;
+    assetsReady=true;
+    markReady();
+    if(ready && !done && !gating() && !studioPending()) finish();
+  };
+
+  function markAssets(){
+    assetsReady=true;
+    markReady();
+  }
+
+  function releasePublicApp(){
+    if(gating() || window.__msStudioBoot) return;
+    appReady=true;
+    markReady();
+  }
+
+  function onDomReady(){
+    markAssets();
+    releasePublicApp();
+  }
+
+  if(document.readyState==="interactive"||document.readyState==="complete") onDomReady();
+  else document.addEventListener("DOMContentLoaded", onDomReady, { once:true });
+  setTimeout(markAssets, maxMs);
+  setTimeout(function(){
+    if(done) return;
+    if(gating() || studioPending()) return;
+    if(window.__msReleaseBoot) window.__msReleaseBoot();
+  }, maxMs);
+  // Wall-clock backup if rAF is throttled/frozen.
+  setTimeout(function(){
+    if(done || window.__msAuthRedirecting) return;
+    if(gating() || studioPending() || document.getElementById("ms-boot")) failTo404();
+  }, failMs + 250);
+})();
+</script>
+  <script>
+    (function () {
+      var BUILD = "20261107-accent-btn";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <script src="js/auth-gate-head.js?v=20261107-soft-radius"></script>
+  <title>Welcome - Moonrise Studio</title>
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+<style>
+    /* Prevent step stacking + keep first step visible before JS */
+    .ms-onboard-card { display: flex; flex-direction: column; min-height: min(34rem, calc(100dvh - 1.7rem)); }
+    .ms-onboard-main { flex: 1 1 auto; min-height: 18rem; position: relative; }
+    .ms-onboard-main .ms-onboard-panel { display: none; opacity: 1; }
+    .ms-onboard-main .ms-onboard-panel.is-active { display: flex; flex-direction: column; }
+    .ms-onboard-main .ms-onboard-panel[hidden] { display: none !important; }
+    /* Before JS: keep step 1 readable. Do not override animated steps (ms-panel-anim). */
+    .ms-onboard-main .ms-onboard-panel.is-active:not(.ms-panel-anim) .ms-onboard-panel-scroll > *,
+    .ms-onboard-main .ms-onboard-panel.is-active:not(.ms-panel-anim) > .ms-onboard-actions,
+    .ms-onboard-main .ms-onboard-panel.is-active:not(.ms-panel-anim) .ms-onboard-legal-links .ms-onboard-legal-card {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  </style>
+  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
+<link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+  <link rel="stylesheet" href="css/onboarding-premium.css?v=20261028-cream-full&_=20261006-plain">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+</head>
+<body data-page="onboarding" class="ms-onboard-page">
+  <div class="ms-onboard-bg" aria-hidden="true"></div>
+  <div class="ms-onboard">
+    <div class="ms-onboard-card">
+      <header class="ms-onboard-card-head">
+        <div class="ms-onboard-card-head-row">
+          <a class="ms-onboard-brand" href="index.html" aria-label="moonrise.">
+            <img src="assets/MoonriseLogo.png" alt="" width="28" height="28">
+            <span>moonrise.</span>
+          </a>
+          <div class="ms-onboard-card-head-actions">
+            <span class="ms-onboard-step-pill" id="onb-progress-label">1 of 7</span>
+          </div>
+        </div>
+        <p class="ms-onboard-step-name" id="onb-step-name">Welcome</p>
+        <div class="ms-onboard-progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1" id="onb-progress-bar">
+          <div class="ms-onboard-progress-fill" id="onb-progress-fill"></div>
+        </div>
+      </header>
+
+      <main class="ms-onboard-main" id="onb-main">
+        <!-- 1 Introduction -->
+        <section class="ms-onboard-panel is-active is-visible" data-onb-step="1">
+          <div class="ms-onboard-panel-scroll">
+            <header class="ms-onboard-panel-head">
+              <h1>Welcome</h1>
+            </header>
+            <p class="ms-onboard-lead">
+              You make a free website for a local business. They pay on that site if they want to keep it. You keep 90%.
+            </p>
+            <ol class="ms-onboard-preview">
+              <li><strong>Learn the steps</strong><span>How a sale works, from the first search to your payout.</span></li>
+              <li><strong>Agree to the rule</strong><span>Owners pay on Moonrise. You never charge them yourself.</span></li>
+              <li><strong>Set up payouts</strong><span>A card on file, where we send your money, and how clients reach you.</span></li>
+            </ol>
+          </div>
+          <footer class="ms-onboard-actions">
+            <button type="button" class="ms-btn ms-onboard-next" data-onb-next>Continue</button>
+          </footer>
+        </section>
+
+        <!-- 2 How it works -->
+        <section class="ms-onboard-panel ms-onboard-panel--path" data-onb-step="2" hidden>
+          <div class="ms-onboard-panel-scroll">
+            <header class="ms-onboard-panel-head">
+              <h1>How you get paid</h1>
+            </header>
+            <p class="ms-onboard-lead">Six steps. Nothing here is hidden.</p>
+            <ol class="ms-onboard-plain">
+              <li>
+                <span class="ms-onboard-plain-num">1</span>
+                <span><strong>Find a business</strong><span>Search for a local business that needs a website.</span></span>
+              </li>
+              <li>
+                <span class="ms-onboard-plain-num">2</span>
+                <span><strong>Build the site</strong><span>Swipe to generate it, then set the price the owner will pay.</span></span>
+              </li>
+              <li>
+                <span class="ms-onboard-plain-num">3</span>
+                <span><strong>Publish it</strong><span>The site goes live with a small watermark until they pay.</span></span>
+              </li>
+              <li>
+                <span class="ms-onboard-plain-num">4</span>
+                <span><strong>Send the link</strong><span>Share the live site. They pay only on Moonrise, never to you directly.</span></span>
+              </li>
+              <li>
+                <span class="ms-onboard-plain-num">5</span>
+                <span><strong>They pay</strong><span>They tap the watermark and pay once. The watermark comes off.</span></span>
+              </li>
+              <li>
+                <span class="ms-onboard-plain-num">6</span>
+                <span><strong>You get paid</strong><span>You keep 90%. Then find the next business.</span></span>
+              </li>
+            </ol>
+          </div>
+          <footer class="ms-onboard-actions">
+            <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
+            <button type="button" class="ms-btn ms-onboard-next" data-onb-next>Continue</button>
+          </footer>
+        </section>
+
+        <!-- 3 Policies -->
+        <section class="ms-onboard-panel" data-onb-step="3" hidden>
+          <div class="ms-onboard-panel-scroll">
+            <header class="ms-onboard-panel-head">
+              <h1>The one rule</h1>
+            </header>
+            <p class="ms-onboard-lead">Owners pay on their website. You do not collect the money yourself.</p>
+            <div class="ms-creator-policy-notice ms-onboard-policy" role="note">
+              <strong>Never charge a business owner directly.</strong>
+              <p>They pay through the watermark. After they pay, the watermark comes off and you receive 90%.</p>
+              <p>Cash, Venmo, PayPal, invoices, or any other off-site payment is not allowed. It can close your account and cancel payouts.</p>
+            </div>
+            <div class="ms-onboard-legal-links">
+              <a class="ms-onboard-legal-card" href="legal.html#privacy" target="_blank" rel="noopener">
+                <span class="ms-onboard-legal-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </span>
+                <span class="ms-onboard-legal-copy">
+                  <strong>Privacy Policy</strong>
+                </span>
+                <span class="ms-onboard-legal-arrow" aria-hidden="true">?</span>
+              </a>
+              <a class="ms-onboard-legal-card" href="legal.html#terms" target="_blank" rel="noopener">
+                <span class="ms-onboard-legal-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                </span>
+                <span class="ms-onboard-legal-copy">
+                  <strong>Terms of Service</strong>
+                </span>
+                <span class="ms-onboard-legal-arrow" aria-hidden="true">?</span>
+              </a>
+            </div>
+            <label class="ms-onboard-check">
+              <input type="checkbox" id="onb-legal-agree">
+              <span>I have read and agree to the Privacy Policy and Terms of Service.</span>
+            </label>
+          </div>
+          <footer class="ms-onboard-actions">
+            <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
+            <button type="button" class="ms-btn ms-onboard-next" data-onb-next>Continue</button>
+          </footer>
+        </section>
+
+        <!-- 4 Security card -->
+        <section class="ms-onboard-panel" data-onb-step="4" hidden>
+          <div class="ms-onboard-panel-scroll">
+            <header class="ms-onboard-panel-head ms-onboard-panel-head--stripe">
+              <h1>Card on file</h1>
+              <a
+                class="ms-onboard-stripe-partner"
+                id="onb-stripe-partner"
+                href="https://stripe.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="ms-onboard-stripe-partner-label">
+                  <span>Partnered with</span>
+                  <img src="assets/Stripe.png" alt="Stripe" width="56" height="24" loading="lazy" decoding="async">
+                </span>
+                <span class="ms-onboard-stripe-partner-busy" aria-hidden="true">
+                  <span class="ms-onboard-stripe-spinner"></span>
+                  <span>Verifying...</span>
+                </span>
+              </a>
+            </header>
+            <p class="ms-onboard-lead">Add a card so the account stays in good standing. Stripe checks it with a $1 charge, then refunds that $1 right away. You are not paying to join.</p>
+            <div class="ms-onboard-form-block">
+              <div class="ms-sec-card-panel" id="onb-security-card-panel">
+                <div id="onb-security-card-mount"></div>
+                <div class="ms-sec-card-verified-row" id="onb-security-card-verified-wrap" hidden>
+                  <span class="ms-sec-card-verified-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <div class="ms-sec-card-verified-copy">
+                    <span class="ms-sec-card-verified-kicker">Card on file</span>
+                    <span class="ms-sec-card-verified-text" id="onb-security-card-verified"></span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="ms-sec-card-retry ms-sec-card-retry--reload"
+                  id="onb-retry-card"
+                  hidden
+                  aria-label="Try again"
+                  title="Try again"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+                  <span>Try again</span>
+                </button>
+              </div>
+            </div>
+            <label class="ms-onboard-check">
+              <input type="checkbox" id="onb-card-agree">
+              <span>I authorize Moonrise to store this card and charge it for fraud, chargebacks, or violations of the Terms of Service.</span>
+            </label>
+          </div>
+          <footer class="ms-onboard-actions">
+            <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
+            <button type="button" class="ms-btn ms-onboard-next" data-onb-next id="onb-finish-setup" disabled>Continue</button>
+          </footer>
+        </section>
+
+        <!-- 5 Payout method -->
+        <section class="ms-onboard-panel" data-onb-step="5" hidden>
+          <div class="ms-onboard-panel-scroll">
+            <header class="ms-onboard-panel-head">
+              <h1>Where we pay you</h1>
+            </header>
+            <p class="ms-onboard-lead" id="onb-payout-lead">When an owner buys their site, we send your 90% here.</p>
+            <div class="ms-onboard-form-block" id="onb-payout-form">
+              <div class="ms-field">
+                <label class="ms-label" id="onb-payout-method-label">How you get paid</label>
+                <div class="ms-payout-picker" id="onb-payout-picker">
+                  <input type="hidden" id="onb-payout-method" value="">
+                  <button
+                    type="button"
+                    class="ms-payout-picker-trigger"
+                    id="onb-payout-picker-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="onb-payout-method-label"
+                  >
+                    <span class="ms-payout-picker-empty" id="onb-payout-picker-empty">Select a payout method</span>
+                    <span class="ms-payout-picker-selected" id="onb-payout-picker-selected" hidden>
+                      <img class="ms-payout-picker-logo" id="onb-payout-picker-logo" alt="" width="24" height="24">
+                      <span class="ms-payout-picker-name" id="onb-payout-picker-name"></span>
+                    </span>
+                    <svg class="ms-payout-picker-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="ms-payout-picker-menu" id="onb-payout-picker-menu" role="listbox" hidden></div>
+                </div>
+              </div>
+              <div class="ms-field is-locked" id="onb-payout-handle-field">
+                <label class="ms-label" for="onb-payout-handle" id="onb-payout-handle-label">Payout details</label>
+                <input class="ms-input" id="onb-payout-handle" type="text" autocomplete="off" placeholder="Select a payout method first" disabled>
+                <p class="ms-settings-hint ms-muted" id="onb-payout-handle-hint">Choose how you get paid above, then enter your details here.</p>
+              </div>
+            </div>
+            <div class="ms-onboard-payout-confirm" id="onb-payout-confirm" hidden>
+              <article class="ms-onboard-payout-preview">
+                <span class="ms-onboard-payout-preview-avatar" id="onb-payout-preview-avatar">
+                  <img id="onb-payout-preview-photo" alt="" hidden>
+                  <span id="onb-payout-preview-initial" hidden></span>
+                </span>
+                <span class="ms-onboard-payout-preview-copy">
+                  <strong id="onb-payout-preview-name"></strong>
+                  <span id="onb-payout-preview-meta"></span>
+                </span>
+              </article>
+              <p class="ms-onboard-payout-preview-note" id="onb-payout-preview-note" hidden></p>
+            </div>
+          </div>
+          <footer class="ms-onboard-actions">
+            <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
+            <button type="button" class="ms-btn ms-onboard-next" data-onb-next>Continue</button>
+          </footer>
+        </section>
+
+        <!-- 6 Contact information -->
+        <section class="ms-onboard-panel" data-onb-step="6" hidden>
+          <div class="ms-onboard-panel-scroll">
+            <header class="ms-onboard-panel-head">
+              <h1>How clients reach you</h1>
+            </header>
+            <p class="ms-onboard-lead">
+              Add an email and phone clients can use for small edits. A free virtual number is fine if you want to keep your personal number private.
+            </p>
+            <div class="ms-onboard-form-block">
+              <div class="ms-field">
+                <label class="ms-label" for="onb-contact-email">Email</label>
+                <input class="ms-input" id="onb-contact-email" type="email" required autocomplete="email" placeholder="you@studio.com">
+              </div>
+              <div class="ms-field">
+                <label class="ms-label" for="onb-phone">Phone number</label>
+                <div class="ms-phone" id="onb-phone-root">
+                  <div class="ms-phone-country" id="onb-phone-country">
+                    <button type="button" class="ms-phone-trigger" id="onb-phone-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Country code">
+                      <span class="ms-phone-flag" id="onb-phone-flag" aria-hidden="true">????</span>
+                      <span class="ms-phone-dial" id="onb-phone-dial">+1</span>
+                      <svg class="ms-phone-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="ms-phone-menu" id="onb-phone-menu" role="listbox" hidden></div>
+                  </div>
+                  <input class="ms-input ms-phone-input" id="onb-phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="(555) 000-0000" data-country="US">
+                </div>
+              </div>
+            </div>
+            <p class="ms-onboard-chip-label">Get a free virtual number</p>
+            <div class="ms-onboard-chips" role="list">
+              <a class="ms-onboard-chip" role="listitem" href="https://voice.google.com/" target="_blank" rel="noopener">Google Voice</a>
+              <a class="ms-onboard-chip" role="listitem" href="https://www.textnow.com/" target="_blank" rel="noopener">TextNow</a>
+              <a class="ms-onboard-chip" role="listitem" href="https://www.openphone.com/" target="_blank" rel="noopener">OpenPhone</a>
+            </div>
+          </div>
+          <footer class="ms-onboard-actions">
+            <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
+            <button type="button" class="ms-btn ms-onboard-next" data-onb-next>Continue</button>
+          </footer>
+        </section>
+
+        <!-- 7 Ready -->
+        <section class="ms-onboard-panel ms-onboard-panel--celebrate" data-onb-step="7" hidden>
+          <div class="ms-onboard-panel-scroll">
+            <header class="ms-onboard-panel-head ms-onboard-panel-head--celebrate">
+              <h1>You're ready</h1>
+              <div class="ms-onb-celebrate-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M8 12.5l2.5 2.5L16 9"/>
+                </svg>
+              </div>
+            </header>
+            <p class="ms-onboard-lead">
+              Next, find a local business and build their site. The short video shows the whole flow.
+            </p>
+            <div class="ms-course-video ms-onb-celebrate-video">
+              <iframe
+                src="https://www.youtube.com/embed/9XvXF1LrWgA?rel=0&modestbranding=1"
+                title="Moonrise Studio course video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+          <footer class="ms-onboard-actions ms-onboard-actions--stack">
+            <a class="ms-btn ms-onboard-next" id="onb-go-finder" href="leads.html">Find a business</a>
+            <a class="ms-btn ms-btn-secondary" id="onb-go-dash" href="dashboard.html">Go to dashboard</a>
+          </footer>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script defer src="js/config.js?v=20261107-accent-btn"></script>
+  <script defer src="js/site-branding.js"></script>
+  <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
+  <script defer src="js/auth.js?v=20261107-accent-btn"></script>
+  <script defer src="js/segment-switch.js"></script>
+  <script defer src="js/ui-motion.js?v=20261107-accent-btn"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer src="js/payout-profile.js?v=20260719-payout-other"></script>
+  <script defer src="js/security-card.js?v=20260720-precheck-card"></script>
+  <script defer src="js/onboarding.js?v=20261006-plain"></script>
+</body>
+</html>

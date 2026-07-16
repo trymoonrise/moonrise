@@ -1,0 +1,135 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(self), payment=(self), usb=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self' https://checkout.stripe.com; upgrade-insecure-requests; img-src 'self' data: blob: https:; media-src 'self' https: blob:; font-src 'self' data: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://js.stripe.com; connect-src 'self' https://trymoonrise.com https://www.trymoonrise.com https://*.supabase.co wss://*.supabase.co https://moonrise-studio.vercel.app https://*.vercel.app https://api.stripe.com https://api.openrouter.ai https://api.github.com https://*.basemaps.cartocdn.com https://basemaps.cartocdn.com https://api.bigdatacloud.net https://tiles.openfreemap.org https://nominatim.openstreetmap.org https://overpass-api.de https://overpass.kumi.systems; worker-src 'self' blob: https://cdn.jsdelivr.net; frame-src 'self' blob: data: https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://*.vercel.app https://www.youtube.com https://www.youtube-nocookie.com; child-src 'self' blob: data: https://www.youtube.com https://www.youtube-nocookie.com;"
+        }
+      ]
+    },
+    {
+      "source": "/assets/last-commit.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/(.*\\.html)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/(css|js|assets|watermark|manifest\\.json|robots\\.txt|sitemap\\.xml|llms\\.txt)/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*\\.(?:css|js|png|jpg|jpeg|webp|gif|svg|ico|woff2))",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ],
+  "redirects": [
+    { "source": "/apply", "destination": "/login.html", "permanent": true },
+    { "source": "/apply.html", "destination": "/login.html", "permanent": true },
+    { "source": "/store", "destination": "/donate.html", "permanent": true },
+    { "source": "/store.html", "destination": "/donate.html", "permanent": true },
+    { "source": "/pending-payouts", "destination": "/admin-console.html", "permanent": true },
+    { "source": "/pending-payouts.html", "destination": "/admin-console.html", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/doc/:path*", "destination": "/assets/:path*" },
+    { "source": "/fonts/:path*", "destination": "/assets/fonts/:path*" },
+    { "source": "/hats/:path*", "destination": "/assets/hats/:path*" },
+    { "source": "/health", "destination": "/api" },
+    { "source": "/studio-last-commit", "destination": "/api" },
+    { "source": "/generate", "destination": "/api" },
+    { "source": "/generate/status", "destination": "/api" },
+    { "source": "/edit", "destination": "/api" },
+    { "source": "/checkout", "destination": "/api" },
+    { "source": "/public-checkout", "destination": "/api" },
+    { "source": "/fulfill-go-live", "destination": "/api" },
+    { "source": "/public-hosting-portal", "destination": "/api" },
+    { "source": "/dev-unlock-go-live", "destination": "/api" },
+    { "source": "/public-creator-contact", "destination": "/api" },
+    { "source": "/public-orders", "destination": "/api" },
+    { "source": "/publish", "destination": "/api" },
+    { "source": "/unpublish", "destination": "/api" },
+    { "source": "/domain", "destination": "/api" },
+    { "source": "/resolve-maps", "destination": "/api" },
+    { "source": "/import-site", "destination": "/api" },
+    { "source": "/github/repos", "destination": "/api" },
+    { "source": "/github/site-folders", "destination": "/api" },
+    { "source": "/github/import-site", "destination": "/api" },
+    { "source": "/lead-finder", "destination": "/api" },
+    { "source": "/lead-finder/:path*", "destination": "/api" },
+    { "source": "/embed.js", "destination": "/api" },
+    { "source": "/contact-form.js", "destination": "/api" },
+    { "source": "/contact-submit", "destination": "/api" },
+    { "source": "/webhooks/stripe", "destination": "/api" },
+    { "source": "/donate/config", "destination": "/api" },
+    { "source": "/donate/leaderboard", "destination": "/api" },
+    { "source": "/donate-checkout", "destination": "/api" },
+    { "source": "/donate-fulfill", "destination": "/api" },
+    { "source": "/donate/billing-portal", "destination": "/api" },
+    { "source": "/credits/catalog", "destination": "/api" },
+    { "source": "/credits/balance", "destination": "/api" },
+    { "source": "/credits/plan-checkout", "destination": "/api" },
+    { "source": "/credits/topup-checkout", "destination": "/api" },
+    { "source": "/credits/claim-developer", "destination": "/api" },
+    { "source": "/credits/billing-portal", "destination": "/api" },
+    { "source": "/credits/fulfill-checkout", "destination": "/api" },
+    { "source": "/mvp-checkout", "destination": "/api" },
+    { "source": "/mvp-status", "destination": "/api" },
+    { "source": "/push/vapid-public-key", "destination": "/api" },
+    { "source": "/push/subscribe", "destination": "/api" },
+    { "source": "/push/unsubscribe", "destination": "/api" },
+    { "source": "/auth/status", "destination": "/api" },
+    { "source": "/auth/signin", "destination": "/api" },
+    { "source": "/auth/signup", "destination": "/api" },
+    { "source": "/auth/handoff", "destination": "/api" },
+    { "source": "/auth/pending", "destination": "/api" },
+    { "source": "/auth/forgot", "destination": "/api" },
+    { "source": "/auth/resend-confirm", "destination": "/api" },
+    { "source": "/auth/verify-password", "destination": "/api" },
+    { "source": "/auth/session", "destination": "/api" },
+    { "source": "/auth/signout", "destination": "/api" },
+    { "source": "/auth/delete-account", "destination": "/api" },
+    { "source": "/admin/employee-code", "destination": "/api" },
+    { "source": "/admin/employees/:path*", "destination": "/api" },
+    { "source": "/admin/site-checks", "destination": "/api" },
+    { "source": "/onboarding/payout-preview", "destination": "/api" },
+    { "source": "/security-card/:path*", "destination": "/api" }
+  ],
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 300,
+      "memory": 1024,
+      "includeFiles": "{worker,watermark,website-presets,presets}/**"
+    }
+  }
+}

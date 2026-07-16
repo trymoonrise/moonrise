@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#ffffff;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
+html[data-ms-mode=dark] #ms-boot{background:#111111;color:#f5f5f5}
+html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
+#ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .2s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
+</style>
+<script>
+(function(){
+  var tabHop=false;
+  try{tabHop=!!sessionStorage.getItem("ms_tab_switch")}catch(e){}
+  if(tabHop){
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msBootReleased=1;
+    window.__msTabHop=1;
+    return;
+  }
+  document.documentElement.classList.add("ms-boot");
+  try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
+  try{window.scrollTo(0,0)}catch(e){}
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","progressbar");
+  boot.setAttribute("aria-label","Loading");
+  boot.setAttribute("aria-valuemin","0");
+  boot.setAttribute("aria-valuemax","100");
+  boot.setAttribute("aria-valuenow","0");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  var bar=boot.querySelector(".ms-boot-bar span");
+  var progress=0;
+  var appReady=false;
+  var assetsReady=false;
+  var ready=false;
+  var done=false;
+  var started=performance.now();
+  var readyAt=0;
+  var minMs=0;
+  var maxMs=2500;
+  var failMs=5000;
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+
+  function gating(){
+    return document.documentElement.classList.contains("ms-auth-gating");
+  }
+
+  function studioPending(){
+    return !!window.__msStudioBoot && !(document.body && document.body.dataset.msShellPainted==="1");
+  }
+
+  function forceReveal(){
+    document.documentElement.classList.remove("ms-boot");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msStudioBoot=0;
+    window.__msBootReleased=1;
+    var el=document.getElementById("ms-boot");
+    if(el)el.remove();
+  }
+
+  function failTo404(){
+    if(window.__msAuthRedirecting)return;
+    window.__msAuthRedirecting=true;
+    forceReveal();
+    location.replace("404.html");
+  }
+
+  function setProgress(p){
+    progress=Math.max(0,Math.min(100,p));
+    if(bar) bar.style.transform="scaleX("+(progress/100).toFixed(4)+")";
+    boot.setAttribute("aria-valuenow",String(Math.round(progress)));
+    boot.setAttribute("aria-label","Loading "+Math.round(progress)+"%");
+  }
+
+  function finish(){
+    if(done)return true;
+    // Keep the moonrise bar up until the studio shell paints.
+    if(gating() || studioPending()){
+      setProgress(Math.max(progress, 92));
+      return false;
+    }
+    done=true;
+    window.__msBootReleased=1;
+    setProgress(100);
+    var hide=function(){
+      document.documentElement.classList.remove("ms-boot");
+      document.documentElement.classList.remove("ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    if(reduce){
+      hide();
+      return true;
+    }
+    boot.classList.add("is-leaving");
+    setTimeout(hide, 220);
+    return true;
+  }
+
+  function markReady(){
+    if(ready||done)return;
+    if(!(appReady&&assetsReady))return;
+    ready=true;
+    readyAt=performance.now();
+  }
+
+  function tick(now){
+    if(done)return;
+    var elapsed=now-started;
+    // Absolute escape: never sit on a blank/hold screen past failMs.
+    if(elapsed>=failMs && (gating() || studioPending() || document.getElementById("ms-boot"))){
+      failTo404();
+      return;
+    }
+    if(ready){
+      if(reduce){
+        setProgress(100);
+        if(finish()) return;
+      }else{
+        var sinceReady=Math.max(0,now-readyAt);
+        var minLeft=Math.max(0,minMs-elapsed);
+        var fillMs=Math.max(100,minLeft);
+        var t=Math.min(1,sinceReady/fillMs);
+        var eased=1-Math.pow(1-t,3);
+        var from=Math.max(progress, 82);
+        setProgress(from+((100-from)*eased));
+        if(t>=1 && progress>=99.4){
+          setProgress(100);
+          if(finish()) return;
+        }
+      }
+    }else{
+      var tWait=Math.min(1,elapsed/1200);
+      var target=84*(1-Math.pow(1-tWait,2.4));
+      setProgress(progress+(target-progress)*0.18);
+      if(elapsed>=maxMs){
+        if(gating() || studioPending()){
+          setProgress(Math.max(progress, 92));
+        }else{
+          appReady=true;
+          assetsReady=true;
+          markReady();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  window.__msReleaseBoot=function(){
+    appReady=true;
+    assetsReady=true;
+    markReady();
+    if(ready && !done && !gating() && !studioPending()) finish();
+  };
+
+  function markAssets(){
+    assetsReady=true;
+    markReady();
+  }
+
+  function releasePublicApp(){
+    if(gating() || window.__msStudioBoot) return;
+    appReady=true;
+    markReady();
+  }
+
+  function onDomReady(){
+    markAssets();
+    releasePublicApp();
+  }
+
+  if(document.readyState==="interactive"||document.readyState==="complete") onDomReady();
+  else document.addEventListener("DOMContentLoaded", onDomReady, { once:true });
+  setTimeout(markAssets, maxMs);
+  setTimeout(function(){
+    if(done) return;
+    if(gating() || studioPending()) return;
+    if(window.__msReleaseBoot) window.__msReleaseBoot();
+  }, maxMs);
+  // Wall-clock backup if rAF is throttled/frozen.
+  setTimeout(function(){
+    if(done || window.__msAuthRedirecting) return;
+    if(gating() || studioPending() || document.getElementById("ms-boot")) failTo404();
+  }, failMs + 250);
+})();
+</script>
+  <script>
+    (function () {
+      var BUILD = "20261107-accent-btn";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <script src="js/auth-gate-head.js?v=20261107-compact-ui"></script>
+  <title>My Clients - Moonrise Studio</title>
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
+<link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-compact-ui6">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+</head>
+<body data-page="clients">
+  <div id="shell"></div>
+  <div id="page-body" class="ms-clients-page">
+    <header class="ms-page-head">
+      <div class="ms-page-head-copy">
+        <h1>My Clients</h1>
+      </div>
+    </header>
+
+    <section class="ms-card ms-clients-card" aria-label="Clients">
+      <header class="ms-clients-section-head">
+        <div class="ms-clients-section-copy">
+          <h2 id="ms-clients-section-title">Paid clients</h2>
+          <span class="ms-clients-count" id="ms-clients-count" aria-live="polite"></span>
+        </div>
+        <div class="ms-clients-toolbar">
+          <button type="button" class="ms-btn ms-clients-add-btn" id="ms-clients-add">Add client</button>
+          <button type="button" class="ms-btn ms-btn-secondary ms-clients-export-btn" id="ms-clients-download-csv">Export CSV</button>
+        </div>
+      </header>
+
+      <div class="ms-clients-table-wrap">
+        <div class="ms-clients-table-toolbar">
+          <label class="ms-clients-search-label ms-sr-only" for="ms-clients-search">Search clients</label>
+          <div class="ms-clients-search-field">
+            <input
+              type="search"
+              id="ms-clients-search"
+              class="ms-clients-search"
+              placeholder="Search by business, creator, or site�"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button
+              type="button"
+              id="ms-clients-search-clear"
+              class="ms-clients-search-clear"
+              hidden
+              aria-label="Clear search"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+        </div>
+        <table class="ms-clients-table is-skel-loading">
+          <thead>
+            <tr>
+              <th scope="col">Business</th>
+              <th scope="col" id="ms-clients-creator-col" hidden>Creator</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Live site</th>
+              <th scope="col">Paid</th>
+              <th scope="col">Date</th>
+              <th scope="col">Status</th>
+              <th scope="col"><span class="ms-sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="ms-clients-body"></tbody>
+        </table>
+        <div class="ms-skel-block" id="ms-clients-skel" aria-hidden="true">
+          <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:28px;height:28px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--md"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+          <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:28px;height:28px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--lg"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+          <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:28px;height:28px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--md"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+          <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:28px;height:28px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--lg"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+        </div>
+      </div>
+
+      <div class="ms-clients-empty" id="ms-clients-empty" hidden>
+        <p class="ms-clients-empty-title">No clients yet</p>
+        <p class="ms-clients-empty-desc">When a business pays to go live, they show up here. You keep 90% of each sale - @moonrise keeps 10%.</p>
+      </div>
+
+      <div class="ms-clients-status" id="ms-clients-status" hidden role="status"></div>
+    </section>
+  </div>
+
+  <dialog class="ms-clients-dialog" id="ms-clients-add-dialog" aria-labelledby="ms-clients-add-title">
+    <div class="ms-clients-dialog-panel">
+      <header class="ms-clients-dialog-head">
+        <h2 class="ms-clients-dialog-title" id="ms-clients-add-title">Add client</h2>
+        <p class="ms-clients-dialog-lead">Log a client manually for your records. Paid go-live sales still appear automatically.</p>
+      </header>
+      <form class="ms-clients-form" id="ms-clients-add-form">
+        <div class="ms-clients-form-body">
+          <div class="ms-clients-form-grid">
+            <label class="ms-clients-field ms-clients-field--wide">
+              <span class="ms-clients-field-label">Business name</span>
+              <input class="ms-clients-input" id="ms-clients-add-name" name="business_name" type="text" required maxlength="120" autocomplete="organization" placeholder="Business name" />
+            </label>
+            <label class="ms-clients-field">
+              <span class="ms-clients-field-label">Phone</span>
+              <input class="ms-clients-input" id="ms-clients-add-phone" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder="Optional" />
+            </label>
+            <label class="ms-clients-field">
+              <span class="ms-clients-field-label">Amount paid</span>
+              <input class="ms-clients-input" id="ms-clients-add-paid" name="paid" type="text" inputmode="decimal" maxlength="12" placeholder="$0" />
+            </label>
+            <label class="ms-clients-field ms-clients-field--wide">
+              <span class="ms-clients-field-label">Live site</span>
+              <input class="ms-clients-input" id="ms-clients-add-website" name="website" type="url" maxlength="240" placeholder="https://..." />
+            </label>
+            <label class="ms-clients-field ms-clients-field--wide">
+              <span class="ms-clients-field-label">Date</span>
+              <input class="ms-clients-input" id="ms-clients-add-date" name="paid_at" type="date" />
+            </label>
+          </div>
+          <p class="ms-clients-form-status" id="ms-clients-add-error" hidden role="alert"></p>
+        </div>
+        <div class="ms-clients-dialog-actions ms-clients-form-actions">
+          <button type="button" class="ms-clients-dialog-back" id="ms-clients-add-cancel">Cancel</button>
+          <button type="submit" class="ms-btn ms-clients-dialog-next" id="ms-clients-add-submit">Save client</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog class="ms-clients-dialog" id="ms-clients-remove-dialog" aria-labelledby="ms-clients-remove-title">
+    <div class="ms-clients-dialog-panel ms-clients-dialog-panel--compact">
+      <header class="ms-clients-dialog-head">
+        <h2 class="ms-clients-dialog-title" id="ms-clients-remove-title">Remove client?</h2>
+      </header>
+      <p class="ms-clients-dialog-warning" id="ms-clients-remove-message" aria-live="polite"></p>
+      <p class="ms-clients-dialog-error" id="ms-clients-remove-error" hidden role="alert"></p>
+      <div class="ms-clients-dialog-actions">
+        <button type="button" class="ms-clients-dialog-back" id="ms-clients-remove-cancel">Keep client</button>
+        <button type="button" class="ms-btn ms-btn-danger ms-clients-dialog-next" id="ms-clients-remove-submit">Remove</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script defer src="js/config.js?v=20261107-accent-btn"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+  <script defer src="js/site-branding.js"></script>
+  <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
+  <script defer src="js/auth.js?v=20261107-accent-btn"></script>
+  <script defer src="js/app.js?v=20261107-accent-btn"></script>
+  
+  <script defer src="js/segment-switch.js"></script>
+  <script defer src="js/ui-motion.js?v=20261107-accent-btn"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer src="js/income.js?v=20260718-income"></script>
+  <script defer src="js/clients.js?v=20261107-compact-ui"></script>
+</body>
+</html>

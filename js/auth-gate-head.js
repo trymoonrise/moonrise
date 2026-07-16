@@ -1,0 +1,237 @@
+/**
+ * Runs synchronously in <head> on protected pages.
+ * Hides the page until StudioAuth confirms the session, and redirects immediately
+ * when there is no stored session (prevents a flash of private UI).
+ * This is a UX gate only - tokens are not cryptographically verified here.
+ */
+(function () {
+  // Installed home-screen apps drop into Safari/Chrome chrome on a normal link
+  // navigation. Stay in this web app for same-origin pages.
+  try {
+    var standalone =
+      window.navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+    if (standalone && !window.__msStandaloneNav) {
+      window.__msStandaloneNav = 1;
+      document.addEventListener(
+        "click",
+        function (event) {
+          var link = event.target && event.target.closest && event.target.closest("a[href]");
+          if (!link) return;
+          if (event.defaultPrevented || event.button !== 0) return;
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          if (link.target && link.target !== "_self") return;
+          if (link.hasAttribute("download")) return;
+          var url;
+          try {
+            url = new URL(link.getAttribute("href"), location.href);
+          } catch (err) {
+            return;
+          }
+          if (url.origin !== location.origin) return;
+          if (url.pathname === location.pathname && url.hash === location.hash) return;
+          event.preventDefault();
+          location.assign(url.pathname + url.search + url.hash);
+        },
+        false
+      );
+    }
+  } catch (err) {}
+
+  if (!window.__msAppearanceBoot) {
+    window.__msAppearanceBoot = 1;
+    document.write('<script src="js/appearance.js?v=20261107-compact-ui"><\/script>');
+  }
+
+  var PUBLIC = {
+    "": 1,
+    "index.html": 1,
+    "login.html": 1,
+    "orders.html": 1,
+    "contact.html": 1,
+    "privacy.html": 1,
+    "terms.html": 1,
+    "refund.html": 1,
+    "legal.html": 1,
+    "report.html": 1,
+    "download.html": 1,
+    "404.html": 1,
+  };
+
+  var file = location.pathname.split("/").pop() || "index.html";
+
+  // Channel hop storage cleared - navigation is static (no enter hide/ease).
+  try {
+    sessionStorage.removeItem("ms_channel_hop");
+  } catch (e) {}
+
+  if (PUBLIC[file]) {
+    var releasePublic = function () {
+      if (window.__msReleaseBoot) window.__msReleaseBoot();
+    };
+    // Release as soon as the DOM is ready — do not wait for window.load/fonts.
+    if (document.readyState === "interactive" || document.readyState === "complete") {
+      releasePublic();
+    } else {
+      document.addEventListener("DOMContentLoaded", releasePublic, { once: true });
+    }
+    return;
+  }
+
+  var tabHop = false;
+  try {
+    tabHop = !!sessionStorage.getItem("ms_tab_switch") || !!window.__msTabHop;
+  } catch (e) {}
+
+  document.documentElement.classList.add("ms-auth-gating");
+  // Tab hops keep chrome visible; cold loads still hold until the shell paints.
+  if (!tabHop) {
+    document.documentElement.classList.add("ms-hold");
+    window.__msStudioBoot = 1;
+  } else {
+    window.__msTabHop = 1;
+    window.__msStudioBoot = 0;
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msBootReleased = 1;
+  }
+
+  var preconnect = document.createElement("link");
+  preconnect.rel = "preconnect";
+  preconnect.href = "https://erfaxgmnzdropviormpj.supabase.co";
+  document.head.appendChild(preconnect);
+
+  var cdn = document.createElement("link");
+  cdn.rel = "preconnect";
+  cdn.href = "https://cdn.jsdelivr.net";
+  cdn.crossOrigin = "anonymous";
+  document.head.appendChild(cdn);
+
+  ["js/config.js?v=20261106-app-shell", "js/auth.js?v=20261106-app-shell", "js/app.js?v=20261106-app-shell"].forEach(function (href) {
+    var preload = document.createElement("link");
+    preload.rel = "preload";
+    preload.as = "script";
+    preload.href = href;
+    document.head.appendChild(preload);
+  });
+
+  if (!tabHop) {
+    var style = document.createElement("style");
+    style.textContent = "html.ms-hold body{visibility:hidden!important}";
+    document.head.appendChild(style);
+  }
+
+  function redirectToLogin() {
+    // A prerender that sends itself to login is what the next channel shows.
+    if (document.prerendering) return;
+    if (window.__msAuthRedirecting) return;
+    window.__msAuthRedirecting = true;
+    var next = encodeURIComponent(file + location.search + location.hash);
+    location.replace("login.html?next=" + next);
+  }
+
+  try {
+    localStorage.removeItem("moonrise-studio-auth");
+    sessionStorage.removeItem("moonrise-studio-auth");
+  } catch (e) {}
+
+  function looksSignedIn() {
+    try {
+      if (sessionStorage.getItem("ms_session_hint") === "1") return true;
+    } catch (e) {}
+    return /(?:^|;\s*)ms_on=1(?:;|$)/.test(document.cookie || "");
+  }
+
+  // No saved sign-in: go to login before the page paints.
+  // A saved sign-in stays on this channel under the loader until auth.js confirms it.
+  if (!looksSignedIn()) {
+    redirectToLogin();
+    return;
+  }
+
+  window.__msReleaseAuthGate = function () {
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.add("ms-auth-ready");
+    // Do not release the moonrise bar here — wait until paintApp marks the shell.
+  };
+
+  // Absolute escape: shell must paint or we leave this hold screen.
+  setTimeout(function () {
+    if (window.__msAuthRedirecting) return;
+    if (document.body && document.body.dataset.msShellPainted === "1" && !document.getElementById("ms-boot")) return;
+    window.__msAuthRedirecting = true;
+    try {
+      document.documentElement.classList.remove("ms-boot");
+      document.documentElement.classList.remove("ms-hold");
+      document.documentElement.classList.remove("ms-auth-gating");
+      document.getElementById("ms-boot")?.remove();
+    } catch (e) {}
+    location.replace("404.html");
+  }, 5000);
+
+  mountTabBarEarly();
+})();
+
+function mountTabBarEarly() {
+  var stem = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/i, "") || "index";
+  var pages = { dashboard: 1, builder: 1, clients: 1, settings: 1 };
+  if (!pages[stem]) return;
+
+  var icons = {
+    grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>',
+    hammer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.73-4.24-4.24"/><path d="m14.5 7.5 3.5-3.5a2.12 2.12 0 0 1 3 3L17.5 10.5"/></svg>',
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+    users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  };
+  var items = [
+    ["dashboard", "dashboard.html", "Dashboard", "Dashboard", icons.grid],
+    ["builder", "builder.html", "Builder", "Builder", icons.hammer],
+    ["leads", "leads.html", "Finder", "Business Finder", icons.search],
+    ["clients", "clients.html", "Clients", "My Clients", icons.users],
+  ];
+
+  function paint() {
+    if (!document.body || document.getElementById("ms-tabbar")) return;
+    var html = '<span class="ms-tab-pill" aria-hidden="true"></span>';
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var active = stem === item[0];
+      html +=
+        '<a class="ms-tab' +
+        (active ? " is-active" : "") +
+        '" href="' +
+        item[1] +
+        '" data-tab="' +
+        item[0] +
+        '" aria-label="' +
+        item[3] +
+        '"' +
+        (active ? ' aria-current="page"' : "") +
+        '><span class="ms-tab-ico" aria-hidden="true">' +
+        item[4] +
+        '</span><span class="ms-tab-label">' +
+        item[2] +
+        "</span></a>";
+    }
+    var nav = document.createElement("nav");
+    nav.id = "ms-tabbar";
+    nav.className = "ms-tabbar";
+    nav.setAttribute("aria-label", "Main pages");
+    nav.dataset.mounted = "1";
+    nav.innerHTML = html;
+    document.body.appendChild(nav);
+  }
+
+  if (document.body) paint();
+  else {
+    var obs = new MutationObserver(function () {
+      if (!document.body) return;
+      obs.disconnect();
+      paint();
+    });
+    obs.observe(document.documentElement, { childList: true });
+    document.addEventListener("DOMContentLoaded", function () {
+      obs.disconnect();
+      paint();
+    });
+  }
+}

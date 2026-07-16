@@ -1,0 +1,1289 @@
+/**
+ * Compact studio chrome — reference light-app system.
+ * Off-white canvas, white groups, 52px rows, floating tab pill.
+ */
+
+:root {
+  --ms-min-border: color-mix(in srgb, var(--ms-ink) 8%, transparent);
+  --ms-min-border-strong: color-mix(in srgb, var(--ms-ink) 14%, transparent);
+  --ms-min-muted: color-mix(in srgb, var(--ms-ink) 48%, transparent);
+  --ms-min-quiet: color-mix(in srgb, var(--ms-ink) 38%, transparent);
+  --ms-min-fill: color-mix(in srgb, var(--ms-ink) 4%, transparent);
+  --ms-min-fill-hover: color-mix(in srgb, var(--ms-ink) 6%, transparent);
+  --ms-min-radius: 16px;
+  --ms-min-radius-lg: 16px;
+  --ms-min-radius-md: 14px;
+  --ms-min-radius-sm: 12px;
+  --ms-radius: 16px;
+  --ms-radius-card: 16px;
+  --ms-min-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+  --ms-set-row-h: 52px;
+  --ms-canvas: #f2f2f7;
+  --ms-group: #ffffff;
+}
+
+html[data-ms-mode="dark"] {
+  --ms-min-border: rgb(255 255 255 / 10%);
+  --ms-min-border-strong: rgb(255 255 255 / 14%);
+  --ms-min-muted: rgb(255 255 255 / 48%);
+  --ms-min-quiet: rgb(255 255 255 / 38%);
+  --ms-min-fill: rgb(255 255 255 / 6%);
+  --ms-min-fill-hover: rgb(255 255 255 / 9%);
+  --ms-min-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 10px 28px rgba(0, 0, 0, 0.22);
+  --ms-canvas: #000000;
+  --ms-group: #1c1c1e;
+}
+
+/* —— Shell / page —— */
+body[data-page="dashboard"],
+body[data-page="settings"],
+body[data-page="clients"],
+body[data-page="projects"],
+body[data-page="builder"],
+body[data-page="leads"] {
+  background: var(--ms-canvas) !important;
+}
+
+#page-body.ms-dash-page,
+#page-body.ms-settings-page,
+#page-body.ms-clients-page,
+#page-body.ms-projects-page,
+#page-body.ms-content-page,
+#page-body.ms-pricing-page {
+  padding-top: 1.15rem !important;
+  padding-bottom: 5.5rem !important;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ms-page-head {
+  margin-bottom: 1rem !important;
+  padding-bottom: 0 !important;
+  border: 0 !important;
+  text-align: left !important;
+}
+
+.ms-page-head-copy {
+  text-align: left !important;
+}
+
+.ms-page-head h1 {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.1 !important;
+  color: var(--ms-ink) !important;
+  text-align: left !important;
+}
+
+.ms-page-head .lead {
+  display: none !important;
+}
+
+.ms-settings-hint,
+.ms-muted {
+  color: var(--ms-min-muted) !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.4 !important;
+}
+
+/* —— Sidebar (compact grouped channels) —— */
+.ms-sidebar {
+  background: var(--ms-canvas) !important;
+  border-right: 1px solid var(--ms-min-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.ms-sidebar-scroll {
+  gap: 0.75rem !important;
+  padding: 0.85rem 0.75rem 0.5rem !important;
+}
+
+.ms-brand {
+  padding: 0.35rem 0.35rem 0.55rem !important;
+  gap: 0.55rem !important;
+}
+
+.ms-brand-logo {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 9px !important;
+  box-shadow: 0 0 0 1px var(--ms-min-border) !important;
+}
+
+.ms-brand-name {
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.ms-nav-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0.35rem 0 !important;
+  background: var(--ms-group) !important;
+  border: 0 !important;
+  border-radius: var(--ms-min-radius) !important;
+  box-shadow: none !important;
+  overflow: hidden;
+}
+
+.ms-nav-section {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  padding: 0.45rem 0.9rem 0.25rem !important;
+  margin: 0 !important;
+  gap: 0.35rem !important;
+  font-size: 0.68rem !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: var(--ms-min-quiet) !important;
+}
+
+.ms-nav-section-ico {
+  width: 11px !important;
+  height: 11px !important;
+  color: var(--ms-min-quiet) !important;
+  opacity: 0.85;
+}
+
+.ms-nav-section-ico svg {
+  width: 11px !important;
+  height: 11px !important;
+}
+
+.ms-nav {
+  gap: 0 !important;
+  padding: 0.15rem 0.35rem 0.35rem !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ms-nav-pill {
+  display: none !important;
+}
+
+.ms-nav-link {
+  gap: 0.7rem !important;
+  min-height: 2.75rem !important;
+  padding: 0.55rem 0.7rem !important;
+  border-radius: 12px !important;
+  font-size: 0.9375rem !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.015em !important;
+  color: var(--ms-ink) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.ms-nav-link .ms-nav-ico {
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--ms-min-muted) !important;
+  opacity: 1;
+}
+
+.ms-nav-link .ms-nav-ico svg {
+  width: 18px !important;
+  height: 18px !important;
+  stroke-width: 1.75 !important;
+}
+
+.ms-nav-link:hover {
+  background: var(--ms-min-fill) !important;
+  color: var(--ms-ink) !important;
+}
+
+.ms-nav-link:hover .ms-nav-ico {
+  color: var(--ms-ink) !important;
+}
+
+.ms-nav-link.is-active,
+.ms-nav:not(:has(.ms-nav-pill)) .ms-nav-link.is-active,
+.ms-nav-link.is-active.is-generating {
+  background: var(--ms-min-fill) !important;
+  color: var(--ms-ink) !important;
+  font-weight: 650 !important;
+  box-shadow: none !important;
+}
+
+.ms-nav-link.is-active .ms-nav-ico {
+  color: var(--ms-ink) !important;
+}
+
+.ms-sidebar-legal {
+  margin: 0.15rem 0.35rem 0 !important;
+  padding: 0.35rem 0.4rem !important;
+  border-top: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.15rem 0.25rem !important;
+}
+
+.ms-sidebar-legal-link {
+  font-size: 0.72rem !important;
+  color: var(--ms-min-quiet) !important;
+  border-radius: 999px !important;
+  padding: 0.28rem 0.55rem !important;
+}
+
+.ms-sidebar-legal-link:hover,
+.ms-sidebar-legal-link.is-active {
+  color: var(--ms-ink) !important;
+  background: var(--ms-min-fill) !important;
+}
+
+.ms-sidebar-legal-sep {
+  display: none !important;
+}
+
+.ms-sidebar-updated {
+  color: var(--ms-min-quiet) !important;
+  font-size: 0.68rem !important;
+  font-weight: 500 !important;
+  padding: 0 0.9rem !important;
+  margin: 0.15rem 0 0 !important;
+}
+
+.ms-credits-tag,
+.ms-income-tag {
+  margin: 0 0.75rem !important;
+  border-radius: 12px !important;
+  background: var(--ms-group) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  min-height: 2.6rem !important;
+  padding: 0.45rem 0.85rem !important;
+}
+
+.ms-sidebar-foot {
+  border-top: 0 !important;
+  margin: 0.5rem 0.75rem 0.85rem !important;
+  padding: 0.35rem !important;
+  background: var(--ms-group) !important;
+  border-radius: var(--ms-min-radius) !important;
+}
+
+.ms-user-row {
+  gap: 0.55rem !important;
+  padding: 0.35rem 0.4rem !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+}
+
+.ms-user-name {
+  font-size: 0.875rem !important;
+  font-weight: 650 !important;
+}
+
+/* —— Cards / stacks —— */
+.ms-card,
+.ms-settings-card,
+.ms-dash-card,
+.ms-project-card,
+.ms-auth-card,
+.ms-help-card,
+.ms-course-card,
+.ms-orders-card,
+.ms-download-card,
+.ms-fin-card,
+.ms-store-card,
+.ms-clients-card,
+.ms-projects-card {
+  background: var(--ms-group) !important;
+  border: 0 !important;
+  border-radius: var(--ms-min-radius) !important;
+  box-shadow: none !important;
+}
+
+.ms-settings-stack,
+.ms-dash-stack {
+  gap: 0.75rem !important;
+  max-width: 560px !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ms-settings-card-title,
+.ms-dash-projects-title {
+  font-size: 0.92rem !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--ms-ink) !important;
+  border: 0 !important;
+  margin: 0 0 0.65rem !important;
+  padding: 0 !important;
+}
+
+.ms-settings-card-title svg,
+.ms-dash-projects-title svg {
+  width: 16px !important;
+  height: 16px !important;
+  opacity: 0.7;
+}
+
+/* —— Compact settings groups / rows —— */
+.ms-settings-compact {
+  gap: 0.75rem !important;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.ms-set-group {
+  margin: 0;
+  padding: 0;
+  background: var(--ms-group);
+  border-radius: var(--ms-min-radius);
+  overflow: hidden;
+  border: 0;
+  box-shadow: none;
+}
+
+.ms-set-group--danger .ms-set-row--danger,
+.ms-set-group--danger .ms-set-row--danger .ms-set-row-label {
+  color: #ff3b30 !important;
+}
+
+.ms-set-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: var(--ms-set-row-h);
+  padding: 0 1rem;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ms-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ms-set-row + .ms-set-row,
+.ms-set-row + .ms-set-panel,
+.ms-set-panel + .ms-set-row {
+  border-top: 1px solid var(--ms-min-border);
+  margin-left: 0;
+}
+
+.ms-set-row + .ms-set-row {
+  box-shadow: inset 3.25rem 0 0 0 var(--ms-group);
+  border-top-color: var(--ms-min-border);
+}
+
+.ms-set-row:active {
+  background: var(--ms-min-fill);
+}
+
+.ms-set-row-ico {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--ms-ink);
+  display: grid;
+  place-items: center;
+}
+
+.ms-set-row-ico svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.75;
+}
+
+.ms-set-row-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--ms-ink);
+}
+
+.ms-set-row-value {
+  flex: 0 1 auto;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9375rem;
+  color: var(--ms-min-muted);
+  text-align: right;
+}
+
+.ms-set-row-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: var(--ms-ink);
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 12%);
+}
+
+.ms-set-chevron {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: color-mix(in srgb, var(--ms-ink) 28%, transparent);
+  display: grid;
+  place-items: center;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ms-set-chevron svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ms-set-row.is-open .ms-set-chevron {
+  transform: rotate(90deg);
+}
+
+.ms-set-row--static {
+  cursor: default;
+}
+
+.ms-set-row--static:active {
+  background: transparent;
+}
+
+.ms-set-row--profile {
+  gap: 0.85rem;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+  min-height: 4.25rem;
+}
+
+.ms-set-row-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.ms-set-row-copy strong {
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--ms-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-set-row-copy span {
+  font-size: 0.8125rem;
+  color: var(--ms-min-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-set-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  padding: 0;
+  border-top: 0 solid transparent;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.ms-set-panel.is-open {
+  border-top: 1px solid var(--ms-min-border);
+}
+
+.ms-set-panel.is-expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.ms-set-panel[hidden] {
+  display: none !important;
+}
+
+.ms-set-panel.is-open[hidden] {
+  display: grid !important;
+}
+
+.ms-set-panel-inner {
+  overflow: hidden;
+  min-height: 0;
+  padding: 0 1rem;
+}
+
+.ms-set-panel.is-expanded .ms-set-panel-inner {
+  padding: 0.2rem 1rem 0.95rem;
+}
+
+.ms-set-panel .ms-field {
+  margin-top: 0.65rem;
+}
+
+.ms-set-panel .ms-settings-actions {
+  margin-top: 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: flex-start;
+}
+
+body[data-page="settings"] .ms-set-panel .ms-btn,
+body[data-page="settings"] .ms-set-panel a.ms-btn,
+body[data-page="settings"] .ms-set-panel #set-save,
+body[data-page="settings"] .ms-set-panel #set-passkey-add,
+body[data-page="settings"] .ms-set-panel #set-passkey-change,
+body[data-page="settings"] .ms-set-panel #set-delete-account,
+#page-body.ms-settings-page .ms-set-panel .ms-btn,
+#page-body.ms-settings-page .ms-set-panel a.ms-btn {
+  height: auto !important;
+  min-height: 2.15rem !important;
+  padding: 0.4rem 0.85rem !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  border-radius: 999px !important;
+  flex: 0 1 auto;
+  width: auto !important;
+  max-width: 100%;
+  line-height: 1.2 !important;
+}
+
+.ms-set-panel .ms-appearance-reset {
+  min-height: 2rem !important;
+  padding: 0.35rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+  border-radius: 999px !important;
+}
+
+.ms-set-panel .ms-settings-hint {
+  margin: 0.55rem 0 0.25rem;
+}
+
+@media (max-width: 900px) {
+  .ms-set-panel .ms-settings-actions {
+    gap: 0.35rem;
+  }
+
+  body[data-page="settings"] .ms-set-panel .ms-btn,
+  #page-body.ms-settings-page .ms-set-panel .ms-btn {
+    min-height: 2.05rem !important;
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.8125rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-set-panel,
+  .ms-set-chevron {
+    transition: none !important;
+  }
+}
+
+.ms-set-quiet {
+  margin: 0.35rem 1rem 0.85rem;
+  font-size: 0.78rem;
+  color: var(--ms-min-quiet);
+  line-height: 1.4;
+}
+
+/* Profile photo — neutral, no accent gradient bleed */
+.ms-set-photo-preview {
+  background: var(--ms-min-fill) !important;
+  border: 1px solid var(--ms-min-border) !important;
+  box-shadow: none !important;
+}
+
+.ms-set-photo-preview:hover {
+  border-color: var(--ms-min-border-strong) !important;
+}
+
+.ms-set-photo-initials {
+  color: var(--ms-ink) !important;
+  background: transparent !important;
+}
+
+.ms-set-row--profile .ms-set-photo-frame {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  position: relative;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #ececef;
+  isolation: isolate;
+}
+
+.ms-set-row--profile .ms-set-photo-preview,
+.ms-set-row--profile .ms-set-photo-img,
+.ms-set-row--profile .ms-set-photo-initials {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+}
+
+.ms-set-row--profile .ms-set-photo-preview {
+  border: 0 !important;
+  background: #ececef !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+html[data-ms-mode="dark"] .ms-set-row--profile .ms-set-photo-frame,
+html[data-ms-mode="dark"] .ms-set-row--profile .ms-set-photo-preview {
+  background: rgb(255 255 255 / 10%) !important;
+}
+
+.ms-set-row--profile .ms-set-photo-initials {
+  display: grid;
+  place-items: center;
+  background: var(--ms-min-fill) !important;
+  color: var(--ms-min-muted) !important;
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.ms-set-row--profile .ms-set-photo-reset {
+  display: none;
+}
+
+.ms-set-row--profile .ms-set-photo-frame.is-busy::before,
+.ms-set-row--profile .ms-set-photo-frame.is-avatar-ready::before {
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-width: 2px;
+  border-color: color-mix(in srgb, var(--ms-ink) 18%, transparent);
+  border-top-color: var(--ms-ink);
+}
+
+.ms-set-row--profile .ms-set-photo-frame.is-busy::after {
+  background: color-mix(in srgb, var(--ms-group) 55%, transparent);
+}
+
+.ms-set-panel .ms-settings-profile-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 0.35rem;
+}
+
+.ms-set-panel .ms-settings-photo-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.ms-set-panel .ms-set-photo-frame {
+  width: 72px;
+  height: 72px;
+  position: relative;
+}
+
+.ms-set-panel .ms-set-photo-preview,
+.ms-set-panel .ms-set-photo-img,
+.ms-set-panel .ms-set-photo-initials {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+}
+
+.ms-set-panel .ms-set-photo-initials {
+  display: grid;
+  place-items: center;
+  background: var(--ms-min-fill);
+  font-weight: 650;
+}
+
+.ms-set-panel .ms-set-photo-reset {
+  position: absolute;
+  right: -0.15rem;
+  bottom: -0.15rem;
+}
+
+/* Appearance blocks inside panels */
+.ms-set-panel .ms-appearance-block,
+.ms-set-panel .ms-appearance-mode {
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0.35rem 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.ms-set-panel .ms-appearance-swatches,
+.ms-set-panel .ms-appearance-sizes {
+  background: var(--ms-min-fill) !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 0.55rem !important;
+}
+
+.ms-set-panel .ms-appearance-foot {
+  margin-top: 0.65rem;
+}
+
+/* —— Dashboard —— */
+.ms-dash-hero {
+  gap: 1rem !important;
+  margin-bottom: 0.85rem !important;
+}
+
+.ms-dash-hero-label,
+.ms-dash-metric-label,
+.ms-dash-ring-kicker,
+.ms-dash-hero-hint,
+.ms-dash-metric-hint,
+.ms-dash-bar-caption,
+.ms-dash-ring-sub {
+  color: var(--ms-min-muted) !important;
+  font-weight: 500 !important;
+}
+
+.ms-dash-hero-value,
+.ms-dash-metric-value,
+.ms-dash-ring-value {
+  letter-spacing: -0.04em !important;
+  font-weight: 700 !important;
+  color: var(--ms-ink) !important;
+}
+
+.ms-dash-overview-grid {
+  gap: 0.55rem !important;
+}
+
+.ms-dash-metric {
+  background: var(--ms-min-fill) !important;
+  border: 0 !important;
+  border-radius: var(--ms-min-radius) !important;
+  box-shadow: none !important;
+  padding: 0.85rem 0.9rem !important;
+}
+
+.ms-dash-bar,
+.ms-dash-ring {
+  background: var(--ms-min-fill) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+.ms-dash-bar-fill {
+  background: var(--ms-accent) !important;
+}
+
+.ms-dash-tool,
+a.ms-dash-tool {
+  margin-top: 0.85rem !important;
+  min-height: 2.75rem !important;
+  font-size: 0.9rem !important;
+}
+
+.ms-dash-projects-toggle {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.ms-dash-count-badge {
+  background: var(--ms-min-fill) !important;
+  color: var(--ms-min-muted) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  font-weight: 550 !important;
+  border-radius: 999px !important;
+}
+
+.ms-dash-projects-search-input,
+.ms-dash-projects-filter,
+.ms-dash-filter-btn {
+  border-radius: var(--ms-min-radius-md) !important;
+  border-color: var(--ms-min-border-strong) !important;
+  box-shadow: none !important;
+}
+
+.ms-dash-projects-filter.is-active {
+  background: color-mix(in srgb, var(--ms-accent) 12%, transparent) !important;
+  color: var(--ms-accent) !important;
+  border-color: color-mix(in srgb, var(--ms-accent) 22%, transparent) !important;
+}
+
+/* —— Tabs / mobile chrome: floating compact dock —— */
+@media (max-width: 900px) {
+  html .ms-tabbar,
+  html body .ms-tabbar,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar {
+    left: 50% !important;
+    right: auto !important;
+    bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px)) !important;
+    width: min(22.25rem, calc(100% - 1.5rem)) !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0.3rem !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.12rem !important;
+    background: color-mix(in srgb, #ffffff 88%, transparent) !important;
+    border: 1px solid rgb(0 0 0 / 6%) !important;
+    border-top: 1px solid rgb(0 0 0 / 6%) !important;
+    border-radius: 999px !important;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 12px 32px rgba(0, 0, 0, 0.12) !important;
+    backdrop-filter: saturate(1.6) blur(22px) !important;
+    -webkit-backdrop-filter: saturate(1.6) blur(22px) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    z-index: 220 !important;
+  }
+
+  html body.ms-nav-open .ms-tabbar {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translate3d(-50%, 110%, 0) !important;
+  }
+
+  /* Sliding pill unused — active tab uses soft wash chip. */
+  html .ms-tab-pill,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab-pill {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  html .ms-tab,
+  html .ms-tabbar .ms-menu-toggle.ms-tab-menu,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
+    position: relative !important;
+    z-index: 1 !important;
+    flex: 1 1 0 !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 0 !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    color: #8e8e93 !important;
+    -webkit-text-fill-color: #8e8e93 !important;
+    transform: none !important;
+    transition: background-color 0.22s ease, color 0.22s ease, transform 0.15s ease !important;
+  }
+
+  html .ms-tab.is-active,
+  html .ms-tabbar.is-pill-ready .ms-tab.is-active,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
+    background: #ececef !important;
+    background-color: #ececef !important;
+    color: #1d1d1f !important;
+    -webkit-text-fill-color: #1d1d1f !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+  }
+
+  html .ms-tab.is-active .ms-tab-ico,
+  html .ms-tab.is-active .ms-tab-label,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-label {
+    color: #1d1d1f !important;
+    -webkit-text-fill-color: #1d1d1f !important;
+  }
+
+  html[data-ms-mode="dark"] .ms-tab.is-active,
+  html[data-ms-mode="dark"] .ms-tabbar.is-pill-ready .ms-tab.is-active,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active {
+    background: rgb(255 255 255 / 12%) !important;
+    background-color: rgb(255 255 255 / 12%) !important;
+    color: #f4f4f5 !important;
+    -webkit-text-fill-color: #f4f4f5 !important;
+  }
+
+  html[data-ms-mode="dark"] .ms-tab.is-active .ms-tab-ico,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico {
+    color: #f4f4f5 !important;
+    -webkit-text-fill-color: #f4f4f5 !important;
+  }
+
+  html .ms-tab-ico {
+    width: 22px !important;
+    height: 22px !important;
+    display: grid !important;
+    place-items: center !important;
+  }
+
+  html .ms-tab-ico svg {
+    width: 21px !important;
+    height: 21px !important;
+    stroke-width: 1.7 !important;
+  }
+
+  html .ms-tab.is-active .ms-tab-ico svg {
+    stroke-width: 2 !important;
+  }
+
+  html .ms-tabbar .ms-menu-toggle.ms-tab-menu {
+    inset: auto !important;
+    display: grid !important;
+    place-items: center !important;
+    width: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    color: #1d1d1f !important;
+    -webkit-text-fill-color: #1d1d1f !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  html .ms-tabbar .ms-menu-toggle.ms-tab-menu svg {
+    width: 21px !important;
+    height: 21px !important;
+    stroke-width: 1.85 !important;
+  }
+
+  html .ms-tab:active,
+  html .ms-tabbar .ms-menu-toggle.ms-tab-menu:active {
+    transform: scale(0.94) !important;
+  }
+
+  body[data-page="dashboard"] #page-body,
+  body[data-page="clients"] #page-body,
+  body[data-page="settings"] #page-body,
+  body[data-page="leads"] #page-body,
+  body[data-page="builder"].ms-lb-setup #page-body,
+  body[data-page="builder"].ms-lb-setup .ms-builder-setup-page,
+  #page-body.ms-dash-page,
+  #page-body.ms-settings-page,
+  #page-body.ms-clients-page,
+  #page-body.ms-projects-page {
+    padding-bottom: calc(5.35rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+html[data-ms-mode="dark"] .ms-tabbar {
+  background: color-mix(in srgb, var(--ms-group) 88%, transparent) !important;
+  border: 1px solid rgb(255 255 255 / 10%) !important;
+  border-top: 1px solid rgb(255 255 255 / 10%) !important;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 14px 36px rgba(0, 0, 0, 0.5) !important;
+}
+
+html[data-ms-mode="dark"] .ms-tab-pill {
+  background: rgb(255 255 255 / 10%) !important;
+}
+
+.ms-menu-toggle:not(.ms-tab-menu),
+.ms-help-btn {
+  border: 0 !important;
+  background: color-mix(in srgb, var(--ms-group) 92%, transparent) !important;
+  box-shadow: var(--ms-min-shadow) !important;
+  border-radius: 999px !important;
+}
+
+/* —— Forms / rows —— */
+.ms-settings-pref-row,
+.ms-appearance-mode,
+.ms-appearance-block {
+  border-color: var(--ms-min-border) !important;
+  border-radius: var(--ms-min-radius) !important;
+}
+
+.ms-appearance-swatches,
+.ms-appearance-sizes {
+  background: var(--ms-min-fill) !important;
+  border: 1px solid var(--ms-min-border) !important;
+  box-shadow: none !important;
+  border-radius: var(--ms-min-radius) !important;
+}
+
+input.ms-input,
+textarea.ms-textarea,
+.ms-auth-card input.ms-input,
+select.ms-input {
+  border-color: var(--ms-min-border-strong) !important;
+  background: var(--ms-group) !important;
+  box-shadow: none !important;
+  border-radius: var(--ms-min-radius-md) !important;
+}
+
+/* —— Buttons —— */
+.ms-btn,
+a.ms-btn,
+button.ms-btn,
+.ms-dash-tool,
+a.ms-dash-tool {
+  border-radius: 999px !important;
+}
+
+.ms-btn-secondary,
+.ms-dash-tool.ms-btn-secondary,
+a.ms-btn-secondary {
+  border-width: 1px !important;
+  font-weight: 600 !important;
+}
+
+.ms-project-card,
+.ms-lead-card,
+.ms-client-card,
+.ms-list-row,
+.ms-settings-row,
+.ms-modal,
+.ms-dialog,
+.ms-sheet,
+.ms-popover {
+  border-radius: var(--ms-min-radius) !important;
+}
+
+.ms-card::before,
+.ms-dash-card::before,
+.ms-settings-card::before {
+  display: none !important;
+}
+
+/* —— Skeleton loading —— */
+.ms-skel {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--ms-ink) 8%, transparent);
+  border-radius: 8px;
+  color: transparent !important;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ms-skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--ms-ink) 6%, transparent) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: ms-skel-shimmer 1.15s ease-in-out infinite;
+}
+
+.ms-skel-circle {
+  border-radius: 999px;
+}
+
+.ms-skel-line {
+  height: 0.75rem;
+  border-radius: 6px;
+}
+
+.ms-skel-line--sm {
+  height: 0.55rem;
+  width: 42%;
+}
+
+.ms-skel-line--md {
+  width: 68%;
+}
+
+.ms-skel-line--lg {
+  width: 88%;
+}
+
+.ms-skel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: var(--ms-set-row-h);
+  padding: 0 1rem;
+}
+
+.ms-skel-row-copy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ms-skel-block {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem;
+}
+
+.ms-skel-block[hidden] {
+  display: none !important;
+}
+
+.ms-dash-progress-card.is-skel-loading .ms-dash-overview-live {
+  display: none !important;
+}
+
+.ms-clients-table.is-skel-loading,
+.ms-clients-table-wrap:has(#ms-clients-skel:not([hidden])) .ms-clients-table {
+  display: none !important;
+}
+
+#ms-clients-skel:not([hidden]) {
+  display: grid;
+}
+
+.ms-skel-metric {
+  height: 4.5rem;
+  border-radius: var(--ms-min-radius);
+}
+
+.ms-set-row.is-skel .ms-set-row-copy strong,
+.ms-set-row.is-skel .ms-set-row-copy span,
+.ms-set-row.is-skel .ms-set-photo-preview {
+  visibility: hidden;
+}
+
+.ms-set-row.is-skel::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ms-ink) 8%, transparent);
+}
+
+.ms-set-row.is-skel {
+  position: relative;
+}
+
+.ms-set-row.is-skel .ms-set-row-copy::before,
+.ms-set-row.is-skel .ms-set-row-copy::after {
+  content: "";
+  display: block;
+  height: 0.7rem;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--ms-ink) 8%, transparent);
+}
+
+.ms-set-row.is-skel .ms-set-row-copy::before {
+  width: 7.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.ms-set-row.is-skel .ms-set-row-copy::after {
+  width: 4.5rem;
+  height: 0.55rem;
+}
+
+@keyframes ms-skel-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-skel::after {
+    animation: none !important;
+    display: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  #page-body.ms-dash-page,
+  #page-body.ms-settings-page,
+  #page-body.ms-clients-page,
+  #page-body.ms-projects-page {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 0.85rem) !important;
+  }
+
+  .ms-page-head h1 {
+    font-size: 1.7rem !important;
+  }
+
+  .ms-settings-card {
+    padding: 1rem !important;
+  }
+}
+
+/* Beat cream-ink / studio-ui sidebar specificity */
+html:not([data-ms-mode="dark"]) .ms-sidebar,
+html[data-ms-mode="dark"] .ms-sidebar {
+  background: var(--ms-canvas) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-group,
+html[data-ms-mode="dark"] .ms-nav-group {
+  background: var(--ms-group) !important;
+  border-radius: var(--ms-min-radius) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav,
+html[data-ms-mode="dark"] .ms-nav {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-active,
+html:not([data-ms-mode="dark"]) .ms-nav:not(:has(.ms-nav-pill)) .ms-nav-link.is-active,
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-active.is-generating,
+html[data-ms-mode="dark"] .ms-nav-link.is-active,
+html[data-ms-mode="dark"] .ms-nav:not(:has(.ms-nav-pill)) .ms-nav-link.is-active {
+  background: var(--ms-min-fill) !important;
+  color: var(--ms-ink) !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-sidebar-foot,
+html[data-ms-mode="dark"] .ms-sidebar-foot {
+  background: var(--ms-group) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-credits-tag,
+html:not([data-ms-mode="dark"]) .ms-income-tag,
+html[data-ms-mode="dark"] .ms-credits-tag,
+html[data-ms-mode="dark"] .ms-income-tag {
+  background: var(--ms-group) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-set-photo-preview,
+html[data-ms-mode="dark"] .ms-set-photo-preview {
+  background: var(--ms-min-fill) !important;
+  border-color: var(--ms-min-border) !important;
+}

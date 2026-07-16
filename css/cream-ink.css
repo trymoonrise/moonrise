@@ -1,0 +1,896 @@
+/* Black / white / grey component layer. Load after studio.css / studio-ui.css.
+   Visual only — no layout/JS behavior changes. */
+
+:root {
+  --ms-bg: #fafafa;
+  --ms-surface: #ffffff;
+  --ms-surface-alt: #f3f3f3;
+  --ms-surface-prompt: #eeeeee;
+  --ms-ink: #1a1a1a;
+  --ms-muted: #6b6b6b;
+  --ms-line: #e5e5e5;
+  --ms-dashed: #d4d4d4;
+  --ms-track-off: #e0e0e0;
+  --ms-segment: #f2f2f2;
+  /* Default selection + accent: black / white / neutral greys (Appearance may override accent). */
+  --ms-select: #d8d8d8;
+  --ms-select-soft: #eeeeee;
+  --ms-accent: #232427;
+  --ms-accent-bright: #232427;
+  --ms-accent-strong: #000000;
+  --ms-accent-soft: #f3f3f3;
+  --ms-accent-rgb: 35, 36, 39;
+  --ms-brand: #1a1a1a;
+  --ms-link: #1a1a1a;
+  --ms-banner: #e8e8e8;
+  --ms-banner-ink: #1a1a1a;
+  --ms-skeleton: #c4c4c4;
+  --ms-danger: #e03a1a;
+  --ms-radius: 16px;
+  --ms-radius-card: 24px;
+  --ms-radius-list: 16px;
+  --ms-radius-pill: 999px;
+  --ms-shadow-card: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --ms-shadow-segment: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+html:not([data-ms-mode="dark"]) body,
+html:not([data-ms-mode="dark"]) body[data-page] {
+  background: var(--ms-bg);
+  color: var(--ms-ink);
+}
+
+/* —— Surfaces / cards —— */
+html:not([data-ms-mode="dark"]) :where(
+  .card,
+  .ms-card,
+  .ms-dash-card,
+  .ms-dash-island,
+  .ms-dash-metric,
+  .ms-settings-card,
+  .ms-project-card,
+  .ms-auth-card,
+  .ms-stat,
+  .ms-panel,
+  .ms-lb-panel,
+  .ms-lb-dock,
+  .ms-lb-prompt,
+  .ms-fin-card,
+  .ms-store-card,
+  .ms-help-card,
+  .ms-course-card,
+  .ms-orders-card,
+  .ms-download-card,
+  .ms-legal-doc .ms-card
+) {
+  background: var(--ms-surface) !important;
+  border: 1px solid var(--ms-line) !important;
+  border-radius: var(--ms-radius-card) !important;
+  box-shadow: var(--ms-shadow-card) !important;
+  color: var(--ms-ink);
+}
+
+html:not([data-ms-mode="dark"]) .ms-dash-progress-card.ms-dash-card,
+html:not([data-ms-mode="dark"]) .ms-dash-card.ms-dash-posts {
+  background: var(--ms-surface) !important;
+  border: 1px solid var(--ms-line) !important;
+  border-radius: var(--ms-radius-card) !important;
+  box-shadow: var(--ms-shadow-card) !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-metric,
+  .ms-stat,
+  .ms-surface-alt,
+  .ms-home-method-viz
+) {
+  background: var(--ms-surface-alt) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-dash-progress-card .ms-dash-metric {
+  background: transparent !important;
+}
+
+/* —— Typography —— */
+html:not([data-ms-mode="dark"]) :where(
+  h1, h2, h3,
+  .ms-page-head h1,
+  .ms-settings-card-title,
+  .ms-brand-name,
+  .ms-auth-title,
+  .ms-home-title
+) {
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink);
+}
+
+html:not([data-ms-mode="dark"]) body:not(.ms-home-menu-open) .ms-home-brand strong {
+  color: #000 !important;
+  -webkit-text-fill-color: #000;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+
+html:not([data-ms-mode="dark"]) body.ms-home-menu-open .ms-home-brand,
+html:not([data-ms-mode="dark"]) body.ms-home-menu-open .ms-home-brand strong {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-muted,
+  .ms-page-eyebrow,
+  .ms-home-sub,
+  .ms-home-section-lead,
+  .ms-auth-sub,
+  .ms-helper,
+  .ms-field-hint,
+  .ms-settings-hint
+) {
+  color: var(--ms-muted) !important;
+}
+
+/* —— Primary / secondary buttons —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost):not(.ms-btn-ghost-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost),
+  .ms-home-cta-primary,
+  .ms-home-footer-signup,
+  .ms-home-method-cta,
+  .ms-lf-find,
+  .ms-lf-map-scan,
+  .ms-lf-map-all,
+  .ms-lb-publish-btn,
+  .ms-lb-publish-btn.is-live,
+  .ms-lb-publish-btn.needs-update,
+  .ms-lb-publish-btn.is-loading,
+  .ms-lb-edit-btn.is-primary,
+  .ms-paywall-pay,
+  .ms-fin-save,
+  .ms-fin-next,
+  .ms-store-buy:not(.is-ghost),
+  .lf-action-builder,
+  .ms-help-vcard-save,
+  .ms-onboard-next,
+  #btn-checkout,
+  .ms-download-install-btn,
+  body[data-page="download"] .ms-download-actions .ms-btn:not(.ms-btn-secondary)
+) {
+  background: var(--ms-accent) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 0 !important;
+  border-radius: var(--ms-radius-pill) !important;
+  box-shadow: none !important;
+  font-weight: 700 !important;
+  filter: none !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"])[data-ms-accent-tone="light"] :where(
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost):not(.ms-btn-ghost-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost),
+  .ms-home-cta-primary,
+  .ms-lf-find,
+  .ms-lf-map-scan,
+  .ms-lf-map-all,
+  .ms-lb-publish-btn,
+  .ms-lb-edit-btn.is-primary,
+  .ms-paywall-pay,
+  .ms-fin-save,
+  .ms-fin-next,
+  .ms-store-buy:not(.is-ghost),
+  .lf-action-builder,
+  .ms-onboard-next,
+  #btn-checkout,
+  .ms-download-install-btn
+) {
+  color: #1a1a1a !important;
+  -webkit-text-fill-color: #1a1a1a !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-btn-secondary,
+  .ms-btn-ghost,
+  .ms-home-cta-secondary,
+  .ms-dash-tool,
+  .ms-dash-filter-btn,
+  .ms-store-buy.is-ghost,
+  .ms-lb-redesign-btn,
+  .ms-lb-unpublish-btn,
+  .ms-lb-dev-unlock-btn,
+  .ms-lb-icon-btn,
+  body[data-page="download"] .ms-download-actions .ms-btn-secondary
+) {
+  background: transparent !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  border: 1.5px solid var(--ms-ink) !important;
+  border-radius: var(--ms-radius-pill) !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-lb-delete-btn,
+  .ms-btn-ghost-danger
+) {
+  background: transparent !important;
+  color: var(--ms-danger) !important;
+  -webkit-text-fill-color: var(--ms-danger) !important;
+  border: 1.5px solid var(--ms-danger) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-btn-danger {
+  background: var(--ms-danger) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 0 !important;
+  border-radius: var(--ms-radius-pill) !important;
+  box-shadow: none !important;
+}
+
+/* —— Forms —— */
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input,
+  .ms-auth-card input.ms-input,
+  select.ms-select,
+  textarea.ms-textarea,
+  .ms-lf-input,
+  .ms-phone-input,
+  .ms-onboard-page .ms-input,
+  .ms-onboard-page .ms-phone-input,
+  .ms-bs-gh-select-trigger
+) {
+  background: transparent !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  caret-color: var(--ms-ink);
+  border: 1.5px solid var(--ms-ink) !important;
+  border-radius: 16px !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) textarea.ms-textarea {
+  border-radius: 28px !important;
+  min-height: 8rem;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input:focus,
+  .ms-auth-card input.ms-input:focus,
+  select.ms-select:focus,
+  textarea.ms-textarea:focus,
+  .ms-lf-input:focus,
+  .ms-bs-gh-select-trigger:focus
+) {
+  border-color: var(--ms-ink) !important;
+  border-width: 2px !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input::placeholder,
+  textarea.ms-textarea::placeholder,
+  .ms-lf-input::placeholder
+) {
+  color: #6a6a62 !important;
+  opacity: 1;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input,
+  .ms-lf-input,
+  #lf-query
+):-webkit-autofill,
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input,
+  .ms-lf-input,
+  #lf-query
+):-webkit-autofill:hover,
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input,
+  .ms-lf-input,
+  #lf-query
+):-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  caret-color: var(--ms-ink);
+  box-shadow: 0 0 0 1000px var(--ms-bg) inset !important;
+  transition: background-color 99999s ease-out;
+}
+
+/* Underline-style single fields (auth email feel) */
+html:not([data-ms-mode="dark"]) .ms-auth-card input.ms-input {
+  border: 0 !important;
+  border-bottom: 2px solid var(--ms-ink) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  font-size: 1.25rem !important;
+  font-weight: 500;
+  height: auto !important;
+  min-height: 2.75rem;
+  padding-bottom: 0.65rem !important;
+}
+
+/* —— Switches —— */
+html:not([data-ms-mode="dark"]) .ms-switch-track {
+  width: 51px;
+  height: 29px;
+  background: var(--ms-track-off) !important;
+  border: 2px solid #e8e8dc !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-switch-track::after {
+  top: 2px;
+  left: 2px;
+  width: 21px;
+  height: 21px;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 1px rgba(35, 36, 39, 0.12) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-switch input:checked + .ms-switch-track {
+  background: var(--ms-ink) !important;
+  border-color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-switch input:checked + .ms-switch-track::after {
+  transform: translateX(22px);
+  box-shadow: 0 0 0 2px var(--ms-ink) !important;
+}
+
+/* —— Nav / sidebar —— */
+html:not([data-ms-mode="dark"]) .ms-sidebar {
+  background: var(--ms-bg) !important;
+  border-right: 1px solid var(--ms-line) !important;
+  box-shadow: none !important;
+}
+
+/* Category lists sit in a super-light grey shell on the cream rail */
+html:not([data-ms-mode="dark"]) .ms-nav {
+  background: #f0f1f3 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-group {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-sidebar-foot {
+  background: var(--ms-surface-alt) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-user-avatar {
+  background: var(--ms-select) !important;
+  color: var(--ms-ink) !important;
+  box-shadow: 0 0 0 2px var(--ms-bg), 0 0 0 3.5px var(--ms-select) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-pill,
+html:not([data-ms-mode="dark"]) .ms-tab-pill {
+  background: var(--ms-select) !important;
+  box-shadow: var(--ms-shadow-segment) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link {
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  background: transparent !important;
+  border-radius: 12px;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link .ms-nav-ico,
+html:not([data-ms-mode="dark"]) .ms-nav-link .ms-nav-label {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link:hover {
+  background: var(--ms-surface-alt) !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+}
+
+/* Selected state uses --ms-select (grey by default; follows Appearance when set) */
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-active {
+  background: transparent !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  font-weight: 650;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav:not(:has(.ms-nav-pill)) .ms-nav-link.is-active,
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-active.is-generating {
+  background: var(--ms-select) !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  box-shadow: var(--ms-shadow-segment) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-active .ms-nav-ico {
+  color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating {
+  color: var(--ms-ink) !important;
+  background: color-mix(in srgb, var(--ms-select) 55%, var(--ms-bg)) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ms-select) 70%, transparent) !important;
+  animation: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating .ms-nav-ico {
+  color: var(--ms-ink) !important;
+  animation: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating .ms-nav-progress {
+  background: var(--ms-line) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating .ms-nav-progress::after {
+  background: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-menu-toggle {
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--ms-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-tabbar .ms-menu-toggle.ms-tab-menu {
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--ms-ink) !important;
+}
+
+/* —— Tabs / segmented —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-tabs,
+  .ms-segmented,
+  .ms-auth-tabs,
+  .ms-lb-mode,
+  .ms-lb-viewports,
+  .ms-lb-widget-mode,
+  .ms-bs-mode-tabs
+) {
+  background: var(--ms-segment) !important;
+  border-radius: 16px !important;
+  padding: 4px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-segmented .is-active,
+  .ms-auth-tab.is-active,
+  .ms-tabs .is-active,
+  .ms-lb-mode-btn.is-active,
+  .ms-lb-viewport-btn.is-active,
+  .ms-lb-widget-mode-btn.is-active,
+  .ms-bs-mode-tab.is-active,
+  .ms-bs-gh-provider-btn.is-active,
+  .seg-switch[data-seg-tone="primary"] > .seg-switch-indicator
+) {
+  background: var(--ms-select) !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--ms-shadow-segment) !important;
+  border: 0 !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-auth-tab:not(.is-active),
+  .ms-lb-mode-btn:not(.is-active),
+  .ms-lb-viewport-btn:not(.is-active),
+  .ms-lb-widget-mode-btn:not(.is-active),
+  .ms-bs-mode-tab:not(.is-active),
+  .ms-bs-gh-provider-btn:not(.is-active)
+) {
+  color: #666666 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Profile-style top tabs underline */
+html:not([data-ms-mode="dark"]) .ms-top-tabs .is-active,
+html:not([data-ms-mode="dark"]) .ms-profile-tabs .is-active {
+  color: var(--ms-ink) !important;
+  box-shadow: inset 0 -3px 0 var(--ms-ink) !important;
+  background: transparent !important;
+}
+
+/* —— List rows / hairlines —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-settings-row,
+  .ms-list-row,
+  .ms-detail-row,
+  .ms-fin-row
+) {
+  border-bottom: 1px solid var(--ms-line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* —— Search pills —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-search,
+  input.ms-search,
+  .ms-lf-search,
+  #lf-query,
+  .ms-dash-projects-search-field,
+  .ms-clients-search-field,
+  .ms-orders-search,
+  .ms-orders-search input,
+  .ms-lf-map-search-field,
+  .ms-lf-map-search-field input
+) {
+  border: 1.5px solid var(--ms-ink) !important;
+  border-radius: var(--ms-radius-pill) !important;
+  background: transparent !important;
+  color: var(--ms-ink) !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-projects-search-field input,
+  .ms-clients-search-field input,
+  .ms-lf-map-search-field input,
+  #lf-query
+) {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-projects-search-field input::placeholder,
+  .ms-clients-search-field input::placeholder,
+  .ms-orders-search input::placeholder,
+  .ms-lf-map-search-field input::placeholder,
+  #lf-query::placeholder
+) {
+  color: #6a6a62 !important;
+  opacity: 1 !important;
+}
+
+/* —— Banners / tips —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-banner,
+  .ms-tip,
+  .ms-info-banner,
+  .ms-profile-complete,
+  .ms-lb-tip
+) {
+  background: var(--ms-banner) !important;
+  color: var(--ms-banner-ink) !important;
+  border: 0 !important;
+  border-radius: 24px !important;
+  box-shadow: none !important;
+}
+
+/* —— Links —— */
+html:not([data-ms-mode="dark"]) a:not(.ms-btn):not(.ms-home-cta-primary):not(.ms-home-cta-secondary):not(.ms-nav-link):not(.ms-home-bloom-nav a):not(.ms-legal-nav a):not(.ms-legal-toc a):not(.ms-orders-nav-link) {
+  color: var(--ms-link);
+}
+
+html:not([data-ms-mode="dark"]) .ms-card a,
+html:not([data-ms-mode="dark"]) .ms-legal-doc a,
+html:not([data-ms-mode="dark"]) .ms-help-card a,
+html:not([data-ms-mode="dark"]) .ms-settings-card a {
+  color: var(--ms-link) !important;
+}
+
+/* —— Home polish —— */
+body[data-page="home"] .ms-home-title,
+body[data-page="home"] .ms-home-title-accent {
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+  background: none !important;
+}
+
+body[data-page="home"] .ms-home-sub {
+  color: #666666 !important;
+}
+
+/* Readable secondary text across studio */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-muted,
+  .ms-page-eyebrow,
+  .ms-auth-sub,
+  .ms-helper,
+  .ms-field-hint,
+  .ms-settings-hint,
+  .ms-home-section-lead,
+  .ms-dash-metric span,
+  .ms-stat-label,
+  label .ms-hint,
+  .ms-empty,
+  .ms-empty-copy,
+  .ms-toast,
+  .ms-footer-note
+) {
+  color: #666666 !important;
+  opacity: 1 !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input::placeholder,
+  textarea.ms-textarea::placeholder,
+  .ms-auth-card input.ms-input::placeholder
+) {
+  color: #6a6a62 !important;
+  opacity: 1 !important;
+}
+
+/* Page padding rhythm for public / auth surfaces */
+html:not([data-ms-mode="dark"]) body[data-page="login"],
+html:not([data-ms-mode="dark"]) body[data-page="download"],
+html:not([data-ms-mode="dark"]) body[data-page="orders"],
+html:not([data-ms-mode="dark"]) body[data-page="contact"],
+html:not([data-ms-mode="dark"]) body[data-page="legal"],
+html:not([data-ms-mode="dark"]) body[data-page="report"] {
+  padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+}
+
+html:not([data-ms-mode="dark"]) body[data-page="login"] .ms-auth-card,
+html:not([data-ms-mode="dark"]) body[data-page="download"] .ms-download-card,
+html:not([data-ms-mode="dark"]) body[data-page="orders"] .ms-orders-card {
+  max-width: 26rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem 1.35rem !important;
+}
+
+body[data-page="home"] .ms-home-cta-primary {
+  background: var(--ms-accent) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+body[data-page="home"] .ms-home-cta-secondary {
+  background: transparent !important;
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+  border: 1.5px solid #232427 !important;
+}
+
+body[data-page="home"] .ms-home-bloom {
+  background: #1d1d1f !important;
+}
+
+body[data-page="home"] .ms-home-bloom-nav a {
+  color: #ffffff !important;
+}
+
+body[data-page="home"] .ms-home-bloom-nav a:hover {
+  color: #c8c8cc !important;
+}
+
+body[data-page="home"].ms-home-menu-open .ms-home-brand,
+body[data-page="home"].ms-home-menu-open .ms-home-brand strong {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+body[data-page="home"].ms-home-menu-open .ms-home-orb.is-open i {
+  background: #ffffff !important;
+}
+
+body[data-page="home"] .ms-home-method-card {
+  background: #fafafa !important;
+  border-color: #e5e5e5 !important;
+  box-shadow: var(--ms-shadow-card) !important;
+}
+
+/* —— Auth —— */
+html:not([data-ms-mode="dark"]) body[data-page="login"] {
+  background: #ffffff !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-auth-card {
+  background: #fafafa !important;
+  border: 1px solid #e5e5e5 !important;
+  border-radius: 28px !important;
+  box-shadow: var(--ms-shadow-card) !important;
+}
+
+/* —— Chrome odds and ends —— */
+html:not([data-ms-mode="dark"]) .ms-lb-send {
+  background: var(--ms-ink) !important;
+  color: #ffffff !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(.ms-chip, .ms-tag, .ms-pill) {
+  background: var(--ms-surface-alt) !important;
+  color: var(--ms-ink) !important;
+  border: 1px solid var(--ms-line) !important;
+  border-radius: var(--ms-radius-pill) !important;
+}
+
+/* Dashboard / project tiles: no cool-white or blue-tint cards on cream */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-post,
+  .ms-dash-preview,
+  .ms-dash-island,
+  .ms-dash-island-panel,
+  .ms-dash-progress-card
+) {
+  background: var(--ms-surface) !important;
+  border-color: var(--ms-line) !important;
+  box-shadow: var(--ms-shadow-card) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-dash-count-badge,
+html:not([data-ms-mode="dark"]) .ms-dash-projects-filter.is-active {
+  background: var(--ms-select) !important;
+  color: var(--ms-ink) !important;
+  border-color: transparent !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-dash-post-avatar,
+html:not([data-ms-mode="dark"]) .ms-dash-preview-placeholder {
+  background: var(--ms-select) !important;
+  color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(.ms-skeleton, .ms-placeholder-block) {
+  background: var(--ms-skeleton) !important;
+  border-radius: 22px;
+}
+
+/* Pressed feel */
+@media (hover: hover) {
+  html:not([data-ms-mode="dark"]) :where(
+    .ms-btn:not(:disabled),
+    .ms-home-cta-primary,
+    .ms-home-cta-secondary,
+    .ms-home-footer-signup,
+    .ms-home-method-cta
+  ):hover {
+    opacity: 0.85;
+    transform: scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-ms-mode="dark"]) :where(.ms-btn, .ms-home-cta-primary, .ms-home-cta-secondary):hover {
+    transform: none;
+  }
+}
+
+/* —— Finder / map chrome (overrides late leads-map.css) —— */
+html:not([data-ms-mode="dark"]) #page-body.ms-lf-page.ms-lf-page--map {
+  --lf-btn-bg: var(--ms-accent, #232427) !important;
+  --lf-btn-shadow: none !important;
+  --lf-btn-shadow-hover: none !important;
+  --lf-chrome-grey: #e5e5e5 !important;
+  --lf-muted: #6b6b6b !important;
+  --lf-btn-radius: 999px !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-lf-map-pill,
+  .ms-lf-map-search-field
+) {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1px solid var(--ms-line) !important;
+  box-shadow: var(--ms-shadow-card) !important;
+  color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-lf-map-chip,
+  .ms-lf-map-pill-body,
+  .ms-lf-map-chip--count,
+  .ms-lf-map-pill-icon
+) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-map-search-field {
+  border-radius: var(--ms-radius-pill) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-lf-map-scan,
+  .ms-lf-map-all,
+  .ms-lf-find
+):is(:hover, :focus, :focus-visible, :active) {
+  box-shadow: none !important;
+  filter: none !important;
+  background-image: none !important;
+}
+
+/* Slide-to-generate matches Scan nearby: ink track, cream thumb (not pale toggle grey). */
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb,
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:hover,
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:focus,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-thumb,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-thumb:hover,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-thumb:focus {
+  background: var(--ms-surface) !important;
+  color: var(--ms-ink) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 3px 10px rgba(0, 0, 0, 0.18) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:focus-visible,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-thumb:focus-visible {
+  outline: 2px solid var(--ms-ink) !important;
+  outline-offset: 2px !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-slide-track,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-track {
+  background: var(--ms-ink) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-slide-fill,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-fill {
+  background: #3a3c36 !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-slide-label,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-label {
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+}
+
+/* —— Flat cream surfaces (no cool washes) —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-island-panel,
+  .ms-clients-toolbar,
+  .ms-orders-wash,
+  .ms-orders-field,
+  .ms-onboard-card-head
+) {
+  background: var(--ms-surface) !important;
+  background-image: none !important;
+  border-color: var(--ms-line) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-onboard-progress-fill {
+  background: var(--ms-ink) !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-appearance-sizes button.is-selected,
+html:not([data-ms-mode="dark"]) .ms-appearance-swatch.is-selected {
+  border-color: var(--ms-ink) !important;
+  box-shadow: 0 0 0 2px var(--ms-select) !important;
+}
