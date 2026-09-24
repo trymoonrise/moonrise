@@ -308,7 +308,6 @@
   ];
 
   const CHANNEL_HOP_KEY = "ms_channel_hop";
-  const CHANNEL_LEAVE_MS = 360;
 
   let pageMotionStarted = false;
   let channelLeaveBound = false;
@@ -406,34 +405,21 @@
   }
 
   function leaveToChannel(link) {
-    if (!link || document.body.classList.contains("ms-channel-leaving")) return;
-    const dir = channelDirForLink(link);
-    document.documentElement.style.setProperty("--ms-channel-dir", String(dir));
-    writeChannelHop(dir, document.body?.dataset?.page || "", link.getAttribute("data-nav") || "");
-
+    if (!link) return;
     document.querySelectorAll(".ms-sidebar .ms-nav-link.is-active").forEach(function (el) {
       el.classList.remove("is-active");
       el.removeAttribute("aria-current");
     });
     link.classList.add("is-active");
     link.setAttribute("aria-current", "page");
-    global.StudioShell?.syncNavPillForLink?.(link, { animate: true });
-
+    global.StudioShell?.syncNavPillForLink?.(link, { animate: false });
     document.body.classList.remove("ms-nav-open");
-
-    const pageBody = document.getElementById("page-body");
-    if (pageBody) pageBody.style.willChange = "opacity, transform";
-
-    // Paint current frame, then leave — avoids a snap when the class toggles.
-    global.requestAnimationFrame(function () {
-      global.requestAnimationFrame(function () {
-        document.body.classList.add("ms-channel-leaving");
-      });
-    });
-
-    global.setTimeout(function () {
-      global.location.assign(link.href);
-    }, CHANNEL_LEAVE_MS);
+    try {
+      sessionStorage.removeItem(CHANNEL_HOP_KEY);
+    } catch (_) {
+      /* ignore */
+    }
+    global.location.assign(link.href);
   }
 
   function bindChannelNav() {
@@ -501,92 +487,28 @@
     if (pageMotionStarted) return;
     pageMotionStarted = true;
     consumeChannelHop();
-    document.documentElement.classList.add("ms-channel-hop");
-    document.documentElement.classList.remove("ms-channel-entered");
-    document.body.classList.remove("ms-page-motion-ready");
-
-    const pageBody = document.getElementById("page-body");
-    if (pageBody) pageBody.style.willChange = "opacity, transform";
-
-    void document.body.offsetWidth;
-    nextFrame()
-      .then(nextFrame)
-      .then(function () {
-        finishPageMotion();
-      });
-    global.setTimeout(function () {
-      if (!document.body.classList.contains("ms-page-motion-ready")) {
-        finishPageMotion();
-      }
-    }, 900);
+    document.documentElement.classList.remove("ms-channel-hop");
+    finishPageMotion();
   }
 
   function playPageMotion() {
-    const hopping =
-      document.documentElement.classList.contains("ms-channel-hop") || !!readChannelHop();
-
-    if (hopping) {
-      playChannelHopEnter();
-      return;
-    }
-
-    if (pageMotionShouldSkip()) {
-      finishPageMotion();
-      return;
-    }
     if (pageMotionStarted) return;
+    // Static page loads — skip rise/stagger and channel enter easing.
+    consumeChannelHop();
+    document.documentElement.classList.remove("ms-channel-hop");
     pageMotionStarted = true;
-
-    const items = markPageMotionItems();
-    const sidebar = document.getElementById("ms-sidebar");
-    if (sidebar) sidebar.classList.add("ms-motion-sidebar");
-
-    if (!items.length && !sidebar) {
-      finishPageMotion();
-      return;
-    }
-
-    void document.body.offsetWidth;
-    nextFrame()
-      .then(nextFrame)
-      .then(function () {
-        finishPageMotion();
-      });
-
-    global.setTimeout(function () {
-      if (!document.body.classList.contains("ms-page-motion-ready")) {
-        finishPageMotion();
-      }
-    }, 1200);
+    finishPageMotion();
   }
 
   function schedulePageMotion() {
-    const hopping =
-      document.documentElement.classList.contains("ms-channel-hop") || !!readChannelHop();
-
-    if (!hopping && pageMotionShouldSkip()) {
-      finishPageMotion();
-      return;
-    }
-
-    const page = document.body?.dataset?.page || "";
-    const usesShell = document.getElementById("shell") && !PAGE_MOTION_NO_SHELL.has(page);
-
     function tryPlay() {
-      if (usesShell && !document.getElementById("ms-sidebar")) return;
       playPageMotion();
-    }
-
-    if (usesShell) {
-      document.addEventListener("ms:shell-ready", tryPlay, { once: true });
-      global.setTimeout(tryPlay, 1200);
-      return;
     }
 
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", playPageMotion, { once: true });
+      document.addEventListener("DOMContentLoaded", tryPlay, { once: true });
     } else {
-      playPageMotion();
+      tryPlay();
     }
   }
 

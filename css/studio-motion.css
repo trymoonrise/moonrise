@@ -43,45 +43,33 @@ body.ms-contact-public .ms-contact-main {
   }
 }
 
-/* Pre-hide marked items until the ready class triggers the entrance */
+/* Page items stay visible — no rise/stagger enter easing */
 .ms-motion-item {
-  opacity: 0;
-  transform: translate3d(0, var(--ms-motion-rise), 0) scale(0.992);
-  will-change: opacity, transform;
-  transition:
-    opacity 0s linear var(--ms-motion-dur-med),
-    transform 0s linear var(--ms-motion-dur-med);
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 @media (min-width: 901px) {
   .ms-sidebar.ms-motion-sidebar {
-    opacity: 0;
-    transform: translate3d(-10px, 0, 0);
-    will-change: opacity, transform;
-    transition:
-      opacity 0s linear var(--ms-motion-dur-slow),
-      transform 0s linear var(--ms-motion-dur-slow);
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
-/* Page reveal items - class applied once at load by ui-motion.js */
+/* Ready class retained for callers; no animated reveal */
 body.ms-page-motion-ready .ms-motion-item {
   opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
-  transition:
-    opacity var(--ms-motion-dur-med) var(--ms-motion-ease-soft),
-    transform var(--ms-motion-dur-med) var(--ms-motion-ease-soft);
-  transition-delay: calc(var(--ms-motion-base-delay) + var(--ms-motion-stagger) * var(--ms-motion-i, 0));
+  transform: none;
+  transition: none;
 }
 
 @media (min-width: 901px) {
   body.ms-page-motion-ready .ms-sidebar.ms-motion-sidebar {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition:
-      opacity var(--ms-motion-dur-slow) var(--ms-motion-ease-soft),
-      transform var(--ms-motion-dur-slow) var(--ms-motion-ease-soft);
-    transition-delay: 0.02s;
+    transform: none;
+    transition: none;
   }
 }
 
@@ -132,31 +120,25 @@ body.ms-page-motion-ready .ms-motion-item {
   transition: none !important;
 }
 
-/* ── Channel switch (sidebar / tab → other channel) ─────────────────────── */
-html.ms-channel-hop {
-  --ms-channel-dir: 1;
-  --ms-channel-leave-dur: 0.36s;
-  --ms-channel-enter-dur: 0.46s;
-  --ms-channel-ease: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-html.ms-channel-hop #page-body {
-  opacity: 0;
-  transform: translate3d(calc(var(--ms-channel-dir, 1) * 22px), 0, 0);
-  filter: blur(0);
-  will-change: opacity, transform;
-}
-
+/* ── Channel switch: static (no leave/enter easing) ─────────────────────── */
+html.ms-channel-hop #page-body,
 html.ms-channel-hop body.ms-page-motion-ready #page-body,
-html.ms-channel-hop.ms-channel-entered #page-body {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  transition:
-    opacity var(--ms-channel-enter-dur) var(--ms-channel-ease),
-    transform var(--ms-channel-enter-dur) var(--ms-channel-ease);
+html.ms-channel-hop.ms-channel-entered #page-body,
+body.ms-channel-leaving #page-body {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+  will-change: auto;
 }
 
-/* During a hop, keep the desktop sidebar steady (only content moves). */
+html.ms-channel-hop .ms-motion-item,
+body.ms-channel-leaving .ms-motion-item {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
 @media (min-width: 901px) {
   html.ms-channel-hop .ms-sidebar.ms-motion-sidebar,
   html.ms-channel-hop body.ms-page-motion-ready .ms-sidebar.ms-motion-sidebar {
@@ -166,35 +148,14 @@ html.ms-channel-hop.ms-channel-entered #page-body {
   }
 }
 
-/* Hop enter: content moves as one block — skip per-item stagger flash. */
-html.ms-channel-hop .ms-motion-item {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
-
 body.ms-channel-leaving {
   pointer-events: none;
 }
 
-body.ms-channel-leaving #page-body {
-  opacity: 0;
-  transform: translate3d(calc(var(--ms-channel-dir, 1) * -18px), 0, 0);
-  transition:
-    opacity var(--ms-channel-leave-dur, 0.36s) cubic-bezier(0.4, 0, 0.2, 1),
-    transform var(--ms-channel-leave-dur, 0.36s) cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity, transform;
-}
-
-body.ms-channel-leaving .ms-motion-item {
-  transition: none !important;
-}
-
-/* Soften chrome during the handoff so the page swap feels continuous. */
 body.ms-channel-leaving .ms-quick-nav,
 body.ms-channel-leaving .ms-menu-toggle {
-  opacity: 0.35;
-  transition: opacity 0.28s ease;
+  opacity: 1;
+  transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1807,7 +1807,6 @@
   }
 
   const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings"];
-  const TAB_SWITCH_MS = 360;
   const TAB_SWITCH_KEY = "ms_tab_switch";
 
   function prefersTabMotionReduce() {
@@ -1898,40 +1897,15 @@
 
       writeTabSwitch(page, toId || "leads");
       setActiveTab(nav, link);
-      syncTabPill(nav, link, { animate: !prefersTabMotionReduce() });
+      syncTabPill(nav, link, { animate: false });
 
-      const tabOrder = ["dashboard", "builder", "leads", "clients", "settings"];
-      const fromIdx = tabOrder.indexOf(page);
-      const toIdx = tabOrder.indexOf(toId || "leads");
-      const dir = toIdx >= fromIdx ? 1 : -1;
-      document.documentElement.style.setProperty("--ms-channel-dir", String(dir));
       try {
-        sessionStorage.setItem(
-          "ms_channel_hop",
-          JSON.stringify({
-            dir,
-            from: page,
-            to: toId || "leads",
-            t: Date.now(),
-          })
-        );
+        sessionStorage.removeItem("ms_channel_hop");
       } catch (_) {
         /* ignore */
       }
-      if (!prefersTabMotionReduce()) {
-        const pageBody = document.getElementById("page-body");
-        if (pageBody) pageBody.style.willChange = "opacity, transform";
-        window.requestAnimationFrame(() => {
-          window.requestAnimationFrame(() => {
-            document.body.classList.add("ms-channel-leaving");
-          });
-        });
-      }
 
-      const delay = prefersTabMotionReduce() ? 0 : TAB_SWITCH_MS;
-      window.setTimeout(() => {
-        location.href = link.href;
-      }, delay);
+      location.href = link.href;
     });
 
     window.addEventListener(

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <script>
@@ -31,13 +31,13 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20260924-channel-motion"></script>
+  <script src="js/auth-gate-head.js?v=20260924-static-nav"></script>
   <title>Builder - Moonrise Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/studio.css?v=20260924-mode-tabs-slide">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-no-tabbar-ease">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="builder" class="ms-lb-setup">
@@ -48,7 +48,7 @@
       <header class="ms-page-head ms-bs-hero">
         <div class="ms-page-head-copy">
           <h1>Builder</h1>
-          <p class="lead">Choose how to start â€” Google link, manual details, or upload your own site.</p>
+          <p class="lead">Choose how to start — Google link, manual details, or upload your own site.</p>
         </div>
       </header>
 
@@ -69,7 +69,7 @@
                 </span>
                 <div class="ms-bs-path-copy">
                   <h3 id="bs-path-google-title">Google link</h3>
-                  <p>Paste a Maps or g.page URL â€” weâ€™ll pull the details.</p>
+                  <p>Paste a Maps or g.page URL — we’ll pull the details.</p>
                 </div>
               </header>
               <div class="ms-lb-onboard-maps">
@@ -89,7 +89,7 @@
                 </span>
                 <div class="ms-bs-path-copy">
                   <h3 id="bs-path-manual-title">Manual input</h3>
-                  <p>Fill every field below if you donâ€™t have a link.</p>
+                  <p>Fill every field below if you don’t have a link.</p>
                 </div>
               </header>
               <div class="ms-lb-onboard-fields ms-lb-onboard-fields--manual">
@@ -112,7 +112,7 @@
                   </div>
                   <div class="ms-lb-onboard-field ms-lb-onboard-field--full">
                     <label class="ms-lb-onboard-label" for="onb-description">Brief description <span class="ms-lb-onboard-optional">(optional)</span></label>
-                    <input class="ms-lb-onboard-input" id="onb-description" placeholder="Family-owned plumber serving the area for 20 yearsâ€¦" autocomplete="off" data-1p-ignore data-lpignore="true">
+                    <input class="ms-lb-onboard-input" id="onb-description" placeholder="Family-owned plumber serving the area for 20 years…" autocomplete="off" data-1p-ignore data-lpignore="true">
                   </div>
                 </div>
               </div>
@@ -156,8 +156,8 @@
                   </div>
                   <div class="ms-lb-onboard-field ms-bs-gh-token-field">
                     <label class="ms-lb-onboard-label" for="bs-gh-token">GitHub token</label>
-                    <input class="ms-lb-onboard-input" id="bs-gh-token" type="password" placeholder="ghp_â€¦ or github_pat_â€¦" autocomplete="off" spellcheck="false" data-1p-ignore data-lpignore="true">
-                    <p class="ms-muted ms-bs-gh-hint">Needs <strong>repo</strong> scope for private repos. Token is used only for this import â€” never stored.</p>
+                    <input class="ms-lb-onboard-input" id="bs-gh-token" type="password" placeholder="ghp_… or github_pat_…" autocomplete="off" spellcheck="false" data-1p-ignore data-lpignore="true">
+                    <p class="ms-muted ms-bs-gh-hint">Needs <strong>repo</strong> scope for private repos. Token is used only for this import — never stored.</p>
                     <p class="ms-muted ms-bs-gh-status" id="bs-gh-status" hidden></p>
                   </div>
                 </div>
@@ -177,7 +177,7 @@
                         aria-labelledby="bs-gh-repo-label"
                         disabled
                       >
-                        <span class="ms-bs-gh-select-label is-placeholder" id="bs-gh-repo-label-text">Select a repositoryâ€¦</span>
+                        <span class="ms-bs-gh-select-label is-placeholder" id="bs-gh-repo-label-text">Select a repository…</span>
                         <svg class="ms-bs-gh-select-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
                       </button>
                       <div class="ms-bs-gh-select-menu" id="bs-gh-repo-menu" role="listbox" aria-labelledby="bs-gh-repo-label" hidden></div>
@@ -190,9 +190,9 @@
                   <div class="ms-lb-onboard-field ms-bs-gh-path-field">
                     <label class="ms-lb-onboard-label" for="bs-gh-path">Site folder</label>
                     <select class="ms-lb-onboard-input ms-bs-gh-path" id="bs-gh-path" aria-describedby="bs-gh-path-hint">
-                      <option value="">Loading foldersâ€¦</option>
+                      <option value="">Loading folders…</option>
                     </select>
-                    <p class="ms-muted ms-bs-gh-hint" id="bs-gh-path-hint">Pick the folder that contains your websiteâ€™s index.html.</p>
+                    <p class="ms-muted ms-bs-gh-hint" id="bs-gh-path-hint">Pick the folder that contains your website’s index.html.</p>
                   </div>
                   <div class="ms-lb-onboard-field ms-bs-upload-name-field">
                     <label class="ms-lb-onboard-label" for="onb-upload-name">Business name <span class="ms-lb-onboard-optional">(optional)</span></label>
@@ -229,10 +229,10 @@
   <script defer src="js/supabase-client.js?v=20260911-live2"></script>
   <script defer src="js/auth.js?v=20260911-live2"></script>
   <script defer src="js/segment-switch.js?v=20260924-mode-tabs-slide"></script>
-  <script defer src="js/ui-motion.js?v=20260924-channel-smooth"></script>
+  <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
-  <script defer src="js/app.js?v=20260924-no-tabbar-ease"></script>
+  <script defer src="js/app.js?v=20260924-static-nav"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
   <script defer src="js/builder.js?v=20260924-mode-tabs-slide"></script>
 </body>
