@@ -290,7 +290,7 @@
     "#page-body > .ms-dash-stack > .ms-dash-posts",
     "#page-body .ms-help-guide > .ms-card",
     "#page-body .ms-donate-channel > .ms-donate-card",
-    "#page-body .ms-donate-channel > .ms-donate-wall",
+    "#page-body .ms-donate-channel .ms-donate-unified-foot",
     "#page-body .ms-store-grid > .ms-store-product",
     "#page-body > .ms-card",
     "#page-body > section:not(.ms-motion-skip)",
@@ -308,7 +308,7 @@
   ];
 
   const CHANNEL_HOP_KEY = "ms_channel_hop";
-  const CHANNEL_LEAVE_MS = 280;
+  const CHANNEL_LEAVE_MS = 360;
 
   let pageMotionStarted = false;
   let channelLeaveBound = false;
@@ -420,7 +420,16 @@
     global.StudioShell?.syncNavPillForLink?.(link, { animate: true });
 
     document.body.classList.remove("ms-nav-open");
-    document.body.classList.add("ms-channel-leaving");
+
+    const pageBody = document.getElementById("page-body");
+    if (pageBody) pageBody.style.willChange = "opacity, transform";
+
+    // Paint current frame, then leave — avoids a snap when the class toggles.
+    global.requestAnimationFrame(function () {
+      global.requestAnimationFrame(function () {
+        document.body.classList.add("ms-channel-leaving");
+      });
+    });
 
     global.setTimeout(function () {
       global.location.assign(link.href);
@@ -493,6 +502,12 @@
     pageMotionStarted = true;
     consumeChannelHop();
     document.documentElement.classList.add("ms-channel-hop");
+    document.documentElement.classList.remove("ms-channel-entered");
+    document.body.classList.remove("ms-page-motion-ready");
+
+    const pageBody = document.getElementById("page-body");
+    if (pageBody) pageBody.style.willChange = "opacity, transform";
+
     void document.body.offsetWidth;
     nextFrame()
       .then(nextFrame)

@@ -1759,6 +1759,7 @@
 
   function setBuilderMode(mode) {
     const next = mode === "manual" || mode === "upload" ? mode : "google";
+    const prev = state.builderMode;
     state.builderMode = next;
     document.querySelectorAll("[data-builder-mode]").forEach((btn) => {
       const on = btn.getAttribute("data-builder-mode") === next;
@@ -1770,6 +1771,11 @@
       panel.hidden = !on;
       panel.classList.toggle("is-active", on);
       panel.setAttribute("aria-hidden", on ? "false" : "true");
+      if (on && prev && prev !== next) {
+        panel.classList.remove("is-enter");
+        void panel.offsetWidth;
+        panel.classList.add("is-enter");
+      }
     });
     if (next === "upload") setGithubWizardStep(state.githubWizardStep || 1);
     else {
@@ -1778,6 +1784,7 @@
     }
     setOnboardError("");
     updateOnboardContinue();
+    global.SegmentSwitch?.refresh?.(document.querySelector(".ms-bs-mode-tabs"), true);
   }
 
   function formatUploadBytes(n) {

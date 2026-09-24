@@ -68,6 +68,13 @@
 .mr-wm-pay:hover:not(:disabled){filter:brightness(1.03);transform:translateY(-.5px)}
 .mr-wm-pay:disabled{opacity:.55;cursor:not-allowed}
 .mr-wm-note{margin:0;text-align:center;font-size:.78rem;color:#94a3b8;line-height:1.4}
+.mr-wm-help{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:.35rem;width:100%;min-height:2.65rem;margin-top:.15rem;padding:.55rem .75rem;border:1px solid var(--mr-line,#e8edf3);border-radius:12px;background:#fff;color:#475569;font:inherit;font-family:var(--mr-font);font-size:.9rem;font-weight:650;letter-spacing:-.01em;cursor:pointer;transition:border-color .15s ease,background .15s ease,color .15s ease}
+.mr-wm-help:hover{border-color:#bfdbfe;background:#f8fbff;color:#1d4ed8}
+.mr-wm-help.is-open{border-color:#bfdbfe;background:#f8fbff;color:#1d4ed8}
+.mr-wm-help-chevron{width:.85rem;height:.85rem;display:inline-block;transition:transform .22s ease;flex-shrink:0}
+.mr-wm-help.is-open .mr-wm-help-chevron{transform:rotate(180deg)}
+.mr-wm-help-panel{display:grid;gap:1rem;margin-top:.15rem}
+.mr-wm-help-panel[hidden]{display:none!important}
 .mr-wm-error{margin:0;color:#b91c1c;font-size:.85rem;font-weight:600;line-height:1.4}
 .mr-wm-contact-btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:2.85rem;padding:.65rem .75rem;border:1px solid var(--mr-line,#e8edf3);border-radius:12px;background:#fff;color:var(--mr-ink,#0f172a);font:inherit;font-family:var(--mr-font);font-size:.86rem;font-weight:650;letter-spacing:-.01em;text-decoration:none;text-align:center;transition:border-color .15s ease,background .15s ease,color .15s ease;box-sizing:border-box}
 .mr-wm-contact-btn:hover{border-color:#bfdbfe;background:#f8fbff;color:#1d4ed8}
@@ -321,7 +328,12 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       '<button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>' +
       '<p class="mr-wm-error" id="mr-wm-error" hidden></p>' +
       '<p class="mr-wm-note">Secure Stripe checkout &middot; promo codes accepted &middot; hosting included</p>' +
+      '<button type="button" class="mr-wm-help" id="mr-wm-help" aria-expanded="false" aria-controls="mr-wm-help-panel">' +
+      "Help" +
+      '<svg class="mr-wm-help-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +
+      "</button>" +
       "</div>" +
+      '<div class="mr-wm-help-panel" id="mr-wm-help-panel" hidden>' +
       '<div class="mr-wm-contacts">' +
       '<p class="mr-wm-contacts-label">Need a site change?</p>' +
       '<div class="mr-wm-contacts-row">' +
@@ -331,6 +343,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       "</div>" +
       '<div class="mr-wm-faq" id="mr-wm-faq">' +
       faqHtml() +
+      "</div>" +
       "</div></div>" +
       '<div class="mr-wm-step" data-step="creator" hidden id="mr-wm-step-creator"></div>' +
       '<div class="mr-wm-step" data-step="hq" hidden id="mr-wm-step-hq"></div>' +
@@ -596,6 +609,13 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
         step.hidden = !isMain;
         step.classList.toggle("is-active", isMain);
       });
+      const helpBtn = document.getElementById("mr-wm-help");
+      const helpPanel = document.getElementById("mr-wm-help-panel");
+      if (helpPanel) helpPanel.hidden = true;
+      if (helpBtn) {
+        helpBtn.classList.remove("is-open");
+        helpBtn.setAttribute("aria-expanded", "false");
+      }
     }
 
     function showError(msg) {
@@ -612,6 +632,26 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     overlay?.addEventListener("click", (e) => {
       if (e.target === overlay) closePanel();
     });
+
+    const helpBtn = document.getElementById("mr-wm-help");
+    const helpPanel = document.getElementById("mr-wm-help-panel");
+    helpBtn?.addEventListener("click", () => {
+      if (!helpPanel) return;
+      const open = helpPanel.hasAttribute("hidden");
+      if (open) {
+        helpPanel.removeAttribute("hidden");
+        helpBtn.classList.add("is-open");
+        helpBtn.setAttribute("aria-expanded", "true");
+        requestAnimationFrame(() => {
+          helpPanel.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        });
+      } else {
+        helpPanel.setAttribute("hidden", "");
+        helpBtn.classList.remove("is-open");
+        helpBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+
     if (!keydownBound) {
       keydownBound = true;
       document.addEventListener("keydown", (e) => {

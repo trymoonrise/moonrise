@@ -247,7 +247,7 @@
     const LB = window.MoonriseDonateLeaderboard;
     if (!LB || !list) return;
     LB.clearLoading(list);
-    LB.renderList(list, entries, { showPlaceholder: true });
+    LB.renderFacepile(list, entries, { showPlaceholder: true, limit: 10 });
   }
 
   async function loadLeaderboard() {
@@ -256,12 +256,11 @@
     if (!LB || !list) return;
 
     if (!workerUrl()) {
-      list.innerHTML =
-        '<li class="ms-donate-lb-empty">Leaderboard unavailable - worker not configured.</li>';
+      list.innerHTML = '<span class="ms-donate-facepile-empty">Leaderboard unavailable</span>';
       return;
     }
 
-    LB.renderLoading(list, 5);
+    LB.renderFacepileLoading(list, 8);
 
     try {
       const entries = await LB.fetchEntries(10);
@@ -269,7 +268,7 @@
     } catch (e) {
       LB.clearLoading(list);
       list.innerHTML =
-        '<li class="ms-donate-lb-empty">Leaderboard unavailable right now. Try again in a moment.</li>';
+        '<span class="ms-donate-facepile-empty">Leaderboard unavailable right now.</span>';
       console.warn("Donate leaderboard:", e?.message || e);
     }
   }

@@ -10,7 +10,7 @@
     {
       id: "donate",
       href: "donate.html",
-      label: "Donate & Store",
+      label: "Support",
       icon: "heart",
       pages: ["donate", "store"],
     },
@@ -1807,7 +1807,7 @@
   }
 
   const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings"];
-  const TAB_SWITCH_MS = 340;
+  const TAB_SWITCH_MS = 360;
   const TAB_SWITCH_KEY = "ms_tab_switch";
 
   function prefersTabMotionReduce() {
@@ -1919,7 +1919,13 @@
         /* ignore */
       }
       if (!prefersTabMotionReduce()) {
-        document.body.classList.add("ms-channel-leaving");
+        const pageBody = document.getElementById("page-body");
+        if (pageBody) pageBody.style.willChange = "opacity, transform";
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            document.body.classList.add("ms-channel-leaving");
+          });
+        });
       }
 
       const delay = prefersTabMotionReduce() ? 0 : TAB_SWITCH_MS;
@@ -1938,58 +1944,7 @@
     );
   }
 
-  function isTabBarPageFile(href) {
-    try {
-      const url = new URL(href, location.href);
-      const file = (url.pathname.split("/").pop() || "").toLowerCase();
-      return /^(dashboard|builder|clients|settings)\.html$/.test(file);
-    } catch (_) {
-      return false;
-    }
-  }
-
-  function bindTabBarLeave() {
-    if (window.__msTabBarLeave) return;
-    window.__msTabBarLeave = true;
-    document.addEventListener("click", (event) => {
-      const page = document.body?.dataset?.page || "";
-      if (!TAB_BAR_PAGES.includes(page)) return;
-      if (event.defaultPrevented || event.button !== 0) return;
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const link = event.target.closest("a[href]");
-      if (!link || link.target === "_blank") return;
-      if (link.closest("#ms-tabbar")) return;
-      const href = link.getAttribute("href") || "";
-      if (!href || href.charAt(0) === "#" || /^(mailto:|tel:|javascript:)/i.test(href)) return;
-      let url;
-      try {
-        url = new URL(link.href, location.href);
-      } catch (_) {
-        return;
-      }
-      if (url.origin !== location.origin) return;
-      const file = (url.pathname.split("/").pop() || "").toLowerCase();
-      if (!file.endsWith(".html") || isTabBarPageFile(url.href)) return;
-      const bar = document.getElementById("ms-tabbar");
-      if (!bar) return;
-      if (bar.classList.contains("is-leaving") || bar.classList.contains("is-switching")) {
-        event.preventDefault();
-        return;
-      }
-      if (!window.matchMedia("(max-width: 900px)").matches) return;
-      if (prefersTabMotionReduce()) return;
-      const style = window.getComputedStyle(bar);
-      if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return;
-      event.preventDefault();
-      bar.classList.add("is-leaving");
-      window.setTimeout(() => {
-        location.href = link.href;
-      }, 580);
-    });
-  }
-
   function ensureTabBar(page) {
-    bindTabBarLeave();
     if (!TAB_BAR_PAGES.includes(page)) {
       document.getElementById("ms-tabbar")?.remove();
       return;

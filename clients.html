@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <script>
     (function () {
-      var BUILD = "20260924-drawer-ease";
+      var BUILD = "20260924-clear-x";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260924-nav-grey">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-drawer-ease">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-no-tabbar-ease">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-no-tabbar-ease">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="clients">
@@ -79,7 +79,9 @@
               class="ms-clients-search-clear"
               hidden
               aria-label="Clear search"
-            >Ã—</button>
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
           </div>
         </div>
         <table class="ms-clients-table">
@@ -167,10 +169,10 @@
   <script defer src="js/supabase-client.js?v=20260911-live2"></script>
   <script defer src="js/auth.js?v=20260911-live2"></script>
   <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20260924-channel-motion"></script>
+  <script defer src="js/ui-motion.js?v=20260924-channel-smooth"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
-  <script defer src="js/app.js?v=20260924-nav-pill-fix"></script>
+  <script defer src="js/app.js?v=20260924-no-tabbar-ease"></script>
   <script defer src="js/clients.js?v=20260909-clients-fix"></script>
 </body>
 </html>

@@ -481,6 +481,52 @@
       color: #94a3b8;
       line-height: 1.4;
     }
+    .mr-wm-help {
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      width: 100%;
+      min-height: 2.65rem;
+      margin-top: 0.15rem;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--mr-line);
+      border-radius: 12px;
+      background: #fff;
+      color: #475569;
+      font: inherit;
+      font-family: var(--mr-font);
+      font-size: 0.9rem;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+    .mr-wm-help:hover,
+    .mr-wm-help.is-open {
+      border-color: #bfdbfe;
+      background: #f8fbff;
+      color: #1d4ed8;
+    }
+    .mr-wm-help-chevron {
+      width: 0.85rem;
+      height: 0.85rem;
+      display: inline-block;
+      transition: transform 0.22s ease;
+      flex-shrink: 0;
+    }
+    .mr-wm-help.is-open .mr-wm-help-chevron {
+      transform: rotate(180deg);
+    }
+    .mr-wm-help-panel {
+      display: grid;
+      gap: 1rem;
+      margin-top: 0.15rem;
+    }
+    .mr-wm-help-panel[hidden] {
+      display: none !important;
+    }
     .mr-wm-error {
       margin: 0;
       color: #b91c1c;
@@ -615,33 +661,39 @@
           <button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>
           <p class="mr-wm-error" id="mr-wm-error" hidden></p>
           <p class="mr-wm-note">Secure Stripe checkout &middot; hosting included</p>
+          <button type="button" class="mr-wm-help" id="mr-wm-help" aria-expanded="false" aria-controls="mr-wm-help-panel">
+            Help
+            <svg class="mr-wm-help-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
         </div>
-        <a class="mr-wm-contact-btn" id="mr-wm-contact" href="../contact.html" target="_blank" rel="noopener noreferrer">Contact Moonrise</a>
-        <div class="mr-wm-faq" id="mr-wm-faq">
-          <details>
-            <summary>What is this?</summary>
-            <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
-              <p>This is a Moonrise website preview. The watermark stays until you complete checkout - then it comes off and the site stays live.</p>
-            </div></div>
-          </details>
-          <details>
-            <summary>What do I get?</summary>
-            <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
-              <p>Stripe confirms instantly. The watermark is removed and your site stays published with hosting included.</p>
-            </div></div>
-          </details>
-          <details>
-            <summary>Do I own the website?</summary>
-            <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
-              <p>The site stays managed by <a href="mailto:trymoonrise@gmail.com">@trymoonrise</a>. We handle the technical work, updates, and redesigns so it can keep evolving with your business.</p>
-            </div></div>
-          </details>
-          <details>
-            <summary>Need changes?</summary>
-            <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
-              <p>Message <a href="mailto:trymoonrise@gmail.com">Moonrise</a> for photos, hours, services, colors, redesigns, and more.</p>
-            </div></div>
-          </details>
+        <div class="mr-wm-help-panel" id="mr-wm-help-panel" hidden>
+          <a class="mr-wm-contact-btn" id="mr-wm-contact" href="../contact.html" target="_blank" rel="noopener noreferrer">Contact Moonrise</a>
+          <div class="mr-wm-faq" id="mr-wm-faq">
+            <details>
+              <summary>What is this?</summary>
+              <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
+                <p>This is a Moonrise website preview. The watermark stays until you complete checkout - then it comes off and the site stays live.</p>
+              </div></div>
+            </details>
+            <details>
+              <summary>What do I get?</summary>
+              <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
+                <p>Stripe confirms instantly. The watermark is removed and your site stays published with hosting included.</p>
+              </div></div>
+            </details>
+            <details>
+              <summary>Do I own the website?</summary>
+              <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
+                <p>The site stays managed by <a href="mailto:trymoonrise@gmail.com">@trymoonrise</a>. We handle the technical work, updates, and redesigns so it can keep evolving with your business.</p>
+              </div></div>
+            </details>
+            <details>
+              <summary>Need changes?</summary>
+              <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
+                <p>Message <a href="mailto:trymoonrise@gmail.com">Moonrise</a> for photos, hours, services, colors, redesigns, and more.</p>
+              </div></div>
+            </details>
+          </div>
         </div>
       </div>
     </div>
@@ -766,6 +818,22 @@
         });
       }
       bindExclusiveFaq(document.getElementById("mr-wm-faq"));
+
+      const helpBtn = document.getElementById("mr-wm-help");
+      const helpPanel = document.getElementById("mr-wm-help-panel");
+      helpBtn?.addEventListener("click", () => {
+        if (!helpPanel) return;
+        const open = helpPanel.hasAttribute("hidden");
+        if (open) {
+          helpPanel.removeAttribute("hidden");
+          helpBtn.classList.add("is-open");
+          helpBtn.setAttribute("aria-expanded", "true");
+        } else {
+          helpPanel.setAttribute("hidden", "");
+          helpBtn.classList.remove("is-open");
+          helpBtn.setAttribute("aria-expanded", "false");
+        }
+      });
 
       tickTimer();
 

@@ -132,14 +132,18 @@ body.ms-page-motion-ready .ms-motion-item {
   transition: none !important;
 }
 
-/* ── Channel switch (sidebar nav → other channel) ───────────────────────── */
+/* ── Channel switch (sidebar / tab → other channel) ─────────────────────── */
 html.ms-channel-hop {
   --ms-channel-dir: 1;
+  --ms-channel-leave-dur: 0.36s;
+  --ms-channel-enter-dur: 0.46s;
+  --ms-channel-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html.ms-channel-hop #page-body {
   opacity: 0;
-  transform: translate3d(0, calc(var(--ms-channel-dir, 1) * 16px), 0);
+  transform: translate3d(calc(var(--ms-channel-dir, 1) * 22px), 0, 0);
+  filter: blur(0);
   will-change: opacity, transform;
 }
 
@@ -148,8 +152,8 @@ html.ms-channel-hop.ms-channel-entered #page-body {
   opacity: 1;
   transform: translate3d(0, 0, 0);
   transition:
-    opacity var(--ms-motion-dur-med) var(--ms-motion-ease-soft),
-    transform var(--ms-motion-dur-med) var(--ms-motion-ease-soft);
+    opacity var(--ms-channel-enter-dur) var(--ms-channel-ease),
+    transform var(--ms-channel-enter-dur) var(--ms-channel-ease);
 }
 
 /* During a hop, keep the desktop sidebar steady (only content moves). */
@@ -175,10 +179,10 @@ body.ms-channel-leaving {
 
 body.ms-channel-leaving #page-body {
   opacity: 0;
-  transform: translate3d(0, calc(var(--ms-channel-dir, 1) * -12px), 0);
+  transform: translate3d(calc(var(--ms-channel-dir, 1) * -18px), 0, 0);
   transition:
-    opacity 0.26s var(--ms-motion-ease-out),
-    transform 0.26s var(--ms-motion-ease-out);
+    opacity var(--ms-channel-leave-dur, 0.36s) cubic-bezier(0.4, 0, 0.2, 1),
+    transform var(--ms-channel-leave-dur, 0.36s) cubic-bezier(0.4, 0, 0.2, 1);
   will-change: opacity, transform;
 }
 
@@ -186,8 +190,15 @@ body.ms-channel-leaving .ms-motion-item {
   transition: none !important;
 }
 
+/* Soften chrome during the handoff so the page swap feels continuous. */
+body.ms-channel-leaving .ms-quick-nav,
+body.ms-channel-leaving .ms-menu-toggle {
+  opacity: 0.35;
+  transition: opacity 0.28s ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-page="home"]):not([data-page="orders"]):not([data-page="leads"]):not(.ms-onboard-page):not(.ms-legal-site):not(.ms-contact-public)::before {
+  body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-page="home"]):not([data-page="orders"]):not([data-page="leads"]):not([data-page="leaderboard"]):not(.ms-onboard-page):not(.ms-legal-site):not(.ms-contact-public):not(.ms-ldb-site)::before {
     animation: none;
   }
 
@@ -202,6 +213,12 @@ body.ms-channel-leaving .ms-motion-item {
   body.ms-channel-leaving #page-body {
     opacity: 1 !important;
     transform: none !important;
+    transition: none !important;
+  }
+
+  body.ms-channel-leaving .ms-quick-nav,
+  body.ms-channel-leaving .ms-menu-toggle {
+    opacity: 1 !important;
     transition: none !important;
   }
 }

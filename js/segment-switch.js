@@ -57,14 +57,14 @@
       tone: "surface",
     },
     {
-      track: ".ms-bs-recent-filters",
+      track: ".ms-projects-filters",
       items: ":scope > .ms-dash-projects-filter",
       activeClass: "is-active",
       tone: "surface",
     },
     {
-      track: ".ms-projects-filters",
-      items: ":scope > .ms-dash-projects-filter",
+      track: ".ms-bs-mode-tabs",
+      items: ":scope > .ms-bs-mode-tab",
       activeClass: "is-active",
       tone: "surface",
     },

@@ -256,8 +256,71 @@
     return html;
   }
 
+  function renderFacepileAvatar(entry, index) {
+    const name = escapeHtml(entry?.name || "Supporter");
+    const rank = Number(entry?.rank) || index + 1;
+    const z = Math.max(1, 20 - index);
+    if (entry?.avatarUrl) {
+      return (
+        `<span class="ms-donate-facepile-item" role="listitem" style="z-index:${z}" title="${name}">` +
+        `<img class="ms-donate-facepile-avatar" src="${escapeHtml(entry.avatarUrl)}" alt="${name}" width="44" height="44" loading="lazy" decoding="async">` +
+        `<span class="ms-sr-only">#${rank} ${name}</span>` +
+        `</span>`
+      );
+    }
+    return (
+      `<span class="ms-donate-facepile-item" role="listitem" style="z-index:${z}" title="${name}">` +
+      `<span class="ms-donate-facepile-avatar is-fallback" aria-hidden="true">${escapeHtml(entry?.initials || "?")}</span>` +
+      `<span class="ms-sr-only">#${rank} ${name}</span>` +
+      `</span>`
+    );
+  }
+
+  function renderFacepile(listEl, entries, options) {
+    if (!listEl) return;
+    const opts = options && typeof options === "object" ? options : {};
+    const showPlaceholder = opts.showPlaceholder !== false;
+    const cap = Math.max(1, Math.min(Number(opts.limit) || 10, 20));
+    const list = (Array.isArray(entries) ? entries : []).slice(0, cap);
+
+    listEl.classList.add("ms-donate-facepile");
+    listEl.removeAttribute("aria-busy");
+
+    if (!list.length) {
+      listEl.innerHTML = showPlaceholder
+        ? `<span class="ms-donate-facepile-item is-placeholder" role="listitem" style="z-index:1" title="Be the first supporter">` +
+          `<img class="ms-donate-facepile-avatar" src="doc/pfp.png" alt="" width="44" height="44" loading="lazy" decoding="async">` +
+          `<span class="ms-sr-only">Be the first supporter</span>` +
+          `</span>`
+        : `<span class="ms-donate-facepile-empty">No supporters yet</span>`;
+      return;
+    }
+
+    listEl.innerHTML = list.map((entry, index) => renderFacepileAvatar(entry, index)).join("");
+  }
+
+  function renderFacepileLoading(listEl, count) {
+    if (!listEl) return;
+    const total = Math.max(3, Math.min(Number(count) || 6, 10));
+    let html = "";
+    for (let i = 0; i < total; i += 1) {
+      const z = Math.max(1, 20 - i);
+      html +=
+        `<span class="ms-donate-facepile-item is-skeleton" role="presentation" style="z-index:${z}" aria-hidden="true">` +
+        `<span class="ms-donate-facepile-avatar is-skeleton"></span>` +
+        `</span>`;
+    }
+    listEl.classList.add("ms-donate-facepile");
+    listEl.innerHTML = html;
+    listEl.setAttribute("aria-busy", "true");
+  }
+
   function renderList(listEl, entries, options) {
     if (!listEl) return;
+    if (listEl.classList.contains("ms-donate-facepile") || listEl.id === "donate-leaderboard-list") {
+      renderFacepile(listEl, entries, options);
+      return;
+    }
     const opts = options && typeof options === "object" ? options : {};
     const showPlaceholder = opts.showPlaceholder !== false;
 
@@ -273,6 +336,10 @@
 
   function renderLoading(listEl, count) {
     if (!listEl) return;
+    if (listEl.classList.contains("ms-donate-facepile") || listEl.id === "donate-leaderboard-list") {
+      renderFacepileLoading(listEl, count);
+      return;
+    }
     listEl.innerHTML = renderSkeleton(count);
     listEl.setAttribute("aria-busy", "true");
   }
@@ -299,6 +366,8 @@
     renderLoading,
     clearLoading,
     renderPlaceholder,
+    renderFacepile,
+    renderFacepileLoading,
     computeStats,
     renderFullPage,
     renderFullPageLoading,

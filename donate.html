@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <script>
     (function () {
-      var BUILD = "20260924-drawer-ease";
+      var BUILD = "20260924-support-unified";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -32,13 +32,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <script src="js/auth-gate-head.js?v=20260924-channel-motion"></script>
-  <title>Donate &amp; Store - Moonrise Studio</title>
+  <title>Support - Moonrise Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260924-nav-grey">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-drawer-ease">
-  <link rel="stylesheet" href="css/donate.css?v=20260719-lb-studio">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-no-tabbar-ease">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-no-tabbar-ease">
+  <link rel="stylesheet" href="css/donate.css?v=20260924-support-unified">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="donate">
@@ -46,70 +46,84 @@
   <div id="page-body" class="ms-content-page ms-donate-page">
     <header class="ms-page-head ms-donate-head">
       <div class="ms-page-head-copy">
-        <h1>Donate &amp; Store</h1>
-        <p class="lead ms-muted">Support Moonrise with a one-time gift, then pick up creator tools. MVP+ includes Store items free.</p>
+        <h1>Support</h1>
+        <p class="lead ms-muted">A one-time gift keeps Moonrise running. Thank you.</p>
       </div>
     </header>
 
     <div class="ms-donate-channel">
-      <section class="ms-donate-card" id="donate-checkout-card" aria-label="Donate">
-        <p class="ms-donate-panel-copy">Choose any amount - paid once through Stripe. Every gift helps keep Moonrise running.</p>
+      <section class="ms-donate-card ms-donate-unified" id="donate-checkout-card" aria-label="Donate">
+        <div class="ms-donate-unified-main">
+          <p class="ms-donate-panel-copy">Choose an amount. Secure checkout via Stripe.</p>
 
-        <label class="ms-donate-field-label" for="donate-onetime-amount">Amount (USD)</label>
-        <div class="ms-donate-presets" id="donate-onetime-presets" role="group" aria-label="Suggested amounts">
-          <button type="button" class="ms-donate-preset" data-donate-preset="1">$1</button>
-          <button type="button" class="ms-donate-preset" data-donate-preset="10">$10</button>
-          <button type="button" class="ms-donate-preset is-active" data-donate-preset="25">$25</button>
-          <button type="button" class="ms-donate-preset" data-donate-preset="50">$50</button>
-          <button type="button" class="ms-donate-preset" data-donate-preset="100">$100</button>
-          <button type="button" class="ms-donate-preset" data-donate-preset="custom" aria-expanded="false" aria-controls="donate-onetime-custom">Custom</button>
-        </div>
-        <div class="ms-donate-custom-amount" id="donate-onetime-custom" hidden>
-          <div class="ms-donate-amount-wrap" id="donate-onetime-amount-wrap">
-            <span class="ms-donate-amount-prefix" aria-hidden="true">$</span>
-            <input
-              type="number"
-              id="donate-onetime-amount"
-              class="ms-donate-amount-input"
-              inputmode="decimal"
-              min="1"
-              max="1000"
-              step="1"
-              value="25"
-              aria-describedby="donate-onetime-amount-hint donate-onetime-amount-error"
+          <div class="ms-donate-amount-block">
+            <span class="ms-donate-field-label" id="donate-amount-label">Amount</span>
+            <div
+              class="ms-donate-presets"
+              id="donate-onetime-presets"
+              role="group"
+              aria-labelledby="donate-amount-label"
             >
+              <button type="button" class="ms-donate-preset" data-donate-preset="1">$1</button>
+              <button type="button" class="ms-donate-preset" data-donate-preset="10">$10</button>
+              <button type="button" class="ms-donate-preset is-active" data-donate-preset="25">$25</button>
+              <button type="button" class="ms-donate-preset" data-donate-preset="50">$50</button>
+              <button type="button" class="ms-donate-preset" data-donate-preset="100">$100</button>
+              <button type="button" class="ms-donate-preset" data-donate-preset="custom" aria-expanded="false" aria-controls="donate-onetime-custom">Custom</button>
+            </div>
+            <div class="ms-donate-custom-amount" id="donate-onetime-custom" hidden>
+              <div class="ms-donate-amount-wrap" id="donate-onetime-amount-wrap">
+                <span class="ms-donate-amount-prefix" aria-hidden="true">$</span>
+                <input
+                  type="number"
+                  id="donate-onetime-amount"
+                  class="ms-donate-amount-input"
+                  inputmode="decimal"
+                  min="1"
+                  max="1000"
+                  step="1"
+                  value="25"
+                  aria-describedby="donate-onetime-amount-hint donate-onetime-amount-error"
+                >
+              </div>
+              <p class="ms-donate-field-hint" id="donate-onetime-amount-hint">$1 â€“ $1,000</p>
+              <p class="ms-donate-field-error" id="donate-onetime-amount-error" hidden role="alert"></p>
+            </div>
           </div>
-          <p class="ms-donate-field-hint" id="donate-onetime-amount-hint">$1 - $1,000</p>
-          <p class="ms-donate-field-error" id="donate-onetime-amount-error" hidden role="alert"></p>
+
+          <label class="ms-donate-field" for="donate-message">
+            <span class="ms-donate-field-label">Note <span class="ms-muted">optional</span></span>
+            <input
+              type="text"
+              id="donate-message"
+              class="ms-donate-note-input"
+              maxlength="120"
+              placeholder="Say something on the supporter wall"
+              aria-describedby="donate-message-count"
+            >
+          </label>
+          <p class="ms-donate-field-meta" id="donate-message-count">0 / 120</p>
+
+          <button type="button" class="ms-btn ms-donate-submit" id="btn-donate-continue">Donate $25</button>
+
+          <p class="ms-settings-status is-ok" id="donate-ok" hidden></p>
+          <p class="ms-error" id="donate-error" hidden></p>
         </div>
 
-        <label class="ms-donate-field" for="donate-message">
-          <span class="ms-donate-field-label">Wall note <span class="ms-muted">(optional)</span></span>
-          <input
-            type="text"
-            id="donate-message"
-            class="ms-donate-note-input"
-            maxlength="120"
-            placeholder="Short message on the supporter wall"
-            aria-describedby="donate-message-count"
-          >
-        </label>
-        <p class="ms-donate-field-meta" id="donate-message-count">0 / 120</p>
-
-        <button type="button" class="ms-btn ms-donate-submit" id="btn-donate-continue">Continue to checkout</button>
-
-        <p class="ms-settings-status is-ok" id="donate-ok" hidden></p>
-        <p class="ms-error" id="donate-error" hidden></p>
-      </section>
-
-      <section class="ms-donate-wall ms-donate-card" aria-labelledby="donate-lb-heading">
-        <div class="ms-donate-wall-head">
-          <h2 class="ms-donate-wall-title" id="donate-lb-heading">Leaderboard</h2>
-          <p class="ms-donate-wall-sub">Top 10 supporters — with wall notes</p>
-        </div>
-        <ol class="ms-donate-lb-list ms-donate-lb-list--preview" id="donate-leaderboard-list" aria-live="polite"></ol>
-        <div class="ms-donate-wall-foot">
-          <a class="ms-btn ms-btn-secondary ms-donate-view-all" href="leaderboard.html">View all</a>
+        <div class="ms-donate-unified-foot" aria-labelledby="donate-lb-heading">
+          <div class="ms-donate-supporters-row">
+            <div class="ms-donate-supporters-copy">
+              <h2 class="ms-donate-wall-title" id="donate-lb-heading">Top supporters</h2>
+              <a class="ms-donate-view-all-link" href="leaderboard.html">View all</a>
+            </div>
+            <div
+              class="ms-donate-facepile"
+              id="donate-leaderboard-list"
+              role="list"
+              aria-label="Top 10 supporters"
+              aria-live="polite"
+            ></div>
+          </div>
         </div>
       </section>
     </div>
@@ -199,12 +213,12 @@
   <script defer src="js/supabase-client.js?v=20260911-live2"></script>
   <script defer src="js/auth.js?v=20260911-live2"></script>
   <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20260924-channel-motion"></script>
+  <script defer src="js/ui-motion.js?v=20260924-support-unified"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260722-donate-pro"></script>
-  <script defer src="js/app.js?v=20260924-nav-pill-fix"></script>
-  <script defer src="js/donate-leaderboard-ui.js?v=20260719-lb-studio"></script>
-  <script defer src="js/donate.js?v=20260719-lb-modern"></script>
+  <script defer src="js/app.js?v=20260924-no-tabbar-ease"></script>
+  <script defer src="js/donate-leaderboard-ui.js?v=20260924-facepile"></script>
+  <script defer src="js/donate.js?v=20260924-support-unified"></script>
   <script defer src="js/store.js?v=20260923-donate-store"></script>
 </body>
 </html>

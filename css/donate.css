@@ -1,54 +1,64 @@
-/* Donate - simple centered channel */
+/* Donate — single unified Support card */
 
 #page-body.ms-donate-page {
-  --ms-channel-w: 56rem;
+  --ms-channel-w: 34rem;
 }
 
 .ms-donate-head {
   text-align: center;
-  margin-bottom: 0.35rem;
+  margin-bottom: 1.15rem;
 }
 
 .ms-donate-head .ms-page-head-copy {
   width: 100%;
-  max-width: 36rem;
+  max-width: 28rem;
   margin-inline: auto;
+}
+
+.ms-donate-head h1 {
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+
+.ms-donate-head .lead {
+  margin: 0.45rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .ms-donate-channel {
   width: 100%;
-  max-width: 56rem;
+  max-width: 34rem;
   margin: 0 auto;
-  display: grid;
-  gap: 1rem;
-  align-items: stretch;
-}
-
-@media (min-width: 900px) {
-  .ms-donate-channel {
-    grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
-    gap: 1.25rem;
-  }
-
-  .ms-donate-card#donate-checkout-card {
-    position: sticky;
-    top: 1rem;
-    align-self: start;
-  }
+  display: block;
 }
 
 .ms-donate-card {
-  padding: 1.25rem;
-  border-radius: 20px;
+  padding: 0;
+  border-radius: 18px;
   background: #fff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e5eaf1;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.9) inset,
-    0 16px 40px rgba(15, 23, 42, 0.07);
+    0 14px 36px rgba(15, 23, 42, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0;
   min-width: 0;
+  overflow: hidden;
+}
+
+.ms-donate-unified-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+  padding: 1.45rem 1.45rem 1.3rem;
+}
+
+.ms-donate-unified-foot {
+  padding: 1rem 1.45rem 1.2rem;
+  border-top: 1px solid #eef2f6;
+  background: #fafbfc;
 }
 
 .ms-donate-active {
@@ -140,8 +150,8 @@
 
 .ms-donate-panel-copy {
   margin: 0;
-  font-size: 0.88rem;
-  line-height: 1.45;
+  font-size: 0.9rem;
+  line-height: 1.5;
   color: #64748b;
 }
 
@@ -179,26 +189,40 @@
   height: 0.68rem;
 }
 
+.ms-donate-amount-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
 .ms-donate-field-label {
   display: block;
-  margin: 0.15rem 0 0.4rem;
-  font-size: 0.82rem;
+  margin: 0;
+  font-size: 0.8rem;
   font-weight: 650;
+  letter-spacing: 0.01em;
   color: #334155;
 }
 
+.ms-donate-field-label .ms-muted {
+  font-weight: 500;
+  color: #94a3b8;
+}
+
 .ms-donate-field {
-  display: block;
-  margin-top: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
 }
 
 .ms-donate-amount-wrap {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.55rem 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 11px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #dbe3ec;
+  border-radius: 12px;
   background: #fff;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -241,25 +265,31 @@
 
 .ms-donate-field-hint,
 .ms-donate-field-meta {
-  margin: 0.35rem 0 0;
-  font-size: 0.78rem;
+  margin: 0;
+  font-size: 0.75rem;
   color: #94a3b8;
+  text-align: right;
+}
+
+.ms-donate-field-hint {
+  text-align: left;
+  margin-top: 0.35rem;
 }
 
 .ms-donate-field-error {
-  margin: 0;
+  margin: 0.35rem 0 0;
   font-size: 0.82rem;
   color: #dc2626;
 }
 
 .ms-donate-presets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
 }
 
 .ms-donate-custom-amount {
-  margin-top: 0.55rem;
+  margin-top: 0.15rem;
 }
 
 .ms-donate-custom-amount[hidden] {
@@ -269,39 +299,52 @@
 .ms-donate-preset {
   appearance: none;
   border: 1px solid #e2e8f0;
-  border-radius: 999px;
-  padding: 0.35rem 0.7rem;
+  border-radius: 11px;
+  min-height: 2.55rem;
+  padding: 0.55rem 0.4rem;
   background: #fff;
-  color: #475569;
+  color: #334155;
   font: inherit;
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 650;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  touch-action: manipulation;
 }
 
 .ms-donate-preset:hover {
   border-color: #93c5fd;
   color: #1d4ed8;
+  background: #f8fbff;
 }
 
 .ms-donate-preset.is-active {
   border-color: #2563eb;
   background: #eff6ff;
   color: #1d4ed8;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12);
+}
+
+.ms-donate-preset:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 }
 
 .ms-donate-note-input {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 11px;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #dbe3ec;
+  border-radius: 12px;
   background: #fff;
   font: inherit;
   font-size: 0.92rem;
   color: #0f172a;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ms-donate-note-input::placeholder {
+  color: #94a3b8;
 }
 
 .ms-donate-note-input:focus {
@@ -313,9 +356,11 @@
 .ms-donate-submit {
   width: 100%;
   justify-content: center;
-  min-height: 2.85rem;
+  min-height: 3rem;
   font-size: 0.98rem;
-  margin-top: 0.15rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+  border-radius: 12px;
 }
 
 .ms-donate-submit.is-loading {
@@ -355,17 +400,38 @@
   display: none;
 }
 
-.ms-donate-wall {
-  min-height: 0;
+.ms-donate-supporters-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.ms-donate-wall-head {
-  margin: 0 0 0.15rem;
+.ms-donate-supporters-copy {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
-.ms-donate-wall-foot {
-  margin-top: 0.65rem;
-  padding-top: 0;
+.ms-donate-wall-title {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+}
+
+.ms-donate-view-all-link {
+  font-size: 0.8rem;
+  font-weight: 650;
+  color: #2563eb;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ms-donate-view-all-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
 }
 
 .ms-donate-view-all {
@@ -376,18 +442,77 @@
   border-radius: 10px;
 }
 
-.ms-donate-wall-title {
+.ms-donate-facepile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
   margin: 0;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #0f172a;
+  padding: 0;
+  min-height: 2.5rem;
 }
 
-.ms-donate-wall-sub {
-  margin: 0.15rem 0 0;
-  font-size: 0.78rem;
+.ms-donate-facepile-item {
+  position: relative;
+  display: inline-flex;
+  margin-left: -0.55rem;
+  border-radius: 999px;
+  transition: transform 0.18s ease;
+}
+
+.ms-donate-facepile-item:first-child {
+  margin-left: 0;
+}
+
+.ms-donate-facepile-item:hover,
+.ms-donate-facepile-item:focus-within {
+  transform: translateY(-2px) scale(1.04);
+  z-index: 30 !important;
+}
+
+.ms-donate-facepile-avatar {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  object-fit: cover;
+  display: block;
+  background: #e2e8f0;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.ms-donate-facepile-avatar.is-fallback {
+  display: inline-grid;
+  place-items: center;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.ms-donate-facepile-avatar.is-skeleton,
+.ms-donate-facepile-item.is-skeleton .ms-donate-facepile-avatar {
+  border-color: #fff;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e8eef5 45%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  animation: ms-donate-shimmer 1.15s ease-in-out infinite;
+}
+
+.ms-donate-facepile-empty {
+  font-size: 0.84rem;
   color: #94a3b8;
+}
+
+.ms-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .ms-donate-lb-list {
@@ -1082,18 +1207,27 @@ body[data-page="leaderboard"]::before {
     grid-row: 1 / span 2;
     align-self: center;
   }
+
+  #page-body.ms-donate-page {
+    padding-left: 1.15rem;
+    padding-right: 1.15rem;
+  }
+
+  .ms-donate-unified-main,
+  .ms-donate-unified-foot {
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
+
+  .ms-donate-presets {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ms-ldb-podium-slot.is-skeleton,
   .ms-ldb-row.is-skeleton {
     animation: none;
-  }
-}
-
-@media (max-width: 640px) {
-  #page-body.ms-donate-page {
-    padding-left: 1.15rem;
-    padding-right: 1.15rem;
   }
 }
