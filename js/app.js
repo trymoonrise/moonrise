@@ -831,15 +831,11 @@
       document.body.classList.toggle("ms-nav-open", open);
       menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
       menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-      // Never aria-hide a focused control — blur first, then hide from AT while nav is open.
-      if (open) {
-        if (document.activeElement === menuToggle) menuToggle.blur();
-        menuToggle.setAttribute("aria-hidden", "true");
-        menuToggle.tabIndex = -1;
-      } else {
-        menuToggle.removeAttribute("aria-hidden");
-        menuToggle.tabIndex = 0;
-      }
+      // Do not set aria-hidden on the toggle — it retains focus on click and Chromium warns.
+      // tabIndex keeps it out of the tab order while the sidebar is open.
+      if (open && document.activeElement === menuToggle) menuToggle.blur();
+      menuToggle.removeAttribute("aria-hidden");
+      menuToggle.tabIndex = open ? -1 : 0;
     }
 
     menuToggle.setAttribute("aria-expanded", "false");
@@ -1971,7 +1967,7 @@
       return;
     }
     const s = document.createElement("script");
-    s.src = "js/install-hint.js?v=20260924-console2";
+    s.src = "js/install-hint.js?v=20260924-console3";
     s.defer = true;
     document.head.appendChild(s);
   }
