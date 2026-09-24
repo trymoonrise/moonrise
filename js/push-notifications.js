@@ -57,6 +57,11 @@
 
   async function readyRegistration() {
     if (!supported()) throw new Error("Push notifications are not supported in this browser.");
+    try {
+      await navigator.serviceWorker.register("sw.js", { updateViaCache: "none" });
+    } catch (_) {
+      /* ignore — ready may still resolve if already registered */
+    }
     const reg = await navigator.serviceWorker.ready;
     if (!reg?.pushManager) throw new Error("Push manager is unavailable.");
     return reg;

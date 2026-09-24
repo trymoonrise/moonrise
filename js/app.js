@@ -1967,7 +1967,7 @@
       return;
     }
     const s = document.createElement("script");
-    s.src = "js/install-hint.js?v=20260924-console3";
+    s.src = "js/install-hint.js?v=20260924-console4";
     s.defer = true;
     document.head.appendChild(s);
   }

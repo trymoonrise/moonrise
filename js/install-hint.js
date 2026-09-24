@@ -134,6 +134,7 @@
   async function promptInstall() {
     if (!deferredInstallPrompt) return { outcome: "unavailable" };
     try {
+      await registerPwaServiceWorkerNow();
       await deferredInstallPrompt.prompt();
       const choice = await deferredInstallPrompt.userChoice;
       const outcome = choice?.outcome || "dismissed";
@@ -235,8 +236,13 @@
   }
 
   function registerPwaServiceWorker() {
-    if (!canRegisterServiceWorker()) return;
-    navigator.serviceWorker
+    // Settings/Download still register so Chromium considers the app installable.
+    return registerPwaServiceWorkerNow();
+  }
+
+  function registerPwaServiceWorkerNow() {
+    if (!canRegisterServiceWorker()) return Promise.resolve(null);
+    return navigator.serviceWorker
       .register(PWA_SW_URL, { updateViaCache: "none" })
       .then((reg) => {
         try {
@@ -244,9 +250,11 @@
         } catch (_) {
           /* ignore */
         }
+        return reg;
       })
       .catch((error) => {
         console.warn("Service worker registration failed", error);
+        return null;
       });
   }
 
@@ -266,7 +274,7 @@
     getInstructionsHtml: installHintSubcopyHtml,
     promptInstall,
     ensurePwaMetadata,
-    registerPwaServiceWorker,
+    registerPwaServiceWorker: registerPwaServiceWorkerNow,
   };
 
   function start() {
