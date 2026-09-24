@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/generation-announce.css?v=20260721-float">
-  <link rel="stylesheet" href="css/studio.css?v=20260924-tab-pill">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-mode-fill">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260719-perf">
   <link rel="stylesheet" href="css/mvp-gate.css?v=20260717-mvp-fix">
   <style>
@@ -286,18 +286,9 @@
             </div>
 
             <div class="ms-lb-price">
-              <div class="ms-lb-price-title">
-                <div>
-                  <strong>Website price</strong>
-                </div>
-              </div>
-              <div class="ms-lb-price-head">
-                <label class="ms-lb-price-stat ms-lb-price-stat--input" for="lb-price-input">
-                  <div class="ms-lb-price-stat-top">
-                    <span class="ms-lb-price-stat-icon" aria-hidden="true" title="Editable">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-                    </span>
-                  </div>
+              <label class="ms-lb-price-main" for="lb-price-input">
+                <span class="ms-lb-price-label">Website price</span>
+                <span class="ms-lb-price-stat ms-lb-price-stat--input">
                   <span class="ms-lb-price-input-wrap">
                     <span class="ms-lb-price-currency" aria-hidden="true">$</span>
                     <input
@@ -312,8 +303,11 @@
                       value="500"
                     >
                   </span>
-                </label>
-              </div>
+                  <span class="ms-lb-price-stat-icon" aria-hidden="true" title="Editable">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                  </span>
+                </span>
+              </label>
               <div class="ms-creator-policy-notice ms-creator-policy-notice--compact" role="note">
                 <p><strong>You must never charge business owners outside of this platform.</strong> Once you publish a website, a blue watermark will appear on the live site prompting the business owner to pay the <strong>Website Price</strong> you set. After payment, the watermark is automatically removed and you get paid, so you never have to worry about handling payments yourself.</p>
                 <details class="ms-creator-policy-more">
@@ -730,6 +724,6 @@
   <script defer src="js/app.js?v=20260924-tab-pill"></script>
   <script defer src="js/creator-contact.js?v=20260719-watermark-contact"></script>
   <script defer src="js/generation-lock.js?v=20260721-one-gen"></script>
-  <script defer src="js/builder.js?v=20260909-qr-vert"></script>
+  <script defer src="js/builder.js?v=20260924-manual-widgets"></script>
 </body>
 </html>

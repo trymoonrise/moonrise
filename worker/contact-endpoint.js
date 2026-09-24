@@ -60,7 +60,7 @@ function withDefaultContactFormContext(ctx, existingContext) {
   return {
     ...(ctx && typeof ctx === "object" ? ctx : {}),
     contactForm: prior || {
-      enabled: true,
+      enabled: false,
       mode: "auto",
       notificationEmail: "",
       endpointUrl: "",

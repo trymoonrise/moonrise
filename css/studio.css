@@ -7701,7 +7701,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 
 .ms-lb-price {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.7rem;
   padding: 0.85rem 0.9rem;
   border-radius: 16px;
   background: #fff;
@@ -7709,6 +7709,26 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
   box-shadow:
     0 1px 2px rgba(15, 23, 42, 0.03),
     0 10px 26px rgba(15, 23, 42, 0.045);
+}
+
+.ms-lb-price-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.ms-lb-price-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  cursor: pointer;
 }
 
 .ms-lb-price-title {
@@ -7779,36 +7799,37 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 }
 
 .ms-lb-price-stat {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.45rem;
   width: fit-content;
   max-width: 100%;
   min-height: 0;
-  padding: 0.5rem 0.72rem 0.52rem;
+  margin-left: auto;
+  padding: 0.42rem 0.55rem 0.42rem 0.7rem;
   box-sizing: border-box;
   border-radius: 12px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  border: 1.5px dashed #cbd5e1;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  box-shadow: none;
 }
 
 .ms-lb-price-stat-icon {
   display: grid;
   place-items: center;
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.45rem;
+  height: 1.45rem;
   flex-shrink: 0;
-  border-radius: 7px;
-  background: #e2e8f0;
-  color: #475569;
+  border-radius: 8px;
+  background: #eef2f7;
+  color: #64748b;
 }
 
 .ms-lb-price-stat-icon svg {
-  width: 0.72rem;
-  height: 0.72rem;
+  width: 0.78rem;
+  height: 0.78rem;
 }
 
 .ms-lb-price-stat--input {
@@ -7817,21 +7838,16 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 
 .ms-lb-price-stat--input:hover {
   border-color: #94a3b8;
-  border-style: solid;
   background: #fff;
 }
 
 .ms-lb-price-stat--input:focus-within {
-  border-style: solid;
   border-color: #3b82f6;
   background: #fff;
-  box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.16),
-    inset 0 1px 2px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
 }
 
 .ms-lb-price-stat--input.is-invalid {
-  border-style: solid;
   border-color: #f87171;
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
@@ -7841,8 +7857,8 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
   align-items: baseline;
   gap: 0.08rem;
   min-width: 0;
-  padding-bottom: 0.2rem;
-  border-bottom: 2px solid #94a3b8;
+  padding-bottom: 0.12rem;
+  border-bottom: 2px solid #cbd5e1;
 }
 
 .ms-lb-price-stat--input:hover .ms-lb-price-input-wrap,
@@ -7852,7 +7868,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 
 .ms-lb-price-currency {
   color: #64748b;
-  font-size: 1.45rem;
+  font-size: 1.35rem;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.055em;
@@ -7869,7 +7885,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
   color: #0f172a;
   caret-color: #2563eb;
   font: inherit;
-  font-size: 1.45rem;
+  font-size: 1.35rem;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.055em;
@@ -7889,6 +7905,10 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
   font-size: 0.72rem;
   font-weight: 500;
   line-height: 1.35;
+}
+
+.ms-lb-price > .ms-creator-policy-notice {
+  margin-top: 0.1rem;
 }
 
 .ms-creator-policy-notice {
@@ -13453,8 +13473,31 @@ body.ms-legal-site {
     padding: 0.42rem 0.72rem;
     font-size: 0.8rem;
   }
-  .ms-lb-mode { padding: 0.14rem; }
-  .ms-lb-mode-btn { padding: 0.35rem 0.65rem; font-size: 0.8rem; }
+  .ms-lb-mode { padding: 0.18rem; }
+  .ms-lb-mode-btn { padding: 0.42rem 0.7rem; font-size: 0.84rem; }
+  .ms-lb-body > .ms-lb-chrome-bar .ms-lb-mode-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+  .ms-lb-body > .ms-lb-chrome-bar .ms-lb-mode {
+    width: 100%;
+    max-width: none;
+    justify-self: stretch;
+    display: flex;
+    padding: 0.2rem;
+    gap: 0.1rem;
+  }
+  .ms-lb-body > .ms-lb-chrome-bar .ms-lb-mode-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.55rem 0.35rem;
+    font-size: 0.84rem;
+    gap: 0.28rem;
+  }
+  .ms-lb-body > .ms-lb-chrome-bar .ms-lb-mode-btn svg {
+    width: 16px;
+    height: 16px;
+  }
   .ms-lb-topbar {
     grid-template-columns: auto 1fr auto;
     gap: 0.45rem;
@@ -13471,7 +13514,11 @@ body.ms-legal-site {
       max(0.55rem, env(safe-area-inset-bottom, 0px));
     min-height: 0;
     flex: 1;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
   }
 
   .ms-lb-body.is-tools-expanded {
@@ -13524,15 +13571,16 @@ body.ms-legal-site {
     flex: 0 0 auto;
     width: 100%;
     min-height: min(42dvh, 340px);
-    max-height: min(46dvh, 380px);
+    height: min(46dvh, 380px);
+    max-height: none;
   }
   .ms-lb-side {
     order: 2;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-height: 0;
     max-height: none;
     height: auto;
-    overflow: hidden;
+    overflow: visible;
     justify-content: flex-start;
     gap: 0;
     padding: 0.15rem 0.15rem max(0.5rem, env(safe-area-inset-bottom, 0px));
@@ -13545,15 +13593,12 @@ body.ms-legal-site {
 
   .ms-lb-side-controls {
     min-height: 0;
-    flex: 1 1 auto;
-    height: 100%;
-    max-height: 100%;
+    flex: 0 0 auto;
+    height: auto;
+    max-height: none;
     gap: 0.65rem;
     padding: 0.15rem 0 0.35rem;
-    overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
+    overflow: visible;
     touch-action: pan-y;
   }
 
@@ -13579,8 +13624,14 @@ body.ms-legal-site {
   }
   .ms-lb-price {
     padding: 0.72rem 0.75rem;
-    gap: 0.6rem;
+    gap: 0.55rem;
     border-radius: 14px;
+  }
+  .ms-lb-price-main {
+    gap: 0.55rem;
+  }
+  .ms-lb-price-label {
+    font-size: 0.9rem;
   }
   .ms-lb-price-title {
     gap: 0.4rem;
@@ -13593,12 +13644,12 @@ body.ms-legal-site {
     padding: 0.22rem 0.42rem;
   }
   .ms-lb-price-stat {
-    padding: 0.45rem 0.62rem 0.48rem;
-    gap: 0.45rem;
+    padding: 0.4rem 0.48rem 0.4rem 0.58rem;
+    gap: 0.38rem;
   }
   .ms-lb-price-currency,
   .ms-lb-price-input {
-    font-size: 1.28rem;
+    font-size: 1.22rem;
   }
   .ms-lb-price-hint {
     font-size: 0.67rem;

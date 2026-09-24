@@ -4722,12 +4722,13 @@ async function diagnoseCustomDomainDns(hostname) {
 
 function readStoredCustomDomain(ctx) {
   const raw = ctx?.customDomain;
-  const enabledFlag = ctx?.customDomainEnabled;
+  // Manual only — never infer "on" from a leftover hostname.
+  const enabled = ctx?.customDomainEnabled === true;
   if (raw && typeof raw === "object" && !Array.isArray(raw)) {
     const hostname = normalizeCustomHostname(raw.hostname || raw.domain || "");
     return {
       hostname,
-      enabled: enabledFlag === true || (enabledFlag !== false && !!hostname),
+      enabled,
       status: String(raw.status || "").trim(),
       verified: !!raw.verified,
       verification: Array.isArray(raw.verification) ? raw.verification : [],
@@ -4738,7 +4739,7 @@ function readStoredCustomDomain(ctx) {
   const hostname = normalizeCustomHostname(raw);
   return {
     hostname,
-    enabled: enabledFlag === true || (enabledFlag !== false && !!hostname),
+    enabled,
     status: "",
     verified: false,
     verification: [],
@@ -5081,7 +5082,7 @@ async function deployProjectToVercel(supabase, project) {
   } catch (domainErr) {
     console.warn("Custom domain attach on publish failed:", domainErr?.message || domainErr);
     const stored = readStoredCustomDomain(ctx);
-    if (stored.hostname) {
+    if (stored.enabled && stored.hostname) {
       ctx.customDomain = buildCustomDomainRecord(stored.hostname, null, {
         status: "error",
         error: domainErr?.message || "Could not attach domain",

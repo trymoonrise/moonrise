@@ -2359,6 +2359,8 @@
   }
 
   const MVP_STAR_TONES = 6;
+  /** Avoid a one-second star flash before credits/profile resolve entitlement. */
+  let mvpAccessResolved = false;
 
   function cycleMvpStar(star) {
     if (!star) return;
@@ -2441,33 +2443,36 @@
     return requirePaidPlan(feature);
   }
 
-  function syncMvpAccessUi() {
+  function syncMvpAccessUi(opts) {
+    if (opts && opts.resolved) mvpAccessResolved = true;
     const locked = !canAccessCodeTools();
+    // Keep buttons usable until we know; only show the star once entitlement is known.
+    const showLockChrome = mvpAccessResolved && locked;
     const codeBtn = document.querySelector('.is-mode[data-mode="code"]');
     const downloadBtn = document.getElementById("btn-download-html");
     const lockHint = "Unlock with MVP+ (Donate) or an active Starter, Pro, or Business plan";
     if (codeBtn) {
-      codeBtn.classList.toggle("is-mvp-locked", locked);
-      codeBtn.setAttribute("aria-disabled", locked ? "true" : "false");
-      codeBtn.title = locked ? lockHint : "Code";
+      codeBtn.classList.toggle("is-mvp-locked", showLockChrome);
+      codeBtn.setAttribute("aria-disabled", showLockChrome ? "true" : "false");
+      codeBtn.title = showLockChrome ? lockHint : "Code";
       codeBtn.setAttribute(
         "aria-label",
-        locked ? "View Code (MVP+ or plan required)" : "Code"
+        showLockChrome ? "View Code (MVP+ or plan required)" : "Code"
       );
-      ensureMvpStar(codeBtn, locked);
+      ensureMvpStar(codeBtn, showLockChrome);
     }
     if (downloadBtn) {
-      downloadBtn.classList.toggle("is-mvp-locked", locked);
-      downloadBtn.setAttribute("aria-disabled", locked ? "true" : "false");
-      downloadBtn.title = locked ? lockHint : "Download HTML";
+      downloadBtn.classList.toggle("is-mvp-locked", showLockChrome);
+      downloadBtn.setAttribute("aria-disabled", showLockChrome ? "true" : "false");
+      downloadBtn.title = showLockChrome ? lockHint : "Download HTML";
       downloadBtn.setAttribute(
         "aria-label",
-        locked ? "Download HTML (MVP+ or plan required)" : "Download HTML"
+        showLockChrome ? "Download HTML (MVP+ or plan required)" : "Download HTML"
       );
-      ensureMvpStar(downloadBtn, locked);
+      ensureMvpStar(downloadBtn, showLockChrome);
     }
     // Never leave a locked user stuck in code mode.
-    if (locked && state.mode === "code") {
+    if (mvpAccessResolved && locked && state.mode === "code") {
       state.mode = "preview";
       try {
         updatePreview();
@@ -2490,7 +2495,7 @@
     if (data.totalCredits != null) {
       state.totalCredits = Number(data.totalCredits) || 0;
     }
-    syncMvpAccessUi();
+    syncMvpAccessUi({ resolved: true });
     if (state.mode === "code" && !canAccessCodeTools()) {
       state.mode = "preview";
       try {
@@ -2536,9 +2541,10 @@
   function syncMvpFromProfile(profile) {
     if (profile?.mvp_plus || isOwnerHandle()) {
       state.mvpPlus = true;
-      syncMvpAccessUi();
     }
-    return syncCreditsFromWorker();
+    return syncCreditsFromWorker().finally(() => {
+      syncMvpAccessUi({ resolved: true });
+    });
   }
 
   function releaseFinderLeadHold() {
@@ -7704,9 +7710,8 @@
     } else {
       hostname = String(raw || "").trim();
     }
-    const enabled =
-      ctx.customDomainEnabled === true ||
-      (ctx.customDomainEnabled !== false && !!hostname);
+    // Manual only — never infer "on" from a leftover hostname.
+    const enabled = ctx.customDomainEnabled === true;
     let provider = String(ctx.customDomainProvider || "").trim().toLowerCase();
     if (!provider && raw && typeof raw === "object") {
       provider = String(raw.provider || "").trim().toLowerCase();
