@@ -3,7 +3,7 @@
 <head>
   <script>
     (function () {
-      var BUILD = "20260924-drawer-ease";
+      var BUILD = "20260924-signup-authcode";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260924-nav-grey">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-drawer-ease">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-signup-authcode">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-channel-smooth">
   <meta name="color-scheme" content="light">
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <script defer src="js/config.js?v=20260909-discord"></script>
@@ -145,6 +145,26 @@
           </button>
         </div>
       </div>
+      <div class="ms-field" id="auth-code-field" hidden>
+        <label class="ms-label" for="auth-code">Authorization code</label>
+        <input
+          class="ms-input"
+          id="auth-code"
+          name="auth_code"
+          type="text"
+          inputmode="text"
+          autocomplete="one-time-code"
+          maxlength="6"
+          minlength="6"
+          spellcheck="false"
+          autocapitalize="off"
+          placeholder="6-character code"
+          aria-describedby="auth-code-hint"
+        >
+        <p class="ms-muted" id="auth-code-hint" style="margin:0.4rem 0 0;font-size:0.8rem;line-height:1.35">
+          Employee access only. Ask Moonrise for the code.
+        </p>
+      </div>
       <div class="ms-auth-autosave" id="autosave-wrap">
         <div class="ms-auth-autosave-copy">
           <span class="ms-auth-autosave-title">Auto save</span>
@@ -175,12 +195,12 @@
 
   <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
   <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20260924-channel-motion"></script>
+  <script defer src="js/ui-motion.js?v=20260924-channel-smooth"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/handles.js"></script>
   <script defer src="js/auth-security.js?v=20260911-passkey4"></script>
   <script defer src="js/supabase-client.js?v=20260911-passkey4"></script>
-  <script defer src="js/auth.js?v=20260911-passkey4"></script>
+  <script defer src="js/auth.js?v=20260924-signup-authcode"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();
@@ -275,6 +295,8 @@
       const backWrap = document.getElementById("back-wrap");
       const autosaveWrap = document.getElementById("autosave-wrap");
       const autosaveToggle = document.getElementById("auth-autosave");
+      const authCodeField = document.getElementById("auth-code-field");
+      const authCodeInput = document.getElementById("auth-code");
       const handleInput = document.getElementById("handle");
       const AUTOSAVE_ENABLED_KEY = "ms_auth_autosave_enabled";
       const AUTOSAVE_EMAIL_KEY = "ms_auth_autosave_email";
@@ -474,6 +496,12 @@
       });
 
       passwordInput.addEventListener("input", updatePasswordMeter);
+      authCodeInput?.addEventListener("input", () => {
+        const cleaned = String(authCodeInput.value || "")
+          .replace(/[^A-Za-z0-9!@#$%&*]/g, "")
+          .slice(0, 6);
+        if (authCodeInput.value !== cleaned) authCodeInput.value = cleaned;
+      });
       setMode(mode, true);
 
       form.addEventListener("submit", async (e) => {
@@ -505,6 +533,14 @@
             return;
           }
         }
+        if (mode === "signup") {
+          const authCode = String(authCodeInput?.value || "").trim();
+          if (!/^[A-Za-z0-9!@#$%&*]{6}$/.test(authCode)) {
+            showAuthError("Enter the 6-character authorization code from Moonrise.");
+            authCodeInput?.focus();
+            return;
+          }
+        }
         if (mode === "recover" && passwordInput.value !== passwordConfirm.value) {
           showAuthError("Passwords do not match");
           passwordConfirm.focus();
@@ -516,7 +552,7 @@
         if (mode === "signin") submit.textContent = "Signing in...";
         else if (mode === "signup") submit.textContent = "Creating account...";
         try {
-          writeAutosaveEnabled(isAutosaveEnabled());
+          if (mode === "signin") writeAutosaveEnabled(isAutosaveEnabled());
           if (mode === "forgot") {
             await window.StudioAuth.requestPasswordReset(email);
             sessionStorage.setItem("ms_pw_recovery", "1");
@@ -531,8 +567,8 @@
             return;
           } else if (mode === "signup") {
             const handleVal = form.handle.value;
-            const data = await window.StudioAuth.signUp(email, password, handleVal);
-            persistAutosavedFields();
+            const authCode = String(authCodeInput?.value || "").trim();
+            const data = await window.StudioAuth.signUp(email, password, handleVal, authCode);
             if (data?.session) {
               await continueAfterAuth({ email, password });
               return;
@@ -566,6 +602,9 @@
           } else if (ex.code === "signup_exists") {
             window.StudioToast?.info?.(ex.message || "An account with this email already exists.");
             setMode("signin");
+          } else if (ex.code === "invalid_auth_code" || ex.code === "signup_disabled") {
+            showAuthError(ex);
+            authCodeInput?.focus();
           } else if (ex.code === "auth_failed" || ex.code === "auth_locked") {
             showAuthError(ex);
             if (ex.code === "auth_failed" && mode === "signin") {
@@ -886,7 +925,14 @@
         if (resendWrap) resendWrap.hidden = true;
         backWrap.hidden = !(showForgot || showRecover);
         if (autosaveWrap) {
-          autosaveWrap.hidden = showForgot || showRecover;
+          // Auto save is sign-in only; signup uses the authorization code instead.
+          autosaveWrap.hidden = !mode || mode !== "signin";
+        }
+        setOpen(authCodeField, showSignup, instant);
+        if (authCodeInput) {
+          authCodeInput.disabled = !showSignup;
+          authCodeInput.required = showSignup;
+          if (!showSignup) authCodeInput.value = "";
         }
         if (emailInput) {
           if (mode === "signup") {

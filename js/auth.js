@@ -90,6 +90,12 @@
     if (code === "signup_exists") {
       return "An account with this email already exists. Sign in instead.";
     }
+    if (code === "invalid_auth_code") {
+      return "That authorization code is not valid. Ask Moonrise for the employee code.";
+    }
+    if (code === "signup_disabled") {
+      return "New accounts are invite-only. Ask Moonrise for an authorization code.";
+    }
     if (code === "email_rate_limited" || code === "over_email_send_rate_limit") {
       return "Too many emails were sent. Wait a minute and try again.";
     }
@@ -366,7 +372,7 @@
     return session?.user || null;
   }
 
-  async function signUp(email, password, handle) {
+  async function signUp(email, password, handle, authCode) {
     const sb = getClient();
     if (!sb) throw new Error("Supabase is not configured");
     const handles = global.StudioHandles;
@@ -378,6 +384,7 @@
       email: String(email || "").trim(),
       password: String(password || ""),
       handle: cleanHandle,
+      authCode: String(authCode || "").trim(),
     });
     const sessionData = await applySessionTokens(payload);
     const user = sessionData?.user || payload.user;
@@ -531,8 +538,8 @@
   }
 
   /** Sign up, then create a passkey while the new session is active. */
-  async function signUpWithPasskey(email, password, handle) {
-    const data = await signUp(email, password, handle);
+  async function signUpWithPasskey(email, password, handle, authCode) {
+    const data = await signUp(email, password, handle, authCode);
     if (!(data?.session || data?.access_token || data?.user)) {
       return { ...(data || {}), created: false, needsEmailConfirm: true };
     }

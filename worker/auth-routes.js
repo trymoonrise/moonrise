@@ -2,11 +2,62 @@
  * Secured auth routes - lockouts + rate limits in front of Supabase Auth.
  */
 const { createClient } = require("@supabase/supabase-js");
+const crypto = require("crypto");
 const { sendPasswordResetEmail } = require("./contact-mail");
 
 const SUPPORT_EMAIL =
   String(process.env.MOONRISE_SUPPORT_EMAIL || "trymoonrise@gmail.com").trim() ||
   "trymoonrise@gmail.com";
+
+/** Employee signup gate: 6-char codes from SIGNUP_AUTHORIZATION_CODE (comma-separated OK). */
+function configuredSignupAuthCodes() {
+  const raw = String(
+    process.env.SIGNUP_AUTHORIZATION_CODE || process.env.SIGNUP_AUTH_CODE || ""
+  ).trim();
+  if (!raw) return [];
+  return raw
+    .split(/[,;\s]+/)
+    .map((c) => c.trim())
+    .filter((c) => c.length === 6);
+}
+
+function timingSafeEqualString(a, b) {
+  const left = Buffer.from(String(a || ""), "utf8");
+  const right = Buffer.from(String(b || ""), "utf8");
+  if (left.length !== right.length) return false;
+  return crypto.timingSafeEqual(left, right);
+}
+
+function assertSignupAuthCode(provided) {
+  const codes = configuredSignupAuthCodes();
+  if (!codes.length) {
+    return {
+      ok: false,
+      status: 403,
+      error: "New accounts are invite-only. Ask Moonrise for an authorization code.",
+      code: "signup_disabled",
+    };
+  }
+  const candidate = String(provided || "").trim();
+  if (!/^[A-Za-z0-9!@#$%&*]{6}$/.test(candidate)) {
+    return {
+      ok: false,
+      status: 403,
+      error: "Enter the 6-character authorization code from Moonrise.",
+      code: "invalid_auth_code",
+    };
+  }
+  const matched = codes.some((code) => timingSafeEqualString(code, candidate));
+  if (!matched) {
+    return {
+      ok: false,
+      status: 403,
+      error: "That authorization code is not valid. Ask Moonrise for the employee code.",
+      code: "invalid_auth_code",
+    };
+  }
+  return { ok: true };
+}
 
 function publicAppBase() {
   return String(process.env.PUBLIC_APP_URL || "https://trymoonrise.com").replace(/\/$/, "");
@@ -314,10 +365,17 @@ function mountAuthRoutes(app, { db, security }) {
         .trim()
         .replace(/^@/, "")
         .toLowerCase();
+      const authCode = String(req.body?.authCode || req.body?.auth_code || "").trim();
       const ip = clientIp(req);
       if (!email || !password) {
         return res.status(400).json({ error: "Email and password are required", code: "invalid_input" });
       }
+
+      const codeGate = assertSignupAuthCode(authCode);
+      if (!codeGate.ok) {
+        return res.status(codeGate.status).json({ error: codeGate.error, code: codeGate.code });
+      }
+
       const pwCheck = validatePassword(password, email);
       if (!pwCheck.ok) {
         return res.status(400).json({ error: pwCheck.error, code: pwCheck.code });
