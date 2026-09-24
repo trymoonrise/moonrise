@@ -3,7 +3,7 @@
 <head>
   <script>
     (function () {
-      var BUILD = "20260911-live2";
+      var BUILD = "20260924-legal";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -32,7 +32,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <script src="js/auth-gate-head.js?v=20260911-live2"></script>
-  <title>Guide · Moonrise Studio</title>
+  <title>Creator Guide - Moonrise Studio</title>
+  <meta name="description" content="Complete Moonrise creator guide: Business Finder, Builder, publishing, watermark checkout, payouts, MVP+, contact forms, domains, and getting paid.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -45,96 +46,142 @@
   <div id="page-body" class="ms-content-page ms-help-guide-page">
     <header class="ms-page-head">
       <div class="ms-page-head-copy">
-        <h1>Creator help</h1>
-        <p class="lead">Build websites for local businesses and get paid when they go live on Moonrise. You never charge the owner - they pay on the watermark checkout. You keep 90% of each sale; @moonrise takes 10% to run checkout, hosting, and the platform.</p>
+        <h1>Creator Guide</h1>
+        <p class="lead">
+          Everything you need to build websites for local businesses on Moonrise, publish a live preview, and get paid
+          when the owner unlocks the site. This guide is detailed on purpose — read it once, then keep it as your
+          reference while you work.
+        </p>
       </div>
     </header>
 
     <nav class="ms-help-toc" aria-label="On this page">
       <a href="#what">What Moonrise is</a>
-      <a href="#loop">Your creator loop</a>
+      <a href="#who">Who this is for</a>
+      <a href="#rules">Golden rules</a>
+      <a href="#loop">Creator loop</a>
       <a href="#payments">How you get paid</a>
-      <a href="#donate">Donate &amp; MVP+</a>
       <a href="#finder">Business Finder</a>
-      <a href="#builder">Builder</a>
+      <a href="#builder">Builder &amp; Editor</a>
+      <a href="#price">Website Price</a>
+      <a href="#widgets">Contact form &amp; domain</a>
+      <a href="#publish">Publish &amp; watermark</a>
       <a href="#clients">Clients &amp; go-live</a>
       <a href="#payouts">Payouts</a>
-      <a href="#mvp">MVP+</a>
-      <a href="#account">Account</a>
+      <a href="#donate">Donate &amp; MVP+</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#account">Account &amp; security</a>
       <a href="#community">Course &amp; community</a>
+      <a href="#tips">Tips &amp; troubleshooting</a>
+      <a href="#legal">Policies</a>
       <a href="#contact">Contact</a>
     </nav>
 
     <div class="ms-help-guide">
       <section class="ms-card ms-settings-card" id="what">
         <h2 class="ms-settings-card-title">What Moonrise is</h2>
-        <p class="ms-settings-hint">Moonrise lets you build websites for local businesses for free and get paid when they unlock the site on the watermark checkout. Find a lead, generate with AI, customize, publish with the watermark, and share the live site link.</p>
+        <p class="ms-settings-hint">
+          Moonrise Studio is an AI-powered platform that helps creators build professional websites for local businesses
+          and earn when those businesses go live. You find a business that needs a site, generate a polished preview,
+          customize it, publish it with a Moonrise watermark, and share the live link. The business owner pays on the
+          watermark checkout. When they pay, the watermark is removed automatically and you earn your creator share.
+        </p>
         <ul class="ms-help-list">
-          <li><strong>Free to build</strong> - you create and preview sites at no cost to the business owner.</li>
-          <li><strong>They pay on the watermark</strong> - published sites stay watermarked until the owner pays through Moonrise on the live site.</li>
-          <li><strong>You never charge them</strong> - do not collect cash, Venmo, invoices, or any payment outside Moonrise.</li>
-          <li><strong>You keep 90%</strong> - @moonrise takes 10% of each go-live payment for Stripe, hosting, and platform costs.</li>
-          <li>Paid clients show up under <a href="clients.html">My Clients</a>; your income tracks on the <a href="dashboard.html">Dashboard</a>.</li>
+          <li><strong>Free to build</strong> — create, preview, redesign, and publish watermarked sites without charging the owner up front.</li>
+          <li><strong>They pay on the watermark</strong> — the live site stays watermarked until the owner completes Moonrise checkout.</li>
+          <li><strong>You never charge them for go-live</strong> — no cash, Venmo, invoices, or off-platform payment for the same unlock.</li>
+          <li><strong>You keep 90%</strong> — Moonrise keeps 10% of each go-live payment to run checkout, hosting, and the platform (before processor fees and adjustments).</li>
+          <li><strong>Paid clients appear under</strong> <a href="clients.html">My Clients</a>; income tracks on the <a href="dashboard.html">Dashboard</a>.</li>
         </ul>
+        <p class="ms-settings-hint">
+          Moonrise is a software tool. You still own your sales conversations, how you present the preview, and any
+          extra services you offer beyond go-live unlock. The platform handles hosting the preview, watermark checkout,
+          and splitting the go-live payment.
+        </p>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="who">
+        <h2 class="ms-settings-card-title">Who this is for</h2>
+        <ul class="ms-help-list">
+          <li><strong>Creators / sellers</strong> — people who find local businesses, build sites in Moonrise, and earn when owners unlock.</li>
+          <li><strong>Business owners</strong> — people who receive a live preview link and can pay on the watermark to go live. They usually do not need a creator account to pay.</li>
+          <li><strong>New users</strong> — if you are just starting, follow the creator loop below in order. You do not need to be a developer.</li>
+        </ul>
+        <p class="ms-settings-hint">
+          Typical customers for creators include plumbers, salons, restaurants, cleaners, contractors, clinics, and other
+          local service businesses that are hard to find online or have no modern website.
+        </p>
+      </section>
+
+      <section class="ms-card ms-settings-card ms-creator-policy-card" id="rules">
+        <h2 class="ms-settings-card-title">Golden rules (read before you sell)</h2>
+        <div class="ms-creator-policy-notice">
+          <p><strong>1. Creators do not charge business owners for go-live.</strong> Build, publish, and share the live site link. The owner pays only through the Moonrise watermark on the deployed website.</p>
+          <p><strong>2. Set Website Price before you publish.</strong> That is what the owner sees at checkout. You keep 90%; Moonrise keeps 10% of that go-live amount (subject to processor fees and Terms).</p>
+          <p><strong>3. Do not remove or hide the watermark</strong> before the owner pays. Do not tell them to pay you instead of Moonrise checkout.</p>
+          <p><strong>4. Contact form and custom domain are optional.</strong> They stay off until you turn them on and save. They are not required to publish.</p>
+          <p>Breaking the payment rules can lead to permanent ban, withheld payouts, site removal, and other consequences described in the <a href="terms.html">Terms of Service</a>.</p>
+        </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="loop">
+        <h2 class="ms-settings-card-title">Your creator loop</h2>
+        <p class="ms-settings-hint">Most successful creators repeat this same loop every day.</p>
+        <ol class="ms-help-steps">
+          <li>
+            <strong>Find</strong>
+            <span>Open <a href="leads.html">Business Finder</a> and search by city and category, or paste a Google Maps link in <a href="builder.html">Builder</a>. Pick businesses that look active and under-served online.</span>
+          </li>
+          <li>
+            <strong>Generate</strong>
+            <span>Use slide-to-generate in Finder, or fill business details in Builder and generate. Watch progress until the preview appears. Generation is free for creators.</span>
+          </li>
+          <li>
+            <strong>Polish</strong>
+            <span>Open the project in Editor. Fix names, phone, hours, services, and photos if needed. Preview desktop and mobile. Optionally enable contact form or custom domain (manual toggles).</span>
+          </li>
+          <li>
+            <strong>Price</strong>
+            <span>Set Website Price to what the owner will pay at watermark checkout. Be clear and fair — this is the unlock price, not a fee you collect yourself.</span>
+          </li>
+          <li>
+            <strong>Publish &amp; share</strong>
+            <span>Publish the watermarked live site. Send the link to the owner (text, call follow-up, or in-person). Explain that paying on the site removes the watermark and keeps the site live.</span>
+          </li>
+          <li>
+            <strong>Get paid</strong>
+            <span>When they pay through the watermark, Moonrise removes the watermark and credits your 90% share. Track it on the Dashboard and keep payout details current in Settings.</span>
+          </li>
+        </ol>
       </section>
 
       <section class="ms-card ms-settings-card ms-creator-policy-card" id="payments">
         <h2 class="ms-settings-card-title">How you get paid (important)</h2>
         <div class="ms-creator-policy-notice">
           <p><strong>Creators do not charge business owners.</strong> Your job is to build, publish, and share the live site link. The owner pays only through the Moonrise watermark on the deployed website — that is the sole checkout for going live.</p>
-          <p>When they pay, the watermark is removed automatically, the site stays live, and you receive <strong>90%</strong> of the sale (@moonrise keeps 10%). Set the unlock price in the editor before you publish.</p>
-          <p>Charging the owner directly - or asking them to pay outside the watermark - violates Moonrise Terms and may result in <strong>permanent ban, withheld payouts, site removal, and other severe consequences</strong>. See <a href="terms.html">Terms of Service</a>.</p>
+          <p>When they pay, the watermark is removed automatically, the site stays live, and you receive <strong>90%</strong> of the go-live sale (Moonrise keeps <strong>10%</strong>). Set the unlock price in the editor before you publish.</p>
+          <p>Charging the owner directly — or asking them to pay outside the watermark — violates Moonrise Terms and may result in <strong>permanent ban, withheld payouts, site removal, and other severe consequences</strong>. See <a href="terms.html">Terms of Service</a>.</p>
         </div>
-      </section>
-
-      <section class="ms-card ms-settings-card" id="loop">
-        <h2 class="ms-settings-card-title">Your creator loop</h2>
-        <ol class="ms-help-steps">
-          <li>
-            <strong>Find</strong>
-            <span>Use <a href="leads.html">Business Finder</a> to search local leads, or paste a Google Maps link in Builder.</span>
-          </li>
-          <li>
-            <strong>Generate</strong>
-            <span>Slide to generate in Business Finder or fill details in <a href="builder.html">Builder</a>, then edit in <a href="editor.html">Editor</a>. Generation is free.</span>
-          </li>
-          <li>
-            <strong>Polish</strong>
-            <span>Edit copy, layout, contact form, and domain settings in Builder. Preview desktop and mobile before you share.</span>
-          </li>
-          <li>
-            <strong>Sell</strong>
-            <span>Send the live site link. The owner pays on the site — not to you.</span>
-          </li>
-          <li>
-            <strong>Get paid</strong>
-            <span>When they pay through the watermark, you keep 90% (@moonrise keeps 10%). Add payout methods in <a href="settings.html">Settings</a> and track income on the <a href="dashboard.html">Dashboard</a>.</span>
-          </li>
-        </ol>
-      </section>
-
-      <section class="ms-card ms-settings-card" id="donate">
-        <h2 class="ms-settings-card-title">Donate &amp; MVP+</h2>
-        <p class="ms-settings-hint"><a href="https://trymoonrise.com" target="_blank" rel="noopener noreferrer">trymoonrise.com</a> is free for everyone. Donations are optional but much appreciated to keep it that way - and unlock <a href="#mvp">MVP+</a> perks.</p>
         <ul class="ms-help-list">
-          <li><strong>Free platform</strong> - build sites, use Business Finder, and get paid when clients go live.</li>
-          <li><strong>MVP+ perks</strong> - View code and download HTML in Builder, everything free in the Store, and you help keep the platform free for everyone.</li>
-          <li><strong>How to donate</strong> - MVP+ from <strong>$5/mo</strong>, or choose any one-time amount from <strong>$1 to $1,000</strong> (counts on the leaderboard).</li>
-          <li><strong>Income</strong> - when clients pay to go live, you keep 90% (@moonrise keeps 10%). Track it on the <a href="dashboard.html">Dashboard</a>.</li>
+          <li>Checkout is powered by Stripe on the live watermark page.</li>
+          <li>Owners do not need a Moonrise creator account to pay.</li>
+          <li>Go-live checkout may also describe hosting or recurring charges — show those details to the owner if they ask.</li>
+          <li>Optional creator purchases (MVP+, Store, donations) are separate from the owner&rsquo;s unlock payment.</li>
         </ul>
-        <div class="ms-settings-actions">
-          <a class="ms-btn" href="donate.html">Donate · unlock MVP+</a>
-        </div>
       </section>
 
       <section class="ms-card ms-settings-card" id="finder">
         <h2 class="ms-settings-card-title">Business Finder</h2>
-        <p class="ms-settings-hint">Finder is your lead engine — search by place and category, then send strong businesses straight into Builder.</p>
+        <p class="ms-settings-hint">
+          Finder is your lead engine. Search by place and category, review ratings and contact details, organize statuses,
+          then send strong businesses into Builder.
+        </p>
         <ul class="ms-help-list">
-          <li>Search local businesses and review ratings, categories, and contact details.</li>
-          <li><strong>Slide to generate</strong> opens Builder and starts a site for that lead using their real facts.</li>
-          <li>While a site is generating, the Builder channel in the sidebar animates so you always know a job is running.</li>
-          <li>Use lead statuses (pending, complete, etc.) to keep your pipeline organized.</li>
+          <li>Search local businesses and review ratings, categories, addresses, and phone numbers when available.</li>
+          <li><strong>Slide to generate</strong> opens Builder and starts a site for that lead using their facts. Keep the slide held until it completes — do not refresh mid-drag.</li>
+          <li>While a site is generating, the Builder item in the sidebar can show that a job is running.</li>
+          <li>Use lead statuses (pending, complete, and similar) to keep your pipeline organized.</li>
+          <li>Lead data can come from public or third-party sources. Always verify phone and business name before you publish or call.</li>
         </ul>
         <div class="ms-settings-actions">
           <a class="ms-btn" href="leads.html">Open Business Finder</a>
@@ -142,32 +189,82 @@
       </section>
 
       <section class="ms-card ms-settings-card" id="builder">
-        <h2 class="ms-settings-card-title">Builder</h2>
-        <p class="ms-settings-hint">Builder is where sites are born and edited. You can start from Finder, a Maps URL, or manual business details.</p>
+        <h2 class="ms-settings-card-title">Builder &amp; Editor</h2>
+        <p class="ms-settings-hint">
+          Builder is where sites are started. Editor is where you refine, price, publish, and manage optional features.
+          You can start from Finder, a Maps URL, manual business details, or an uploaded / GitHub site where available.
+        </p>
         <ul class="ms-help-list">
-          <li><strong>Generate</strong> builds a full site from business details and Website Presets. Watch the progress UI until the preview appears.</li>
-          <li><strong>Edit</strong> with chat-style prompts or by adjusting business fields, then regenerate sections as needed.</li>
-          <li><strong>Redesign</strong> generates a fresh visual direction on an existing project. Generation and redesign are free for creators.</li>
-          <li><strong>Website price</strong> - set what the owner pays on the watermark (not a fee you charge them). You keep 90%; @moonrise keeps 10%.</li>
-          <li><strong>Publish</strong> - the live site shows a watermark until the owner pays on the deployed site; the watermark is removed automatically after payment.</li>
-          <li><strong>Contact form</strong> (when enabled) can collect leads to your email after you save and republish.</li>
-          <li><strong>View code</strong> / <strong>Download HTML</strong> require MVP+ (Donate) or an active Starter, Pro, or Business plan.</li>
+          <li><strong>Generate</strong> builds a full site from business details and Website Presets. Wait for the progress UI until the preview appears.</li>
+          <li><strong>Edit modes</strong> — switch Preview / Edit / Code (Code may require MVP+ or a paid plan). On mobile, the mode switch sits beside Back.</li>
+          <li><strong>Edit with prompts or fields</strong> — adjust copy and business fields, then regenerate sections as needed.</li>
+          <li><strong>Redesign</strong> creates a fresh visual direction on an existing project. Generation and redesign are free for creators.</li>
+          <li><strong>Device previews</strong> — check desktop, tablet, and phone before you share with an owner.</li>
+          <li><strong>View code / Download HTML</strong> require MVP+ (Donate) or an active Starter, Pro, or Business plan where offered.</li>
+          <li><strong>Watermark widget</strong> — unpaid live sites show the Moonrise watermark until the owner pays.</li>
         </ul>
         <div class="ms-settings-actions">
           <a class="ms-btn" href="builder.html">Open Builder</a>
+          <a class="ms-btn ms-btn-secondary" href="projects.html">My Projects</a>
         </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="price">
+        <h2 class="ms-settings-card-title">Website Price</h2>
+        <p class="ms-settings-hint">
+          Website Price is the amount the business owner pays at watermark checkout to unlock the site. It is not a fee
+          you collect personally.
+        </p>
+        <ul class="ms-help-list">
+          <li>Set the price in the editor before you publish so the owner sees the correct amount.</li>
+          <li>After payment, you keep 90% and Moonrise keeps 10% of that go-live amount (before processor fees and any adjustments under the Terms).</li>
+          <li>Choose a price that matches the value of the site and what similar local businesses will actually pay.</li>
+          <li>If you change the price after publishing, save and update/publish again so checkout stays accurate.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="widgets">
+        <h2 class="ms-settings-card-title">Contact form &amp; custom domain (manual)</h2>
+        <p class="ms-settings-hint">
+          These features stay off until you turn them on. They do not auto-enable just because a site has a form section
+          or a domain name saved from earlier work.
+        </p>
+        <ul class="ms-help-list">
+          <li><strong>Contact form</strong> — enable the toggle, choose Auto (email notifications) or Custom (your own endpoint), enter details, then Save &amp; apply. Republish/update if the site is already live so delivery activates.</li>
+          <li><strong>Send test email</strong> — available after Auto mode is enabled and saved with a valid notification email.</li>
+          <li><strong>Custom domain</strong> — enable the toggle, pick where the domain is managed (Squarespace, GoDaddy, Namecheap, Cloudflare, etc.), enter the hostname, save, then follow the DNS steps and Check status.</li>
+          <li>Publish the site first before connecting a domain. DNS changes can take a few minutes (sometimes longer) to verify.</li>
+          <li>Turning a feature off and saving disconnects delivery or domain connection according to the product flow.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="publish">
+        <h2 class="ms-settings-card-title">Publish &amp; watermark</h2>
+        <p class="ms-settings-hint">
+          Publishing deploys a live URL you can share. Until the owner pays, the site displays a Moonrise watermark with
+          checkout.
+        </p>
+        <ul class="ms-help-list">
+          <li>Use Publish / Update in the editor or site settings when you are ready to go live with the preview.</li>
+          <li>Share the live link, not only a local preview. Owners need the deployed URL to pay.</li>
+          <li>After successful payment, Moonrise removes the watermark and redeploys a clean site automatically.</li>
+          <li>You can unpublish from site settings if you need to take a preview down (subject to product rules and any paid hosting state).</li>
+          <li>Do not instruct owners to screenshot around the watermark or use developer tools to hide it — that violates Terms.</li>
+        </ul>
       </section>
 
       <section class="ms-card ms-settings-card" id="clients">
         <h2 class="ms-settings-card-title">Clients &amp; go-live</h2>
-        <p class="ms-settings-hint">Share the watermarked preview. The business owner pays on the live site to remove the watermark - never pay you directly. Dashboard shows your 90% share; My Clients lists everyone who paid through Moonrise.</p>
+        <p class="ms-settings-hint">
+          When an owner pays through the watermark, they become a paid client on Moonrise. Your Dashboard income and
+          My Clients list update from those successful checkouts.
+        </p>
         <ul class="ms-help-list">
-          <li>Set the Website Price in the editor, then publish and share the live site link.</li>
-          <li>The owner pays only through the Moonrise watermark checkout on the deployed website.</li>
-          <li>Do not collect cash, Venmo, invoices, or any off-platform payment from the owner.</li>
-          <li>You receive 90% of the sale; @moonrise keeps 10% as the platform fee.</li>
+          <li>Set Website Price, publish, and share the live site link.</li>
+          <li>Walk the owner through paying on the site if they are unsure — stay on the watermark checkout path.</li>
           <li>After payment, the project appears under <a href="clients.html">My Clients</a> and counts toward Dashboard income.</li>
           <li>Set an income goal on the <a href="dashboard.html">Dashboard</a> to track how you are pacing.</li>
+          <li>Extra custom work beyond go-live should be scoped clearly and must never replace watermark payment for the same unlock.</li>
         </ul>
         <div class="ms-settings-actions">
           <a class="ms-btn ms-btn-secondary" href="dashboard.html">Dashboard</a>
@@ -177,38 +274,58 @@
 
       <section class="ms-card ms-settings-card" id="payouts">
         <h2 class="ms-settings-card-title">Payouts</h2>
-        <p class="ms-settings-hint">Creators add a payment method during onboarding ($1 temporary charge, refunded immediately). This confirms the card is valid and keeps it on file. Commissions are tracked on your Dashboard and paid outside the app for now.</p>
+        <p class="ms-settings-hint">
+          Creators typically add a payment method during onboarding (a small temporary authorization may be used to
+          validate the method). Commission tracking lives on your Dashboard. Payout fulfillment may be processed
+          according to current platform practice (including manual payout outside the app where noted in product copy).
+        </p>
         <ul class="ms-help-list">
-          <li>Add your payment method during creator onboarding after signup.</li>
-          <li>Your 90% creator share is paid manually outside the app today - Income on the Dashboard tracks what you are owed.</li>
-          <li>Income reflects your 90% share after Moonrise's 10% platform fee.</li>
+          <li>Keep payout details accurate in <a href="settings.html">Settings</a>.</li>
+          <li>Income on the Dashboard reflects your 90% creator share after Moonrise&rsquo;s 10% platform fee (before any processor or dispute adjustments).</li>
+          <li>Chargebacks, refunds, or Terms violations can delay or reverse amounts — see the Terms for details.</li>
+          <li>You are responsible for taxes on your earnings.</li>
         </ul>
         <div class="ms-settings-actions">
           <a class="ms-btn" href="settings.html">Open Settings</a>
+          <a class="ms-btn ms-btn-secondary" href="pending-payouts.html">Pending payouts</a>
         </div>
       </section>
 
-      <section class="ms-card ms-settings-card" id="mvp">
-        <h2 class="ms-settings-card-title">MVP+</h2>
-        <p class="ms-settings-hint">Donate to unlock MVP+. While active, perks apply on your account and paid Store items are included.</p>
+      <section class="ms-card ms-settings-card" id="donate">
+        <h2 class="ms-settings-card-title">Donate &amp; MVP+</h2>
+        <p class="ms-settings-hint">
+          <a href="https://trymoonrise.com" target="_blank" rel="noopener noreferrer">trymoonrise.com</a> is free for
+          creators to build and earn. Donations are optional and help keep generation free — and unlock MVP+ perks.
+        </p>
         <ul class="ms-help-list">
-          <li>View code and download HTML in Builder while MVP+ is active.</li>
-          <li>Everything free in the <a href="donate.html#store">Store</a>.</li>
-          <li>Support Moonrise - keep generation free for everyone.</li>
+          <li><strong>Free platform</strong> — build sites, use Business Finder, and get paid when clients go live.</li>
+          <li><strong>MVP+ perks</strong> — View code and download HTML in Builder, Store items included while active, and support for keeping the platform free.</li>
+          <li><strong>How to donate</strong> — MVP+ from about <strong>$5/mo</strong>, or choose a one-time amount (amounts may appear on the leaderboard).</li>
+          <li>Open the <a href="donate.html">Donate</a> page for current options and the <a href="donate.html#store">Store</a>.</li>
         </ul>
         <div class="ms-settings-actions">
-          <a class="ms-btn ms-btn-secondary" href="donate.html#store">Store</a>
-          <a class="ms-btn" href="donate.html">Donate</a>
+          <a class="ms-btn" href="donate.html">Donate · unlock MVP+</a>
         </div>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="dashboard">
+        <h2 class="ms-settings-card-title">Dashboard &amp; projects</h2>
+        <ul class="ms-help-list">
+          <li><a href="dashboard.html">Dashboard</a> — income, goals, and a snapshot of your creator activity.</li>
+          <li><a href="projects.html">Projects</a> — all sites you have generated or imported; open any project to keep editing.</li>
+          <li><a href="orders.html">Orders</a> — locate order-related information when you need it for a client payment.</li>
+          <li><a href="leaderboard.html">Leaderboard</a> — community standings where donations and activity may appear.</li>
+        </ul>
       </section>
 
       <section class="ms-card ms-settings-card" id="account">
-        <h2 class="ms-settings-card-title">Account &amp; profile</h2>
+        <h2 class="ms-settings-card-title">Account &amp; security</h2>
         <ul class="ms-help-list">
           <li>Update handle, display name, and photo in <a href="settings.html">Settings</a>.</li>
-          <li>Change your password under Security.</li>
-          <li>Income in the sidebar links to your <a href="dashboard.html">Dashboard</a>.</li>
-          <li>Sign out from the arrow icon next to your name, or from Settings ? Session.</li>
+          <li>Change password or passkey under Security where available.</li>
+          <li>Creator contact details you save may appear on watermarked sites so owners can reach you about edits.</li>
+          <li>Sign out from the arrow icon next to your name, or from Settings → Session.</li>
+          <li>Use a unique password and keep your email inbox accessible for recovery and payment notices.</li>
         </ul>
       </section>
 
@@ -217,24 +334,57 @@
         <ul class="ms-help-list">
           <li>Watch the creator walkthrough on the <a href="course.html">Course</a> page.</li>
           <li>Join Telegram and Discord from the Account section in the sidebar for updates and creator chat.</li>
-          <li>Browse the <a href="donate.html#store">Store</a> for creator tools - free with MVP+, or purchase individually.</li>
+          <li>Browse the <a href="donate.html#store">Store</a> for creator tools — free with MVP+, or purchase individually where offered.</li>
         </ul>
         <div class="ms-settings-actions">
           <a class="ms-btn" href="course.html">Open Course</a>
         </div>
       </section>
 
+      <section class="ms-card ms-settings-card" id="tips">
+        <h2 class="ms-settings-card-title">Tips &amp; troubleshooting</h2>
+        <ul class="ms-help-list">
+          <li><strong>Generation stuck?</strong> Wait for the progress UI to finish. Avoid refreshing mid-job. If it fails, try again with clearer business details or a redesign.</li>
+          <li><strong>Slide-to-generate reset?</strong> Keep holding until the threshold completes; list refreshes are deferred while you slide.</li>
+          <li><strong>Owner cannot pay?</strong> Confirm they opened the live published URL (not a screenshot or local file) and that Website Price is set.</li>
+          <li><strong>Contact form not emailing?</strong> Confirm the toggle is on, Auto mode has a valid email, you clicked Save &amp; apply, and you updated the live site after saving.</li>
+          <li><strong>Domain still pending?</strong> Remove conflicting A/CNAME records at your DNS host, add the records Moonrise shows, wait a few minutes, then Check status.</li>
+          <li><strong>Code button locked?</strong> Unlock with MVP+ or an eligible plan — see Donate / Store.</li>
+          <li><strong>Mobile chrome cramped?</strong> Preview / Edit / Code stretch beside Back on phones; scroll the tools row if device icons overflow.</li>
+        </ul>
+      </section>
+
+      <section class="ms-card ms-settings-card" id="legal">
+        <h2 class="ms-settings-card-title">Policies</h2>
+        <p class="ms-settings-hint">
+          Using Moonrise means you agree to the platform rules. The Guide explains how the product works; the legal pages
+          control rights and obligations.
+        </p>
+        <ul class="ms-help-list">
+          <li><a href="terms.html">Terms of Service</a> — payment rules, acceptable use, bans, liability limits.</li>
+          <li><a href="privacy.html">Privacy Policy</a> — what we collect, how we use it, and your choices.</li>
+          <li><a href="help.html">Help / Contact</a> — reach the team for billing, access, or product issues.</li>
+        </ul>
+      </section>
+
       <section class="ms-card ms-settings-card" id="contact">
         <h2 class="ms-settings-card-title">Contact</h2>
-        <p class="ms-settings-hint">Stuck on billing, a failed generate, or account access? Reach the Moonrise team from Help ? phone, email, Discord, and more.</p>
+        <p class="ms-settings-hint">
+          Stuck on billing, a failed generate, domain DNS, or account access? Reach Moonrise from Help — phone, email,
+          Discord, and more.
+        </p>
+        <ul class="ms-help-list">
+          <li>Email: <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a></li>
+          <li>Phone: <a href="tel:+14013000957">(401) 300-0957</a></li>
+        </ul>
         <div class="ms-settings-actions">
           <a class="ms-btn" href="help.html">Contact us</a>
         </div>
         <p class="ms-help-legal">
           <a href="privacy.html">Privacy</a>
-          <span aria-hidden="true">?</span>
+          <span aria-hidden="true">·</span>
           <a href="terms.html">Terms</a>
-          <span aria-hidden="true">?</span>
+          <span aria-hidden="true">·</span>
           <a href="settings.html">Settings</a>
         </p>
       </section>

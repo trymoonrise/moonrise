@@ -31,7 +31,7 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Manage hosting Â· Moonrise</title>
+  <title>Manage hosting - Moonrise</title>
   <meta name="description" content="Manage or cancel Moonrise website hosting after go-live payment.">
   <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -122,7 +122,7 @@
   <main class="ms-hosting-main">
     <form class="ms-hosting-card" id="hosting-billing-form">
       <h1>Manage or cancel hosting</h1>
-      <p>Enter the email you used when you paid to remove the watermark. Weâ€™ll open Stripeâ€™s secure billing portal so you can update your card or cancel.</p>
+      <p>Enter the email you used when you paid to remove the watermark. We'll open Stripe's secure billing portal so you can update your card or cancel.</p>
       <label>
         Project ID
         <input id="hosting-project-id" name="projectId" autocomplete="off" spellcheck="false" required>
@@ -173,9 +173,9 @@
         try {
           if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.textContent = "Openingâ€¦";
+            submitBtn.textContent = "Opening...";
           }
-          setStatus("Opening Stripe billing portalâ€¦");
+          setStatus("Opening Stripe billing portal...");
           const res = await fetch(workerBase() + "/public-hosting-portal", {
             method: "POST",
             headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -184,7 +184,7 @@
           const data = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(data.error || "Could not open billing portal");
           if (!data.url) throw new Error("Billing portal URL missing");
-          setStatus("Redirectingâ€¦", "ok");
+          setStatus("Redirecting...", "ok");
           location.href = data.url;
         } catch (err) {
           setStatus(err?.message || "Could not open billing portal", "error");

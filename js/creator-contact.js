@@ -53,7 +53,7 @@
     return {
       kind: "creator",
       name,
-      subtitle: "Website creator Â· site changes & updates",
+      subtitle: "Website creator  -  site changes & updates",
       email,
       phone,
       phoneDisplay: phoneDisplay || phone,
@@ -73,7 +73,7 @@
     return {
       kind: "creator",
       name: String(stored.name || "Your creator").trim() || "Your creator",
-      subtitle: String(stored.subtitle || "Website creator Â· site changes & updates").trim(),
+      subtitle: String(stored.subtitle || "Website creator  -  site changes & updates").trim(),
       email,
       phone,
       phoneDisplay:
@@ -99,7 +99,7 @@
     kind: "hq",
     name: "Moonrise",
     org: "Moonrise Studio",
-    subtitle: "Headquarters Â· trymoonrise.com",
+    subtitle: "Headquarters  -  trymoonrise.com",
     email: "trymoonrise@gmail.com",
     phone: "+14013000957",
     phoneDisplay: "(401) 300-0957",

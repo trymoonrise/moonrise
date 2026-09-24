@@ -6,7 +6,7 @@ const HQ_CONTACT = {
   kind: "hq",
   name: "Moonrise",
   org: "Moonrise Studio",
-  subtitle: "Headquarters Â· trymoonrise.com",
+  subtitle: "Headquarters  -  trymoonrise.com",
   email: String(process.env.MOONRISE_SUPPORT_EMAIL || "trymoonrise@gmail.com").trim(),
   phone: String(process.env.MOONRISE_SUPPORT_PHONE || "+14013000957").trim(),
   url: String(process.env.PUBLIC_APP_URL || "https://trymoonrise.com").replace(/\/$/, ""),
@@ -66,7 +66,7 @@ function buildCreatorContactSnapshot(profile) {
   return {
     kind: "creator",
     name,
-    subtitle: "Website creator Â· site changes & updates",
+    subtitle: "Website creator  -  site changes & updates",
     email: email || "",
     phone: phone || "",
     phoneDisplay: phoneDisplay || phone || "",
@@ -102,7 +102,7 @@ function readStoredCreatorContact(project) {
   return {
     kind: "creator",
     name: String(stored.name || "Your creator").trim() || "Your creator",
-    subtitle: String(stored.subtitle || "Website creator Â· site changes & updates").trim(),
+    subtitle: String(stored.subtitle || "Website creator  -  site changes & updates").trim(),
     email,
     phone,
     phoneDisplay:

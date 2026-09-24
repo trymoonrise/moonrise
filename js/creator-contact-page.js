@@ -92,7 +92,7 @@
   function render(data) {
     contact = data;
     if (nameEl) nameEl.textContent = data.name || "Creator";
-    if (roleEl) roleEl.textContent = data.subtitle || "Website creator · site changes & updates";
+    if (roleEl) roleEl.textContent = data.subtitle || "Website creator  -  site changes & updates";
     if (avatarEl) {
       avatarEl.textContent = initials(data.name);
       avatarEl.style.display = "grid";
@@ -105,7 +105,7 @@
     renderLinks(data);
     if (card) card.hidden = false;
     if (hqSection) hqSection.hidden = false;
-    document.title = (data.name || "Creator") + " · Moonrise";
+    document.title = (data.name || "Creator") + "  -  Moonrise";
   }
 
   saveBtn?.addEventListener("click", () => {

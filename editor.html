@@ -32,13 +32,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <script src="js/auth-gate-head.js?v=20260911-live2"></script>
-  <title>Editor Â· Moonrise Studio</title>
+  <title>Editor - Moonrise Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/generation-announce.css?v=20260721-float">
-  <link rel="stylesheet" href="css/studio.css?v=20260924-mode-fill">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-maximize">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260719-perf">
   <link rel="stylesheet" href="css/mvp-gate.css?v=20260717-mvp-fix">
   <style>
@@ -52,7 +52,7 @@
       box-sizing: border-box;
     }
 
-    /* Live sites carry the paywall watermark â€” editor preview never shows it. */
+    /* Live sites carry the paywall watermark - editor preview never shows it. */
     #watermark-host,
     #mr-wm-chip-root,
     #mr-wm-overlay-root,
@@ -92,6 +92,16 @@
                 Code
               </button>
             </div>
+            <button
+              type="button"
+              class="ms-lb-maximize is-vp"
+              id="lb-maximize-preview"
+              data-vp="fullscreen"
+              title="Maximize preview"
+              aria-label="Maximize preview"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+            </button>
           </div>
 
           <div class="ms-lb-viewports" role="group" aria-label="Builder tools">
@@ -213,7 +223,7 @@
                       aria-expanded="false"
                       aria-labelledby="lb-custom-domain-provider-label lb-custom-domain-provider-value"
                     >
-                      <span class="ms-lb-domain-select-value is-placeholder" id="lb-custom-domain-provider-value">Select where your domain is managedâ€¦</span>
+                      <span class="ms-lb-domain-select-value is-placeholder" id="lb-custom-domain-provider-value">Select where your domain is managed...</span>
                       <svg class="ms-lb-domain-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <ul class="ms-lb-domain-select-menu" id="lb-custom-domain-provider-menu" role="listbox" aria-labelledby="lb-custom-domain-provider-label" hidden>
@@ -228,7 +238,7 @@
                       <li role="option" data-value="other" tabindex="-1">Other / I manage DNS myself</li>
                     </ul>
                     <select class="ms-lb-domain-provider-native" id="lb-custom-domain-provider" aria-hidden="true" tabindex="-1">
-                      <option value="">Select where your domain is managedâ€¦</option>
+                      <option value="">Select where your domain is managed...</option>
                       <option value="squarespace">Squarespace</option>
                       <option value="godaddy">GoDaddy</option>
                       <option value="namecheap">Namecheap</option>
@@ -268,7 +278,7 @@
               class="ms-lb-widget ms-lb-widget--soon"
               id="lb-booking-system-widget"
               aria-disabled="true"
-              title="Booking System â€” Coming soon"
+              title="Booking System - Coming soon"
             >
               <div class="ms-lb-widget-head">
                 <div class="ms-lb-widget-icon" aria-hidden="true">
@@ -338,7 +348,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>
                 Unpublish
               </button>
-              <button type="button" class="ms-lb-dev-unlock-btn" id="btn-dev-unlock-top" hidden title="Developer only â€” simulate a successful purchase">
+              <button type="button" class="ms-lb-dev-unlock-btn" id="btn-dev-unlock-top" hidden title="Developer only - simulate a successful purchase">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                 Simulate unlock
               </button>
@@ -413,7 +423,7 @@
                     </div>
                     <span class="ms-lb-progress-pct" id="preview-progress-pct">0%</span>
                   </div>
-                  <p class="ms-lb-loading-copy" id="preview-loading-copy">Building your websiteâ€¦</p>
+                  <p class="ms-lb-loading-copy" id="preview-loading-copy">Building your website...</p>
                 </div>
               </div>
               <div class="ms-lb-gen-error" id="preview-gen-error" hidden role="alert">
@@ -724,6 +734,6 @@
   <script defer src="js/app.js?v=20260924-tab-pill"></script>
   <script defer src="js/creator-contact.js?v=20260719-watermark-contact"></script>
   <script defer src="js/generation-lock.js?v=20260721-one-gen"></script>
-  <script defer src="js/builder.js?v=20260924-manual-widgets"></script>
+  <script defer src="js/builder.js?v=20260924-maximize"></script>
 </body>
 </html>
