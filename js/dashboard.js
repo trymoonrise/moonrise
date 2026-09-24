@@ -908,10 +908,19 @@
 
   function mountPreviewFrames(projects) {
     const byId = Object.fromEntries((projects || []).map((p) => [p.id, p.html || ""]));
-    document.querySelectorAll(".ms-dash-preview-iframe[data-preview-id]").forEach((frame) => {
+    const sel = ".ms-dash-preview-iframe[data-preview-id]";
+    if (window.MsPreviewThumb?.mount) {
+      window.MsPreviewThumb.mount(sel, byId);
+      return;
+    }
+    // Fallback: never inject raw site HTML into sandbox="" thumbs.
+    const sanitize = window.MsPreviewThumb?.sanitize;
+    document.querySelectorAll(sel).forEach((frame) => {
       const id = frame.getAttribute("data-preview-id");
       const html = byId[id];
-      if (html) frame.srcdoc = html;
+      if (!html) return;
+      frame.removeAttribute("src");
+      frame.srcdoc = typeof sanitize === "function" ? sanitize(html) : "";
     });
   }
 

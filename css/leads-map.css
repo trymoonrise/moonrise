@@ -1416,7 +1416,8 @@ body[data-page="leads"] #ms-hard-refresh,
     width: auto !important;
     height: calc(var(--lf-sheet-h, 36dvh) + var(--lf-sheet-dock, 7.75rem));
     max-height: calc(var(--lf-sheet-max, 48dvh) + var(--lf-sheet-dock, 7.75rem));
-    min-height: calc(8.5rem + var(--lf-sheet-dock, 7.75rem));
+    /* Allow pull-to-dismiss below peek; resting snaps still set a taller --lf-sheet-h. */
+    min-height: calc(2.75rem + var(--lf-sheet-dock, 7.75rem));
     border-radius: var(--lf-radius-sheet) var(--lf-radius-sheet) 0 0;
     border: 0;
     padding: 0 var(--lf-chrome-x) var(--lf-sheet-dock, 7.75rem);
@@ -1770,7 +1771,7 @@ body[data-page="leads"] #ms-hard-refresh,
     width: var(--lf-chrome-w);
     height: calc(var(--lf-sheet-h, 42vh) + var(--lf-sheet-dock, var(--lf-actions-clearance)));
     max-height: calc(var(--lf-sheet-max, 58vh) + var(--lf-sheet-dock, var(--lf-actions-clearance)));
-    min-height: calc(12rem + var(--lf-sheet-dock, var(--lf-actions-clearance)));
+    min-height: calc(2.75rem + var(--lf-sheet-dock, var(--lf-actions-clearance)));
     border-radius: 32px 32px 0 0;
     padding: 0 1rem var(--lf-sheet-dock, var(--lf-actions-clearance));
     gap: 0.35rem;

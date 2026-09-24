@@ -1935,8 +1935,31 @@
 
   function hideResultsPanel() {
     if (!resultsPanel) return;
+    resultsPanel.classList.remove("is-sheet-dragging");
+    if (resultsPanel.hidden) {
+      resultsPanel.classList.remove("is-sheet-open");
+      return;
+    }
+    if (!resultsPanel.classList.contains("is-sheet-open")) {
+      resultsPanel.hidden = true;
+      return;
+    }
+    // Slide down off-screen, then hide so the next open can animate up again.
     resultsPanel.classList.remove("is-sheet-open");
-    resultsPanel.hidden = true;
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      resultsPanel.hidden = true;
+      resultsPanel.removeEventListener("transitionend", onEnd);
+    };
+    const onEnd = (e) => {
+      if (e.target !== resultsPanel) return;
+      if (e.propertyName && e.propertyName !== "transform") return;
+      finish();
+    };
+    resultsPanel.addEventListener("transitionend", onEnd);
+    window.setTimeout(finish, 520);
   }
 
   const SHEET_MQ = "(max-width: 900px)";
@@ -1946,6 +1969,8 @@
     { id: "mid", ratio: 0.68 },
     { id: "full", ratio: 1 },
   ];
+  /** While dragging, allow shrinking past peek so the sheet can be dismissed. */
+  const SHEET_DRAG_FLOOR_PX = 36;
   const SHEET_UI_GAP = 10;
   let sheetSnapIndex = 1;
   let sheetDragBound = false;
@@ -2009,9 +2034,11 @@
     if (!MAP_UI || !resultsPanel) return;
     const opts = options && typeof options === "object" ? options : {};
     const snaps = sheetSnapHeights();
-    const minH = snaps[0].px;
+    const peekH = snaps[0].px;
     const maxH = snaps[snaps.length - 1].px;
-    const next = Math.max(minH, Math.min(maxH, Math.round(Number(px) || minH)));
+    // Resting snaps never go below peek; dragging may shrink toward dismiss.
+    const floor = opts.dragging ? SHEET_DRAG_FLOOR_PX : peekH;
+    const next = Math.max(floor, Math.min(maxH, Math.round(Number(px) || peekH)));
     if (opts.dragging) resultsPanel.classList.add("is-sheet-dragging");
     else resultsPanel.classList.remove("is-sheet-dragging");
     resultsPanel.style.setProperty("--lf-sheet-h", next + "px");
@@ -2029,6 +2056,28 @@
       sheetHandle.setAttribute("aria-valuenow", String(i));
       sheetHandle.setAttribute("aria-valuetext", snaps[i].id);
     }
+  }
+
+  function shouldDismissSheet(heightPx) {
+    const peekH = sheetSnapHeights()[0]?.px || 0;
+    if (!(peekH > 0)) return false;
+    const dismissAt = Math.max(SHEET_DRAG_FLOOR_PX + 24, Math.round(peekH * 0.62));
+    return heightPx < dismissAt;
+  }
+
+  function settleSheetAfterDrag(heightPx) {
+    const h = Number(heightPx) || 0;
+    if (shouldDismissSheet(h)) {
+      hideResultsPanel();
+      return;
+    }
+    const snaps = sheetSnapHeights();
+    let idx = nearestSheetSnapIndex(h);
+    const cur = snaps[sheetSnapIndex]?.px || h;
+    if (h > cur + 28) idx = Math.min(snaps.length - 1, sheetSnapIndex + 1);
+    else if (h < cur - 28) idx = Math.max(0, sheetSnapIndex - 1);
+    else idx = nearestSheetSnapIndex(h);
+    setSheetSnap(idx);
   }
 
   function nearestSheetSnapIndex(px) {
@@ -2096,15 +2145,7 @@
         /* ignore */
       }
       pointerId = null;
-      const h = currentSheetHeightPx();
-      const snaps = sheetSnapHeights();
-      // Velocity-ish bias: if dragged past midpoint toward next snap, prefer it.
-      let idx = nearestSheetSnapIndex(h);
-      const cur = snaps[sheetSnapIndex]?.px || h;
-      if (h > cur + 28) idx = Math.min(snaps.length - 1, sheetSnapIndex + 1);
-      else if (h < cur - 28) idx = Math.max(0, sheetSnapIndex - 1);
-      else idx = nearestSheetSnapIndex(h);
-      setSheetSnap(idx);
+      settleSheetAfterDrag(currentSheetHeightPx());
     };
 
     sheetHandle.addEventListener(
@@ -2133,10 +2174,12 @@
         setSheetSnap(sheetSnapIndex + 1);
       } else if (e.key === "ArrowDown" || e.key === "PageDown") {
         e.preventDefault();
-        setSheetSnap(sheetSnapIndex - 1);
-      } else if (e.key === "Home") {
+        if (sheetSnapIndex <= 0) hideResultsPanel();
+        else setSheetSnap(sheetSnapIndex - 1);
+      } else if (e.key === "Home" || e.key === "Escape") {
         e.preventDefault();
-        setSheetSnap(0);
+        if (e.key === "Escape") hideResultsPanel();
+        else setSheetSnap(0);
       } else if (e.key === "End") {
         e.preventDefault();
         setSheetSnap(SHEET_SNAPS.length - 1);
@@ -2181,11 +2224,7 @@
       if (!listPulling) return;
       listPulling = false;
       if (!resultsPanel.classList.contains("is-sheet-dragging")) return;
-      const h = currentSheetHeightPx();
-      let idx = nearestSheetSnapIndex(h);
-      const cur = sheetSnapHeights()[sheetSnapIndex]?.px || h;
-      if (h < cur - 28) idx = Math.max(0, sheetSnapIndex - 1);
-      setSheetSnap(idx);
+      settleSheetAfterDrag(currentSheetHeightPx());
     };
     resultsEl?.addEventListener("touchend", endListPull);
     resultsEl?.addEventListener("touchcancel", endListPull);

@@ -831,8 +831,15 @@
       document.body.classList.toggle("ms-nav-open", open);
       menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
       menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-      menuToggle.setAttribute("aria-hidden", open ? "true" : "false");
-      menuToggle.tabIndex = open ? -1 : 0;
+      // Never aria-hide a focused control — blur first, then hide from AT while nav is open.
+      if (open) {
+        if (document.activeElement === menuToggle) menuToggle.blur();
+        menuToggle.setAttribute("aria-hidden", "true");
+        menuToggle.tabIndex = -1;
+      } else {
+        menuToggle.removeAttribute("aria-hidden");
+        menuToggle.tabIndex = 0;
+      }
     }
 
     menuToggle.setAttribute("aria-expanded", "false");
@@ -1956,7 +1963,7 @@
     if (window.__msInstallHintBooted) return;
     if (document.querySelector('script[src*="install-hint.js"]')) return;
     const s = document.createElement("script");
-    s.src = "js/install-hint.js?v=20260923-no-banner";
+    s.src = "js/install-hint.js?v=20260924-console";
     s.defer = true;
     document.head.appendChild(s);
   }

@@ -145,7 +145,19 @@
     }
   }
 
+  function shouldDeferInstallPrompt() {
+    const page = String(document.body?.dataset?.page || "").toLowerCase();
+    if (page === "settings" || page === "download" || page === "login" || page === "onboarding") {
+      return true;
+    }
+    const path = String(window.location.pathname || "").toLowerCase();
+    return /(?:^|\/)(settings|download|login|onboarding)(?:\.html)?$/i.test(path);
+  }
+
   window.addEventListener("beforeinstallprompt", (e) => {
+    // Only defer on pages that offer Install. Elsewhere skip preventDefault so
+    // Chromium does not warn that the banner was suppressed without prompt().
+    if (!shouldDeferInstallPrompt()) return;
     e.preventDefault();
     deferredInstallPrompt = e;
     const banner = document.getElementById("ios-install-banner");

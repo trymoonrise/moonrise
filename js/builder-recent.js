@@ -110,10 +110,18 @@
 
   function mountPreviewFrames(projects) {
     const byId = Object.fromEntries((projects || []).map((p) => [p.id, p.html || ""]));
-    document.querySelectorAll("#builder-recent-list .ms-dash-preview-iframe[data-preview-id]").forEach((frame) => {
+    const sel = "#builder-recent-list .ms-dash-preview-iframe[data-preview-id]";
+    if (window.MsPreviewThumb?.mount) {
+      window.MsPreviewThumb.mount(sel, byId);
+      return;
+    }
+    const sanitize = window.MsPreviewThumb?.sanitize;
+    document.querySelectorAll(sel).forEach((frame) => {
       const id = frame.getAttribute("data-preview-id");
       const html = byId[id];
-      if (html) frame.srcdoc = html;
+      if (!html) return;
+      frame.removeAttribute("src");
+      frame.srcdoc = typeof sanitize === "function" ? sanitize(html) : "";
     });
   }
 

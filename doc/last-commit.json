@@ -1,6 +1,6 @@
 {
   "repo": "trymoonrise/moonrise",
-  "sha": "2c7189f4bec8c5ac33ce18a7329dcce51114fcf4",
-  "committedAt": "2026-09-24T00:56:09-07:00",
-  "message": "Refresh studio phone chrome and ship the waiting finder, dashboard, and storage updates."
+  "sha": "36c187deb96811ae0c033d5a8474d55be4cd4c8d",
+  "committedAt": "2026-09-24T07:46:41-07:00",
+  "message": "Expand legal docs and guide, fix title encoding, add preview maximize."
 }
