@@ -1,16 +1,13 @@
 /**
  * Shared slide-to-complete control (Business Finder + testslider).
- * Delta-based drag (immune to sheet scroll), axis lock, compositor fill.
+ * Immediate gesture lock + delta tracking. List refreshes must not rebuild DOM mid-drag.
  */
 (function (global) {
-  /** Commit while dragging only when essentially at the end. */
-  const COMPLETE_RATIO = 0.96;
-  /** On release, commit if the thumb was dragged far enough. */
-  const RELEASE_COMMIT_RATIO = 0.9;
-  const END_TOLERANCE_PX = 3;
-  const ARM_PX = 7;
-  const RETURN_MS = 320;
-  const COMPLETE_MS = 320;
+  const COMPLETE_RATIO = 0.94;
+  const RELEASE_COMMIT_RATIO = 0.82;
+  const END_TOLERANCE_PX = 4;
+  const RETURN_MS = 280;
+  const COMPLETE_MS = 280;
   const FALLBACK_THUMB = 44;
   const FALLBACK_PAD = 4;
 
@@ -84,7 +81,6 @@
     if (!opts || !opts.drag) {
       slide.style.setProperty("--ms-lf-slide-max", max + "px");
       slide.style.setProperty("--ms-lf-slide-thumb", m.thumbW + "px");
-      // Legacy fill px for any older CSS still reading it.
       const fillPx = fillToEnd ? m.trackW : Math.min(m.trackW, m.pad + clamped + m.thumbW);
       slide.style.setProperty("--ms-lf-slide-fill", fillPx + "px");
     }
@@ -106,25 +102,37 @@
     return current >= max * need || current >= max - END_TOLERANCE_PX;
   }
 
+  function emitIdle() {
+    try {
+      global.document.dispatchEvent(new CustomEvent("ms:lf-slide-idle"));
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
   function resetSlide(slide, animated) {
     if (!slide) return;
     const m = metrics(slide);
     if (!m) {
       clearInline(slide);
+      emitIdle();
       return;
     }
     slide.classList.remove("is-dragging", "is-completing");
+    delete slide.dataset.msLfSlideDragging;
     if (animated) {
       slide.classList.add("is-returning");
       setX(slide, 0, m);
       global.setTimeout(function () {
         slide.classList.remove("is-returning");
         clearInline(slide);
+        emitIdle();
       }, RETURN_MS);
       return;
     }
     slide.classList.remove("is-returning");
     clearInline(slide);
+    emitIdle();
   }
 
   function completeSlide(slide, onComplete) {
@@ -132,11 +140,13 @@
     const m = metrics(slide);
     if (!m || m.max <= 0) return;
     slide.classList.remove("is-dragging", "is-returning");
+    delete slide.dataset.msLfSlideDragging;
     slide.classList.add("is-completing");
     setX(slide, m.max, m, { fillToEnd: true });
     global.setTimeout(function () {
       slide.classList.remove("is-completing");
       if (typeof onComplete === "function") onComplete(slide);
+      emitIdle();
     }, COMPLETE_MS);
   }
 
@@ -153,10 +163,7 @@
     }
     if (slide.dataset.msLfSlideDragging === "1") return false;
 
-    let m = metrics(slide);
-    if (!m || m.max <= 2) {
-      m = metrics(slide);
-    }
+    const m = metrics(slide);
     if (!m || m.max <= 2) return false;
 
     const gestureMetrics = {
@@ -171,9 +178,7 @@
     const { track, thumb } = gestureMetrics;
 
     const startX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
-    const startY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
     const onThumb = !!e.target.closest?.(".ms-lf-slide-thumb");
-    // Delta tracking from a fixed origin — immune to sheet/list scroll mid-drag.
     let originLeft = readX(slide);
     if (!onThumb) {
       const rect = track.getBoundingClientRect();
@@ -185,29 +190,42 @@
     }
     const pointerOriginX = startX;
     let current = Math.max(0, Math.min(max, originLeft));
-    let armed = false;
     let finished = false;
-    let moved = false;
+    let moved = Math.abs(current) > 1;
     let raf = 0;
     let latestX = startX;
     const pointerId = e.pointerId ?? 1;
     const usePointer = e.pointerId != null;
 
-    // Seed CSS vars without claiming the gesture yet (allows vertical scroll to win).
+    // Lock the gesture immediately so parent scroll / list refresh cannot steal it.
+    try {
+      e.preventDefault();
+      if (typeof e.stopPropagation === "function") e.stopPropagation();
+    } catch (_) {
+      /* ignore */
+    }
+
+    slide.dataset.msLfSlideDragging = "1";
+    slide.classList.add("is-dragging");
+    global.document.body.classList.add("ms-lf-slide-dragging");
     setX(slide, current, gestureMetrics);
 
-    function clientXY(ev) {
-      if (ev.clientX != null || ev.clientY != null) {
-        return {
-          x: ev.clientX != null ? ev.clientX : startX,
-          y: ev.clientY != null ? ev.clientY : startY,
-        };
+    if (usePointer) {
+      try {
+        thumb.setPointerCapture(pointerId);
+      } catch (_) {
+        try {
+          track.setPointerCapture(pointerId);
+        } catch (_) {
+          /* ignore */
+        }
       }
-      const touch = ev.changedTouches?.[0] || ev.touches?.[0];
-      return {
-        x: touch ? touch.clientX : startX,
-        y: touch ? touch.clientY : startY,
-      };
+    }
+
+    function clientX(ev) {
+      if (ev && ev.clientX != null) return ev.clientX;
+      const touch = ev?.changedTouches?.[0] || ev?.touches?.[0];
+      return touch ? touch.clientX : latestX;
     }
 
     function teardownListeners() {
@@ -220,6 +238,11 @@
         } catch (_) {
           /* ignore */
         }
+        try {
+          if (track.hasPointerCapture?.(pointerId)) track.releasePointerCapture(pointerId);
+        } catch (_) {
+          /* ignore */
+        }
       } else {
         global.removeEventListener("mousemove", onMove, true);
         global.removeEventListener("mouseup", onRelease, true);
@@ -229,7 +252,7 @@
       }
     }
 
-    function finish(forceComplete, softAbort) {
+    function finish(forceComplete) {
       if (finished) return;
       finished = true;
       if (raf) {
@@ -240,12 +263,6 @@
       global.document.body.classList.remove("ms-lf-slide-dragging");
       teardownListeners();
       slide.classList.remove("is-dragging");
-
-      if (softAbort || !armed) {
-        // Never really took the gesture — leave the thumb where CSS defaults it.
-        clearInline(slide);
-        return;
-      }
 
       current = setX(slide, current, gestureMetrics);
       const shouldComplete =
@@ -260,87 +277,45 @@
       }
     }
 
-    function arm(ev) {
-      if (armed || finished) return true;
-      const { x, y } = clientXY(ev);
-      const dx = x - startX;
-      const dy = y - startY;
-      if (Math.abs(dx) < ARM_PX && Math.abs(dy) < ARM_PX) return false;
-
-      // Vertical intent → abort and let the sheet/list scroll.
-      if (Math.abs(dy) > Math.abs(dx) * 1.1) {
-        finish(false, true);
-        return false;
-      }
-
-      armed = true;
-      slide.dataset.msLfSlideDragging = "1";
-      slide.classList.add("is-dragging");
-      global.document.body.classList.add("ms-lf-slide-dragging");
-      if (usePointer) {
-        try {
-          thumb.setPointerCapture(pointerId);
-        } catch (_) {
-          try {
-            track.setPointerCapture(pointerId);
-          } catch (_) {
-            /* ignore */
-          }
-        }
-      }
-      try {
-        ev.preventDefault();
-      } catch (_) {
-        /* ignore */
-      }
-      return true;
-    }
-
     function applyFrame() {
       raf = 0;
-      if (finished || !armed) return;
+      if (finished) return;
       const next = originLeft + (latestX - pointerOriginX);
       current = setX(slide, next, gestureMetrics, { drag: true });
-      if (Math.abs(latestX - pointerOriginX) >= ARM_PX) moved = true;
+      if (Math.abs(latestX - pointerOriginX) >= 3) moved = true;
       if (moved && completes(current, max, COMPLETE_RATIO)) {
-        finish(true, false);
+        finish(true);
       }
     }
 
     function onMove(ev) {
       if (finished) return;
       if (usePointer && ev.pointerId != null && ev.pointerId !== pointerId) return;
-      const { x } = clientXY(ev);
-      latestX = x;
-
-      if (!armed) {
-        if (!arm(ev)) return;
-      } else {
-        try {
-          ev.preventDefault();
-        } catch (_) {
-          /* ignore */
-        }
+      try {
+        ev.preventDefault();
+      } catch (_) {
+        /* ignore */
       }
-
+      latestX = clientX(ev);
       if (!raf) raf = global.requestAnimationFrame(applyFrame);
     }
 
     function onRelease(ev) {
       if (usePointer && ev?.pointerId != null && ev.pointerId !== pointerId) return;
-      if (armed) {
-        const { x } = clientXY(ev || {});
-        latestX = x;
-        current = setX(slide, originLeft + (latestX - pointerOriginX), gestureMetrics, { drag: true });
-        if (Math.abs(latestX - pointerOriginX) >= ARM_PX) moved = true;
-      }
-      finish(false, false);
+      latestX = clientX(ev || {});
+      current = setX(slide, originLeft + (latestX - pointerOriginX), gestureMetrics, { drag: true });
+      if (Math.abs(latestX - pointerOriginX) >= 3) moved = true;
+      finish(false);
     }
 
     function onCancel(ev) {
       if (usePointer && ev?.pointerId != null && ev.pointerId !== pointerId) return;
-      // Treat cancel like release so a near-complete slide still commits.
-      onRelease(ev);
+      // Browser stole the gesture (scroll/refresh). Keep progress: complete if far enough,
+      // otherwise soft-hold then return — never hard-clear mid-slide without animation.
+      latestX = clientX(ev || {});
+      current = setX(slide, originLeft + (latestX - pointerOriginX), gestureMetrics, { drag: true });
+      if (Math.abs(latestX - pointerOriginX) >= 3) moved = true;
+      finish(false);
     }
 
     if (usePointer) {
@@ -397,7 +372,15 @@
       if (!track) return;
       const slide = track.closest(".ms-lf-slide");
       if (!slide) return;
-      beginDrag(e, slide, hooks);
+      const started = beginDrag(e, slide, hooks);
+      if (started) {
+        try {
+          e.preventDefault();
+          e.stopPropagation();
+        } catch (_) {
+          /* ignore */
+        }
+      }
     }
 
     container.addEventListener("pointerdown", onStart, true);
@@ -422,9 +405,24 @@
   function prime(root) {
     root?.querySelectorAll(".ms-lf-slide").forEach(function (slide) {
       if (slide.classList.contains("is-done")) return;
+      if (slide.dataset.msLfSlideDragging === "1") return;
+      if (
+        slide.classList.contains("is-dragging") ||
+        slide.classList.contains("is-completing") ||
+        slide.classList.contains("is-returning")
+      ) {
+        return;
+      }
       const m = metrics(slide);
       if (m && m.max > 0) setX(slide, 0, m);
     });
+  }
+
+  function isGestureActive() {
+    return (
+      global.document.body.classList.contains("ms-lf-slide-dragging") ||
+      !!global.document.querySelector(".ms-lf-slide[data-ms-lf-slide-dragging='1']")
+    );
   }
 
   global.MsLfSlide = {
@@ -444,5 +442,6 @@
     bindTrack,
     bindContainer,
     prime,
+    isGestureActive,
   };
 })(window);

@@ -31,6 +31,8 @@
   const MAP_MARKER_LIMIT = 120;
   let resultsEmptyHint = "";
   let scrapeViaLeadFinderGate = Promise.resolve();
+  let pendingLeadRender = null;
+  let pendingVisibleRefresh = false;
   const LOADING_CARD_COUNT = MAP_UI ? 2 : 6;
   const MIN_SEARCH_RESULTS = MAP_UI ? 18 : 50;
   const MAP_DEFAULT = { lat: 34.05, lng: -118.25, zoom: 8 };
@@ -2669,6 +2671,10 @@
       onComplete: onGenerateSlideComplete,
     });
 
+    document.addEventListener("ms:lf-slide-idle", () => {
+      flushDeferredLeadRender();
+    });
+
     resultsEl.addEventListener("keydown", (e) => {
       const thumb = e.target.closest(".ms-lf-slide-thumb");
       if (!thumb) return;
@@ -2962,8 +2968,38 @@
     );
   }
 
+  function isSlideGestureActive() {
+    return !!(window.MsLfSlide?.isGestureActive?.() ||
+      document.body.classList.contains("ms-lf-slide-dragging") ||
+      resultsEl?.querySelector?.(".ms-lf-slide[data-ms-lf-slide-dragging='1']"));
+  }
+
+  function flushDeferredLeadRender() {
+    if (isSlideGestureActive()) return;
+    if (pendingVisibleRefresh) {
+      pendingVisibleRefresh = false;
+      pendingLeadRender = null;
+      refreshVisibleLeads();
+      return;
+    }
+    if (!pendingLeadRender) return;
+    const next = pendingLeadRender;
+    pendingLeadRender = null;
+    renderLeads(next.leads, next.query);
+  }
+
   function renderLeads(leads, query) {
     if (!resultsEl) return;
+    // Website enrichment / nearby refresh rebuilds cards — that kills an in-progress slide.
+    if (isSlideGestureActive()) {
+      pendingLeadRender = {
+        leads: Array.isArray(leads) ? leads.slice() : [],
+        query: query || "",
+      };
+      lastLeads = pendingLeadRender.leads;
+      lastQuery = pendingLeadRender.query;
+      return;
+    }
     clearLoadingCards();
     lastLeads = Array.isArray(leads) ? leads.slice() : [];
     lastQuery = query || "";
@@ -3042,6 +3078,10 @@
   }
 
   function refreshVisibleLeads() {
+    if (isSlideGestureActive()) {
+      pendingVisibleRefresh = true;
+      return;
+    }
     if (listView === "saved" && !lastLeads.length) {
       renderLeads(savedLeadsList(), "Quick Save");
       setStatus("");

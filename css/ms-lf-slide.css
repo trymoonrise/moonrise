@@ -27,7 +27,7 @@
   border-radius: var(--ms-lf-slide-radius) !important;
   overflow: hidden !important;
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: none;
   isolation: isolate;
   -webkit-user-select: none;
   user-select: none;
