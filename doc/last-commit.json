@@ -1,6 +1,6 @@
 {
   "repo": "trymoonrise/moonrise",
-  "sha": "36c187deb96811ae0c033d5a8474d55be4cd4c8d",
-  "committedAt": "2026-09-24T07:46:41-07:00",
-  "message": "Expand legal docs and guide, fix title encoding, add preview maximize."
+  "sha": "c28dd93201aa9fd11b2b85e754391b6798ee5a35",
+  "committedAt": "2026-09-24T08:12:27-07:00",
+  "message": "Stop immutable JS caching, never defer install prompt, and force BUILD console5 reload so stale app.js cannot stick."
 }

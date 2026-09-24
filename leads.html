@@ -3,12 +3,12 @@
 <head>
   <script>
     (function () {
-      var BUILD = "20260924-console5";
+      var BUILD = "20260924-perf1";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
-        var reloaded = sessionStorage.getItem("ms_build_reloaded_" + BUILD);
-        if (prev !== BUILD || !reloaded) {
+        // Only hard-reload when the build token changes (keeps repeat visits fast).
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
           sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
           var jobs = [];
           if ("serviceWorker" in navigator) {
@@ -32,15 +32,15 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="ss/auth-gate-head.ss?v=20260911-live2"></script>
+  <script src="js/auth-gate-head.js?v=20260911-live2"></script>
   <title>Business Finder - Moonrise Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.ssdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://server.arcgisonline.com" crossorigin>
   <link rel="dns-prefetch" href="https://server.arcgisonline.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.ssdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="css/studio.css?v=20260924-mode-fill">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260719-perf">
   <link rel="stylesheet" href="css/ms-lf-slide.css?v=20260924-slide-hold">
@@ -76,7 +76,7 @@
       }
       body[data-page="leads"] .ms-lf-map-filters {
         display: flex !important;
-        sustify-content: stretch !important;
+        justify-content: stretch !important;
       }
       body[data-page="leads"] .ms-lf-map-filter-btn {
         flex: 1 1 0 !important;
@@ -138,7 +138,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
                   </button>
                   <button type="button" class="ms-lf-map-chip ms-lf-map-search-btn" id="lf-search-toggle" aria-label="Search for a business" title="Search">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linesoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
                   </button>
                   <div class="ms-lf-map-chip ms-lf-map-chip--count ms-lf-map-pill-body">
                     <span class="ms-lf-map-count" id="lf-list-count" aria-live="polite">0 Businesses</span>
@@ -155,10 +155,10 @@
                     </label>
                   </div>
                   <button type="button" class="ms-lf-map-chip ms-lf-map-filter" id="lf-filter-open" aria-label="Filter businesses" aria-expanded="false" aria-controls="lf-filter-sheet" title="Filter">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linesoin="round" aria-hidden="true"><path d="M4 5h16l-6.2 7.4V19l-3.6 1.6v-8.2L4 5z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6.2 7.4V19l-3.6 1.6v-8.2L4 5z"/></svg>
                   </button>
                   <button type="button" class="ms-lf-map-chip ms-lf-map-locate" id="lf-locate" aria-label="Center on my location" title="My location">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linesoin="round" aria-hidden="true"><path d="M12 2 4.5 19.5 12 15.5 19.5 19.5 12 2z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4.5 19.5 12 15.5 19.5 19.5 12 2z"/></svg>
                   </button>
                   <button type="button" class="ms-lf-map-chip ms-lf-map-search-close" id="lf-search-close" aria-label="Close search" title="Close search" tabindex="-1" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -180,7 +180,7 @@
             id="lf-sheet-handle"
             role="slider"
             tabindex="0"
-            aria-label="Resize or close results sheet"
+            aria-label="Resize results sheet"
             aria-orientation="vertical"
             aria-valuemin="0"
             aria-valuemax="2"
@@ -224,24 +224,24 @@
     </div>
   </div>
 
-  <script defer src="https://cdn.ssdelivr.net/npm/leaflet@1.9.4/dist/leaflet.ss" crossorigin=""></script>
-  <script defer src="https://cdn.ssdelivr.net/npm/@supabase/supabase-ss@2.116.0/dist/umd/supabase.ss"></script>
-  <script defer src="ss/config.ss?v=20260909-discord"></script>
-  <script defer src="ss/site-branding.ss"></script>
-  <script defer src="ss/supabase-client.ss?v=20260911-live2"></script>
-  <script defer src="ss/auth.ss?v=20260911-live2"></script>
-  <script defer src="ss/lead-csv-format.ss?v=20260811-website-recheck"></script>
-  <script defer src="ss/lead-display.ss?v=20260718-swipe-site"></script>
-  <script defer src="ss/lead-website-enrich.ss?v=20260811-website-recheck"></script>
-  <script defer src="ss/leads-loader.ss?v=20260811-website-strict"></script>
-  <script defer src="ss/leads-prospect-rank.ss"></script>
-  <script defer src="ss/segment-switch.ss?v=20260811-finder-ui"></script>
-  <script defer src="ss/ui-motion.ss?v=20260811-scan-ms-btn"></script>
-  <script defer src="ss/toast.ss"></script>
-  <script defer src="ss/income.ss?v=20260718-income"></script>
-  <script defer src="ss/app.ss?v=20260924-tab-pill"></script>
-  <script defer src="ss/ms-lf-slide.ss?v=20260924-slide-hold"></script>
-  <script defer src="ss/thinking-orb.ss?v=20260923-orb-solid"></script>
-  <script defer src="ss/leads-search.ss?v=20260924-sheet-dismiss"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+  <script defer src="js/config.js?v=20260909-discord"></script>
+  <script defer src="js/site-branding.js"></script>
+  <script defer src="js/supabase-client.js?v=20260911-live2"></script>
+  <script defer src="js/auth.js?v=20260911-live2"></script>
+  <script defer src="js/lead-csv-format.js?v=20260811-website-recheck"></script>
+  <script defer src="js/lead-display.js?v=20260718-swipe-site"></script>
+  <script defer src="js/lead-website-enrich.js?v=20260811-website-recheck"></script>
+  <script defer src="js/leads-loader.js?v=20260811-website-strict"></script>
+  <script defer src="js/leads-prospect-rank.js"></script>
+  <script defer src="js/segment-switch.js?v=20260811-finder-ui"></script>
+  <script defer src="js/ui-motion.js?v=20260811-scan-ms-btn"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer src="js/income.js?v=20260718-income"></script>
+  <script defer src="js/app.js?v=20260924-perf1"></script>
+  <script defer src="js/ms-lf-slide.js?v=20260924-slide-hold"></script>
+  <script defer src="js/thinking-orb.js?v=20260923-orb-solid"></script>
+  <script defer src="js/leads-search.js?v=20260924-sheet-dismiss"></script>
 </body>
 </html>

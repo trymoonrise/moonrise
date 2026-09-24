@@ -3,12 +3,11 @@
 <head>
   <script>
     (function () {
-      var BUILD = "20260924-console5";
+      var BUILD = "20260924-perf1";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
-        var reloaded = sessionStorage.getItem("ms_build_reloaded_" + BUILD);
-        if (prev !== BUILD || !reloaded) {
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
           sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
           var jobs = [];
           if ("serviceWorker" in navigator) {
@@ -136,7 +135,7 @@
   <script defer src="js/ui-motion.js?v=20260719-onb-motion"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
-  <script defer src="js/app.js?v=20260924-console5"></script>
+  <script defer src="js/app.js?v=20260924-perf1"></script>
   <script defer src="js/pending-payouts.js?v=20260812-payouts-modal"></script>
 </body>
 </html>
