@@ -276,6 +276,9 @@
   ]);
   const PAGE_MOTION_SELECTORS = [
     "#page-body > .ms-page-head",
+    "#page-body > .ms-ldb-head",
+    "#page-body > .ms-ldb-top",
+    "#page-body > .ms-ldb-wall",
     "#page-body > .ms-lf-search",
     "#page-body > .ms-lf-popular",
     "#page-body > .ms-help-toc",
@@ -304,7 +307,11 @@
     ".ms-legal-wrap > section",
   ];
 
+  const CHANNEL_HOP_KEY = "ms_channel_hop";
+  const CHANNEL_LEAVE_MS = 280;
+
   let pageMotionStarted = false;
+  let channelLeaveBound = false;
 
   function pageMotionShouldSkip() {
     const body = document.body;
@@ -315,13 +322,141 @@
     return prefersReducedMotion();
   }
 
+  function readChannelHop() {
+    try {
+      const raw = sessionStorage.getItem(CHANNEL_HOP_KEY);
+      if (!raw) return null;
+      const hop = JSON.parse(raw);
+      if (!hop || !hop.t || Date.now() - hop.t > 8000) {
+        sessionStorage.removeItem(CHANNEL_HOP_KEY);
+        return null;
+      }
+      return hop;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function consumeChannelHop() {
+    const hop = readChannelHop();
+    try {
+      sessionStorage.removeItem(CHANNEL_HOP_KEY);
+    } catch (_) {
+      /* ignore */
+    }
+    return hop;
+  }
+
+  function writeChannelHop(dir, from, to) {
+    try {
+      sessionStorage.setItem(
+        CHANNEL_HOP_KEY,
+        JSON.stringify({
+          dir: dir >= 0 ? 1 : -1,
+          from: from || "",
+          to: to || "",
+          t: Date.now(),
+        })
+      );
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function channelNavLinks() {
+    return Array.from(
+      document.querySelectorAll(".ms-sidebar .ms-nav a.ms-nav-link[href]:not(.is-soon)")
+    );
+  }
+
+  function channelDirForLink(link) {
+    const links = channelNavLinks();
+    const toIdx = links.indexOf(link);
+    const fromIdx = links.findIndex(function (el) {
+      return el.classList.contains("is-active");
+    });
+    if (toIdx < 0 || fromIdx < 0) return 1;
+    return toIdx >= fromIdx ? 1 : -1;
+  }
+
+  function isChannelNavClick(link, e) {
+    if (!link || link.tagName !== "A") return false;
+    if (link.classList.contains("is-soon") || link.classList.contains("is-active")) return false;
+    if (link.hasAttribute("data-external-redirect")) return false;
+    if (prefersReducedMotion()) return false;
+    if (e.defaultPrevented || e.button !== 0) return false;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return false;
+    if (link.target && link.target !== "_self") return false;
+    if (link.hasAttribute("download")) return false;
+    const href = link.getAttribute("href");
+    if (!href || href.charAt(0) === "#") return false;
+    try {
+      const url = new URL(link.href, global.location.href);
+      if (url.origin !== global.location.origin) return false;
+      if (
+        url.pathname === global.location.pathname &&
+        url.search === global.location.search
+      ) {
+        return false;
+      }
+    } catch (_) {
+      return false;
+    }
+    return true;
+  }
+
+  function leaveToChannel(link) {
+    if (!link || document.body.classList.contains("ms-channel-leaving")) return;
+    const dir = channelDirForLink(link);
+    document.documentElement.style.setProperty("--ms-channel-dir", String(dir));
+    writeChannelHop(dir, document.body?.dataset?.page || "", link.getAttribute("data-nav") || "");
+
+    document.querySelectorAll(".ms-sidebar .ms-nav-link.is-active").forEach(function (el) {
+      el.classList.remove("is-active");
+      el.removeAttribute("aria-current");
+    });
+    link.classList.add("is-active");
+    link.setAttribute("aria-current", "page");
+    global.StudioShell?.syncNavPillForLink?.(link, { animate: true });
+
+    document.body.classList.remove("ms-nav-open");
+    document.body.classList.add("ms-channel-leaving");
+
+    global.setTimeout(function () {
+      global.location.assign(link.href);
+    }, CHANNEL_LEAVE_MS);
+  }
+
+  function bindChannelNav() {
+    if (channelLeaveBound) return;
+    channelLeaveBound = true;
+    document.addEventListener(
+      "click",
+      function (e) {
+        const link = e.target?.closest?.("a.ms-nav-link[href]");
+        if (!link || !link.closest(".ms-sidebar")) return;
+        if (!isChannelNavClick(link, e)) return;
+        e.preventDefault();
+        leaveToChannel(link);
+      },
+      true
+    );
+  }
+
   function finishPageMotion() {
     document.body.classList.add("ms-page-motion-ready");
+    document.documentElement.classList.add("ms-channel-entered");
     document.querySelectorAll(".ms-motion-item").forEach(function (el) {
       el.style.removeProperty("will-change");
     });
     const sidebar = document.getElementById("ms-sidebar");
     if (sidebar) sidebar.style.removeProperty("will-change");
+    const pageBody = document.getElementById("page-body");
+    if (pageBody) {
+      global.setTimeout(function () {
+        pageBody.style.removeProperty("will-change");
+      }, 700);
+    }
   }
 
   function isMotionCandidate(el) {
@@ -353,7 +488,33 @@
     return items;
   }
 
+  function playChannelHopEnter() {
+    if (pageMotionStarted) return;
+    pageMotionStarted = true;
+    consumeChannelHop();
+    document.documentElement.classList.add("ms-channel-hop");
+    void document.body.offsetWidth;
+    nextFrame()
+      .then(nextFrame)
+      .then(function () {
+        finishPageMotion();
+      });
+    global.setTimeout(function () {
+      if (!document.body.classList.contains("ms-page-motion-ready")) {
+        finishPageMotion();
+      }
+    }, 900);
+  }
+
   function playPageMotion() {
+    const hopping =
+      document.documentElement.classList.contains("ms-channel-hop") || !!readChannelHop();
+
+    if (hopping) {
+      playChannelHopEnter();
+      return;
+    }
+
     if (pageMotionShouldSkip()) {
       finishPageMotion();
       return;
@@ -385,7 +546,10 @@
   }
 
   function schedulePageMotion() {
-    if (pageMotionShouldSkip()) {
+    const hopping =
+      document.documentElement.classList.contains("ms-channel-hop") || !!readChannelHop();
+
+    if (!hopping && pageMotionShouldSkip()) {
       finishPageMotion();
       return;
     }
@@ -418,6 +582,7 @@
     document.addEventListener("keydown", onPointer, true);
     document.addEventListener("click", onClick, true);
     bootFaq();
+    bindChannelNav();
     schedulePageMotion();
   }
 
@@ -436,5 +601,6 @@
     waitForTransition: waitForTransition,
     prefersReducedMotion: prefersReducedMotion,
     playPageMotion: playPageMotion,
+    leaveToChannel: leaveToChannel,
   };
 })(window);

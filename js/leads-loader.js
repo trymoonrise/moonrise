@@ -1113,7 +1113,9 @@
       .filter((lead) => {
         if (websiteFilter === "with") return !!lead.hasWebsite || lead.websiteStatus === "has";
         if (websiteFilter === "without") {
-          return !lead.hasWebsite && lead.websiteStatus === "missing";
+          // Keep confirmed missing and unverified (no URL / unknown) — exclude only confirmed has-site.
+          if (lead.hasWebsite || lead.websiteStatus === "has") return false;
+          return true;
         }
         return true;
       });

@@ -3,7 +3,7 @@
 <head>
   <script>
     (function () {
-      var BUILD = "20260924-perf1";
+      var BUILD = "20260924-ldb-minimal";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -31,56 +31,57 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20260911-live2"></script>
+  <script src="js/auth-gate-head.js?v=20260924-channel-motion"></script>
   <title>Leaderboard - Moonrise Studio</title>
   <meta name="description" content="Moonrise supporter leaderboard — ranked by lifetime gifts to keep the platform running.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260924-mode-fill">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20260719-perf">
-  <link rel="stylesheet" href="css/donate.css?v=20260719-lb-redesign">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-nav-grey">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-ldb-minimal">
+  <link rel="stylesheet" href="css/donate.css?v=20260924-ldb-minimal">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
-<body data-page="leaderboard">
+<body data-page="leaderboard" class="ms-ldb-site">
   <div id="shell"></div>
   <div id="page-body" class="ms-content-page ms-leaderboard-page">
-    <div class="ms-lb-hero" aria-hidden="true">
-      <div class="ms-lb-hero-wash ms-lb-hero-wash-a"></div>
-      <div class="ms-lb-hero-wash ms-lb-hero-wash-b"></div>
-    </div>
+    <header class="ms-ldb-head">
+      <a class="ms-ldb-back" href="donate.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        Donate
+      </a>
+      <h1>Leaderboard</h1>
+      <p class="ms-ldb-lead">Creators and fans who keep Moonrise running, ranked by lifetime gifts.</p>
 
-    <header class="ms-lb-head">
-      <p class="ms-lb-eyebrow"><a href="donate.html">? Back to Donate</a></p>
-      <h1>Supporter leaderboard</h1>
-      <p class="ms-lb-lead">Creators and fans who keep Moonrise running — ranked by total lifetime gifts.</p>
-      <div class="ms-lb-stats" id="leaderboard-stats" aria-live="polite">
-        <div class="ms-lb-stat">
-          <span class="ms-lb-stat-value" id="leaderboard-stat-count">—</span>
-          <span class="ms-lb-stat-label">Supporters</span>
+      <div class="ms-ldb-meta" id="leaderboard-stats" aria-live="polite">
+        <div class="ms-ldb-meta-item">
+          <span class="ms-ldb-meta-value" id="leaderboard-stat-count">—</span>
+          <span class="ms-ldb-meta-label">Supporters</span>
         </div>
-        <div class="ms-lb-stat">
-          <span class="ms-lb-stat-value" id="leaderboard-stat-total">—</span>
-          <span class="ms-lb-stat-label">Raised on wall</span>
+        <span class="ms-ldb-meta-sep" aria-hidden="true"></span>
+        <div class="ms-ldb-meta-item">
+          <span class="ms-ldb-meta-value" id="leaderboard-stat-total">—</span>
+          <span class="ms-ldb-meta-label">Raised</span>
         </div>
       </div>
-      <a class="ms-btn ms-lb-cta" href="donate.html">Support Moonrise</a>
+
+      <a class="ms-btn ms-ldb-cta" href="donate.html">Support Moonrise</a>
     </header>
 
-    <section class="ms-lb-stage" aria-labelledby="leaderboard-podium-heading">
-      <h2 class="ms-lb-section-title" id="leaderboard-podium-heading">Top supporters</h2>
-      <div class="ms-lb-podium" id="leaderboard-podium" hidden></div>
-      <p class="ms-lb-empty ms-lb-empty--podium" id="leaderboard-podium-empty" hidden>
+    <section class="ms-ldb-top" aria-labelledby="leaderboard-podium-heading">
+      <h2 class="ms-ldb-title" id="leaderboard-podium-heading">Top supporters</h2>
+      <div class="ms-ldb-podium" id="leaderboard-podium" hidden></div>
+      <p class="ms-ldb-empty" id="leaderboard-podium-empty" hidden>
         No supporters yet. Be the first on the wall.
       </p>
     </section>
 
-    <section class="ms-lb-wall" aria-labelledby="leaderboard-full-heading">
-      <div class="ms-lb-wall-head">
-        <h2 class="ms-lb-section-title" id="leaderboard-full-heading">Supporter wall</h2>
-        <p class="ms-lb-wall-sub">Ranked by lifetime support · notes from checkout</p>
+    <section class="ms-ldb-wall" aria-labelledby="leaderboard-full-heading">
+      <div class="ms-ldb-wall-head">
+        <h2 class="ms-ldb-title" id="leaderboard-full-heading">All supporters</h2>
+        <p class="ms-ldb-wall-sub">Lifetime totals · notes from checkout</p>
       </div>
-      <ol class="ms-lb-rank-list" id="leaderboard-full-list" aria-live="polite"></ol>
+      <ol class="ms-ldb-list" id="leaderboard-full-list" aria-live="polite"></ol>
       <p class="ms-error" id="leaderboard-error" hidden></p>
     </section>
   </div>
@@ -91,11 +92,11 @@
   <script defer src="js/supabase-client.js?v=20260911-live2"></script>
   <script defer src="js/auth.js?v=20260911-live2"></script>
   <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20260719-onb-motion"></script>
+  <script defer src="js/ui-motion.js?v=20260924-ldb-minimal"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260722-donate-pro"></script>
-  <script defer src="js/app.js?v=20260924-perf1"></script>
-  <script defer src="js/donate-leaderboard-ui.js?v=20260719-lb-redesign"></script>
-  <script defer src="js/leaderboard.js?v=20260719-lb-redesign"></script>
+  <script defer src="js/app.js?v=20260924-nav-pill-fix"></script>
+  <script defer src="js/donate-leaderboard-ui.js?v=20260924-ldb-minimal"></script>
+  <script defer src="js/leaderboard.js?v=20260924-ldb-minimal"></script>
 </body>
 </html>

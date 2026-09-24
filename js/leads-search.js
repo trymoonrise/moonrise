@@ -1871,11 +1871,20 @@
   function applyWebsiteFilter(leads, filter) {
     const mode = String(filter || "all").toLowerCase();
     const pool = reconcileLeadList(leads);
-    // Strict filters:
-    // - with → confirmed has website
-    // - without → confirmed missing website (unknowns stay in All only)
+    // Strict "with" = confirmed site. "without" includes confirmed missing plus
+    // unverified list/scrape rows with no URL yet (so Scan nearby is not empty
+    // while website enrichment is still running).
     if (mode === "with") return pool.filter(leadHasWebsite);
-    if (mode === "without") return pool.filter(leadMissingWebsite);
+    if (mode === "without") {
+      return pool.filter((lead) => {
+        if (leadHasWebsite(lead)) return false;
+        if (leadMissingWebsite(lead)) return true;
+        const website = leadWebsite(lead);
+        if (website && /^https?:\/\//i.test(website)) return false;
+        // Provisional: no URL on file, not yet confirmed as "has"
+        return true;
+      });
+    }
     return pool;
   }
 
@@ -3278,10 +3287,11 @@
         }
       }
 
-      const memoryPool = applyWebsiteFilter(
-        searchType ? filterLocalLeads(searchType, "") : (allLeads.length ? allLeads.slice() : lastLeads.slice()),
-        websiteFilter
-      );
+      const memoryPool = searchType
+        ? filterLocalLeads(searchType, "")
+        : allLeads.length
+          ? allLeads.slice()
+          : lastLeads.slice();
       const memoryNearby = applyNearbyFilterAndSort(
         memoryPool,
         userCoords,
@@ -3300,7 +3310,7 @@
         );
         if (db.ok && db.leads?.length) {
           const dbNearby = applyNearbyFilterAndSort(
-            applyWebsiteFilter(db.leads, websiteFilter),
+            db.leads,
             userCoords,
             NEARBY_RADIUS_MILES,
             {
@@ -3335,9 +3345,8 @@
         });
         if (scraped.ok && scraped.leads?.length) {
           scrapedFresh = true;
-          let scrapedFiltered = applyWebsiteFilter(scraped.leads, websiteFilter);
-          scrapedFiltered = applyNearbyFilterAndSort(
-            scrapedFiltered,
+          const scrapedNearby = applyNearbyFilterAndSort(
+            scraped.leads,
             userCoords,
             NEARBY_RADIUS_MILES,
             {
@@ -3346,29 +3355,35 @@
             }
           );
           mergeScrapedIntoAllLeads(scraped.leads);
-          leads = mergeById(leads, scrapedFiltered);
+          leads = mergeById(leads, scrapedNearby);
         } else if (!scraped.skipped) {
           remoteError = scraped.error || "Nearby scrape returned no leads";
           console.warn("Nearby scrape:", remoteError);
         }
       }
 
-      // Final pass: re-filter merged set so nothing outside the radius remains.
+      // Final pass: keep the full nearby pool; website filter is applied in renderLeads.
       leads = applyNearbyFilterAndSort(leads, userCoords, NEARBY_RADIUS_MILES, {
         trustScrapeRadius: scrapedFresh,
         includeUnknownDistance: scrapedFresh,
       });
-      leads = applyWebsiteFilter(leads, websiteFilter);
+      const visible = applyWebsiteFilter(leads, websiteFilter);
 
-      if (!leads.length) {
+      if (!visible.length) {
         if (remoteError) {
           resultsEmptyHint = remoteError;
           setError(remoteError);
-        } else {
+        } else if (!leads.length) {
           resultsEmptyHint =
             "No businesses found within " +
             NEARBY_RADIUS_MILES +
             " miles. Try a specific category (e.g. Plumber, Barbershop) or turn off Near me.";
+          setError(resultsEmptyHint);
+        } else {
+          resultsEmptyHint =
+            "No matching businesses for this website filter within " +
+            NEARBY_RADIUS_MILES +
+            " miles. Try All businesses.";
           setError(resultsEmptyHint);
         }
       } else {
@@ -3463,7 +3478,7 @@
       if (isDbConnected()) {
         const db = await searchSupabaseLeads(searchType, location, websiteFilter);
         if (db.ok && db.leads?.length) {
-          leads = applyWebsiteFilter(db.leads, websiteFilter);
+          leads = db.leads.slice();
           mergeScrapedIntoAllLeads(db.leads);
         } else if (db.reason === "sign_in_required") {
           remoteError = "Sign in to search Business Finder leads.";
@@ -3485,21 +3500,18 @@
         const scraped = await scrapeViaLeadFinder(searchType, location, "", null);
         if (scraped.ok && scraped.leads?.length) {
           scrapedFresh = true;
-          const scrapedFiltered = applyWebsiteFilter(scraped.leads, websiteFilter);
           mergeScrapedIntoAllLeads(scraped.leads);
-          if (scrapedFiltered.length) {
-            const byId = new Map();
-            leads.forEach((lead) => {
-              const id = leadId(lead);
-              if (id) byId.set(id, lead);
-            });
-            scrapedFiltered.forEach((lead) => {
-              const id = leadId(lead);
-              if (id) byId.set(id, lead);
-              else leads.push(lead);
-            });
-            leads = Array.from(byId.values());
-          }
+          const byId = new Map();
+          leads.forEach((lead) => {
+            const id = leadId(lead);
+            if (id) byId.set(id, lead);
+          });
+          scraped.leads.forEach((lead) => {
+            const id = leadId(lead);
+            if (id) byId.set(id, lead);
+            else leads.push(lead);
+          });
+          leads = Array.from(byId.values());
         } else if (!scraped.skipped) {
           remoteError = scraped.error || "Live scrape returned no leads";
           console.warn("LeadFinder scrape:", remoteError);
@@ -3508,14 +3520,12 @@
 
       if (!leads.length && allLeads.length) {
         leads = filterLocalLeads(searchType, location);
-        leads = applyWebsiteFilter(leads, websiteFilter);
       }
 
       setStatus("");
-      if (remoteError && !leads.length) {
+      if (remoteError && !applyWebsiteFilter(leads, websiteFilter).length) {
         setError(remoteError);
       }
-      leads = applyWebsiteFilter(leads, websiteFilter);
       renderLeads(rankLeadList(leads), query);
     } finally {
       setFindBusy(false);

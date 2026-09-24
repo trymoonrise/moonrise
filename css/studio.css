@@ -340,18 +340,50 @@ body.ms-sidebar-resizing iframe {
 }
 
 .ms-nav {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.12rem;
   padding: 0.45rem;
   border-radius: 18px;
-  background: #f4f7fa;
+  background: #e8edf3;
   border: none;
   box-shadow: none;
 }
 
+.ms-nav-pill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 1px 3px rgba(15, 23, 42, 0.06);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.22s ease;
+}
+
+.ms-nav-pill.is-ready {
+  opacity: 1;
+}
+
+.ms-nav-pill.is-snap {
+  transition: none;
+}
+
 .ms-nav-link {
   position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 0.7rem;
@@ -503,9 +535,16 @@ body.ms-sidebar-resizing iframe {
 }
 
 .ms-nav-link.is-active {
-  background: #ffffff;
+  background: transparent;
   color: var(--ms-ink);
   font-weight: 600;
+  box-shadow: none;
+}
+
+/* Fallback when pill is missing (or generating state needs its own fill). */
+.ms-nav:not(:has(.ms-nav-pill)) .ms-nav-link.is-active,
+.ms-nav-link.is-active.is-generating {
+  background: #ffffff;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.95) inset,
     0 1px 3px rgba(15, 23, 42, 0.06);
@@ -513,6 +552,12 @@ body.ms-sidebar-resizing iframe {
 
 .ms-nav-link.is-active .ms-nav-ico {
   color: #2563eb;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-nav-pill {
+    transition: none;
+  }
 }
 
 .ms-nav-link.is-soon {
@@ -13354,8 +13399,12 @@ body.ms-legal-site {
 @media (max-width: 900px) {
   .ms-sidebar {
     width: min(84vw, 288px);
-    transform: translate3d(-105%, 0, 0);
+    transform: translate3d(calc(-100% - 12px), 0, 0);
     box-shadow: 16px 0 44px rgba(15, 23, 42, 0);
+    transition:
+      transform 0.44s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.44s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
   }
   body.ms-nav-open #shell {
     position: relative;
@@ -13367,6 +13416,15 @@ body.ms-legal-site {
   body.ms-nav-open .ms-sidebar {
     transform: translate3d(0, 0, 0);
     box-shadow: 16px 0 44px rgba(15, 23, 42, 0.16);
+    transition:
+      transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* Closing: slightly snappier ease-in so it tucks away cleanly */
+  body:not(.ms-nav-open) .ms-sidebar {
+    transition:
+      transform 0.32s cubic-bezier(0.4, 0, 0.7, 0.2),
+      box-shadow 0.28s ease;
   }
   /* Nav scrim on ::after so ::before ambient drift (studio-motion.css) stays intact */
   body::after {
@@ -13379,24 +13437,24 @@ body.ms-legal-site {
     visibility: hidden;
     pointer-events: none;
     transition:
-      opacity 0.28s ease,
-      visibility 0s linear 0.28s;
+      opacity 0.32s cubic-bezier(0.4, 0, 0.7, 0.2),
+      visibility 0s linear 0.32s;
   }
   body.ms-nav-open::after {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
     transition:
-      opacity 0.28s ease,
+      opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1),
       visibility 0s linear 0s;
   }
   .ms-menu-toggle {
     display: grid !important;
     place-items: center;
     transition:
-      transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.2s ease,
-      visibility 0.2s ease,
+      transform 0.36s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.28s ease,
+      visibility 0.28s ease,
       background 0.2s ease,
       border-color 0.2s ease;
   }

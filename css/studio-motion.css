@@ -13,7 +13,7 @@
 }
 
 /* Subtle ambient wash on app pages (matches onboarding/home drift) */
-body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-page="home"]):not([data-page="orders"]):not([data-page="leads"]):not(.ms-onboard-page):not(.ms-legal-site):not(.ms-contact-public)::before {
+body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-page="home"]):not([data-page="orders"]):not([data-page="leads"]):not([data-page="leaderboard"]):not(.ms-onboard-page):not(.ms-legal-site):not(.ms-contact-public):not(.ms-ldb-site)::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -87,18 +87,41 @@ body.ms-page-motion-ready .ms-motion-item {
 
 /* Mobile drawer uses transform for off-canvas - never the desktop sidebar entrance */
 @media (max-width: 900px) {
+  .ms-sidebar.ms-motion-sidebar,
   body.ms-page-motion-ready .ms-sidebar.ms-motion-sidebar {
-    transition: transform 0.32s var(--ms-motion-ease-soft) !important;
-  }
-
-  .ms-sidebar.ms-motion-sidebar {
     opacity: 1 !important;
-    transform: translate3d(-105%, 0, 0) !important;
-    transition: transform 0.32s var(--ms-motion-ease-soft) !important;
+    /* Defer transform/transition to studio.css drawer rules (open ease-in). */
+    transition:
+      transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
 
-  body.ms-nav-open .ms-sidebar {
+  body:not(.ms-nav-open) .ms-sidebar.ms-motion-sidebar {
+    transform: translate3d(calc(-100% - 12px), 0, 0) !important;
+    transition:
+      transform 0.32s cubic-bezier(0.4, 0, 0.7, 0.2),
+      box-shadow 0.28s ease !important;
+  }
+
+  body.ms-nav-open .ms-sidebar,
+  body.ms-nav-open .ms-sidebar.ms-motion-sidebar {
     transform: translate3d(0, 0, 0) !important;
+    transition:
+      transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @media (max-width: 900px) {
+    .ms-sidebar,
+    .ms-sidebar.ms-motion-sidebar,
+    body.ms-nav-open .ms-sidebar,
+    body::after,
+    body.ms-nav-open::after,
+    .ms-menu-toggle {
+      transition: none !important;
+    }
   }
 }
 
@@ -109,6 +132,60 @@ body.ms-page-motion-ready .ms-motion-item {
   transition: none !important;
 }
 
+/* ── Channel switch (sidebar nav → other channel) ───────────────────────── */
+html.ms-channel-hop {
+  --ms-channel-dir: 1;
+}
+
+html.ms-channel-hop #page-body {
+  opacity: 0;
+  transform: translate3d(0, calc(var(--ms-channel-dir, 1) * 16px), 0);
+  will-change: opacity, transform;
+}
+
+html.ms-channel-hop body.ms-page-motion-ready #page-body,
+html.ms-channel-hop.ms-channel-entered #page-body {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity var(--ms-motion-dur-med) var(--ms-motion-ease-soft),
+    transform var(--ms-motion-dur-med) var(--ms-motion-ease-soft);
+}
+
+/* During a hop, keep the desktop sidebar steady (only content moves). */
+@media (min-width: 901px) {
+  html.ms-channel-hop .ms-sidebar.ms-motion-sidebar,
+  html.ms-channel-hop body.ms-page-motion-ready .ms-sidebar.ms-motion-sidebar {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Hop enter: content moves as one block — skip per-item stagger flash. */
+html.ms-channel-hop .ms-motion-item {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+body.ms-channel-leaving {
+  pointer-events: none;
+}
+
+body.ms-channel-leaving #page-body {
+  opacity: 0;
+  transform: translate3d(0, calc(var(--ms-channel-dir, 1) * -12px), 0);
+  transition:
+    opacity 0.26s var(--ms-motion-ease-out),
+    transform 0.26s var(--ms-motion-ease-out);
+  will-change: opacity, transform;
+}
+
+body.ms-channel-leaving .ms-motion-item {
+  transition: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-page="home"]):not([data-page="orders"]):not([data-page="leads"]):not(.ms-onboard-page):not(.ms-legal-site):not(.ms-contact-public)::before {
     animation: none;
@@ -116,6 +193,13 @@ body.ms-page-motion-ready .ms-motion-item {
 
   .ms-motion-item,
   .ms-sidebar.ms-motion-sidebar {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  html.ms-channel-hop #page-body,
+  body.ms-channel-leaving #page-body {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;

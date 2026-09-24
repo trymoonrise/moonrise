@@ -18,6 +18,24 @@
   };
 
   var file = location.pathname.split("/").pop() || "index.html";
+
+  // Channel hop: hide content before paint so enter animation does not flash.
+  try {
+    var hopRaw = sessionStorage.getItem("ms_channel_hop");
+    if (hopRaw) {
+      var hop = JSON.parse(hopRaw);
+      if (hop && hop.t && Date.now() - hop.t < 8000) {
+        document.documentElement.classList.add("ms-channel-hop");
+        document.documentElement.style.setProperty(
+          "--ms-channel-dir",
+          Number(hop.dir) >= 0 ? "1" : "-1"
+        );
+      } else {
+        sessionStorage.removeItem("ms_channel_hop");
+      }
+    }
+  } catch (e) {}
+
   if (PUBLIC[file]) return;
 
   document.documentElement.classList.add("ms-auth-gating");

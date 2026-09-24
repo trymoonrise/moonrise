@@ -1,6 +1,6 @@
 {
   "repo": "trymoonrise/moonrise",
-  "sha": "c28dd93201aa9fd11b2b85e754391b6798ee5a35",
-  "committedAt": "2026-09-24T08:12:27-07:00",
-  "message": "Stop immutable JS caching, never defer install prompt, and force BUILD console5 reload so stale app.js cannot stick."
+  "sha": "05f4e49b79d244954adc42191342c94a17384b0c",
+  "committedAt": "2026-09-24T08:19:48-07:00",
+  "message": "Restore Finder asset paths, re-enable long cache for versioned static files, and ship perf1 build reload."
 }

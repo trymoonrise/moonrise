@@ -59,8 +59,8 @@ async function main() {
   const searchJs = fs.readFileSync(path.join(ROOT, "js/leads-search.js"), "utf8");
   const configJs = fs.readFileSync(path.join(ROOT, "js/config.js"), "utf8");
 
-  ok("leads.html has Leaflet CSS CDN", /unpkg\.com\/leaflet@1\.9\.4\/dist\/leaflet\.css/.test(html));
-  ok("leads.html has Leaflet JS CDN", /unpkg\.com\/leaflet@1\.9\.4\/dist\/leaflet\.js/.test(html));
+  ok("leads.html has Leaflet CSS CDN", /cdn\.jsdelivr\.net\/npm\/leaflet@1\.9\.4\/dist\/leaflet\.css/.test(html));
+  ok("leads.html has Leaflet JS CDN", /cdn\.jsdelivr\.net\/npm\/leaflet@1\.9\.4\/dist\/leaflet\.js/.test(html));
   ok("leads.html has #lf-map", html.includes('id="lf-map"'));
   ok("leads.html has Scan Near Me + All", html.includes("lf-scan-near") && html.includes("lf-scan-all"));
   ok("CSS has dark map stage", css.includes(".ms-lf-map-stage") && css.includes("#0f172a"));
@@ -81,7 +81,7 @@ async function main() {
   }
 
   try {
-    const leaflet = await fetchText("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js", {
+    const leaflet = await fetchText("https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js", {
       timeout: 15000,
     });
     ok("Leaflet CDN reachable", leaflet.status === 200 && leaflet.body.includes("Leaflet"), "status=" + leaflet.status);

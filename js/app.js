@@ -203,6 +203,7 @@
     OWNER_MENU.forEach((item) => {
       nav.insertAdjacentHTML("beforeend", navLink(item, page || document.body?.dataset?.page || ""));
     });
+    ensureNavPills({ animate: false });
   }
 
   function brandLogo() {
@@ -350,6 +351,11 @@
       /* ignore */
     }
     applyChannelGenerating();
+    try {
+      ensureNavPills({ animate: true });
+    } catch (_) {
+      /* ignore until shell helpers exist */
+    }
   }
 
   function cancelChannelGenerating() {
@@ -912,7 +918,82 @@
 
     bindExternalRedirects();
     initSidebarResize();
+    ensureNavPills({ animate: false });
+    bindNavPillResize();
   }
+
+  function prefersNavMotionReduce() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function syncNavPill(nav, link, { animate = true } = {}) {
+    if (!nav || !link || !nav.contains(link)) return;
+    let pill = nav.querySelector(":scope > .ms-nav-pill");
+    if (!pill) {
+      pill = document.createElement("span");
+      pill.className = "ms-nav-pill";
+      pill.setAttribute("aria-hidden", "true");
+      nav.insertBefore(pill, nav.firstChild);
+    }
+    // Match the active link box exactly (offset* already includes nav padding).
+    const left = link.offsetLeft;
+    const top = link.offsetTop;
+    const width = Math.max(link.offsetWidth, 1);
+    const height = Math.max(link.offsetHeight, 1);
+    const reduce = prefersNavMotionReduce();
+    const snap = !animate || reduce || !pill.classList.contains("is-ready");
+    if (snap) pill.classList.add("is-snap");
+    else pill.classList.remove("is-snap");
+    pill.style.width = width + "px";
+    pill.style.height = height + "px";
+    pill.style.transform = "translate3d(" + left + "px, " + top + "px, 0)";
+    pill.classList.add("is-ready");
+    if (snap) {
+      void pill.offsetWidth;
+      pill.classList.remove("is-snap");
+    }
+  }
+
+  function ensureNavPills({ animate = false } = {}) {
+    document.querySelectorAll(".ms-sidebar .ms-nav").forEach((nav) => {
+      const active =
+        nav.querySelector("a.ms-nav-link.is-active") ||
+        nav.querySelector("a.ms-nav-link[aria-current='page']");
+      if (!active) {
+        const pill = nav.querySelector(":scope > .ms-nav-pill");
+        if (pill) pill.classList.remove("is-ready");
+        return;
+      }
+      syncNavPill(nav, active, { animate });
+    });
+  }
+
+  function bindNavPillResize() {
+    if (window.__msNavPillResize) return;
+    window.__msNavPillResize = true;
+    let timer = 0;
+    window.addEventListener(
+      "resize",
+      () => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => ensureNavPills({ animate: false }), 80);
+      },
+      { passive: true }
+    );
+  }
+
+  function syncNavPillForLink(link, opts) {
+    if (!link) return;
+    const nav = link.closest(".ms-nav");
+    if (!nav) return;
+    syncNavPill(nav, link, opts);
+  }
+
+  window.StudioShell = Object.assign(window.StudioShell || {}, {
+    ensureNavPills,
+    syncNavPill,
+    syncNavPillForLink,
+  });
 
   function bindSidebarScrollChrome() {
     const scroller = document.querySelector(".ms-sidebar-scroll");
@@ -1818,6 +1899,28 @@
       writeTabSwitch(page, toId || "leads");
       setActiveTab(nav, link);
       syncTabPill(nav, link, { animate: !prefersTabMotionReduce() });
+
+      const tabOrder = ["dashboard", "builder", "leads", "clients", "settings"];
+      const fromIdx = tabOrder.indexOf(page);
+      const toIdx = tabOrder.indexOf(toId || "leads");
+      const dir = toIdx >= fromIdx ? 1 : -1;
+      document.documentElement.style.setProperty("--ms-channel-dir", String(dir));
+      try {
+        sessionStorage.setItem(
+          "ms_channel_hop",
+          JSON.stringify({
+            dir,
+            from: page,
+            to: toId || "leads",
+            t: Date.now(),
+          })
+        );
+      } catch (_) {
+        /* ignore */
+      }
+      if (!prefersTabMotionReduce()) {
+        document.body.classList.add("ms-channel-leaving");
+      }
 
       const delay = prefersTabMotionReduce() ? 0 : TAB_SWITCH_MS;
       window.setTimeout(() => {

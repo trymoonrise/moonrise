@@ -49,7 +49,7 @@
   }
 
   function lbAvatarHtml(entry, className, size) {
-    const cls = className || "ms-lb-avatar";
+    const cls = className || "ms-ldb-row-avatar";
     const px = Number(size) || 40;
     if (entry?.avatarUrl) {
       return (
@@ -60,10 +60,7 @@
   }
 
   function podiumMedal(rank) {
-    if (rank === 1) return "🥇";
-    if (rank === 2) return "🥈";
-    if (rank === 3) return "🥉";
-    return "#" + rank;
+    return "#" + (Number(rank) || "");
   }
 
   function podiumSlotClass(rank) {
@@ -79,15 +76,15 @@
     const total = escapeHtml(entry.totalLabel || "");
     const message = String(entry.message || "").trim();
     const messageHtml = message
-      ? `<p class="ms-lb-podium-note">“${escapeHtml(message)}”</p>`
-      : `<p class="ms-lb-podium-note is-muted">Supported Moonrise</p>`;
+      ? `<p class="ms-ldb-podium-note">“${escapeHtml(message)}”</p>`
+      : `<p class="ms-ldb-podium-note is-muted">Supported Moonrise</p>`;
 
     return (
-      `<article class="ms-lb-podium-slot${podiumSlotClass(rank)}">` +
-      `<span class="ms-lb-podium-medal" aria-hidden="true">${podiumMedal(rank)}</span>` +
-      lbAvatarHtml(entry, "ms-lb-podium-avatar", rank === 1 ? 56 : 48) +
-      `<strong class="ms-lb-podium-name">${name}</strong>` +
-      `<span class="ms-lb-podium-amount">${total}</span>` +
+      `<article class="ms-ldb-podium-slot${podiumSlotClass(rank)}">` +
+      `<span class="ms-ldb-podium-medal" aria-hidden="true">${podiumMedal(rank)}</span>` +
+      lbAvatarHtml(entry, "ms-ldb-podium-avatar", rank === 1 ? 48 : 44) +
+      `<strong class="ms-ldb-podium-name">${name}</strong>` +
+      `<span class="ms-ldb-podium-amount">${total}</span>` +
       messageHtml +
       `</article>`
     );
@@ -101,11 +98,7 @@
       podiumEl.innerHTML = "";
       return;
     }
-    const second = top[1] || null;
-    const first = top[0] || null;
-    const third = top[2] || null;
-    const ordered = [second, first, third].filter(Boolean);
-    podiumEl.innerHTML = ordered.map((entry) => renderPodiumSlot(entry)).join("");
+    podiumEl.innerHTML = top.map((entry) => renderPodiumSlot(entry)).join("");
     podiumEl.hidden = false;
   }
 
@@ -114,17 +107,17 @@
     const name = escapeHtml(entry.name || "Supporter");
     const total = escapeHtml(entry.totalLabel || "");
     const message = String(entry.message || "").trim();
-    const messageHtml = message ? `<p class="ms-lb-row-note">“${escapeHtml(message)}”</p>` : "";
+    const messageHtml = message ? `<p class="ms-ldb-row-note">“${escapeHtml(message)}”</p>` : "";
 
     return (
-      `<li class="ms-lb-row${rankClass(rank)}">` +
-      `<span class="ms-lb-row-rank" aria-label="Rank ${rank}">${rank}</span>` +
-      lbAvatarHtml(entry, "ms-lb-row-avatar", 40) +
-      `<div class="ms-lb-row-copy">` +
-      `<strong class="ms-lb-row-name">${name}</strong>` +
+      `<li class="ms-ldb-row${rankClass(rank)}">` +
+      `<span class="ms-ldb-row-rank" aria-label="Rank ${rank}">${rank}</span>` +
+      lbAvatarHtml(entry, "ms-ldb-row-avatar", 40) +
+      `<div class="ms-ldb-row-copy">` +
+      `<strong class="ms-ldb-row-name">${name}</strong>` +
       messageHtml +
       `</div>` +
-      `<span class="ms-lb-row-amount">${total}</span>` +
+      `<span class="ms-ldb-row-amount">${total}</span>` +
       `</li>`
     );
   }
@@ -139,23 +132,23 @@
     if (!rest.length) {
       if (entries?.length && skipTop > 0) {
         listEl.innerHTML =
-          '<li class="ms-lb-empty">More supporters will appear here as the community grows.</li>';
+          '<li class="ms-ldb-empty">More supporters will appear here as the community grows.</li>';
         return;
       }
       if (!entries?.length && showPlaceholder) {
         listEl.innerHTML =
-          `<li class="ms-lb-row ms-lb-row--placeholder">` +
-          `<span class="ms-lb-row-rank" aria-hidden="true">—</span>` +
-          lbAvatarHtml({ avatarUrl: "doc/pfp.png", initials: "?" }, "ms-lb-row-avatar", 40) +
-          `<div class="ms-lb-row-copy">` +
-          `<strong class="ms-lb-row-name">Your name could be here</strong>` +
-          `<p class="ms-lb-row-note is-muted">Donate any amount and leave a note on the wall.</p>` +
+          `<li class="ms-ldb-row ms-ldb-row--placeholder">` +
+          `<span class="ms-ldb-row-rank" aria-hidden="true">—</span>` +
+          lbAvatarHtml({ avatarUrl: "doc/pfp.png", initials: "?" }, "ms-ldb-row-avatar", 40) +
+          `<div class="ms-ldb-row-copy">` +
+          `<strong class="ms-ldb-row-name">Your name could be here</strong>` +
+          `<p class="ms-ldb-row-note is-muted">Donate any amount and leave a note on the wall.</p>` +
           `</div>` +
-          `<span class="ms-lb-row-amount">—</span>` +
+          `<span class="ms-ldb-row-amount">—</span>` +
           `</li>`;
         return;
       }
-      listEl.innerHTML = '<li class="ms-lb-empty">Everyone in the top 3 is on the podium above.</li>';
+      listEl.innerHTML = '<li class="ms-ldb-empty">Everyone in the top 3 is listed above.</li>';
       return;
     }
 
@@ -166,12 +159,16 @@
     if (refs?.podiumEl) {
       refs.podiumEl.hidden = false;
       refs.podiumEl.innerHTML =
-        `<article class="ms-lb-podium-slot is-skeleton is-second"></article>` +
-        `<article class="ms-lb-podium-slot is-skeleton is-first"></article>` +
-        `<article class="ms-lb-podium-slot is-skeleton is-third"></article>`;
+        `<article class="ms-ldb-podium-slot is-skeleton is-first"></article>` +
+        `<article class="ms-ldb-podium-slot is-skeleton is-second"></article>` +
+        `<article class="ms-ldb-podium-slot is-skeleton is-third"></article>`;
     }
     if (refs?.podiumEmptyEl) refs.podiumEmptyEl.hidden = true;
-    renderLoading(refs?.listEl, 6);
+    if (refs?.listEl) {
+      refs.listEl.innerHTML =
+        `<li class="ms-ldb-row is-skeleton" aria-hidden="true"></li>`.repeat(4);
+      refs.listEl.setAttribute("aria-busy", "true");
+    }
     if (refs?.countEl) refs.countEl.textContent = "—";
     if (refs?.totalEl) refs.totalEl.textContent = "—";
   }
