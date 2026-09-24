@@ -44,9 +44,9 @@
     }
   }
 
-  function hasStoredSession() {
+  function readStoredSession() {
     function tokenFromRaw(raw) {
-      if (!raw) return false;
+      if (!raw) return null;
       try {
         var parsed = JSON.parse(raw);
         var token =
@@ -58,31 +58,34 @@
           parsed?.refresh_token ||
           parsed?.session?.refresh_token ||
           parsed?.currentSession?.refresh_token;
-        if (!token || !refresh) return false;
+        if (!token || !refresh) return null;
         var exp =
           parsed?.expires_at ||
           parsed?.session?.expires_at ||
           parsed?.currentSession?.expires_at;
-        if (exp && Number(exp) * 1000 < Date.now() - 60000) return false;
-        return true;
+        var fresh = !(exp && Number(exp) * 1000 < Date.now() - 60000);
+        return { fresh: fresh };
       } catch (_) {
-        return false;
+        return null;
       }
     }
     try {
       // Auto save ON = durable localStorage session (auto login).
       // Auto save OFF = sessionStorage only (must sign in every browser visit).
       if (rememberLoginEnabled()) {
-        if (tokenFromRaw(localStorage.getItem("moonrise-studio-auth"))) return true;
-        return tokenFromRaw(sessionStorage.getItem("moonrise-studio-auth"));
+        return (
+          tokenFromRaw(localStorage.getItem("moonrise-studio-auth")) ||
+          tokenFromRaw(sessionStorage.getItem("moonrise-studio-auth"))
+        );
       }
       return tokenFromRaw(sessionStorage.getItem("moonrise-studio-auth"));
     } catch (_) {
-      return false;
+      return null;
     }
   }
 
-  if (!hasStoredSession()) {
+  var stored = readStoredSession();
+  if (!stored) {
     redirectToLogin();
     return;
   }
@@ -92,6 +95,14 @@
     document.documentElement.classList.add("ms-auth-ready");
   };
 
-  // Valid local session — show page immediately; requireAuth() validates in background.
-  window.__msReleaseAuthGate();
+  if (stored.fresh) {
+    // Access token still valid — show page immediately; requireAuth() validates in background.
+    window.__msReleaseAuthGate();
+  } else {
+    // Access token expired but a refresh token is saved. Keep the page hidden
+    // until requireAuth() refreshes it. If that never happens, send them to sign in.
+    setTimeout(function () {
+      if (document.documentElement.classList.contains("ms-auth-gating")) redirectToLogin();
+    }, 12000);
+  }
 })();

@@ -3,7 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function () {
+      // Home-screen / installed app opens the site root. If a session is saved,
+      // continue to the dashboard before the landing page paints. A normal browser
+      // visit stays on this page, including when an old token is sitting in storage.
+      var params;
+      try {
+        params = new URLSearchParams(location.search);
+      } catch (e) {
+        return;
+      }
+      if (params.get("go") === "app") {
+        location.replace("dashboard.html");
+        return;
+      }
+
+      function installedLaunch() {
+        if (params.get("launch") === "app") return true;
+        try {
+          if (navigator.standalone === true) return true;
+          var mq = window.matchMedia;
+          if (!mq) return false;
+          return (
+            mq("(display-mode: standalone)").matches ||
+            mq("(display-mode: fullscreen)").matches ||
+            mq("(display-mode: minimal-ui)").matches ||
+            mq("(display-mode: window-controls-overlay)").matches
+          );
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function tokenPresent(raw) {
+        if (!raw) return false;
+        try {
+          var parsed = JSON.parse(raw);
+          var token =
+            parsed.access_token ||
+            (parsed.session && parsed.session.access_token) ||
+            (parsed.currentSession && parsed.currentSession.access_token);
+          var refresh =
+            parsed.refresh_token ||
+            (parsed.session && parsed.session.refresh_token) ||
+            (parsed.currentSession && parsed.currentSession.refresh_token);
+          return !!(token && refresh);
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function signedIn() {
+        try {
+          var remember = localStorage.getItem("ms_auth_autosave_enabled") !== "0";
+          if (remember) {
+            if (tokenPresent(localStorage.getItem("moonrise-studio-auth"))) return true;
+            return tokenPresent(sessionStorage.getItem("moonrise-studio-auth"));
+          }
+          return tokenPresent(sessionStorage.getItem("moonrise-studio-auth"));
+        } catch (e) {
+          return false;
+        }
+      }
+
+      if (installedLaunch() && signedIn()) {
+        location.replace("dashboard.html");
+        return;
+      }
+
+      if (params.get("launch") === "app") {
+        params.delete("launch");
+        var qs = params.toString();
+        try {
+          history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+        } catch (e) {}
+      }
+    })();
+  </script>
   <title>trymoonrise.com - Build websites. Get paid.</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="doc/MoonriseLogo.png">
   <meta name="description" content="Moonrise is an AI-powered platform that lets you create professional websites with 1 click for local business owners, creators, and more! It's designed to make website creation fast, simple, effortless, and get paid.">
   <link rel="canonical" href="https://trymoonrise.com/">
   <meta property="og:type" content="website">
@@ -19,7 +103,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260720-hero-center">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-tab-lift">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260719-perf">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20260909-discord"></script>
@@ -100,7 +184,7 @@
     <header class="ms-home-nav">
       <a class="ms-home-brand" href="index.html">
         <img src="doc/MoonriseLogo.png" alt="" width="40" height="40">
-        <strong>trymoonrise.com</strong>
+        <strong>moonrise.</strong>
       </a>
       <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
         <i></i><i></i><i></i>
@@ -109,11 +193,12 @@
 
     <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
       <nav class="ms-home-bloom-nav" aria-label="Primary">
-        <a href="login.html" style="--nav-i:0">Start earning</a>
-        <a href="#method" style="--nav-i:1">Learn More</a>
-        <a href="download.html" style="--nav-i:2">Download app</a>
-        <a href="orders.html" style="--nav-i:3">Locate my order</a>
-        <a href="login.html" style="--nav-i:4">Sign in</a>
+        <a href="index.html" style="--nav-i:0">Home</a>
+        <a href="login.html" style="--nav-i:1">Start earning</a>
+        <a href="#method" style="--nav-i:2">Learn More</a>
+        <a href="download.html" style="--nav-i:3">Download app</a>
+        <a href="orders.html" style="--nav-i:4">Locate my order</a>
+        <a href="login.html" style="--nav-i:5">Sign in</a>
       </nav>
     </div>
 
@@ -381,7 +466,7 @@
       <div class="ms-home-footer-copy">
         <a class="ms-home-brand" href="index.html">
           <img src="doc/MoonriseLogo.png" alt="" width="32" height="32" loading="lazy" decoding="async">
-          <strong>trymoonrise.com</strong>
+          <strong>moonrise.</strong>
         </a>
         <p>Build websites and get paid when owners unlock on the watermark. Sign up free - you keep 90%.</p>
         <nav class="ms-home-footer-legal" aria-label="Legal and support">
@@ -402,14 +487,6 @@
   <script defer src="js/toast.js"></script>
   <script defer>
     (function () {
-      // Explicit app deep-link only (PWA / bookmarks). Never auto-bounce `/` away
-      // from the marketing landing page â€” stale localStorage sessions were sending
-      // visitors to dashboard â†’ login and skipping the homepage entirely.
-      if (new URLSearchParams(location.search).get("go") === "app") {
-        location.replace("dashboard.html");
-        return;
-      }
-
       const body = document.body;
       const greet = document.getElementById("ms-home-greet");
       const word = greet?.querySelector(".ms-home-greet-word");

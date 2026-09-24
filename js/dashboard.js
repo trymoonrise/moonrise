@@ -18,6 +18,7 @@
   let projectLiveFilter = "all";
   let projectSuggestIndex = -1;
   let projectPaintToken = 0;
+  let projectMaker = { name: "You", avatar: "", initial: "Y" };
   let statsAnimFrame = 0;
   let statsIntroPlayed = false;
   /** Soft cap only for search results; default view shows every project. */
@@ -43,6 +44,76 @@
     } catch (e) {
       return "";
     }
+  }
+
+  function formatMadeWhen(iso) {
+    const t = Date.parse(iso || "");
+    if (!Number.isFinite(t)) return { label: "", title: "" };
+    const date = new Date(t);
+    const title = date.toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    const sec = Math.max(0, (Date.now() - t) / 1000);
+    let label = title;
+    if (sec < 45) label = "Just now";
+    else if (sec < 3600) label = Math.max(1, Math.floor(sec / 60)) + "m ago";
+    else if (sec < 86400) label = Math.floor(sec / 3600) + "h ago";
+    else if (sec < 86400 * 7) label = Math.floor(sec / 86400) + "d ago";
+    else label = formatDate(iso);
+    return { label, title };
+  }
+
+  function safeAvatarUrl(url) {
+    const value = String(url || "").trim();
+    if (!value || value.startsWith("//") || /^javascript:/i.test(value)) return "";
+    if (value.startsWith("data:") && !value.startsWith("data:image/")) return "";
+    return value;
+  }
+
+  function makerAvatarSrc() {
+    if (projectMaker.avatar) return projectMaker.avatar;
+    const sideImg = document.getElementById("ms-user-avatar-img");
+    const painted = sideImg && !sideImg.hidden ? String(sideImg.getAttribute("src") || "").trim() : "";
+    return safeAvatarUrl(painted) || "doc/pfp.png";
+  }
+
+  function setProjectMaker(user, profile) {
+    const rawName =
+      profile?.display_name ||
+      profile?.handle ||
+      user?.user_metadata?.display_name ||
+      user?.user_metadata?.handle ||
+      (user?.email ? String(user.email).split("@")[0] : "") ||
+      "You";
+    const name = String(rawName).replace(/^@/, "").trim() || "You";
+    const avatar = safeAvatarUrl(profile?.avatar_url || user?.user_metadata?.avatar_url || "");
+    projectMaker = {
+      name,
+      avatar,
+      initial: name.slice(0, 1).toUpperCase() || "Y",
+    };
+  }
+
+  async function loadMaker(user) {
+    let profile = null;
+    try {
+      const client = window.SiteSupabase?.getClient?.();
+      if (client && user?.id) {
+        const { data } = await client
+          .from("profiles")
+          .select("handle, display_name, avatar_url")
+          .eq("id", user.id)
+          .maybeSingle();
+        profile = data || null;
+      }
+    } catch (_) {
+      profile = null;
+    }
+    setProjectMaker(user, profile);
   }
 
   function formatGoal(n) {
@@ -619,11 +690,6 @@
     void paintProjects();
   }
 
-  function isProjectsPanelOpen() {
-    const btn = document.getElementById("dash-projects-toggle");
-    return btn?.getAttribute("aria-expanded") === "true";
-  }
-
   async function paintProjects() {
     const token = ++projectPaintToken;
     const host = document.getElementById("dash-projects-list");
@@ -631,9 +697,6 @@
     const hint = document.getElementById("dash-projects-search-hint");
     const searchWrap = document.getElementById("dash-projects-search-wrap");
     const filtersWrap = document.querySelector(".ms-dash-projects-filters");
-    const card = document.querySelector(".ms-dash-projects-card");
-    const btn = document.getElementById("dash-projects-toggle");
-    const panel = document.getElementById("dash-projects-panel");
     const projects = allProjects.slice();
 
     if (countEl) {
@@ -646,24 +709,16 @@
     if (!host) return;
 
     if (!projects.length) {
-      host.innerHTML = "";
+      host.innerHTML =
+        '<div class="ms-dash-empty ms-dash-empty--dotted"><p>No projects yet.</p></div>';
       if (hint) {
         hint.hidden = true;
         hint.textContent = "";
       }
-      card?.classList.add("is-empty");
-      card?.classList.remove("is-open");
-      if (btn) {
-        btn.setAttribute("aria-expanded", "false");
-        btn.disabled = true;
-      }
-      if (panel) panel.hidden = true;
       hideProjectSuggestions();
       return;
     }
 
-    card?.classList.remove("is-empty");
-    if (btn) btn.disabled = false;
     syncProjectLiveFilterUi();
 
     const shown = filteredProjects(projects, projectSearchQuery);
@@ -715,11 +770,30 @@
     mountPreviewFrames(withHtml);
   }
 
+  function projectDetails(p) {
+    const ctx = projectContext(p);
+    const description = String(ctx.description || ctx.about || "").trim();
+    const category = String(ctx.category || "").trim();
+    const address = String(ctx.address || ctx.city_state_zip || ctx.location || "").trim();
+    const phone = String(ctx.phone || ctx.businessPhone || "").trim();
+    const hours = String(ctx.hours || "").trim();
+    let text = description;
+    if (!text) {
+      text = [category, address, phone, hours].filter(Boolean).join(" · ");
+    }
+    if (!text) text = "Website built in Moonrise Studio.";
+    if (text.length > 220) text = text.slice(0, 217).trim() + "…";
+    return { text, category };
+  }
+
   function projectPreview(p) {
     const name = p.business_name || "Untitled";
+    const details = projectDetails(p);
     const hasHtml = !!(p.html && String(p.html).trim());
     const paid = !canDeleteProject(p);
     const live = isLiveProject(p);
+    const made = formatMadeWhen(p.created_at || p.updated_at);
+    const href = "editor.html?project_id=" + encodeURIComponent(p.id);
     const liveBadge = live
       ? '<span class="ms-dash-preview-live" aria-label="Live site">Live</span>'
       : "";
@@ -728,13 +802,28 @@
         liveBadge +
         '<iframe class="ms-dash-preview-iframe" data-preview-id="' +
         escapeAttr(p.id) +
-        '" title="" tabindex="-1" loading="lazy" sandbox=""></iframe></div>'
+        '" title="" tabindex="-1" loading="lazy" scrolling="no" sandbox=""></iframe></div>'
       : '<div class="ms-dash-preview-shot ms-dash-preview-shot--empty" aria-hidden="true">' +
         liveBadge +
         '<span class="ms-dash-preview-placeholder">' +
         escapeHtml(name.slice(0, 1).toUpperCase()) +
         "</span></div>";
-
+    const avatar =
+      '<img src="' +
+      escapeAttr(makerAvatarSrc()) +
+      '" alt="" width="36" height="36" onerror="this.hidden=true;this.nextElementSibling.hidden=false">' +
+      '<span class="ms-dash-post-avatar-fallback" hidden>' +
+      escapeHtml(projectMaker.initial) +
+      "</span>";
+    const when = made.label
+      ? '<time class="ms-dash-post-when" datetime="' +
+        escapeAttr(p.created_at || p.updated_at || "") +
+        '" title="' +
+        escapeAttr(made.title) +
+        '">' +
+        escapeHtml(made.label) +
+        "</time>"
+      : "";
     const deleteBtn = paid
       ? ""
       : '<button type="button" class="ms-dash-preview-delete" data-project-delete="' +
@@ -742,23 +831,42 @@
         '" aria-label="Delete ' +
         escapeAttr(name) +
         '">×</button>';
+    const tag = details.category || (live ? "Live" : "Website");
 
     return (
-      '<article class="ms-dash-preview">' +
-      shot +
-      deleteBtn +
-      '<a class="ms-dash-preview-meta" href="editor.html?project_id=' +
-      encodeURIComponent(p.id) +
-      '" target="_blank" rel="noopener noreferrer">' +
-      '<span class="ms-dash-preview-name">' +
-      escapeHtml(name) +
+      '<article class="ms-dash-post">' +
+      '<header class="ms-dash-post-head">' +
+      '<span class="ms-dash-post-avatar" aria-hidden="true">' +
+      avatar +
       "</span>" +
-      "</a>" +
-      '<a class="ms-dash-preview-hit" href="editor.html?project_id=' +
-      encodeURIComponent(p.id) +
+      '<div class="ms-dash-post-by">' +
+      '<span class="ms-dash-post-author">' +
+      escapeHtml(projectMaker.name) +
+      "</span>" +
+      when +
+      "</div>" +
+      deleteBtn +
+      "</header>" +
+      '<a class="ms-dash-post-media" href="' +
+      href +
       '" target="_blank" rel="noopener noreferrer" aria-label="Open ' +
       escapeAttr(name) +
-      '"></a>' +
+      '">' +
+      shot +
+      "</a>" +
+      '<div class="ms-dash-post-copy">' +
+      '<h3 class="ms-dash-post-title"><a href="' +
+      href +
+      '" target="_blank" rel="noopener noreferrer">' +
+      escapeHtml(name) +
+      "</a></h3>" +
+      '<p class="ms-dash-post-desc">' +
+      escapeHtml(details.text) +
+      "</p>" +
+      '<span class="ms-dash-post-tag">' +
+      escapeHtml(tag) +
+      "</span>" +
+      "</div>" +
       "</article>"
     );
   }
@@ -810,21 +918,6 @@
   async function renderProjects(list) {
     allProjects = (list || []).slice();
     await paintProjects();
-  }
-
-  function bindProjectsToggle() {
-    const btn = document.getElementById("dash-projects-toggle");
-    const panel = document.getElementById("dash-projects-panel");
-    if (!btn || !panel) return;
-    btn.addEventListener("click", () => {
-      if (btn.disabled || btn.closest(".ms-dash-projects-card")?.classList.contains("is-empty")) {
-        return;
-      }
-      const open = btn.getAttribute("aria-expanded") === "true";
-      btn.setAttribute("aria-expanded", open ? "false" : "true");
-      panel.hidden = open;
-      btn.closest(".ms-dash-island")?.classList.toggle("is-open", !open);
-    });
   }
 
   function openDeleteDialog(project) {
@@ -917,23 +1010,47 @@
     }
   }
 
+  function setProjectFilterOpen(open) {
+    const panel = document.getElementById("dash-projects-filters");
+    const btn = document.getElementById("dash-projects-filter-open");
+    if (panel) panel.classList.toggle("is-open", open);
+    if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
   function syncProjectLiveFilterUi() {
     document.querySelectorAll("[data-live-filter]").forEach((btn) => {
       const on = btn.getAttribute("data-live-filter") === projectLiveFilter;
       btn.classList.toggle("is-active", on);
       btn.setAttribute("aria-pressed", on ? "true" : "false");
     });
+    document.getElementById("dash-projects-filter-open")?.classList.toggle("is-filtering", projectLiveFilter !== "all");
   }
 
   function bindProjectLiveFilter() {
-    document.querySelector(".ms-dash-projects-filters")?.addEventListener("click", (e) => {
+    const panel = document.getElementById("dash-projects-filters");
+    const openBtn = document.getElementById("dash-projects-filter-open");
+    openBtn?.addEventListener("click", () => {
+      const open = openBtn.getAttribute("aria-expanded") === "true";
+      setProjectFilterOpen(!open);
+    });
+    panel?.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-live-filter]");
       if (!btn) return;
       const next = btn.getAttribute("data-live-filter") || "all";
-      if (next === projectLiveFilter) return;
-      projectLiveFilter = next;
-      syncProjectLiveFilterUi();
-      void paintProjects();
+      if (next !== projectLiveFilter) {
+        projectLiveFilter = next;
+        syncProjectLiveFilterUi();
+        void paintProjects();
+      }
+      setProjectFilterOpen(false);
+    });
+    document.addEventListener("click", (e) => {
+      if (!panel?.classList.contains("is-open")) return;
+      if (panel.contains(e.target) || openBtn?.contains(e.target)) return;
+      setProjectFilterOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setProjectFilterOpen(false);
     });
   }
 
@@ -1037,7 +1154,7 @@
     const client = window.SiteSupabase.getClient();
     const query = client
       .from("projects")
-      .select("id,business_name,status,watermark_enabled,updated_at,vercel_url,price_cents,lead_id,business_context")
+      .select("id,business_name,status,watermark_enabled,created_at,updated_at,vercel_url,price_cents,lead_id,business_context")
       .eq("user_id", userId)
       .order("updated_at", { ascending: false })
       .limit(100);
@@ -1053,6 +1170,7 @@
       goalTarget = DEFAULT_GOAL;
       salesCount = 0;
       commissionEarned = 0;
+      setProjectMaker(null, null);
       setStats([]);
       await renderProjects([]);
       writeDashboardCache();
@@ -1065,6 +1183,7 @@
       const [_, projects] = await Promise.all([
         loadGoal(user.id),
         fetchProjectsList(user.id),
+        loadMaker(user),
       ]);
       list = projects;
     } catch (e) {
@@ -1107,7 +1226,6 @@
     if (started) return;
     started = true;
     bindGoalEditor();
-    bindProjectsToggle();
     bindProjectLiveFilter();
     bindProjectSearch();
     bindProjectActions();

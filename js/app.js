@@ -7,8 +7,13 @@
     { id: "leads", href: "leads.html", label: "Business Finder", icon: "search" },
     { id: "builder", href: "builder.html", label: "Builder", icon: "hammer" },
     { id: "clients", href: "clients.html", label: "My Clients", icon: "users" },
-    { id: "donate", href: "donate.html", label: "Donate", icon: "heart" },
-    { id: "store", href: "store.html", label: "Store", icon: "bag" },
+    {
+      id: "donate",
+      href: "donate.html",
+      label: "Donate & Store",
+      icon: "heart",
+      pages: ["donate", "store"],
+    },
   ];
 
   const OWNER_MENU = [
@@ -61,7 +66,8 @@
     bag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
     heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
     external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
-    menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>',
+    menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="7" x2="19" y2="7"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="17" x2="19" y2="17"/></svg>',
+    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.2V16"/><circle cx="12" cy="8" r="0.8" fill="currentColor" stroke="none"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>',
   };
 
@@ -247,7 +253,8 @@
       );
     }
 
-    const active = !item.external && page === item.id ? " is-active" : "";
+    const activeIds = item.pages || [item.id];
+    const active = !item.external && activeIds.includes(page) ? " is-active" : "";
     const externalAttrs = item.external
       ? ' data-external-redirect="true" data-external-url="' +
         String(item.href || "").replace(/"/g, "&quot;") +
@@ -699,40 +706,22 @@
     Promise.allSettled(jobs).then(reload, reload);
   }
 
-  /** Fixed top-right deep hard reset - all Studio pages / phones / tablets / desktop. */
+  /** Deep hard reset lives in the Settings session card. */
   function ensureHardRefreshButton() {
     stripHardRefreshParam();
     if (!document.body) return;
     const page = document.body.dataset?.page || "";
-    // Finder has its own chrome; skip the global hard-refresh control there.
-    if (page === "leads") {
-      const existing = document.getElementById("ms-hard-refresh");
-      if (existing) existing.remove();
+    const btn = document.getElementById("ms-hard-refresh");
+    if (page !== "settings") {
+      if (btn) btn.remove();
       return;
     }
-    let btn = document.getElementById("ms-hard-refresh");
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.type = "button";
-      btn.id = "ms-hard-refresh";
-      btn.className = "ms-hard-refresh";
-      btn.setAttribute("aria-label", "Deep hard reset");
-      btn.title = "Deep hard reset — clear cache and reload";
-      btn.innerHTML = ICONS.refresh;
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        hardRefreshSite();
-      });
-      document.body.appendChild(btn);
-    } else {
-      btn.innerHTML = ICONS.refresh;
-      btn.setAttribute("aria-label", "Deep hard reset");
-      btn.title = "Deep hard reset — clear cache and reload";
-      if (btn.parentElement !== document.body) {
-        document.body.appendChild(btn);
-      }
-    }
+    if (!btn || btn.dataset.bound === "1") return;
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      hardRefreshSite();
+    });
   }
 
   function buildShell(opts) {
@@ -772,9 +761,7 @@
       brandLogo() +
       '" alt="" loading="eager" decoding="async">' +
       '<div class="ms-brand-copy">' +
-      '<strong class="ms-brand-name">' +
-      companyName() +
-      "</strong>" +
+      '<strong class="ms-brand-name">moonrise.</strong>' +
       "</div></div>" +
       '<div class="ms-sidebar-scroll">' +
       navGroup("Workspace", "layers", menuHtml, "Main") +
@@ -830,6 +817,9 @@
     menuToggle.setAttribute("aria-label", "Open menu");
     menuToggle.innerHTML = ICONS.menu;
 
+    ensureQuickNav(page);
+    ensureTabBar(page);
+
     document.getElementById("ms-signout")?.addEventListener("click", async () => {
       await window.StudioAuth?.signOut?.();
       location.href = "index.html";
@@ -843,7 +833,6 @@
       menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       menuToggle.setAttribute("aria-hidden", open ? "true" : "false");
       menuToggle.tabIndex = open ? -1 : 0;
-      menuToggle.innerHTML = ICONS.menu;
     }
 
     menuToggle.setAttribute("aria-expanded", "false");
@@ -1347,11 +1336,36 @@
 
     if (!imgEl) return;
 
+    const paintMenuAvatar = (photoUrl) => {
+      const menuImg = document.getElementById("ms-menu-avatar-img");
+      const menuInitial = document.getElementById("ms-menu-avatar-initial");
+      const menuAvatar = document.getElementById("ms-menu-avatar");
+      if (menuInitial) menuInitial.textContent = initial;
+      if (!menuImg || !menuAvatar) return;
+      if (photoUrl) {
+        menuImg.hidden = false;
+        menuImg.onerror = () => {
+          menuImg.hidden = true;
+          menuAvatar.classList.remove("has-photo");
+          if (menuInitial) menuInitial.hidden = false;
+        };
+        if (menuImg.getAttribute("src") !== photoUrl) menuImg.src = photoUrl;
+        menuAvatar.classList.add("has-photo");
+        if (menuInitial) menuInitial.hidden = true;
+      } else {
+        menuImg.hidden = true;
+        menuImg.removeAttribute("src");
+        menuAvatar.classList.remove("has-photo");
+        if (menuInitial) menuInitial.hidden = false;
+      }
+    };
+
     const markLoaded = () => {
       avatarEl.classList.remove("is-loading");
       avatarEl.classList.add("has-photo", "is-avatar-ready");
       imgEl.hidden = false;
       if (initialEl) initialEl.hidden = true;
+      paintMenuAvatar(imgEl.currentSrc || imgEl.src);
       avatarEl._msRevealTimer = window.setTimeout(() => {
         avatarEl.classList.remove("is-avatar-ready");
       }, 650);
@@ -1361,12 +1375,14 @@
       avatarEl.classList.remove("is-loading", "has-photo");
       imgEl.hidden = true;
       if (initialEl) initialEl.hidden = false;
+      paintMenuAvatar("");
     };
 
     imgEl.hidden = false;
     imgEl.alt = "";
     imgEl.decoding = "async";
     imgEl.setAttribute("fetchpriority", "high");
+    paintMenuAvatar(resolved);
 
     // Already showing this exact image (cached) - no spinner flash
     if (imgEl.getAttribute("src") === resolved && imgEl.complete && imgEl.naturalWidth > 0) {
@@ -1660,11 +1676,138 @@
     document.head.appendChild(s);
   }
 
+  function ensureQuickNav(page) {
+    let bar = document.getElementById("ms-quick-nav");
+    if (!bar) {
+      bar = document.createElement("header");
+      bar.id = "ms-quick-nav";
+      bar.className = "ms-quick-nav";
+      document.body.appendChild(bar);
+    }
+    const onHelp = page === "help";
+    bar.innerHTML =
+      '<span class="ms-top-brand">' +
+      '<img class="ms-top-brand-logo" src="' +
+      brandLogo() +
+      '" alt="" width="28" height="28" decoding="async">' +
+      '<span class="ms-top-brand-name">moonrise.</span>' +
+      "</span>" +
+      '<a class="ms-help-btn' +
+      (onHelp ? " is-current" : "") +
+      '" href="help.html" aria-label="Help"' +
+      (onHelp ? ' aria-current="page"' : "") +
+      ">" +
+      ICONS.info +
+      "</a>";
+  }
+
+  const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings"];
+
+  function isTabBarPageFile(href) {
+    try {
+      const url = new URL(href, location.href);
+      const file = (url.pathname.split("/").pop() || "").toLowerCase();
+      return /^(dashboard|builder|clients|settings)\.html$/.test(file);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function bindTabBarLeave() {
+    if (window.__msTabBarLeave) return;
+    window.__msTabBarLeave = true;
+    document.addEventListener("click", (event) => {
+      const page = document.body?.dataset?.page || "";
+      if (!TAB_BAR_PAGES.includes(page)) return;
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = event.target.closest("a[href]");
+      if (!link || link.target === "_blank") return;
+      const href = link.getAttribute("href") || "";
+      if (!href || href.charAt(0) === "#" || /^(mailto:|tel:|javascript:)/i.test(href)) return;
+      let url;
+      try {
+        url = new URL(link.href, location.href);
+      } catch (_) {
+        return;
+      }
+      if (url.origin !== location.origin) return;
+      const file = (url.pathname.split("/").pop() || "").toLowerCase();
+      if (!file.endsWith(".html") || isTabBarPageFile(url.href)) return;
+      const bar = document.getElementById("ms-tabbar");
+      if (!bar) return;
+      if (bar.classList.contains("is-leaving")) {
+        event.preventDefault();
+        return;
+      }
+      if (!window.matchMedia("(max-width: 900px)").matches) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const style = window.getComputedStyle(bar);
+      if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return;
+      event.preventDefault();
+      bar.classList.add("is-leaving");
+      window.setTimeout(() => {
+        location.href = link.href;
+      }, 580);
+    });
+  }
+
+  function ensureTabBar(page) {
+    bindTabBarLeave();
+    if (!TAB_BAR_PAGES.includes(page)) {
+      document.getElementById("ms-tabbar")?.remove();
+      return;
+    }
+    const items = [
+      { id: "dashboard", href: "dashboard.html", label: "Dashboard", icon: "grid" },
+      { id: "builder", href: "builder.html", label: "Builder", icon: "hammer" },
+      {
+        id: "leads",
+        href: "leads.html",
+        label: "Finder",
+        aria: "Business Finder",
+        icon: "search",
+      },
+      { id: "clients", href: "clients.html", label: "Clients", aria: "My Clients", icon: "users" },
+      { id: "settings", href: "settings.html", label: "Settings", icon: "gear" },
+    ];
+    let nav = document.getElementById("ms-tabbar");
+    if (!nav) {
+      nav = document.createElement("nav");
+      nav.id = "ms-tabbar";
+      nav.className = "ms-tabbar";
+      nav.setAttribute("aria-label", "Main pages");
+      document.body.appendChild(nav);
+    }
+    nav.innerHTML = items
+      .map((item) => {
+        const active = page === item.id;
+        const icon = ICONS[item.icon] || "";
+        const mark = '<span class="ms-tab-ico" aria-hidden="true">' + icon + "</span>";
+        return (
+          '<a class="ms-tab' +
+          (active ? " is-active" : "") +
+          '" href="' +
+          item.href +
+          '" aria-label="' +
+          (item.aria || item.label) +
+          '"' +
+          (active ? ' aria-current="page"' : "") +
+          ">" +
+          mark +
+          '<span class="ms-tab-label">' +
+          item.label +
+          "</span></a>"
+        );
+      })
+      .join("");
+  }
+
   function ensureInstallHintScript() {
     if (window.__msInstallHintBooted) return;
     if (document.querySelector('script[src*="install-hint.js"]')) return;
     const s = document.createElement("script");
-    s.src = "js/install-hint.js";
+    s.src = "js/install-hint.js?v=20260923-no-banner";
     s.defer = true;
     document.head.appendChild(s);
   }

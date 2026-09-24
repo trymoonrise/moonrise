@@ -8,8 +8,8 @@
   /** On release, commit only if the thumb was dragged most of the way. */
   const RELEASE_COMMIT_RATIO = 0.88;
   const END_TOLERANCE_PX = 4;
-  const RETURN_MS = 280;
-  const COMPLETE_MS = 320;
+  const RETURN_MS = 340;
+  const COMPLETE_MS = 360;
   const FALLBACK_THUMB = 44;
   const FALLBACK_PAD = 4;
 

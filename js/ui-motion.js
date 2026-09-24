@@ -284,6 +284,7 @@
     "#page-body > .ms-store-mvp-note",
     "#page-body > .ms-settings-stack > .ms-card",
     "#page-body > .ms-dash-stack > .ms-card",
+    "#page-body > .ms-dash-stack > .ms-dash-posts",
     "#page-body .ms-help-guide > .ms-card",
     "#page-body .ms-donate-channel > .ms-donate-card",
     "#page-body .ms-donate-channel > .ms-donate-wall",

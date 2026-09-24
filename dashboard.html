@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260910-admin-dot">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-tab-lift">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260719-perf">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -61,41 +61,43 @@
         </div>
       </section>
 
-      <section class="ms-card ms-settings-card ms-dash-card ms-dash-island ms-dash-projects-card" aria-label="Recent projects">
-        <button type="button" class="ms-dash-island-toggle" id="dash-projects-toggle" aria-expanded="false" aria-controls="dash-projects-panel">
-          <span class="ms-settings-card-title ms-dash-island-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
-            Recent projects
-          </span>
+      <section class="ms-dash-posts" aria-label="Recent posts">
+        <header class="ms-dash-projects-head">
+          <h2 class="ms-dash-projects-title">Recent posts</h2>
           <span class="ms-dash-count-badge" id="dash-projects-count">0 projects</span>
-        </button>
-        <div class="ms-dash-island-panel" id="dash-projects-panel" hidden>
+        </header>
+        <div class="ms-dash-projects-body" id="dash-projects-panel">
           <div class="ms-dash-projects-search" id="dash-projects-search-wrap">
             <label class="ms-sr-only" for="dash-projects-search">Search projects</label>
-            <div class="ms-dash-projects-search-field">
-              <input
-                type="search"
-                id="dash-projects-search"
-                class="ms-dash-projects-search-input"
-                placeholder="Search name, location, category, phone, domain…"
-                autocomplete="off"
-                spellcheck="false"
-                aria-autocomplete="list"
-                aria-controls="dash-projects-suggest"
-                aria-expanded="false"
-              >
-              <button type="button" class="ms-dash-projects-search-clear" id="dash-projects-search-clear" hidden aria-label="Clear search">×</button>
+            <div class="ms-dash-projects-search-row">
+              <div class="ms-dash-projects-search-field">
+                <input
+                  type="search"
+                  id="dash-projects-search"
+                  class="ms-dash-projects-search-input"
+                  placeholder="Search name, location, category, phone, domain…"
+                  autocomplete="off"
+                  spellcheck="false"
+                  aria-autocomplete="list"
+                  aria-controls="dash-projects-suggest"
+                  aria-expanded="false"
+                >
+                <button type="button" class="ms-dash-projects-search-clear" id="dash-projects-search-clear" hidden aria-label="Clear search">×</button>
+              </div>
+              <button type="button" class="ms-dash-filter-btn" id="dash-projects-filter-open" aria-expanded="false" aria-controls="dash-projects-filters" aria-label="Filter posts">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6.2 7.4V19l-3.6 1.6v-8.2L4 5z"/></svg>
+              </button>
+            </div>
+            <div class="ms-dash-projects-filters" id="dash-projects-filters" role="group" aria-label="Filter by live status">
+              <button type="button" class="ms-dash-projects-filter is-active" data-live-filter="all" aria-pressed="true">All</button>
+              <button type="button" class="ms-dash-projects-filter" data-live-filter="live" aria-pressed="false">Live</button>
+              <button type="button" class="ms-dash-projects-filter" data-live-filter="not-live" aria-pressed="false">Not live</button>
             </div>
             <ul class="ms-dash-projects-suggest" id="dash-projects-suggest" role="listbox" hidden></ul>
             <p class="ms-dash-projects-search-hint" id="dash-projects-search-hint" hidden></p>
           </div>
-          <div class="ms-dash-projects-filters" role="group" aria-label="Filter by live status">
-            <button type="button" class="ms-dash-projects-filter is-active" data-live-filter="all" aria-pressed="true">All</button>
-            <button type="button" class="ms-dash-projects-filter" data-live-filter="live" aria-pressed="false">Live</button>
-            <button type="button" class="ms-dash-projects-filter" data-live-filter="not-live" aria-pressed="false">Not live</button>
-          </div>
-          <div class="ms-dash-previews" id="dash-projects-list"></div>
         </div>
+        <div class="ms-dash-previews" id="dash-projects-list"></div>
       </section>
     </div>
   </div>
@@ -119,12 +121,12 @@
   <script defer src="js/supabase-client.js?v=20260909-login3"></script>
   <script defer src="js/auth.js?v=20260909-login3"></script>
   <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20260719-perf"></script>
+  <script defer src="js/ui-motion.js?v=20260923-posts-open"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/project-lifecycle.js?v=20260718-delete-fix"></script>
-  <script defer src="js/app.js?v=20260911-passkey3"></script>
-  <script defer src="js/install-hint.js"></script>
-  <script defer src="js/dashboard.js?v=20260721-perf"></script>
+  <script defer src="js/app.js?v=20260924-brand-name"></script>
+  <script defer src="js/install-hint.js?v=20260923-no-banner"></script>
+  <script defer src="js/dashboard.js?v=20260924-post-filter"></script>
 </body>
 </html>

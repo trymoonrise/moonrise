@@ -1,13 +1,11 @@
 /**
- * Install / Add to Home Screen hint.
- * Shows after login on the first authenticated page, and on Dashboard visits
- * when the user has not dismissed it yet.
+ * PWA install support.
+ * The floating Install Moonrise banner is not shown. Install lives in Settings → Download app.
  */
 (function () {
   if (window.__msInstallHintBooted) return;
   window.__msInstallHintBooted = true;
 
-  const PUBLIC_PAGES = new Set(["index", "login", "apply", "orders", "home", "download", ""]);
   const PWA_BASE_URL = new URL("../", document.currentScript?.src || window.location.href);
   const PWA_MANIFEST_URL = new URL("manifest.json", PWA_BASE_URL).href;
   const PWA_SW_URL = new URL("sw.js", PWA_BASE_URL).href;
@@ -17,22 +15,6 @@
   const INSTALL_HINT_KEY = "ms_ios_install_hint_dismissed_v1";
   const PROMPT_AFTER_LOGIN_KEY = "ms_prompt_install_after_login";
   const PWA_APP_TITLE = "Moonrise";
-
-  function pageId() {
-    return String(document.body?.getAttribute("data-page") || "").trim().toLowerCase();
-  }
-
-  function isPublicPage() {
-    return PUBLIC_PAGES.has(pageId());
-  }
-
-  function shouldPromptAfterLogin() {
-    try {
-      return sessionStorage.getItem(PROMPT_AFTER_LOGIN_KEY) === "1";
-    } catch (_) {
-      return false;
-    }
-  }
 
   function clearPromptAfterLogin() {
     try {
@@ -227,59 +209,7 @@
   }
 
   function maybeShowInstallHint() {
-    if (isPublicPage()) return;
-    if (isStandaloneDisplay()) return;
-    if (!document.body) return;
-    if (document.getElementById("ios-install-banner")) return;
-
-    const afterLogin = shouldPromptAfterLogin();
-    // After login: always prompt once on the next authenticated page.
-    // Otherwise: keep the quieter dashboard-only reminder.
-    if (!afterLogin) {
-      if (pageId() !== "dashboard") return;
-      if (isInstallHintDismissed()) return;
-    }
-
-    const banner = document.createElement("div");
-    banner.id = "ios-install-banner";
-    banner.className = "ios-install-banner";
-    banner.setAttribute("role", "dialog");
-    banner.setAttribute("aria-label", "Install " + PWA_APP_TITLE);
-    banner.innerHTML =
-      '<img class="ios-install-banner-icon" src="' +
-      pwaIconUrl() +
-      '" alt="" width="40" height="40" decoding="async" loading="eager">' +
-      '<div class="ios-install-banner-text">' +
-      "<strong>Install Moonrise</strong>" +
-      "<span>" +
-      installHintSubcopyHtml() +
-      "</span>" +
-      "</div>" +
-      '<button type="button" class="ios-install-banner-close" aria-label="Dismiss">&times;</button>';
-
-    document.body.appendChild(banner);
-    clearPromptAfterLogin();
-
-    if (deferredInstallPrompt && isDesktopDevice()) {
-      banner.classList.add("ios-install-banner--installable");
-      banner.title = "Click to install Moonrise";
-    }
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => banner.classList.add("is-visible"));
-    });
-
-    banner.querySelector(".ios-install-banner-close")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dismissInstallHint(banner);
-    });
-
-    banner.addEventListener("click", async (e) => {
-      if (e.target.closest(".ios-install-banner-close")) return;
-      if (!deferredInstallPrompt) return;
-      const result = await promptInstall();
-      if (result.outcome === "accepted") dismissInstallHint(banner);
-    });
+    document.getElementById("ios-install-banner")?.remove();
   }
 
   function canRegisterServiceWorker() {

@@ -32,11 +32,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <script src="js/auth-gate-head.js?v=20260911-live2"></script>
-  <title>Donate · Moonrise Studio</title>
+  <title>Donate &amp; Store · Moonrise Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260911-live2">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-tab-lift">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260719-perf">
   <link rel="stylesheet" href="css/donate.css?v=20260719-lb-studio">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
@@ -46,8 +46,8 @@
   <div id="page-body" class="ms-content-page ms-donate-page">
     <header class="ms-page-head ms-donate-head">
       <div class="ms-page-head-copy">
-        <h1>Donate</h1>
-        <p class="lead ms-muted">Support Moonrise with a one-time gift. Top supporters appear on the leaderboard.</p>
+        <h1>Donate &amp; Store</h1>
+        <p class="lead ms-muted">Support Moonrise with a one-time gift, then pick up creator tools. MVP+ includes Store items free.</p>
       </div>
     </header>
 
@@ -113,6 +113,85 @@
         </div>
       </section>
     </div>
+
+    <section class="ms-store-embed" id="store" aria-label="Store">
+      <header class="ms-store-embed-head">
+        <h2>Store</h2>
+        <p>Tools and resources to find clients and close more deals.</p>
+      </header>
+
+      <p class="ms-store-mvp-note" id="store-mvp-note">
+        Unlock everything here with <a href="#donate-checkout-card">MVP+</a> from $5/mo, or purchase items individually when checkout opens.
+      </p>
+
+      <div class="ms-store-content">
+        <div class="ms-store-grid">
+          <article class="ms-store-product" id="lead-scraper">
+            <div class="ms-store-product-head">
+              <div class="ms-store-product-visual" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              </div>
+              <div class="ms-store-product-copy">
+                <h2>Lead Scraper</h2>
+                <p class="ms-store-desc">Bulk Maps leads by niche and city.</p>
+              </div>
+            </div>
+            <div class="ms-store-foot">
+              <p class="ms-store-price"><span class="ms-store-amount">$19</span></p>
+              <button type="button" class="ms-store-buy" data-product="Lead Scraper">Purchase</button>
+            </div>
+          </article>
+
+          <article class="ms-store-product" id="cold-call">
+            <div class="ms-store-product-head">
+              <div class="ms-store-product-visual" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.74.34 1.53.57 2.34.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div class="ms-store-product-copy">
+                <h2>Cold Call Scripts</h2>
+                <p class="ms-store-desc">Door-opener phone lines.</p>
+              </div>
+            </div>
+            <div class="ms-store-foot">
+              <p class="ms-store-price"><span class="ms-store-amount">$5</span></p>
+              <button type="button" class="ms-store-buy" data-product="Cold Call Scripts">Purchase</button>
+            </div>
+          </article>
+
+          <article class="ms-store-product" id="serverly">
+            <div class="ms-store-product-head">
+              <div class="ms-store-product-visual" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div class="ms-store-product-copy">
+                <h2>Serverly</h2>
+                <p class="ms-store-desc">Build your own Discord server.</p>
+              </div>
+            </div>
+            <div class="ms-store-foot">
+              <p class="ms-store-price"><span class="ms-store-amount is-link">serverly.store</span></p>
+              <a class="ms-store-buy is-ghost" href="https://serverly.store" target="_blank" rel="noopener noreferrer">Visit</a>
+            </div>
+          </article>
+
+          <article class="ms-store-product" id="free-university-tools">
+            <div class="ms-store-product-head">
+              <div class="ms-store-product-visual" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </div>
+              <div class="ms-store-product-copy">
+                <h2>Free University Tools</h2>
+                <p class="ms-store-desc">Find many free overpowered tools.</p>
+              </div>
+            </div>
+            <div class="ms-store-foot">
+              <p class="ms-store-price"><span class="ms-store-amount is-link">freeuniversitytools.com</span></p>
+              <a class="ms-store-buy is-ghost" href="https://freeuniversitytools.com" target="_blank" rel="noopener noreferrer">Visit</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
   </div>
 
   <script defer src="js/config.js?v=20260909-discord"></script>
@@ -123,8 +202,9 @@
   <script defer src="js/ui-motion.js?v=20260719-onb-motion"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260722-donate-pro"></script>
-  <script defer src="js/app.js?v=20260911-passkey3"></script>
+  <script defer src="js/app.js?v=20260924-brand-name"></script>
   <script defer src="js/donate-leaderboard-ui.js?v=20260719-lb-studio"></script>
   <script defer src="js/donate.js?v=20260719-lb-modern"></script>
+  <script defer src="js/store.js?v=20260923-donate-store"></script>
 </body>
 </html>

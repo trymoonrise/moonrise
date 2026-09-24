@@ -3,7 +3,7 @@
 <head>
   <script>
     (function () {
-      var BUILD = "20260911-passkey4";
+      var BUILD = "20260923-nopasskey";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -36,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260911-passkey4">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-tab-lift">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260719-perf">
   <meta name="color-scheme" content="light">
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
@@ -45,6 +45,25 @@
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="login">
+  <header class="ms-home-nav">
+    <a class="ms-home-brand" href="index.html">
+      <img src="doc/MoonriseLogo.png" alt="" width="40" height="40">
+      <strong>moonrise.</strong>
+    </a>
+    <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
+      <i></i><i></i><i></i>
+    </button>
+  </header>
+  <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
+    <nav class="ms-home-bloom-nav" aria-label="Primary">
+      <a href="index.html" style="--nav-i:0">Home</a>
+      <a href="login.html" style="--nav-i:1">Start earning</a>
+      <a href="index.html#method" style="--nav-i:2">Learn More</a>
+      <a href="download.html" style="--nav-i:3">Download app</a>
+      <a href="orders.html" style="--nav-i:4">Locate my order</a>
+      <a href="login.html" style="--nav-i:5">Sign in</a>
+    </nav>
+  </div>
   <p class="ms-auth-file-warning" id="auth-file-warning" hidden role="alert">
     This page was opened as a local file, so sign-in cannot connect to Moonrise.
     <a href="https://trymoonrise.com/login.html">Open the live login page</a> instead.
@@ -143,15 +162,6 @@
         <button type="button" class="ms-auth-forgot" id="resend-confirm-link">Resend confirmation email</button>
       </p>
       <button class="ms-btn" type="submit" id="auth-submit" style="width:100%">Sign in</button>
-      <div class="ms-auth-passkey" id="passkey-wrap" hidden>
-        <p class="ms-auth-or" aria-hidden="true"><span>or</span></p>
-        <button class="ms-btn ms-btn-secondary" type="button" id="auth-passkey" style="width:100%">
-          Passkey
-        </button>
-        <p class="ms-auth-passkey-hint ms-muted" id="passkey-hint">
-          Sign in with a saved passkey.
-        </p>
-      </div>
       <p class="ms-auth-home-wrap">
         <a class="ms-auth-home" href="index.html">Back to home</a>
       </p>
@@ -163,6 +173,7 @@
     </form>
   </div>
 
+  <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20260720-login-fix"></script>
   <script defer src="js/toast.js"></script>
@@ -208,40 +219,11 @@
             /* ignore — password managers may refuse this origin */
           }
         }
-        if (!opts?.skipPasskeyOffer) {
-          await maybeOfferPasskeyAfterLogin();
-        }
         window.StudioAuth.setFinanceOnboardingSoftSkip?.(false);
         const destination = await window.StudioAuth.studioOnboardingRedirect(nextUrl);
         location.replace(destination);
       }
 
-      async function maybeOfferPasskeyAfterLogin() {
-        try {
-          if (!window.StudioAuth?.canUsePasskeys?.()) return;
-          const existing = await window.StudioAuth.listPasskeys?.();
-          if (Array.isArray(existing) && existing.length) return;
-          try {
-            if (sessionStorage.getItem("ms_passkey_offer_declined") === "1") return;
-          } catch (_) {
-            /* ignore */
-          }
-          const want = window.confirm("Save a passkey on this device for one-tap sign-in next time?");
-          if (!want) {
-            try {
-              sessionStorage.setItem("ms_passkey_offer_declined", "1");
-            } catch (_) {
-              /* ignore */
-            }
-            return;
-          }
-          await window.StudioAuth.registerPasskey();
-          window.StudioToast?.success?.("Passkey saved");
-        } catch (ex) {
-          if (ex?.code === "passkey_cancelled" || /cancel/i.test(String(ex?.message || ""))) return;
-          console.warn("passkey offer", ex);
-        }
-      }
       let mode = params.get("mode") === "signup" ? "signup"
         : params.get("mode") === "forgot" ? "forgot"
         : params.get("mode") === "recover" ? "recover"
@@ -293,9 +275,6 @@
       const backWrap = document.getElementById("back-wrap");
       const autosaveWrap = document.getElementById("autosave-wrap");
       const autosaveToggle = document.getElementById("auth-autosave");
-      const passkeyWrap = document.getElementById("passkey-wrap");
-      const passkeyBtn = document.getElementById("auth-passkey");
-      const passkeyHint = document.getElementById("passkey-hint");
       const handleInput = document.getElementById("handle");
       const AUTOSAVE_ENABLED_KEY = "ms_auth_autosave_enabled";
       const AUTOSAVE_EMAIL_KEY = "ms_auth_autosave_email";
@@ -497,167 +476,6 @@
       passwordInput.addEventListener("input", updatePasswordMeter);
       setMode(mode, true);
 
-      function syncPasskeyUi() {
-        if (!passkeyWrap) return;
-        let hostOk = false;
-        try {
-          const host = String(location.hostname || "").toLowerCase();
-          hostOk = host === "trymoonrise.com" || host === "www.trymoonrise.com";
-        } catch (_) {}
-        const deviceOk = !!(window.isSecureContext && window.PublicKeyCredential);
-        const apiOk = !!window.StudioAuth?.canUsePasskeys?.();
-        const show = (mode === "signin" || mode === "signup") && hostOk && deviceOk;
-        passkeyWrap.hidden = !show;
-        if (passkeyBtn) {
-          passkeyBtn.disabled = show && !apiOk;
-          if (mode === "signup") {
-            passkeyBtn.textContent = "Create account with passkey";
-            passkeyBtn.title = "Create your account and save a passkey on this device";
-            if (passkeyHint) {
-              passkeyHint.textContent =
-                "Creates your account, then saves a passkey for one-tap sign-in next time.";
-            }
-          } else {
-            passkeyBtn.textContent = "Passkey";
-            passkeyBtn.title = "Sign in with a passkey, or create one with email and password";
-            if (passkeyHint) {
-              passkeyHint.textContent =
-                "Signs you in with a saved passkey, or creates one using your email & password.";
-            }
-          }
-          if (!apiOk) passkeyBtn.title = "Loading passkey support...";
-        }
-      }
-
-      passkeyBtn?.addEventListener("click", async () => {
-        showAuthError("");
-        if (hint) hint.textContent = "";
-        writeAutosaveEnabled(isAutosaveEnabled());
-        const email = String(form.email?.value || "").trim();
-        const password = String(passwordInput?.value || "");
-        const handle = String(form.handle?.value || "").trim();
-
-        if (mode === "signup") {
-          if (!window.StudioAuth?.signUpWithPasskey && !window.StudioAuth?.signUp) {
-            showAuthError("Sign-up is still loading. Try again in a moment.");
-            return;
-          }
-          if (!handle) {
-            showAuthError("Choose a handle");
-            form.handle?.focus();
-            return;
-          }
-          if (!email || !password) {
-            showAuthError("Enter your email and password to create a passkey account");
-            (!email ? form.email : passwordInput)?.focus();
-            return;
-          }
-          const strength = updatePasswordMeter();
-          if (!strength.ok) {
-            showAuthError(
-              "Choose a stronger password: 8+ characters with upper & lowercase letters and a number."
-            );
-            passwordInput.focus();
-            return;
-          }
-          passkeyBtn.disabled = true;
-          passkeyBtn.textContent = "Creating account...";
-          try {
-            const run = window.StudioAuth.signUpWithPasskey
-              ? () => window.StudioAuth.signUpWithPasskey(email, password, handle)
-              : async () => {
-                  const data = await window.StudioAuth.signUp(email, password, handle);
-                  if (data?.session || data?.access_token) {
-                    try {
-                      await window.StudioAuth.registerPasskey();
-                      return { ...data, created: true };
-                    } catch (_) {
-                      return { ...data, created: false };
-                    }
-                  }
-                  return { ...data, created: false, needsEmailConfirm: true };
-                };
-            const data = await run();
-            persistAutosavedFields();
-            if (data?.session || data?.access_token || data?.created || data?.signedUp) {
-              if (data?.created) {
-                window.StudioToast?.success?.("Account and passkey created");
-              }
-              await continueAfterAuth({ email, password, skipPasskeyOffer: true });
-              return;
-            }
-            hint.textContent =
-              "Check your email for the Moonrise confirmation link - after you verify, you can create a passkey from Settings.";
-            setMode("signin");
-            window.StudioToast?.info?.("We sent a confirmation email - check your inbox");
-          } catch (ex) {
-            if (ex?.sessionOk) {
-              window.StudioToast?.info?.(ex.message || "Account created");
-              persistAutosavedFields();
-              await continueAfterAuth({ email, password, skipPasskeyOffer: true });
-              return;
-            }
-            showAuthError(ex);
-          } finally {
-            passkeyBtn.disabled = false;
-            syncPasskeyUi();
-          }
-          return;
-        }
-
-        // Sign in mode
-        if (!window.StudioAuth?.continueWithPasskey && !window.StudioAuth?.signInWithPasskey) {
-          showAuthError("Passkey support is still loading. Try again in a moment.");
-          return;
-        }
-        passkeyBtn.disabled = true;
-        const idle = "Passkey";
-        passkeyBtn.textContent = "Waiting for passkey...";
-        try {
-          const run =
-            window.StudioAuth.continueWithPasskey ||
-            (async () => {
-              await window.StudioAuth.signInWithPasskey();
-              return { created: false };
-            });
-          const result = await run({ email, password });
-          if (result?.created) {
-            window.StudioToast?.success?.("Passkey created — you are signed in");
-          }
-          persistAutosavedFields();
-          await continueAfterAuth({
-            email,
-            password,
-            skipPasskeyOffer: true,
-          });
-        } catch (ex) {
-          if (ex?.sessionOk) {
-            window.StudioToast?.info?.(ex.message || "Signed in without saving a passkey");
-            persistAutosavedFields();
-            await continueAfterAuth({ email, password, skipPasskeyOffer: true });
-            return;
-          }
-          if (ex?.code === "passkey_needs_password") {
-            showAuthError(ex);
-            if (hint) {
-              hint.textContent =
-                "Fill email and password, then tap Passkey once to create it and sign in.";
-            }
-            if (!email) form.email?.focus();
-            else passwordInput?.focus();
-          } else {
-            showAuthError(ex);
-          }
-        } finally {
-          passkeyBtn.disabled = false;
-          passkeyBtn.textContent = idle;
-          syncPasskeyUi();
-        }
-      });
-
-      syncPasskeyUi();
-      [0, 100, 300, 800, 1600, 3200].forEach((ms) => setTimeout(syncPasskeyUi, ms));
-
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         showAuthError("");
@@ -681,7 +499,7 @@
           const strength = updatePasswordMeter();
           if (!strength.ok) {
             showAuthError(
-              "Choose a stronger password: 8+ characters with upper & lowercase letters and a number."
+              "Choose a stronger password: 8+ characters with upper and lowercase letters, a number, and a symbol."
             );
             passwordInput.focus();
             return;
@@ -713,35 +531,10 @@
             return;
           } else if (mode === "signup") {
             const handleVal = form.handle.value;
-            const usePasskeySignup =
-              !!window.StudioAuth?.signUpWithPasskey &&
-              !!window.StudioAuth?.canUsePasskeys?.();
-            let data;
-            try {
-              data = usePasskeySignup
-                ? await window.StudioAuth.signUpWithPasskey(email, password, handleVal)
-                : await window.StudioAuth.signUp(email, password, handleVal);
-            } catch (signupEx) {
-              if (signupEx?.sessionOk) {
-                persistAutosavedFields();
-                window.StudioToast?.info?.(
-                  signupEx.message || "Account created — add a passkey anytime in Settings"
-                );
-                await continueAfterAuth({ email, password, skipPasskeyOffer: true });
-                return;
-              }
-              throw signupEx;
-            }
+            const data = await window.StudioAuth.signUp(email, password, handleVal);
             persistAutosavedFields();
-            if (data?.session || data?.access_token || data?.created || data?.signedUp) {
-              if (data?.created) {
-                window.StudioToast?.success?.("Account and passkey created");
-              }
-              await continueAfterAuth({
-                email,
-                password,
-                skipPasskeyOffer: !!data?.created || usePasskeySignup,
-              });
+            if (data?.session) {
+              await continueAfterAuth({ email, password });
               return;
             }
             hint.textContent = "Check your email for the Moonrise confirmation link - tap it to verify and sign in automatically.";
@@ -881,6 +674,53 @@
         if (resendWrap) resendWrap.hidden = true;
       }
 
+      function passwordBits(value) {
+        let pool = 0;
+        if (/[a-z]/.test(value)) pool += 26;
+        if (/[A-Z]/.test(value)) pool += 26;
+        if (/\d/.test(value)) pool += 10;
+        if (/[^A-Za-z0-9]/.test(value)) pool += 32;
+        if (!pool) pool = 10;
+
+        let effective = 0;
+        for (let i = 0; i < value.length; ) {
+          let run = 1;
+          while (i + run < value.length && value[i + run] === value[i]) run += 1;
+          effective += 1 + Math.log2(run) * 0.35;
+          i += run;
+        }
+
+        let seq = 0;
+        for (let j = 2; j < value.length; j += 1) {
+          const a = value.charCodeAt(j - 2);
+          const b = value.charCodeAt(j - 1);
+          const c = value.charCodeAt(j);
+          if ((b - a === 1 && c - b === 1) || (a - b === 1 && b - c === 1)) seq += 1;
+        }
+
+        let bits = effective * Math.log2(pool);
+        if (seq) bits -= Math.min(bits * 0.28, seq * 1.4);
+        const unique = new Set(value).size / value.length;
+        if (unique < 0.5) bits *= 0.8;
+        if (value.length >= 16) bits += 6;
+        if (value.length >= 20) bits += 6;
+        return Math.max(0, bits);
+      }
+
+      function mostlyCommonPassword(value) {
+        const raw = value.toLowerCase();
+        if (COMMON.has(raw)) return true;
+        const norm = raw
+          .replace(/@/g, "a")
+          .replace(/0/g, "o")
+          .replace(/[1!|]/g, "i")
+          .replace(/3/g, "e")
+          .replace(/\$/g, "s")
+          .replace(/[^a-z]/g, "");
+        const words = ["password", "moonrise", "admin", "welcome", "letmein", "qwerty", "iloveyou", "sunshine", "football", "dragon", "master", "login", "abc123", "passw0rd"];
+        return words.some((word) => norm === word || (norm.includes(word) && norm.length - word.length <= 2));
+      }
+
       function scorePassword(pw) {
         const value = String(pw || "");
         const rules = {
@@ -889,50 +729,144 @@
           number: /\d/.test(value),
           symbol: /[^A-Za-z0-9]/.test(value),
         };
-        let score = 0;
-        if (rules.length) score += 1;
-        if (value.length >= 12) score += 1;
-        if (rules.case) score += 1;
-        if (rules.number) score += 1;
-        if (rules.symbol) score += 1;
-        if (COMMON.has(value.toLowerCase()) || /(.)\1{3,}/.test(value) || /0123|1234|2345|abcd|qwer/i.test(value)) {
-          score = Math.min(score, 1);
-        }
-        const level =
-          score <= 1 ? "weak" :
-          score === 2 ? "fair" :
-          score === 3 ? "good" :
-          score >= 4 ? "strong" : "weak";
-        const ok = score >= 3 && rules.length && rules.case && rules.number;
-        return { score, level, rules, ok, percent: Math.min(100, (score / 5) * 100) };
+        const ruleOrder = ["length", "case", "number", "symbol"];
+        const score = ruleOrder.filter((key) => rules[key]).length;
+        if (!value) return { score, level: "empty", rules, ok: false, percent: 0 };
+
+        let bits = passwordBits(value);
+        const common = mostlyCommonPassword(value);
+        if (common) bits = Math.min(bits, 20);
+
+        const level = common || bits < 28
+          ? "weak"
+          : bits < 42
+            ? "fair"
+            : bits < 58
+              ? "good"
+              : bits < 78
+                ? "strong"
+                : "impenetrable";
+        let percent = 0;
+        if (level === "weak") percent = Math.min(28, 10 + bits * 0.55);
+        else if (level === "fair") percent = 34 + Math.min(20, (bits - 28) * 1.3);
+        else if (level === "good") percent = 58 + Math.min(18, (bits - 42) * 1.1);
+        else if (level === "strong") percent = 78 + Math.min(12, (bits - 58) * 0.6);
+        else percent = Math.min(100, 94 + (bits - 78) * 0.45);
+
+        const ok = score === ruleOrder.length && !common && bits >= 42;
+        return { score, level, rules, ok, percent };
       }
 
       function updatePasswordMeter() {
         if (mode !== "signup" && mode !== "recover") return;
         const result = scorePassword(passwordInput.value);
-        pwFill.style.width = (passwordInput.value ? Math.max(12, result.percent) : 0) + "%";
-        pwMeter.dataset.level = passwordInput.value ? result.level : "empty";
+        pwFill.style.width = (passwordInput.value ? result.percent : 0) + "%";
+        pwMeter.dataset.level = result.level === "guessable" ? "weak" : result.level;
         const labels = {
           empty: "Enter a password",
           weak: "Too weak",
-          fair: "Fair - add more variety",
+          fair: "Fair",
           good: "Good",
           strong: "Strong",
+          impenetrable: "Impenetrable",
+          guessable: "Too easy to guess",
         };
-        pwLabel.textContent = labels[passwordInput.value ? result.level : "empty"];
+        pwLabel.textContent = labels[result.level];
+        const ruleOrder = ["length", "case", "number", "symbol"];
+        const nextRule = ruleOrder.find((key) => !result.rules[key]) || "";
         document.querySelectorAll("#pw-rules [data-rule]").forEach((li) => {
-          li.classList.toggle("is-met", !!result.rules[li.dataset.rule]);
+          li.classList.toggle("is-current", li.dataset.rule === nextRule);
         });
         return result;
       }
 
+      const AUTH_GROW_MS = 480;
+      const AUTH_GROW_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+      let authCardHold = 0;
+
       function setOpen(el, open, instant) {
-        if (window.StudioMotion?.setOpen) {
-          window.StudioMotion.setOpen(el, open, { instant: !!instant });
-        } else {
-          el.hidden = !open;
+        if (!el) return;
+        const want = !!open;
+        const reduce =
+          !!instant || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        el.classList.add("ms-auth-collapse");
+        el._authGrow = (el._authGrow || 0) + 1;
+        const gen = el._authGrow;
+
+        function settleOpen() {
+          el.hidden = false;
+          el.classList.add("is-open");
+          el.style.height = "";
+          el.style.overflow = "";
+          el.style.transition = "";
         }
+
+        function settleClosed() {
+          el.classList.remove("is-open");
+          el.hidden = true;
+          el.style.height = "";
+          el.style.overflow = "";
+          el.style.transition = "";
+        }
+
+        if (reduce) {
+          if (want) settleOpen();
+          else settleClosed();
+          return;
+        }
+
+        const settledOpen = el.classList.contains("is-open") && !el.hidden && !el.style.height;
+        if (want === settledOpen) return;
+
+        const from = el.hidden ? 0 : el.getBoundingClientRect().height;
+        el.hidden = false;
+        el.style.overflow = "hidden";
+        el.style.transition = "none";
+        el.style.height = from + "px";
+        void el.offsetHeight;
+        el.style.height = "auto";
+        const target = want ? el.offsetHeight : 0;
+        el.style.height = from + "px";
+        void el.offsetHeight;
+        el.style.transition =
+          "height " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE +
+          ", margin-top " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE +
+          ", margin-bottom " + AUTH_GROW_MS + "ms " + AUTH_GROW_EASE;
+        if (want) el.classList.add("is-open");
+        else el.classList.remove("is-open");
+        el.style.height = target + "px";
+
+        const done = (e) => {
+          if (e.target !== el || e.propertyName !== "height" || gen !== el._authGrow) return;
+          el.removeEventListener("transitionend", done);
+          if (want) settleOpen();
+          else settleClosed();
+        };
+        el.addEventListener("transitionend", done);
       }
+
+      function holdAuthCardTop(ms) {
+        const card = document.querySelector(".ms-auth-card");
+        if (!card) return;
+        const token = ++authCardHold;
+        const frozenTop = card.getBoundingClientRect().top;
+        const endAt = performance.now() + ms;
+        const step = () => {
+          if (token !== authCardHold) return;
+          card.style.transform = "none";
+          const delta = frozenTop - card.getBoundingClientRect().top;
+          card.style.transform = "translate3d(0, " + delta.toFixed(2) + "px, 0)";
+          if (performance.now() < endAt) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+
+      window.addEventListener("resize", () => {
+        const card = document.querySelector(".ms-auth-card");
+        if (!card) return;
+        authCardHold += 1;
+        card.style.transform = "";
+      });
 
       function setMode(next, instant) {
         mode = next;
@@ -948,14 +882,12 @@
         const showTabs = mode === "signin" || mode === "signup";
 
         authTabs.hidden = !showTabs;
-        forgotWrap.hidden = mode !== "signin";
+        setOpen(forgotWrap, mode === "signin", instant);
         if (resendWrap) resendWrap.hidden = true;
         backWrap.hidden = !(showForgot || showRecover);
         if (autosaveWrap) {
           autosaveWrap.hidden = showForgot || showRecover;
         }
-        syncPasskeyUi();
-
         if (emailInput) {
           if (mode === "signup") {
             emailInput.type = "email";
@@ -963,9 +895,8 @@
           } else {
             emailInput.type = "text";
             emailInput.inputMode = "email";
-            // username + webauthn helps password managers and conditional passkey UI.
-            emailInput.autocomplete =
-              mode === "signin" ? "username webauthn" : "email";
+            // username (without webauthn) lets the browser offer saved passwords.
+            emailInput.autocomplete = mode === "signin" ? "username" : "email";
           }
         }
 
@@ -1006,6 +937,10 @@
         else {
           pwFill.style.width = "0%";
           pwMeter.dataset.level = "empty";
+        }
+
+        if (!instant && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          holdAuthCardTop(AUTH_GROW_MS + 40);
         }
       }
     })();

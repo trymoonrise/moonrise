@@ -17,6 +17,7 @@
   const findBtn = document.getElementById("lf-find");
   const searchPill = document.getElementById("lf-search-pill");
   const searchToggle = document.getElementById("lf-search-toggle");
+  const searchClose = document.getElementById("lf-search-close");
   const menuToggleBtn = document.getElementById("lf-menu-toggle");
   const locateBtn = document.getElementById("lf-locate");
   const scanNearBtn = document.getElementById("lf-scan-near");
@@ -1156,7 +1157,8 @@
           scanNearBtn.dataset.prevLabel = scanNearBtn.textContent || "Scan nearby";
         }
         scanNearBtn.innerHTML =
-          '<span class="ms-lf-map-scan-spin" aria-hidden="true"></span><span class="ms-lf-map-scan-label">Scanning…</span>';
+          '<canvas class="ms-lf-map-scan-spin" width="20" height="20" aria-hidden="true"></canvas><span class="ms-lf-map-scan-label">Scanning…</span>';
+        window.MoonriseThinkingOrb?.mount(scanNearBtn.querySelector("canvas"));
       } else if (scanNearBtn.dataset.prevLabel) {
         scanNearBtn.textContent = scanNearBtn.dataset.prevLabel;
         delete scanNearBtn.dataset.prevLabel;
@@ -1175,7 +1177,8 @@
           scanAllBtn.dataset.prevLabel = scanAllBtn.textContent || "All";
         }
         scanAllBtn.innerHTML =
-          '<span class="ms-lf-map-scan-spin" aria-hidden="true"></span>';
+          '<canvas class="ms-lf-map-scan-spin" width="20" height="20" aria-hidden="true"></canvas>';
+        window.MoonriseThinkingOrb?.mount(scanAllBtn.querySelector("canvas"));
         scanAllBtn.setAttribute("title", "Scanning…");
       } else if (scanAllBtn.dataset.prevLabel) {
         scanAllBtn.textContent = scanAllBtn.dataset.prevLabel;
@@ -1859,9 +1862,7 @@
   }
 
   function getWebsiteFilter() {
-    const active =
-      document.querySelector("#lf-website-filter .ms-lf-map-filter-btn.is-active") ||
-      document.querySelector("#lf-website-filter .ms-lf-website-btn.is-active");
+    const active = document.querySelector("#lf-website-filter [data-website].is-active");
     return String(active?.getAttribute("data-website") || "without").toLowerCase();
   }
 
@@ -2147,6 +2148,7 @@
       "touchstart",
       (e) => {
         if (!e.touches?.[0]) return;
+        if (e.target.closest(".ms-lf-slide")) return;
         if ((resultsEl.scrollTop || 0) > 2) return;
         listPullStartY = e.touches[0].clientY;
         listPulling = true;
@@ -2158,6 +2160,10 @@
       "touchmove",
       (e) => {
         if (!listPulling || !e.touches?.[0]) return;
+        if (e.target.closest(".ms-lf-slide")) {
+          listPulling = false;
+          return;
+        }
         const dy = e.touches[0].clientY - listPullStartY;
         if (dy <= 8) return;
         if ((resultsEl.scrollTop || 0) > 2) {
@@ -3714,18 +3720,37 @@
     findLeads();
   });
 
+  function setFilterSheet(open) {
+    const sheet = document.getElementById("lf-filter-sheet");
+    const opener = document.getElementById("lf-filter-open");
+    if (!sheet) return;
+    sheet.hidden = !open;
+    opener?.setAttribute("aria-expanded", open ? "true" : "false");
+    opener?.classList.toggle("is-open", !!open);
+  }
+
+  document.getElementById("lf-filter-open")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const sheet = document.getElementById("lf-filter-sheet");
+    setFilterSheet(!!sheet?.hidden);
+  });
+  document.getElementById("lf-filter-close")?.addEventListener("click", () => setFilterSheet(false));
+  document.getElementById("lf-filter-scrim")?.addEventListener("click", () => setFilterSheet(false));
+  document.addEventListener("keydown", (e) => {
+    const sheet = document.getElementById("lf-filter-sheet");
+    if (e.key === "Escape" && sheet && !sheet.hidden) setFilterSheet(false);
+  });
+
   document.getElementById("lf-website-filter")?.addEventListener("click", (e) => {
-    const btn =
-      e.target.closest("button[data-website].ms-lf-map-filter-btn") ||
-      e.target.closest("button[data-website]");
+    const btn = e.target.closest("button[data-website]");
     if (!btn) return;
-    document
-      .querySelectorAll("#lf-website-filter .ms-lf-map-filter-btn, #lf-website-filter .ms-lf-website-btn")
-      .forEach((b) => {
-        const on = b === btn;
-        b.classList.toggle("is-active", on);
-        b.setAttribute("aria-pressed", on ? "true" : "false");
-      });
+    document.querySelectorAll("#lf-website-filter [data-website]").forEach((b) => {
+      const on = b === btn;
+      b.classList.toggle("is-active", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    setFilterSheet(false);
     if (listView === "saved") {
       resetLeadReveals();
       refreshVisibleLeads();
@@ -3839,10 +3864,38 @@
 
   function setSearchPillMode(mode) {
     if (!searchPill) return;
-    searchPill.dataset.mode = mode === "search" ? "search" : "idle";
-    if (mode === "search") {
-      window.requestAnimationFrame(() => queryInput?.focus());
+    const next = mode === "search" ? "search" : "idle";
+    const body = searchPill.querySelector(".ms-lf-map-pill-body");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const from = !reduce && body && searchPill.dataset.mode !== next ? body.getBoundingClientRect() : null;
+    searchPill.dataset.mode = next;
+    if (searchClose) {
+      searchClose.tabIndex = next === "search" ? 0 : -1;
+      searchClose.setAttribute("aria-hidden", next === "search" ? "false" : "true");
     }
+    if (next === "search") {
+      setFilterSheet(false);
+      queryInput?.focus({ preventScroll: true });
+    } else {
+      queryInput?.blur();
+    }
+    if (!from || !body) return;
+    const to = body.getBoundingClientRect();
+    const dx = from.left - to.left;
+    if (Math.abs(dx) < 0.5 && Math.abs(from.width - to.width) < 0.5) return;
+    body.style.transformOrigin = "left center";
+    const anim = body.animate(
+      [
+        { transform: "translateX(" + dx + "px)", width: from.width + "px" },
+        { transform: "translateX(0px)", width: to.width + "px" },
+      ],
+      { duration: 560, easing: "cubic-bezier(0.32, 0.72, 0, 1)" }
+    );
+    const clearOrigin = () => {
+      body.style.transformOrigin = "";
+    };
+    anim.onfinish = clearOrigin;
+    anim.oncancel = clearOrigin;
   }
 
   function scheduleMapInvalidate() {
@@ -4258,6 +4311,18 @@
       }
       // Second tap on the search icon submits (does not just close).
       void runMapSearchSubmit();
+    });
+
+    searchPill?.querySelector(".ms-lf-map-pill-body")?.addEventListener("click", (e) => {
+      if (searchPill?.dataset.mode === "search") return;
+      e.preventDefault();
+      setSearchPillMode("search");
+    });
+
+    searchClose?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setSearchPillMode("idle");
     });
 
     locateBtn?.addEventListener("click", async () => {

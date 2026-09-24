@@ -846,48 +846,34 @@ body.ms-sidebar-resizing iframe {
   pointer-events: none;
 }
 
-.ms-hard-refresh {
-  position: fixed;
-  top: var(--ms-chrome-top);
-  right: var(--ms-chrome-right);
-  left: auto;
-  /* Above builder fullscreen preview (80) and most chrome; below toasts (100000). */
-  z-index: 130;
-  display: grid !important;
-  place-items: center;
-  width: var(--ms-chrome-btn);
-  height: var(--ms-chrome-btn);
-  min-width: var(--ms-chrome-btn);
-  min-height: var(--ms-chrome-btn);
-  max-width: var(--ms-chrome-btn);
-  margin: 0;
-  padding: 0;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background: #fff;
-  color: #64748b;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  pointer-events: auto;
-  opacity: 1;
-  visibility: visible;
-  box-sizing: border-box;
-  transition:
-    color 0.15s ease,
-    background 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+.ms-tabbar,
+.ms-quick-nav {
+  display: none;
 }
 
-.ms-hard-refresh svg {
-  width: 20px;
-  height: 20px;
+body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="clients"]):not([data-page="settings"]) .ms-tabbar {
+  display: none !important;
+}
+
+#settings-session .ms-hard-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  position: static;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 2.75rem;
+  max-width: none;
+  margin: 0;
+}
+
+#settings-session .ms-hard-refresh svg {
+  width: 18px;
+  height: 18px;
   display: block;
+  flex-shrink: 0;
   pointer-events: none;
 }
 
@@ -922,26 +908,10 @@ body.ms-sidebar-resizing iframe {
   }
 }
 
-/* Same control on phone/tablet - larger tap target, never hide. */
 @media (max-width: 900px) {
   :root {
     --ms-chrome-btn: 44px;
-    --ms-chrome-gap: 0.65rem;
-  }
-
-  .ms-hard-refresh {
-    top: var(--ms-chrome-top);
-    right: var(--ms-chrome-right);
-    width: var(--ms-chrome-btn);
-    height: var(--ms-chrome-btn);
-    min-width: var(--ms-chrome-btn);
-    min-height: var(--ms-chrome-btn);
-    border-radius: 12px;
-  }
-
-  .ms-hard-refresh svg {
-    width: 20px;
-    height: 20px;
+    --ms-chrome-gap: 1rem;
   }
 
   .ms-menu-toggle {
@@ -951,6 +921,257 @@ body.ms-sidebar-resizing iframe {
     height: var(--ms-chrome-btn);
     min-width: var(--ms-chrome-btn);
     min-height: var(--ms-chrome-btn);
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 12px;
+    padding: 0;
+    color: #0f172a;
+  }
+
+  .ms-menu-toggle svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .ms-quick-nav {
+    display: flex;
+    position: fixed;
+    top: var(--ms-chrome-top);
+    left: 0;
+    right: 0;
+    height: var(--ms-chrome-btn);
+    z-index: 138;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding-left: calc(var(--ms-chrome-left) + var(--ms-chrome-btn) + 0.85rem);
+    padding-right: calc(var(--ms-chrome-right) + var(--ms-chrome-btn) + 0.85rem);
+    box-sizing: border-box;
+    pointer-events: none;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .ms-quick-nav::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(var(--ms-chrome-top) * -1);
+    height: calc(var(--ms-chrome-top) + var(--ms-chrome-btn) + 2.85rem);
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(238, 243, 248, 0.98) 0,
+      rgba(238, 243, 248, 0.96) calc(var(--ms-chrome-top) + var(--ms-chrome-btn)),
+      rgba(238, 243, 248, 0) 100%
+    );
+  }
+
+  .ms-top-brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ms-top-brand-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .ms-top-brand-name {
+    color: #0f172a;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .ms-help-btn {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: var(--ms-chrome-right);
+    display: grid;
+    place-items: center;
+    width: var(--ms-chrome-btn);
+    height: var(--ms-chrome-btn);
+    min-width: var(--ms-chrome-btn);
+    padding: 0;
+    color: #0f172a;
+    text-decoration: none;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ms-help-btn svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+
+  .ms-help-btn.is-current {
+    color: #2563eb;
+  }
+
+  .ms-help-btn:active {
+    opacity: 0.65;
+  }
+
+  .ms-help-btn:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  body.ms-nav-open .ms-quick-nav {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .ms-tabbar {
+    display: flex;
+    position: fixed;
+    left: 50%;
+    right: auto;
+    bottom: calc(1.45rem + env(safe-area-inset-bottom, 0px));
+    z-index: 140;
+    width: min(22.5rem, calc(100% - 1.5rem));
+    min-height: 0;
+    margin: 0;
+    padding: 0.32rem;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.1rem;
+    background: #fff;
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    border-radius: 999px;
+    box-shadow: 0 14px 32px rgba(37, 99, 235, 0.18);
+    transform: translate3d(-50%, 0, 0);
+    animation: ms-tabbar-in 0.78s cubic-bezier(0.16, 0.84, 0.24, 1) both;
+  }
+
+  .ms-tabbar.is-leaving {
+    animation: ms-tabbar-out 0.58s cubic-bezier(0.4, 0, 0.15, 1) forwards;
+    pointer-events: none;
+  }
+
+  @keyframes ms-tabbar-in {
+    from {
+      transform: translate3d(-50%, calc(100% + 1.6rem), 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes ms-tabbar-out {
+    from {
+      transform: translate3d(-50%, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, calc(100% + 1.8rem), 0);
+    }
+  }
+
+  .ms-tab {
+    position: relative;
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    height: 46px;
+    min-height: 46px;
+    padding: 0;
+    border-radius: 999px;
+    color: #3b82f6;
+    text-decoration: none;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+
+  .ms-tab:active {
+    transform: scale(0.96);
+  }
+
+  .ms-tab:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+  }
+
+  .ms-tab-ico,
+  .ms-tab-orb {
+    display: grid;
+    place-items: center;
+    width: auto;
+    height: auto;
+    margin: 0;
+    border-radius: 0;
+    background: none;
+    color: inherit;
+    box-shadow: none;
+  }
+
+  .ms-tab-ico svg,
+  .ms-tab-orb svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+
+  .ms-tab-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .ms-tab.is-active {
+    background: #2563eb;
+    color: #fff;
+  }
+
+  .ms-tab-main {
+    color: #3b82f6;
+  }
+
+  body.ms-nav-open .ms-tabbar {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body[data-page="dashboard"] #page-body,
+  body[data-page="clients"] #page-body,
+  body[data-page="settings"] #page-body,
+  body[data-page="builder"].ms-lb-setup #page-body,
+  body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
+    padding-bottom: calc(6.15rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .ios-install-banner {
+    bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px));
   }
 
   /* Keep titles clear of fixed menu / refresh chrome */
@@ -1000,17 +1221,13 @@ body.ms-sidebar-resizing iframe {
   }
 }
 
-@media (pointer: coarse) {
-  .ms-hard-refresh {
-    width: var(--ms-chrome-btn);
-    height: var(--ms-chrome-btn);
-    min-width: var(--ms-chrome-btn);
-    min-height: var(--ms-chrome-btn);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .ms-hard-refresh.is-spinning svg {
+    animation: none;
+  }
+
+  .ms-tabbar,
+  .ms-tabbar.is-leaving {
     animation: none;
   }
 }
@@ -1658,25 +1875,58 @@ body[data-page="dashboard"] {
   color: #3b82f6;
 }
 
-.ms-dash-projects-card {
+.ms-dash-posts {
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  padding-bottom: 1rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 
-.ms-dash-projects-card.is-empty {
+.ms-dash-projects-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.15rem 0.05rem 0;
+  border: 0;
+  background: transparent;
+}
+
+.ms-dash-projects-title {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.ms-dash-projects-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0;
+  background: none;
+}
+
+.ms-dash-posts.is-empty {
   gap: 0;
   padding-bottom: 0;
   align-self: stretch;
 }
 
-.ms-dash-projects-card.is-empty .ms-dash-island-panel {
+.ms-dash-posts.is-empty .ms-dash-island-panel {
   display: none;
 }
 
-.ms-dash-projects-card.is-empty .ms-dash-island-toggle {
+.ms-dash-posts.is-empty .ms-dash-island-toggle {
   cursor: default;
 }
 
@@ -1803,6 +2053,171 @@ body[data-page="dashboard"] {
   transform-origin: top left;
   pointer-events: none;
   background: #fff;
+}
+
+.ms-dash-posts .ms-dash-previews {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.ms-dash-post {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 18px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.07);
+}
+
+.ms-dash-post-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.72rem 0.8rem;
+}
+
+.ms-dash-post-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #60a5fa, #2563eb);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.ms-dash-post-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ms-dash-post-avatar-fallback[hidden] {
+  display: none !important;
+}
+
+.ms-dash-post-by {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.ms-dash-post-author {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ms-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-dash-post-when {
+  font-size: 0.75rem;
+  color: var(--ms-muted);
+}
+
+.ms-dash-post-head .ms-dash-preview-delete {
+  position: static;
+  flex-shrink: 0;
+  opacity: 1;
+}
+
+.ms-dash-post-media {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ms-dash-post .ms-dash-preview-shot {
+  aspect-ratio: 16 / 10;
+  background: #e8f1ff;
+}
+
+.ms-dash-post-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.85rem 0.95rem 0.95rem;
+}
+
+.ms-dash-post-title {
+  margin: 0;
+  font-size: 1.16rem;
+  line-height: 1.25;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.ms-dash-post-title a {
+  color: var(--ms-ink);
+  text-decoration: none;
+}
+
+.ms-dash-post-title a:hover {
+  color: #1d4ed8;
+}
+
+.ms-dash-post-desc {
+  margin: 0;
+  color: var(--ms-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ms-dash-post-tag {
+  align-self: flex-start;
+  margin-top: 0.15rem;
+  padding: 0.26rem 0.62rem;
+  border-radius: 999px;
+  background: var(--ms-accent-soft);
+  color: #1d4ed8;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+@media (min-width: 861px) {
+  .ms-dash-posts .ms-dash-previews {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .ms-dash-post .ms-dash-preview-shot {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 560px) {
+  .ms-dash-projects-head,
+  .ms-dash-projects-body {
+    padding: 0;
+  }
+
+  .ms-dash-post {
+    border-radius: 16px;
+  }
+
+  .ms-dash-post-title {
+    font-size: 1.05rem;
+  }
+
+  .ms-dash-post-copy {
+    padding: 0.75rem 0.8rem 0.85rem;
+  }
 }
 
 .ms-dash-preview-delete {
@@ -2106,6 +2521,61 @@ body[data-page="dashboard"] {
 .ms-dash-projects-search {
   position: relative;
   margin: 0 0 0.85rem;
+}
+
+.ms-dash-posts .ms-dash-projects-search-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.ms-dash-posts .ms-dash-projects-search-field {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ms-dash-filter-btn {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: #fff;
+  color: #2563eb;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ms-dash-filter-btn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.ms-dash-filter-btn:hover,
+.ms-dash-filter-btn[aria-expanded="true"],
+.ms-dash-filter-btn.is-filtering {
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.ms-dash-filter-btn:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.45);
+  outline-offset: 2px;
+}
+
+.ms-dash-posts .ms-dash-projects-filters {
+  display: none;
+  margin: 0.55rem 0 0;
+}
+
+.ms-dash-posts .ms-dash-projects-filters.is-open {
+  display: flex;
 }
 
 .ms-dash-projects-search-field {
@@ -3559,6 +4029,38 @@ input.ms-input:-webkit-autofill:focus {
   margin-bottom: 0.7rem;
 }
 
+/* Mode switch: height and the gap ease together so the card extends instead of jumping. */
+.ms-auth-card .ms-auth-collapse {
+  overflow: hidden;
+}
+
+.ms-auth-card .ms-field.ms-auth-collapse:not(.is-open) {
+  margin-bottom: 0;
+}
+
+.ms-auth-card .ms-field.ms-auth-collapse.is-open {
+  margin-bottom: 0.7rem;
+}
+
+.ms-auth-card .ms-pw-meter.ms-auth-collapse:not(.is-open) {
+  margin-top: 0;
+}
+
+.ms-auth-card .ms-pw-meter.ms-auth-collapse.is-open {
+  margin-top: 0.55rem;
+}
+
+.ms-auth-card .ms-auth-forgot-wrap.ms-auth-collapse:not(.is-open),
+.ms-auth-card .ms-auth-back-wrap.ms-auth-collapse:not(.is-open) {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.ms-auth-card .ms-auth-forgot-wrap.ms-auth-collapse.is-open {
+  margin-top: -0.35rem;
+  margin-bottom: 0.85rem;
+}
+
 .ms-auth-pw-shell {
   position: relative;
   display: block;
@@ -3662,6 +4164,12 @@ input.ms-input:-webkit-autofill:focus {
   animation: ms-pw-pulse 1.4s ease-in-out infinite;
 }
 
+.ms-pw-meter[data-level="impenetrable"] .ms-pw-fill {
+  background: linear-gradient(90deg, #047857, #34d399 55%, #6ee7b7);
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.55);
+  animation: ms-pw-pulse 1.1s ease-in-out infinite;
+}
+
 @keyframes ms-pw-pulse {
   0%, 100% { filter: brightness(1); }
   50% { filter: brightness(1.12); }
@@ -3681,24 +4189,37 @@ input.ms-input:-webkit-autofill:focus {
   color: #64748b;
 }
 
+.ms-pw-meter[data-level="empty"] .ms-pw-label { color: #64748b; }
 .ms-pw-meter[data-level="weak"] .ms-pw-label { color: #dc2626; }
 .ms-pw-meter[data-level="fair"] .ms-pw-label { color: #d97706; }
 .ms-pw-meter[data-level="good"] .ms-pw-label { color: #0f766e; }
 .ms-pw-meter[data-level="strong"] .ms-pw-label { color: #059669; }
+.ms-pw-meter[data-level="impenetrable"] .ms-pw-label {
+  color: #047857;
+  letter-spacing: -0.02em;
+}
 
 .ms-pw-rules {
   list-style: none;
-  margin: 0.45rem 0 0;
+  margin: 0;
   padding: 0;
-  display: grid;
-  gap: 0.2rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .ms-pw-rules li {
   font-size: 0.72rem;
-  color: #94a3b8;
+  line-height: 1.3;
+  color: #475569;
   padding-left: 1rem;
   position: relative;
+  max-height: 0;
+  margin: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(8px) scale(0.86);
+  transform-origin: left center;
+  pointer-events: none;
 }
 
 .ms-pw-rules li::before {
@@ -3709,17 +4230,41 @@ input.ms-input:-webkit-autofill:focus {
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 50%;
-  background: #cbd5e1;
-  transition: background 0.2s ease, transform 0.2s ease;
+  background: #94a3b8;
 }
 
-.ms-pw-rules li.is-met {
-  color: #0f766e;
+.ms-pw-rules li.is-current {
+  max-height: 1.7rem;
+  margin-top: 0.28rem;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  animation: ms-pw-rule-pop 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.ms-pw-rules li.is-met::before {
-  background: #10b981;
-  transform: scale(1.15);
+.ms-pw-rules li.is-current::before {
+  animation: ms-pw-rule-dot 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes ms-pw-rule-pop {
+  0% { opacity: 0; transform: translateY(8px) scale(0.82); }
+  58% { opacity: 1; transform: translateY(-2px) scale(1.05); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes ms-pw-rule-dot {
+  0% { transform: scale(0.4); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-pw-rules li,
+  .ms-pw-rules li.is-current,
+  .ms-pw-rules li.is-current::before {
+    animation: none;
+    transition: none;
+  }
 }
 
 .ms-pw-hint {
@@ -3730,10 +4275,6 @@ input.ms-input:-webkit-autofill:focus {
 }
 
 @media (max-width: 480px) {
-  .ms-pw-rules {
-    display: none;
-  }
-
   .ms-pw-hint {
     font-size: 0.68rem;
   }
@@ -3786,6 +4327,10 @@ input.ms-input:-webkit-autofill:focus {
   }
 
   .ms-auth-card .ms-field {
+    margin-bottom: 0.55rem;
+  }
+
+  .ms-auth-card .ms-field.ms-auth-collapse.is-open {
     margin-bottom: 0.55rem;
   }
 
@@ -5468,6 +6013,8 @@ body[data-page="editor"].ms-lb-workspace #shell,
 body[data-page="editor"].ms-lb-workspace .ms-sidebar,
 body[data-page="editor"].ms-lb-workspace .ms-sidebar-resizer,
 body[data-page="editor"].ms-lb-workspace .ms-menu-toggle,
+body[data-page="editor"].ms-lb-workspace .ms-quick-nav,
+body[data-page="editor"].ms-lb-workspace .ms-tabbar,
 body[data-page="editor"] .ms-hard-refresh {
   display: none !important;
 }
@@ -5496,7 +6043,9 @@ body[data-page="editor"].ms-lb-workspace {
 
 body[data-page="builder"].ms-lb-workspace.ms-lb-hide-shell .ms-sidebar,
 body[data-page="builder"].ms-lb-workspace.ms-lb-hide-shell .ms-sidebar-resizer,
-body[data-page="builder"].ms-lb-workspace.ms-lb-hide-shell .ms-menu-toggle {
+body[data-page="builder"].ms-lb-workspace.ms-lb-hide-shell .ms-menu-toggle,
+body[data-page="builder"].ms-lb-workspace.ms-lb-hide-shell .ms-quick-nav,
+body[data-page="builder"].ms-lb-workspace.ms-lb-hide-shell .ms-tabbar {
   display: none !important;
 }
 
@@ -5504,11 +6053,6 @@ body[data-page="builder"].ms-lb-workspace.ms-lb-hide-shell #builder-workspace,
 body[data-page="builder"].ms-lb-workspace.ms-lb-hide-shell .ms-builder-page {
   margin-left: 0 !important;
   width: 100% !important;
-}
-
-/* Hard refresh stays available in Builder on every device. */
-body[data-page="builder"] .ms-hard-refresh {
-  display: grid !important;
 }
 
 body[data-page="builder"].ms-lb-workspace.ms-lb-show-shell,
@@ -13431,6 +13975,18 @@ body.ms-home-menu-open .ms-home-brand img {
     0 4px 10px rgba(15, 23, 42, 0.2);
 }
 
+body[data-page="login"] .ms-home-nav,
+body[data-page="download"] .ms-home-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+body[data-page="login"] {
+  padding-top: max(4.75rem, calc(env(safe-area-inset-top, 0px) + 4rem));
+}
+
 .ms-home-hero {
   max-width: 1120px;
   margin: 0 auto;
@@ -17219,6 +17775,37 @@ body.ms-payouts-modal-open {
   .ms-store-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.ms-donate-page .ms-store-embed {
+  width: 100%;
+  max-width: 56rem;
+  margin: 1.5rem auto 0;
+}
+
+.ms-store-embed-head {
+  margin: 0 0 0.85rem;
+}
+
+.ms-store-embed-head h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.ms-store-embed-head p {
+  margin: 0.3rem 0 0;
+  color: var(--ms-muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.ms-donate-page .ms-store-mvp-note,
+.ms-donate-page .ms-store-content {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 

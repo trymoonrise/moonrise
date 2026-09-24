@@ -40,10 +40,10 @@
   <link rel="dns-prefetch" href="https://server.arcgisonline.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-  <link rel="stylesheet" href="css/studio.css?v=20260911-live2">
+  <link rel="stylesheet" href="css/studio.css?v=20260924-tab-lift">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260719-perf">
-  <link rel="stylesheet" href="css/ms-lf-slide.css?v=20260812-slide-full">
-  <link rel="stylesheet" href="css/leads-map.css?v=20260815-hide-locate-search">
+  <link rel="stylesheet" href="css/ms-lf-slide.css?v=20260923-slide-smooth">
+  <link rel="stylesheet" href="css/leads-map.css?v=20260923-filter-center">
   <style id="lf-map-bar-width-fix">
     /* Inline so PWA cache cannot leave search/filter bars narrow */
     @media (max-width: 900px) {
@@ -153,8 +153,14 @@
                       >
                     </label>
                   </div>
+                  <button type="button" class="ms-lf-map-chip ms-lf-map-filter" id="lf-filter-open" aria-label="Filter businesses" aria-expanded="false" aria-controls="lf-filter-sheet" title="Filter">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6.2 7.4V19l-3.6 1.6v-8.2L4 5z"/></svg>
+                  </button>
                   <button type="button" class="ms-lf-map-chip ms-lf-map-locate" id="lf-locate" aria-label="Center on my location" title="My location">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4.5 19.5 12 15.5 19.5 19.5 12 2z"/></svg>
+                  </button>
+                  <button type="button" class="ms-lf-map-chip ms-lf-map-search-close" id="lf-search-close" aria-label="Close search" title="Close search" tabindex="-1" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
                   </button>
                 </div>
               </div>
@@ -165,11 +171,6 @@
             </form>
           </div>
 
-          <div class="ms-lf-map-filters" id="lf-website-filter" role="group" aria-label="Website filter">
-            <button type="button" class="ms-lf-map-filter-btn" data-website="all">All</button>
-            <button type="button" class="ms-lf-map-filter-btn is-active" data-website="without" aria-pressed="true">No Website</button>
-            <button type="button" class="ms-lf-map-filter-btn" data-website="with">Website</button>
-          </div>
         </div>
 
         <aside class="ms-lf-map-panel" id="lf-results-panel" hidden aria-label="Business results">
@@ -188,6 +189,29 @@
           <p class="ms-error" id="lf-error" hidden></p>
           <div class="ms-lead-list ms-lf-map-results" id="lf-results"></div>
         </aside>
+
+        <div class="ms-lf-filter-sheet" id="lf-filter-sheet" hidden>
+          <button type="button" class="ms-lf-filter-scrim" id="lf-filter-scrim" aria-label="Close filters"></button>
+          <div class="ms-lf-filter-card" role="dialog" aria-modal="true" aria-labelledby="lf-filter-title">
+            <div class="ms-lf-filter-head">
+              <h2 id="lf-filter-title">Filter businesses</h2>
+              <button type="button" class="ms-lf-filter-close" id="lf-filter-close" aria-label="Close filters">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+              </button>
+            </div>
+            <div id="lf-website-filter" role="group" aria-label="Website filter">
+              <button type="button" class="ms-lf-filter-option" data-website="all" aria-pressed="false">
+                <span>All businesses</span>
+              </button>
+              <button type="button" class="ms-lf-filter-option is-active" data-website="without" aria-pressed="true">
+                <span>No website</span>
+              </button>
+              <button type="button" class="ms-lf-filter-option" data-website="with" aria-pressed="false">
+                <span>Has a website</span>
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div class="ms-lf-map-actions">
           <div class="ms-lf-map-actions-tray">
@@ -214,8 +238,9 @@
   <script defer src="js/ui-motion.js?v=20260811-scan-ms-btn"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
-  <script defer src="js/app.js?v=20260911-passkey3"></script>
-  <script defer src="js/ms-lf-slide.js?v=20260812-slide-full"></script>
-  <script defer src="js/leads-search.js?v=20260909-queue"></script>
+  <script defer src="js/app.js?v=20260924-brand-name"></script>
+  <script defer src="js/ms-lf-slide.js?v=20260923-slide-smooth"></script>
+  <script defer src="js/thinking-orb.js?v=20260923-orb-solid"></script>
+  <script defer src="js/leads-search.js?v=20260923-slide-smooth"></script>
 </body>
 </html>
