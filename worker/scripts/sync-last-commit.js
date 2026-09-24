@@ -30,7 +30,7 @@ function main() {
   }
   if (!sha || !committedAt) return;
   const payload = {
-    repo: "trymoonrise/moonrise-studio",
+    repo: "trymoonrise/moonrise",
     sha,
     committedAt,
     message,

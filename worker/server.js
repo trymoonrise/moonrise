@@ -894,7 +894,7 @@ app.get("/studio-last-commit", async (_req, res) => {
   const repo = String(
     process.env.STUDIO_GITHUB_REPO ||
       process.env.GITHUB_REPO ||
-      "trymoonrise/moonrise-studio"
+      "trymoonrise/moonrise"
   )
     .trim()
     .replace(/^https?:\/\/github\.com\//i, "")

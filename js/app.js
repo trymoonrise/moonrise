@@ -410,7 +410,7 @@
     const cfg = window.SITE_CONFIG || {};
     const fromCfg = String(cfg.githubRepo || cfg.studioGithubRepo || "").trim();
     if (fromCfg) return fromCfg.replace(/^https?:\/\/github\.com\//i, "").replace(/\.git$/i, "");
-    return "trymoonrise/moonrise-studio";
+    return "trymoonrise/moonrise";
   }
 
   async function resolveLastCommitAt() {
@@ -1477,7 +1477,7 @@
       case "network":
       case "server":
         return window.isLocalDevHost?.()
-          ? "Can't reach the local Moonrise worker. Start it with: cd moonrise-studio/worker && npm run dev"
+          ? "Can't reach the local Moonrise worker. Start it with: cd moonrise/worker && npm run dev"
           : "Can't reach Moonrise right now. Check your internet connection and try again.";
       case "auth":
         return "Sign in to generate a website.";
@@ -1684,6 +1684,18 @@
       bar.className = "ms-quick-nav";
       document.body.appendChild(bar);
     }
+    // Match iOS/Safari status bar to the opaque chrome fill (no site bleed-through).
+    try {
+      let theme = document.querySelector('meta[name="theme-color"]');
+      if (!theme) {
+        theme = document.createElement("meta");
+        theme.name = "theme-color";
+        document.head.appendChild(theme);
+      }
+      theme.content = "#eef3f8";
+    } catch (_) {
+      /* ignore */
+    }
     const onHelp = page === "help";
     bar.innerHTML =
       '<span class="ms-top-brand">' +
@@ -1702,6 +1714,114 @@
   }
 
   const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings"];
+  const TAB_SWITCH_MS = 340;
+  const TAB_SWITCH_KEY = "ms_tab_switch";
+
+  function prefersTabMotionReduce() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function syncTabPill(nav, tab, { animate = true } = {}) {
+    if (!nav || !tab) return;
+    const pill = nav.querySelector(".ms-tab-pill");
+    if (!pill) return;
+    const width = tab.offsetWidth;
+    const left = tab.offsetLeft;
+    if (!animate) {
+      const prev = pill.style.transition;
+      pill.style.transition = "none";
+      pill.style.width = width + "px";
+      pill.style.transform = "translate3d(" + left + "px, 0, 0)";
+      void pill.offsetWidth;
+      pill.style.transition = prev;
+      return;
+    }
+    pill.style.width = width + "px";
+    pill.style.transform = "translate3d(" + left + "px, 0, 0)";
+  }
+
+  function setActiveTab(nav, tab) {
+    if (!nav || !tab) return;
+    nav.querySelectorAll(".ms-tab").forEach((el) => {
+      el.classList.remove("is-active");
+      el.removeAttribute("aria-current");
+    });
+    tab.classList.add("is-active");
+    tab.setAttribute("aria-current", "page");
+  }
+
+  function readTabSwitch() {
+    try {
+      const raw = sessionStorage.getItem(TAB_SWITCH_KEY);
+      sessionStorage.removeItem(TAB_SWITCH_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (!data || typeof data.from !== "string" || typeof data.to !== "string") return null;
+      return data;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function writeTabSwitch(from, to) {
+    try {
+      sessionStorage.setItem(TAB_SWITCH_KEY, JSON.stringify({ from, to }));
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function bindTabBarSwitch(nav, page) {
+    if (!nav || nav.__msTabSwitchBound) return;
+    nav.__msTabSwitchBound = true;
+    nav.addEventListener("click", (event) => {
+      const link = event.target.closest("a.ms-tab[href]");
+      if (!link || !nav.contains(link)) return;
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (link.target === "_blank") return;
+
+      const toId = link.getAttribute("data-tab") || "";
+      let url;
+      try {
+        url = new URL(link.href, location.href);
+      } catch (_) {
+        return;
+      }
+      if (url.origin !== location.origin) return;
+
+      const samePage =
+        (toId && toId === page) ||
+        url.pathname === location.pathname ||
+        link.classList.contains("is-active");
+      if (samePage) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      if (nav.classList.contains("is-switching")) return;
+      nav.classList.add("is-switching");
+
+      writeTabSwitch(page, toId || "leads");
+      setActiveTab(nav, link);
+      syncTabPill(nav, link, { animate: !prefersTabMotionReduce() });
+
+      const delay = prefersTabMotionReduce() ? 0 : TAB_SWITCH_MS;
+      window.setTimeout(() => {
+        location.href = link.href;
+      }, delay);
+    });
+
+    window.addEventListener(
+      "resize",
+      () => {
+        const active = nav.querySelector(".ms-tab.is-active");
+        if (active) syncTabPill(nav, active, { animate: false });
+      },
+      { passive: true }
+    );
+  }
 
   function isTabBarPageFile(href) {
     try {
@@ -1723,6 +1843,7 @@
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       const link = event.target.closest("a[href]");
       if (!link || link.target === "_blank") return;
+      if (link.closest("#ms-tabbar")) return;
       const href = link.getAttribute("href") || "";
       if (!href || href.charAt(0) === "#" || /^(mailto:|tel:|javascript:)/i.test(href)) return;
       let url;
@@ -1736,12 +1857,12 @@
       if (!file.endsWith(".html") || isTabBarPageFile(url.href)) return;
       const bar = document.getElementById("ms-tabbar");
       if (!bar) return;
-      if (bar.classList.contains("is-leaving")) {
+      if (bar.classList.contains("is-leaving") || bar.classList.contains("is-switching")) {
         event.preventDefault();
         return;
       }
       if (!window.matchMedia("(max-width: 900px)").matches) return;
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (prefersTabMotionReduce()) return;
       const style = window.getComputedStyle(bar);
       if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return;
       event.preventDefault();
@@ -1779,28 +1900,56 @@
       nav.setAttribute("aria-label", "Main pages");
       document.body.appendChild(nav);
     }
-    nav.innerHTML = items
-      .map((item) => {
-        const active = page === item.id;
-        const icon = ICONS[item.icon] || "";
-        const mark = '<span class="ms-tab-ico" aria-hidden="true">' + icon + "</span>";
-        return (
-          '<a class="ms-tab' +
-          (active ? " is-active" : "") +
-          '" href="' +
-          item.href +
-          '" aria-label="' +
-          (item.aria || item.label) +
-          '"' +
-          (active ? ' aria-current="page"' : "") +
-          ">" +
-          mark +
-          '<span class="ms-tab-label">' +
-          item.label +
-          "</span></a>"
-        );
-      })
-      .join("");
+    const switchAnim = readTabSwitch();
+    nav.innerHTML =
+      '<span class="ms-tab-pill" aria-hidden="true"></span>' +
+      items
+        .map((item) => {
+          const active = page === item.id;
+          const icon = ICONS[item.icon] || "";
+          const mark = '<span class="ms-tab-ico" aria-hidden="true">' + icon + "</span>";
+          return (
+            '<a class="ms-tab' +
+            (active ? " is-active" : "") +
+            '" href="' +
+            item.href +
+            '" data-tab="' +
+            item.id +
+            '" aria-label="' +
+            (item.aria || item.label) +
+            '"' +
+            (active ? ' aria-current="page"' : "") +
+            ">" +
+            mark +
+            '<span class="ms-tab-label">' +
+            item.label +
+            "</span></a>"
+          );
+        })
+        .join("");
+
+    bindTabBarSwitch(nav, page);
+
+    const activeTab = nav.querySelector(".ms-tab.is-active");
+    const fromTab =
+      switchAnim && switchAnim.to === page
+        ? nav.querySelector('.ms-tab[data-tab="' + switchAnim.from + '"]')
+        : null;
+
+    requestAnimationFrame(() => {
+      if (
+        fromTab &&
+        activeTab &&
+        fromTab !== activeTab &&
+        !prefersTabMotionReduce() &&
+        window.matchMedia("(max-width: 900px)").matches
+      ) {
+        syncTabPill(nav, fromTab, { animate: false });
+        requestAnimationFrame(() => syncTabPill(nav, activeTab, { animate: true }));
+      } else if (activeTab) {
+        syncTabPill(nav, activeTab, { animate: false });
+      }
+    });
   }
 
   function ensureInstallHintScript() {

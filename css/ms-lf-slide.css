@@ -5,6 +5,7 @@
   --ms-lf-slide-thumb: 44px;
   --ms-lf-slide-pad: 4px;
   --ms-lf-slide-radius: 12px;
+  --ms-lf-slide-fill-ratio: 0;
   --ms-lf-slide-fill: calc(var(--ms-lf-slide-pad) + var(--ms-lf-slide-thumb));
   width: 100%;
   max-width: 100%;
@@ -26,10 +27,15 @@
   border-radius: var(--ms-lf-slide-radius) !important;
   overflow: hidden !important;
   cursor: grab;
-  touch-action: none;
+  touch-action: pan-y;
   isolation: isolate;
   -webkit-user-select: none;
   user-select: none;
+  overscroll-behavior: none;
+}
+
+.ms-lf-slide.is-dragging .ms-lf-slide-track {
+  touch-action: none;
 }
 
 .ms-lf-slide-fill {
@@ -37,11 +43,14 @@
   left: 0 !important;
   top: 0 !important;
   bottom: 0 !important;
-  width: min(var(--ms-lf-slide-fill), 100%);
+  width: 100%;
   max-width: 100%;
-  border-radius: var(--ms-lf-slide-radius) 0 0 var(--ms-lf-slide-radius) !important;
+  border-radius: var(--ms-lf-slide-radius) !important;
   pointer-events: none;
   opacity: 0;
+  transform: scaleX(var(--ms-lf-slide-fill-ratio, 0));
+  transform-origin: left center;
+  will-change: transform;
   transition: opacity 0.16s ease;
 }
 
@@ -57,7 +66,9 @@
 
 .ms-lf-slide.is-returning .ms-lf-slide-fill,
 .ms-lf-slide.is-completing .ms-lf-slide-fill {
-  transition: width 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+  transition:
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.16s ease;
 }
 
 .ms-lf-slide-label {
@@ -80,7 +91,7 @@
 
 .ms-lf-slide.is-dragging .ms-lf-slide-label,
 .ms-lf-slide.is-completing .ms-lf-slide-label {
-  opacity: 0.55;
+  opacity: 0.45;
 }
 
 /*
@@ -138,7 +149,7 @@
 
 .ms-lf-slide.is-returning .ms-lf-slide-thumb,
 .ms-lf-slide.is-completing .ms-lf-slide-thumb {
-  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ms-lf-slide-thumb:hover,
@@ -164,10 +175,12 @@ body.ms-lf-slide-dragging {
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
+  overscroll-behavior: none;
 }
 
 body.ms-lf-slide-dragging .ms-lf-map-results,
-body.ms-lf-slide-dragging #lf-results {
+body.ms-lf-slide-dragging #lf-results,
+body.ms-lf-slide-dragging .ms-lf-map-card {
   overflow: hidden !important;
   touch-action: none !important;
   overscroll-behavior: none;
@@ -180,4 +193,13 @@ body.ms-lf-slide-dragging #lf-results {
 
 .ms-lf-slide.is-done .ms-lf-slide-track {
   cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-lf-slide.is-returning .ms-lf-slide-thumb,
+  .ms-lf-slide.is-completing .ms-lf-slide-thumb,
+  .ms-lf-slide.is-returning .ms-lf-slide-fill,
+  .ms-lf-slide.is-completing .ms-lf-slide-fill {
+    transition-duration: 0.01ms !important;
+  }
 }

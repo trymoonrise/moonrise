@@ -27,7 +27,7 @@ html.ms-auth-gating body {
   --ms-content-scale: 1.2;
   --ms-chrome-btn: 48px;
   --ms-chrome-gap: 0.75rem;
-  --ms-chrome-top: max(var(--ms-chrome-gap), env(safe-area-inset-top, 0px));
+  --ms-chrome-top: calc(env(safe-area-inset-top, 0px) + var(--ms-chrome-gap));
   --ms-chrome-left: max(var(--ms-chrome-gap), env(safe-area-inset-left, 0px));
   --ms-chrome-right: max(var(--ms-chrome-gap), env(safe-area-inset-right, 0px));
 }
@@ -958,14 +958,15 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(var(--ms-chrome-top) * -1);
-    height: calc(var(--ms-chrome-top) + var(--ms-chrome-btn) + 2.85rem);
+    /* Reach well above the viewport so iOS rubber-band / status-bar never reveals the page */
+    top: calc((var(--ms-chrome-top) + 8rem) * -1);
+    height: calc(var(--ms-chrome-top) + var(--ms-chrome-btn) + 0.85rem + 8rem);
     z-index: 0;
     pointer-events: none;
     background: linear-gradient(
       to bottom,
-      rgba(238, 243, 248, 0.98) 0,
-      rgba(238, 243, 248, 0.96) calc(var(--ms-chrome-top) + var(--ms-chrome-btn)),
+      #eef3f8 0,
+      #eef3f8 calc(8rem + var(--ms-chrome-top) + var(--ms-chrome-btn)),
       rgba(238, 243, 248, 0) 100%
     );
   }
@@ -1047,7 +1048,7 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     position: fixed;
     left: 50%;
     right: auto;
-    bottom: calc(1.45rem + env(safe-area-inset-bottom, 0px));
+    bottom: calc(0.55rem + env(safe-area-inset-bottom, 0px));
     z-index: 140;
     width: min(22.5rem, calc(100% - 1.5rem));
     min-height: 0;
@@ -1063,6 +1064,23 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     box-shadow: 0 14px 32px rgba(37, 99, 235, 0.18);
     transform: translate3d(-50%, 0, 0);
     animation: ms-tabbar-in 0.78s cubic-bezier(0.16, 0.84, 0.24, 1) both;
+  }
+
+  .ms-tab-pill {
+    position: absolute;
+    top: 0.32rem;
+    left: 0;
+    z-index: 0;
+    height: 46px;
+    width: 0;
+    border-radius: 999px;
+    background: #2563eb;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
+    transition:
+      transform 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+      width 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, width;
   }
 
   .ms-tabbar.is-leaving {
@@ -1090,6 +1108,7 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
 
   .ms-tab {
     position: relative;
+    z-index: 1;
     flex: 1 1 0;
     display: flex;
     align-items: center;
@@ -1100,10 +1119,11 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     padding: 0;
     border-radius: 999px;
     color: #3b82f6;
+    background: transparent;
     text-decoration: none;
     line-height: 1;
     -webkit-tap-highlight-color: transparent;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    transition: color 0.28s ease, transform 0.15s ease;
   }
 
   .ms-tab:active {
@@ -1148,12 +1168,24 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
   }
 
   .ms-tab.is-active {
-    background: #2563eb;
+    background: transparent;
     color: #fff;
   }
 
   .ms-tab-main {
     color: #3b82f6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ms-tab-pill {
+      transition: none;
+    }
+  }
+
+  body.ms-nav-open .ms-tabbar {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   body.ms-nav-open .ms-tabbar {
@@ -1167,11 +1199,11 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
   body[data-page="settings"] #page-body,
   body[data-page="builder"].ms-lb-setup #page-body,
   body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
-    padding-bottom: calc(6.15rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
   }
 
   .ios-install-banner {
-    bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px));
+    bottom: calc(3.7rem + env(safe-area-inset-bottom, 0px));
   }
 
   /* Keep titles clear of fixed menu / refresh chrome */

@@ -3865,9 +3865,11 @@
   function setSearchPillMode(mode) {
     if (!searchPill) return;
     const next = mode === "search" ? "search" : "idle";
-    const body = searchPill.querySelector(".ms-lf-map-pill-body");
+    if (searchPill.dataset.mode === next) {
+      if (next === "search") queryInput?.focus({ preventScroll: true });
+      return;
+    }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const from = !reduce && body && searchPill.dataset.mode !== next ? body.getBoundingClientRect() : null;
     searchPill.dataset.mode = next;
     if (searchClose) {
       searchClose.tabIndex = next === "search" ? 0 : -1;
@@ -3875,27 +3877,13 @@
     }
     if (next === "search") {
       setFilterSheet(false);
-      queryInput?.focus({ preventScroll: true });
+      // Let the pill morph settle before the keyboard jumps in.
+      const focusSearch = () => queryInput?.focus({ preventScroll: true });
+      if (reduce) focusSearch();
+      else window.setTimeout(focusSearch, 200);
     } else {
       queryInput?.blur();
     }
-    if (!from || !body) return;
-    const to = body.getBoundingClientRect();
-    const dx = from.left - to.left;
-    if (Math.abs(dx) < 0.5 && Math.abs(from.width - to.width) < 0.5) return;
-    body.style.transformOrigin = "left center";
-    const anim = body.animate(
-      [
-        { transform: "translateX(" + dx + "px)", width: from.width + "px" },
-        { transform: "translateX(0px)", width: to.width + "px" },
-      ],
-      { duration: 560, easing: "cubic-bezier(0.32, 0.72, 0, 1)" }
-    );
-    const clearOrigin = () => {
-      body.style.transformOrigin = "";
-    };
-    anim.onfinish = clearOrigin;
-    anim.oncancel = clearOrigin;
   }
 
   function scheduleMapInvalidate() {

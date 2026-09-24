@@ -1,8 +1,8 @@
 {
-  "name": "moonrise-studio",
+  "name": "moonrise",
   "version": "1.0.0",
   "private": true,
-  "description": "Moonrise Studio static app + API worker entry for Vercel",
+  "description": "Moonrise static app + API worker entry for Vercel",
   "engines": {
     "node": ">=18"
   },
