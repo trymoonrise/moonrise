@@ -1,6 +1,6 @@
 {
   "repo": "trymoonrise/moonrise-studio",
-  "sha": "72e11775bb553d7f96a21f8e215672dea8f160ff",
-  "committedAt": "2026-09-10T20:23:44-07:00",
-  "message": "Use one Passkey button for both sign-in and first-time create."
+  "sha": "2c7189f4bec8c5ac33ce18a7329dcce51114fcf4",
+  "committedAt": "2026-09-24T00:56:09-07:00",
+  "message": "Refresh studio phone chrome and ship the waiting finder, dashboard, and storage updates."
 }
