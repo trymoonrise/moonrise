@@ -1,6 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function () {
+      var BUILD = "20260924-console5";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        var reloaded = sessionStorage.getItem("ms_build_reloaded_" + BUILD);
+        if (prev !== BUILD || !reloaded) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <script src="js/auth-gate-head.js?v=20260909-login3"></script>
@@ -125,7 +154,7 @@
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/project-lifecycle.js?v=20260718-delete-fix"></script>
-  <script defer src="js/app.js?v=20260924-console4"></script>
+  <script defer src="js/app.js?v=20260924-console5"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
   <script defer src="js/dashboard.js?v=20260924-console"></script>
 </body>

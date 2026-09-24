@@ -838,6 +838,15 @@
       menuToggle.tabIndex = open ? -1 : 0;
     }
 
+    // Belt-and-suspenders: strip aria-hidden if any stale script re-adds it.
+    try {
+      new MutationObserver(() => {
+        if (menuToggle.hasAttribute("aria-hidden")) menuToggle.removeAttribute("aria-hidden");
+      }).observe(menuToggle, { attributes: true, attributeFilter: ["aria-hidden"] });
+    } catch (_) {
+      /* ignore */
+    }
+
     menuToggle.setAttribute("aria-expanded", "false");
     menuToggle.onclick = () => {
       setNavOpen(!document.body.classList.contains("ms-nav-open"));
@@ -1967,7 +1976,7 @@
       return;
     }
     const s = document.createElement("script");
-    s.src = "js/install-hint.js?v=20260924-console4";
+    s.src = "js/install-hint.js?v=20260924-console5";
     s.defer = true;
     document.head.appendChild(s);
   }

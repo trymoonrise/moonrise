@@ -146,28 +146,12 @@
     }
   }
 
-  function shouldDeferInstallPrompt() {
-    const page = String(document.body?.dataset?.page || "").toLowerCase();
-    if (page === "settings" || page === "download" || page === "login" || page === "onboarding") {
-      return true;
-    }
-    const path = String(window.location.pathname || "").toLowerCase();
-    return /(?:^|\/)(settings|download|login|onboarding)(?:\.html)?$/i.test(path);
-  }
 
   window.addEventListener("beforeinstallprompt", (e) => {
-    // Only defer on pages that offer Install. Elsewhere skip preventDefault so
-    // Chromium does not warn that the banner was suppressed without prompt().
-    if (!shouldDeferInstallPrompt()) return;
-    e.preventDefault();
-    deferredInstallPrompt = e;
-    const banner = document.getElementById("ios-install-banner");
-    const sub = banner?.querySelector(".ios-install-banner-text span");
-    if (sub) sub.innerHTML = installHintSubcopyHtml();
-    if (banner && isDesktopDevice()) {
-      banner.classList.add("ios-install-banner--installable");
-      banner.title = "Click to install Moonrise";
-    }
+    // Never call preventDefault — Chromium logs a noisy warning whenever the
+    // deferred prompt is captured without a later prompt() call. Settings →
+    // Download still documents how to install via the browser UI.
+    deferredInstallPrompt = null;
     notifyInstallStateChanged();
   });
   window.addEventListener("appinstalled", () => {
