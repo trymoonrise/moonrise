@@ -3181,6 +3181,53 @@
   const EDIT_DRAG_THRESHOLD_PX = 6;
   const PREVIEW_SANDBOX_PREVIEW = "allow-same-origin allow-scripts allow-forms";
   const PREVIEW_SANDBOX_EDIT = "allow-same-origin";
+
+  /** Remove scripts/handlers so edit-mode sandbox="" does not flood the console. */
+  function stripExecutableForEditSandbox(html) {
+    const raw = String(html || "");
+    if (!raw.trim()) return raw;
+    try {
+      const doc = new DOMParser().parseFromString(raw, "text/html");
+      doc
+        .querySelectorAll(
+          "script, iframe, object, embed, applet, frame, frameset, " +
+            "link[rel='preload'], link[rel='modulepreload'], link[rel='import'], " +
+            "link[as='script'], link[rel='prefetch'], link[rel='prerender']"
+        )
+        .forEach((node) => node.remove());
+      doc.querySelectorAll("*").forEach((el) => {
+        if (!el.attributes) return;
+        const drop = [];
+        for (let i = 0; i < el.attributes.length; i++) {
+          const attr = el.attributes[i];
+          const name = String(attr.name || "");
+          const value = String(attr.value || "");
+          if (/^on/i.test(name)) drop.push(name);
+          else if (
+            /^(href|src|xlink:href|action|formaction)$/i.test(name) &&
+            /^\s*(javascript|vbscript):/i.test(value)
+          ) {
+            drop.push(name);
+          }
+        }
+        drop.forEach((n) => el.removeAttribute(n));
+      });
+      const root = doc.documentElement;
+      return root ? "<!DOCTYPE html>\n" + root.outerHTML : raw;
+    } catch (_) {
+      return raw
+        .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+        .replace(/<script\b[^>]*\/?>/gi, "")
+        .replace(/\s+on[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "");
+    }
+  }
+
+  function previewSandboxAllowsScripts(frame) {
+    const sb = String(frame?.getAttribute("sandbox") || "");
+    // Empty sandbox attribute means all restrictions (no scripts).
+    if (frame?.hasAttribute("sandbox") && sb.trim() === "") return false;
+    return /\ballow-scripts\b/i.test(sb);
+  }
   const EDITABLE_TAGS = new Set([
     "img",
     "a",
@@ -3622,7 +3669,10 @@
     void frame.offsetWidth;
     setPreviewFrameViewportClass(frame, state.viewport);
     applyPreviewViewportSize();
-    const safeHtml = closeIncompleteHtml(ensureMobileFriendlyHtml(injectContactFormPreviewHtml(html)));
+    const safeHtmlRaw = closeIncompleteHtml(ensureMobileFriendlyHtml(injectContactFormPreviewHtml(html)));
+    const safeHtml = previewSandboxAllowsScripts(frame)
+      ? safeHtmlRaw
+      : stripExecutableForEditSandbox(safeHtmlRaw);
     revokePreviewObjectUrl();
     // Force nav rebind after a fresh document load.
     editState.uploadNavDoc = null;

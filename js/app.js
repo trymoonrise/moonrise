@@ -1962,8 +1962,16 @@
   function ensureInstallHintScript() {
     if (window.__msInstallHintBooted) return;
     if (document.querySelector('script[src*="install-hint.js"]')) return;
+    // Only load on pages that offer Install — avoids Chromium's
+    // "Banner not shown: preventDefault()" warning everywhere else.
+    const page = String(document.body?.dataset?.page || "").toLowerCase();
+    if (page && !/^(settings|download|login|onboarding)$/.test(page)) return;
+    const path = String(window.location.pathname || "").toLowerCase();
+    if (!page && !/(?:^|\/)(settings|download|login|onboarding)(?:\.html)?$/i.test(path)) {
+      return;
+    }
     const s = document.createElement("script");
-    s.src = "js/install-hint.js?v=20260924-console";
+    s.src = "js/install-hint.js?v=20260924-console2";
     s.defer = true;
     document.head.appendChild(s);
   }
