@@ -7441,61 +7441,12 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 
 .ms-lb-mode-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: stretch;
   gap: 0.35rem;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-}
-
-.ms-lb-maximize {
-  justify-self: end;
-  align-self: stretch;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 2.55rem;
-  min-height: 2.35rem;
-  padding: 0;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background: #fff;
-  color: #334155;
-  cursor: pointer;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-  transition:
-    color 0.18s ease,
-    border-color 0.18s ease,
-    background 0.18s ease,
-    transform 0.18s ease;
-}
-
-.ms-lb-maximize svg {
-  width: 16px;
-  height: 16px;
-}
-
-.ms-lb-maximize:hover {
-  color: var(--ms-accent, #2563eb);
-  border-color: #cbd5e1;
-  background: #f8fafc;
-}
-
-.ms-lb-maximize:active {
-  transform: scale(0.96);
-}
-
-.ms-lb-maximize.is-active {
-  color: var(--ms-accent, #2563eb);
-  border-color: color-mix(in srgb, var(--ms-accent, #2563eb) 35%, #e2e8f0);
-  background: color-mix(in srgb, var(--ms-accent, #2563eb) 8%, #fff);
-}
-
-.ms-lb-maximize:focus-visible {
-  outline: 2px solid #93c5fd;
-  outline-offset: 2px;
 }
 
 .ms-lb-back {
@@ -7620,6 +7571,8 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
   place-items: center;
   position: relative;
   z-index: 1;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .ms-lb-icon-btn svg {
@@ -7778,20 +7731,12 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
   font-size: 0.78rem;
 }
 
-.ms-lb-body > .ms-lb-chrome-bar .ms-lb-maximize {
-  align-self: stretch;
-  height: auto;
-  min-height: 0;
-  width: 2.5rem;
-  border-radius: 13px;
-}
-
 .ms-lb-body > .ms-lb-chrome-bar .ms-lb-mode-btn {
   min-width: 0;
-  gap: 0.28rem;
-  padding: 0.48rem 0.58rem;
-  font-size: 0.79rem;
-  flex: 1;
+  gap: 0.32rem;
+  padding: 0.52rem 0.7rem;
+  font-size: 0.82rem;
+  flex: 1 1 0;
   justify-content: center;
   white-space: nowrap;
 }
@@ -9387,12 +9332,80 @@ body.ms-lb-vp-resizing .ms-preview-frame-shell,
 }
 
 body.ms-lb-fullscreen {
-  overflow: hidden;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+  /* Kill channel-hop / motion transforms that trap position:fixed children. */
+  #page-body,
+  #builder-workspace,
+  .ms-builder-page,
+  .ms-lb-stage {
+    transform: none !important;
+    filter: none !important;
+    perspective: none !important;
+  }
 }
 
 body.ms-lb-fullscreen .ms-preview-frame-wrap,
 body.ms-lb-fullscreen .ms-preview-frame-shell {
   overflow: visible !important;
+}
+
+/* Pin the preview stage to the real viewport so mobile overflow scroll
+   containers cannot trap the fullscreen iframe (iOS Safari). */
+body.ms-lb-fullscreen #builder-workspace,
+body.ms-lb-fullscreen .ms-builder-page,
+body.ms-lb-fullscreen .ms-lb-stage,
+body.ms-lb-fullscreen .ms-lb-body {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  -webkit-overflow-scrolling: auto;
+  z-index: 70;
+}
+
+body.ms-lb-fullscreen .ms-lb-main {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 71;
+  order: 0 !important;
+  flex: none !important;
+}
+
+body.ms-lb-fullscreen .ms-lb-browser,
+body.ms-lb-fullscreen .ms-preview-frame-wrap,
+body.ms-lb-fullscreen .ms-preview-frame-shell {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  border-radius: 0 !important;
+  z-index: 72;
+}
+
+body.ms-lb-fullscreen .ms-preview-frame.is-fullscreen {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 73;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-width: none !important;
 }
 
 body.ms-lb-fullscreen .ms-lb-chrome {
@@ -9434,6 +9447,7 @@ body.ms-lb-fullscreen .ms-lb-chrome {
 body.ms-lb-fullscreen .ms-lb-side,
 body.ms-lb-fullscreen .ms-lb-pane-resizer,
 body.ms-lb-fullscreen .ms-lb-body > .ms-lb-chrome-bar {
+  display: none !important;
   visibility: hidden;
   pointer-events: none;
 }
@@ -13594,7 +13608,7 @@ body.ms-legal-site {
     max-width: none !important;
   }
   body.ms-lb-fullscreen .ms-lb-body {
-    padding-top: max(0.55rem, env(safe-area-inset-top, 0px));
+    padding: 0 !important;
   }
   .ms-lb-nav-btn {
     padding: 0.42rem 0.72rem;
@@ -13603,7 +13617,7 @@ body.ms-legal-site {
   .ms-lb-mode { padding: 0.18rem; }
   .ms-lb-mode-btn { padding: 0.42rem 0.7rem; font-size: 0.84rem; }
   .ms-lb-body > .ms-lb-chrome-bar .ms-lb-mode-row {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr);
     gap: 0.4rem;
   }
   .ms-lb-body > .ms-lb-chrome-bar .ms-lb-mode {
@@ -13617,23 +13631,13 @@ body.ms-legal-site {
   .ms-lb-body > .ms-lb-chrome-bar .ms-lb-mode-btn {
     flex: 1 1 0;
     min-width: 0;
-    padding: 0.55rem 0.35rem;
+    padding: 0.55rem 0.45rem;
     font-size: 0.84rem;
     gap: 0.28rem;
   }
   .ms-lb-body > .ms-lb-chrome-bar .ms-lb-mode-btn svg {
     width: 16px;
     height: 16px;
-  }
-  .ms-lb-body > .ms-lb-chrome-bar .ms-lb-maximize {
-    width: 2.65rem;
-    min-height: 0;
-    align-self: stretch;
-    border-radius: 13px;
-  }
-  .ms-lb-body > .ms-lb-chrome-bar .ms-lb-maximize svg {
-    width: 17px;
-    height: 17px;
   }
   .ms-lb-topbar {
     grid-template-columns: auto 1fr auto;
@@ -17351,6 +17355,13 @@ body.ms-payouts-modal-open {
   cursor: pointer;
   transform: translateY(-50%);
   transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ms-clients-search-clear svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+  pointer-events: none;
 }
 
 .ms-clients-search-clear:hover {

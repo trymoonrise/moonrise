@@ -2685,10 +2685,49 @@
   function syncFullscreenUi() {
     const isFs = state.viewport === "fullscreen";
     document.body.classList.toggle("ms-lb-fullscreen", isFs);
+    document.documentElement.classList.toggle("ms-lb-fullscreen", isFs);
+
     const exitBtn = document.getElementById("lb-exit-fullscreen");
-    if (exitBtn) exitBtn.hidden = !isFs;
     const browser = document.getElementById("preview-browser");
     if (browser) browser.classList.toggle("is-fullscreen", isFs);
+
+    if (exitBtn) {
+      // Keep the exit control on <body> so it is never trapped under mobile
+      // overflow / stacking contexts inside the builder stage.
+      if (isFs) {
+        if (exitBtn.parentElement !== document.body) {
+          if (!exitBtn.dataset.msFsHome) {
+            const home = exitBtn.parentElement;
+            if (home?.id) exitBtn.dataset.msFsHome = "#" + home.id;
+            else exitBtn.dataset.msFsHome = "preview-browser";
+          }
+          document.body.appendChild(exitBtn);
+        }
+        exitBtn.hidden = false;
+        exitBtn.removeAttribute("hidden");
+      } else {
+        exitBtn.hidden = true;
+        exitBtn.setAttribute("hidden", "");
+        const homeSel = exitBtn.dataset.msFsHome;
+        let home = null;
+        if (homeSel && homeSel.startsWith("#")) home = document.getElementById(homeSel.slice(1));
+        if (!home) home = document.getElementById("preview-browser") || browser;
+        if (home && exitBtn.parentElement !== home) home.appendChild(exitBtn);
+      }
+    }
+
+    // Nudge layout after class changes so mobile browsers recompute the
+    // fixed fullscreen stage (especially after scroll-container traps).
+    if (isFs) {
+      requestAnimationFrame(() => {
+        applyPreviewViewportSize();
+        try {
+          window.scrollTo(0, 0);
+        } catch (_) {
+          /* ignore */
+        }
+      });
+    }
   }
 
   const VIEWPORT_WIDTH_LIMITS = {
@@ -9470,7 +9509,8 @@
       });
     });
     document.querySelectorAll(".is-vp").forEach((btn) => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
         const vp = btn.dataset.vp;
         if (vp === "fullscreen" && state.viewport === "fullscreen") {
           exitFullscreen();
@@ -9494,6 +9534,12 @@
           return;
         }
         setViewport(vp);
+        if (vp === "fullscreen") {
+          // updatePreview can re-park/size before the fullscreen class settles on mobile.
+          syncFullscreenUi();
+          applyPreviewViewportSize();
+          return;
+        }
         updatePreview();
       });
     });
