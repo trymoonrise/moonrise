@@ -59,49 +59,6 @@
     return `<span class="${cls} is-fallback" aria-hidden="true">${escapeHtml(entry?.initials || "?")}</span>`;
   }
 
-  function podiumMedal(rank) {
-    return "#" + (Number(rank) || "");
-  }
-
-  function podiumSlotClass(rank) {
-    if (rank === 1) return " is-first";
-    if (rank === 2) return " is-second";
-    if (rank === 3) return " is-third";
-    return "";
-  }
-
-  function renderPodiumSlot(entry) {
-    const rank = Number(entry.rank) || 0;
-    const name = escapeHtml(entry.name || "Supporter");
-    const total = escapeHtml(entry.totalLabel || "");
-    const message = String(entry.message || "").trim();
-    const messageHtml = message
-      ? `<p class="ms-ldb-podium-note">“${escapeHtml(message)}”</p>`
-      : `<p class="ms-ldb-podium-note is-muted">Supported Moonrise</p>`;
-
-    return (
-      `<article class="ms-ldb-podium-slot${podiumSlotClass(rank)}">` +
-      `<span class="ms-ldb-podium-medal" aria-hidden="true">${podiumMedal(rank)}</span>` +
-      lbAvatarHtml(entry, "ms-ldb-podium-avatar", rank === 1 ? 48 : 44) +
-      `<strong class="ms-ldb-podium-name">${name}</strong>` +
-      `<span class="ms-ldb-podium-amount">${total}</span>` +
-      messageHtml +
-      `</article>`
-    );
-  }
-
-  function renderPodium(podiumEl, entries) {
-    if (!podiumEl) return;
-    const top = (Array.isArray(entries) ? entries : []).slice(0, 3);
-    if (!top.length) {
-      podiumEl.hidden = true;
-      podiumEl.innerHTML = "";
-      return;
-    }
-    podiumEl.innerHTML = top.map((entry) => renderPodiumSlot(entry)).join("");
-    podiumEl.hidden = false;
-  }
-
   function renderRankRow(entry) {
     const rank = Number(entry.rank) || 0;
     const name = escapeHtml(entry.name || "Supporter");
@@ -122,83 +79,35 @@
     );
   }
 
-  function renderRankList(listEl, entries, options) {
+  function renderRankList(listEl, entries) {
     if (!listEl) return;
-    const opts = options && typeof options === "object" ? options : {};
-    const skipTop = Math.max(0, Number(opts.skipTop) || 0);
-    const showPlaceholder = opts.showPlaceholder !== false;
-    const rest = (Array.isArray(entries) ? entries : []).slice(skipTop);
-
-    if (!rest.length) {
-      if (entries?.length && skipTop > 0) {
-        listEl.innerHTML =
-          '<li class="ms-ldb-empty">More supporters will appear here as the community grows.</li>';
-        return;
-      }
-      if (!entries?.length && showPlaceholder) {
-        listEl.innerHTML =
-          `<li class="ms-ldb-row ms-ldb-row--placeholder">` +
-          `<span class="ms-ldb-row-rank" aria-hidden="true">—</span>` +
-          lbAvatarHtml({ avatarUrl: "doc/pfp.png", initials: "?" }, "ms-ldb-row-avatar", 40) +
-          `<div class="ms-ldb-row-copy">` +
-          `<strong class="ms-ldb-row-name">Your name could be here</strong>` +
-          `<p class="ms-ldb-row-note is-muted">Donate any amount and leave a note on the wall.</p>` +
-          `</div>` +
-          `<span class="ms-ldb-row-amount">—</span>` +
-          `</li>`;
-        return;
-      }
-      listEl.innerHTML = '<li class="ms-ldb-empty">Everyone in the top 3 is listed above.</li>';
+    const list = Array.isArray(entries) ? entries : [];
+    if (!list.length) {
+      listEl.innerHTML =
+        '<li class="ms-ldb-empty">No supporters yet. <a href="donate.html">Be the first.</a></li>';
       return;
     }
-
-    listEl.innerHTML = rest.map((entry) => renderRankRow(entry)).join("");
+    listEl.innerHTML = list.map((entry) => renderRankRow(entry)).join("");
   }
 
   function renderFullPageLoading(refs) {
-    if (refs?.podiumEl) {
-      refs.podiumEl.hidden = false;
-      refs.podiumEl.innerHTML =
-        `<article class="ms-ldb-podium-slot is-skeleton is-first"></article>` +
-        `<article class="ms-ldb-podium-slot is-skeleton is-second"></article>` +
-        `<article class="ms-ldb-podium-slot is-skeleton is-third"></article>`;
-    }
-    if (refs?.podiumEmptyEl) refs.podiumEmptyEl.hidden = true;
     if (refs?.listEl) {
       refs.listEl.innerHTML =
-        `<li class="ms-ldb-row is-skeleton" aria-hidden="true"></li>`.repeat(4);
+        `<li class="ms-ldb-row is-skeleton" aria-hidden="true"></li>`.repeat(6);
       refs.listEl.setAttribute("aria-busy", "true");
     }
     if (refs?.countEl) refs.countEl.textContent = "—";
     if (refs?.totalEl) refs.totalEl.textContent = "—";
   }
 
-  function renderFullPage(refs, entries, options) {
-    const opts = options && typeof options === "object" ? options : {};
+  function renderFullPage(refs, entries) {
     const list = Array.isArray(entries) ? entries : [];
     const stats = computeStats(list);
 
     if (refs?.countEl) refs.countEl.textContent = String(stats.count);
     if (refs?.totalEl) refs.totalEl.textContent = stats.totalLabel;
-
-    if (!list.length) {
-      if (refs?.podiumEl) {
-        refs.podiumEl.hidden = true;
-        refs.podiumEl.innerHTML = "";
-      }
-      if (refs?.podiumEmptyEl) refs.podiumEmptyEl.hidden = false;
-      renderRankList(refs?.listEl, [], { showPlaceholder: opts.showPlaceholder !== false });
-      clearLoading(refs?.listEl);
-      return;
-    }
-
-    if (refs?.podiumEmptyEl) refs.podiumEmptyEl.hidden = true;
-    renderPodium(refs?.podiumEl, list);
     clearLoading(refs?.listEl);
-    renderRankList(refs?.listEl, list, {
-      skipTop: Math.min(3, list.length),
-      showPlaceholder: false,
-    });
+    renderRankList(refs?.listEl, list);
   }
 
   function renderEntry(entry) {

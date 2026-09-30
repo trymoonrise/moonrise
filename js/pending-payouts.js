@@ -196,9 +196,11 @@
 
   function filteredRows() {
     const q = searchQuery.trim().toLowerCase();
-    const pool = rows.filter((row) =>
-      view === "paid" ? row.payout_status === "paid" : row.payout_status !== "paid"
-    );
+    const pool = rows.filter((row) => {
+      const status = String(row.payout_status || "pending").toLowerCase();
+      if (status === "cancelled") return false;
+      return view === "paid" ? status === "paid" : status !== "paid";
+    });
     if (!q) return pool;
     return pool.filter((row) =>
       [
@@ -222,7 +224,10 @@
   }
 
   function updateSummary() {
-    const pending = rows.filter((row) => row.payout_status !== "paid");
+    const pending = rows.filter((row) => {
+      const status = String(row.payout_status || "pending").toLowerCase();
+      return status !== "paid" && status !== "cancelled";
+    });
     const totalOwed = pending.reduce(
       (sum, row) => sum + (Number(row.creator_share_cents) || 0),
       0
@@ -318,7 +323,10 @@
               : ""
             : '<button type="button" class="ms-btn ms-btn-secondary ms-payouts-mark-paid" data-project-id="' +
               esc(row.project_id) +
-              '">Mark paid</button>';
+              '">Mark paid</button>' +
+              '<button type="button" class="ms-btn ms-btn-danger ms-payouts-remove" data-project-id="' +
+              esc(row.project_id) +
+              '">Remove</button>';
 
         return (
           '<article class="ms-payouts-item" role="listitem" data-project-id="' +
@@ -464,6 +472,7 @@
         const project = projectMap.get(String(payment.project_id || ""));
         if (!isGoLivePayment(payment, project)) return;
         const payoutRecord = payoutMap.get(String(project.id)) || null;
+        if (String(payoutRecord?.status || "").toLowerCase() === "cancelled") return;
         built.push(
           buildRow({
             payment,
@@ -606,6 +615,114 @@
     }
   }
 
+  function askRemovePayout(row) {
+    return new Promise((resolve) => {
+      const modal = $("ms-payouts-remove-modal");
+      const summary = $("ms-payouts-remove-summary");
+      const cancelBtn = $("ms-payouts-remove-cancel");
+      const confirmBtn = $("ms-payouts-remove-confirm");
+      if (!modal || !cancelBtn || !confirmBtn) {
+        resolve(false);
+        return;
+      }
+
+      const creator = row.creator_handle ? "@" + row.creator_handle : row.creator_display_name || "—";
+      const owed = formatMoney(row.creator_share_cents) || "$0.00";
+      if (summary) {
+        summary.innerHTML =
+          '<div class="ms-payouts-modal-summary-row"><span>Business</span><strong>' +
+          esc(row.business_name || "Untitled business") +
+          "</strong></div>" +
+          '<div class="ms-payouts-modal-summary-row"><span>Creator</span><strong>' +
+          esc(creator) +
+          "</strong></div>" +
+          '<div class="ms-payouts-modal-summary-row"><span>Owed</span><strong>' +
+          esc(owed) +
+          "</strong></div>";
+      }
+
+      modal.hidden = false;
+      modal.classList.add("is-open");
+      document.body.classList.add("ms-payouts-modal-open");
+      window.setTimeout(() => confirmBtn.focus(), 30);
+
+      const finish = (value) => {
+        modal.hidden = true;
+        modal.classList.remove("is-open");
+        document.body.classList.remove("ms-payouts-modal-open");
+        modal.removeEventListener("click", onBackdrop);
+        cancelBtn.removeEventListener("click", onCancel);
+        confirmBtn.removeEventListener("click", onConfirm);
+        document.removeEventListener("keydown", onKey);
+        resolve(value);
+      };
+
+      const onCancel = () => finish(false);
+      const onConfirm = () => finish(true);
+      const onBackdrop = (e) => {
+        if (e.target === modal) finish(false);
+      };
+      const onKey = (e) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          finish(false);
+        }
+      };
+
+      cancelBtn.addEventListener("click", onCancel);
+      confirmBtn.addEventListener("click", onConfirm);
+      modal.addEventListener("click", onBackdrop);
+      document.addEventListener("keydown", onKey);
+    });
+  }
+
+  async function removePayout(projectId) {
+    const row = rows.find((item) => String(item.project_id) === String(projectId));
+    if (!row) return;
+    if (String(row.payout_status || "").toLowerCase() === "paid") return;
+    const sb = getSb();
+    if (!sb) {
+      setBanner("Supabase is not connected.", true);
+      return;
+    }
+
+    const ok = await askRemovePayout(row);
+    if (!ok) return;
+
+    const payload = {
+      payment_id: row.payment_id,
+      project_id: row.project_id,
+      creator_user_id: row.creator_user_id,
+      sale_cents: row.sale_cents,
+      creator_share_cents: row.creator_share_cents,
+      platform_share_cents: row.platform_share_cents,
+      status: "cancelled",
+      payout_method: row.payout_method || null,
+      payout_handle: row.payout_handle || null,
+      payout_email: row.payout_email || null,
+      payout_phone: row.payout_phone || null,
+      paid_out_at: null,
+      paid_out_note: "Removed from the pending queue",
+    };
+
+    try {
+      if (!payoutsTableReady) {
+        throw new Error("Payout tracking table is not ready yet.");
+      }
+      const { error } = await withTimeout(
+        sb.from("creator_payouts").upsert(payload, { onConflict: "project_id" }),
+        QUERY_MS,
+        "Removing payout"
+      );
+      if (error) throw error;
+      rows = rows.filter((item) => String(item.project_id) !== String(projectId));
+      renderRows();
+      window.StudioToast?.success?.("Payout removed.");
+    } catch (e) {
+      setBanner(e?.message || "Could not remove payout.", true);
+    }
+  }
+
   function downloadCsv() {
     const visible = filteredRows();
     if (!visible.length) {
@@ -695,10 +812,16 @@
 
     $("ms-payouts-download-csv")?.addEventListener("click", downloadCsv);
     $("ms-payouts-body")?.addEventListener("click", (e) => {
-      const btn = e.target.closest(".ms-payouts-mark-paid");
-      if (!btn) return;
+      const paidBtn = e.target.closest(".ms-payouts-mark-paid");
+      if (paidBtn) {
+        e.preventDefault();
+        void markPaid(paidBtn.getAttribute("data-project-id"));
+        return;
+      }
+      const removeBtn = e.target.closest(".ms-payouts-remove");
+      if (!removeBtn) return;
       e.preventDefault();
-      void markPaid(btn.getAttribute("data-project-id"));
+      void removePayout(removeBtn.getAttribute("data-project-id"));
     });
   }
 

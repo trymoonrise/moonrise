@@ -65,8 +65,13 @@ async function recordPendingCreatorPayout(supabase, { projectId, ownerId, sessio
       .select("status")
       .eq("project_id", projectId)
       .maybeSingle();
-    if (String(existing?.status || "").toLowerCase() === "paid") {
-      return { ok: true, skipped: true, reason: "already_paid" };
+    const existingStatus = String(existing?.status || "").toLowerCase();
+    if (existingStatus === "paid" || existingStatus === "cancelled") {
+      return {
+        ok: true,
+        skipped: true,
+        reason: existingStatus === "paid" ? "already_paid" : "removed",
+      };
     }
 
     const { error } = await supabase.from("creator_payouts").upsert(

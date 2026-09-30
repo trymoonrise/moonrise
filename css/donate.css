@@ -806,50 +806,41 @@ body[data-page="leaderboard"]::before {
 }
 
 .ms-ldb-lead {
-  margin: 0.65rem 0 0;
+  margin: 0.45rem 0 0;
   max-width: 28rem;
   font-size: 0.95rem;
-  line-height: 1.55;
+  line-height: 1.5;
   color: #64748b;
 }
 
 .ms-ldb-meta {
   display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin: 1.35rem 0 0;
+  align-items: baseline;
   flex-wrap: wrap;
-}
-
-.ms-ldb-meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  min-width: 0;
+  gap: 0.35rem;
+  margin: 0.85rem 0 0;
 }
 
 .ms-ldb-meta-value {
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: #0f172a;
   font-variant-numeric: tabular-nums;
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
 .ms-ldb-meta-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #94a3b8;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #64748b;
 }
 
-.ms-ldb-meta-sep {
-  width: 1px;
-  height: 2.1rem;
-  background: rgba(15, 23, 42, 0.1);
-  flex-shrink: 0;
+.ms-ldb-meta-dot {
+  margin: 0 0.2rem;
+  color: #cbd5e1;
 }
 
 .ms-ldb-cta {
@@ -1060,52 +1051,65 @@ body[data-page="leaderboard"]::before {
 }
 
 .ms-ldb-list {
-  margin: 0;
-  padding: 0;
+  margin: 1.35rem 0 0;
+  padding: 0.2rem 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid rgba(15, 23, 42, 0.07);
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 18px;
 }
 
 .ms-ldb-list > .ms-ldb-empty {
   margin: 0;
   border: 0;
   border-radius: 0;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
   background: transparent;
-  padding: 1.15rem 0.15rem;
+  padding: 1.15rem 1rem;
+}
+
+.ms-ldb-empty a {
+  color: #2563eb;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.ms-ldb-empty a:hover {
+  text-decoration: underline;
 }
 
 .ms-ldb-row {
   display: grid;
-  grid-template-columns: 2rem 2.5rem minmax(0, 1fr) auto;
+  grid-template-columns: 1.6rem 2.5rem minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 0.15rem;
+  gap: 0.7rem;
+  padding: 0.8rem 0.95rem;
   border: 0;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
   border-radius: 0;
   background: transparent;
 }
 
-.ms-ldb-row.is-gold .ms-ldb-row-rank,
-.ms-ldb-row.is-silver .ms-ldb-row-rank,
-.ms-ldb-row.is-bronze .ms-ldb-row-rank {
-  background: #eff6ff;
+.ms-ldb-row:last-child {
+  border-bottom: 0;
+}
+
+.ms-ldb-row.is-gold .ms-ldb-row-rank {
+  background: none;
   color: #2563eb;
 }
 
 .ms-ldb-row-rank {
-  width: 1.65rem;
-  height: 1.65rem;
+  width: auto;
+  height: auto;
   display: inline-grid;
   place-items: center;
-  border-radius: 999px;
-  background: #f1f5f9;
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #64748b;
+  border-radius: 0;
+  background: none;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #94a3b8;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1169,43 +1173,9 @@ body[data-page="leaderboard"]::before {
 }
 
 @media (max-width: 640px) {
-  .ms-ldb-podium {
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  .ms-ldb-podium:has(> :only-child),
-  .ms-ldb-podium:has(> :first-child:nth-last-child(2)) {
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
   .ms-ldb-row {
-    grid-template-columns: 1.65rem minmax(0, 1fr) auto;
-    grid-template-rows: auto auto;
-    column-gap: 0.65rem;
-    row-gap: 0.15rem;
-  }
-
-  .ms-ldb-row-avatar {
-    display: none;
-  }
-
-  .ms-ldb-row-rank {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    align-self: center;
-  }
-
-  .ms-ldb-row-copy {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
-
-  .ms-ldb-row-amount {
-    grid-column: 3;
-    grid-row: 1 / span 2;
-    align-self: center;
+    grid-template-columns: 1.35rem 2.25rem minmax(0, 1fr) auto;
+    column-gap: 0.6rem;
   }
 
   #page-body.ms-donate-page {

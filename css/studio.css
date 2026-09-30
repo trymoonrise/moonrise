@@ -1093,32 +1093,36 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     position: fixed;
     left: 50%;
     right: auto;
-    bottom: calc(0.55rem + env(safe-area-inset-bottom, 0px));
+    bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px));
     z-index: 140;
-    width: min(22.5rem, calc(100% - 1.5rem));
+    width: min(26rem, calc(100% - 1.25rem));
     min-height: 0;
     margin: 0;
-    padding: 0.32rem;
+    padding: 0.3rem;
     box-sizing: border-box;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
-    gap: 0.1rem;
-    background: #fff;
-    border: 1px solid rgba(37, 99, 235, 0.16);
-    border-radius: 999px;
-    box-shadow: 0 14px 32px rgba(37, 99, 235, 0.18);
+    gap: 0;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 22px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 12px 32px rgba(15, 23, 42, 0.1);
+    backdrop-filter: saturate(1.4) blur(18px);
+    -webkit-backdrop-filter: saturate(1.4) blur(18px);
     transform: translate3d(-50%, 0, 0);
   }
 
   .ms-tab-pill {
     position: absolute;
-    top: 0.32rem;
+    top: 0.3rem;
     left: 0;
     z-index: 0;
-    height: 46px;
+    height: 52px;
     width: 0;
-    border-radius: 999px;
-    background: #2563eb;
+    border-radius: 16px;
+    background: #f1f5f9;
     pointer-events: none;
     transform: translate3d(0, 0, 0);
     transition:
@@ -1132,19 +1136,21 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     z-index: 1;
     flex: 1 1 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 0.16rem;
     min-width: 0;
-    height: 46px;
-    min-height: 46px;
-    padding: 0;
-    border-radius: 999px;
-    color: #3b82f6;
+    height: 52px;
+    min-height: 52px;
+    padding: 0 0.1rem;
+    border-radius: 16px;
+    color: #64748b;
     background: transparent;
     text-decoration: none;
     line-height: 1;
     -webkit-tap-highlight-color: transparent;
-    transition: color 0.28s ease, transform 0.15s ease;
+    transition: color 0.2s ease, transform 0.15s ease;
   }
 
   .ms-tab:active {
@@ -1171,26 +1177,44 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
 
   .ms-tab-ico svg,
   .ms-tab-orb svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     display: block;
   }
 
   .ms-tab-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
+    position: static;
+    width: 100%;
+    height: auto;
+    margin: 0;
     padding: 0;
-    margin: -1px;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    clip: auto;
+    font-size: 0.62rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-align: center;
+    text-overflow: ellipsis;
     white-space: nowrap;
     border: 0;
   }
 
   .ms-tab.is-active {
+    background: #f1f5f9;
+    color: #0f172a;
+  }
+
+  .ms-tabbar.is-pill-ready .ms-tab.is-active {
     background: transparent;
-    color: #fff;
+  }
+
+  .ms-tab.is-active .ms-tab-ico {
+    color: #2563eb;
+  }
+
+  .ms-tab.is-active .ms-tab-ico svg {
+    stroke-width: 2.15;
   }
 
   .ms-tab-main {
@@ -1220,11 +1244,23 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
   body[data-page="settings"] #page-body,
   body[data-page="builder"].ms-lb-setup #page-body,
   body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
-    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(6.4rem + env(safe-area-inset-bottom, 0px));
   }
 
   .ios-install-banner {
-    bottom: calc(3.7rem + env(safe-area-inset-bottom, 0px));
+    bottom: calc(5.1rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (max-width: 380px) {
+    .ms-tab-label {
+      font-size: 0.56rem;
+    }
+
+    .ms-tab-ico svg,
+    .ms-tab-orb svg {
+      width: 18px;
+      height: 18px;
+    }
   }
 
   /* Keep titles clear of fixed menu / refresh chrome */
@@ -1659,27 +1695,31 @@ body[data-page="dashboard"] {
 }
 
 .ms-dash-progress-card {
-  display: flex;
-  justify-content: center;
+  display: block;
+  padding: 1.35rem 1.4rem 1.25rem;
 }
 
 .ms-dash-progress-layout {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  justify-content: center;
-  gap: clamp(1rem, 2.5vw, 1.75rem);
-  width: min(100%, 640px);
-  margin: 0 auto;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  width: 100%;
+  margin: 0;
+}
+
+.ms-dash-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
 }
 
 .ms-dash-overview-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(7.5rem, 1fr));
-  grid-template-rows: repeat(2, auto);
-  gap: 0.65rem;
-  flex: 1 1 17.5rem;
-  width: min(100%, 22.5rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  width: 100%;
   min-width: 0;
 }
 
@@ -1699,31 +1739,39 @@ body[data-page="dashboard"] {
 
 .ms-dash-metric {
   display: grid;
-  gap: 0.2rem;
-  justify-items: stretch;
-  text-align: center;
-  padding: 0.55rem 0.45rem 0.65rem;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
-  border: 1px solid #e2e8f0;
+  gap: 0.15rem;
+  justify-items: start;
+  text-align: left;
+  padding: 0.85rem 0.95rem 0.8rem;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e8edf5;
   min-width: 0;
 }
 
-.ms-dash-metric--earned .ms-dash-metric-value,
-.ms-dash-metric--sales .ms-dash-metric-value {
-  color: #2563eb;
-}
-
 .ms-dash-metric-label {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #94a3b8;
 }
 
+.ms-dash-metric-edit {
+  margin-left: 0.35rem;
+  color: #2563eb;
+  letter-spacing: 0.05em;
+}
+
+.ms-dash-metric-hint {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #94a3b8;
+}
+
 .ms-dash-metric-value {
-  font-size: 1.15rem;
+  font-size: clamp(1.2rem, 1.6vw, 1.45rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   color: #0f172a;
@@ -1747,17 +1795,18 @@ body[data-page="dashboard"] {
   border: 0;
   background: transparent;
   padding: 0;
-  margin: 0 auto;
+  margin: 0;
   font: inherit;
-  font-size: 1.15rem;
+  font-size: clamp(1.2rem, 1.6vw, 1.45rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   color: #0f172a;
   font-variant-numeric: tabular-nums;
   line-height: 1.15;
   cursor: pointer;
-  width: 100%;
-  text-align: center;
+  width: auto;
+  max-width: 100%;
+  text-align: left;
 }
 
 .ms-dash-goal-display:focus-visible {
@@ -1776,8 +1825,8 @@ body[data-page="dashboard"] {
   font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  text-align: center;
-  padding: 0.15rem 0.25rem;
+  text-align: left;
+  padding: 0.15rem 0.4rem;
   font-variant-numeric: tabular-nums;
   box-sizing: border-box;
 }
@@ -1787,22 +1836,21 @@ body[data-page="dashboard"] {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
 }
 
-.ms-dash-metric--goal.is-editing .ms-dash-goal-display {
+.ms-dash-metric--goal.is-editing .ms-dash-goal-display,
+.ms-dash-metric--goal.is-editing .ms-dash-metric-edit {
   display: none;
 }
 
 .ms-dash-ring-wrap {
-  flex: 0 0 auto;
-  width: min(100%, 240px);
-  max-width: 240px;
+  width: clamp(168px, 28vw, 220px);
+  max-width: 220px;
   display: grid;
   place-items: center;
-  padding: 0.15rem 0;
 }
 
 .ms-dash-ring {
   position: relative;
-  width: min(100%, 260px);
+  width: 100%;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -1817,28 +1865,30 @@ body[data-page="dashboard"] {
 }
 
 .ms-dash-ring-track {
-  stroke: #dbeafe;
-  stroke-width: 18;
+  stroke: #e7eef8;
+  stroke-width: 34;
 }
 
 .ms-dash-ring-prog {
-  stroke: #3b82f6;
-  stroke-width: 18;
+  stroke: #2563eb;
+  stroke-width: 34;
   stroke-linecap: round;
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   transition: stroke-dashoffset 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.25));
 }
 
 .ms-dash-ring-center {
   position: relative;
   z-index: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.12rem;
   text-align: center;
-  padding: 0 0.75rem;
+  width: 58%;
+  padding: 0;
 }
 
 .ms-dash-ring-progress {
@@ -1850,12 +1900,33 @@ body[data-page="dashboard"] {
 }
 
 .ms-dash-ring-value {
-  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-size: clamp(1.7rem, 2.4vw, 2.15rem);
   font-weight: 700;
-  letter-spacing: -0.04em;
-  color: #1d4ed8;
+  letter-spacing: -0.045em;
+  color: #0f172a;
   font-variant-numeric: tabular-nums;
   line-height: 1;
+}
+
+.ms-dash-ring-kicker {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  line-height: 1;
+}
+
+.ms-dash-ring-sub {
+  margin: 0.2rem 0 0;
+  max-width: 100%;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: #2563eb;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
 }
 
 .ms-dash-stat-label {
@@ -1876,32 +1947,32 @@ body[data-page="dashboard"] {
   width: 100%;
 }
 
-.ms-dash-overview-grid .ms-dash-tool {
+.ms-dash-overview .ms-dash-tool {
   width: 100%;
-  min-height: 3.25rem;
+  min-height: 2.75rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  padding: 0.75rem 0.65rem;
+  gap: 0.45rem;
+  padding: 0.65rem 0.9rem;
   border-radius: 12px;
-  background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+  background: #fff;
   border: 1px solid #e2e8f0;
   text-align: left;
   text-decoration: none;
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   font-weight: 650;
   line-height: 1.2;
   box-shadow: none;
 }
 
-.ms-dash-overview-grid .ms-dash-tool:hover {
+.ms-dash-overview .ms-dash-tool:hover {
   border-color: #bfdbfe;
   background: #f8fbff;
 }
 
-.ms-dash-overview-grid .ms-dash-tool svg {
+.ms-dash-overview .ms-dash-tool svg {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
@@ -2779,30 +2850,28 @@ body[data-page="dashboard"] {
     font-size: 1rem;
   }
 
-  .ms-dash-overview-grid .ms-dash-tool {
-    min-height: 3rem;
-    padding: 0.65rem 0.45rem;
-    font-size: 0.8rem;
+  .ms-dash-overview .ms-dash-tool {
+    min-height: 2.6rem;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.84rem;
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 720px) {
   .ms-dash-progress-layout {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    width: min(100%, 22.5rem);
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 1.1rem;
   }
 
   .ms-dash-ring-wrap {
-    width: min(100%, 220px);
-    max-width: 220px;
+    width: min(100%, 196px);
+    max-width: 196px;
   }
 
+  .ms-dash-overview,
   .ms-dash-overview-grid {
     width: 100%;
-    max-width: none;
-    flex: 1 1 auto;
   }
 }
 
@@ -2813,11 +2882,11 @@ body[data-page="dashboard"] {
   }
 
   .ms-dash-metric {
-    padding: 0.45rem 0.3rem 0.55rem;
+    padding: 0.7rem 0.7rem 0.65rem;
   }
 
   .ms-dash-metric-label {
-    font-size: 0.55rem;
+    font-size: 0.66rem;
   }
 }
 
@@ -16844,10 +16913,15 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 }
 
 .ms-payouts-item-action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
   flex-shrink: 0;
 }
 
-.ms-payouts-mark-paid {
+.ms-payouts-mark-paid,
+.ms-payouts-remove {
   white-space: nowrap;
 }
 

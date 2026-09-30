@@ -1707,18 +1707,9 @@
     });
   }
 
-  async function boot() {
-    let session = null;
-    if (window.StudioAuth?.requireAuth) {
-      try {
-        session = await window.StudioAuth.requireAuth();
-        if (!session) return;
-      } catch (e) {
-        console.warn(e);
-        return;
-      }
-    }
-
+  function paintApp() {
+    if (document.body.dataset.msShellPainted === "1") return;
+    document.body.dataset.msShellPainted = "1";
     buildShell();
     ensureHardRefreshButton();
     bindNavCancel();
@@ -1731,17 +1722,11 @@
     setChannelGenerating(null, false);
     document.body.classList.add("ms-ready");
     document.dispatchEvent(new Event("ms:shell-ready"));
-    document.body.dataset.msAuthFired = "1";
-    document.dispatchEvent(new Event("ms:auth-ready"));
-
-    if (session && window.StudioAuth.ensureStudioOnboarding) {
-      try {
-        const redirected = await window.StudioAuth.ensureStudioOnboarding(session);
-        if (redirected === "redirect") return;
-      } catch (e) {
-        console.warn(e);
-      }
-    }
+    // Let scripts that load after app.js subscribe before the page starts fetching.
+    setTimeout(function () {
+      document.body.dataset.msAuthFired = "1";
+      document.dispatchEvent(new Event("ms:auth-ready"));
+    }, 0);
 
     window.requestAnimationFrame(function () {
       window.requestAnimationFrame(function () {
@@ -1755,6 +1740,46 @@
 
     ensureInstallHintScript();
     ensureGenerationAnnounceScript();
+  }
+
+  async function finishSession(session) {
+    if (!session || !window.StudioAuth?.ensureStudioOnboarding) return;
+    try {
+      await window.StudioAuth.ensureStudioOnboarding(session);
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  async function boot() {
+    ensureTabBar(document.body?.dataset?.page || "");
+    const gateOpen = document.documentElement.classList.contains("ms-auth-ready");
+    if (gateOpen) {
+      paintApp();
+      if (!window.StudioAuth?.requireAuth) return;
+      try {
+        const session = await window.StudioAuth.requireAuth();
+        if (!session) return;
+        await finishSession(session);
+      } catch (e) {
+        console.warn(e);
+      }
+      return;
+    }
+
+    let session = null;
+    if (window.StudioAuth?.requireAuth) {
+      try {
+        session = await window.StudioAuth.requireAuth();
+        if (!session) return;
+      } catch (e) {
+        console.warn(e);
+        return;
+      }
+    }
+
+    paintApp();
+    await finishSession(session);
   }
 
   function ensureGenerationAnnounceScript() {
@@ -1945,7 +1970,8 @@
       document.body.appendChild(nav);
     }
     const switchAnim = readTabSwitch();
-    nav.innerHTML =
+    const alreadyMounted = nav.dataset.mounted === "1" && nav.querySelectorAll("a.ms-tab").length === items.length;
+    if (!alreadyMounted) nav.innerHTML =
       '<span class="ms-tab-pill" aria-hidden="true"></span>' +
       items
         .map((item) => {
@@ -1971,6 +1997,7 @@
           );
         })
         .join("");
+    nav.dataset.mounted = "1";
 
     bindTabBarSwitch(nav, page);
 
@@ -1989,9 +2016,11 @@
         window.matchMedia("(max-width: 900px)").matches
       ) {
         syncTabPill(nav, fromTab, { animate: false });
+        nav.classList.add("is-pill-ready");
         requestAnimationFrame(() => syncTabPill(nav, activeTab, { animate: true }));
       } else if (activeTab) {
         syncTabPill(nav, activeTab, { animate: false });
+        nav.classList.add("is-pill-ready");
       }
     });
   }

@@ -273,6 +273,9 @@
     const salesEl = document.getElementById("dash-sales-progress");
     const pctEl = document.getElementById("stat-goal-pct");
     const commissionEl = document.getElementById("stat-commission");
+    const leftEl = document.getElementById("stat-goal-left");
+    const leftLabelEl = document.getElementById("stat-goal-left-label");
+    const avgEl = document.getElementById("stat-avg-sale");
     const ringEl = document.getElementById("stat-goal-ring");
     const ring = document.querySelector(".ms-dash-ring");
     const input = document.getElementById("stat-goal-input");
@@ -287,6 +290,13 @@
     if (input && document.activeElement !== input) input.value = String(Math.round(goal));
     if (salesEl) salesEl.textContent = String(Math.round(sales));
     if (commissionEl) commissionEl.textContent = formatCommission(commission);
+    const remaining = Math.max(0, Number(goal) - Number(commission));
+    const reached = Number(goal) > 0 && remaining <= 0.009;
+    if (leftEl) leftEl.textContent = reached ? "Reached" : formatCommission(remaining);
+    if (leftLabelEl) leftLabelEl.textContent = reached ? "" : "left";
+    if (avgEl) {
+      avgEl.textContent = sales > 0.001 ? formatCommission(commission / sales) : "—";
+    }
     if (pctEl) pctEl.textContent = Math.round(pct) + "%";
     if (ring) {
       ring.setAttribute(
@@ -296,12 +306,14 @@
           formatCommission(commission) +
           " earned of " +
           formatGoal(goal) +
-          " goal"
+          " goal, " +
+          (reached ? "goal reached" : formatCommission(remaining) + " left")
       );
     }
     if (ringEl) {
       ringEl.style.strokeDasharray = "100";
-      ringEl.style.strokeDashoffset = String(100 - pct);
+      ringEl.style.strokeDashoffset = String(Math.max(0, 100 - pct));
+      ringEl.style.opacity = pct <= 0 ? "0" : "1";
     }
   }
 

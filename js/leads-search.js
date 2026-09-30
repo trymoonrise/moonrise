@@ -391,11 +391,6 @@
     }
   }
 
-  /**
-   * Always hits the browser geolocation API (never skips after a prior denial).
-   * Browsers only re-show the native dialog when state is "prompt"; if permanently
-   * blocked we still call it and surface clear steps to re-enable.
-   */
   function requestUserLocation(options) {
     const opts = options && typeof options === "object" ? options : {};
     return new Promise((resolve, reject) => {
@@ -442,6 +437,21 @@
   async function ensureUserLocation(options) {
     const opts = options && typeof options === "object" ? options : {};
     await queryGeolocationPermission();
+    if (locationPermissionState === "denied") {
+      syncLocationChrome(true);
+      const blocked = Object.assign(new Error(LOCATION_DENIED_MSG), {
+        code: 1,
+        permissionDenied: true,
+      });
+      if (!opts.quiet) {
+        setError(blocked.message);
+        if (MAP_UI) {
+          setStatus("Allow location to scan businesses near you.");
+          revealResults();
+        }
+      }
+      throw blocked;
+    }
     try {
       const coords = await requestUserLocation({
         fresh: opts.fresh !== false,
@@ -1983,6 +1993,8 @@
   const SHEET_UI_GAP = 10;
   let sheetSnapIndex = 1;
   let sheetDragBound = false;
+  /** Frozen peek/full limits so a drag does not remeasure dock height every move. */
+  let sheetDragLimits = null;
 
   function isMobileSheetLayout() {
     return MAP_UI && window.matchMedia?.(SHEET_MQ)?.matches === true;
@@ -2010,7 +2022,7 @@
     const fromOffset = actions ? Math.ceil(actions.offsetHeight || 0) : 0;
     const dockH = Math.max(72, fromRect, fromOffset) || Math.round(stageH * 0.16);
 
-    const maxH = Math.max(150, stageH - topInset - dockH);
+    const maxH = Math.max(150, Math.floor(stageH - topInset - dockH));
     return { stageH, topInset, dockH, maxH };
   }
 
@@ -2039,12 +2051,32 @@
     });
   }
 
+  function readSheetLimits() {
+    const maxRaw = Number.parseFloat(
+      String(resultsPanel?.style?.getPropertyValue("--lf-sheet-max") || "").trim()
+    );
+    if (!(maxRaw > 0)) {
+      const snaps = sheetSnapHeights();
+      return { peekH: snaps[0].px, maxH: snaps[snaps.length - 1].px };
+    }
+    const maxH = Math.round(maxRaw);
+    const peekH = Math.min(maxH, Math.round(Math.max(150, maxH * SHEET_SNAPS[0].ratio)));
+    return { peekH, maxH };
+  }
+
   function setSheetHeightPx(px, options) {
     if (!MAP_UI || !resultsPanel) return;
     const opts = options && typeof options === "object" ? options : {};
-    const snaps = sheetSnapHeights();
-    const peekH = snaps[0].px;
-    const maxH = snaps[snaps.length - 1].px;
+    let peekH;
+    let maxH;
+    if (opts.dragging && sheetDragLimits) {
+      peekH = sheetDragLimits.peekH;
+      maxH = sheetDragLimits.maxH;
+    } else {
+      const snaps = sheetSnapHeights();
+      peekH = snaps[0].px;
+      maxH = snaps[snaps.length - 1].px;
+    }
     // Resting snaps never go below peek; dragging may shrink toward dismiss.
     const floor = opts.dragging ? SHEET_DRAG_FLOOR_PX : peekH;
     const next = Math.max(floor, Math.min(maxH, Math.round(Number(px) || peekH)));
@@ -2137,12 +2169,60 @@
     let pointerId = null;
     let startY = 0;
     let startH = 0;
+    let scrollLock = null;
+    let dragRaf = 0;
+    let pendingH = 0;
+    let dragMoved = false;
+
+    const restoreResultsScroll = () => {
+      if (!resultsEl || scrollLock == null) return;
+      if (resultsEl.scrollTop !== scrollLock) resultsEl.scrollTop = scrollLock;
+    };
+
+    const beginLiveDrag = () => {
+      sheetDragLimits = readSheetLimits();
+      resultsPanel.classList.add("is-sheet-dragging");
+      resultsPanel.style.setProperty("transition", "none");
+      if (resultsEl) scrollLock = resultsEl.scrollTop;
+    };
+
+    const applyLiveHeight = (px) => {
+      setSheetHeightPx(px, { dragging: true });
+      // Layout before restoring scroll, so overflow anchoring can't paint a jump.
+      if (resultsEl) void resultsEl.scrollHeight;
+      restoreResultsScroll();
+    };
+
+    const queueLiveHeight = (px) => {
+      pendingH = px;
+      dragMoved = true;
+      if (dragRaf) return;
+      dragRaf = window.requestAnimationFrame(() => {
+        dragRaf = 0;
+        if (!dragging && !listPulling) return;
+        applyLiveHeight(pendingH);
+      });
+    };
+
+    const finishLiveDrag = () => {
+      if (dragRaf) {
+        window.cancelAnimationFrame(dragRaf);
+        dragRaf = 0;
+        if (dragMoved) applyLiveHeight(pendingH);
+      }
+      const h = currentSheetHeightPx();
+      dragMoved = false;
+      scrollLock = null;
+      resultsPanel.style.removeProperty("transition");
+      sheetDragLimits = null;
+      settleSheetAfterDrag(h);
+    };
 
     const onMove = (e) => {
       if (!dragging || e.pointerId !== pointerId) return;
       e.preventDefault();
       const dy = startY - e.clientY; // drag up → taller
-      setSheetHeightPx(startH + dy, { dragging: true });
+      queueLiveHeight(startH + dy);
     };
 
     const endDrag = (e) => {
@@ -2154,7 +2234,7 @@
         /* ignore */
       }
       pointerId = null;
-      settleSheetAfterDrag(currentSheetHeightPx());
+      finishLiveDrag();
     };
 
     sheetHandle.addEventListener(
@@ -2163,11 +2243,18 @@
         if (resultsPanel.hidden) return;
         if (e.button != null && e.button !== 0) return;
         dragging = true;
+        dragMoved = false;
         pointerId = e.pointerId;
         startY = e.clientY;
         startH = currentSheetHeightPx();
+        pendingH = startH;
+        beginLiveDrag();
+        try {
+          sheetHandle.focus({ preventScroll: true });
+        } catch (_) {
+          /* ignore */
+        }
         sheetHandle.setPointerCapture?.(pointerId);
-        resultsPanel.classList.add("is-sheet-dragging");
         e.preventDefault();
       },
       { passive: false }
@@ -2196,6 +2283,7 @@
     });
 
     // Pull-down from top of list collapses (touch / mobile primarily).
+    const LIST_PULL_SLOP = 8;
     let listPullStartY = 0;
     let listPulling = false;
     resultsEl?.addEventListener(
@@ -2206,7 +2294,9 @@
         if ((resultsEl.scrollTop || 0) > 2) return;
         listPullStartY = e.touches[0].clientY;
         listPulling = true;
+        dragMoved = false;
         startH = currentSheetHeightPx();
+        pendingH = startH;
       },
       { passive: true }
     );
@@ -2215,17 +2305,21 @@
       (e) => {
         if (!listPulling || !e.touches?.[0]) return;
         if (e.target.closest(".ms-lf-slide")) {
+          const started = resultsPanel.classList.contains("is-sheet-dragging");
           listPulling = false;
+          if (started) finishLiveDrag();
           return;
         }
         const dy = e.touches[0].clientY - listPullStartY;
-        if (dy <= 8) return;
-        if ((resultsEl.scrollTop || 0) > 2) {
+        if (dy <= LIST_PULL_SLOP) return;
+        if ((resultsEl.scrollTop || 0) > 2 && !dragMoved) {
           listPulling = false;
           return;
         }
+        if (!dragMoved) beginLiveDrag();
         e.preventDefault();
-        setSheetHeightPx(startH - dy, { dragging: true });
+        // Subtract the slop so the sheet doesn't jump when the pull takes over.
+        queueLiveHeight(startH - (dy - LIST_PULL_SLOP));
       },
       { passive: false }
     );
@@ -2233,7 +2327,7 @@
       if (!listPulling) return;
       listPulling = false;
       if (!resultsPanel.classList.contains("is-sheet-dragging")) return;
-      settleSheetAfterDrag(currentSheetHeightPx());
+      finishLiveDrag();
     };
     resultsEl?.addEventListener("touchend", endListPull);
     resultsEl?.addEventListener("touchcancel", endListPull);
@@ -2241,6 +2335,7 @@
     window.addEventListener(
       "resize",
       () => {
+        if (dragging || listPulling) return;
         syncSheetLayoutVars();
         if (!resultsPanel.hidden) setSheetSnap(sheetSnapIndex);
       },
@@ -3961,15 +4056,20 @@
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     searchPill.dataset.mode = next;
     if (searchClose) {
-      searchClose.tabIndex = next === "search" ? 0 : -1;
-      searchClose.setAttribute("aria-hidden", next === "search" ? "false" : "true");
+      const closing = next !== "search";
+      if (closing && document.activeElement === searchClose) {
+        searchClose.blur();
+        (searchToggle || queryInput)?.focus({ preventScroll: true });
+      }
+      searchClose.tabIndex = closing ? -1 : 0;
+      if (closing) searchClose.setAttribute("aria-hidden", "true");
+      else searchClose.removeAttribute("aria-hidden");
     }
     if (next === "search") {
       setFilterSheet(false);
-      // Let the pill morph settle before the keyboard jumps in.
       const focusSearch = () => queryInput?.focus({ preventScroll: true });
-      if (reduce) focusSearch();
-      else window.setTimeout(focusSearch, 200);
+      focusSearch();
+      if (!reduce) window.setTimeout(focusSearch, 220);
     } else {
       queryInput?.blur();
     }
@@ -4367,7 +4467,11 @@
   function bindMapFinderUi() {
     if (!MAP_UI) return;
     initLeadMap();
-    initMobileResultsSheet();
+    try {
+      initMobileResultsSheet();
+    } catch (err) {
+      console.error("Results sheet failed to start", err);
+    }
     setListCount(0);
     hideResultsPanel();
 
@@ -4378,9 +4482,13 @@
       openStudioMenu();
     });
 
-    searchToggle?.addEventListener("click", (e) => {
+    let searchToggleAt = 0;
+    const onSearchToggle = (e) => {
       e.preventDefault();
       e.stopPropagation();
+      const now = Date.now();
+      if (now - searchToggleAt < 450) return;
+      searchToggleAt = now;
       const open = searchPill?.dataset.mode !== "search";
       if (open) {
         setSearchPillMode("search");
@@ -4388,6 +4496,32 @@
       }
       // Second tap on the search icon submits (does not just close).
       void runMapSearchSubmit();
+    };
+    // pointerup covers taps whose click the map or sheet cancels.
+    let searchPointerId = null;
+    let searchPointerX = 0;
+    let searchPointerY = 0;
+    searchToggle?.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (e.button != null && e.button !== 0) return;
+        searchPointerId = e.pointerId;
+        searchPointerX = e.clientX;
+        searchPointerY = e.clientY;
+      },
+      { passive: true }
+    );
+    searchToggle?.addEventListener("pointerup", (e) => {
+      if (searchPointerId == null || e.pointerId !== searchPointerId) return;
+      searchPointerId = null;
+      const moved = Math.hypot(e.clientX - searchPointerX, e.clientY - searchPointerY);
+      if (moved > 10) return;
+      onSearchToggle(e);
+    });
+    searchToggle?.addEventListener("click", onSearchToggle);
+    searchToggle?.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      onSearchToggle(e);
     });
 
     searchPill?.querySelector(".ms-lf-map-pill-body")?.addEventListener("click", (e) => {

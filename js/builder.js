@@ -1784,7 +1784,7 @@
     }
     setOnboardError("");
     updateOnboardContinue();
-    global.SegmentSwitch?.refresh?.(document.querySelector(".ms-bs-mode-tabs"), true);
+    window.SegmentSwitch?.refresh?.(document.querySelector(".ms-bs-mode-tabs"), true);
   }
 
   function formatUploadBytes(n) {

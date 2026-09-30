@@ -3,7 +3,7 @@
 <head>
   <script>
     (function () {
-      var BUILD = "20260924-drawer-ease";
+      var BUILD = "20260930-channel-instant";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -31,13 +31,13 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20260924-static-nav"></script>
+  <script src="js/auth-gate-head.js?v=20260930-channel-instant"></script>
   <title>Dashboard - Moonrise Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260924-no-tabbar-ease">
+  <link rel="stylesheet" href="css/studio.css?v=20260930-channel-instant">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -56,30 +56,45 @@
           <div class="ms-dash-ring-wrap">
             <div class="ms-dash-ring" role="img" aria-label="0 percent of income goal">
               <svg class="ms-dash-ring-svg" viewBox="0 0 280 280" aria-hidden="true">
-                <circle class="ms-dash-ring-track" cx="140" cy="140" r="118" fill="none" />
-                <circle class="ms-dash-ring-prog" id="stat-goal-ring" cx="140" cy="140" r="118" fill="none" pathLength="100" />
+                <circle class="ms-dash-ring-track" cx="140" cy="140" r="104" fill="none" />
+                <circle class="ms-dash-ring-prog" id="stat-goal-ring" cx="140" cy="140" r="104" fill="none" pathLength="100" />
               </svg>
               <div class="ms-dash-ring-center">
                 <p class="ms-dash-ring-progress">
                   <span class="ms-dash-ring-value" id="stat-goal-pct">0%</span>
                 </p>
+                <p class="ms-dash-ring-kicker">of goal</p>
+                <p class="ms-dash-ring-sub">
+                  <span id="stat-goal-left">$1,000.00</span>
+                  <span id="stat-goal-left-label">left</span>
+                </p>
               </div>
             </div>
           </div>
 
-          <div class="ms-dash-overview-grid" aria-label="Key metrics and quick actions">
-            <div class="ms-dash-metric ms-dash-metric--goal" id="stat-goal-wrap">
-              <span class="ms-dash-metric-label">Goal</span>
-              <button type="button" class="ms-dash-metric-value ms-dash-goal-display" id="stat-goal" title="Click to edit income goal" aria-label="Income goal $1,000, click to edit">$1,000</button>
-              <input class="ms-dash-goal-input" id="stat-goal-input" type="number" inputmode="numeric" min="1" max="1000000" step="1" value="1000" aria-label="Edit income goal" hidden>
-            </div>
-            <div class="ms-dash-metric ms-dash-metric--earned">
-              <span class="ms-dash-metric-label">Income</span>
-              <strong class="ms-dash-metric-value" id="stat-commission">$0</strong>
-            </div>
-            <div class="ms-dash-metric ms-dash-metric--sales">
-              <span class="ms-dash-metric-label">Sales</span>
-              <strong class="ms-dash-metric-value" id="dash-sales-progress">0</strong>
+          <div class="ms-dash-overview">
+            <div class="ms-dash-overview-grid" aria-label="Key metrics">
+              <div class="ms-dash-metric ms-dash-metric--earned">
+                <span class="ms-dash-metric-label">Income</span>
+                <strong class="ms-dash-metric-value" id="stat-commission">$0.00</strong>
+                <span class="ms-dash-metric-hint">Your 90% share</span>
+              </div>
+              <div class="ms-dash-metric ms-dash-metric--goal" id="stat-goal-wrap">
+                <span class="ms-dash-metric-label">Goal <span class="ms-dash-metric-edit">Edit</span></span>
+                <button type="button" class="ms-dash-metric-value ms-dash-goal-display" id="stat-goal" title="Click to edit income goal" aria-label="Income goal $1,000, click to edit">$1,000</button>
+                <input class="ms-dash-goal-input" id="stat-goal-input" type="number" inputmode="numeric" min="1" max="1000000" step="1" value="1000" aria-label="Edit income goal" hidden>
+                <span class="ms-dash-metric-hint">Lifetime target</span>
+              </div>
+              <div class="ms-dash-metric ms-dash-metric--sales">
+                <span class="ms-dash-metric-label">Sales</span>
+                <strong class="ms-dash-metric-value" id="dash-sales-progress">0</strong>
+                <span class="ms-dash-metric-hint">Paid sites</span>
+              </div>
+              <div class="ms-dash-metric ms-dash-metric--avg">
+                <span class="ms-dash-metric-label">Average</span>
+                <strong class="ms-dash-metric-value" id="stat-avg-sale">—</strong>
+                <span class="ms-dash-metric-hint">Per paid site</span>
+              </div>
             </div>
             <a class="ms-btn ms-btn-secondary ms-dash-tool" href="leads.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -153,8 +168,8 @@
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/project-lifecycle.js?v=20260718-delete-fix"></script>
-  <script defer src="js/app.js?v=20260924-static-nav"></script>
+  <script defer src="js/app.js?v=20260930-channel-instant"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
-  <script defer src="js/dashboard.js?v=20260924-console"></script>
+  <script defer src="js/dashboard.js?v=20260929-dash-overview"></script>
 </body>
 </html>
