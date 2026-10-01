@@ -129,7 +129,7 @@ function mapSignupAuthError(error) {
     return {
       status: 503,
       error:
-        "trymoonrise.com DNS looks set up, but Resend hasn't verified the domain yet. Go to resend.com/domains → trymoonrise.com → Verify, wait a few minutes, then try signup again.",
+        "trymoonrise.com DNS looks set up, but Resend hasn't verified the domain yet. Go to resend.com/domains -> trymoonrise.com -> Verify, wait a few minutes, then try signup again.",
       code: "email_send_failed",
     };
   }
@@ -458,7 +458,7 @@ function mountAuthRoutes(app, { db, security }) {
       if (error) {
         const msg = String(error.message || "");
         const code = String(error.code || "");
-        // Unknown account — same success shape (no email enumeration).
+        // Unknown account - same success shape (no email enumeration).
         if (/user not found|unable to find|not found/i.test(msg) || code === "user_not_found") {
           return res.json({ ok: true, message: "If that email exists, a reset link is on the way." });
         }
@@ -535,7 +535,7 @@ function mountAuthRoutes(app, { db, security }) {
   });
 
   /**
-   * Verify current password under lockout rules (Settings → change password).
+   * Verify current password under lockout rules (Settings -> change password).
    * Body: { email?, password } - email defaults from Bearer user.
    */
   app.post("/auth/verify-password", authIpLimiter, verifyPasswordLimiter, async (req, res) => {

@@ -40,7 +40,7 @@
     }
     try {
       if (enabled) {
-        // Promote tab session → durable so Auto save ON actually stays signed in.
+        // Promote tab session -> durable so Auto save ON actually stays signed in.
         const raw = global.sessionStorage.getItem(AUTH_STORAGE_KEY);
         if (raw && !global.localStorage.getItem(AUTH_STORAGE_KEY)) {
           global.localStorage.setItem(AUTH_STORAGE_KEY, raw);
@@ -135,7 +135,7 @@
         autoRefreshToken: true,
         detectSessionInUrl: true,
         storage: authStorage(),
-        // Password sign-in goes through the worker then setSession — not PKCE.
+        // Password sign-in goes through the worker then setSession - not PKCE.
         flowType: "implicit",
         // WebAuthn passkeys (Face ID / fingerprint / password manager).
         experimental: { passkey: true },

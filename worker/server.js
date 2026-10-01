@@ -2,8 +2,8 @@
  * Moonrise Studio worker
  * - POST /generate   OpenRouter HTML generation
  * - POST /checkout   Stripe Checkout Session
- * - POST /webhooks/stripe  payment → unlock watermark
- * - POST /resolve-maps  Google Maps URL → business details
+ * - POST /webhooks/stripe  payment -> unlock watermark
+ * - POST /resolve-maps  Google Maps URL -> business details
  * - POST /publish    Vercel deployment
  * - POST /unpublish  Take site offline on Vercel
  */
@@ -305,7 +305,7 @@ function isStripeTestMode() {
 
 /**
  * Optional go-live discount:
- * - STRIPE_GO_LIVE_COUPON_ID=coupon_… → auto-apply that Stripe coupon
+ * - STRIPE_GO_LIVE_COUPON_ID=coupon_... -> auto-apply that Stripe coupon
  * - otherwise allow promo codes at Checkout (unless STRIPE_GO_LIVE_ALLOW_PROMO=0)
  * Create a 100% off coupon/promo in Stripe Dashboard for free unlock testing.
  */
@@ -1155,7 +1155,7 @@ app.post("/webhooks/stripe", express.raw({ type: "application/json" }), async (r
             );
           }
         } else if (kind === "site_hosting") {
-          // Monthly hosting renewal — email the buyer an invoice + cancel link.
+          // Monthly hosting renewal - email the buyer an invoice + cancel link.
           try {
             await emailSiteHostingInvoice(stripe, invoice, sub);
           } catch (hostMailErr) {
@@ -1567,7 +1567,7 @@ async function readPresetHtmlFile(filename) {
     .replace(/^\/+/, "");
   if (!safeName || safeName.includes("..") || path.isAbsolute(safeName)) return "";
 
-  // Prefer local files when bundled (Vercel includeFiles) — faster, no GitHub rate limits.
+  // Prefer local files when bundled (Vercel includeFiles) - faster, no GitHub rate limits.
   const presetsRoot = path.resolve(WEBSITE_PRESETS_DIR, "presets");
   const filePath = path.resolve(presetsRoot, safeName);
   if (filePath.startsWith(presetsRoot + path.sep) || filePath === presetsRoot) {
@@ -1893,7 +1893,7 @@ async function openRouterChat({
 }
 
 /**
- * Category → design atmosphere/palette heuristics.
+ * Category -> design atmosphere/palette heuristics.
  * Lets us skip the stage-1 "vibe" LLM call for most businesses (big speed win)
  * while still handing the assembler a coherent, trade-appropriate design system.
  */
@@ -3996,7 +3996,7 @@ app.post("/public-hosting-portal", publicCheckoutLimiter, async (req, res) => {
     }
     if (!buyer || buyer !== email) {
       return res.status(403).json({
-        error: "That email doesn’t match the one used to pay for this site.",
+        error: "That email doesn't match the one used to pay for this site.",
       });
     }
 
@@ -4412,7 +4412,7 @@ function vercelHostname(url) {
 function looksLikePreviewVercelHost(host) {
   const base = String(host || "").toLowerCase().replace(/\.vercel\.app$/i, "");
   if (!base) return false;
-  // Preview: …-{deploymentId} or …-{deploymentId}-{teamSlug}
+  // Preview: ...-{deploymentId} or ...-{deploymentId}-{teamSlug}
   if (/-[a-z0-9]{8,12}(?:-[a-z0-9-]+)?$/i.test(base)) return true;
   // Preview hash embedded before a team suffix (e.g. slug-abc12345team-teamslug)
   const parts = base.split("-");
@@ -4470,7 +4470,7 @@ function slugifyVercelSegment(value) {
     .replace(/^-+|-+$/g, "");
 }
 
-/** Short, stable slug from the business name (e.g. "Hammer and Nail Juarez Handyman Service" → hammer-and-nail-juarez). */
+/** Short, stable slug from the business name (e.g. "Hammer and Nail Juarez Handyman Service" -> hammer-and-nail-juarez). */
 function buildVercelProjectSlug(project) {
   const ctx = project.business_context && typeof project.business_context === "object" ? project.business_context : {};
   const saved = slugifyVercelSegment(ctx.vercelSlug);
@@ -4478,7 +4478,7 @@ function buildVercelProjectSlug(project) {
 
   const tokens = String(project.business_name || "site")
     .toLowerCase()
-    .replace(/['’]/g, "")
+    .replace(/['']/g, "")
     .split(/[^a-z0-9]+/)
     .filter(Boolean);
 
@@ -4729,14 +4729,14 @@ function customDomainDnsHints(hostname) {
       tip:
         "Point " +
         host +
-        " with an A record → 76.76.21.21. Optional: CNAME www → cname.vercel-dns.com",
+        " with an A record -> 76.76.21.21. Optional: CNAME www -> cname.vercel-dns.com",
     };
   }
   return {
     type: "CNAME",
     name: labels.slice(0, -2).join(".") || labels[0] || "www",
     value: "cname.vercel-dns.com",
-    tip: "Point " + host + " with a CNAME → cname.vercel-dns.com",
+    tip: "Point " + host + " with a CNAME -> cname.vercel-dns.com",
   };
 }
 
@@ -4803,13 +4803,13 @@ async function diagnoseCustomDomainDns(hostname) {
       }
     }
   } catch (_) {
-    issues.push("Could not look up DNS yet. Save the records, wait 2–5 minutes, then check again.");
+    issues.push("Could not look up DNS yet. Save the records, wait 2-5 minutes, then check again.");
   }
 
   if (!issues.length) {
     return {
       ok: true,
-      message: "DNS looks right. Vercel may need another minute — check status again shortly.",
+      message: "DNS looks right. Vercel may need another minute - check status again shortly.",
       issues: [],
       observed,
       expected,
@@ -4827,7 +4827,7 @@ async function diagnoseCustomDomainDns(hostname) {
 
 function readStoredCustomDomain(ctx) {
   const raw = ctx?.customDomain;
-  // Manual only — never infer "on" from a leftover hostname.
+  // Manual only - never infer "on" from a leftover hostname.
   const enabled = ctx?.customDomainEnabled === true;
   if (raw && typeof raw === "object" && !Array.isArray(raw)) {
     const hostname = normalizeCustomHostname(raw.hostname || raw.domain || "");
@@ -4884,7 +4884,7 @@ async function vercelVerifyProjectDomain(scope, projectIdOrName, hostname) {
   );
   const data = await res.json().catch(() => ({}));
   if (res.ok) return data;
-  // Verification can 400 while DNS is still propagating — treat as pending status payload.
+  // Verification can 400 while DNS is still propagating - treat as pending status payload.
   if (res.status === 400 || res.status === 409) {
     return data?.domain || data || null;
   }
@@ -5560,7 +5560,7 @@ app.get("/domain", requireUser, async (req, res) => {
         if (txt?.value) {
           record.pendingReason =
             (record.pendingReason ? record.pendingReason + " " : "") +
-            "Also add Vercel’s TXT verify record if shown below.";
+            "Also add Vercel's TXT verify record if shown below.";
         }
       }
     }
@@ -6083,7 +6083,7 @@ async function resolveGoogleMapsPlace(rawUrl) {
   const ogTitle = pickMeta(html, "og:title");
   const ogDesc = pickMeta(html, "og:description");
   if (ogTitle && ogTitle.toLowerCase() !== "google maps" && !details.businessName) {
-    details.businessName = ogTitle.replace(/\s*[-–|].*$/, "").trim();
+    details.businessName = ogTitle.replace(/\s*[--|].*$/, "").trim();
   }
   if (ogDesc && !details.address && !/google maps/i.test(ogDesc)) {
     details.address = ogDesc.slice(0, 200);

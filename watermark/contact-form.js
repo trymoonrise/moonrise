@@ -1,7 +1,7 @@
 /**
  * Moonrise contact form handler for published sites.
- * Auto mode → POST /contact-submit (email via Resend).
- * Custom mode → Formspree, Discord, Telegram, or generic webhook.
+ * Auto mode -> POST /contact-submit (email via Resend).
+ * Custom mode -> Formspree, Discord, Telegram, or generic webhook.
  */
 (function (global) {
   function parseFields(form) {
@@ -146,7 +146,7 @@
       const submitBtn = form.querySelector('[type="submit"]');
       const fields = parseFields(form);
       if (submitBtn) submitBtn.disabled = true;
-      showStatus(form, "Sending…", true);
+      showStatus(form, "Sending...", true);
       try {
         if (opts.mode === "auto") {
           await submitAuto(opts.worker, opts.projectId, fields);

@@ -59,7 +59,7 @@
       name: "Bitcoin",
       logo: "doc/Bitcoin.png",
       label: "Bitcoin wallet address",
-      placeholder: "bc1… or 1…",
+      placeholder: "bc1... or 1...",
       hint: "Your Bitcoin wallet address for payouts.",
     },
     {
@@ -833,7 +833,7 @@
     const prevLabel = btn?.textContent || "Continue";
     if (btn) {
       btn.disabled = true;
-      btn.textContent = "Verifying…";
+      btn.textContent = "Verifying...";
     }
     setError("");
     setCardRetryVisible(false);

@@ -64,7 +64,7 @@
     if (!maps.startsWith("http")) return false;
     if (checked.has(maps)) return false;
 
-    // Already live-confirmed missing — don't re-hit Maps every render.
+    // Already live-confirmed missing - don't re-hit Maps every render.
     if (
       lead?.websiteEnriched === true &&
       lead?.websiteConfirmed === true &&
@@ -73,7 +73,7 @@
       return false;
     }
 
-    // DB says they have a site — nothing to verify for the "no website" path.
+    // DB says they have a site - nothing to verify for the "no website" path.
     if (F?.resolveSupabaseHasWebsiteFlag?.(lead) === true) return false;
 
     const rawSite = String(lead?.website || lead?.website_url || lead?.websiteUrl || "").trim();

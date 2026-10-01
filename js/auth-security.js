@@ -1,5 +1,5 @@
 /**
- * Client-side auth security helpers — storage hygiene, URL token scrubbing, HTML escape.
+ * Client-side auth security helpers - storage hygiene, URL token scrubbing, HTML escape.
  */
 (function (global) {
   const AUTH_STORAGE_KEY = "moonrise-studio-auth";

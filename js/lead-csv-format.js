@@ -1,6 +1,6 @@
 /**
  * Google Maps lead export CSV · column layout used for Business Finder cards.
- * Header: hfpxzc href, qBF1Pd, MW4etd, UY7F9, W4Efsd … Jn12ke src
+ * Header: hfpxzc href, qBF1Pd, MW4etd, UY7F9, W4Efsd ... Jn12ke src
  */
 (function (global) {
   const COL = {
@@ -223,7 +223,7 @@
 
     const dbFlag = resolveSupabaseHasWebsiteFlag(lead);
     if (dbFlag === true) {
-      // DB says they have a site even if URL is missing — never treat as "no website".
+      // DB says they have a site even if URL is missing - never treat as "no website".
       return { status: "has", hasWebsite: true, website: "", confirmed: true };
     }
     if (dbFlag === false) {
@@ -380,7 +380,7 @@
         .split(/\n\n+/)
         .map((part) => part.trim())
         .filter(Boolean)[0];
-      // Don't treat Maps title mash (name + 5.0(70)Category…) as hours.
+      // Don't treat Maps title mash (name + 5.0(70)Category...) as hours.
       if (
         firstBlock &&
         !/\d+(?:\.\d+)?\(\d+\)/.test(firstBlock) &&
@@ -404,7 +404,7 @@
   function resolveReviewQuote(row) {
     const quote = raw(cell(row, "reviewQuote")) || raw(cell(row, "reviewQuoteAlt")) || raw(cell(row, "extra"));
     if (!quote) return "";
-    if (/^["“]/.test(quote) || quote.length > 18) return quote;
+    if (/^[""]/.test(quote) || quote.length > 18) return quote;
     return "";
   }
 

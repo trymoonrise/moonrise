@@ -1,5 +1,5 @@
 /**
- * Builder - business details → generate with Website Presets, then AI edit / publish.
+ * Builder - business details -> generate with Website Presets, then AI edit / publish.
  */
 (function () {
   const DEFAULT_TEMPLATE_ID = "local-service";
@@ -423,7 +423,7 @@
     genProgressPct = 0;
     document.body.classList.add("ms-lb-generating");
     document.documentElement.classList.remove("ms-lb-boot-generating");
-    renderGenerateProgress(0, label || "Building your website…");
+    renderGenerateProgress(0, label || "Building your website...");
     syncBuilderChannelGenerating({ cancellable: false });
     const startedAt = Date.now();
     const approachMs = 90000;
@@ -459,7 +459,7 @@
     genProgressPct = 0;
     document.body.classList.remove("ms-lb-generating");
     document.documentElement.classList.remove("ms-lb-boot-generating");
-    renderGenerateProgress(0, "Building your website…");
+    renderGenerateProgress(0, "Building your website...");
     const loading = document.getElementById("preview-loading");
     if (loading) {
       loading.hidden = true;
@@ -536,7 +536,7 @@
     const status = document.getElementById("builder-status");
     const setupStatus = document.getElementById("builder-setup-status");
     if (busy) {
-      if (!genProgressActive) startGenerateProgress(label || "Building your website…");
+      if (!genProgressActive) startGenerateProgress(label || "Building your website...");
       else if (label) renderGenerateProgress(genProgressPct, label);
       if (setupStatus) {
         setupStatus.hidden = true;
@@ -1058,7 +1058,7 @@
     }
   }
 
-  /** Send the user back to the page they opened from (Business Finder, Projects, Dashboard…). */
+  /** Send the user back to the page they opened from (Business Finder, Projects, Dashboard...). */
   function leaveBuilder() {
     if (isEditorPage()) {
       location.href = "builder.html";
@@ -1387,9 +1387,9 @@
     }
     if (select) {
       select.disabled = true;
-      select.innerHTML = "<option value=\"\">Loading folders…</option>";
+      select.innerHTML = "<option value=\"\">Loading folders...</option>";
     }
-    if (hint) hint.textContent = "Scanning repository for website folders…";
+    if (hint) hint.textContent = "Scanning repository for website folders...";
     try {
       const base = await pingWorker();
       const headers = await authHeaders();
@@ -1404,7 +1404,7 @@
       return true;
     } catch (e) {
       renderGithubFolders([{ path: "", label: "(repository root)", htmlCount: 0, hasIndex: false }], "");
-      if (hint) hint.textContent = e?.message || "Could not scan folders — importing from repo root.";
+      if (hint) hint.textContent = e?.message || "Could not scan folders - importing from repo root.";
       return false;
     }
   }
@@ -1465,7 +1465,7 @@
     if (label) {
       label.textContent = next
         ? labelText || next
-        : String(label.dataset.placeholder || "Select a repository…");
+        : String(label.dataset.placeholder || "Select a repository...");
       label.classList.toggle("is-placeholder", !next);
     }
     document.querySelectorAll(".ms-bs-gh-select-option").forEach((btn) => {
@@ -1526,10 +1526,10 @@
     state.githubRepos = list;
     const placeholder =
       list.length
-        ? "Select a repository…"
+        ? "Select a repository..."
         : state.githubConnected
           ? "No repositories found"
-          : "Connect with a token first…";
+          : "Connect with a token first...";
     if (label) label.dataset.placeholder = placeholder;
 
     menu.innerHTML = "";
@@ -1538,7 +1538,7 @@
       empty.className = "ms-bs-gh-select-empty";
       empty.textContent = state.githubConnected
         ? "No repositories found for this token."
-        : "Connect with a token first…";
+        : "Connect with a token first...";
       menu.appendChild(empty);
     } else {
       list.forEach((repo) => {
@@ -1583,7 +1583,7 @@
     state.githubListing = true;
     state.githubConnected = false;
     state.githubToken = token;
-    setGithubStatus("Connecting…");
+    setGithubStatus("Connecting...");
     updateOnboardContinue();
     renderGithubRepos([]);
     try {
@@ -1670,7 +1670,7 @@
       throw new Error(
         data.error ||
           (res.status === 504 || res.status === 502
-            ? "Import timed out on the server. Use Site folder if the site isn’t at the repo root."
+            ? "Import timed out on the server. Use Site folder if the site isn't at the repo root."
             : "Could not import from GitHub (" + res.status + ")")
       );
     }
@@ -1720,7 +1720,7 @@
     btn.setAttribute("aria-busy", busy ? "true" : "false");
     if (busy) {
       btn.disabled = true;
-      btn.textContent = label || "Loading…";
+      btn.textContent = label || "Loading...";
     } else {
       btn.textContent = onboardCtaLabel();
     }
@@ -1734,22 +1734,22 @@
       setOnboardGenerateLoading(
         true,
         state.builderMode === "upload" && (Number(state.githubWizardStep) || 1) < 3
-          ? "Connecting…"
-          : "Importing…"
+          ? "Connecting..."
+          : "Importing..."
       );
       return;
     }
     if (state.githubListing) {
-      setOnboardGenerateLoading(true, "Connecting…");
+      setOnboardGenerateLoading(true, "Connecting...");
       return;
     }
     if (state.builderMode !== "upload" && state.mapsScraping) {
-      setOnboardGenerateLoading(true, "Looking up…");
+      setOnboardGenerateLoading(true, "Looking up...");
       window.StudioShell?.setChannelGenerating?.(shellChannelId(), true, { cancellable: false });
       return;
     }
     if (state.builderMode !== "upload" && (generateAbort || generateInFlight || genProgressActive)) {
-      setOnboardGenerateLoading(true, "Generating…");
+      setOnboardGenerateLoading(true, "Generating...");
       syncBuilderChannelGenerating();
       return;
     }
@@ -2603,7 +2603,7 @@
   }
 
   function guessNameFromPrompt(notes) {
-    const m = String(notes || "").match(/for\s+([A-Z][\w&'’.\-\s]{1,40})/i);
+    const m = String(notes || "").match(/for\s+([A-Z][\w&''.\-\s]{1,40})/i);
     return m ? m[1].trim() : "";
   }
 
@@ -2651,7 +2651,7 @@
     const hasHtml = !!(state.html && state.html.trim());
     const showCode = state.mode === "code";
     const projectLoading = document.body.classList.contains("ms-lb-project-loading");
-    // Overlay only while a real generate/load is active - never a fake "Generating…" state.
+    // Overlay only while a real generate/load is active - never a fake "Generating..." state.
     const showLoading = (genProgressActive || projectLoading) && !showCode;
     const showGenError =
       !!(genError && !genError.hidden) && !showLoading && !hasHtml && !showCode;
@@ -2668,7 +2668,7 @@
       if (genProgressActive) {
         /* label owned by renderGenerateProgress */
       } else if (projectLoading) {
-        loadingCopy.textContent = "Loading project…";
+        loadingCopy.textContent = "Loading project...";
         const fill = document.getElementById("preview-progress-fill");
         const pctEl = document.getElementById("preview-progress-pct");
         if (fill) fill.style.width = "35%";
@@ -3365,7 +3365,7 @@
     const labels = {
       idle: "",
       unsaved: "Unsaved changes",
-      saving: "Saving…",
+      saving: "Saving...",
       saved: "Saved",
       error: message || "Save failed - retrying",
     };
@@ -3758,7 +3758,7 @@
     };
 
     // Replace the iframe node so each paint gets a fresh JS realm.
-    // Re-using document.write on the same frame redeclares const/let (pill, player, …).
+    // Re-using document.write on the same frame redeclares const/let (pill, player, ...).
     try {
       const parent = frame.parentNode;
       if (parent) {
@@ -3846,7 +3846,7 @@
     [0, 50, 150, 400, 900, 1800].forEach((ms) => {
       window.setTimeout(() => {
         if (!(state.html && String(state.html).trim()) || state.mode === "code") return;
-        // Only rewrite when content is missing — avoid redeclaring preview scripts.
+        // Only rewrite when content is missing - avoid redeclaring preview scripts.
         ensurePreviewPainted();
       }, ms);
     });
@@ -4458,7 +4458,7 @@
     if (editState.selected !== target) selectEditable(target);
     try {
       if (btn) btn.disabled = true;
-      setEditUploadStatus("Uploading…");
+      setEditUploadStatus("Uploading...");
       const url = await uploadSiteImage(file);
       commitEditChange((node) => {
         node.setAttribute("src", url);
@@ -4601,8 +4601,8 @@
       const reorder = getReorderContext(el);
       if (reorder) {
         const horizontalReorder = isHorizontalReorderParent(reorder.parent);
-        const prevLabel = horizontalReorder ? "←" : "↑";
-        const nextLabel = horizontalReorder ? "→" : "↓";
+        const prevLabel = horizontalReorder ? "<-" : "↑";
+        const nextLabel = horizontalReorder ? "->" : "↓";
         const prevTitle = horizontalReorder ? "Move earlier" : "Move up";
         const nextTitle = horizontalReorder ? "Move later" : "Move down";
         chunks.push(
@@ -4659,7 +4659,7 @@
         '<span class="ms-lb-edit-label">Image URL</span>' +
         '<input class="ms-lb-edit-input" id="lb-edit-src" type="url" value="' +
         src.replace(/"/g, "&quot;") +
-        '" placeholder="https://…"></div>' +
+        '" placeholder="https://..."></div>' +
         '<div class="ms-lb-edit-field">' +
         '<span class="ms-lb-edit-label">Alt text</span>' +
         '<input class="ms-lb-edit-input" id="lb-edit-alt" type="text" value="' +
@@ -4672,7 +4672,7 @@
         '<span class="ms-lb-edit-label">Link URL</span>' +
         '<input class="ms-lb-edit-input" id="lb-edit-href" type="url" value="' +
         String(el.getAttribute("href") || "").replace(/"/g, "&quot;") +
-        '" placeholder="https://…"></div></div>';
+        '" placeholder="https://..."></div></div>';
     } else {
       body = '<p class="ms-lb-edit-empty">Nothing here for this element.</p>';
     }
@@ -5614,7 +5614,7 @@
       settingsDeleteBtn.hidden = paid;
       settingsDeleteBtn.disabled = paid;
       settingsDeleteBtn.title = paid
-        ? "This website was paid for - it can’t be deleted."
+        ? "This website was paid for - it can't be deleted."
         : "";
     }
     syncRedesignButtonUi();
@@ -6087,7 +6087,7 @@
       }
       renderGenerateProgress(
         Math.max(genProgressPct, 40),
-        "Still building your website…"
+        "Still building your website..."
       );
       await sleepMs((Number(data.retryAfterSec) || 3) * 1000);
     }
@@ -6148,7 +6148,7 @@
     editState.previewPainted = false;
     // Show preparing progress immediately so swipe never lands on "No code generated yet".
     if (!genProgressActive && !(state.html && String(state.html).trim())) {
-      startGenerateProgress("Preparing your website…");
+      startGenerateProgress("Preparing your website...");
     } else {
       syncEmptyState();
     }
@@ -6275,9 +6275,9 @@
       setBuilderPhase("workspace");
     }
 
-    renderGenerateProgress(Math.max(genProgressPct, 6), "Starting generation…");
+    renderGenerateProgress(Math.max(genProgressPct, 6), "Starting generation...");
     if (!genProgressActive) {
-      startGenerateProgress("Starting generation…");
+      startGenerateProgress("Starting generation...");
     }
 
     if (!(await ensureCreditsForGeneration())) {
@@ -6299,7 +6299,7 @@
     }, GENERATE_TIMEOUT_MS);
     // Real generate request armed - consume the stored pick and show building progress.
     applyPickFromStorageOrQuery(params(), { retain: false });
-    setPromptBusy(true, isRedesign ? "Redesigning your website…" : "Building your website…");
+    setPromptBusy(true, isRedesign ? "Redesigning your website..." : "Building your website...");
     updateOnboardContinue();
     const generatedHtmlKeep = { html: "" };
     let generationSucceeded = false;
@@ -6314,7 +6314,7 @@
           typeof window.resolveWorkerUrl === "function" ? window.resolveWorkerUrl() : base;
         throw new Error(workerUnreachableMessage(primary || base, e?.message || e));
       }
-      renderGenerateProgress(Math.max(genProgressPct, 18), "Building your website…");
+      renderGenerateProgress(Math.max(genProgressPct, 18), "Building your website...");
       const headers = await authHeaders();
       const requestId = createGenerateRequestId(isRedesign, opts);
       writeGenInflight({
@@ -6323,9 +6323,9 @@
         leadId: intake.leadId || state.leadId || null,
         redesign: isRedesign,
       });
-      renderGenerateProgress(Math.max(genProgressPct, 25), "Building your website…");
+      renderGenerateProgress(Math.max(genProgressPct, 25), "Building your website...");
       const data = await runGenerateRequest(base, requestId, intake, headers, signal);
-      renderGenerateProgress(Math.max(genProgressPct, 88), "Finishing your website…");
+      renderGenerateProgress(Math.max(genProgressPct, 88), "Finishing your website...");
       if (data.credits) {
         state.totalCredits = Number(data.credits.totalCredits) || 0;
         document.dispatchEvent(new CustomEvent("ms:credits-changed", { detail: data.credits }));
@@ -6509,7 +6509,7 @@
       const submit = document.getElementById("lb-redesign-submit");
       if (submit) {
         submit.disabled = true;
-        submit.textContent = "Starting…";
+        submit.textContent = "Starting...";
       }
       closeRedesignConfirm(true);
     });
@@ -6569,7 +6569,7 @@
       const wasLive = !!liveSiteUrl();
       const hadUpdates = wasLive && hasUnpublishedChanges();
       const watermarked = state.project?.watermark_enabled !== false;
-      setStatus(watermarked ? "Publishing to Vercel (with watermark)…" : "Publishing to Vercel…");
+      setStatus(watermarked ? "Publishing to Vercel (with watermark)..." : "Publishing to Vercel...");
       const headers = await authHeaders();
       const res = await fetch(workerUrl() + "/publish", {
         method: "POST",
@@ -6679,7 +6679,7 @@
     const btn = document.getElementById("btn-dev-unlock-top");
     if (btn) btn.disabled = true;
     try {
-      setStatus("Simulating paid unlock…");
+      setStatus("Simulating paid unlock...");
       const data = await workerPost("/dev-unlock-go-live", {
         projectId: state.projectId,
       });
@@ -6694,8 +6694,8 @@
       );
       window.StudioToast?.success?.(
         data?.redeployError
-          ? "Unlocked (redeploy had an issue — check status)"
-          : "Watermark removed — purchase simulated"
+          ? "Unlocked (redeploy had an issue - check status)"
+          : "Watermark removed - purchase simulated"
       );
     } catch (e) {
       setError(
@@ -6723,7 +6723,7 @@
     const confirmed = await confirmUnpublish();
     if (!confirmed) return;
     setError("");
-    setStatus("Taking site offline…");
+    setStatus("Taking site offline...");
     try {
       let data;
       try {
@@ -6803,7 +6803,7 @@
       const submit = document.getElementById("lb-unpublish-submit");
       if (submit) {
         submit.disabled = true;
-        submit.textContent = "Unpublishing…";
+        submit.textContent = "Unpublishing...";
       }
       closeUnpublishConfirm(true);
     });
@@ -6864,7 +6864,7 @@
       const submit = document.getElementById("lb-delete-submit");
       if (submit) {
         submit.disabled = true;
-        submit.textContent = "Deleting…";
+        submit.textContent = "Deleting...";
       }
       closeDeleteConfirm(true);
     });
@@ -6883,13 +6883,13 @@
       return;
     }
     if (isPaidProject(state.project)) {
-      setError("This website was paid for - it can’t be deleted.");
+      setError("This website was paid for - it can't be deleted.");
       return;
     }
     const confirmed = await confirmDeleteProject();
     if (!confirmed) return;
     setError("");
-    setStatus("Deleting project…");
+    setStatus("Deleting project...");
     try {
       if (liveSiteUrl()) {
         try {
@@ -6910,7 +6910,7 @@
         .select("id");
       if (error) throw error;
       if (!data?.length) {
-        throw new Error("This website was paid for - it can’t be deleted.");
+        throw new Error("This website was paid for - it can't be deleted.");
       }
       location.href = "dashboard.html";
     } catch (e) {
@@ -6972,7 +6972,7 @@
   function ownerTelHref(raw) {
     const digits = String(raw || "").replace(/\D/g, "");
     if (digits.length < 7) return "";
-    // US 10-digit → E.164; otherwise keep country code if already present.
+    // US 10-digit -> E.164; otherwise keep country code if already present.
     const e164 =
       digits.length === 10
         ? "1" + digits
@@ -7015,7 +7015,7 @@
     const href = ownerTelHref(phone);
     if (!href) {
       window.StudioToast?.info?.(
-        "Add the owner's phone in Settings → Contact, then try again."
+        "Add the owner's phone in Settings -> Contact, then try again."
       );
       setSiteSettingsOpen(true, "contact");
       return;
@@ -7037,8 +7037,8 @@
       window.matchMedia("(pointer: coarse)").matches;
     window.StudioToast?.info?.(
       coarse
-        ? "Calling " + display + "…"
-        : "Opening dialer for " + display + " — number copied. On Windows, pick Phone Link / your phone app."
+        ? "Calling " + display + "..."
+        : "Opening dialer for " + display + " - number copied. On Windows, pick Phone Link / your phone app."
     );
   }
 
@@ -7537,7 +7537,7 @@
   }
 
   function publishBusyLabel() {
-    return liveSiteUrl() && hasUnpublishedChanges() ? "Updating…" : "Publishing…";
+    return liveSiteUrl() && hasUnpublishedChanges() ? "Updating..." : "Publishing...";
   }
 
   let publishInFlight = false;
@@ -7656,7 +7656,7 @@
 
     const tokens = String(businessName)
       .toLowerCase()
-      .replace(/['’]/g, "")
+      .replace(/['']/g, "")
       .split(/[^a-z0-9]+/)
       .filter(Boolean);
 
@@ -7827,7 +7827,7 @@
     } else {
       hostname = String(raw || "").trim();
     }
-    // Manual only — never infer "on" from a leftover hostname.
+    // Manual only - never infer "on" from a leftover hostname.
     const enabled = ctx.customDomainEnabled === true;
     let provider = String(ctx.customDomainProvider || "").trim().toLowerCase();
     if (!provider && raw && typeof raw === "object") {
@@ -7866,7 +7866,7 @@
       helpUrl: "https://account.squarespace.com/domains",
       guideTitle: "Squarespace",
       steps: [
-        "Open <strong>DNS Settings</strong> → delete old A and www records.",
+        "Open <strong>DNS Settings</strong> -> delete old A and www records.",
         "Add the 2 records below, then click <strong>Check status</strong>.",
       ],
     },
@@ -7875,7 +7875,7 @@
       helpUrl: "https://dcc.godaddy.com/control/portfolio",
       guideTitle: "GoDaddy",
       steps: [
-        "Open <strong>DNS</strong> → remove old A / www records.",
+        "Open <strong>DNS</strong> -> remove old A / www records.",
         "Add the 2 records below, then click <strong>Check status</strong>.",
       ],
     },
@@ -7884,7 +7884,7 @@
       helpUrl: "https://ap.www.namecheap.com/domains/list/",
       guideTitle: "Namecheap",
       steps: [
-        "Open <strong>Advanced DNS</strong> → remove old A / www records.",
+        "Open <strong>Advanced DNS</strong> -> remove old A / www records.",
         "Add the 2 records below, then click <strong>Check status</strong>.",
       ],
     },
@@ -7893,7 +7893,7 @@
       helpUrl: "https://dash.cloudflare.com/",
       guideTitle: "Cloudflare",
       steps: [
-        "Open <strong>DNS</strong> → remove old A / www records (Proxy off).",
+        "Open <strong>DNS</strong> -> remove old A / www records (Proxy off).",
         "Add the 2 records below, then click <strong>Check status</strong>.",
       ],
     },
@@ -7902,7 +7902,7 @@
       helpUrl: "https://domains.google.com/",
       guideTitle: "Google Domains",
       steps: [
-        "Open <strong>DNS</strong> → remove old A / www records.",
+        "Open <strong>DNS</strong> -> remove old A / www records.",
         "Add the 2 records below, then click <strong>Check status</strong>.",
       ],
     },
@@ -7911,7 +7911,7 @@
       helpUrl: "https://my.bluehost.com/",
       guideTitle: "Bluehost",
       steps: [
-        "Open <strong>DNS</strong> → remove old A / www records.",
+        "Open <strong>DNS</strong> -> remove old A / www records.",
         "Add the 2 records below, then click <strong>Check status</strong>.",
       ],
     },
@@ -7920,7 +7920,7 @@
       helpUrl: "https://www.hover.com/control_panel",
       guideTitle: "Hover",
       steps: [
-        "Open <strong>DNS</strong> → remove old A / www records.",
+        "Open <strong>DNS</strong> -> remove old A / www records.",
         "Add the 2 records below, then click <strong>Check status</strong>.",
       ],
     },
@@ -7929,7 +7929,7 @@
       helpUrl: "https://porkbun.com/account/domainsSpeedy",
       guideTitle: "Porkbun",
       steps: [
-        "Open <strong>DNS</strong> → remove old A / www records.",
+        "Open <strong>DNS</strong> -> remove old A / www records.",
         "Add the 2 records below, then click <strong>Check status</strong>.",
       ],
     },
@@ -7938,7 +7938,7 @@
       helpUrl: "",
       guideTitle: "Your DNS host",
       steps: [
-        "Open DNS settings → remove old A / www records.",
+        "Open DNS settings -> remove old A / www records.",
         "Add the 2 records below, then click <strong>Check status</strong>.",
       ],
     },
@@ -7950,7 +7950,7 @@
       .toLowerCase();
   }
 
-  const DOMAIN_PROVIDER_PLACEHOLDER = "Select where your domain is managed…";
+  const DOMAIN_PROVIDER_PLACEHOLDER = "Select where your domain is managed...";
 
   function syncDomainProviderSelectUi(value) {
     const select = document.getElementById("lb-custom-domain-provider");
@@ -8073,14 +8073,14 @@
         tip:
           "Point " +
           host +
-          " with an A record → 76.76.21.21. Optional: CNAME www → cname.vercel-dns.com",
+          " with an A record -> 76.76.21.21. Optional: CNAME www -> cname.vercel-dns.com",
       };
     }
     return {
       type: "CNAME",
       name: labels.slice(0, -2).join(".") || labels[0] || "www",
       value: "cname.vercel-dns.com",
-      tip: "Point " + host + " with a CNAME → cname.vercel-dns.com",
+      tip: "Point " + host + " with a CNAME -> cname.vercel-dns.com",
     };
   }
 
@@ -8457,7 +8457,7 @@
     try {
       if (saveBtn) {
         saveBtn.disabled = true;
-        saveBtn.textContent = "Saving…";
+        saveBtn.textContent = "Saving...";
       }
       await persistProjectPatch({ business_context: ctx });
       syncContactFormWidgetUi();
@@ -8470,8 +8470,8 @@
 
       const live = liveSiteUrl();
       if (live && enabled) {
-        setContactFormFeedback("Applying on your live site…");
-        if (saveBtn) saveBtn.textContent = "Updating live site…";
+        setContactFormFeedback("Applying on your live site...");
+        if (saveBtn) saveBtn.textContent = "Updating live site...";
         await publish();
         setContactFormFeedback(
           "Live. Use Send test email, or submit the form on your live site.",
@@ -8480,7 +8480,7 @@
         window.StudioToast?.success?.("Contact form is live");
       } else if (live && !enabled) {
         setContactFormFeedback("Saved. Click Update in the top bar to remove it from the live site.");
-        window.StudioToast?.success?.("Contact form saved — click Update to apply");
+        window.StudioToast?.success?.("Contact form saved - click Update to apply");
       } else {
         setContactFormFeedback("Saved. Publish your site to activate the form.", "ok");
         window.StudioToast?.success?.("Contact form saved");
@@ -8516,9 +8516,9 @@
     try {
       if (testBtn) {
         testBtn.disabled = true;
-        testBtn.textContent = "Sending…";
+        testBtn.textContent = "Sending...";
       }
-      setContactFormFeedback("Sending test email to " + email + "…");
+      setContactFormFeedback("Sending test email to " + email + "...");
       // Ensure latest email is persisted before the public submit reads it.
       if (email !== cfg.notificationEmail) {
         await persistProjectPatch({
@@ -8720,14 +8720,14 @@
     try {
       if (saveBtn) {
         saveBtn.disabled = true;
-        saveBtn.textContent = "Saving…";
+        saveBtn.textContent = "Saving...";
       }
       await persistProjectPatch({ business_context: ctx });
       syncSiteFeatureWidgets();
       syncPublishLiveUi();
       if (liveSiteUrl() && (changed || hasUnpublishedChanges())) {
-        setSiteFeatureHint(id, "Updating the live site…");
-        if (saveBtn) saveBtn.textContent = "Updating live site…";
+        setSiteFeatureHint(id, "Updating the live site...");
+        if (saveBtn) saveBtn.textContent = "Updating live site...";
         const published = await publishLiveUpdate();
         if (!published) {
           setSiteFeatureHint(
@@ -8819,7 +8819,7 @@
     if (hint) {
       hint.textContent = on
         ? "Shows on the live site until go-live is paid. Save & apply, then publish to update."
-        : "Watermark off — publish will skip the Moonrise paywall badge.";
+        : "Watermark off - publish will skip the Moonrise paywall badge.";
     }
   }
 
@@ -8869,7 +8869,7 @@
       if (hint) {
         hint.textContent = e.target.checked
           ? "Shows on the live site until go-live is paid."
-          : "Watermark off — publish will skip the Moonrise paywall badge.";
+          : "Watermark off - publish will skip the Moonrise paywall badge.";
       }
     });
     document.getElementById("lb-watermark-save")?.addEventListener("click", () => {
@@ -9143,9 +9143,9 @@
     try {
       if (checkBtn) {
         checkBtn.disabled = true;
-        checkBtn.textContent = "Checking…";
+        checkBtn.textContent = "Checking...";
       }
-      setDomainWidgetFeedback("Checking domain status on Vercel…");
+      setDomainWidgetFeedback("Checking domain status on Vercel...");
       const data = await workerGet(
         "/domain?projectId=" + encodeURIComponent(state.projectId) + "&verify=1"
       );
@@ -9162,10 +9162,10 @@
           data?.diagnosis?.message ||
           domain?.diagnosis?.message ||
           domain?.dns?.tip ||
-          "DNS not updated yet. Delete old A/www records, add the cards below, wait 2–5 minutes, then check again.";
+          "DNS not updated yet. Delete old A/www records, add the cards below, wait 2-5 minutes, then check again.";
         setDomainWidgetFeedback(reason, data?.diagnosis?.ok === false || domain?.diagnosis?.ok === false ? "error" : "");
         window.StudioToast?.info?.(
-          data?.diagnosis?.ok ? "DNS looks right — wait a minute" : "DNS needs an update"
+          data?.diagnosis?.ok ? "DNS looks right - wait a minute" : "DNS needs an update"
         );
       }
     } catch (e) {
@@ -9201,7 +9201,7 @@
       try {
         if (saveBtn) {
           saveBtn.disabled = true;
-          saveBtn.textContent = "Disconnecting…";
+          saveBtn.textContent = "Disconnecting...";
         }
         const data = await workerPost("/domain", {
           projectId: state.projectId,
@@ -9257,10 +9257,10 @@
     try {
       if (saveBtn) {
         saveBtn.disabled = true;
-        saveBtn.textContent = "Connecting…";
+        saveBtn.textContent = "Connecting...";
       }
-      setSiteSettingsStatus("Connecting domain on Vercel…");
-      if (fromWidget) setDomainWidgetFeedback("Connecting domain on Vercel…");
+      setSiteSettingsStatus("Connecting domain on Vercel...");
+      if (fromWidget) setDomainWidgetFeedback("Connecting domain on Vercel...");
       const data = await workerPost("/domain", {
         projectId: state.projectId,
         domain,
@@ -9283,7 +9283,7 @@
       window.StudioToast?.success?.(
         data?.verified
           ? "Domain connected and verified"
-          : "Domain added — follow the " + providerLabel + " steps"
+          : "Domain added - follow the " + providerLabel + " steps"
       );
       setStatus("Custom domain connected.");
     } catch (e) {
@@ -9430,7 +9430,7 @@
         state.githubConnected = false;
         state.githubToken = "";
         renderGithubRepos([]);
-        setGithubStatus("Token changed — connect again.");
+        setGithubStatus("Token changed - connect again.");
         setGithubWizardStep(1);
       }
       updateOnboardContinue();
@@ -9983,7 +9983,7 @@
     if (!projectId && !finderHandoff) clearBuilderForNextVisit();
     const fromFinder = intakeFromQuery();
     hydrateIntakeFromBuilderHandoff();
-    // Finder → Editor: claim this lead so it stays hidden in Business Finder.
+    // Finder -> Editor: claim this lead so it stays hidden in Business Finder.
     if (state.fromFinder && state.leadId) {
       try {
         const key = "ms_lf_claimed_v1";
@@ -10010,7 +10010,7 @@
 
     setBuilderPhase("workspace");
     if (params().get("paid") === "1" && projectId) {
-      setStatus("Payment received - removing watermark…");
+      setStatus("Payment received - removing watermark...");
       const sessionId = String(params().get("session_id") || "").trim();
       if (sessionId.startsWith("cs_") && workerUrl()) {
         try {
@@ -10041,7 +10041,7 @@
     }
     if (projectId) {
       try {
-        setStatus("Loading project…");
+        setStatus("Loading project...");
         document.body.classList.add("ms-lb-project-loading");
         syncEmptyState();
         await loadProject(projectId);

@@ -104,7 +104,7 @@
       font-weight: 600;
     }
 
-    /* —— Slider —— */
+    /* -- Slider -- */
     .slider {
       --x: 0;
       --max: 0;
@@ -174,7 +174,7 @@
       scale: 1.06;
     }
 
-    /* —— Theme toggle —— */
+    /* -- Theme toggle -- */
     .theme-toggle {
       position: fixed;
       top: max(1rem, env(safe-area-inset-top));
@@ -238,7 +238,7 @@
 
   <main class="stage">
     <h1 class="brand">Slide</h1>
-    <p class="hint">Drag the handle — it tracks while you hold</p>
+    <p class="hint">Drag the handle - it tracks while you hold</p>
 
     <div
       class="slider"
@@ -324,7 +324,7 @@
         valueLabel.textContent = String(pct);
         slider.setAttribute("aria-valuenow", String(pct));
         if (announce) {
-          /* live region optional — valuetext is enough for SR */
+          /* live region optional - valuetext is enough for SR */
         }
       }
 

@@ -2,7 +2,7 @@
  * Runs synchronously in <head> on protected pages.
  * Hides the page until StudioAuth confirms the session, and redirects immediately
  * when there is no stored session (prevents a flash of private UI).
- * This is a UX gate only — tokens are not cryptographically verified here.
+ * This is a UX gate only - tokens are not cryptographically verified here.
  */
 (function () {
   var PUBLIC = {
@@ -19,7 +19,7 @@
 
   var file = location.pathname.split("/").pop() || "index.html";
 
-  // Channel hop storage cleared — navigation is static (no enter hide/ease).
+  // Channel hop storage cleared - navigation is static (no enter hide/ease).
   try {
     sessionStorage.removeItem("ms_channel_hop");
   } catch (e) {}
@@ -102,7 +102,7 @@
   };
 
   if (stored.fresh) {
-    // Access token still valid — show page immediately; requireAuth() validates in background.
+    // Access token still valid - show page immediately; requireAuth() validates in background.
     window.__msReleaseAuthGate();
   } else {
     // Access token expired but a refresh token is saved. Keep the page hidden

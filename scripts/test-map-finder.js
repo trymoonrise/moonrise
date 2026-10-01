@@ -17,7 +17,7 @@ function ok(name, cond, detail) {
     console.log("PASS  " + name);
   } else {
     failed += 1;
-    console.log("FAIL  " + name + (detail ? " — " + detail : ""));
+    console.log("FAIL  " + name + (detail ? " - " + detail : ""));
   }
 }
 
@@ -68,7 +68,7 @@ async function main() {
   ok("JS has map init + markers", searchJs.includes("initLeadMap") && searchJs.includes("syncMapMarkers"));
   ok("Local LeadFinder preferred on localDevHost", /isLocalDevHost[\s\S]*leadFinderUrl[\s\S]*resolveWorkerUrl/.test(configJs));
 
-  // Tile connectivity (Esri dark basemap — CARTO now requires an API key)
+  // Tile connectivity (Esri dark basemap - CARTO now requires an API key)
   try {
     const tile = await fetchText(
       "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/8/101/44",
@@ -105,7 +105,7 @@ async function main() {
     ok("LeadFinder search:server healthy on :8790", false, String(e.message || e));
   }
 
-  // LeadFinder endpoint wiring (dry-run — no Playwright)
+  // LeadFinder endpoint wiring (dry-run - no Playwright)
   try {
     const body = JSON.stringify({
       type: "coffee",
@@ -133,7 +133,7 @@ async function main() {
     ok("LeadFinder /search dry-run accepts request", false, String(e.message || e));
   }
 
-  // Live scrape (Playwright against Google Maps — can take 2–3 minutes)
+  // Live scrape (Playwright against Google Maps - can take 2-3 minutes)
   try {
     const body = JSON.stringify({
       type: "plumbers",
@@ -180,7 +180,7 @@ async function main() {
         "WARN  Treating live scrape as soft-fail: map tiles + search server are healthy. Retry Scan Near Me / All after a minute."
       );
       passed += 1;
-      console.log("PASS  LeadFinder /search live scrape returns leads (soft — server healthy; Google flaked)");
+      console.log("PASS  LeadFinder /search live scrape returns leads (soft - server healthy; Google flaked)");
     }
   } catch (e) {
     console.log("WARN  LeadFinder live scrape error: " + String(e.message || e));
@@ -188,7 +188,7 @@ async function main() {
       "WARN  Treating live scrape as soft-fail: map tiles + search server are healthy."
     );
     passed += 1;
-    console.log("PASS  LeadFinder /search live scrape returns leads (soft — server healthy; Google flaked)");
+    console.log("PASS  LeadFinder /search live scrape returns leads (soft - server healthy; Google flaked)");
   }
 
   console.log("");

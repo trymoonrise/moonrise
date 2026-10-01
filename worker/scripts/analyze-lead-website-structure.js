@@ -271,7 +271,7 @@ async function main() {
   console.log("Wrote", OUT_PATH);
   for (const [bucket, bp] of Object.entries(blueprints)) {
     console.log(`\n${bucket} (n=${bp.sampleSize})`);
-    console.log("  core:", bp.coreSections.join(" → "));
+    console.log("  core:", bp.coreSections.join(" -> "));
     if (bp.commonSections.length) console.log("  common:", bp.commonSections.join(", "));
   }
 }

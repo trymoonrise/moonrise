@@ -1991,7 +1991,7 @@ html[data-theme="dark"] .tpl-price-tip.tpl-price-tip--widget-float {
   display: none !important;
 }
 .lead-builder-widget.is-frame-loading .lead-builder-widget-stage::after {
-  content: "Loading…";
+  content: "Loading...";
   position: absolute;
   inset: 0;
   display: grid;
@@ -30503,7 +30503,7 @@ html[data-theme="dark"] .dashboard-redesign.owner-console-page .owner-playtest-d
   color: var(--text);
 }
 
-/* Branch flow (condition → action) */
+/* Branch flow (condition -> action) */
 .handout-branch-flow,
 .handout-pick-list {
   list-style: none;

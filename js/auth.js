@@ -105,7 +105,7 @@
     if (code === "email_send_failed") {
       return (
         fallback ||
-        "Moonrise couldn't send that email. Check spam, wait a minute, then try again — or contact " +
+        "Moonrise couldn't send that email. Check spam, wait a minute, then try again - or contact " +
           SUPPORT_EMAIL +
           "."
       );
@@ -528,7 +528,7 @@
         const err = authError({
           error:
             regEx?.message ||
-            "Signed in, but the passkey was not saved. You can add one in Settings → Passkeys.",
+            "Signed in, but the passkey was not saved. You can add one in Settings -> Passkeys.",
           code: "passkey_create_failed",
         });
         err.sessionOk = true;
@@ -561,7 +561,7 @@
       const err = authError({
         error:
           regEx?.message ||
-          "Account created, but the passkey was not saved. Add one in Settings → Passkeys.",
+          "Account created, but the passkey was not saved. Add one in Settings -> Passkeys.",
         code: "passkey_create_failed",
       });
       err.sessionOk = true;

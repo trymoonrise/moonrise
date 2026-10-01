@@ -367,7 +367,7 @@ async function main() {
   }
 
   const tryUnsplash = [...new Set(MORE_UNSPLASH)].filter((id) => !have.has(id));
-  console.error("Checking", tryUnsplash.length, "extra Unsplash IDs…");
+  console.error("Checking", tryUnsplash.length, "extra Unsplash IDs...");
   for (let i = 0; i < tryUnsplash.length; i += 1) {
     const id = tryUnsplash[i];
     if (await headOk(U(id))) {
@@ -382,7 +382,7 @@ async function main() {
   }
 
   const tryPexels = [...new Set(PEXELS_IDS)].filter((id) => !have.has(`pexels-${id}`));
-  console.error("Checking", tryPexels.length, "Pexels IDs…");
+  console.error("Checking", tryPexels.length, "Pexels IDs...");
   for (let i = 0; i < tryPexels.length; i += 1) {
     const id = tryPexels[i];
     if (await headOk(P(id))) {

@@ -24,7 +24,7 @@ Good feature requests usually answer:
 
 - Who is this for?
 - What problem does it solve?
-- What would “done” look like?
+- What would "done" look like?
 
 ## Code and product changes
 

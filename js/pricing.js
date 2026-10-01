@@ -217,7 +217,7 @@
   async function startPlanCheckout(planId, btn) {
     btn.disabled = true;
     const prev = btn.textContent;
-    btn.textContent = "Redirecting…";
+    btn.textContent = "Redirecting...";
     try {
       await window.StudioAuth.requireAuth();
       const base = workerUrl();
@@ -235,7 +235,7 @@
         return;
       }
       if (data.manageExisting) {
-        window.StudioToast?.info?.("Opening billing to change your plan…");
+        window.StudioToast?.info?.("Opening billing to change your plan...");
       }
       if (!data.url) throw new Error("No checkout URL returned");
       location.href = data.url;
@@ -258,7 +258,7 @@
 
     btn.disabled = true;
     const prev = btn.textContent;
-    btn.textContent = "Redirecting…";
+    btn.textContent = "Redirecting...";
     try {
       await window.StudioAuth.requireAuth();
       const base = workerUrl();
@@ -315,7 +315,7 @@
     const q = new URLSearchParams(location.search);
     const sessionId = q.get("session_id");
     if (q.get("sub") === "1") {
-      window.StudioToast?.success?.("Payment received - activating your plan…");
+      window.StudioToast?.success?.("Payment received - activating your plan...");
       let tries = 0;
       const poll = async () => {
         tries += 1;
@@ -340,7 +340,7 @@
       window.StudioToast?.error?.("Checkout canceled.");
       history.replaceState({}, "", "pricing.html");
     } else if (q.get("topup") === "1") {
-      window.StudioToast?.success?.("Top-up received - adding credits…");
+      window.StudioToast?.success?.("Top-up received - adding credits...");
       void (async () => {
         try {
           if (sessionId) await fulfillCheckout(sessionId);
@@ -361,7 +361,7 @@
   async function claimDeveloperCredits(btn) {
     btn.disabled = true;
     const prev = btn.textContent;
-    btn.textContent = "Claiming…";
+    btn.textContent = "Claiming...";
     try {
       await window.StudioAuth.requireAuth();
       const base = workerUrl();

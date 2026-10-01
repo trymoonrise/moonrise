@@ -3,28 +3,28 @@
  */
 
 const STRIPE_CHECKOUT_WRITE_MSG =
-  'Stripe key is missing Checkout Sessions Write. In Stripe Dashboard → API keys → edit this restricted key, enable "Checkout Sessions: Write", save, then retry payment.';
+  'Stripe key is missing Checkout Sessions Write. In Stripe Dashboard -> API keys -> edit this restricted key, enable "Checkout Sessions: Write", save, then retry payment.';
 
 const STRIPE_CHECKOUT_READ_MSG =
-  'Stripe key is missing Checkout Sessions Read. In Stripe Dashboard → API keys → edit this restricted key, enable "Checkout Sessions: Read", save, then retry.';
+  'Stripe key is missing Checkout Sessions Read. In Stripe Dashboard -> API keys -> edit this restricted key, enable "Checkout Sessions: Read", save, then retry.';
 
 const STRIPE_BILLING_PORTAL_MSG =
-  'Stripe key is missing Billing Portal access. In Stripe Dashboard → API keys → edit this restricted key, enable "Billing Portal: Write", save, then retry.';
+  'Stripe key is missing Billing Portal access. In Stripe Dashboard -> API keys -> edit this restricted key, enable "Billing Portal: Write", save, then retry.';
 
 const STRIPE_SUBSCRIPTIONS_MSG =
-  'Stripe key is missing Subscriptions Read. In Stripe Dashboard → API keys → edit this restricted key, enable "Subscriptions: Read", save, then retry.';
+  'Stripe key is missing Subscriptions Read. In Stripe Dashboard -> API keys -> edit this restricted key, enable "Subscriptions: Read", save, then retry.';
 
 const STRIPE_GENERIC_PERM_MSG =
-  'Stripe key is missing required permissions. In Stripe Dashboard → API keys → edit this restricted key, enable Checkout Sessions (Read + Write), Billing Portal (Write), and Subscriptions (Read), save, then retry payment.';
+  'Stripe key is missing required permissions. In Stripe Dashboard -> API keys -> edit this restricted key, enable Checkout Sessions (Read + Write), Billing Portal (Write), and Subscriptions (Read), save, then retry payment.';
 
 const STRIPE_NOT_CONFIGURED_MSG =
-  "Stripe is not configured on the server. Add STRIPE_SECRET_KEY in your deployment environment (Vercel → Settings → Environment Variables), redeploy, then retry payment.";
+  "Stripe is not configured on the server. Add STRIPE_SECRET_KEY in your deployment environment (Vercel -> Settings -> Environment Variables), redeploy, then retry payment.";
 
 const OPENROUTER_NOT_CONFIGURED_MSG =
   "Website generation is not configured. Add OPENROUTER_API_KEY in your deployment environment, redeploy the worker, then try again.";
 
 const SUPABASE_NOT_CONFIGURED_MSG =
-  "Supabase is not configured on the worker. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to worker/.env (local) or Vercel → Settings → Environment Variables, restart/redeploy, then retry.";
+  "Supabase is not configured on the worker. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to worker/.env (local) or Vercel -> Settings -> Environment Variables, restart/redeploy, then retry.";
 
 const VERCEL_NOT_CONFIGURED_MSG =
   "Publishing is not configured. Add VERCEL_TOKEN in your deployment environment, redeploy the worker, then try publishing again.";

@@ -730,7 +730,7 @@ async function main() {
 
   let validSet = new Set(allIds);
   if (doVerify) {
-    console.error("Verifying", allIds.length, "Unsplash IDs…");
+    console.error("Verifying", allIds.length, "Unsplash IDs...");
     const { good, bad } = await verifyIds(allIds);
     validSet = new Set(good);
     console.error("good", good.length, "bad", bad.length);

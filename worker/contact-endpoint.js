@@ -89,7 +89,7 @@ function ensureContactFormHtml(html, meta) {
     `\n<section id="contact" class="moonrise-contact-section" aria-labelledby="moonrise-contact-heading">` +
     `<div class="moonrise-contact-inner">` +
     `<h2 id="moonrise-contact-heading">Get in touch</h2>` +
-    `<p>Contact ${businessName} — we will get back to you shortly.</p>` +
+    `<p>Contact ${businessName} - we will get back to you shortly.</p>` +
     phoneLink +
     `<form class="moonrise-contact-form" method="post" action="#">` +
     `<div class="moonrise-contact-field"><label for="moonrise-contact-name">Name</label>` +

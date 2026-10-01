@@ -146,7 +146,7 @@ Return ONLY valid JSON (no markdown fences, no commentary):
 }
 
 Rules:
-- picks MUST use ids from the catalog you are given. Prefer 8–10 picks. Max 10.
+- picks MUST use ids from the catalog you are given. Prefer 8-10 picks. Max 10.
 - roles should cover a full landing: nav, hero, features (or cards/sections), proof (testimonials/hooks), cta, form, footer. Optional: buttons, backgrounds.
 - Match atmosphere to the trade (plumber ≠ florist ≠ law firm).
 - picks must support a FULL page (not hero-only): always include nav, hero, services/features, proof, form, footer.
@@ -158,7 +158,7 @@ Rules:
   - bg / surface / ink / muted / accent must work together as one palette (shared undertone or clear complementary accent).
   - ink on bg and ink on surface must stay highly readable (strong contrast). Accent must pop on both light and dark surfaces used in the plan.
   - Prefer rich, designed hues over muddy grays or neon clash. Ban default AI orange CTAs, purple-indigo SaaS, and flat navy-with-no-photo heroes.
-  - Trade cues: trades/home services → charcoal/ink + steel or warm neutral (black/white CTAs beat safety-orange pills); beauty/wellness → soft neutrals + one deep brand hue or script brand; law/finance → deep ink + restrained gold or teal; food → appetite-friendly warm tones; outdoor → natural greens - always refined, never clipart-loud.
+  - Trade cues: trades/home services -> charcoal/ink + steel or warm neutral (black/white CTAs beat safety-orange pills); beauty/wellness -> soft neutrals + one deep brand hue or script brand; law/finance -> deep ink + restrained gold or teal; food -> appetite-friendly warm tones; outdoor -> natural greens - always refined, never clipart-loud.
   - Type vibe: distinctive display (serif, script, or characterful grotesk) + solid body sans - never Inter/Roboto as the brand voice.
 - Do not write HTML. Do not invent contact facts.`;
 
@@ -178,7 +178,7 @@ Banned AI tells (never ship these):
 - Purple-to-indigo SaaS gradients, glow effects, rounded-full marketing pills
 - Hero packed with stats chips, address blocks, schedules, icon rows, or floating badges on the media
 - Inset hero image cards, side-panel heroes, or collage tiles in the first viewport
-- "Welcome to…", "Your trusted…", "Quality you can count on" cookie headlines
+- "Welcome to...", "Your trusted...", "Quality you can count on" cookie headlines
 
 Handmade bar (must pass):
 - Brand-test: if you remove the nav, the first viewport still feels brand-specific via imagery + type - not a reusable template.
@@ -197,7 +197,7 @@ Handmade bar (must pass):
 - Every generation must feel freshly designed for THIS run - never a cookie-cutter repeat.
 - Follow the Creative variation block in the user message: headline angle, layout emphasis, rhythm, and component twist.
 - Vary hero media treatment, section spacing rhythm, and CTA phrasing even when the business facts are unchanged.
-- Do NOT reuse generic headline formulas ("Welcome to…", "Your trusted…", "Quality service you can count on") across runs.
+- Do NOT reuse generic headline formulas ("Welcome to...", "Your trusted...", "Quality service you can count on") across runs.
 - Stay well formulated: one palette, one type pairing, one button system - unique in composition, not chaotic.
 
 ## Unified component reuse (critical)
@@ -219,11 +219,11 @@ Handmade bar (must pass):
 ## Handmade craft quality bar
 - Target careful boutique / local craft polish: confident whitespace, expressive type, real media, restrained motion - NOT Stripe/Linear SaaS chrome.
 - Hero (mandatory): edge-to-edge photo OR muted looping video (100svh/min-height full viewport). Overlay with linear and/or radial gradient for legibility - never a flat navy fill with no media.
-- Hero copy budget: brand wordmark + one headline (3–7 words) + one short support line (max ~10 words) + primary + secondary CTA. No paragraph under the hero headline.
+- Hero copy budget: brand wordmark + one headline (3-7 words) + one short support line (max ~10 words) + primary + secondary CTA. No paragraph under the hero headline.
 - Nav: follow the navigation kit first. If no nav kit, prefer a floating centered island (brand left, 3-5 links, one book CTA). Wordmark may use a distinctive brand face (serif or script) when the trade fits.
-- Services/features: photo-led or editorial rows preferred; if cards are used, fill them with pack imagery - not a wall of generic icons. Each card: short title (2–4 words) + one short line (max ~12 words).
+- Services/features: photo-led or editorial rows preferred; if cards are used, fill them with pack imagery - not a wall of generic icons. Each card: short title (2-4 words) + one short line (max ~12 words).
 - Proof: quiet trust strip, footnotes, or 2-3 real testimonial cards - no fake star counts, review scores, or invented awards.
-- CTA band: short headline (3–6 words) + one button, visually distinct but same design system.
+- CTA band: short headline (3-6 words) + one button, visually distinct but same design system.
 - Contact form: clean stacked fields - can sit in a light panel; not a bare unstyled form.
 - Footer: dark or muted surface, business name, phone, address, hours when provided.
 - Motion: ship 2-3 intentional motions (Ken-Burns/drift on hero media, staggered hero enter, soft scroll reveals, hover wipe). Honor prefers-reduced-motion.
@@ -242,7 +242,7 @@ Handmade bar (must pass):
 ## Component adaptation workflow (follow for EVERY kit item)
 1) READ the kit snippet's HTML tree: outer wrapper, grid/flex classes, media slots, heading hierarchy, button markup.
 2) COPY the DOM skeleton into your section (same nesting depth, same grid columns, same media placement).
-3) PORT the kit's CSS: extract border-radius, padding, shadows, typography scale, hover states → map to :root vars + shared classes.
+3) PORT the kit's CSS: extract border-radius, padding, shadows, typography scale, hover states -> map to :root vars + shared classes.
 4) REPLACE all demo text, names, prices, and placeholder images with business facts + stock media pack URLs.
 5) STRIP demo-only controls (toggles, gallery chrome, preset labels) and STRIP tear decorations: clip-path cuts, diagonal slashes, and anything positioned outside its card. Keep the visual design patterns that stay inside the section.
 6) CROSS-POLLINATE: the button style from hero/cta kits becomes .btn--primary everywhere; card treatment from services kit becomes .card everywhere.
@@ -258,7 +258,7 @@ Handmade bar (must pass):
    - One cohesive family: surfaces related to bg; muted derived from ink; accent used sparingly for CTAs, highlights, and key UI.
    - Readable contrast for text and buttons. Never place low-contrast muted text on muted backgrounds.
    - Buttons: solid accent (or ink) with clear hover; outline secondary that still reads on phone.
-   - Avoid default “AI purple / indigo on white”, flat #3b82f6-only looks, and default trade orange (#ea580c) pill accents.
+   - Avoid default "AI purple / indigo on white", flat #3b82f6-only looks, and default trade orange (#ea580c) pill accents.
    - Optional tasteful gradients or soft tints must stay inside the same palette - no random rainbow. Surfaces should shift (photo, soft tint, deep band) - never one flat color for the whole page.
 3) Typography: fluid scale with clamp() - optional eyebrow, h1 hero, h2 section titles, body, muted captions.
    - Pair a distinctive display (Fraunces / DM Serif Display / Playfair / characterful grotesk / optional script for brand wordmark) with a solid body sans (Sora, DM Sans, Manrope, Source Sans 3).
@@ -277,25 +277,25 @@ Handmade bar (must pass):
 - Videos: muted playsinline autoplay loop preload="metadata"; add a poster image.
 - Every major visual section needs real media. No empty gray boxes.
 
-## Copy rules (keep it simple — critical)
+## Copy rules (keep it simple - critical)
 - Prefer fewer words everywhere. Cut fluff. Short words beat clever ones.
 - Rewrite ALL visible text for THIS business. No Lorem / Acme / sample names.
 - Use the exact business name, phone, address, and hours when provided.
 - Invent no fake phone, address, hours, reviews, awards, or star ratings.
 - Never use em dash characters in visible copy. Use commas, periods, colons, or hyphens instead.
 - Hard length caps:
-  - Hero H1: 3–7 words. No subtitle paragraph — one short support line (max ~10 words).
-  - Section titles: 2–5 words.
+  - Hero H1: 3-7 words. No subtitle paragraph - one short support line (max ~10 words).
+  - Section titles: 2-5 words.
   - Section leads / body blurbs: max 1 short sentence (~12 words). Prefer none when the title is enough.
   - Service / feature cards: title + max 1 short line (~12 words). Never multi-sentence blurbs.
-  - About / FAQ answers: 1–2 short sentences max.
-  - CTA band: 3–6 words + button label.
+  - About / FAQ answers: 1-2 short sentences max.
+  - CTA band: 3-6 words + button label.
 - UX voice: plain, confident, trade-appropriate. Sound human, not like a brochure.
 - CTA labels must name the outcome ("Get a Quote", "Book Now", "Call Now") - never bare "Submit", "Learn More", or "Click Here".
 - Banned clichés and filler: "Welcome to", "Unlock", "Experience the difference", "In today's world", "Your one-stop shop", "We pride ourselves", "Streamlined solutions", "real results", "simplify complexity", "measurable outcomes", "elevate", "empower", "transform".
 - Testimonials: only real quotes explicitly present in business facts/notes. If none exist, omit testimonial copy or the testimonials section content - never fabricate names or quotes.
 - Announcement/promo bar: only when a real notice exists in business data. Never fake seasonal promos.
-- If space is tight, delete adjectives and marketing sentences first — never invent more copy.
+- If space is tight, delete adjectives and marketing sentences first - never invent more copy.
 
 ## Bone structure (page arc)
 - You receive a trade-specific ordered section list (navigation, hero, credibility, services, about, gallery, testimonials, pricing, faq, hours_location, map, cta_band, contact_form, footer - not all trades include every section).
@@ -324,11 +324,11 @@ Handmade bar (must pass):
 - Hero height grows with its content. A fixed header must not cover the headline or CTAs. On small screens, nav links stay visible and wrap. Never use display:none on the menu unless a working button opens it.
 - Single file: CSS in <style>, minimal JS only if needed.
 - No Moonrise watermark / paywall / studio branding.
-- Hero: full-bleed media + brand signal + one short headline (3–7 words) + one short support line (max ~10 words) + primary + secondary CTA. No hero paragraphs, stats, chips, or cards.
+- Hero: full-bleed media + brand signal + one short headline (3-7 words) + one short support line (max ~10 words) + primary + secondary CTA. No hero paragraphs, stats, chips, or cards.
 
 ## Output budget
 - Deliver one COMPLETE document that closes </html>. Prefer compact CSS and lean markup so the full page fits in a single response.
-- Target roughly 25–55 KB of HTML source for a typical 8–12 section landing. Do not pad with unused rules or duplicate media blocks.
+- Target roughly 25-55 KB of HTML source for a typical 8-12 section landing. Do not pad with unused rules or duplicate media blocks.
 - Never stop mid-section. If space is tight, shorten copy before dropping required sections.
 
 ## Responsive fit & essentials (critical - must survive any resize)
@@ -336,7 +336,7 @@ Handmade bar (must pass):
 1. Always include:
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-2. Layout must reflow cleanly from ~360px phone → tablet → desktop.
+2. Layout must reflow cleanly from ~360px phone -> tablet -> desktop.
    - No horizontal page scroll at any width.
    - Prefer overflow-x: clip on html/body only if needed.
    - Never trap vertical scroll.
@@ -354,14 +354,14 @@ Handmade bar (must pass):
 5. Typography must scale fluidly:
    - use clamp() (or equivalent)
    - headlines must not overflow or clip on narrow screens
-   - keep body line-length readable (~45–75ch)
+   - keep body line-length readable (~45-75ch)
 
 6. Navigation must fit on phones:
    - Keep the links on screen: wrap them under the wordmark, or use a real menu button that toggles them open.
    - Never set the link row to display:none with no control. Never let links overflow off-screen or collide with the logo.
 
 7. Multi-column sections must collapse responsively:
-   - services / features / pricing / team → 1 column on small, 2 mid, 3+ only on wide
+   - services / features / pricing / team -> 1 column on small, 2 mid, 3+ only on wide
    - forms stack full-width on mobile
 
 8. Touch targets and buttons:
@@ -527,8 +527,8 @@ function formatKitUsagePlaybook(presetPack) {
     "",
     "Cohesion rules:",
     "- When a kit lists Slots / Adapt hint, fill every slot and follow the adapt hint before inventing layout changes.",
-    "- Merge CSS from ALL kits into one stylesheet. Extract the best button rule from hero/cta kits → apply globally as .btn--primary.",
-    "- Extract card padding, radius, and shadow from the services/cards kit → apply to every .card (services, testimonials, pricing, team).",
+    "- Merge CSS from ALL kits into one stylesheet. Extract the best button rule from hero/cta kits -> apply globally as .btn--primary.",
+    "- Extract card padding, radius, and shadow from the services/cards kit -> apply to every .card (services, testimonials, pricing, team).",
     "- Extract section header rhythm (eyebrow + title + lead) from the strongest kit and reuse via .section-head on every section.",
     "- Do NOT write generic Bootstrap-style sections when a kit exists for that role.",
     "- Minimum bar: nav, hero, 2+ content sections, contact form, and footer must clearly inherit kit structure."
@@ -578,18 +578,18 @@ function formatKitSkeletonDraft(presetPack, structure, media) {
     if (!body) continue;
     const role = kit.role || kit.category || "component";
     chunks.push(
-      `<!-- KIT ${kit.id} | role:${role} | ${kit.title || "untitled"} — keep this DOM structure -->`,
+      `<!-- KIT ${kit.id} | role:${role} | ${kit.title || "untitled"} - keep this DOM structure -->`,
       body
     );
   }
   if (!chunks.length) return "";
 
   return [
-    "## Kit skeleton draft (START HERE — mandatory)",
+    "## Kit skeleton draft (START HERE - mandatory)",
     `Real Website Presets markup (${ordered.length} components) stitched for this page.`,
     "Your job: unify into ONE complete HTML document. Keep each kit's DOM (grids, media frames, cards, forms, nav/footer). Do not replace with plain stacked sections.",
     "Rewrite demo copy with business facts (short). Merge CSS into one <style> with :root palette + shared .btn/.card/.section. Fill stock media slots from the pack.",
-    "Add any missing bone sections only if no kit covers them — match kit visual language. Output full <!DOCTYPE html>…</html>.",
+    "Add any missing bone sections only if no kit covers them - match kit visual language. Output full <!DOCTYPE html>...</html>.",
     "",
     "```html",
     chunks.join("\n"),
@@ -631,7 +631,7 @@ function buildPlanUserPrompt(ctx, catalog) {
     formatPresetCatalog(catalog),
     "",
     "## Task",
-    "Decide atmosphere + a Coolors-quality trade-fit palette + collect 8–10 component ids (max 10). JSON only.",
+    "Decide atmosphere + a Coolors-quality trade-fit palette + collect 8-10 component ids (max 10). JSON only.",
   ].join("\n");
 }
 
@@ -677,16 +677,16 @@ function formatPresetPack(presetPack, media, options = {}) {
         const styleMatch = html.match(/<style\b[^>]*>([\s\S]*?)<\/style>/i);
         const css = styleMatch ? String(styleMatch[1] || "").trim() : "";
         lines.push(
-          "DOM is in the Kit skeleton draft above — PORT this CSS into shared classes:",
+          "DOM is in the Kit skeleton draft above - PORT this CSS into shared classes:",
           "```css",
           css || "/* use structure hints; CSS was truncated */",
           "```"
         );
       } else {
         lines.push(
-          "COPY its HTML tree (wrappers → grid → media/copy slots). PORT its CSS patterns into shared classes.",
+          "COPY its HTML tree (wrappers -> grid -> media/copy slots). PORT its CSS patterns into shared classes.",
           "Fill every listed slot with business facts / stock media. Keep grid columns, media placement, card shells, button shapes, and spacing rhythm.",
-          "Rewrite placeholder copy with business facts. Recolor hard-coded demo colors → :root palette vars.",
+          "Rewrite placeholder copy with business facts. Recolor hard-coded demo colors -> :root palette vars.",
           "Do not replace with a generic invented layout. Strip demo-only animation if it fights the unified system.",
           "```html",
           html,
@@ -760,7 +760,7 @@ function formatDesignSystemBlueprint(plan) {
     ".container | .section | .section-head | .eyebrow | .section-title | .section-lead",
     ".btn | .btn--primary | .btn--secondary | .card (interaction containers only) | .grid | .grid--2 | .grid--3",
     "",
-    "Kit adaptation rule: preserve each preset's grid/media hierarchy; remap colors to vars; map buttons → .btn; map interactive tiles → .card.",
+    "Kit adaptation rule: preserve each preset's grid/media hierarchy; remap colors to vars; map buttons -> .btn; map interactive tiles -> .card.",
     "Hero rule: full-bleed media plane + overlay type. Do not wrap hero copy in a bordered/shadowed card.",
     "Component quality bar: must feel handmade and brand-specific - if the hero could belong to any business after removing the name, redesign it.",
   ].join("\n");
@@ -782,7 +782,7 @@ function formatAssemblyMap(structure, presetPack) {
   }
 
   const lines = [
-    "## Section → kit assembly map",
+    "## Section -> kit assembly map",
     "Build every section below in order. When a kit is listed, you MUST adapt that kit's HTML/CSS - do not freestyle a generic section.",
     "",
   ];
@@ -794,12 +794,12 @@ function formatAssemblyMap(structure, presetPack) {
     if (kit) {
       const hints = extractPresetStructureHints(String(kit.html || ""));
       lines.push(
-        `${i + 1}. ${label} (\`${section}\`) → ADAPT Kit "${kit.title || kit.id}" [id: ${kit.id}]`,
+        `${i + 1}. ${label} (\`${section}\`) -> ADAPT Kit "${kit.title || kit.id}" [id: ${kit.id}]`,
         `   Use its ${hints.layout} layout (${hints.patterns}). Preserve classes/patterns: ${hints.keyClasses}`
       );
     } else {
       lines.push(
-        `${i + 1}. ${label} (\`${section}\`) → no kit - build with shared .section/.card/.btn primitives + stock media, matching the visual language of the kits above`
+        `${i + 1}. ${label} (\`${section}\`) -> no kit - build with shared .section/.card/.btn primitives + stock media, matching the visual language of the kits above`
       );
     }
   });
@@ -858,13 +858,13 @@ function buildGenerationUserPrompt(ctx, presetPack, plan, media, options = {}) {
     "",
     "## Task",
     `Assemble one complete single-page site with all ${sectionCount} bone-structure sections.`,
-    "Step 1: Start from the Kit skeleton draft above — do not invent a blank page.",
+    "Step 1: Start from the Kit skeleton draft above - do not invent a blank page.",
     "Step 2: Write :root tokens + shared utility classes (.container, .section, .btn, .card, .grid) and merge kit CSS into one <style>.",
     "Step 3: For each section, keep the mapped kit's HTML skeleton; rewrite copy; recolor to palette; fill stock media.",
-    "Step 4: Cross-pollinate kit styles - hero button → .btn--primary globally; services card → .card globally; nav spacing → all sections.",
+    "Step 4: Cross-pollinate kit styles - hero button -> .btn--primary globally; services card -> .card globally; nav spacing -> all sections.",
     "Step 5: Hero must include real image or muted looping video from the pack, using the hero kit's media frame.",
     "Include contact form and footer. Do not use em dashes in visible copy.",
-    "COPY BUDGET (hard): keep it simple. Hero H1 3–7 words + support line max ~10 words (no hero paragraph). Section titles 2–5 words. Card/body blurbs one short line (~12 words) or omit. No brochure fluff, no long marketing sentences.",
+    "COPY BUDGET (hard): keep it simple. Hero H1 3-7 words + support line max ~10 words (no hero paragraph). Section titles 2-5 words. Card/body blurbs one short line (~12 words) or omit. No brochure fluff, no long marketing sentences.",
     ctx.notes
       ? "Honor the creator generation instructions in Business facts - they override generic layout/style defaults when specific."
       : "",

@@ -59,7 +59,7 @@ export function config() {
     // Hard-locked: every Discord message is exactly 1000 leads.
     discordBatchSize: 1000,
     queriesPerRun: Math.max(1, Number(process.env.QUERIES_PER_RUN || 50)),
-    // Parallel Google Maps tabs in one Chromium (1–8). Higher = faster, more CPU/RAM.
+    // Parallel Google Maps tabs in one Chromium (1-8). Higher = faster, more CPU/RAM.
     scrapeWorkers: Math.max(1, Math.min(8, Number(process.env.SCRAPE_WORKERS || 4))),
     cleanPageSize: Math.max(10, Number(process.env.CLEAN_PAGE_SIZE || 40)),
     minSearchResults: Math.max(1, Number(process.env.MIN_SEARCH_RESULTS || 50)),

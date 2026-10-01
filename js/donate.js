@@ -322,7 +322,7 @@
     if (btn) {
       btn.disabled = true;
       btn.classList.add("is-loading");
-      btn.textContent = "Opening checkout…";
+      btn.textContent = "Opening checkout...";
     }
 
     try {
@@ -360,7 +360,7 @@
     }
     if (params.get("paid") !== "1" || !sessionId) return;
 
-    setOk("Confirming your donation…");
+    setOk("Confirming your donation...");
     try {
       const base = workerUrl();
       const res = await fetch(base + "/donate-fulfill", {

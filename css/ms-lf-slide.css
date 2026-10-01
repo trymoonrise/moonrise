@@ -1,4 +1,4 @@
-/* Slide-to-generate — thumb stays inside the track (CSS clamp + fixed size). */
+/* Slide-to-generate - thumb stays inside the track (CSS clamp + fixed size). */
 .ms-lf-slide {
   --ms-lf-slide-x: 0px;
   --ms-lf-slide-max: 0px;
@@ -95,7 +95,7 @@
 }
 
 /*
- * Thumb travel uses --ms-lf-slide-x (0 → max) on the compositor.
+ * Thumb travel uses --ms-lf-slide-x (0 -> max) on the compositor.
  * The track clips anything past the end.
  */
 .ms-lf-slide-thumb {

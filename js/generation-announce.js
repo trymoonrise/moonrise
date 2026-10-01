@@ -1,5 +1,5 @@
 /**
- * Floating generation announcement — standalone UI component.
+ * Floating generation announcement - standalone UI component.
  * Requires generation-lock.js (loaded automatically if missing).
  */
 (function (global) {
@@ -70,7 +70,7 @@
       '<div class="ms-gen-announce-card">' +
       '<span class="ms-gen-announce-spinner" aria-hidden="true"></span>' +
       '<div class="ms-gen-announce-copy">' +
-      "<span>Generating your website…</span>" +
+      "<span>Generating your website...</span>" +
       '<span class="ms-gen-announce-sub">Keep this tab open while we build it.</span>' +
       "</div>" +
       "</div>" +

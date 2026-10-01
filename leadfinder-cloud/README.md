@@ -21,7 +21,7 @@ Hands-free Google Maps lead scraper. Same seed file + scrape idea as the Chrome 
 ## Security
 
 Your Discord webhook URL is a secret. Put it only in Render env vars / local `.env`.  
-**If you pasted it in chat, rotate it** in Discord → Channel → Integrations → Webhooks → regenerate.
+**If you pasted it in chat, rotate it** in Discord -> Channel -> Integrations -> Webhooks -> regenerate.
 
 ## On-demand search scrape (Business Finder)
 
@@ -63,12 +63,12 @@ node src/cloudRun.js --limit=1
 ## Deploy on Render
 
 1. Push repo to GitHub (include `LeadFinderCloud/`)
-2. [Render](https://dashboard.render.com) → **New** → **Blueprint** → select repo
+2. [Render](https://dashboard.render.com) -> **New** -> **Blueprint** -> select repo
 3. Root / blueprint file: `LeadFinderCloud/render.yaml`
 4. Set secrets:
    - `DISCORD_WEBHOOK_URL`
    - `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (recommended)
-5. In Supabase → Storage → create private bucket **`leadfinder-cloud`**  
+5. In Supabase -> Storage -> create private bucket **`leadfinder-cloud`**  
    (holds `cloud-state.json` so cron runs remember `nextIndex` + Discord pending buffer)
 6. Trigger a manual run from the Cron service to verify Discord delivery
 

@@ -5187,7 +5187,7 @@ input.ms-input:-webkit-autofill:focus {
   transition: none;
 }
 
-/* —— Pro lead card (ported from website lf-pro, Studio styling) —— */
+/* -- Pro lead card (ported from website lf-pro, Studio styling) -- */
 .ms-lead-card.ms-lf-pro {
   display: flex;
   flex-direction: column;
@@ -5518,7 +5518,7 @@ input.ms-input:-webkit-autofill:focus {
   overflow: hidden;
 }
 
-/* Finder slide visuals — layout/physics live in css/ms-lf-slide.css */
+/* Finder slide visuals - layout/physics live in css/ms-lf-slide.css */
 .ms-lf-slide-track {
   background: linear-gradient(135deg, #60a5fa, #2563eb);
   box-shadow:
@@ -19136,7 +19136,7 @@ body.ms-lb-qr-open {
     max-width: min(82vw, 19rem);
   }
 
-  /* Portrait / vertical card (taller than wide) — not landscape/sideways */
+  /* Portrait / vertical card (taller than wide) - not landscape/sideways */
   .ms-lb-qr-card-face {
     width: 100%;
     aspect-ratio: 5 / 8;

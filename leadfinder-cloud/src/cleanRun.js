@@ -14,7 +14,7 @@ const DEFAULT_STATE = {
   updated: 0,
   websitesFound: 0,
   failed: 0,
-  mode: "missing_website", // missing_website → then all_stale
+  mode: "missing_website", // missing_website -> then all_stale
   updatedAt: "",
 };
 
@@ -295,7 +295,7 @@ async function main() {
             event: "status",
             text: `Website found · ${name} · ${item.websiteUrl}`,
           });
-          console.log(`Clean website found: ${name} → ${item.websiteUrl}`);
+          console.log(`Clean website found: ${name} -> ${item.websiteUrl}`);
         }
 
         if (item.changes.length || item.gainedWebsite) {

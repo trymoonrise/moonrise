@@ -64,7 +64,7 @@
     const name = escapeHtml(entry.name || "Supporter");
     const total = escapeHtml(entry.totalLabel || "");
     const message = String(entry.message || "").trim();
-    const messageHtml = message ? `<p class="ms-ldb-row-note">“${escapeHtml(message)}”</p>` : "";
+    const messageHtml = message ? `<p class="ms-ldb-row-note">"${escapeHtml(message)}"</p>` : "";
 
     return (
       `<li class="ms-ldb-row${rankClass(rank)}">` +
@@ -96,8 +96,8 @@
         `<li class="ms-ldb-row is-skeleton" aria-hidden="true"></li>`.repeat(6);
       refs.listEl.setAttribute("aria-busy", "true");
     }
-    if (refs?.countEl) refs.countEl.textContent = "—";
-    if (refs?.totalEl) refs.totalEl.textContent = "—";
+    if (refs?.countEl) refs.countEl.textContent = "-";
+    if (refs?.totalEl) refs.totalEl.textContent = "-";
   }
 
   function renderFullPage(refs, entries) {
@@ -135,14 +135,14 @@
   function renderPlaceholder() {
     return (
       `<li class="ms-donate-lb-item ms-donate-lb-item--placeholder has-message">` +
-      `<span class="ms-donate-lb-rank" aria-hidden="true">#–</span>` +
+      `<span class="ms-donate-lb-rank" aria-hidden="true">#-</span>` +
       `<div class="ms-donate-lb-main">` +
       `<img class="ms-donate-lb-avatar ms-donate-lb-avatar--placeholder" src="doc/pfp.png" alt="" width="32" height="32" loading="lazy" decoding="async">` +
       `<div class="ms-donate-lb-copy">` +
       `<strong class="ms-donate-lb-name">Your profile here</strong>` +
-      `<p class="ms-donate-lb-message is-muted">Be the first supporter — pick an amount and leave a wall note.</p>` +
+      `<p class="ms-donate-lb-message is-muted">Be the first supporter - pick an amount and leave a wall note.</p>` +
       `</div></div>` +
-      `<span class="ms-donate-lb-amount">—</span>` +
+      `<span class="ms-donate-lb-amount">-</span>` +
       `</li>`
     );
   }

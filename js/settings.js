@@ -233,7 +233,7 @@
 
     notifToggle.disabled = false;
     if (enabled) {
-      setNotifHint("On — you will get a notification when a client purchases their website.");
+      setNotifHint("On - you will get a notification when a client purchases their website.");
     } else {
       setNotifHint("Turn on to get a device notification for each new paid client.");
     }
@@ -385,7 +385,7 @@
       await window.MoonrisePush.setClientPurchaseAlerts(wantOn);
       notifToggle.checked = wantOn;
       if (wantOn) {
-        setNotifHint("On — you will get a notification when a client purchases their website.");
+        setNotifHint("On - you will get a notification when a client purchases their website.");
         window.StudioToast?.success?.("Client purchase alerts enabled.");
       } else {
         setNotifHint("Turn on to get a device notification for each new paid client.");

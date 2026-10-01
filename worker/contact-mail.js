@@ -151,7 +151,7 @@ ${
   hosting
     ? `<p style="margin:0 0 12px;">Hosting &amp; maintenance: <strong>${escapeHtml(
         hosting
-      )}/month</strong> — cancel anytime.</p>`
+      )}/month</strong> - cancel anytime.</p>`
     : ""
 }
 ${
@@ -167,7 +167,7 @@ ${
     ? `<p style="margin:20px 0 12px;"><a href="${escapeHtml(
         manage
       )}" style="display:inline-block;padding:10px 16px;border-radius:8px;background:#0f172a;color:#fff;text-decoration:none;font-weight:600;">Manage or cancel hosting</a></p>
-<p style="margin:0 0 12px;font-size:13px;color:#64748b;">Use the email address you paid with to open Stripe’s secure billing portal.</p>`
+<p style="margin:0 0 12px;font-size:13px;color:#64748b;">Use the email address you paid with to open Stripe's secure billing portal.</p>`
     : ""
 }
 <p style="margin:20px 0 0;font-size:12px;color:#94a3b8;">Moonrise</p>

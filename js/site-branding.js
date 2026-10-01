@@ -117,7 +117,7 @@
   upsertMeta("property", "og:title", pageTitle);
   upsertMeta("property", "og:description", pageDesc);
   upsertMeta("property", "og:image", embedUrl);
-  upsertMeta("property", "og:image:alt", siteName + " — Build websites. Get paid.");
+  upsertMeta("property", "og:image:alt", siteName + " - Build websites. Get paid.");
   upsertMeta("property", "og:url", canonical);
   upsertMeta("property", "og:locale", locale);
 

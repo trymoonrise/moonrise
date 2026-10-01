@@ -552,7 +552,7 @@ export async function scrapeMapsSearch(page, queryText, cfg, geo) {
   }
 
   // Wait until either a results feed OR a place action panel is ready.
-  // Exact-name searches often redirect /search → /place after a beat.
+  // Exact-name searches often redirect /search -> /place after a beat.
   const readyMs = cfg.pageReadyMs || 6000;
   await page
     .waitForSelector(
@@ -563,7 +563,7 @@ export async function scrapeMapsSearch(page, queryText, cfg, geo) {
 
   await sleep(cfg.pageSettleMs || 250);
 
-  // Poll briefly for /search → /place redirect + contact actions.
+  // Poll briefly for /search -> /place redirect + contact actions.
   let landedOnPlace = false;
   for (let i = 0; i < 20; i += 1) {
     landedOnPlace = await page.evaluate(() => {

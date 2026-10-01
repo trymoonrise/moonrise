@@ -28,7 +28,7 @@ const HOST = String(
 );
 const SEARCH_SECRET = String(process.env.LEADFINDER_SEARCH_SECRET || "").trim();
 
-/** Client aborts around 180s — never leave a lock stuck longer than this. */
+/** Client aborts around 180s - never leave a lock stuck longer than this. */
 const BUSY_MAX_MS = Math.max(
   60_000,
   Number(process.env.LEADFINDER_BUSY_MAX_MS || 3 * 60_000) || 180_000,
@@ -59,7 +59,7 @@ function clearStalePlaywrightBusy() {
     Date.now() - playwrightBusySince > BUSY_MAX_MS
   ) {
     console.warn(
-      `Playwright lock stale (${Math.round((Date.now() - playwrightBusySince) / 1000)}s, kind=${playwrightBusyKind}) — clearing`,
+      `Playwright lock stale (${Math.round((Date.now() - playwrightBusySince) / 1000)}s, kind=${playwrightBusyKind}) - clearing`,
     );
     setPlaywrightBusy(false);
     return true;

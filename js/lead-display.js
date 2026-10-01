@@ -66,7 +66,7 @@
 
   /**
    * Recover "Gardener" / "Tutoring service" from snippets like
-   * "Pjs 5.0(19)GardenerTemporarily" or "… 5.0(4)Educational consultantOpen".
+   * "Pjs 5.0(19)GardenerTemporarily" or "... 5.0(4)Educational consultantOpen".
    */
   function extractCategoryFromMashedMapsSnippet(value, name) {
     const src = raw(value);
@@ -81,7 +81,7 @@
         ""
       )
       .trim();
-    // Soft-split jammed CamelCase tails left after status strip ("LawnCare" → "Lawn Care").
+    // Soft-split jammed CamelCase tails left after status strip ("LawnCare" -> "Lawn Care").
     after = after.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\s+/g, " ").trim();
     if (!after) return "";
     if (isMapsUiLabel(after) || looksLikeStreetAddress(after) || looksLikeHours(after)) return "";
@@ -137,7 +137,7 @@
       .trim();
   }
 
-  /** Remove Open/Closed/hours glued onto street lines ("Unit DClosed", "… #COpen 24 hours"). */
+  /** Remove Open/Closed/hours glued onto street lines ("Unit DClosed", "... #COpen 24 hours"). */
   function stripTrailingHoursStatus(value) {
     let v = spaceMapsTitleMash(value);
     if (!v) return "";
@@ -226,7 +226,7 @@
     if (looksLikeHours(v)) return false;
     if (PHONE_RE.test(v)) return false;
     if (v.startsWith("http")) return false;
-    // Business-name + rating mash ("… Lane … 4.7(198)") is not an address.
+    // Business-name + rating mash ("... Lane ... 4.7(198)") is not an address.
     if (looksLikeMapsTitleMash(raw(value)) && !ADDRESS_RE.test(cleaned)) return false;
     if (ADDRESS_RE.test(v)) return true;
     if (STREET_WORD_RE.test(v) && ADDRESS_RE.test(v)) return true;
@@ -696,7 +696,7 @@
       const [a, b] = avatarColorsForLead(lead);
       return `--lf-avatar-a:${a};--lf-avatar-b:${b}`;
     },
-    /** Suggested upfront tier from Google review count (Business Finder → Lead Builder). */
+    /** Suggested upfront tier from Google review count (Business Finder -> Lead Builder). */
     priceTierFromReviewCount(reviewCount) {
       const c = Number(reviewCount);
       if (!Number.isFinite(c) || c < 0) return "$500";

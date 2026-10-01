@@ -1,4 +1,4 @@
-/* Map-based Business Finder — large mockup-matched UI */
+/* Map-based Business Finder - large mockup-matched UI */
 
 .ms-sr-only {
   position: absolute;
@@ -225,7 +225,7 @@
   display: block;
 }
 
-/* Grey pill shell — white action chips sit on top */
+/* Grey pill shell - white action chips sit on top */
 .ms-lf-map-pill {
   display: block;
   width: 100%;
@@ -1597,7 +1597,7 @@ body[data-page="leads"] #ms-hard-refresh,
     --lf-action-h: 3.4rem;
     --lf-map-pad: 1.65rem;
     --lf-chrome-w: min(26.5rem, calc(100% - (var(--lf-map-pad) * 2)));
-    /* Fallback only — JS syncSheetLayoutVars() measures the Scan dock. */
+    /* Fallback only - JS syncSheetLayoutVars() measures the Scan dock. */
     --lf-actions-clearance: 6.15rem;
     --lf-radius-sheet: 32px;
     padding-top: 2rem;
@@ -1775,7 +1775,7 @@ body[data-page="leads"] #ms-hard-refresh,
   }
 
   /*
-   * PC results sheet — same language as mobile:
+   * PC results sheet - same language as mobile:
    * floor-anchored white sheet with dock padding; height driven by --lf-sheet-h (draggable).
    */
   .ms-lf-map-panel {

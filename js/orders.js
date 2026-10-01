@@ -37,7 +37,7 @@
 
     try {
       if (typeof location !== "undefined" && /^https?:$/i.test(location.protocol)) {
-        // Same-origin when Studio is served from the Vercel host (rewrites /public-orders → API).
+        // Same-origin when Studio is served from the Vercel host (rewrites /public-orders -> API).
         if (location.origin === cloud || location.hostname.endsWith("vercel.app")) {
           add(location.origin);
         }
@@ -234,7 +234,7 @@
     async function load(q) {
       latestQuery = String(q || "").trim();
       statusEl.hidden = false;
-      statusEl.textContent = "Loading published sites…";
+      statusEl.textContent = "Loading published sites...";
       try {
         const result = await fetchOrders(latestQuery, activeYear);
         if (String(searchEl?.value || "").trim() !== latestQuery) return;

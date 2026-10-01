@@ -41,8 +41,8 @@
         ui.listEl.innerHTML =
           '<li class="ms-ldb-empty">Leaderboard unavailable right now. Try again in a moment.</li>';
       }
-      if (ui.countEl) ui.countEl.textContent = "—";
-      if (ui.totalEl) ui.totalEl.textContent = "—";
+      if (ui.countEl) ui.countEl.textContent = "-";
+      if (ui.totalEl) ui.totalEl.textContent = "-";
       setError(e.message || "Could not load leaderboard");
     }
   }

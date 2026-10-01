@@ -295,7 +295,7 @@
     if (leftEl) leftEl.textContent = reached ? "Reached" : formatCommission(remaining);
     if (leftLabelEl) leftLabelEl.textContent = reached ? "" : "left";
     if (avgEl) {
-      avgEl.textContent = sales > 0.001 ? formatCommission(commission / sales) : "—";
+      avgEl.textContent = sales > 0.001 ? formatCommission(commission / sales) : "-";
     }
     if (pctEl) pctEl.textContent = Math.round(pct) + "%";
     if (ring) {
@@ -794,7 +794,7 @@
       text = [category, address, phone, hours].filter(Boolean).join(" · ");
     }
     if (!text) text = "Website built in Moonrise Studio.";
-    if (text.length > 220) text = text.slice(0, 217).trim() + "…";
+    if (text.length > 220) text = text.slice(0, 217).trim() + "...";
     return { text, category };
   }
 
@@ -948,7 +948,7 @@
     if (!dialog || !project) return;
     if (!canDeleteProject(project)) {
       window.StudioToast?.error?.(
-        "This website was paid for - it can’t be deleted."
+        "This website was paid for - it can't be deleted."
       );
       return;
     }
@@ -984,7 +984,7 @@
     if (project && !canDeleteProject(project)) {
       if (error) {
         error.hidden = false;
-        error.textContent = "This website was paid for - it can’t be deleted.";
+        error.textContent = "This website was paid for - it can't be deleted.";
       }
       return;
     }
@@ -1013,7 +1013,7 @@
       if (dbError) throw dbError;
       if (!data?.length) {
         if (project && !canDeleteProject(project)) {
-          throw new Error("This website was paid for - it can’t be deleted.");
+          throw new Error("This website was paid for - it can't be deleted.");
         }
         throw new Error("Could not delete project. Refresh and try again.");
       }

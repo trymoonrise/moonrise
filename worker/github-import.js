@@ -1,6 +1,6 @@
 /**
  * Ephemeral GitHub PAT helpers for Builder Upload import.
- * Tokens are never persisted — only used for the request lifetime.
+ * Tokens are never persisted - only used for the request lifetime.
  */
 
 const GH_API = "https://api.github.com";
@@ -385,12 +385,12 @@ function rewriteSiteBasePaths(html, prefixes) {
   ].sort((a, b) => b.length - a.length);
   for (const prefix of list) {
     const esc = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    // href="/prefix" or href="/prefix/" → index.html (must run before the path strip)
+    // href="/prefix" or href="/prefix/" -> index.html (must run before the path strip)
     out = out.replace(
       new RegExp(`(\\b(?:href|src|action)=["'])\\/?${esc}\\/?(?=["'#?])`, "gi"),
       "$1index.html"
     );
-    // href="/prefix/page.html" → href="page.html"
+    // href="/prefix/page.html" -> href="page.html"
     out = out.replace(
       new RegExp(`(\\b(?:href|src|action)=["'])\\/?${esc}\\/(?!\\/)`, "gi"),
       "$1"
@@ -620,7 +620,7 @@ async function importRepoSite(token, { fullName, pathPrefix = "" } = {}) {
       // Adjust reservation to actual size.
       total += Math.max(0, file.size - estimate);
       if (total > MAX_FETCH_BYTES && file.size > estimate) {
-        // Over budget after real size — drop this optional asset.
+        // Over budget after real size - drop this optional asset.
         total -= file.size;
         return;
       }

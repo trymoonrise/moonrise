@@ -311,7 +311,7 @@
     function onCancel(ev) {
       if (usePointer && ev?.pointerId != null && ev.pointerId !== pointerId) return;
       // Browser stole the gesture (scroll/refresh). Keep progress: complete if far enough,
-      // otherwise soft-hold then return — never hard-clear mid-slide without animation.
+      // otherwise soft-hold then return - never hard-clear mid-slide without animation.
       latestX = clientX(ev || {});
       current = setX(slide, originLeft + (latestX - pointerOriginX), gestureMetrics, { drag: true });
       if (Math.abs(latestX - pointerOriginX) >= 3) moved = true;

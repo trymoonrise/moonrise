@@ -1,6 +1,6 @@
 /**
  * PWA install support.
- * The floating Install Moonrise banner is not shown. Install lives in Settings → Download app.
+ * The floating Install Moonrise banner is not shown. Install lives in Settings -> Download app.
  */
 (function () {
   if (window.__msInstallHintBooted) return;
@@ -148,8 +148,8 @@
 
 
   window.addEventListener("beforeinstallprompt", (e) => {
-    // Never call preventDefault — Chromium logs a noisy warning whenever the
-    // deferred prompt is captured without a later prompt() call. Settings →
+    // Never call preventDefault - Chromium logs a noisy warning whenever the
+    // deferred prompt is captured without a later prompt() call. Settings ->
     // Download still documents how to install via the browser UI.
     deferredInstallPrompt = null;
     notifyInstallStateChanged();
@@ -182,7 +182,7 @@
     if (deferredInstallPrompt) {
       return "Tap <em>Install</em> from the browser menu";
     }
-    return "Use browser menu → <em>Install</em> / <em>Add to Home Screen</em>";
+    return "Use browser menu -> <em>Install</em> / <em>Add to Home Screen</em>";
   }
 
   function dismissInstallHint(banner) {

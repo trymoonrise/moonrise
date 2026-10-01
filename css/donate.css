@@ -1,4 +1,4 @@
-/* Donate — single unified Support card */
+/* Donate - single unified Support card */
 
 #page-body.ms-donate-page {
   --ms-channel-w: 34rem;
@@ -745,7 +745,7 @@
   text-align: center;
 }
 
-/* Full leaderboard page — minimal, isolated from builder .ms-lb-* */
+/* Full leaderboard page - minimal, isolated from builder .ms-lb-* */
 body.ms-ldb-site,
 body[data-page="leaderboard"] {
   background: #f7f8fb;

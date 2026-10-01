@@ -1,4 +1,4 @@
-/* Bridge website Business Finder tokens → Moonrise Studio theme */
+/* Bridge website Business Finder tokens -> Moonrise Studio theme */
 .leads-page,
 .lf-advanced-dialog {
   --bg: var(--ms-bg, #f3f5f8);
@@ -752,7 +752,7 @@ html[data-theme="dark"] .lf-action-btn:hover:not(.is-disabled):not(.lf-action-bu
 
 
 
-/* Fixed menu portal â€” do not flip parent overflow on open (that caused scroll glitches). */
+/* Fixed menu portal - do not flip parent overflow on open (that caused scroll glitches). */
 .dash-pending-menu-wrap.is-open {
   z-index: 12;
 }
@@ -1630,7 +1630,7 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 .lf-filter-categories .leads-chips {
   gap: 5px;
-  /* All LeadFinder niches â€” scroll rather than clipping to ~2 rows */
+  /* All LeadFinder niches - scroll rather than clipping to ~2 rows */
   max-height: 10.5rem;
   overflow-x: hidden;
   overflow-y: auto;
@@ -1947,7 +1947,7 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 
 
-/* Business Finder Â· pending toggle (matches dashboard design) */
+/* Business Finder - pending toggle (matches dashboard design) */
 .leads-page .leads-page-pending {
   margin: 0 0 12px;
   padding: 0;
@@ -4938,7 +4938,7 @@ a.btn.secondary,
 
 
 
-/* Business Finder cards Â· dashboard-style polish */
+/* Business Finder cards - dashboard-style polish */
 .leads-grid {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 12px;
@@ -5913,7 +5913,7 @@ html[data-theme="light"] .dash-sales-toggle {
 
 
 
-/* Pending business cards Â· theme-safe overrides */
+/* Pending business cards - theme-safe overrides */
 html[data-theme="light"] .dash-pending-list > .dash-pending-item,
 html[data-theme="dark"] .dash-pending-list > .dash-pending-item,
 html[data-theme="light"]:not([data-ui-color]) .dash-pending-list > .dash-pending-item {
@@ -5925,7 +5925,7 @@ html[data-theme="light"]:not([data-ui-color]) .dash-pending-list > .dash-pending
 
 
 
-/* Dashboard pending section Â· matches revenue tracker style */
+/* Dashboard pending section - matches revenue tracker style */
 .dashboard-redesign .dash-pending-island-card .dash-toggle-btn {
   padding: 16px 18px;
 }
@@ -6145,7 +6145,7 @@ html[data-ui-color] .lf-card-sub {
 
 
 
-/* ===== Business Finder Â· professional cards (lf-pro) ===== */
+/* ===== Business Finder - professional cards (lf-pro) ===== */
 .leads-page .leads-grid {
   /* min(100%, 300px) prevents tracks wider than the viewport on small phones */
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));

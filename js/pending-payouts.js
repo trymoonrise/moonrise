@@ -510,7 +510,7 @@
       }
 
       const method = payoutMethodLabel(row.payout_method);
-      const creator = row.creator_handle ? "@" + row.creator_handle : row.creator_name || "—";
+      const creator = row.creator_handle ? "@" + row.creator_handle : row.creator_name || "-";
       const owed = formatMoney(row.creator_share_cents) || "$0.00";
       if (summary) {
         summary.innerHTML =
@@ -626,7 +626,7 @@
         return;
       }
 
-      const creator = row.creator_handle ? "@" + row.creator_handle : row.creator_display_name || "—";
+      const creator = row.creator_handle ? "@" + row.creator_handle : row.creator_display_name || "-";
       const owed = formatMoney(row.creator_share_cents) || "$0.00";
       if (summary) {
         summary.innerHTML =

@@ -10,9 +10,9 @@ Moonrise Studio (trymoonrise.com) is an AI-powered web platform for selling webs
 
 ## How it works
 
-1. **Find** â€” Use Business Finder to discover local businesses that need a website.
-2. **Build** â€” Generate and customize a site in the Moonrise builder (free to preview).
-3. **Close** â€” Send the published link. When the owner pays on the watermark checkout, the site goes live without the watermark. Creators keep 90%; Moonrise keeps 10%.
+1. **Find** - Use Business Finder to discover local businesses that need a website.
+2. **Build** - Generate and customize a site in the Moonrise builder (free to preview).
+3. **Close** - Send the published link. When the owner pays on the watermark checkout, the site goes live without the watermark. Creators keep 90%; Moonrise keeps 10%.
 
 ## Pricing model
 

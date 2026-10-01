@@ -186,8 +186,8 @@
     if (creatorCol) creatorCol.hidden = !isOwnerView;
     if (search) {
       search.placeholder = isOwnerView
-        ? "Search by business, creator, or site…"
-        : "Search by business or site…";
+        ? "Search by business, creator, or site..."
+        : "Search by business or site...";
     }
     document.body.classList.toggle("ms-clients-owner", !!isOwnerView);
   }

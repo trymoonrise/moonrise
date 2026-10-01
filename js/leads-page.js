@@ -342,7 +342,7 @@
   }
 
   /**
-   * Default Smart Mode: best website-need niches (plumbing, HVAC, roofing, …) float to the top.
+   * Default Smart Mode: best website-need niches (plumbing, HVAC, roofing, ...) float to the top.
    * Within each band, original shuffle order is preserved so cards still feel randomized.
    */
   function applySmartProspectOrder(leads) {
@@ -1761,7 +1761,7 @@
     if (!isUsefulLeadTipText(t)) return "";
     const limit = Math.max(40, Number(maxLen) || 280);
     if (t.length <= limit) return t;
-    return t.slice(0, limit - 1).trimEnd() + "…";
+    return t.slice(0, limit - 1).trimEnd() + "...";
   }
 
   function collectReviewSnippets(lead) {
@@ -2105,7 +2105,7 @@
   }
 
   function setMetricsLoading(loading) {
-    const val = loading ? "…" : null;
+    const val = loading ? "..." : null;
     ["lf-stat-total", "lf-stat-done", "lf-category-available"].forEach((id) => {
       const el = $(id);
       if (el && val) el.textContent = val;
@@ -2133,7 +2133,7 @@
     return 0;
   }
 
-  /** Unfiltered Available view → real table total; filtered views → matches currently known. */
+  /** Unfiltered Available view -> real table total; filtered views -> matches currently known. */
   function getHeaderLeadCount() {
     const dbTotal = getKnownDbLeadCount();
     if (filtersAreDefaultWide() && dbTotal > 0) return dbTotal;
@@ -2206,17 +2206,17 @@
     try {
       const u = new URL(url);
       const host = u.hostname.replace(/^www\./i, "");
-      return host.length > 32 ? host.slice(0, 29) + "…" : host;
+      return host.length > 32 ? host.slice(0, 29) + "..." : host;
     } catch (e) {
       const s = String(url).replace(/^https?:\/\//i, "").replace(/^www\./i, "").split("/")[0] || "";
-      return s.length > 32 ? s.slice(0, 29) + "…" : s;
+      return s.length > 32 ? s.slice(0, 29) + "..." : s;
     }
   }
 
   function looksLikeReviewQuote(text) {
     const t = String(text || "").trim();
     if (t.length < 24) return false;
-    if (/^["“']/.test(t)) return true;
+    if (/^[""']/.test(t)) return true;
     return t.split(/\s+/).length >= 6;
   }
 
@@ -2461,7 +2461,7 @@
         repName: rep?.name || rep?.id,
       });
       const msg = data?.accepted
-        ? 'Quick Prompt started for "' + name + '" · check Telegram in 1–5 min.'
+        ? 'Quick Prompt started for "' + name + '" · check Telegram in 1-5 min.'
         : 'Quick Prompt sent to Telegram for "' + name + '".';
       void global.SiteDialog?.alert?.({ message: msg });
     } catch (e) {

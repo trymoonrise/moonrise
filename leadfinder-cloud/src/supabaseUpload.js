@@ -14,7 +14,7 @@ function makeClient(cfg) {
 
 /**
  * Upload leads through public.import_leads_csv_rows.
- * Rows use public.leads column names (maps_url, business_name, …).
+ * Rows use public.leads column names (maps_url, business_name, ...).
  */
 export async function uploadLeadsToSupabase(leads, cfg) {
   if (!cfg.useSupabase) {

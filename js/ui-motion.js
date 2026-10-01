@@ -157,7 +157,7 @@
   }
 
   /**
-   * Smoothly open/close an element using grid 0fr → 1fr.
+   * Smoothly open/close an element using grid 0fr -> 1fr.
    * opts.instant skips animation (initial hydrate).
    */
   function setOpen(el, open, opts) {
@@ -493,7 +493,7 @@
 
   function playPageMotion() {
     if (pageMotionStarted) return;
-    // Static page loads — skip rise/stagger and channel enter easing.
+    // Static page loads - skip rise/stagger and channel enter easing.
     consumeChannelHop();
     document.documentElement.classList.remove("ms-channel-hop");
     pageMotionStarted = true;

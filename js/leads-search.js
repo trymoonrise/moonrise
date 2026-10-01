@@ -110,7 +110,7 @@
   }
 
   function leadCoords(lead) {
-    // Empty-string lat/lng from fast scrapes become Number("") === 0 — do not
+    // Empty-string lat/lng from fast scrapes become Number("") === 0 - do not
     // treat that as Null Island or Near Me filters wipe every result.
     let lat = parseCoordNumber(lead?.latitude ?? lead?.lat);
     let lng = parseCoordNumber(lead?.longitude ?? lead?.lng);
@@ -154,7 +154,7 @@
       .filter((row) => row.distanceMiles <= radius)
       .sort((a, b) => a.distanceMiles - b.distanceMiles);
 
-    // Live Maps scrape already centered on the user — if every parsed pin
+    // Live Maps scrape already centered on the user - if every parsed pin
     // falls outside the radius (bad coords), keep the scrape instead of empty.
     if (!inRadius.length && opts.trustScrapeRadius && (leads || []).length) {
       return withDistance
@@ -347,13 +347,13 @@
 
   const LOCATION_DENIED_MSG =
     "Location is blocked for this site. Allow location, then tap again. " +
-    "If you chose Don’t allow, open the lock/info icon in the address bar → Site settings → Location → Allow.";
+    "If you chose Don't allow, open the lock/info icon in the address bar -> Site settings -> Location -> Allow.";
 
   let locationPermissionState = "unknown";
   let locationPermissionWatchBound = false;
 
   function isLocationDeniedError(err) {
-    return /permission denied|location is blocked|don’t allow|don't allow/i.test(
+    return /permission denied|location is blocked|don't allow|don't allow/i.test(
       String(err?.message || err || "")
     );
   }
@@ -384,7 +384,7 @@
     if (denied) {
       locateBtn?.setAttribute(
         "title",
-        "Location blocked — tap to allow access"
+        "Location blocked - tap to allow access"
       );
     } else {
       locateBtn?.setAttribute("title", "My location");
@@ -529,7 +529,7 @@
       setFindBusy(true, "near");
     }
     try {
-      // Always re-prompt the browser — do not reuse a prior denial.
+      // Always re-prompt the browser - do not reuse a prior denial.
       const coords = await ensureUserLocation({ fresh: true, fly: !!MAP_UI, quiet: true });
       if (token !== areaRequestToken) return false;
       userCoords = coords;
@@ -590,7 +590,7 @@
     if (!resultsEl) return;
     resultsEl.hidden = false;
     resultsEl.innerHTML = isDbConnected()
-      ? '<div class="ms-dash-empty">Loading leads from the database…</div>'
+      ? '<div class="ms-dash-empty">Loading leads from the database...</div>'
       : '<div class="ms-dash-empty">Leave both fields blank to browse all businesses, or enter a type and location to narrow results.</div>';
   }
 
@@ -652,7 +652,7 @@
   }
 
   function shouldTryLiveScrape() {
-    // Live Maps via local :8790 (dev) or worker → LEADFINDER_SEARCH_URL (prod).
+    // Live Maps via local :8790 (dev) or worker -> LEADFINDER_SEARCH_URL (prod).
     return Boolean(leadFinderBaseUrl());
   }
 
@@ -939,7 +939,7 @@
   }
 
   /**
-   * Slide to generate → hide this business from Available + Quick Save.
+   * Slide to generate -> hide this business from Available + Quick Save.
    * Local first (instant), then optionally mirrored via projects.lead_id.
    */
   function markLeadClaimed(lead) {
@@ -1150,7 +1150,7 @@
       findBtn.setAttribute("aria-busy", busy ? "true" : "false");
       if (busy) {
         findBtn.dataset.prevLabel = findBtn.textContent || "";
-        findBtn.textContent = "Finding…";
+        findBtn.textContent = "Finding...";
       } else if (findBtn.dataset.prevLabel) {
         findBtn.textContent = findBtn.dataset.prevLabel;
         delete findBtn.dataset.prevLabel;
@@ -1169,7 +1169,7 @@
           scanNearBtn.dataset.prevLabel = scanNearBtn.textContent || "Scan nearby";
         }
         scanNearBtn.innerHTML =
-          '<canvas class="ms-lf-map-scan-spin" width="20" height="20" aria-hidden="true"></canvas><span class="ms-lf-map-scan-label">Scanning…</span>';
+          '<canvas class="ms-lf-map-scan-spin" width="20" height="20" aria-hidden="true"></canvas><span class="ms-lf-map-scan-label">Scanning...</span>';
         window.MoonriseThinkingOrb?.mount(scanNearBtn.querySelector("canvas"));
       } else if (scanNearBtn.dataset.prevLabel) {
         scanNearBtn.textContent = scanNearBtn.dataset.prevLabel;
@@ -1191,7 +1191,7 @@
         scanAllBtn.innerHTML =
           '<canvas class="ms-lf-map-scan-spin" width="20" height="20" aria-hidden="true"></canvas>';
         window.MoonriseThinkingOrb?.mount(scanAllBtn.querySelector("canvas"));
-        scanAllBtn.setAttribute("title", "Scanning…");
+        scanAllBtn.setAttribute("title", "Scanning...");
       } else if (scanAllBtn.dataset.prevLabel) {
         scanAllBtn.textContent = scanAllBtn.dataset.prevLabel;
         scanAllBtn.setAttribute("title", "All businesses in the state");
@@ -1305,7 +1305,7 @@
     const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
     prefetchAbort = controller;
 
-    setStatus("Loading all leads from the database…");
+    setStatus("Loading all leads from the database...");
     try {
       await window.LeadsLoader.prefetchAllPages({
         signal: controller?.signal,
@@ -1314,7 +1314,7 @@
           const appended = Array.isArray(result?.appended) ? result.appended.length : 0;
           if (appended) {
             setStatus(
-              "Loading leads… " +
+              "Loading leads... " +
                 Number(result?.meta?.loadedRows || result?.leads?.length || 0).toLocaleString() +
                 " of " +
                 getDbLeadTotal().toLocaleString()
@@ -1393,7 +1393,7 @@
   }
 
   /**
-   * Live Maps scrape via LeadFinder (local :8790 or worker /lead-finder → Render).
+   * Live Maps scrape via LeadFinder (local :8790 or worker /lead-finder -> Render).
    * Serializes requests and waits out upstream busy locks instead of failing empty.
    */
   async function scrapeViaLeadFinder(type, location, query, geo) {
@@ -1427,11 +1427,11 @@
         const waited = Number(data?.busyForMs) || 0;
         setStatus(
           waited > 0
-            ? "Maps scanner busy — waiting for the current scan to finish…"
-            : "Maps scanner busy — waiting…"
+            ? "Maps scanner busy - waiting for the current scan to finish..."
+            : "Maps scanner busy - waiting..."
         );
       } catch (_) {
-        setStatus("Maps scanner busy — retrying…");
+        setStatus("Maps scanner busy - retrying...");
       }
       const delay = Math.min(12_000, 3_500 + attempt * 500);
       await new Promise((r) => setTimeout(r, delay));
@@ -1463,7 +1463,7 @@
       // Interactive Finder: skip place-page enrichment so first results return faster.
       enrich: false,
       fast: true,
-      // Do not write leadfinder-cloud/data/*.csv — watchers treat that as a hard refresh.
+      // Do not write leadfinder-cloud/data/*.csv - watchers treat that as a hard refresh.
       upload: false,
     };
     if (q) body.query = q;
@@ -1500,7 +1500,7 @@
           });
           const preData = await pre.json().catch(() => ({}));
           if (pre.ok && preData?.busy === true && preData?.queueMode !== true) {
-            setStatus("Maps scanner busy — waiting for the current scan to finish…");
+            setStatus("Maps scanner busy - waiting for the current scan to finish...");
             const idle = await waitForLeadFinderIdle(base, headers, 170000);
             if (!idle) {
               return {
@@ -1509,12 +1509,12 @@
                   "Maps scanner is still busy. Wait about a minute, then try Near me again.",
               };
             }
-            setStatus(MAP_UI ? "Scanning Google Maps near you…" : "Scanning Google Maps…");
+            setStatus(MAP_UI ? "Scanning Google Maps near you..." : "Scanning Google Maps...");
           } else if (pre.ok && preData?.busy === true && preData?.queueMode === true) {
-            setStatus("Maps scanner busy — your scan is queued…");
+            setStatus("Maps scanner busy - your scan is queued...");
           }
         } catch (_) {
-          /* health optional — search still attempted */
+          /* health optional - search still attempted */
         }
         let res = await fetch(base + "/search", {
           method: "POST",
@@ -1527,7 +1527,7 @@
           lastError =
             data?.error ||
             "A Maps scan is already running. Wait a moment, then try again.";
-          setStatus("Maps scanner busy — waiting for the current scan to finish…");
+          setStatus("Maps scanner busy - waiting for the current scan to finish...");
           const idle = await waitForLeadFinderIdle(base, headers, 170000);
           if (!idle) {
             return {
@@ -1536,7 +1536,7 @@
                 "Maps scanner is still busy. Wait about a minute, then try Near me again.",
             };
           }
-          setStatus(MAP_UI ? "Scanning Google Maps near you…" : "Scanning Google Maps…");
+          setStatus(MAP_UI ? "Scanning Google Maps near you..." : "Scanning Google Maps...");
           res = await fetch(base + "/search", {
             method: "POST",
             headers,
@@ -1586,7 +1586,7 @@
       error: lastAborted
         ? "LeadFinder scrape timed out"
         : lastOffline && !candidates.some(isWorkerLeadFinderBase)
-          ? "Live Maps search server is not running. On this machine only: localStorage.setItem('ms_use_local_leadfinder','1') then cd leadfinder-cloud && npm run search:server — otherwise use tryMoonrise.com (cloud)."
+          ? "Live Maps search server is not running. On this machine only: localStorage.setItem('ms_use_local_leadfinder','1') then cd leadfinder-cloud && npm run search:server - otherwise use tryMoonrise.com (cloud)."
           : lastOffline
             ? "Live Maps search is temporarily unavailable. Try again in a moment."
           : lastError || "LeadFinder scrape failed",
@@ -1791,7 +1791,7 @@
       return '<span class="ms-lf-pro-no-site">No website</span>';
     }
     if (leadNeedsWebsiteCheck(lead)) {
-      return '<span class="ms-lf-pro-site-check">Checking…</span>';
+      return '<span class="ms-lf-pro-site-check">Checking...</span>';
     }
     return '<span class="ms-lf-pro-no-site">No website</span>';
   }
@@ -1815,7 +1815,7 @@
   }
 
   function enqueueWebsiteVerification(leads) {
-    // Always allow local Maps re-checks — Supabase has_website can be stale
+    // Always allow local Maps re-checks - Supabase has_website can be stale
     // (e.g. Crumbl marked missing while the place page has a real site).
     const maxBatch = Number(window.LeadWebsiteEnrich?.MAX_PER_BATCH) || 48;
     const candidates = (leads || [])
@@ -1945,7 +1945,7 @@
     }
     syncSheetLayoutVars();
     ensureMobileSheetHeight();
-    // Re-measure after paint — dock height can settle one frame later.
+    // Re-measure after paint - dock height can settle one frame later.
     window.requestAnimationFrame(() => {
       syncSheetLayoutVars();
       ensureMobileSheetHeight();
@@ -2221,7 +2221,7 @@
     const onMove = (e) => {
       if (!dragging || e.pointerId !== pointerId) return;
       e.preventDefault();
-      const dy = startY - e.clientY; // drag up → taller
+      const dy = startY - e.clientY; // drag up -> taller
       queueLiveHeight(startH + dy);
     };
 
@@ -2436,7 +2436,7 @@
 
   function cleanCategoryText(value) {
     return String(value || "")
-      .replace(/^[\s\d.,\-−–\u2014+·•]+/, "")
+      .replace(/^[\s\d.,+\-\u2212\u2013\u2014\u00b7\u2022]+/, "")
       .replace(/\b(temporarily closed|permanently closed|temporarily|permanently|closed|open now|open)\b.*$/i, "")
       .replace(/([a-z])([A-Z])/g, "$1 $2")
       .replace(/\s+/g, " ")
@@ -2464,7 +2464,7 @@
       .trim();
     if (!cleaned) return "";
     // Drop junk that is clearly not a category.
-    if (cleaned.length > 40) return cleaned.slice(0, 38).trim() + "…";
+    if (cleaned.length > 40) return cleaned.slice(0, 38).trim() + "...";
     if (cleaned.toLowerCase() === displayName(lead).toLowerCase()) return "";
     if (/^(business|company|store|shop)$/i.test(cleaned)) return "";
     return cleaned;
@@ -2883,7 +2883,7 @@
       websiteLabel = '<span class="ms-lf-pro-has-site">Has website</span>';
       websiteStatus = "has-site";
     } else if (checkingSite && !missingSite) {
-      websiteLabel = '<span class="ms-lf-pro-site-check">Checking…</span>';
+      websiteLabel = '<span class="ms-lf-pro-site-check">Checking...</span>';
     } else {
       websiteLabel = '<span class="ms-lf-pro-no-site">No website</span>';
       websiteStatus = "no-site";
@@ -3133,7 +3133,7 @@
 
   function renderLeads(leads, query) {
     if (!resultsEl) return;
-    // Website enrichment / nearby refresh rebuilds cards — that kills an in-progress slide.
+    // Website enrichment / nearby refresh rebuilds cards - that kills an in-progress slide.
     if (isSlideGestureActive()) {
       pendingLeadRender = {
         leads: Array.isArray(leads) ? leads.slice() : [],
@@ -3350,7 +3350,7 @@
     resetLeadReveals();
     setFindBusy(true, "near");
     if (!opts.fromAreaToggle) showLoadingCards();
-    if (MAP_UI) setStatus("Scanning nearby…");
+    if (MAP_UI) setStatus("Scanning nearby...");
     flyToUserLocation(userCoords);
 
     let leads = [];
@@ -3423,7 +3423,7 @@
       }
 
       if (leads.length && MAP_UI) {
-        setStatus(shouldTryLiveScrape() ? "Showing nearby businesses — refreshing…" : "");
+        setStatus(shouldTryLiveScrape() ? "Showing nearby businesses - refreshing..." : "");
         setError("");
         renderLeads(
           rankLeadsForView(leads, { trustScrapeRadius: false }),
@@ -3432,7 +3432,7 @@
       }
 
       if ((!leads.length || (MAP_UI && leads.length < 8)) && shouldTryLiveScrape()) {
-        if (MAP_UI && !leads.length) setStatus("Scanning Google Maps near you…");
+        if (MAP_UI && !leads.length) setStatus("Scanning Google Maps near you...");
         const scraped = await scrapeViaLeadFinder(scrapeType, nearbyLocation, "", {
           latitude: userCoords.lat,
           longitude: userCoords.lng,
@@ -3563,7 +3563,7 @@
 
     setFindBusy(true, MAP_UI ? "all" : "find");
     if (!opts.fromAreaToggle) showLoadingCards();
-    if (MAP_UI) setStatus("Scanning Google Maps…");
+    if (MAP_UI) setStatus("Scanning Google Maps...");
 
     let leads = [];
     let remoteError = "";
@@ -3585,13 +3585,13 @@
 
       // Paint DB hits immediately; live scrape can still fill gaps afterward.
       if (leads.length && MAP_UI) {
-        setStatus(shouldTryLiveScrape() ? "Showing saved leads — refreshing from Maps…" : "");
+        setStatus(shouldTryLiveScrape() ? "Showing saved leads - refreshing from Maps..." : "");
         setError("");
         renderLeads(rankLeadList(leads), query);
       }
 
       if ((!leads.length || (MAP_UI && leads.length < MIN_SEARCH_RESULTS)) && shouldTryLiveScrape() && (searchType || location.trim())) {
-        if (MAP_UI && !leads.length) setStatus("Scanning Google Maps…");
+        if (MAP_UI && !leads.length) setStatus("Scanning Google Maps...");
         const scraped = await scrapeViaLeadFinder(searchType, location, "", null);
         if (scraped.ok && scraped.leads?.length) {
           scrapedFresh = true;
@@ -4257,7 +4257,7 @@
     lastMarkerIdsSignature = idsSignature;
     lastMarkerSignature = signature;
 
-    // Selection-only change: swap icons in place — never pan/zoom the map.
+    // Selection-only change: swap icons in place - never pan/zoom the map.
     if (!leadsChanged && lfMarkerById.size === withCoords.length) {
       withCoords.forEach(({ id }) => {
         const marker = lfMarkerById.get(id);
@@ -4278,7 +4278,7 @@
         riseOnHover: true,
       });
       marker.on("click", () => {
-        // Highlight + scroll the card only — keep current map center/zoom.
+        // Highlight + scroll the card only - keep current map center/zoom.
         revealResults();
         selectLeadOnMap(id, { scrollCard: true });
       });
@@ -4332,7 +4332,7 @@
     setSearchPillMode("idle");
     setError("");
     if (MAP_UI) {
-      setStatus("Getting your location…");
+      setStatus("Getting your location...");
       revealResults();
     }
     const ok = await enableInMyArea({ autoSearch: true });
@@ -4389,7 +4389,7 @@
     setSearchPillMode("idle");
     setError("");
     if (MAP_UI) {
-      setStatus("Finding your state…");
+      setStatus("Finding your state...");
       revealResults();
     }
 
@@ -4398,7 +4398,7 @@
     // Always reset niche so All never inherits "plumber", "dentist", etc.
     if (typeInput) typeInput.value = "businesses";
 
-    if (MAP_UI) setStatus("Scanning all businesses in " + stateLabel + "…");
+    if (MAP_UI) setStatus("Scanning all businesses in " + stateLabel + "...");
     await findLeads();
   }
 
@@ -4538,7 +4538,7 @@
 
     locateBtn?.addEventListener("click", async () => {
       setError("");
-      setStatus("Getting your location…");
+      setStatus("Getting your location...");
       try {
         // Re-prompt every tap until the browser grants access.
         await ensureUserLocation({ fresh: true, fly: true, quiet: false });
@@ -4625,7 +4625,7 @@
   function bootLeadsSearch() {
     if (booted || document.body?.dataset?.page !== "leads") return;
     if (isDbConnected() && !MAP_UI) showLoadingCards();
-    // Start Leaflet immediately — don't hold the map behind auth warmup.
+    // Start Leaflet immediately - don't hold the map behind auth warmup.
     if (MAP_UI) initLeadMap();
     const run = () => {
       if (booted) return;

@@ -30,7 +30,7 @@
 
 It helps you discover local businesses that need an online presence, create a polished site for them, share a watermarked preview, collect payment, and publish when the order is complete.
 
-The goal is simple: turn website selling into a clear, repeatable flow â€” find â†’ build â†’ present â†’ get paid â†’ go live.
+The goal is simple: turn website selling into a clear, repeatable flow - find -> build -> present -> get paid -> go live.
 
 ---
 
@@ -40,7 +40,7 @@ The goal is simple: turn website selling into a clear, repeatable flow â€” 
   <img src="doc/MoonriseLogo.png" alt="TryMoonrise" width="72" height="72">
 </p>
 
-Hi â€” Iâ€™m the builder behind **Moonrise** / **TryMoonrise**.
+Hi - I'm the builder behind **Moonrise** / **TryMoonrise**.
 
 I build tools for freelancers and creators who want to earn by helping local businesses show up online. Moonrise Studio is the product side of that mission: less busywork, clearer client delivery, and a path from preview to payment.
 
@@ -51,7 +51,7 @@ I build tools for freelancers and creators who want to earn by helping local bus
 | **Phone** | [(401) 300-0957](tel:+14013000957) |
 | **Focus** | Local business websites, freelancers, creators |
 
-If youâ€™re exploring Moonrise, building with it, or want to collaborate â€” reach out.
+If you're exploring Moonrise, building with it, or want to collaborate - reach out.
 
 ---
 
@@ -87,11 +87,11 @@ You still own the relationship, the pitch, and the pricing. Moonrise provides th
 
 ---
 
-## Who itâ€™s for
+## Who it's for
 
 - Freelancers selling websites to local businesses  
 - Creators building a service offer around web presence  
-- Solo operators who want a cleaner find â†’ build â†’ sell loop  
+- Solo operators who want a cleaner find -> build -> sell loop  
 
 ---
 
@@ -149,7 +149,7 @@ For security concerns, please use the process in [SECURITY.md](SECURITY.md).
 
 ## License
 
-Â© Moonrise Studio / TryMoonrise. All rights reserved.
+(c) Moonrise Studio / TryMoonrise. All rights reserved.
 
 This repository and product are provided for Moonrise Studio. Unauthorized copying, redistribution, or commercial reuse of proprietary materials is not permitted without written permission.
 

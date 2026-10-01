@@ -508,7 +508,7 @@
     resolveLastCommitAt().then((iso) => {
       if (!iso) return;
       paintSidebarLastUpdated(iso);
-      // Keep relative wording fresh ("just now" → "5 minutes ago") without another network trip.
+      // Keep relative wording fresh ("just now" -> "5 minutes ago") without another network trip.
       if (bootSidebarLastUpdated._timer) clearInterval(bootSidebarLastUpdated._timer);
       bootSidebarLastUpdated._timer = setInterval(() => {
         const kept = document.getElementById("ms-sidebar-updated")?.dataset?.committedAt;
@@ -665,7 +665,7 @@
       try {
         const url = new URL(location.href);
         url.searchParams.set("_ms_r", String(Date.now()));
-        // Bypass bfcache / soft reload — always hit the network for HTML.
+        // Bypass bfcache / soft reload - always hit the network for HTML.
         location.replace(url.pathname + url.search + url.hash);
       } catch (_) {
         location.reload();
@@ -837,7 +837,7 @@
       document.body.classList.toggle("ms-nav-open", open);
       menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
       menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-      // Do not set aria-hidden on the toggle — it retains focus on click and Chromium warns.
+      // Do not set aria-hidden on the toggle - it retains focus on click and Chromium warns.
       // tabIndex keeps it out of the tab order while the sidebar is open.
       if (open && document.activeElement === menuToggle) menuToggle.blur();
       menuToggle.removeAttribute("aria-hidden");
@@ -2028,7 +2028,7 @@
   function ensureInstallHintScript() {
     if (window.__msInstallHintBooted) return;
     if (document.querySelector('script[src*="install-hint.js"]')) return;
-    // Only load on pages that offer Install — avoids Chromium's
+    // Only load on pages that offer Install - avoids Chromium's
     // "Banner not shown: preventDefault()" warning everywhere else.
     const page = String(document.body?.dataset?.page || "").toLowerCase();
     if (page && !/^(settings|download|login|onboarding)$/.test(page)) return;

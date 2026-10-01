@@ -1,6 +1,6 @@
 /**
  * Load Website Presets from GitHub (main branch) for AI generation.
- * Default: trymoonrise/moonrise → Website Presets/presets
+ * Default: trymoonrise/moonrise -> Website Presets/presets
  */
 const DEFAULT_REPO = "trymoonrise/moonrise";
 const DEFAULT_REF = "main";

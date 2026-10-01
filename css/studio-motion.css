@@ -43,7 +43,7 @@ body.ms-contact-public .ms-contact-main {
   }
 }
 
-/* Page items stay visible — no rise/stagger enter easing */
+/* Page items stay visible - no rise/stagger enter easing */
 .ms-motion-item {
   opacity: 1;
   transform: none;

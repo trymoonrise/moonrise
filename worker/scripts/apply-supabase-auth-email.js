@@ -97,7 +97,7 @@ function buildTemplates() {
   const confirmation = emailShell({
     title: "Confirm your email",
     bodyHtml:
-      "<p style=\"margin:0 0 12px;\">Welcome to Moonrise. Tap the button below to verify <strong>{{ .Email }}</strong> — you'll be signed in automatically.</p>",
+      "<p style=\"margin:0 0 12px;\">Welcome to Moonrise. Tap the button below to verify <strong>{{ .Email }}</strong> - you'll be signed in automatically.</p>",
     buttonLabel: "Confirm email",
     buttonHref: "{{ .ConfirmationURL }}",
     finePrint:

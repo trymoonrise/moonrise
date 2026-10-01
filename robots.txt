@@ -1,4 +1,4 @@
-# Moonrise Studio — https://trymoonrise.com
+# Moonrise Studio - https://trymoonrise.com
 User-agent: *
 Allow: /
 Allow: /index.html

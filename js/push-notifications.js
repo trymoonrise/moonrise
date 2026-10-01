@@ -60,7 +60,7 @@
     try {
       await navigator.serviceWorker.register("sw.js", { updateViaCache: "none" });
     } catch (_) {
-      /* ignore — ready may still resolve if already registered */
+      /* ignore - ready may still resolve if already registered */
     }
     const reg = await navigator.serviceWorker.ready;
     if (!reg?.pushManager) throw new Error("Push manager is unavailable.");

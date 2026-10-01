@@ -58,7 +58,7 @@ window.SITE_CONFIG = {
 
   /**
    * Optional local LeadFinderCloud scrape API (npm run search:server).
-   * Live Maps search defaults to the cloud worker proxy (/lead-finder â†’ Render).
+   * Live Maps search defaults to the cloud worker proxy (/lead-finder -> Render).
    * Opt into local :8790 with: localStorage.setItem("ms_use_local_leadfinder", "1")
    */
   leadFinderUrl: "http://127.0.0.1:8790",
@@ -74,7 +74,7 @@ window.SITE_CONFIG = {
 
   /**
    * Business Finder leads source.
-   * Overridden below: local/LAN â†’ Maps/LeadFinder only; production â†’ Supabase.
+   * Overridden below: local/LAN -> Maps/LeadFinder only; production -> Supabase.
    */
   useSupabaseLeads: true,
 
@@ -87,10 +87,10 @@ window.SITE_CONFIG = {
    */
   reservedHandles: ["moonrise"],
 
-  /** Official team Telegram chat (Account â†’ Telegram). */
+  /** Official team Telegram chat (Account -> Telegram). */
   telegramUrl: "https://t.me/c/3541685239/1",
 
-  /** Official Discord community (Account â†’ Discord). */
+  /** Official Discord community (Account -> Discord). */
   discordUrl: "https://discord.gg/gdbA3gEVY",
 };
 
@@ -139,7 +139,7 @@ function moonriseCanonicalWorkerBase() {
     .replace(/\/$/, "");
 }
 
-/** www â†’ apex so API calls stay same-origin (www /health 308 breaks fetch CORS). */
+/** www -> apex so API calls stay same-origin (www /health 308 breaks fetch CORS). */
 function enforceMoonriseApexHost() {
   try {
     if (typeof location === "undefined") return;
@@ -266,7 +266,7 @@ window.resolveWorkerUrl = function resolveWorkerUrl() {
   return cloud || localConfigured;
 };
 
-/** Ordered worker bases to try when probing reachability (primary â†’ cloud â†’ page origin). */
+/** Ordered worker bases to try when probing reachability (primary -> cloud -> page origin). */
 window.workerUrlCandidates = function workerUrlCandidates() {
   const out = [];
   const push = (url) => {
@@ -280,7 +280,7 @@ window.workerUrlCandidates = function workerUrlCandidates() {
       const host = String(location.hostname || "").toLowerCase();
       push(moonriseProductionWorkerBase(location.hostname));
       push(moonriseCanonicalWorkerBase());
-      // Never probe www â€” it 308-redirects /health without CORS on the redirect.
+      // Never probe www - it 308-redirects /health without CORS on the redirect.
       if (host !== "trymoonrise.com" && host !== "www.trymoonrise.com") {
         if (location.origin) push(location.origin);
       }
@@ -355,7 +355,7 @@ window.pingMoonriseWorker = async function pingMoonriseWorker(signal) {
 };
 
 /**
- * LeadFinder scrape API â€” cloud by default (worker /lead-finder â†’ Render).
+ * LeadFinder scrape API - cloud by default (worker /lead-finder -> Render).
  * Local :8790 only when opted in: localStorage.ms_use_local_leadfinder = "1"
  */
 window.resolveLeadFinderUrl = function resolveLeadFinderUrl() {
@@ -428,7 +428,7 @@ window.leadFinderUrlCandidates = function leadFinderUrlCandidates() {
   return out;
 };
 
-/** Shared auth-ready helper â€” pages should use this instead of custom long timeouts. */
+/** Shared auth-ready helper - pages should use this instead of custom long timeouts. */
 window.StudioBoot = {
   AUTH_WAIT_MS: 1500,
   whenAuthReady(fn) {

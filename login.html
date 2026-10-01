@@ -236,7 +236,7 @@
           try {
             await window.StudioAuth.offerPasswordManagerSave?.(opts.email, opts.password);
           } catch (_) {
-            /* ignore — password managers may refuse this origin */
+            /* ignore - password managers may refuse this origin */
           }
         }
         window.StudioAuth.setFinanceOnboardingSoftSkip?.(false);
