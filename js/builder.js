@@ -3715,7 +3715,9 @@
     void frame.offsetWidth;
     setPreviewFrameViewportClass(frame, state.viewport);
     applyPreviewViewportSize();
-    const safeHtmlRaw = closeIncompleteHtml(ensureMobileFriendlyHtml(injectContactFormPreviewHtml(html)));
+    const safeHtmlRaw = closeIncompleteHtml(
+      ensureMobileFriendlyHtml(injectContactFormPreviewHtml(injectSiteFeaturesPreviewHtml(html)))
+    );
     const safeHtml = previewSandboxAllowsScripts(frame)
       ? safeHtmlRaw
       : stripExecutableForEditSandbox(safeHtmlRaw);
@@ -5212,7 +5214,8 @@
     return String(html || "")
       .replace(/<script\b[^>]*src=["'][^"']*\/embed\.js[^"']*["'][^>]*>\s*<\/script>/gi, "")
       .replace(/<script\b[^>]*src=["'][^"']*\/contact-form\.js[^"']*["'][^>]*>\s*<\/script>/gi, "")
-      .replace(/<!--\s*moonrise:watermark\s*-->/gi, "");
+      .replace(/<!--\s*moonrise:watermark\s*-->/gi, "")
+      .replace(/<!--\s*moonrise:site-features\s*-->[\s\S]*?<!--\s*\/moonrise:site-features\s*-->/gi, "");
   }
 
   function escapePreviewAttr(value) {
@@ -5934,6 +5937,7 @@
     requestAnimationFrame(() => {
       requestAnimationFrame(() => ensurePreviewPainted());
     });
+    void ensureDetectedSiteFeatures();
   }
 
   function hydrateIntakeFromFinderUrl() {
@@ -6102,6 +6106,9 @@
       body: JSON.stringify({
         projectId: state.projectId,
         requestId,
+        siteFeatures: window.MoonriseSiteFeatures
+          ? window.MoonriseSiteFeatures.readConfig(state.project?.business_context)
+          : undefined,
         ...intake,
       }),
       signal,
@@ -6530,18 +6537,18 @@
   }
 
   async function publish() {
-    if (publishInFlight) return;
+    if (publishInFlight) return false;
     setError("");
     if (!isPaymentPolicyAgreed()) {
       setError("Check the payment policy agreement before publishing.");
       document.getElementById("lb-payment-policy-agree")?.focus();
-      return;
+      return false;
     }
     if (ensureOnboardSurvey()) {
       setError("Add a Google link or fill business details, then generate.");
-      return;
+      return false;
     }
-    if (!state.projectId) return;
+    if (!state.projectId) return false;
     setPublishLoading(true);
     try {
       if (state.mode === "edit") {
@@ -6584,12 +6591,22 @@
               " - your client can pay on the live site to remove it."
           : action + ": " + url
       );
+      return true;
     } catch (e) {
       setError(e.message || "Publish failed");
       setStatus("");
+      return false;
     } finally {
       setPublishLoading(false);
     }
+  }
+
+  async function publishLiveUpdate() {
+    const started = Date.now();
+    while (publishInFlight && Date.now() - started < 120000) {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    }
+    return publish();
   }
 
   async function workerPost(path, body) {
@@ -7489,6 +7506,9 @@
           hostname: String(domain.hostname || domain.domain || "").trim(),
           status: String(domain.status || "").trim(),
         },
+        siteFeatures: window.MoonriseSiteFeatures
+          ? window.MoonriseSiteFeatures.readConfig(state.project?.business_context)
+          : {},
       })
     );
   }
@@ -7777,6 +7797,7 @@
       publishBtn.disabled = !canPublishSite() || (!!liveSiteUrl() && !hasUnpublishedChanges());
     }
     syncContactFormWidgetUi();
+    syncSiteFeatureWidgets();
     syncWatermarkWidgetUi();
     syncCustomDomainWidgetUi();
     syncPublishLiveUi();
@@ -8533,6 +8554,215 @@
     }
   }
 
+  function injectSiteFeaturesPreviewHtml(html) {
+    const api = window.MoonriseSiteFeatures;
+    if (!api) return html;
+    return api.applyToHtml(html, api.readConfig(state.project?.business_context));
+  }
+
+  function mountSiteFeatureWidgets() {
+    const api = window.MoonriseSiteFeatures;
+    const price = document.querySelector(".ms-lb-side-controls > .ms-lb-price");
+    if (!api || !price || document.getElementById("lb-feature-booking")) return;
+    document.getElementById("lb-booking-system-widget")?.remove();
+    price.insertAdjacentHTML("beforebegin", api.editorMarkup());
+    api.FEATURES.forEach((feature) => {
+      const widget = document.getElementById("lb-feature-" + feature.id);
+      document.getElementById("lb-feature-" + feature.id + "-enabled")?.addEventListener("change", (e) => {
+        setLbWidgetExpanded(
+          widget,
+          document.getElementById("lb-feature-" + feature.id + "-body"),
+          e.target,
+          !!e.target.checked
+        );
+        void saveSiteFeature(feature.id);
+      });
+      widget?.querySelectorAll("[data-provider-toggle]").forEach((box) => {
+        box.addEventListener("change", () => {
+          const field = widget.querySelector(
+            '[data-provider-field="' + box.getAttribute("data-provider-toggle") + '"]'
+          );
+          if (field) field.hidden = !box.checked;
+        });
+      });
+      document.getElementById("lb-feature-" + feature.id + "-save")?.addEventListener("click", () => {
+        void saveSiteFeature(feature.id);
+      });
+    });
+  }
+
+  function setSiteFeatureHint(id, msg, kind) {
+    const hint = document.getElementById("lb-feature-" + id + "-hint");
+    if (!hint) return;
+    hint.textContent = msg || "";
+    hint.classList.toggle("is-error", kind === "error");
+    hint.classList.toggle("is-ok", kind === "ok");
+  }
+
+  function readSiteFeatureFromDom(feature) {
+    const api = window.MoonriseSiteFeatures;
+    const providers = {};
+    feature.providers.forEach((item) => {
+      providers[item.id] = {
+        on: !!document.getElementById("lb-feature-" + feature.id + "-provider-" + item.id)?.checked,
+        value:
+          document.getElementById("lb-feature-" + feature.id + "-provider-" + item.id + "-value")?.value || "",
+      };
+    });
+    return api.normalizeFeature(feature, {
+      enabled: !!document.getElementById("lb-feature-" + feature.id + "-enabled")?.checked,
+      note: document.getElementById("lb-feature-" + feature.id + "-note")?.value || "",
+      providers,
+      source: "user",
+    });
+  }
+
+  function syncSiteFeatureWidgets() {
+    const api = window.MoonriseSiteFeatures;
+    if (!api || !document.querySelector(".ms-lb-side-controls")) return;
+    mountSiteFeatureWidgets();
+    const config = api.readConfig(state.project?.business_context);
+    api.FEATURES.forEach((feature) => {
+      const values = config[feature.id];
+      setLbWidgetExpanded(
+        document.getElementById("lb-feature-" + feature.id),
+        document.getElementById("lb-feature-" + feature.id + "-body"),
+        document.getElementById("lb-feature-" + feature.id + "-enabled"),
+        values.enabled,
+        { animate: false }
+      );
+      feature.providers.forEach((item) => {
+        const row = values.providers[item.id] || { on: false, value: "" };
+        const box = document.getElementById("lb-feature-" + feature.id + "-provider-" + item.id);
+        const input = document.getElementById("lb-feature-" + feature.id + "-provider-" + item.id + "-value");
+        const field = document
+          .getElementById("lb-feature-" + feature.id)
+          ?.querySelector('[data-provider-field="' + item.id + '"]');
+        if (box && document.activeElement !== box) box.checked = !!row.on;
+        if (field) field.hidden = !(box ? box.checked : row.on);
+        if (input && document.activeElement !== input && input.value !== row.value) input.value = row.value;
+      });
+      const note = document.getElementById("lb-feature-" + feature.id + "-note");
+      if (note && document.activeElement !== note && note.value !== (values.note || "")) note.value = values.note || "";
+      const summary = document.getElementById("lb-feature-" + feature.id + "-summary");
+      if (summary) {
+        const active = feature.providers.filter((item) => values.providers[item.id] && values.providers[item.id].on);
+        summary.textContent = values.enabled
+          ? active.length
+            ? "On · " + active.map((item) => item.label).join(", ")
+            : "On · pick a service"
+          : feature.summary;
+      }
+    });
+  }
+
+  let siteFeatureSeed = null;
+
+  async function ensureDetectedSiteFeatures() {
+    const api = window.MoonriseSiteFeatures;
+    if (!api || !state.projectId || typeof api.detectAndSeed !== "function") return;
+    if (siteFeatureSeed) return siteFeatureSeed;
+    siteFeatureSeed = (async () => {
+      const current = api.readConfig(state.project?.business_context);
+      const seeded = api.detectAndSeed(current, {
+        html: state.html || state.project?.html || "",
+        businessContext: state.project?.business_context || {},
+      });
+      if (!seeded.changed) return;
+      const ctx = {
+        ...(state.project?.business_context || {}),
+        siteFeatures: seeded.config,
+      };
+      state.project = { ...(state.project || {}), business_context: ctx };
+      if (state.html && state.mode !== "edit" && state.mode !== "code") {
+        writePreviewDocument(state.html);
+      }
+      syncSiteFeatureWidgets();
+      await persistProjectPatch({ business_context: ctx });
+      syncSiteFeatureWidgets();
+      syncPublishLiveUi();
+      if (liveSiteUrl()) await publishLiveUpdate();
+    })().finally(() => {
+      siteFeatureSeed = null;
+    });
+    return siteFeatureSeed;
+  }
+
+  async function saveSiteFeature(id) {
+    const api = window.MoonriseSiteFeatures;
+    const feature = api?.featureById(id);
+    if (!feature) return;
+    setSiteFeatureHint(id, "");
+    const values = readSiteFeatureFromDom(feature);
+    const error = api.validateFeature(feature, values);
+    if (error) {
+      setSiteFeatureHint(id, error, "error");
+      return;
+    }
+    const current = api.readConfig(state.project?.business_context);
+    const changed = JSON.stringify(current[id] || null) !== JSON.stringify(values);
+    const ctx = {
+      ...(state.project?.business_context || {}),
+      siteFeatures: { ...current, [id]: values },
+    };
+    state.project = { ...(state.project || {}), business_context: ctx };
+    if (state.html && state.mode !== "edit" && state.mode !== "code") {
+      writePreviewDocument(state.html);
+    }
+    syncPublishLiveUi();
+
+    if (!state.projectId) {
+      setSiteFeatureHint(id, "Saved in this preview. Publish to put it on the live site.", "ok");
+      return;
+    }
+
+    const saveBtn = document.getElementById("lb-feature-" + id + "-save");
+    try {
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Saving…";
+      }
+      await persistProjectPatch({ business_context: ctx });
+      syncSiteFeatureWidgets();
+      syncPublishLiveUi();
+      if (liveSiteUrl() && (changed || hasUnpublishedChanges())) {
+        setSiteFeatureHint(id, "Updating the live site…");
+        if (saveBtn) saveBtn.textContent = "Updating live site…";
+        const published = await publishLiveUpdate();
+        if (!published) {
+          setSiteFeatureHint(
+            id,
+            "Saved in the preview. The live site did not update. Agree to the payment policy, then click Update.",
+            "error"
+          );
+          return;
+        }
+        setSiteFeatureHint(
+          id,
+          values.enabled ? "Live. This feature is on the site." : "Live. This feature was removed from the site.",
+          "ok"
+        );
+        window.StudioToast?.success?.(feature.title + " is live");
+      } else if (liveSiteUrl()) {
+        setSiteFeatureHint(
+          id,
+          values.enabled ? "Already on the live site." : "Already off on the live site.",
+          "ok"
+        );
+      } else {
+        setSiteFeatureHint(id, "Saved in the preview. Publish when you are ready.", "ok");
+        window.StudioToast?.success?.(feature.title + " saved");
+      }
+    } catch (e) {
+      setSiteFeatureHint(id, e.message || "Could not save", "error");
+    } finally {
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save & apply";
+      }
+    }
+  }
+
   function bindContactFormWidget() {
     document.getElementById("lb-contact-form-enabled")?.addEventListener("change", (e) => {
       setContactFormExpanded(!!e.target.checked);
@@ -9126,6 +9356,7 @@
       void saveContactFromSettings();
     });
     bindContactFormWidget();
+    mountSiteFeatureWidgets();
     bindWatermarkWidget();
     bindCustomDomainWidget();
     document.getElementById("lb-set-accent")?.addEventListener("input", (e) => {

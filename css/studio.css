@@ -11455,6 +11455,51 @@ body.ms-lb-onboarding .ms-lb-mode {
   border-radius: 9px;
 }
 
+.ms-lb-provider-list {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.35rem;
+}
+
+.ms-lb-provider-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.ms-lb-provider-toggle input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #2563eb;
+  flex-shrink: 0;
+}
+
+.ms-lb-provider-badge {
+  margin-left: auto;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-radius: 999px;
+  padding: 0.12rem 0.45rem;
+}
+
+.ms-lb-provider-field {
+  margin: 0 0 0.45rem 1.55rem;
+}
+
+.ms-lb-provider-field[hidden] {
+  display: none;
+}
+
 .ms-lb-widget-hint {
   margin: 0.32rem 0 0;
   font-size: 0.72rem;

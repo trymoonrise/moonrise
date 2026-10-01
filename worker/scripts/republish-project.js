@@ -74,15 +74,15 @@ async function main() {
         '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">'
       );
     }
-    out = out.replace(/\bdiv\s*\{([^{}]*)\}/gi, (full, body) => {
+    out = out.replace(/(^|[{};])(\s*)div\s*\{([^{}]*)\}/gi, (full, lead, space, body) => {
       if (!/overflow\s*:\s*hidden/i.test(body)) return full;
       if (/^\s*overflow\s*:\s*hidden\s*;?\s*$/i.test(body)) {
-        return "/* moonrise: stripped-universal-div-overflow */";
+        return lead + "/* moonrise: stripped-universal-div-overflow */";
       }
       const next = body
         .replace(/overflow\s*:\s*hidden\s*!important\s*;?/gi, "")
         .replace(/overflow\s*:\s*hidden\s*;?/gi, "");
-      return "div{" + next + "}";
+      return lead + space + "div{" + next + "}";
     });
     out = out.replace(
       /\b(html|body)\s*\{([^}]*?)overflow\s*:\s*hidden(\s*!important)?([^}]*)\}/gi,

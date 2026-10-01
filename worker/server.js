@@ -50,6 +50,8 @@ const cors = require("cors");
 const Stripe = require("stripe");
 const { createClient } = require("@supabase/supabase-js");
 const { formatApiError, respondApiError, sendStripeMissing } = require("./api-errors");
+const { resolveAssistantContent, hasHtmlDocumentStart } = require("./openrouter-message");
+const { applyToHtml: applySiteFeatureBlocks, readConfig: readSiteFeatureConfig, hasActiveServices } = require("../js/site-features");
 
 const PORT = Number(process.env.PORT || 8787);
 const PUBLIC_APP_URL = String(process.env.PUBLIC_APP_URL || "http://localhost:3000").replace(/\/$/, "");
@@ -1320,9 +1322,37 @@ function stripDemoChrome(html) {
  * Fixes common AI output issues: fixed pill navs too wide, body height locks,
  * and catastrophic `div { overflow: hidden }` rules that trap page scroll.
  */
+function cleanGeneratedCss(css) {
+  let out = String(css || "");
+  // A previous pass replaced `.faq-panel > div { overflow:hidden }` with a
+  // comment and left the selector hanging, which tears the rest of the sheet.
+  out = out.replace(
+    /[^{}]*\/\*\s*moonrise:\s*stripped-universal-div-overflow\s*\*\//gi,
+    "/* moonrise: stripped-universal-div-overflow */"
+  );
+  // Only a bare `div { overflow:hidden }` traps the page. Keep `.faq-panel > div`.
+  out = out.replace(/(^|[{};])(\s*)div\s*\{([^{}]*)\}/gi, (full, lead, space, body) => {
+    if (!/overflow\s*:\s*hidden/i.test(body)) return full;
+    if (/^\s*overflow\s*:\s*hidden\s*;?\s*$/i.test(body)) {
+      return lead + "/* moonrise: stripped-universal-div-overflow */";
+    }
+    const next = body
+      .replace(/overflow\s*:\s*hidden\s*!important\s*;?/gi, "")
+      .replace(/overflow\s*:\s*hidden\s*;?/gi, "");
+    return lead + space + "div{" + next + "}";
+  });
+  out = out.replace(/clip-path\s*:[^;{}]+;?/gi, "");
+  return out;
+}
+
 function ensureMobileFriendlyHtml(html) {
   let out = String(html || "");
   if (!out.trim()) return out;
+
+  out = out.replace(/<style\b([^>]*)>([\s\S]*?)<\/style>/gi, (full, attrs, css) => {
+    if (/data-ms-mobile-fit/i.test(attrs)) return full;
+    return "<style" + attrs + ">" + cleanGeneratedCss(css) + "</style>";
+  });
 
   if (!/<meta[^>]+name=["']viewport["']/i.test(out)) {
     out = out.replace(
@@ -1336,17 +1366,6 @@ function ensureMobileFriendlyHtml(html) {
     );
   }
 
-  // AI sometimes emits `div { overflow: hidden }` which traps scroll on wrappers.
-  out = out.replace(/\bdiv\s*\{([^{}]*)\}/gi, (full, body) => {
-    if (!/overflow\s*:\s*hidden/i.test(body)) return full;
-    if (/^\s*overflow\s*:\s*hidden\s*;?\s*$/i.test(body)) {
-      return "/* moonrise: stripped-universal-div-overflow */";
-    }
-    const next = body
-      .replace(/overflow\s*:\s*hidden\s*!important\s*;?/gi, "")
-      .replace(/overflow\s*:\s*hidden\s*;?/gi, "");
-    return "div{" + next + "}";
-  });
   out = out.replace(
     /\b(html|body)\s*\{([^}]*?)overflow\s*:\s*hidden(\s*!important)?([^}]*)\}/gi,
     (full, sel, before, _imp, after) =>
@@ -1359,16 +1378,28 @@ html{max-width:100%!important;overflow-x:hidden!important;overflow-y:scroll!impo
 body{max-width:100%!important;overflow-x:hidden!important;overflow-y:visible!important;height:auto!important;max-height:none!important;min-height:100%;position:relative!important}
 img,video,canvas,svg{max-width:100%;height:auto}
 iframe{max-width:100%}
+h1,h2,h3,h4,p,li,a,button,.btn,.hero-title,.section-title,.pricing-price,.stat-num{max-width:100%;overflow-wrap:break-word}
+.hero,.hero-stage{height:auto!important;max-height:none!important;min-height:100svh;overflow:visible!important}
+.hero-content{max-width:100%;box-sizing:border-box}
+.about-cut,.about-slash{display:none!important}
+.faq-panel>*{min-height:0;overflow:hidden}
+.btn,.nav-cta,.form-submit,button[type="submit"]{box-sizing:border-box;max-width:100%;min-height:44px;border-radius:var(--radius-md,12px);font-family:var(--font-display,inherit);font-size:.9rem;font-weight:600;line-height:1.2;white-space:normal}
+.btn,.nav-cta{display:inline-flex!important;align-items:center;justify-content:center;width:auto;padding:.85rem 1.25rem!important;text-decoration:none!important}
+.form-submit,button[type="submit"]{display:inline-flex;align-items:center;justify-content:center;width:100%;padding:.85rem 1.25rem;background:var(--ink,#111);color:var(--bg,#fff);border:0}
+main,section,.container,.card,.grid>*,.services-grid>*,.pricing-grid>*,.footer-grid>*{min-width:0;max-width:100%}
 .nav,.dock,nav[class],header .dock,header nav{max-width:100%}
 body > div, main, .page, .wrapper, .site, .layout, .site-wrap, .app, #app, #root, #__next{overflow-x:hidden!important;overflow-y:visible!important;max-height:none!important;height:auto!important}
 @media (max-width:767px){
+  header,.bar{position:sticky!important;top:0;height:auto!important;flex-wrap:wrap;gap:.75rem}
+  .nav-links,header nav,.bar nav{display:flex!important;flex-wrap:wrap;gap:.65rem 1rem;width:100%}
   .nav{padding:.65rem!important;left:0;right:0}
   .dock,header .dock,nav.dock{max-width:calc(100vw - 1.25rem);width:max-content;margin-left:auto;margin-right:auto;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:nowrap}
   .dock::-webkit-scrollbar,header .dock::-webkit-scrollbar{display:none}
   .dock a,header .dock a{white-space:nowrap;flex:0 0 auto}
-  .hero,.hero-content,section,.container{max-width:100vw;box-sizing:border-box}
-  .hero,.hero-stage{min-height:min(100svh,100vh);max-height:none;overflow-x:hidden;overflow-y:visible}
-  .about-badge{right:.75rem!important;bottom:.75rem!important}
+  .hero,.hero-content,section,.container{max-width:100%;box-sizing:border-box}
+  .hero,.hero-stage{min-height:auto!important;overflow:visible!important}
+  .hero-ctas,.hero-ctas .btn{width:100%;max-width:100%}
+  .about-badge{position:static!important}
   .cred-strip,.hero-btns,.cta-btns{gap:.75rem}
 }
 #mr-wm-chip-root,.mr-wm,[data-moonrise-watermark]{z-index:2147483000!important;pointer-events:none}
@@ -1781,7 +1812,17 @@ function parsePlanJson(raw) {
   return { plan, ids, roleById };
 }
 
-async function openRouterChat({ model, system, user, temperature, maxTokens, title, prefer }) {
+async function openRouterChat({
+  model,
+  system,
+  user,
+  temperature,
+  maxTokens,
+  title,
+  prefer,
+  expectHtml = false,
+  reasoningEffort = "minimal",
+}) {
   const key = process.env.OPENROUTER_API_KEY;
   if (!key) throw new Error("MiniMax website generation is not configured");
   const body = {
@@ -1793,30 +1834,61 @@ async function openRouterChat({ model, system, user, temperature, maxTokens, tit
     temperature: temperature ?? 0.5,
     max_tokens: maxTokens ?? 2000,
   };
+  // MiniMax rejects reasoning.enabled=false ("Reasoning is mandatory").
+  // A low effort keeps the chain of thought from consuming the whole max_tokens
+  // budget, which otherwise comes back as finish_reason=length and null content.
+  if (reasoningEffort && reasoningEffort !== "none") {
+    body.reasoning = { effort: reasoningEffort };
+  }
   // Prefer faster providers for generate; cheaper is fine for light JSON tasks.
   const sort = prefer === "price" ? "price" : prefer === "throughput" ? "throughput" : "";
   if (sort) {
     body.provider = { sort };
   }
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const headers = {
+    Authorization: `Bearer ${key}`,
+    "Content-Type": "application/json",
+    "HTTP-Referer": PUBLIC_APP_URL,
+    "X-Title": title || "Moonrise Studio",
+  };
+  const timeoutMs = Math.max(60000, Number(process.env.OPENROUTER_TIMEOUT_MS || 150000));
+  let res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": PUBLIC_APP_URL,
-      "X-Title": title || "Moonrise Studio",
-    },
+    headers,
     body: JSON.stringify(body),
-    signal: AbortSignal.timeout(Math.max(60000, Number(process.env.OPENROUTER_TIMEOUT_MS || 150000))),
+    signal: AbortSignal.timeout(timeoutMs),
   });
-  const data = await res.json().catch(() => ({}));
+  let data = await res.json().catch(() => ({}));
+  if (!res.ok && body.reasoning && /reasoning|effort/i.test(String(data?.error?.message || ""))) {
+    delete body.reasoning;
+    res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    data = await res.json().catch(() => ({}));
+  }
   if (!res.ok) {
     throw new Error(data?.error?.message || `OpenRouter error ${res.status}`);
   }
   const choice = data?.choices?.[0] || {};
+  const message = choice?.message || {};
+  const content = resolveAssistantContent(message, { expectHtml });
+  const reasoningTokens = Number(data?.usage?.completion_tokens_details?.reasoning_tokens || 0);
+  if (!String(message?.content || "").trim()) {
+    console.warn("OpenRouter visible content empty", {
+      title: title || "Moonrise Studio",
+      finishReason: choice?.finish_reason || "",
+      reasoningTokens,
+      completionTokens: Number(data?.usage?.completion_tokens || 0),
+      recoveredChars: String(content || "").length,
+    });
+  }
   return {
-    content: choice?.message?.content || "",
+    content,
     finishReason: choice?.finish_reason || "",
+    reasoningTokens,
   };
 }
 
@@ -2101,13 +2173,16 @@ async function generateWithOpenRouter(ctx, presetPack, plan) {
       temperature: retryIncomplete ? 0.38 : 0.58,
       maxTokens,
       prefer: "throughput",
+      expectHtml: true,
       title: retryIncomplete ? "Moonrise Studio Assemble (retry)" : "Moonrise Studio Assemble",
     });
-    let html = String(result.content || "")
-      .replace(/^```(?:html)?\s*/i, "")
-      .replace(/```\s*$/i, "")
-      .trim();
-    if (!html.includes("<html") && !html.includes("<!DOCTYPE")) {
+    let html = String(result.content || "").trim();
+    if (!hasHtmlDocumentStart(html)) {
+      console.warn("MiniMax response had no HTML document", {
+        finishReason: result.finishReason || "",
+        reasoningTokens: result.reasoningTokens || 0,
+        contentChars: html.length,
+      });
       throw new Error("MiniMax did not return a complete HTML document");
     }
     html = ensurePaletteContrast(
@@ -2118,7 +2193,21 @@ async function generateWithOpenRouter(ctx, presetPack, plan) {
     return { html, finishReason: result.finishReason || "" };
   }
 
-  let { html, finishReason } = await assemble();
+  let assembled;
+  try {
+    assembled = await assemble();
+  } catch (err) {
+    if (!/complete HTML document/i.test(String(err?.message || ""))) throw err;
+    console.warn("Assemble missed the HTML document; retrying once with a larger output budget");
+    assembled = await assemble({
+      retryIncomplete: true,
+      maxTokens: Math.min(
+        16000,
+        Math.max(WEBSITE_MAX_OUTPUT_TOKENS, Math.round(WEBSITE_MAX_OUTPUT_TOKENS * 1.35))
+      ),
+    });
+  }
+  let { html, finishReason } = assembled;
   const firstPass = assessSiteCompleteness(html, structure);
   const truncated = finishReason === "length";
   const missingForm = firstPass.reasons.includes("missing form");
@@ -2356,6 +2445,21 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       requestId: requestId || null,
       variationSeed: requestId || newVariationSeed(),
     };
+
+    const fromBody =
+      req.body.siteFeatures && typeof req.body.siteFeatures === "object"
+        ? readSiteFeatureConfig({ siteFeatures: req.body.siteFeatures })
+        : null;
+    ctx.siteFeatures = fromBody;
+    if (req.body.projectId && !hasActiveServices(fromBody)) {
+      const { data: featureProject } = await supabase
+        .from("projects")
+        .select("business_context")
+        .eq("id", req.body.projectId)
+        .eq("user_id", req.user.id)
+        .maybeSingle();
+      if (featureProject) ctx.siteFeatures = readSiteFeatureConfig(featureProject.business_context);
+    }
 
     if (ctx.description && !/About the business:/i.test(String(ctx.notes || ""))) {
       ctx.notes = [ctx.notes, "About the business: " + ctx.description + "."]
@@ -4024,20 +4128,18 @@ app.post("/edit", requireUser, editLimiter, async (req, res) => {
     const editResult = await openRouterChat({
       system: EDIT_SYSTEM_PROMPT,
       user: buildEditUserPrompt(instruction, currentHtml, WEBSITE_EDIT_MAX_INPUT_CHARS),
-        temperature: 0.3,
+      temperature: 0.3,
       maxTokens: WEBSITE_EDIT_MAX_OUTPUT_TOKENS,
       prefer: "throughput",
+      expectHtml: true,
       title: "Moonrise Studio Edit",
     });
-    let html = String(editResult.content || "")
-      .replace(/^```(?:html)?\s*/i, "")
-      .replace(/```\s*$/i, "")
-      .trim();
+    let html = String(editResult.content || "").trim();
     html = ensurePaletteContrast(stripDemoChrome(html));
     if (editResult.finishReason === "length") {
       console.warn("Edit finished with finish_reason=length");
     }
-    if (!html.includes("<html") && !html.includes("<!DOCTYPE")) {
+    if (!hasHtmlDocumentStart(html)) {
       return res.status(502).json({ error: "Model did not return usable HTML" });
     }
 
@@ -4069,7 +4171,8 @@ function stripRuntimeEmbedsFromStoredHtml(html) {
   return String(html || "")
     .replace(/<script\b[^>]*src=["'][^"']*\/embed\.js[^"']*["'][^>]*>\s*<\/script>/gi, "")
     .replace(/<script\b[^>]*src=["'][^"']*\/contact-form\.js[^"']*["'][^>]*>\s*<\/script>/gi, "")
-    .replace(/<!--\s*moonrise:watermark\s*-->/gi, "");
+    .replace(/<!--\s*moonrise:watermark\s*-->/gi, "")
+    .replace(/<!--\s*moonrise:site-features\s*-->[\s\S]*?<!--\s*\/moonrise:site-features\s*-->/gi, "");
 }
 
 /** Allow the worker embed + Stripe checkout from generated CSP meta tags. */
@@ -4204,6 +4307,7 @@ function preparePublishedHtml(project) {
         ? project.business_context.phone
         : "",
   });
+  html = applySiteFeatureBlocks(html, readSiteFeatureConfig(project.business_context));
   if (isWatermarkActive(project)) {
     html = injectWatermarkEmbed(html, project);
   }
@@ -4591,6 +4695,7 @@ function publishSettingsHash(project) {
         hostname: stored.hostname,
         status: stored.status,
       },
+      siteFeatures: readSiteFeatureConfig(ctx),
     })
   );
 }

@@ -119,6 +119,7 @@ const {
   rewriteStockPathsInHtml,
   ensureStockMediaInHtml,
 } = require("./stock-media");
+const { formatForPrompt: formatConnectedServices } = require("../js/site-features");
 
 /** Stage 1 - vibe + which components to pull (JSON only). */
 const PLAN_SYSTEM_PROMPT = `You are the creative director for Moonrise Studio.
@@ -243,7 +244,7 @@ Handmade bar (must pass):
 2) COPY the DOM skeleton into your section (same nesting depth, same grid columns, same media placement).
 3) PORT the kit's CSS: extract border-radius, padding, shadows, typography scale, hover states → map to :root vars + shared classes.
 4) REPLACE all demo text, names, prices, and placeholder images with business facts + stock media pack URLs.
-5) STRIP demo-only controls (toggles, gallery chrome, preset labels) but KEEP the visual design patterns.
+5) STRIP demo-only controls (toggles, gallery chrome, preset labels) and STRIP tear decorations: clip-path cuts, diagonal slashes, and anything positioned outside its card. Keep the visual design patterns that stay inside the section.
 6) CROSS-POLLINATE: the button style from hero/cta kits becomes .btn--primary everywhere; card treatment from services kit becomes .card everywhere.
 
 ## Full-page requirement (critical)
@@ -318,6 +319,9 @@ Handmade bar (must pass):
 - Contact form REQUIRED: Name, Phone number, How can we help you? (textarea), submit CTA. Click-to-call when phone exists.
 - Footer REQUIRED with business name and contact details when available.
 - Mobile-first, semantic HTML, one cohesive composition.
+- One button system only. Nav, hero, pricing, bands, and the form submit all use .btn.btn--primary or .btn.btn--secondary (same padding, radius, type scale, and font). Do not invent .form-submit, .nav-cta, or .trig with a different shape.
+- Fit the screen. No clip-path, torn edges, or elements pulled outside a section with negative offsets. No overflow:hidden on html, body, .hero, section, or a bare div rule. Headlines, prices, and buttons wrap inside their cards.
+- Hero height grows with its content. A fixed header must not cover the headline or CTAs. On small screens, nav links stay visible and wrap. Never use display:none on the menu unless a working button opens it.
 - Single file: CSS in <style>, minimal JS only if needed.
 - No Moonrise watermark / paywall / studio branding.
 - Hero: full-bleed media + brand signal + one short headline (3–7 words) + one short support line (max ~10 words) + primary + secondary CTA. No hero paragraphs, stats, chips, or cards.
@@ -353,16 +357,17 @@ Handmade bar (must pass):
    - keep body line-length readable (~45–75ch)
 
 6. Navigation must fit on phones:
-   - wrap, horizontally scroll the link row, or use a compact mobile menu
-   - never let nav links overflow off-screen or collide with the logo
+   - Keep the links on screen: wrap them under the wordmark, or use a real menu button that toggles them open.
+   - Never set the link row to display:none with no control. Never let links overflow off-screen or collide with the logo.
 
 7. Multi-column sections must collapse responsively:
    - services / features / pricing / team → 1 column on small, 2 mid, 3+ only on wide
    - forms stack full-width on mobile
 
-8. Touch targets:
+8. Touch targets and buttons:
+   - one button system: .btn.btn--primary and .btn.btn--secondary everywhere, including the form submit
+   - same padding, radius, and font on nav, hero, pricing, and form
    - buttons/links at least ~44px tall
-   - adequate spacing between tappable CTAs
    - primary CTA stays visible and usable on phone
 
 9. Spacing:
@@ -373,7 +378,8 @@ Handmade bar (must pass):
     - do not set html/body to height: 100% with overflow: hidden
     - the page must scroll vertically on mobile
     - never write a universal rule like div { overflow: hidden }
-    - only use overflow: hidden on specific media/card frames
+    - overflow: hidden is only for a named media frame (.service-media, .gallery-stage), never for .hero, section, or .faq-panel
+    - No clip-path, torn paper, diagonal cuts, or slash decorations. Every edge is a straight, simple card or section.
 
 11. Box model:
     - prefer box-sizing: border-box on *, *::before, *::after
@@ -381,15 +387,16 @@ Handmade bar (must pass):
 
 12. Long text safety:
     - overflow-wrap: anywhere (or break-word)
-    - addresses, phones, and URLs must never force sideways scroll
+    - addresses, phones, prices, and URLs must never force sideways scroll or get cut off inside a card
 
 13. Hero media:
-    - min-height that works on short phones
-    - do not lock the whole page
+    - min-height: 100svh is fine, but height must be auto so the headline and both buttons are never clipped
+    - overflow: visible on .hero
     - above-the-fold content must stay readable when the window is resized
 
 14. Sticky / fixed UI:
-    - avoid position: fixed elements that cover content
+    - a fixed header must leave a gap so it does not cover the headline or buttons
+    - on phones, prefer a sticky bar that wraps instead of a fixed bar over the hero
     - no sticky bars that hide the form submit on mobile
 
 Result: when the user resizes the screen at any width, the website always fits nicely, stays readable, and remains fully usable.
@@ -841,6 +848,8 @@ function buildGenerationUserPrompt(ctx, presetPack, plan, media, options = {}) {
     "",
     formatStockMediaForPrompt(stock),
     "",
+    formatConnectedServices(ctx.siteFeatures),
+    "",
     "## Website Presets component kit (reference + CSS to port)",
     "These kit components are REQUIRED building blocks - not optional reference. Adapt each into its mapped section using the shared design system.",
     "One cohesive page: same buttons, cards, fonts, and spacing everywhere - composed FROM these presets, not a patchwork of demo styles or generic AI layouts.",
@@ -862,7 +871,8 @@ function buildGenerationUserPrompt(ctx, presetPack, plan, media, options = {}) {
     "Quality bar: professional, modern, premium local-business - generous whitespace, crisp hierarchy, consistent components, sparse copy.",
     "Kit fidelity bar: the page must look like a designer composed Website Presets - rich cards, polished nav, styled form, cohesive footer - not a bare HTML outline.",
     "Uniqueness bar: follow the Creative variation block - this page must not look like a generic duplicate of prior sites for the same trade.",
-    "Responsive essentials: viewport meta, no horizontal scroll, fluid grids/images, clamp type, mobile nav that fits, columns stack on small screens, touch-friendly CTAs.",
+    "Responsive essentials: viewport meta, no horizontal scroll, fluid grids/images, clamp type, mobile nav that stays visible and wraps, columns stack on small screens, touch-friendly CTAs.",
+    "FIT (hard): one button class for every CTA, including the form submit. No torn edges, clip-path, or decorative slashes. Nothing may be cut off: hero, headlines, prices, and buttons stay inside the screen and wrap. Do not hide the nav on mobile.",
     "Apply the palette consistently (Coolors-level harmony + contrast) via :root CSS variables across the whole page.",
     "If you need more images than unique pack slots, reuse pack URLs - never invent media links.",
     "Keep the document complete and compact so it finishes with </html> in one response.",

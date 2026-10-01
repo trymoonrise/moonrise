@@ -183,7 +183,9 @@
   }
 
   function findContactForm() {
-    const forms = Array.from(document.querySelectorAll("form"));
+    const forms = Array.from(document.querySelectorAll("form")).filter(
+      (form) => form.getAttribute("data-moonrise-native") !== "1"
+    );
     if (!forms.length) return null;
     let best = forms[0];
     let bestScore = scoreForm(best);
