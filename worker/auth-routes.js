@@ -278,6 +278,12 @@ function mountAuthRoutes(app, { db, security }) {
       const { data, error } = await authClient().auth.signInWithPassword({ email, password });
       if (error || !data?.session) {
         const authMessage = String(error?.message || "");
+        if (/banned|disabled user/i.test(authMessage)) {
+          return res.status(403).json({
+            error: "This account is frozen. Ask the studio owner to turn it back on.",
+            code: "account_frozen",
+          });
+        }
         if (/email not confirmed/i.test(authMessage)) {
           return res.status(403).json({
             error:
@@ -292,6 +298,23 @@ function mountAuthRoutes(app, { db, security }) {
           code: fail.code,
           retryAfterMs: fail.retryAfterMs || 0,
           remainingTries: fail.remainingTries,
+        });
+      }
+
+      const { data: profile } = await db()
+        .from("profiles")
+        .select("frozen")
+        .eq("id", data.user.id)
+        .maybeSingle();
+      if (profile?.frozen) {
+        try {
+          await db().auth.admin.signOut(data.session.access_token, "global");
+        } catch (_) {
+          /* The frozen flag still blocks the next page load. */
+        }
+        return res.status(403).json({
+          error: "This account is frozen. Ask the studio owner to turn it back on.",
+          code: "account_frozen",
         });
       }
 

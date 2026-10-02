@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>html.ms-hold body{visibility:hidden!important}</style>
+<script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
   <script>
     (function () {
       var BUILD = "20260924-signup-authcode";
@@ -37,7 +39,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/studio.css?v=20261002-login-bg">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg" onload="document.documentElement.classList.remove('ms-hold')">
   <meta name="color-scheme" content="light">
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <script defer src="js/config.js?v=20260909-discord"></script>
@@ -162,7 +164,7 @@
           aria-describedby="auth-code-hint"
         >
         <p class="ms-muted" id="auth-code-hint" style="margin:0.4rem 0 0;font-size:0.8rem;line-height:1.35">
-          Needed once, when you create your account. Ask your admin for the current Employee ID.
+          Needed once, when you create your account. It expires 6 hours after your admin gives it to you.
         </p>
       </div>
       <div class="ms-auth-autosave" id="autosave-wrap">
@@ -200,7 +202,7 @@
   <script defer src="js/handles.js"></script>
   <script defer src="js/auth-security.js?v=20260911-passkey4"></script>
   <script defer src="js/supabase-client.js?v=20260911-passkey4"></script>
-  <script defer src="js/auth.js?v=20261002-employee-id"></script>
+  <script defer src="js/auth.js?v=20261002-freeze"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();
@@ -277,6 +279,10 @@
 
       const form = document.getElementById("auth-form");
       const err = document.getElementById("auth-error");
+      if (params.get("frozen") === "1" && err) {
+        err.hidden = false;
+        err.textContent = "This account is frozen. Ask the studio owner to turn it back on.";
+      }
       const hint = document.getElementById("auth-hint");
       const submit = document.getElementById("auth-submit");
       const handleField = document.getElementById("handle-field");

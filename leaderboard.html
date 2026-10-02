@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>html.ms-hold body{visibility:hidden!important}</style>
+<script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
   <script>
     (function () {
       var BUILD = "20260929-ldb-simple";
@@ -31,7 +33,7 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261002-appearance5"></script>
+  <script src="js/auth-gate-head.js?v=20261002-owner"></script>
   <title>Leaderboard - Moonrise Studio</title>
   <meta name="description" content="Moonrise supporter leaderboard - ranked by lifetime gifts to keep the platform running.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,7 +42,6 @@
   <link rel="stylesheet" href="css/studio.css?v=20260924-no-tabbar-ease">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <link rel="stylesheet" href="css/donate.css?v=20260929-ldb-simple">
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="leaderboard" class="ms-ldb-site">
   <div id="shell"></div>
@@ -66,15 +67,16 @@
   </div>
 
   <script defer src="js/config.js?v=20260909-discord"></script>
+  <script defer src="js/app.js?v=20261002-owner"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/auth-security.js?v=20260911-live2"></script>
   <script defer src="js/supabase-client.js?v=20260911-live2"></script>
-  <script defer src="js/auth.js?v=20260911-live2"></script>
+  <script defer src="js/auth.js?v=20261002-freeze"></script>
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260722-donate-pro"></script>
-  <script defer src="js/app.js?v=20261002-admin-console"></script>
   <script defer src="js/donate-leaderboard-ui.js?v=20260929-ldb-simple"></script>
   <script defer src="js/leaderboard.js?v=20260929-ldb-simple"></script>
 </body>

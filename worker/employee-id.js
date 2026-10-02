@@ -1,11 +1,14 @@
 /**
  * Rotating Employee IDs for invite-only signup.
  * The HMAC secret lives only in EMPLOYEE_ID_SECRET (server env). The code
- * itself is never stored in the repo. Each 30-second step can be redeemed once.
+ * itself is never stored in the repo. A new random code is shown every 30
+ * seconds. Each code can create one account, and it stops working 6 hours
+ * after it was issued if nobody used it.
  */
 const crypto = require("crypto");
 
 const PERIOD_SECONDS = 30;
+const VALID_SECONDS = 6 * 60 * 60;
 
 function employeeSecret() {
   const raw = String(process.env.EMPLOYEE_ID_SECRET || "").trim();
@@ -49,18 +52,19 @@ function currentEmployeeCode(now = Date.now()) {
     step,
     secondsLeft: secondsLeft(now),
     periodSeconds: PERIOD_SECONDS,
+    validSeconds: VALID_SECONDS,
   };
 }
 
-/** Current step, or the previous one so a code can be typed as it rolls over. */
+/** Any code issued in the last 6 hours. The newest matching step wins. */
 function matchEmployeeStep(code, now = Date.now()) {
   const secret = employeeSecret();
   if (!secret) return null;
   const normalized = String(code || "").trim();
   if (!/^\d{6}$/.test(normalized)) return null;
   const step = currentStep(now);
-  for (const candidate of [step, step - 1]) {
-    if (candidate < 0) continue;
+  const oldest = step - Math.floor(VALID_SECONDS / PERIOD_SECONDS);
+  for (let candidate = step; candidate >= oldest && candidate >= 0; candidate -= 1) {
     if (codesMatch(normalized, codeForStep(secret, candidate))) return candidate;
   }
   return null;
@@ -80,7 +84,7 @@ async function redeemEmployeeId(db, code) {
     return {
       ok: false,
       status: 403,
-      error: "That Employee ID is not valid. Ask your admin for the current code.",
+      error: "That Employee ID is not valid, or it expired after 6 hours. Ask your admin for a new one.",
       code: "invalid_auth_code",
     };
   }
@@ -128,6 +132,7 @@ function isStudioAdmin(user) {
 
 module.exports = {
   PERIOD_SECONDS,
+  VALID_SECONDS,
   employeeSecret,
   currentEmployeeCode,
   matchEmployeeStep,

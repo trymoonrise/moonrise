@@ -91,13 +91,16 @@
       return "An account with this email already exists. Sign in instead.";
     }
     if (code === "invalid_auth_code") {
-      return "That Employee ID is not valid. Ask your admin for the current code.";
+      return "That Employee ID is not valid, or it expired after 6 hours. Ask your admin for a new one.";
     }
     if (code === "auth_code_used") {
       return "That Employee ID was already used. Ask your admin for the next code.";
     }
     if (code === "signup_disabled") {
       return "New accounts are invite-only. Ask your admin for an Employee ID.";
+    }
+    if (code === "account_frozen") {
+      return "This account is frozen. Ask the studio owner to turn it back on.";
     }
     if (code === "email_rate_limited" || code === "over_email_send_rate_limit") {
       return "Too many emails were sent. Wait a minute and try again.";
@@ -935,6 +938,16 @@
         (location.pathname.split("/").pop() || "dashboard.html") + location.search + location.hash
       );
       location.replace("login.html?next=" + next);
+      return null;
+    }
+    const profile = await getProfile();
+    if (profile?.frozen) {
+      try {
+        await signOut();
+      } catch (_) {
+        /* ignore */
+      }
+      location.replace("login.html?frozen=1");
       return null;
     }
     releaseAuthGate();

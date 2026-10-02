@@ -23,6 +23,7 @@
   let searchQuery = "";
   let started = false;
   let payoutsTableReady = true;
+  let playtestMode = false;
 
   const $ = (id) => document.getElementById(id);
   const esc = (s) =>
@@ -483,6 +484,7 @@
         );
       });
 
+      if (playtestMode) return;
       rows = built.sort((a, b) => String(b.sold_at || "").localeCompare(String(a.sold_at || "")));
       renderRows();
       if (!payoutsTableReady) {
@@ -491,6 +493,7 @@
         );
       }
     } catch (e) {
+      if (playtestMode) return;
       rows = [];
       renderRows();
       setBanner(e?.message || "Could not load payouts.", true);
@@ -567,9 +570,28 @@
     });
   }
 
+  function isPlaytestRow(projectId) {
+    return playtestMode || String(projectId || "").startsWith("play-");
+  }
+
+  function notifyPlaytestPayouts() {
+    document.dispatchEvent(new CustomEvent("ms:admin-playtest-payouts", { detail: { payouts: rows } }));
+  }
+
   async function markPaid(projectId) {
     const row = rows.find((item) => String(item.project_id) === String(projectId));
     if (!row) return;
+    if (isPlaytestRow(projectId)) {
+      const note = await askPaidNote(row);
+      if (note === null) return;
+      row.payout_status = "paid";
+      row.paid_out_at = new Date().toISOString();
+      row.paid_out_note = String(note || "").trim();
+      renderRows();
+      notifyPlaytestPayouts();
+      window.StudioToast?.success?.("Playtest only. Nothing was saved.");
+      return;
+    }
     const sb = getSb();
     if (!sb) {
       setBanner("Supabase is not connected.", true);
@@ -680,6 +702,15 @@
     const row = rows.find((item) => String(item.project_id) === String(projectId));
     if (!row) return;
     if (String(row.payout_status || "").toLowerCase() === "paid") return;
+    if (isPlaytestRow(projectId)) {
+      const ok = await askRemovePayout(row);
+      if (!ok) return;
+      row.payout_status = "cancelled";
+      renderRows();
+      notifyPlaytestPayouts();
+      window.StudioToast?.success?.("Playtest only. Nothing was saved.");
+      return;
+    }
     const sb = getSb();
     if (!sb) {
       setBanner("Supabase is not connected.", true);
@@ -835,6 +866,16 @@
     bindUi();
     await loadPayouts();
   }
+
+  document.addEventListener("ms:admin-playtest", (event) => {
+    playtestMode = !!event.detail?.on;
+    if (!playtestMode) {
+      void loadPayouts();
+      return;
+    }
+    rows = Array.isArray(event.detail?.payouts) ? event.detail.payouts : [];
+    renderRows();
+  });
 
   if (document.body.dataset.msAuthFired === "1") void boot();
   else document.addEventListener("ms:auth-ready", () => void boot(), { once: true });

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>html.ms-hold body{visibility:hidden!important}</style>
+<script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
   <script>
     (function () {
       var BUILD = "20260924-drawer-ease";
@@ -38,7 +40,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/studio.css?v=20260924-no-tabbar-ease">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-  <link rel="stylesheet" href="css/download.css?v=20260923-public-menu">
+  <link rel="stylesheet" href="css/download.css?v=20260923-public-menu" onload="document.documentElement.classList.remove('ms-hold')">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20260909-discord"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>

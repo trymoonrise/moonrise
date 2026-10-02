@@ -5,8 +5,8 @@
   const ringEl = document.getElementById("admin-ring");
   const copyBtn = document.getElementById("admin-copy");
 
-  const READY = "Copy this ID to authorize your employee.";
-  const USED = "This ID was already used. Wait for the next one.";
+  const READY = "Copy this ID. It works once and expires in 6 hours if unused.";
+  const USED = "This ID was already used. Copy the next one.";
 
   let snapshot = null;
   let expiresAt = 0;
@@ -48,36 +48,60 @@
     });
   }
 
+  function revealCard() {
+    document.querySelector(".ms-admin-code-card")?.classList.remove("is-pending");
+  }
+
+  function syncClock() {
+    if (!snapshot) return;
+    const period = (Number(snapshot.periodSeconds) || 30) * 1000;
+    const leftMs = Math.max(0, expiresAt - Date.now());
+    const second = Math.max(0, Math.ceil(leftMs / 1000));
+    if (ringEl) ringEl.style.setProperty("--ms-admin-progress", String(leftMs / period));
+    if (secondsEl) secondsEl.textContent = String(second);
+    lastSecond = second;
+  }
+
   function scrambleTo(nextCode) {
     const target = String(nextCode || "").replace(/\D/g, "").padStart(6, "0").slice(0, 6);
     const digits = ensureDigits();
     const token = ++scrambleToken;
-    if (reduceMotion) {
+    if (reduceMotion || !shownCode) {
       writeDigits(target);
       shownCode = target;
+      revealCard();
       return;
     }
+    const started = performance.now();
     digits.forEach((span, i) => {
+      const duration = 160 + Math.random() * 220;
+      let nextFlip = started;
       span.classList.add("is-scrambling");
-      const ticks = 8 + i * 4;
-      let n = 0;
-      const timer = setInterval(() => {
+      const step = (now) => {
         if (token !== scrambleToken) {
-          clearInterval(timer);
           span.classList.remove("is-scrambling");
           return;
         }
-        n += 1;
-        if (n >= ticks) {
+        const elapsed = now - started;
+        if (elapsed >= duration) {
           span.textContent = target[i];
           span.classList.remove("is-scrambling");
-          clearInterval(timer);
           return;
         }
-        span.textContent = String(Math.floor(Math.random() * 10));
-      }, 42);
+        if (now >= nextFlip) {
+          let roll = String(Math.floor(Math.random() * 10));
+          if (roll === span.textContent) roll = String((Number(roll) + 1 + Math.floor(Math.random() * 8)) % 10);
+          span.textContent = roll;
+          const remain = duration - elapsed;
+          const gap = remain > 70 ? 14 + Math.random() * 12 : 22 + Math.random() * 16;
+          nextFlip = now + gap;
+        }
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
     });
     shownCode = target;
+    revealCard();
   }
 
   function paint() {
@@ -102,7 +126,7 @@
       nextFetchAt = Date.now() + 800;
       refresh();
     }
-    requestAnimationFrame(paint);
+    if (painting) requestAnimationFrame(paint);
   }
 
   let painting = false;
@@ -130,13 +154,13 @@
       }
       if (!res.ok) throw new Error(data.error || "Could not load the Employee ID");
       const nextCode = String(data.code || "");
-      if (nextCode && nextCode !== shownCode) {
-        expiresAt = Date.now() + Number(data.secondsLeft || 30) * 1000;
-        scrambleTo(nextCode);
-      } else if (!expiresAt) {
+      snapshot = data;
+      if (!expiresAt || (nextCode && nextCode !== shownCode)) {
         expiresAt = Date.now() + Number(data.secondsLeft || 30) * 1000;
       }
-      snapshot = data;
+      syncClock();
+      if (nextCode && nextCode !== shownCode) scrambleTo(nextCode);
+      else revealCard();
       setStatus(data.used ? USED : READY);
       startPaint();
     } catch (err) {
@@ -155,6 +179,17 @@
     } catch (_) {
       setStatus("Couldn't copy. Select the ID instead.");
     }
+  });
+
+  window.addEventListener("pagehide", () => {
+    painting = false;
+  });
+
+  window.addEventListener("pageshow", (event) => {
+    if (!event.persisted || !snapshot) return;
+    syncClock();
+    revealCard();
+    startPaint();
   });
 
   window.StudioOwner?.gateOwnerPage?.("dashboard.html").then((ok) => {

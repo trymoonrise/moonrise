@@ -12,6 +12,7 @@ create table if not exists public.profiles (
   goal_target integer not null default 1000
     check (goal_target >= 1 and goal_target <= 1000000),
   mvp_plus boolean not null default false,
+  frozen boolean not null default false,
   branding_defaults jsonb not null default '{}'::jsonb,
   payout_profile jsonb not null default '{}'::jsonb,
   security_card_fingerprint text,

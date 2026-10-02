@@ -600,6 +600,128 @@ async function emailSiteHostingInvoice(stripe, invoice, sub) {
     .eq("id", projectId);
 }
 
+/** Keep a payment row and project status for each hosting charge. */
+async function recordSiteHostingCharge(invoice, sub) {
+  const projectId = String(sub?.metadata?.projectId || "").trim();
+  if (!projectId || !invoice?.id) return;
+  const billingReason = String(invoice.billing_reason || "");
+  if (billingReason !== "subscription_cycle" && billingReason !== "subscription_create") return;
+
+  const item = sub.items?.data?.[0];
+  const monthlyRaw = Number(item?.price?.unit_amount);
+  const monthly = Number.isFinite(monthlyRaw) && monthlyRaw > 0 ? monthlyRaw : HOSTING_MONTHLY_CENTS;
+  const paidRaw =
+    billingReason === "subscription_cycle" ? Number(invoice.amount_paid ?? invoice.total) : monthly;
+  const amountCents = Number.isFinite(paidRaw) && paidRaw > 0 ? Math.round(paidRaw) : monthly;
+  if (!amountCents) return;
+
+  const supabase = db();
+  const { data: project, error } = await supabase
+    .from("projects")
+    .select("id,user_id,business_context")
+    .eq("id", projectId)
+    .maybeSingle();
+  if (error) throw error;
+  if (!project?.user_id) return;
+
+  await supabase.from("payments").upsert(
+    {
+      user_id: project.user_id,
+      project_id: projectId,
+      stripe_session_id: `invoice:${invoice.id}`,
+      stripe_payment_intent:
+        typeof invoice.payment_intent === "string"
+          ? invoice.payment_intent
+          : invoice.payment_intent?.id || null,
+      amount_cents: amountCents,
+      currency: invoice.currency || "usd",
+      status: "paid",
+      kind: "site_hosting",
+    },
+    { onConflict: "stripe_session_id" }
+  );
+
+  const ctx =
+    project.business_context && typeof project.business_context === "object"
+      ? project.business_context
+      : {};
+  const periodEnd = sub.current_period_end || item?.current_period_end || null;
+  await supabase
+    .from("projects")
+    .update({
+      business_context: {
+        ...ctx,
+        hostingSubscriptionId: sub.id || ctx.hostingSubscriptionId || null,
+        hostingStripeCustomerId: stripeId(sub.customer) || ctx.hostingStripeCustomerId || null,
+        hostingMonthlyCents: monthly,
+        hostingStatus: "paying",
+        hostingLastPaidAt: new Date().toISOString(),
+        hostingRenewsAt: periodEnd ? new Date(periodEnd * 1000).toISOString() : ctx.hostingRenewsAt || null,
+        paidAt: ctx.paidAt || new Date().toISOString(),
+      },
+    })
+    .eq("id", projectId);
+}
+
+async function syncSiteHostingStatus(sub) {
+  const projectId = String(sub?.metadata?.projectId || "").trim();
+  const supabase = db();
+  let project = null;
+  if (projectId) {
+    const { data, error } = await supabase
+      .from("projects")
+      .select("id,business_context")
+      .eq("id", projectId)
+      .maybeSingle();
+    if (error) throw error;
+    project = data;
+  }
+  if (!project && sub?.id) {
+    const { data, error } = await supabase
+      .from("projects")
+      .select("id,business_context")
+      .filter("business_context->>hostingSubscriptionId", "eq", sub.id)
+      .limit(1);
+    if (error) throw error;
+    project = Array.isArray(data) ? data[0] : null;
+  }
+  if (!project) return;
+
+  const ctx =
+    project.business_context && typeof project.business_context === "object"
+      ? project.business_context
+      : {};
+  const status = String(sub.status || "");
+  let hostingStatus = "paying";
+  if (status === "canceled" || sub.ended_at) hostingStatus = "canceled";
+  else if (sub.cancel_at_period_end) hostingStatus = "canceling";
+  else if (status === "past_due" || status === "unpaid") hostingStatus = "past_due";
+  else if (status !== "active" && status !== "trialing") hostingStatus = "unknown";
+
+  const item = sub.items?.data?.[0];
+  const periodEnd = sub.current_period_end || item?.current_period_end || null;
+  const monthlyRaw = Number(item?.price?.unit_amount);
+  await supabase
+    .from("projects")
+    .update({
+      business_context: {
+        ...ctx,
+        hostingSubscriptionId: sub.id || ctx.hostingSubscriptionId || null,
+        hostingStripeCustomerId: stripeId(sub.customer) || ctx.hostingStripeCustomerId || null,
+        hostingStatus,
+        hostingMonthlyCents:
+          Number.isFinite(monthlyRaw) && monthlyRaw > 0 ? monthlyRaw : ctx.hostingMonthlyCents || HOSTING_MONTHLY_CENTS,
+        hostingRenewsAt: periodEnd ? new Date(periodEnd * 1000).toISOString() : ctx.hostingRenewsAt || null,
+        hostingEndedAt: sub.ended_at
+          ? new Date(sub.ended_at * 1000).toISOString()
+          : hostingStatus === "canceled"
+            ? ctx.hostingEndedAt || new Date().toISOString()
+            : ctx.hostingEndedAt || null,
+      },
+    })
+    .eq("id", project.id);
+}
+
 /**
  * After a go-live Stripe payment: flip watermark off, record payment, redeploy clean HTML.
  * Shared by the Stripe webhook and the /fulfill-go-live return path.
@@ -1171,11 +1293,16 @@ app.post("/webhooks/stripe", express.raw({ type: "application/json" }), async (r
             );
           }
         } else if (kind === "site_hosting") {
-          // Monthly hosting renewal - email the buyer an invoice + cancel link.
+          // Monthly hosting renewal - email the buyer an invoice + cancel link, then keep the ledger.
           try {
             await emailSiteHostingInvoice(stripe, invoice, sub);
           } catch (hostMailErr) {
             console.error("Hosting renewal invoice email failed:", hostMailErr.message || hostMailErr);
+          }
+          try {
+            await recordSiteHostingCharge(invoice, sub);
+          } catch (hostLedgerErr) {
+            console.error("Hosting payment record failed:", hostLedgerErr.message || hostLedgerErr);
           }
         }
       }
@@ -1214,6 +1341,12 @@ app.post("/webhooks/stripe", express.raw({ type: "application/json" }), async (r
             await db().from("profiles").update({ mvp_plus: true }).eq("id", userId);
           }
         }
+      } else if (kind === "site_hosting") {
+        try {
+          await syncSiteHostingStatus(sub);
+        } catch (hostStatusErr) {
+          console.error("Hosting status sync failed:", hostStatusErr.message || hostStatusErr);
+        }
       } else if (kind === "mvp_donation" && userId) {
         const status = String(sub.status || "");
         const active = status === "active" || status === "trialing";
@@ -1249,10 +1382,86 @@ async function requireUser(req, res, next) {
     const { data, error } = await db().auth.getUser(token);
     if (error || !data?.user) return res.status(401).json({ error: "Invalid auth token" });
     req.user = data.user;
+    if (!isStudioAdmin(req.user)) {
+      const { data: profile, error: profileErr } = await db()
+        .from("profiles")
+        .select("frozen")
+        .eq("id", req.user.id)
+        .maybeSingle();
+      if (!profileErr && profile?.frozen) {
+        return res.status(403).json({
+          error: "This account is frozen. Ask the studio owner to turn it back on.",
+          code: "account_frozen",
+        });
+      }
+    }
     next();
   } catch (e) {
     res.status(401).json({ error: e.message || "Unauthorized" });
   }
+}
+
+function cleanEmployeeHandle(raw) {
+  return String(raw || "")
+    .trim()
+    .replace(/^@+/, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9_]/g, "")
+    .slice(0, 24);
+}
+
+function isProtectedEmployee(actor, profile) {
+  const handle = String(profile?.handle || "").replace(/^@/, "").toLowerCase();
+  if (handle === "moonrise") return true;
+  if (profile?.id && profile.id === actor?.id) return true;
+  return isStudioAdmin({ id: profile?.id });
+}
+
+async function loadManageableEmployee(actor, targetId) {
+  const id = String(targetId || "").trim();
+  if (!id) {
+    const err = new Error("Employee required");
+    err.status = 400;
+    throw err;
+  }
+  const { data, error } = await db()
+    .from("profiles")
+    .select("id, handle, display_name, frozen")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) {
+    const err = new Error("Employee not found");
+    err.status = 404;
+    throw err;
+  }
+  if (isProtectedEmployee(actor, data)) {
+    const err = new Error("The owner account stays as it is.");
+    err.status = 403;
+    throw err;
+  }
+  return data;
+}
+
+async function setEmployeeBan(userId, frozen) {
+  const auth = db().auth.admin;
+  const { error } = await auth.updateUserById(userId, {
+    ban_duration: frozen ? "876000h" : "none",
+  });
+  if (error) throw error;
+  if (frozen && typeof auth.signOut === "function") {
+    try {
+      await auth.signOut(userId, "global");
+    } catch (e) {
+      console.warn("employee freeze sign-out", e.message || e);
+    }
+  }
+}
+
+function sendEmployeeError(res, e, fallback) {
+  const status = Number(e?.status) || 500;
+  if (status >= 500) console.error(fallback, e);
+  res.status(status).json({ error: status >= 500 ? fallback : e.message || fallback });
 }
 
 /** Live Employee ID for the studio admin. The HMAC secret never leaves the server. */
@@ -1276,11 +1485,72 @@ app.get("/admin/employee-code", requireUser, async (req, res) => {
       code: snapshot.code,
       secondsLeft: snapshot.secondsLeft,
       periodSeconds: snapshot.periodSeconds,
+      validSeconds: snapshot.validSeconds,
       used: !!data,
     });
   } catch (e) {
     console.error("admin/employee-code", e);
     res.status(500).json({ error: "Could not load the Employee ID" });
+  }
+});
+
+app.patch("/admin/employees/:id", requireUser, async (req, res) => {
+  try {
+    if (!isStudioAdmin(req.user)) return res.status(404).json({ error: "Not found" });
+    const employee = await loadManageableEmployee(req.user, req.params.id);
+    const handle = cleanEmployeeHandle(req.body?.handle);
+    const displayName = String(req.body?.displayName ?? req.body?.display_name ?? "")
+      .replace(/[\u0000-\u001f]/g, "")
+      .trim()
+      .slice(0, 60);
+    if (handle.length < 3) {
+      return res.status(400).json({ error: "Username must be at least 3 characters." });
+    }
+    if (handle === "moonrise" || handle.includes("moonrise")) {
+      return res.status(400).json({ error: "That username is not allowed." });
+    }
+    const { data: clash, error: clashErr } = await db()
+      .from("profiles")
+      .select("id")
+      .eq("handle", handle)
+      .neq("id", employee.id)
+      .maybeSingle();
+    if (clashErr) throw clashErr;
+    if (clash) return res.status(409).json({ error: "Another employee already uses that username." });
+    const { error } = await db()
+      .from("profiles")
+      .update({ handle, display_name: displayName || null })
+      .eq("id", employee.id);
+    if (error) throw error;
+    res.json({ ok: true, id: employee.id, handle, displayName });
+  } catch (e) {
+    sendEmployeeError(res, e, "Could not rename that employee");
+  }
+});
+
+app.post("/admin/employees/:id/freeze", requireUser, async (req, res) => {
+  try {
+    if (!isStudioAdmin(req.user)) return res.status(404).json({ error: "Not found" });
+    const employee = await loadManageableEmployee(req.user, req.params.id);
+    const frozen = req.body?.frozen !== false;
+    const { error } = await db().from("profiles").update({ frozen }).eq("id", employee.id);
+    if (error) throw error;
+    await setEmployeeBan(employee.id, frozen);
+    res.json({ ok: true, id: employee.id, frozen });
+  } catch (e) {
+    sendEmployeeError(res, e, "Could not update that employee");
+  }
+});
+
+app.delete("/admin/employees/:id", requireUser, async (req, res) => {
+  try {
+    if (!isStudioAdmin(req.user)) return res.status(404).json({ error: "Not found" });
+    const employee = await loadManageableEmployee(req.user, req.params.id);
+    const { error } = await db().auth.admin.deleteUser(employee.id);
+    if (error) throw error;
+    res.json({ ok: true, id: employee.id });
+  } catch (e) {
+    sendEmployeeError(res, e, "Could not delete that employee");
   }
 });
 

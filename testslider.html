@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
+<style>html.ms-hold body{visibility:hidden!important}</style>
+<script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Theme Slider Test - Moonrise Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/ms-lf-slide.css?v=20260924-slide-stable">
+  <link rel="stylesheet" href="css/ms-lf-slide.css?v=20260924-slide-stable" onload="document.documentElement.classList.remove('ms-hold')">
   <style>
     :root {
       color-scheme: light;

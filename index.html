@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>html.ms-hold body{visibility:hidden!important}</style>
+<script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
@@ -103,8 +105,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260924-no-tabbar-ease">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+  <link rel="stylesheet" href="css/studio.css?v=20261002-shell">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="document.documentElement.classList.remove('ms-hold')">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20260909-discord"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
@@ -531,7 +533,7 @@
             if (document.fonts?.ready) {
               await Promise.race([
                 document.fonts.ready,
-                new Promise((resolve) => setTimeout(resolve, 1200)),
+                new Promise((resolve) => setTimeout(resolve, 350)),
               ]);
             }
           } catch (_) {}
@@ -552,7 +554,7 @@
           word.classList.add("is-playing");
 
           // Reveal the UI only once the word has visibly shrunk (near the end)
-          setTimeout(revealHome, 1500);
+          setTimeout(revealHome, 900);
           setTimeout(() => {
             if (greet?.parentNode) greet.remove();
           }, 2400);

@@ -32,14 +32,29 @@
   if (PUBLIC[file]) return;
 
   document.documentElement.classList.add("ms-auth-gating");
+  document.documentElement.classList.add("ms-hold");
 
   var preconnect = document.createElement("link");
   preconnect.rel = "preconnect";
   preconnect.href = "https://erfaxgmnzdropviormpj.supabase.co";
   document.head.appendChild(preconnect);
 
+  var cdn = document.createElement("link");
+  cdn.rel = "preconnect";
+  cdn.href = "https://cdn.jsdelivr.net";
+  cdn.crossOrigin = "anonymous";
+  document.head.appendChild(cdn);
+
+  ["js/config.js?v=20260909-discord", "js/app.js?v=20261002-owner"].forEach(function (href) {
+    var preload = document.createElement("link");
+    preload.rel = "preload";
+    preload.as = "script";
+    preload.href = href;
+    document.head.appendChild(preload);
+  });
+
   var style = document.createElement("style");
-  style.textContent = "html.ms-auth-gating body{visibility:hidden!important}";
+  style.textContent = "html.ms-hold body{visibility:hidden!important}";
   document.head.appendChild(style);
 
   function redirectToLogin() {
@@ -123,7 +138,7 @@
 
 function warmChannels() {
   if (!document.head || document.getElementById("ms-channel-speculation")) return;
-  var pages = ["dashboard.html", "builder.html", "leads.html", "clients.html", "settings.html"];
+  var pages = ["dashboard.html", "builder.html", "leads.html", "clients.html", "settings.html", "admin-console.html", "projects.html", "help.html"];
   if (window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports("speculationrules")) {
     var rules = document.createElement("script");
     rules.id = "ms-channel-speculation";

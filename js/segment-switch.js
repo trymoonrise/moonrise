@@ -74,6 +74,12 @@
       activeClass: "active",
       tone: "surface",
     },
+    {
+      track: ".ms-admin-tabs",
+      items: ":scope > .ms-payouts-tab",
+      activeClass: "is-active",
+      tone: "surface",
+    },
   ];
 
   /** @type {WeakMap<Element, object>} */

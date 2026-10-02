@@ -24,13 +24,6 @@
       icon: "key",
       ownerOnly: true,
     },
-    {
-      id: "pending-payouts",
-      href: "pending-payouts.html",
-      label: "Pending payouts",
-      icon: "dollar",
-      ownerOnly: true,
-    },
   ];
 
   const ACCOUNT = [
@@ -1731,6 +1724,7 @@
     }
     setChannelGenerating(null, false);
     document.body.classList.add("ms-ready");
+    document.documentElement.classList.remove("ms-hold");
     document.dispatchEvent(new Event("ms:shell-ready"));
     // Let scripts that load after app.js subscribe before the page starts fetching.
     setTimeout(function () {
@@ -1761,19 +1755,37 @@
     }
   }
 
+  let authWait = 0;
+
+  async function continueSession() {
+    if (!window.StudioAuth?.requireAuth) return;
+    try {
+      const session = await window.StudioAuth.requireAuth();
+      if (!session) return;
+      await finishSession(session);
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
   async function boot() {
     ensureTabBar(document.body?.dataset?.page || "");
     const gateOpen = document.documentElement.classList.contains("ms-auth-ready");
+    // Shell paint must not wait on the Supabase CDN. Auth runs on the next turn
+    // if this file executed before auth.js.
+    if (!window.StudioAuth?.requireAuth) {
+      if (gateOpen) paintApp();
+      if (authWait < 1) {
+        authWait += 1;
+        setTimeout(() => {
+          void boot();
+        }, 0);
+      }
+      return;
+    }
     if (gateOpen) {
       paintApp();
-      if (!window.StudioAuth?.requireAuth) return;
-      try {
-        const session = await window.StudioAuth.requireAuth();
-        if (!session) return;
-        await finishSession(session);
-      } catch (e) {
-        console.warn(e);
-      }
+      void continueSession();
       return;
     }
 
