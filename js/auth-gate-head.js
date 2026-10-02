@@ -5,6 +5,11 @@
  * This is a UX gate only - tokens are not cryptographically verified here.
  */
 (function () {
+  if (!window.__msAppearanceBoot) {
+    window.__msAppearanceBoot = 1;
+    document.write('<script src="js/appearance.js?v=20261002-appearance4"><\/script>');
+  }
+
   var PUBLIC = {
     "": 1,
     "index.html": 1,

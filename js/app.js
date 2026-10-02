@@ -1810,7 +1810,9 @@
         theme.name = "theme-color";
         document.head.appendChild(theme);
       }
-      theme.content = "#eef3f8";
+      theme.content =
+        (window.MoonriseAppearance && window.MoonriseAppearance.chromeColor()) ||
+        "#eef3f8";
     } catch (_) {
       /* ignore */
     }

@@ -71,9 +71,14 @@ function resolveWorkerPublicUrl() {
 const WORKER_PUBLIC_URL = resolveWorkerPublicUrl();
 const WATERMARK_EMBED_PATH = path.join(__dirname, "..", "watermark", "embed.js");
 const CONTACT_FORM_SCRIPT_PATH = path.join(__dirname, "..", "watermark", "contact-form.js");
-/** Website generation and editing - override with WEBSITE_GENERATION_MODEL. */
+/**
+ * Website generation and editing - override with WEBSITE_GENERATION_MODEL.
+ * DeepSeek V4.1 Flash is the cheap coding tier (about $0.40–$1.20 / 1M output,
+ * 1M context) and is stronger at finishing long HTML than MiniMax M2.7.
+ * Thinking is disabled below so the token budget is the page, not a trace.
+ */
 const WEBSITE_GENERATION_MODEL = String(
-  process.env.WEBSITE_GENERATION_MODEL || "minimax/minimax-m2.7"
+  process.env.WEBSITE_GENERATION_MODEL || "deepseek/deepseek-v4.1-flash"
 ).trim();
 /** Assemble output budget (output tokens dominate cost + latency). */
 const WEBSITE_MAX_OUTPUT_TOKENS = Math.max(
@@ -1821,10 +1826,10 @@ async function openRouterChat({
   title,
   prefer,
   expectHtml = false,
-  reasoningEffort = "minimal",
+  reasoningEffort = "none",
 }) {
   const key = process.env.OPENROUTER_API_KEY;
-  if (!key) throw new Error("MiniMax website generation is not configured");
+  if (!key) throw new Error("Website generation is not configured");
   const body = {
     model: model || WEBSITE_GENERATION_MODEL,
     messages: [
@@ -1834,10 +1839,11 @@ async function openRouterChat({
     temperature: temperature ?? 0.5,
     max_tokens: maxTokens ?? 2000,
   };
-  // MiniMax rejects reasoning.enabled=false ("Reasoning is mandatory").
-  // A low effort keeps the chain of thought from consuming the whole max_tokens
-  // budget, which otherwise comes back as finish_reason=length and null content.
-  if (reasoningEffort && reasoningEffort !== "none") {
+  // Thinking models bill the trace as output and can return finish_reason=length
+  // with an empty page. "none" turns that off so max_tokens is the HTML.
+  if (reasoningEffort === "none") {
+    body.reasoning = { enabled: false };
+  } else if (reasoningEffort) {
     body.reasoning = { effort: reasoningEffort };
   }
   // Prefer faster providers for generate; cheaper is fine for light JSON tasks.
@@ -2178,12 +2184,13 @@ async function generateWithOpenRouter(ctx, presetPack, plan) {
     });
     let html = String(result.content || "").trim();
     if (!hasHtmlDocumentStart(html)) {
-      console.warn("MiniMax response had no HTML document", {
+      console.warn("Model response had no HTML document", {
+        model: WEBSITE_GENERATION_MODEL,
         finishReason: result.finishReason || "",
         reasoningTokens: result.reasoningTokens || 0,
         contentChars: html.length,
       });
-      throw new Error("MiniMax did not return a complete HTML document");
+      throw new Error("The model did not return a complete HTML document");
     }
     html = ensurePaletteContrast(
       sanitizeGeneratedCopy(

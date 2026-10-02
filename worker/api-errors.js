@@ -77,7 +77,7 @@ function formatApiError(err, fallback) {
     return { message: STRIPE_NOT_CONFIGURED_MSG, status: 500, code: "STRIPE_NOT_CONFIGURED" };
   }
 
-  if (/openrouter is not configured|minimax website generation is not configured/i.test(raw)) {
+  if (/openrouter is not configured|website generation is not configured|minimax website generation is not configured/i.test(raw)) {
     return { message: OPENROUTER_NOT_CONFIGURED_MSG, status: 503, code: "OPENROUTER_NOT_CONFIGURED" };
   }
 

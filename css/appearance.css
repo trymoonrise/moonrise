@@ -1,0 +1,535 @@
+/* Appearance preferences from Settings. Loaded after studio.css. */
+
+:root {
+  --ms-accent-bright: #60a5fa;
+  --ms-accent-strong: #2563eb;
+  --ms-accent-rgb: 59, 130, 246;
+}
+
+html[data-ms-text="small"] { font-size: 87.5%; }
+html[data-ms-text="large"] { font-size: 112.5%; }
+html[data-ms-text="xlarge"] { font-size: 125%; }
+
+.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger) {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 42%),
+    linear-gradient(135deg, var(--ms-accent-bright) 0%, var(--ms-accent) 48%, var(--ms-accent-strong) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.28) inset,
+    0 -1px 0 rgba(15, 23, 42, 0.12) inset,
+    0 8px 18px rgba(var(--ms-accent-rgb), 0.28),
+    0 2px 4px rgba(var(--ms-accent-rgb), 0.18);
+}
+
+.ms-btn:hover:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger) {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.32) inset,
+    0 -1px 0 rgba(15, 23, 42, 0.1) inset,
+    0 10px 20px rgba(var(--ms-accent-rgb), 0.32),
+    0 3px 6px rgba(var(--ms-accent-rgb), 0.18);
+}
+
+html .ms-switch input:checked + .ms-switch-track {
+  background: var(--ms-accent-bright);
+}
+
+.ms-nav-link.is-active .ms-nav-ico,
+.ms-tab.is-active .ms-tab-ico,
+.ms-tab-main {
+  color: var(--ms-accent-strong);
+}
+
+.ms-nav-link.is-generating {
+  color: var(--ms-accent-strong);
+  background: rgba(var(--ms-accent-rgb), 0.1);
+  box-shadow: inset 0 0 0 1px rgba(var(--ms-accent-rgb), 0.18);
+}
+
+.ms-nav-link.is-generating .ms-nav-ico {
+  color: var(--ms-accent-strong);
+}
+
+input.ms-input:focus,
+textarea.ms-textarea:focus,
+select.ms-select:focus {
+  border-color: var(--ms-accent) !important;
+  box-shadow: 0 0 0 3px rgba(var(--ms-accent-rgb), 0.18);
+}
+
+/* Settings → Appearance */
+.ms-appearance-card {
+  margin-bottom: 0;
+}
+
+.ms-appearance-mode {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0.15rem 0 1.15rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--ms-line);
+  border-radius: 16px;
+  background: var(--ms-accent-soft);
+  background: color-mix(in srgb, var(--ms-accent) 7%, var(--ms-surface));
+}
+
+.ms-appearance-mode-ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--ms-accent-strong);
+  background: var(--ms-accent-soft);
+}
+
+.ms-appearance-mode-ico svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ms-appearance-block {
+  margin-top: 1.05rem;
+}
+
+.ms-appearance-block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ms-muted);
+}
+
+.ms-appearance-block-head strong {
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  font-weight: 700;
+  color: var(--ms-accent-strong);
+}
+
+.ms-appearance-swatches,
+.ms-appearance-sizes {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem;
+  border: 1px solid var(--ms-line);
+  border-radius: 18px;
+  background: #f8fafc;
+  background: color-mix(in srgb, var(--ms-ink) 3%, var(--ms-surface));
+}
+
+.ms-appearance-swatches {
+  justify-content: flex-start;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.ms-appearance-swatch {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  background: var(--swatch, var(--ms-accent));
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+}
+
+.ms-appearance-swatch.is-selected {
+  box-shadow:
+    0 0 0 2px var(--ms-surface),
+    0 0 0 4px var(--ms-accent);
+}
+
+.ms-appearance-swatch.is-selected::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 8px;
+  height: 14px;
+  border: solid #fff;
+  border-width: 0 2.5px 2.5px 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+  pointer-events: none;
+}
+
+.ms-appearance-swatch--custom {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    conic-gradient(from 210deg, #8b5cf6, #3b82f6, #ec4899, #10b981, #f97316, #8b5cf6);
+}
+
+.ms-appearance-swatch--custom.is-selected {
+  background: var(--swatch, var(--ms-accent));
+}
+
+.ms-appearance-swatch--custom.is-light.is-selected::after {
+  border-color: #0f172a;
+}
+
+.ms-appearance-swatch--custom input[type="color"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+}
+
+.ms-appearance-custom-face {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.25);
+  pointer-events: none;
+}
+
+.ms-appearance-swatch--custom.is-selected .ms-appearance-custom-face {
+  display: none;
+}
+
+.ms-appearance-hex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.7rem;
+}
+
+.ms-appearance-hex span {
+  font-size: 0.86rem;
+  font-weight: 650;
+  color: var(--ms-ink);
+}
+
+.ms-appearance-hex .ms-input {
+  width: 8.5rem;
+  min-height: 0;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.95rem;
+  font-family: var(--ms-mono);
+  text-transform: lowercase;
+}
+
+.ms-appearance-sizes button {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ms-ink);
+  border-radius: 14px;
+  min-height: 3.1rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+}
+
+.ms-appearance-sizes button span {
+  display: inline-block;
+  line-height: 1;
+}
+
+.ms-appearance-sizes button[data-text="small"] span { font-size: 0.85rem; }
+.ms-appearance-sizes button[data-text="medium"] span { font-size: 1.05rem; }
+.ms-appearance-sizes button[data-text="large"] span { font-size: 1.28rem; }
+.ms-appearance-sizes button[data-text="xlarge"] span { font-size: 1.5rem; }
+
+.ms-appearance-sizes button.is-selected {
+  border-color: var(--ms-accent);
+  background: var(--ms-surface);
+  color: var(--ms-accent-strong);
+  box-shadow: 0 0 0 1px var(--ms-accent);
+}
+
+.ms-appearance-swatch:focus-visible,
+.ms-appearance-sizes button:focus-visible,
+.ms-appearance-reset:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+}
+
+.ms-appearance-foot {
+  display: flex;
+  justify-content: flex-end;
+  min-height: 1.5rem;
+  margin-top: 0.85rem;
+}
+
+.ms-appearance-reset {
+  border: 0;
+  background: transparent;
+  color: var(--ms-muted);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 650;
+  cursor: pointer;
+  padding: 0.2rem 0;
+}
+
+.ms-appearance-reset:hover {
+  color: var(--ms-accent-strong);
+}
+
+@media (max-width: 560px) {
+  .ms-appearance-swatch {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ms-appearance-hex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ms-appearance-hex .ms-input {
+    width: 100%;
+  }
+}
+
+/* Dark mode — shell, shared cards, and form controls */
+html[data-ms-mode="dark"] {
+  color-scheme: dark;
+  --ms-bg: #0e1320;
+  --ms-surface: #171e2e;
+  --ms-ink: #e8eef8;
+  --ms-muted: #9aa8c2;
+  --ms-line: rgba(148, 163, 184, 0.2);
+}
+
+html[data-ms-mode="dark"] body {
+  background:
+    radial-gradient(980px 420px at 8% -12%, rgba(var(--ms-accent-rgb), 0.18), transparent 58%),
+    var(--ms-bg);
+  color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-sidebar {
+  background: #121826;
+  border-right-color: var(--ms-line);
+}
+
+html[data-ms-mode="dark"] .ms-nav {
+  background: #1b2436;
+}
+
+html[data-ms-mode="dark"] .ms-nav-pill,
+html[data-ms-mode="dark"] .ms-nav:not(:has(.ms-nav-pill)) .ms-nav-link.is-active,
+html[data-ms-mode="dark"] .ms-nav-link.is-active.is-generating {
+  background: #273349;
+  box-shadow: none;
+}
+
+html[data-ms-mode="dark"] .ms-nav-link {
+  color: #d5deee;
+}
+
+html[data-ms-mode="dark"] .ms-nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-nav-section {
+  color: #8ea0bf;
+}
+
+html[data-ms-mode="dark"] :where(
+  .ms-card,
+  .card,
+  .ms-dash-card,
+  .ms-dash-island,
+  .ms-dash-metric,
+  .ms-settings-card,
+  .ms-settings-install-preview
+) {
+  background: var(--ms-surface);
+  color: var(--ms-ink);
+  border-color: var(--ms-line);
+}
+
+html[data-ms-mode="dark"] h1,
+html[data-ms-mode="dark"] h2,
+html[data-ms-mode="dark"] h3,
+html[data-ms-mode="dark"] .ms-page-head h1,
+html[data-ms-mode="dark"] .ms-dash-head h1,
+html[data-ms-mode="dark"] .ms-fin-hero h1,
+html[data-ms-mode="dark"] .ms-settings-card-title,
+html[data-ms-mode="dark"] .ms-settings-pref-copy strong,
+html[data-ms-mode="dark"] .ms-settings-install-copy strong,
+html[data-ms-mode="dark"] .ms-settings-install-steps em,
+html[data-ms-mode="dark"] .ms-brand-name,
+html[data-ms-mode="dark"] .ms-user-name,
+html[data-ms-mode="dark"] .ms-top-brand-name {
+  color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-settings-card-title {
+  border-bottom-color: var(--ms-line);
+}
+
+html[data-ms-mode="dark"] .ms-settings-card-title svg {
+  color: var(--ms-muted);
+}
+
+html[data-ms-mode="dark"] input.ms-input,
+html[data-ms-mode="dark"] textarea.ms-textarea,
+html[data-ms-mode="dark"] .ms-auth-card input.ms-input,
+html[data-ms-mode="dark"] select.ms-select {
+  background-color: #101722 !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink);
+  caret-color: var(--ms-ink);
+  border-color: rgba(148, 163, 184, 0.28);
+  color-scheme: dark;
+}
+
+html[data-ms-mode="dark"] select.ms-select,
+html[data-ms-mode="dark"] select.ms-select:hover,
+html[data-ms-mode="dark"] select.ms-select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa8c2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+}
+
+html[data-ms-mode="dark"] select.ms-select option {
+  color: var(--ms-ink);
+  background: #171e2e;
+}
+
+html[data-ms-mode="dark"] .ms-btn-secondary {
+  color: var(--ms-ink);
+  border-color: var(--ms-line);
+}
+
+html[data-ms-mode="dark"] .ms-btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+html[data-ms-mode="dark"] .ms-settings-card--danger .ms-btn-danger {
+  background: transparent;
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.45);
+}
+
+html[data-ms-mode="dark"] .ms-settings-card--danger .ms-btn-danger:hover:not(:disabled) {
+  background: rgba(248, 113, 113, 0.12);
+}
+
+html[data-ms-mode="dark"] .ms-switch-track {
+  background: #2a354c;
+}
+
+html[data-ms-mode="dark"] .ms-menu-toggle {
+  background: #171e2e;
+  color: var(--ms-ink);
+  border-color: var(--ms-line);
+}
+
+html[data-ms-mode="dark"] .ms-quick-nav::before {
+  background: linear-gradient(
+    to bottom,
+    #0e1320 0,
+    #0e1320 calc(8rem + var(--ms-chrome-top) + var(--ms-chrome-btn)),
+    rgba(14, 19, 32, 0) 100%
+  );
+}
+
+html[data-ms-mode="dark"] .ms-tabbar {
+  background: rgba(23, 30, 46, 0.92);
+  border-color: var(--ms-line);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+html[data-ms-mode="dark"] .ms-tab {
+  color: #c5d0e4;
+}
+
+html[data-ms-mode="dark"] .ms-tab.is-active {
+  background: #273349;
+  color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-appearance-swatches,
+html[data-ms-mode="dark"] .ms-appearance-sizes {
+  background: #121826;
+}
+
+html[data-ms-mode="dark"] .ms-user-logout:hover {
+  background: rgba(248, 113, 113, 0.12);
+}
+
+html[data-ms-mode="dark"] .ms-dash-metric,
+html[data-ms-mode="dark"] .ms-dash-overview .ms-dash-tool,
+html[data-ms-mode="dark"] a.ms-dash-tool,
+html[data-ms-mode="dark"] .ms-dash-projects-search-field,
+html[data-ms-mode="dark"] .ms-dash-filter-btn,
+html[data-ms-mode="dark"] .ms-dash-projects-filter,
+html[data-ms-mode="dark"] .ms-dash-count-badge {
+  background: #121826 !important;
+  background-image: none !important;
+  border-color: var(--ms-line);
+  color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-dash-count-badge,
+html[data-ms-mode="dark"] .ms-dash-metric-edit,
+html[data-ms-mode="dark"] .ms-dash-filter-btn,
+html[data-ms-mode="dark"] .ms-dash-overview .ms-dash-tool,
+html[data-ms-mode="dark"] .ms-dash-overview .ms-dash-tool svg {
+  color: var(--ms-accent-bright);
+}
+
+html[data-ms-mode="dark"] input.ms-dash-projects-search-input {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-dash-overview .ms-dash-tool:hover,
+html[data-ms-mode="dark"] .ms-dash-projects-filter:hover {
+  background: #1b2436 !important;
+  border-color: rgba(var(--ms-accent-rgb), 0.45);
+}
+
+html[data-ms-mode="dark"] .ms-dash-metric-value,
+html[data-ms-mode="dark"] .ms-dash-ring-value,
+html[data-ms-mode="dark"] .ms-dash-projects-search-input {
+  color: var(--ms-ink);
+  -webkit-text-fill-color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-dash-metric-edit,
+html[data-ms-mode="dark"] .ms-dash-overview .ms-dash-tool svg,
+html[data-ms-mode="dark"] .ms-dash-ring-prog {
+  color: var(--ms-accent-bright);
+  stroke: var(--ms-accent-bright);
+}
+
+html[data-ms-mode="dark"] .ms-dash-ring-track {
+  stroke: #2a3548;
+}
+
+html[data-ms-mode="dark"] .ms-dash-projects-filter.is-active {
+  background: rgba(var(--ms-accent-rgb), 0.18);
+  color: var(--ms-accent-bright);
+  border-color: transparent;
+}
+
+html[data-ms-mode="dark"] .seg-switch[data-seg-tone="surface"] > .seg-switch-indicator {
+  background: #273349;
+  box-shadow: none;
+}

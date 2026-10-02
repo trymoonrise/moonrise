@@ -31,7 +31,7 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20260930-channel-instant"></script>
+  <script src="js/auth-gate-head.js?v=20261002-appearance4"></script>
   <title>Settings - Moonrise Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,11 +46,72 @@
     <header class="ms-page-head">
       <div class="ms-page-head-copy">
         <h1>Settings</h1>
-        <p class="lead">Update your profile, password, and account preferences.</p>
+        <p class="lead">Update your profile, appearance, password, and account preferences.</p>
       </div>
     </header>
 
     <div class="ms-settings-stack">
+      <section class="ms-card ms-settings-card ms-appearance-card" id="settings-appearance">
+        <h2 class="ms-settings-card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 22a10 10 0 0 0 8.5-15.2c-.3.1-.6.2-.9.2a3 3 0 0 1-3-3c0-.3.1-.6.2-.9A10 10 0 1 0 12 22z"/></svg>
+          Appearance
+        </h2>
+        <p class="ms-settings-hint ms-muted">Dark mode, theme color, and text size apply across Moonrise on this device.</p>
+
+        <div class="ms-appearance-mode">
+          <span class="ms-appearance-mode-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
+          </span>
+          <div class="ms-settings-pref-copy">
+            <strong>Dark mode</strong>
+            <span class="ms-muted">Easy on the eyes at night</span>
+          </div>
+          <label class="ms-switch ms-switch--night" title="Dark mode">
+            <input type="checkbox" id="set-dark-mode" autocomplete="off" aria-label="Dark mode">
+            <span class="ms-switch-track" aria-hidden="true"></span>
+          </label>
+        </div>
+
+        <div class="ms-appearance-block">
+          <div class="ms-appearance-block-head">
+            <span>Theme color</span>
+            <strong id="set-theme-name">Ocean</strong>
+          </div>
+          <div class="ms-appearance-swatches" role="radiogroup" aria-label="Theme color">
+            <button type="button" class="ms-appearance-swatch" role="radio" data-theme="violet" data-color="#8b5cf6" style="--swatch:#8b5cf6" aria-label="Violet"></button>
+            <button type="button" class="ms-appearance-swatch" role="radio" data-theme="ocean" data-color="#3b82f6" style="--swatch:#3b82f6" aria-label="Ocean"></button>
+            <button type="button" class="ms-appearance-swatch" role="radio" data-theme="rose" data-color="#ec4899" style="--swatch:#ec4899" aria-label="Rose"></button>
+            <button type="button" class="ms-appearance-swatch" role="radio" data-theme="forest" data-color="#10b981" style="--swatch:#10b981" aria-label="Forest"></button>
+            <button type="button" class="ms-appearance-swatch" role="radio" data-theme="sunset" data-color="#f97316" style="--swatch:#f97316" aria-label="Sunset"></button>
+            <label class="ms-appearance-swatch ms-appearance-swatch--custom" id="set-theme-custom-wrap" title="Custom color">
+              <input type="color" id="set-theme-custom" value="#3b82f6" aria-label="Custom theme color">
+              <span class="ms-appearance-custom-face" aria-hidden="true"></span>
+            </label>
+          </div>
+          <label class="ms-appearance-hex">
+            <span>Custom hex</span>
+            <input class="ms-input" id="set-theme-hex" maxlength="7" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="#3b82f6" aria-label="Custom theme color hex">
+          </label>
+        </div>
+
+        <div class="ms-appearance-block">
+          <div class="ms-appearance-block-head">
+            <span>Text size</span>
+            <strong id="set-text-name">Medium</strong>
+          </div>
+          <div class="ms-appearance-sizes" role="radiogroup" aria-label="Text size">
+            <button type="button" role="radio" data-text="small" aria-label="Small"><span>Aa</span></button>
+            <button type="button" role="radio" data-text="medium" aria-label="Medium"><span>Aa</span></button>
+            <button type="button" role="radio" data-text="large" aria-label="Large"><span>Aa</span></button>
+            <button type="button" role="radio" data-text="xlarge" aria-label="Extra large"><span>Aa</span></button>
+          </div>
+        </div>
+
+        <div class="ms-appearance-foot">
+          <button type="button" class="ms-appearance-reset" id="set-appearance-reset" hidden>Reset to default</button>
+        </div>
+      </section>
+
       <div class="ms-settings-row">
         <section class="ms-card ms-settings-card" id="settings-profile">
           <h2 class="ms-settings-card-title">
@@ -225,7 +286,7 @@
   <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
-  <script defer src="js/app.js?v=20260930-channel-instant"></script>
+  <script defer src="js/app.js?v=20261002-appearance"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
   <script defer src="js/push-notifications.js?v=20260719-client-push"></script>
   <script defer src="js/settings.js?v=20260911-passkey4"></script>
