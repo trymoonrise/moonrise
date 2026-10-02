@@ -103,6 +103,7 @@
     { "source": "/auth/forgot", "destination": "/api" },
     { "source": "/auth/resend-confirm", "destination": "/api" },
     { "source": "/auth/verify-password", "destination": "/api" },
+    { "source": "/admin/employee-code", "destination": "/api" },
     { "source": "/security-card/:path*", "destination": "/api" }
   ],
   "functions": {

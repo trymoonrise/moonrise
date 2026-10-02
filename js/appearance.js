@@ -156,7 +156,7 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261002-appearance4";
+      link.href = "css/appearance.css?v=20261002-appearance5";
     }
     if (studio && studio.parentNode) {
       if (link.parentNode !== studio.parentNode || studio.nextElementSibling !== link) {

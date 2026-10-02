@@ -26,6 +26,11 @@ body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-p
 }
 
 body[data-page]:not([data-page="editor"]):not([data-page="builder"]):not([data-page="home"]):not([data-page="orders"]):not(.ms-onboard-page):not(.ms-legal-site):not(.ms-contact-public) #page-body,
+body[data-page="login"]::before {
+  content: none;
+  animation: none;
+}
+
 body[data-page="login"] .ms-auth-card,
 body[data-page="orders"] .ms-orders-main,
 body.ms-legal-site .ms-legal-wrap,

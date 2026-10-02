@@ -533,3 +533,145 @@ html[data-ms-mode="dark"] .seg-switch[data-seg-tone="surface"] > .seg-switch-ind
   background: #273349;
   box-shadow: none;
 }
+
+/* Surfaces that stayed light: post cards, account chip, sidebar account */
+html[data-ms-mode="dark"] .ms-dash-post,
+html[data-ms-mode="dark"] .ms-dash-preview,
+html[data-ms-mode="dark"] .ms-dash-row,
+html[data-ms-mode="dark"] .ms-project-card {
+  background: #161d2c !important;
+  background-image: none !important;
+  border-color: rgba(148, 163, 184, 0.16);
+  box-shadow: none;
+  color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-dash-post:hover,
+html[data-ms-mode="dark"] .ms-dash-preview:hover,
+html[data-ms-mode="dark"] .ms-dash-row:hover,
+html[data-ms-mode="dark"] .ms-project-card:hover {
+  background: #1c2538 !important;
+  border-color: rgba(148, 163, 184, 0.28);
+  box-shadow: none;
+}
+
+html[data-ms-mode="dark"] .ms-dash-preview-shot,
+html[data-ms-mode="dark"] .ms-dash-post .ms-dash-preview-shot,
+html[data-ms-mode="dark"] .ms-dash-preview-iframe {
+  background: #0e1320;
+}
+
+html[data-ms-mode="dark"] .ms-dash-preview-delete {
+  appearance: none;
+  -webkit-appearance: none;
+  transition: none;
+  background: #243044 !important;
+  background-color: #243044 !important;
+  color: #fca5a5 !important;
+  box-shadow: none;
+}
+
+html[data-ms-mode="dark"] .ms-dash-preview-delete:hover {
+  background: rgba(248, 113, 113, 0.18) !important;
+  background-color: rgba(248, 113, 113, 0.18) !important;
+  color: #fecaca !important;
+}
+
+html[data-ms-mode="dark"] .ms-dash-preview-name,
+html[data-ms-mode="dark"] .ms-dash-card-head h2,
+html[data-ms-mode="dark"] .ms-dash-row-name,
+html[data-ms-mode="dark"] .ms-dash-projects-title,
+html[data-ms-mode="dark"] .ms-dash-island-title,
+html[data-ms-mode="dark"] .ms-project-name,
+html[data-ms-mode="dark"] .ms-projects-empty-title {
+  color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-dash-post-title a:hover {
+  color: var(--ms-accent-bright);
+}
+
+html[data-ms-mode="dark"] .ms-dash-post-tag {
+  color: var(--ms-accent-bright);
+  background: rgba(var(--ms-accent-rgb), 0.16);
+}
+
+html[data-ms-mode="dark"] .ms-dash-preview-live {
+  color: #bbf7d0;
+  background: rgba(6, 78, 59, 0.9);
+  border-color: rgba(52, 211, 153, 0.35);
+  box-shadow: none;
+}
+
+html[data-ms-mode="dark"] .ms-dash-pill {
+  background: #243044;
+  color: #c5d0e4;
+}
+
+html[data-ms-mode="dark"] .ms-dash-pill--live {
+  background: rgba(16, 185, 129, 0.16);
+  color: #86efac;
+}
+
+html[data-ms-mode="dark"] .ms-dash-pill--paid {
+  background: rgba(var(--ms-accent-rgb), 0.16);
+  color: var(--ms-accent-bright);
+}
+
+html[data-ms-mode="dark"] .ms-dash-pill--draft {
+  background: #1c2538;
+  color: #9aa8c2;
+}
+
+html[data-ms-mode="dark"] .ms-dash-island-panel {
+  background: #121826;
+  border-top-color: var(--ms-line);
+}
+
+html[data-ms-mode="dark"] .ms-dash-island-toggle:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+html[data-ms-mode="dark"] .ms-dash-empty--dotted {
+  border-color: rgba(148, 163, 184, 0.28);
+  background: transparent;
+}
+
+html[data-ms-mode="dark"] .ms-sidebar-foot,
+html[data-ms-mode="dark"] .ms-credits-tag {
+  background: #1a2233;
+  border-color: rgba(148, 163, 184, 0.2);
+  color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-credits-tag-value,
+html[data-ms-mode="dark"] .ms-credits-tag:hover .ms-credits-tag-value {
+  color: var(--ms-ink);
+}
+
+html[data-ms-mode="dark"] .ms-credits-tag:hover {
+  border-color: rgba(var(--ms-accent-rgb), 0.45);
+}
+
+html[data-ms-mode="dark"] .ms-credits-tag:hover .ms-credits-tag-value {
+  color: var(--ms-accent-bright);
+}
+
+html[data-ms-mode="dark"] .ms-user-avatar {
+  box-shadow:
+    0 0 0 2px #1a2233,
+    0 0 0 3px rgba(148, 163, 184, 0.28);
+}
+
+html[data-ms-mode="dark"] .ms-user-status {
+  border-color: #1a2233;
+}
+
+html[data-ms-mode="dark"] .ms-user-profile:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+html[data-ms-mode="dark"] .ms-sidebar-legal-link:hover,
+html[data-ms-mode="dark"] .ms-sidebar-legal-link.is-active {
+  color: var(--ms-ink);
+}

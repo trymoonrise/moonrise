@@ -2,62 +2,16 @@
  * Secured auth routes - lockouts + rate limits in front of Supabase Auth.
  */
 const { createClient } = require("@supabase/supabase-js");
-const crypto = require("crypto");
 const { sendPasswordResetEmail } = require("./contact-mail");
+const {
+  redeemEmployeeId,
+  releaseEmployeeId,
+  attachEmployeeIdUser,
+} = require("./employee-id");
 
 const SUPPORT_EMAIL =
   String(process.env.MOONRISE_SUPPORT_EMAIL || "trymoonrise@gmail.com").trim() ||
   "trymoonrise@gmail.com";
-
-/** Employee signup gate: 6-char codes from SIGNUP_AUTHORIZATION_CODE (comma-separated OK). */
-function configuredSignupAuthCodes() {
-  const raw = String(
-    process.env.SIGNUP_AUTHORIZATION_CODE || process.env.SIGNUP_AUTH_CODE || ""
-  ).trim();
-  if (!raw) return [];
-  return raw
-    .split(/[,;\s]+/)
-    .map((c) => c.trim())
-    .filter((c) => c.length === 6);
-}
-
-function timingSafeEqualString(a, b) {
-  const left = Buffer.from(String(a || ""), "utf8");
-  const right = Buffer.from(String(b || ""), "utf8");
-  if (left.length !== right.length) return false;
-  return crypto.timingSafeEqual(left, right);
-}
-
-function assertSignupAuthCode(provided) {
-  const codes = configuredSignupAuthCodes();
-  if (!codes.length) {
-    return {
-      ok: false,
-      status: 403,
-      error: "New accounts are invite-only. Ask Moonrise for an authorization code.",
-      code: "signup_disabled",
-    };
-  }
-  const candidate = String(provided || "").trim();
-  if (!/^[A-Za-z0-9!@#$%&*]{6}$/.test(candidate)) {
-    return {
-      ok: false,
-      status: 403,
-      error: "Enter the 6-character authorization code from Moonrise.",
-      code: "invalid_auth_code",
-    };
-  }
-  const matched = codes.some((code) => timingSafeEqualString(code, candidate));
-  if (!matched) {
-    return {
-      ok: false,
-      status: 403,
-      error: "That authorization code is not valid. Ask Moonrise for the employee code.",
-      code: "invalid_auth_code",
-    };
-  }
-  return { ok: true };
-}
 
 function publicAppBase() {
   return String(process.env.PUBLIC_APP_URL || "https://trymoonrise.com").replace(/\/$/, "");
@@ -371,11 +325,6 @@ function mountAuthRoutes(app, { db, security }) {
         return res.status(400).json({ error: "Email and password are required", code: "invalid_input" });
       }
 
-      const codeGate = assertSignupAuthCode(authCode);
-      if (!codeGate.ok) {
-        return res.status(codeGate.status).json({ error: codeGate.error, code: codeGate.code });
-      }
-
       const pwCheck = validatePassword(password, email);
       if (!pwCheck.ok) {
         return res.status(400).json({ error: pwCheck.error, code: pwCheck.code });
@@ -390,6 +339,11 @@ function mountAuthRoutes(app, { db, security }) {
         });
       }
 
+      const codeGate = await redeemEmployeeId(db(), authCode);
+      if (!codeGate.ok) {
+        return res.status(codeGate.status).json({ error: codeGate.error, code: codeGate.code });
+      }
+
       const publicAppUrl = String(process.env.PUBLIC_APP_URL || "https://trymoonrise.com").replace(/\/$/, "");
       const { data, error } = await authClient().auth.signUp({
         email,
@@ -400,6 +354,7 @@ function mountAuthRoutes(app, { db, security }) {
         },
       });
       if (error) {
+        await releaseEmployeeId(db(), codeGate.step);
         const mapped = mapSignupAuthError(error);
         return res.status(mapped.status).json({ error: mapped.error, code: mapped.code });
       }
@@ -407,12 +362,15 @@ function mountAuthRoutes(app, { db, security }) {
       if (data?.user && !data?.session) {
         const identities = data.user.identities;
         if (!identities || identities.length === 0) {
+          await releaseEmployeeId(db(), codeGate.step);
           return res.status(400).json({
             error: "An account with this email already exists. Sign in instead.",
             code: "signup_exists",
           });
         }
       }
+
+      await attachEmployeeIdUser(db(), codeGate.step, data?.user?.id);
 
       if (data?.session) {
         await clearAuthFailures(db(), { email, ip });

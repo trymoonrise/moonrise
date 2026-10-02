@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/studio.css?v=20260924-no-tabbar-ease">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+  <link rel="stylesheet" href="css/studio.css?v=20261002-login-bg">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg">
   <meta name="color-scheme" content="light">
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <script defer src="js/config.js?v=20260909-discord"></script>
@@ -146,23 +146,23 @@
         </div>
       </div>
       <div class="ms-field" id="auth-code-field" hidden>
-        <label class="ms-label" for="auth-code">Authorization code</label>
+        <label class="ms-label" for="auth-code">Employee ID</label>
         <input
           class="ms-input"
           id="auth-code"
-          name="auth_code"
+          name="employee_id"
           type="text"
-          inputmode="text"
+          inputmode="numeric"
           autocomplete="one-time-code"
           maxlength="6"
           minlength="6"
           spellcheck="false"
           autocapitalize="off"
-          placeholder="6-character code"
+          placeholder="6-digit Employee ID"
           aria-describedby="auth-code-hint"
         >
         <p class="ms-muted" id="auth-code-hint" style="margin:0.4rem 0 0;font-size:0.8rem;line-height:1.35">
-          Employee access only. Ask Moonrise for the code.
+          Needed once, when you create your account. Ask your admin for the current Employee ID.
         </p>
       </div>
       <div class="ms-auth-autosave" id="autosave-wrap">
@@ -200,7 +200,7 @@
   <script defer src="js/handles.js"></script>
   <script defer src="js/auth-security.js?v=20260911-passkey4"></script>
   <script defer src="js/supabase-client.js?v=20260911-passkey4"></script>
-  <script defer src="js/auth.js?v=20260924-signup-authcode"></script>
+  <script defer src="js/auth.js?v=20261002-employee-id"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();
@@ -498,7 +498,7 @@
       passwordInput.addEventListener("input", updatePasswordMeter);
       authCodeInput?.addEventListener("input", () => {
         const cleaned = String(authCodeInput.value || "")
-          .replace(/[^A-Za-z0-9!@#$%&*]/g, "")
+          .replace(/\D/g, "")
           .slice(0, 6);
         if (authCodeInput.value !== cleaned) authCodeInput.value = cleaned;
       });
@@ -535,8 +535,8 @@
         }
         if (mode === "signup") {
           const authCode = String(authCodeInput?.value || "").trim();
-          if (!/^[A-Za-z0-9!@#$%&*]{6}$/.test(authCode)) {
-            showAuthError("Enter the 6-character authorization code from Moonrise.");
+          if (!/^\d{6}$/.test(authCode)) {
+            showAuthError("Enter the 6-digit Employee ID from your admin.");
             authCodeInput?.focus();
             return;
           }
@@ -602,7 +602,7 @@
           } else if (ex.code === "signup_exists") {
             window.StudioToast?.info?.(ex.message || "An account with this email already exists.");
             setMode("signin");
-          } else if (ex.code === "invalid_auth_code" || ex.code === "signup_disabled") {
+          } else if (ex.code === "invalid_auth_code" || ex.code === "signup_disabled" || ex.code === "auth_code_used") {
             showAuthError(ex);
             authCodeInput?.focus();
           } else if (ex.code === "auth_failed" || ex.code === "auth_locked") {

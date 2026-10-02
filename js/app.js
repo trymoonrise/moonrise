@@ -18,6 +18,13 @@
 
   const OWNER_MENU = [
     {
+      id: "admin-console",
+      href: "admin-console.html",
+      label: "Admin Console",
+      icon: "key",
+      ownerOnly: true,
+    },
+    {
       id: "pending-payouts",
       href: "pending-payouts.html",
       label: "Pending payouts",
@@ -51,6 +58,7 @@
     hammer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.73-4.24-4.24"/><path d="m14.5 7.5 3.5-3.5a2.12 2.12 0 0 1 3 3L17.5 10.5"/></svg>',
     search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
     globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="3.5"/><path d="M10.5 13.5 21 3"/><path d="M16 8h5"/><path d="M18 6v4"/></svg>',
     dollar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
     grad: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
     help: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
@@ -197,13 +205,15 @@
 
   function injectOwnerNav(page) {
     if (!shouldIncludeOwnerNav()) return;
-    if (document.querySelector('[data-nav="pending-payouts"]')) return;
     const nav = document.querySelector(".ms-sidebar-scroll .ms-nav-group nav.ms-nav");
     if (!nav) return;
+    let added = false;
     OWNER_MENU.forEach((item) => {
+      if (document.querySelector('[data-nav="' + item.id + '"]')) return;
       nav.insertAdjacentHTML("beforeend", navLink(item, page || document.body?.dataset?.page || ""));
+      added = true;
     });
-    ensureNavPills({ animate: false });
+    if (added) ensureNavPills({ animate: false });
   }
 
   function brandLogo() {

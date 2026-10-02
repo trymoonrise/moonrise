@@ -137,8 +137,18 @@ function compileMatchers() {
 
 const MATCHERS = compileMatchers();
 
+const PRIORITY_MATCHERS = [
+  {
+    key: "medical",
+    re: /board\s*(?:&|and)\s*care|assisted living|home health|home care|caregiver|senior care|memory care|residential care|skilled nursing/i,
+  },
+];
+
 function pickPackKey(ctx) {
   const hay = `${ctx?.category || ""} ${ctx?.businessName || ""} ${ctx?.notes || ""}`;
+  for (const m of PRIORITY_MATCHERS) {
+    if (m.re.test(hay) && PACKS[m.key]) return m.key;
+  }
   for (const m of MATCHERS) {
     if (m.re.test(hay)) return m.key;
   }

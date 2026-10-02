@@ -80,7 +80,7 @@
       border: 1px solid #dbe3ee;
       border-radius: 10px;
       font: inherit;
-      font-size: 0.95rem;
+      font-size: 0.82rem;
       color: #0f172a;
       background: #fff;
     }
@@ -106,6 +106,26 @@
     }
     .ms-hosting-status.is-error { color: #b91c1c; }
     .ms-hosting-status.is-ok { color: #0f766e; }
+    .ms-hosting-result {
+      display: none;
+      gap: 0.45rem;
+      padding: 0.85rem 0.9rem;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+    .ms-hosting-result.is-open { display: grid; }
+    .ms-hosting-result strong {
+      color: #0f172a;
+      font-size: 0.95rem;
+    }
+    .ms-hosting-result p {
+      color: #475569;
+    }
+    .ms-hosting-result a {
+      color: #0f172a;
+      font-weight: 650;
+    }
   </style>
 </head>
 <body data-page="hosting-billing" class="ms-contact-public">
@@ -122,7 +142,7 @@
   <main class="ms-hosting-main">
     <form class="ms-hosting-card" id="hosting-billing-form">
       <h1>Manage or cancel hosting</h1>
-      <p>Enter the email you used when you paid to remove the watermark. We'll open Stripe's secure billing portal so you can update your card or cancel.</p>
+      <p>Enter the email you used when you paid to remove the watermark. We'll show whether hosting is active or already canceled, then open Stripe if you still need to update a card or view receipts.</p>
       <label>
         Project ID
         <input id="hosting-project-id" name="projectId" autocomplete="off" spellcheck="false" required>
@@ -131,7 +151,8 @@
         Checkout email
         <input id="hosting-email" name="email" type="email" autocomplete="email" required placeholder="you@business.com">
       </label>
-      <button type="submit" id="hosting-submit">Open billing portal</button>
+      <button type="submit" id="hosting-submit">Check hosting</button>
+      <div class="ms-hosting-result" id="hosting-result"></div>
       <p class="ms-hosting-status" id="hosting-status" role="status" aria-live="polite"></p>
     </form>
   </main>
@@ -157,9 +178,81 @@
 
       function setStatus(msg, kind) {
         if (!statusEl) return;
-        statusEl.textContent = msg || "";
+        statusEl.textContent = clientMessage(msg);
         statusEl.classList.toggle("is-error", kind === "error");
         statusEl.classList.toggle("is-ok", kind === "ok");
+      }
+
+      function clientMessage(msg) {
+        const text = String(msg || "");
+        if (/stripe key|restricted key|stripe dashboard|required permissions/i.test(text)) {
+          return "We couldn't open billing just now. Please try again in a few minutes, or contact support.";
+        }
+        return text;
+      }
+
+      function money(cents, currency) {
+        if (cents == null || cents === "") return "";
+        const code = String(currency || "usd").toUpperCase();
+        try {
+          return new Intl.NumberFormat("en-US", { style: "currency", currency: code }).format(Number(cents) / 100);
+        } catch (e) {
+          return "$" + (Number(cents) / 100).toFixed(2);
+        }
+      }
+
+      function when(iso) {
+        if (!iso) return "";
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return "";
+        return date.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+      }
+
+      function showHosting(data) {
+        const result = document.getElementById("hosting-result");
+        if (!result) return;
+        const hosting = data.hosting || {};
+        const amount = money(hosting.amountCents, hosting.currency);
+        const renews = when(hosting.renewsAt);
+        const ended = when(hosting.endedAt);
+        let title = "Hosting status";
+        let body = "We found the hosting record for this site.";
+        if (hosting.state === "canceled") {
+          title = "Hosting is canceled";
+          body = ended
+            ? "This plan was canceled on " + ended + ". You won't be charged again."
+            : "This plan is already canceled. You won't be charged again.";
+        } else if (hosting.state === "canceling") {
+          title = "Hosting will cancel";
+          body = renews
+            ? "This plan stays active through " + renews + ", then it will not renew."
+            : "This plan is set to cancel at the end of the current period.";
+        } else if (hosting.state === "past_due") {
+          title = "Payment needs attention";
+          body = "The latest hosting payment didn't go through. Update the card to keep the site online.";
+        } else if (hosting.state === "active") {
+          title = "Hosting is active";
+          body = [amount ? amount + " per month" : "", renews ? "renews " + renews : ""]
+            .filter(Boolean)
+            .join(" · ") || "This site's hosting subscription is active.";
+        }
+        result.replaceChildren();
+        const heading = document.createElement("strong");
+        heading.textContent = title;
+        const copy = document.createElement("p");
+        copy.textContent = body;
+        result.append(heading, copy);
+        if (data.url) {
+          const link = document.createElement("a");
+          link.href = data.url;
+          link.textContent = hosting.state === "canceled" ? "View invoices and receipts" : "Update card or cancel in Stripe";
+          result.append(link);
+        } else if (data.portalError) {
+          const note = document.createElement("p");
+          note.textContent = clientMessage(data.portalError);
+          result.append(note);
+        }
+        result.classList.add("is-open");
       }
 
       document.getElementById("hosting-billing-form")?.addEventListener("submit", async (e) => {
@@ -173,9 +266,9 @@
         try {
           if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.textContent = "Opening...";
+            submitBtn.textContent = "Checking...";
           }
-          setStatus("Opening Stripe billing portal...");
+          setStatus("Checking hosting...");
           const res = await fetch(workerBase() + "/public-hosting-portal", {
             method: "POST",
             headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -183,14 +276,22 @@
           });
           const data = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(data.error || "Could not open billing portal");
-          if (!data.url) throw new Error("Billing portal URL missing");
-          setStatus("Redirecting...", "ok");
-          location.href = data.url;
+          showHosting(data);
+          if (data.url && data.hosting && data.hosting.state !== "canceled") {
+            setStatus("Opening billing portal...", "ok");
+            location.href = data.url;
+            return;
+          }
+          setStatus(data.hosting && data.hosting.state === "canceled" ? "" : (data.portalError || ""), data.portalError ? "error" : "ok");
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Check hosting";
+          }
         } catch (err) {
           setStatus(err?.message || "Could not open billing portal", "error");
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = "Open billing portal";
+            submitBtn.textContent = "Check hosting";
           }
         }
       });

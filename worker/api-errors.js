@@ -50,7 +50,7 @@ function stripePermissionMessage(err) {
   if (/checkout_session_read|checkout sessions: read|checkout sessions read/.test(msg)) {
     return STRIPE_CHECKOUT_READ_MSG;
   }
-  if (/billing_portal|billing portal/.test(msg)) {
+  if (/customer_portal|billing_portal|billing portal/.test(msg)) {
     return STRIPE_BILLING_PORTAL_MSG;
   }
   if (/subscriptions?_read|subscriptions: read|subscriptions read/.test(msg)) {

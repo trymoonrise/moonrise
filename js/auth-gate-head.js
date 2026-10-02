@@ -7,7 +7,7 @@
 (function () {
   if (!window.__msAppearanceBoot) {
     window.__msAppearanceBoot = 1;
-    document.write('<script src="js/appearance.js?v=20261002-appearance4"><\/script>');
+    document.write('<script src="js/appearance.js?v=20261002-appearance5"><\/script>');
   }
 
   var PUBLIC = {

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function () {
+      var BUILD = "20261002-employee-id";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <script src="js/auth-gate-head.js?v=20261002-appearance5"></script>
+  <title>Admin Console - Moonrise Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/studio.css?v=20260930-channel-instant">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .ms-admin-code-card {
+      max-width: 28rem;
+      display: grid;
+      justify-items: center;
+      gap: 1rem;
+      padding: 1.6rem 1.25rem 1.4rem;
+      text-align: center;
+    }
+    .ms-admin-ring {
+      --ms-admin-progress: 1;
+      width: 7.5rem;
+      height: 7.5rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(#0f172a calc(var(--ms-admin-progress) * 1turn), #e2e8f0 0);
+    }
+    .ms-admin-ring span {
+      width: 6.15rem;
+      height: 6.15rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 1.35rem;
+    }
+    .ms-admin-seconds.is-tick {
+      animation: ms-admin-tick 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes ms-admin-tick {
+      from { transform: translateY(0.35em); opacity: 0.2; }
+      to { transform: none; opacity: 1; }
+    }
+    .ms-admin-code {
+      margin: 0;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-indent: 0.28em;
+      color: #0f172a;
+      font-variant-numeric: tabular-nums;
+    }
+    .ms-admin-digit {
+      display: inline-block;
+    }
+    .ms-admin-digit.is-scrambling {
+      animation: ms-admin-scramble 0.08s linear infinite;
+    }
+    @keyframes ms-admin-scramble {
+      0% { transform: translateY(-0.22em); opacity: 0.35; }
+      50% { transform: translateY(0.18em); opacity: 1; }
+      100% { transform: translateY(-0.22em); opacity: 0.4; }
+    }
+    .ms-admin-code.is-used {
+      opacity: 0.45;
+    }
+    .ms-admin-status {
+      margin: 0;
+      color: #64748b;
+      font-size: 0.92rem;
+    }
+    .ms-admin-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    html[data-ms-mode="dark"] .ms-admin-ring {
+      background: conic-gradient(#93c5fd calc(var(--ms-admin-progress) * 1turn), #243044 0);
+    }
+    html[data-ms-mode="dark"] .ms-admin-ring span,
+    html[data-ms-mode="dark"] .ms-admin-code {
+      background: #171e2e;
+      color: #f8fafc;
+    }
+    html[data-ms-mode="dark"] .ms-admin-ring span {
+      background: #121826;
+    }
+    html[data-ms-mode="dark"] .ms-admin-status {
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body data-page="admin-console">
+  <div id="shell"></div>
+  <div id="page-body" class="ms-clients-page">
+    <header class="ms-page-head">
+      <div class="ms-page-head-copy">
+        <h1>Admin Console</h1>
+        <p class="ms-muted">Live Employee ID. Copy it and give it to one person. It changes every 30 seconds and works only once, when they create an account.</p>
+      </div>
+    </header>
+    <section class="ms-card ms-admin-code-card" aria-live="polite">
+      <div class="ms-admin-ring" id="admin-ring" style="--ms-admin-progress: 1">
+        <span><b class="ms-admin-seconds" id="admin-seconds">30</b></span>
+      </div>
+      <p class="ms-admin-code" id="admin-code" aria-label="Employee ID">------</p>
+      <p class="ms-admin-status" id="admin-status">Copy this ID to authorize your employee.</p>
+      <div class="ms-admin-actions">
+        <button type="button" class="ms-btn" id="admin-copy">Copy Employee ID</button>
+      </div>
+    </section>
+  </div>
+  <script defer src="js/config.js?v=20260909-discord"></script>
+  <script defer src="js/site-branding.js"></script>
+  <script defer src="js/supabase-client.js?v=20260909-login3"></script>
+  <script defer src="js/auth.js?v=20261002-employee-id"></script>
+  <script defer src="js/segment-switch.js"></script>
+  <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
+  <script defer src="js/toast.js"></script>
+  <script defer src="js/income.js?v=20260718-income"></script>
+  <script defer src="js/app.js?v=20261002-admin-console"></script>
+  <script defer src="js/admin-console.js?v=20261002-employee-scramble"></script>
+</body>
+</html>

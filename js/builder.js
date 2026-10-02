@@ -8575,7 +8575,7 @@
           e.target,
           !!e.target.checked
         );
-        void saveSiteFeature(feature.id);
+        void saveSiteFeature(feature.id, { validate: false });
       });
       widget?.querySelectorAll("[data-provider-toggle]").forEach((box) => {
         box.addEventListener("change", () => {
@@ -8586,7 +8586,7 @@
         });
       });
       document.getElementById("lb-feature-" + feature.id + "-save")?.addEventListener("click", () => {
-        void saveSiteFeature(feature.id);
+        void saveSiteFeature(feature.id, { validate: true });
       });
     });
   }
@@ -8597,6 +8597,17 @@
     hint.textContent = msg || "";
     hint.classList.toggle("is-error", kind === "error");
     hint.classList.toggle("is-ok", kind === "ok");
+  }
+
+  function readAllSiteFeaturesFromDom() {
+    const api = window.MoonriseSiteFeatures;
+    const current = api.readConfig(state.project?.business_context);
+    const siteFeatures = { ...current };
+    api.FEATURES.forEach((feature) => {
+      if (!document.getElementById("lb-feature-" + feature.id + "-enabled")) return;
+      siteFeatures[feature.id] = readSiteFeatureFromDom(feature);
+    });
+    return siteFeatures;
   }
 
   function readSiteFeatureFromDom(feature) {
@@ -8688,24 +8699,44 @@
     return siteFeatureSeed;
   }
 
-  async function saveSiteFeature(id) {
+  let siteFeatureWrite = Promise.resolve();
+
+  function saveSiteFeature(id, opts) {
+    const run = siteFeatureWrite.then(() => saveSiteFeatureNow(id, opts));
+    siteFeatureWrite = run.catch(() => {});
+    return run;
+  }
+
+  async function saveSiteFeatureNow(id, { validate = true } = {}) {
     const api = window.MoonriseSiteFeatures;
     const feature = api?.featureById(id);
     if (!feature) return;
     setSiteFeatureHint(id, "");
     const values = readSiteFeatureFromDom(feature);
-    const error = api.validateFeature(feature, values);
-    if (error) {
-      setSiteFeatureHint(id, error, "error");
-      return;
+    if (validate) {
+      const error = api.validateFeature(feature, values);
+      if (error) {
+        setSiteFeatureHint(id, error, "error");
+        return;
+      }
     }
-    const current = api.readConfig(state.project?.business_context);
-    const changed = JSON.stringify(current[id] || null) !== JSON.stringify(values);
+    const siteFeatures = readAllSiteFeaturesFromDom();
+    const previous = api.readConfig(state.project?.business_context);
+    const changed = JSON.stringify(previous[id] || null) !== JSON.stringify(values);
     const ctx = {
       ...(state.project?.business_context || {}),
-      siteFeatures: { ...current, [id]: values },
+      siteFeatures,
     };
     state.project = { ...(state.project || {}), business_context: ctx };
+    const summary = document.getElementById("lb-feature-" + id + "-summary");
+    if (summary) {
+      const active = feature.providers.filter((item) => values.providers[item.id] && values.providers[item.id].on);
+      summary.textContent = values.enabled
+        ? active.length
+          ? "On · " + active.map((item) => item.label).join(", ")
+          : "On · pick a service"
+        : feature.summary;
+    }
     if (state.html && state.mode !== "edit" && state.mode !== "code") {
       writePreviewDocument(state.html);
     }
@@ -8718,12 +8749,12 @@
 
     const saveBtn = document.getElementById("lb-feature-" + id + "-save");
     try {
-      if (saveBtn) {
+      if (saveBtn && validate) {
         saveBtn.disabled = true;
         saveBtn.textContent = "Saving...";
       }
-      await persistProjectPatch({ business_context: ctx });
-      syncSiteFeatureWidgets();
+      await persistProjectPatch({ business_context: ctx }, { reload: false });
+      if (!validate) return;
       syncPublishLiveUi();
       if (liveSiteUrl() && (changed || hasUnpublishedChanges())) {
         setSiteFeatureHint(id, "Updating the live site...");
@@ -9042,7 +9073,7 @@
     return next;
   }
 
-  async function persistProjectPatch(patch) {
+  async function persistProjectPatch(patch, { reload = true } = {}) {
     if (!state.projectId) throw new Error("Generate a site first");
     const user = await window.StudioAuth.getUser();
     const { error } = await sb()
@@ -9054,6 +9085,14 @@
       .eq("id", state.projectId)
       .eq("user_id", user.id);
     if (error) throw error;
+    if (!reload) {
+      state.project = {
+        ...(state.project || {}),
+        ...patch,
+        business_context: patch.business_context || state.project?.business_context,
+      };
+      return;
+    }
     await loadProject(state.projectId);
   }
 

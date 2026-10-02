@@ -151,9 +151,16 @@ const {
   selectStockMedia,
   ensureStockMediaInHtml,
   ensurePaletteContrast,
-  assessSiteCompleteness,
 } = require("./generate-prompt");
 const { catalogStats } = require("./stock-media");
+const {
+  COPY_SYSTEM_PROMPT,
+  buildCopyUserPrompt,
+  fallbackSiteCopy,
+  normalizeSiteCopy,
+  parseCopyJson,
+  renderBusinessSite,
+} = require("./site-shell");
 const {
   getBusinessStructure,
   getStructurePresetRoles,
@@ -168,6 +175,10 @@ githubPresets.ensureManifest().catch((e) => {
 
 const security = require("./security");
 const { mountAuthRoutes } = require("./auth-routes");
+const {
+  currentEmployeeCode,
+  isStudioAdmin,
+} = require("./employee-id");
 const {
   GENERATION_CREDIT_COST,
   planById,
@@ -1244,6 +1255,35 @@ async function requireUser(req, res, next) {
   }
 }
 
+/** Live Employee ID for the studio admin. The HMAC secret never leaves the server. */
+app.get("/admin/employee-code", requireUser, async (req, res) => {
+  try {
+    if (!isStudioAdmin(req.user)) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    const snapshot = currentEmployeeCode();
+    if (!snapshot) {
+      return res.status(503).json({ error: "Employee IDs are not configured yet." });
+    }
+    const { data, error } = await db()
+      .from("employee_signup_redemptions")
+      .select("step")
+      .eq("step", snapshot.step)
+      .maybeSingle();
+    if (error) throw error;
+    res.setHeader("Cache-Control", "no-store");
+    res.json({
+      code: snapshot.code,
+      secondsLeft: snapshot.secondsLeft,
+      periodSeconds: snapshot.periodSeconds,
+      used: !!data,
+    });
+  } catch (e) {
+    console.error("admin/employee-code", e);
+    res.status(500).json({ error: "Could not load the Employee ID" });
+  }
+});
+
 const rateLimit = (opts) => createDistributedRateLimiter(db, opts);
 
 const GLOBAL_RATE_SKIP = new Set([
@@ -2167,83 +2207,27 @@ function sanitizeGeneratedCopy(html) {
 }
 
 async function generateWithOpenRouter(ctx, presetPack, plan) {
-  const presets = Array.isArray(presetPack) ? presetPack : [];
   const stockMedia = selectStockMedia(ctx);
-  const structure = plan?.structure || getBusinessStructure(ctx);
-
-  async function assemble({ retryIncomplete = false, maxTokens = WEBSITE_MAX_OUTPUT_TOKENS } = {}) {
-    const userPrompt = buildGenerationUserPrompt(ctx, presets, plan, stockMedia, { retryIncomplete });
-    const result = await openRouterChat({
-      system: GENERATION_SYSTEM_PROMPT,
-      user: userPrompt,
-      temperature: retryIncomplete ? 0.38 : 0.58,
-      maxTokens,
-      prefer: "throughput",
-      expectHtml: true,
-      title: retryIncomplete ? "Moonrise Studio Assemble (retry)" : "Moonrise Studio Assemble",
-    });
-    let html = String(result.content || "").trim();
-    if (!hasHtmlDocumentStart(html)) {
-      console.warn("Model response had no HTML document", {
-        model: WEBSITE_GENERATION_MODEL,
-        finishReason: result.finishReason || "",
-        reasoningTokens: result.reasoningTokens || 0,
-        contentChars: html.length,
-      });
-      throw new Error("The model did not return a complete HTML document");
-    }
-    html = ensurePaletteContrast(
-      sanitizeGeneratedCopy(
-        ensureMobileFriendlyHtml(ensureStockMediaInHtml(stripDemoChrome(html), stockMedia))
-      )
-    );
-    return { html, finishReason: result.finishReason || "" };
-  }
-
-  let assembled;
+  const shellPlan = plan || buildLocalPlan(ctx);
+  let copy = fallbackSiteCopy(ctx, shellPlan);
   try {
-    assembled = await assemble();
-  } catch (err) {
-    if (!/complete HTML document/i.test(String(err?.message || ""))) throw err;
-    console.warn("Assemble missed the HTML document; retrying once with a larger output budget");
-    assembled = await assemble({
-      retryIncomplete: true,
-      maxTokens: Math.min(
-        16000,
-        Math.max(WEBSITE_MAX_OUTPUT_TOKENS, Math.round(WEBSITE_MAX_OUTPUT_TOKENS * 1.35))
-      ),
+    const result = await openRouterChat({
+      system: COPY_SYSTEM_PROMPT,
+      user: buildCopyUserPrompt(ctx, shellPlan),
+      temperature: 0.4,
+      maxTokens: 1800,
+      prefer: "throughput",
+      title: "Moonrise Studio Copy",
     });
+    copy = normalizeSiteCopy(parseCopyJson(result.content), ctx, shellPlan);
+  } catch (err) {
+    console.warn("Copy JSON failed, using the business facts directly:", err.message);
+    copy = fallbackSiteCopy(ctx, shellPlan);
   }
-  let { html, finishReason } = assembled;
-  const firstPass = assessSiteCompleteness(html, structure);
-  const truncated = finishReason === "length";
-  const missingForm = firstPass.reasons.includes("missing form");
-  const missingFooter = firstPass.reasons.includes("missing footer");
-  // Retry when structurally thin OR the model hit max_tokens mid-page.
-  if (
-    (truncated || !firstPass.ok) &&
-    (html.length < 28000 || missingForm || missingFooter)
-  ) {
-    console.warn(
-      "Assembled page needs retry:",
-      truncated ? "finish_reason=length" : firstPass.reasons.join(", ")
-    );
-    const retryBudget = Math.min(
-      16000,
-      Math.max(WEBSITE_MAX_OUTPUT_TOKENS, Math.floor(WEBSITE_MAX_OUTPUT_TOKENS * 1.25))
-    );
-    const retry = await assemble({ retryIncomplete: true, maxTokens: retryBudget });
-    const retryPass = assessSiteCompleteness(retry.html, structure);
-    if (retryPass.ok || retry.html.length > html.length) {
-      html = retry.html;
-      finishReason = retry.finishReason;
-    }
-  }
-  if (finishReason === "length") {
-    console.warn("Assemble finished with finish_reason=length; closed tags via closeIncompleteHtml");
-  }
-  html = ensureContactFormHtml(html, ctx);
-  return closeIncompleteHtml(html);
+  const html = ensurePaletteContrast(
+    sanitizeGeneratedCopy(ensureMobileFriendlyHtml(renderBusinessSite(ctx, copy, stockMedia)))
+  );
+  return ensureContactFormHtml(html, ctx);
 }
 
 /** Map manifest category/tags to bone-structure section role for assembly. */
@@ -2545,14 +2529,11 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       presetPack = await loadWebsitePresetPack(ctx);
     }
     if (!presetPack.length) {
-      console.error("Website Presets kit is empty - generation will freestyle without kit HTML", {
+      console.warn("Website Presets kit is empty; the handcrafted page shell will still render", {
         presetsSource: githubPresets.getPresetSourceMeta(),
         presetsDir: WEBSITE_PRESETS_DIR,
         manifestExists: fs.existsSync(path.join(WEBSITE_PRESETS_DIR, "presets", "manifest.json")),
       });
-      throw new Error(
-        "Website Presets components failed to load. Please try generating again in a moment."
-      );
     }
     if (presetPack.length < 6) {
       console.warn("Website Presets kit is thin:", presetPack.length, {
@@ -3960,6 +3941,42 @@ app.post("/fulfill-go-live", publicCheckoutLimiter, async (req, res) => {
   }
 });
 
+async function loadHostingSubscription(stripe, ctx) {
+  const subId = String(ctx.hostingSubscriptionId || "").trim();
+  const customerId = String(ctx.hostingStripeCustomerId || "").trim();
+  if (subId.startsWith("sub_")) return stripe.subscriptions.retrieve(subId);
+  if (!customerId.startsWith("cus_")) return null;
+  const list = await stripe.subscriptions.list({
+    customer: customerId,
+    status: "all",
+    limit: 10,
+  });
+  return (
+    list.data.find((row) => String(row.metadata?.type || "") === "site_hosting") ||
+    list.data[0] ||
+    null
+  );
+}
+
+function summarizeHostingSubscription(sub) {
+  if (!sub) return { state: "none" };
+  const item = sub.items?.data?.[0];
+  const periodEnd = sub.current_period_end || item?.current_period_end || null;
+  let state = "active";
+  if (sub.status === "canceled" || sub.ended_at) state = "canceled";
+  else if (sub.cancel_at_period_end) state = "canceling";
+  else if (sub.status === "past_due" || sub.status === "unpaid") state = "past_due";
+  else if (sub.status !== "active" && sub.status !== "trialing") state = "unknown";
+  return {
+    state,
+    cancelAtPeriodEnd: !!sub.cancel_at_period_end,
+    renewsAt: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
+    endedAt: sub.ended_at ? new Date(sub.ended_at * 1000).toISOString() : null,
+    amountCents: item?.price?.unit_amount ?? null,
+    currency: item?.price?.currency || "usd",
+  };
+}
+
 /**
  * Public billing portal for business owners who paid to remove the watermark.
  * Verifies the checkout email, then opens Stripe Customer Portal (cancel / update card).
@@ -4008,13 +4025,40 @@ app.post("/public-hosting-portal", publicCheckoutLimiter, async (req, res) => {
     }
 
     const returnUrl = String(project.vercel_url || PUBLIC_APP_URL).trim() || PUBLIC_APP_URL;
-    const portal = await stripe.billingPortal.sessions.create({
-      customer: customerId,
-      return_url: returnUrl,
-    });
-    res.json({ url: portal.url });
+    let hosting = { state: "unknown" };
+    try {
+      hosting = summarizeHostingSubscription(await loadHostingSubscription(stripe, ctx));
+    } catch (lookupErr) {
+      console.error("public-hosting-portal lookup", lookupErr);
+    }
+
+    try {
+      const portal = await stripe.billingPortal.sessions.create({
+        customer: customerId,
+        return_url: returnUrl,
+      });
+      return res.json({ url: portal.url, hosting });
+    } catch (portalErr) {
+      console.error("public-hosting-portal", portalErr);
+      if (hosting.state === "unknown" || hosting.state === "none") {
+        return res.status(503).json({
+          error: "We couldn't open billing right now. Please try again in a few minutes, or contact support.",
+        });
+      }
+      return res.json({
+        url: null,
+        hosting,
+        portalError: "The billing portal couldn't be opened. Your hosting status is below.",
+      });
+    }
   } catch (e) {
     console.error("public-hosting-portal", e);
+    const formatted = formatApiError(e, "Could not open billing portal");
+    if (formatted.code === "STRIPE_PERMISSION_DENIED" || formatted.code === "STRIPE_NOT_CONFIGURED") {
+      return res.status(503).json({
+        error: "We couldn't open billing right now. Please try again in a few minutes, or contact support.",
+      });
+    }
     respondApiError(res, e, "Could not open billing portal");
   }
 });

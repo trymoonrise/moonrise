@@ -91,10 +91,13 @@
       return "An account with this email already exists. Sign in instead.";
     }
     if (code === "invalid_auth_code") {
-      return "That authorization code is not valid. Ask Moonrise for the employee code.";
+      return "That Employee ID is not valid. Ask your admin for the current code.";
+    }
+    if (code === "auth_code_used") {
+      return "That Employee ID was already used. Ask your admin for the next code.";
     }
     if (code === "signup_disabled") {
-      return "New accounts are invite-only. Ask Moonrise for an authorization code.";
+      return "New accounts are invite-only. Ask your admin for an Employee ID.";
     }
     if (code === "email_rate_limited" || code === "over_email_send_rate_limit") {
       return "Too many emails were sent. Wait a minute and try again.";
