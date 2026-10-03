@@ -147,6 +147,49 @@ For security concerns, please use the process in [SECURITY.md](SECURITY.md).
 
 ---
 
+## Run the app
+
+You need Node.js 22.
+
+```bash
+cd moonrise-studio
+npm install
+```
+
+Copy `.env.example` to `.env` and `worker/.env.example` to `worker/.env`. Fill in the placeholders for Supabase, Stripe, and the public app URL. Do not commit those files.
+
+Start the API:
+
+```bash
+node worker/server.js
+```
+
+The example worker env uses port 8787. Serve this folder as a static site on port 3000 so it matches `PUBLIC_APP_URL=http://localhost:3000` in `worker/.env.example`. Sign-in, checkout, and published sites call that API.
+
+---
+
+## Database
+
+The studio reaches Supabase over its HTTPS API. Direct Postgres and the pooler are limited to one owner address. They are not open to the whole internet. IPv6 direct connections are not allowed. The HTTPS API, Auth, and Storage are not covered by that list. If a direct connection is refused from a new network, add that address under Database, then Network Restrictions, in the Supabase project.
+
+This project is on the Free plan, so Supabase does not keep daily backups. Once a week, from the allowed address, dump the database and keep the file off this machine:
+
+```bash
+npx supabase db dump --db-url "$SUPABASE_DB_URL" -f moonrise-backup.sql
+```
+
+`SUPABASE_DB_URL` is the session pooler string under Project Settings, then Database. Do not commit the dump or the password.
+
+To restore, run that dump against the same kind of URL:
+
+```bash
+psql "$SUPABASE_DB_URL" -f moonrise-backup.sql
+```
+
+A restore replaces current rows with the dump. Plan for the site to be wrong until it finishes.
+
+---
+
 ## License
 
 (c) Moonrise Studio / TryMoonrise. All rights reserved.

@@ -2,6 +2,7 @@
  * Secured auth routes - lockouts + rate limits in front of Supabase Auth.
  */
 const { createClient } = require("@supabase/supabase-js");
+const { clientError, isProduction } = require("./api-errors");
 const { sendPasswordResetEmail } = require("./contact-mail");
 const {
   redeemEmployeeId,
@@ -40,6 +41,94 @@ function safeAuthRedirect(raw, fallbackPath) {
   }
 }
 
+const SESSION_IDLE_SECONDS = 24 * 60 * 60;
+
+function cookieSecure(req) {
+  const proto = String(req.headers["x-forwarded-proto"] || "").split(",")[0].trim();
+  if (proto === "https") return true;
+  return process.env.NODE_ENV === "production" || !!process.env.VERCEL;
+}
+
+function readCookie(req, name) {
+  const raw = String(req.headers.cookie || "");
+  for (const part of raw.split(";")) {
+    const trimmed = part.trim();
+    const eq = trimmed.indexOf("=");
+    if (eq <= 0) continue;
+    if (trimmed.slice(0, eq) !== name) continue;
+    try {
+      return decodeURIComponent(trimmed.slice(eq + 1));
+    } catch (_) {
+      return "";
+    }
+  }
+  return "";
+}
+
+function serializeCookie(name, value, opts) {
+  const parts = [name + "=" + encodeURIComponent(value), "Path=/", "SameSite=Lax"];
+  if (opts.httpOnly) parts.push("HttpOnly");
+  if (opts.secure) parts.push("Secure");
+  if (opts.maxAge === 0) parts.push("Max-Age=0");
+  else if (Number.isFinite(opts.maxAge)) parts.push("Max-Age=" + String(opts.maxAge));
+  return parts.join("; ");
+}
+
+function appendCookies(res, cookies) {
+  const prev = res.getHeader("Set-Cookie");
+  const list = prev ? (Array.isArray(prev) ? prev.slice() : [String(prev)]) : [];
+  res.setHeader("Set-Cookie", list.concat(cookies));
+}
+
+function rememberRequested(req) {
+  if (req.body && Object.prototype.hasOwnProperty.call(req.body, "remember")) {
+    return req.body.remember !== false && req.body.remember !== "0" && req.body.remember !== 0;
+  }
+  return readCookie(req, "ms_keep") !== "0";
+}
+
+function writeAuthCookies(req, res, session) {
+  const remember = rememberRequested(req);
+  const secure = cookieSecure(req);
+  const maxAge = remember ? SESSION_IDLE_SECONDS : undefined;
+  const refresh = String(session?.refresh_token || "");
+  if (!refresh) return;
+  appendCookies(res, [
+    serializeCookie("ms_rt", refresh, { httpOnly: true, secure, maxAge }),
+    serializeCookie("ms_seen", String(Date.now()), { httpOnly: true, secure, maxAge }),
+    serializeCookie("ms_keep", remember ? "1" : "0", { httpOnly: true, secure, maxAge }),
+    serializeCookie("ms_on", "1", { httpOnly: false, secure, maxAge }),
+  ]);
+}
+
+function clearAuthCookies(req, res) {
+  const secure = cookieSecure(req);
+  appendCookies(res, [
+    serializeCookie("ms_rt", "", { httpOnly: true, secure, maxAge: 0 }),
+    serializeCookie("ms_seen", "", { httpOnly: true, secure, maxAge: 0 }),
+    serializeCookie("ms_keep", "", { httpOnly: true, secure, maxAge: 0 }),
+    serializeCookie("ms_on", "", { httpOnly: false, secure, maxAge: 0 }),
+  ]);
+}
+
+function sessionIsIdle(req) {
+  const seen = Number(readCookie(req, "ms_seen") || 0);
+  if (!Number.isFinite(seen) || seen <= 0) return true;
+  return Date.now() - seen > SESSION_IDLE_SECONDS * 1000;
+}
+
+function sessionJson(session, user, extra) {
+  return {
+    access_token: session.access_token,
+    refresh_token: session.refresh_token,
+    expires_in: session.expires_in,
+    expires_at: session.expires_at,
+    token_type: session.token_type || "bearer",
+    user: user || session.user || null,
+    ...(extra || {}),
+  };
+}
+
 function createAuthClient() {
   const url = String(process.env.SUPABASE_URL || "").trim();
   const anon = String(process.env.SUPABASE_ANON_KEY || "").trim();
@@ -60,10 +149,12 @@ function mapSignupAuthError(error) {
   const msg = String(error?.message || "").trim();
   const code = String(error?.code || "").trim();
   if (!msg || msg === "{}" || msg === "[object Object]") {
+    console.error("signup confirmation email failed", error);
     return {
       status: 503,
-      error:
-        "Moonrise can't send confirmation emails yet because trymoonrise.com isn't verified in Resend. Open resend.com/domains, click Verify on trymoonrise.com, then try again. Until then, sign up with trymoonrise@gmail.com.",
+      error: isProduction()
+        ? "We couldn't send the confirmation email. Try again in a few minutes."
+        : "Moonrise can't send confirmation emails yet because trymoonrise.com isn't verified in Resend. Open resend.com/domains, click Verify on trymoonrise.com, then try again. Until then, sign up with trymoonrise@gmail.com.",
       code: "email_send_failed",
     };
   }
@@ -80,10 +171,12 @@ function mapSignupAuthError(error) {
       msg
     )
   ) {
+    console.error("signup confirmation email failed", msg);
     return {
       status: 503,
-      error:
-        "trymoonrise.com DNS looks set up, but Resend hasn't verified the domain yet. Go to resend.com/domains -> trymoonrise.com -> Verify, wait a few minutes, then try signup again.",
+      error: isProduction()
+        ? "We couldn't send the confirmation email. Try again in a few minutes."
+        : "trymoonrise.com DNS looks set up, but Resend hasn't verified the domain yet. Go to resend.com/domains -> trymoonrise.com -> Verify, wait a few minutes, then try signup again.",
       code: "email_send_failed",
     };
   }
@@ -94,9 +187,10 @@ function mapSignupAuthError(error) {
       code: "signup_exists",
     };
   }
+  if (isProduction()) console.error("signup failed", msg);
   return {
     status: 400,
-    error: msg || "Sign up failed",
+    error: isProduction() ? "Sign up failed. Please try again." : msg || "Sign up failed",
     code: "signup_failed",
   };
 }
@@ -319,17 +413,11 @@ function mountAuthRoutes(app, { db, security }) {
       }
 
       await clearAuthFailures(db(), { email, ip });
-      res.json({
-        access_token: data.session.access_token,
-        refresh_token: data.session.refresh_token,
-        expires_in: data.session.expires_in,
-        expires_at: data.session.expires_at,
-        token_type: data.session.token_type || "bearer",
-        user: data.user,
-      });
+      writeAuthCookies(req, res, data.session);
+      res.json(sessionJson(data.session, data.user));
     } catch (e) {
       console.error(e);
-      res.status(500).json({ error: e.message || "Sign in failed" });
+      res.status(500).json({ error: clientError(e, "Sign in failed") });
     }
   });
 
@@ -397,15 +485,8 @@ function mountAuthRoutes(app, { db, security }) {
 
       if (data?.session) {
         await clearAuthFailures(db(), { email, ip });
-        return res.json({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-          expires_in: data.session.expires_in,
-          expires_at: data.session.expires_at,
-          token_type: data.session.token_type || "bearer",
-          user: data.user,
-          needsEmailConfirm: false,
-        });
+        writeAuthCookies(req, res, data.session);
+        return res.json(sessionJson(data.session, data.user, { needsEmailConfirm: false }));
       }
 
       res.json({
@@ -414,7 +495,7 @@ function mountAuthRoutes(app, { db, security }) {
       });
     } catch (e) {
       console.error(e);
-      res.status(500).json({ error: e.message || "Sign up failed" });
+      res.status(500).json({ error: clientError(e, "Sign up failed") });
     }
   });
 
@@ -485,7 +566,7 @@ function mountAuthRoutes(app, { db, security }) {
       res.json({ ok: true, message: "If that email exists, a reset link is on the way." });
     } catch (e) {
       console.error(e);
-      res.status(500).json({ error: e.message || "Reset failed" });
+      res.status(500).json({ error: clientError(e, "Reset failed") });
     }
   });
 
@@ -511,7 +592,7 @@ function mountAuthRoutes(app, { db, security }) {
       res.json({ ok: true, message: "Confirmation email sent. Check your inbox." });
     } catch (e) {
       console.error(e);
-      res.status(500).json({ error: e.message || "Resend failed" });
+      res.status(500).json({ error: clientError(e, "Resend failed") });
     }
   });
 
@@ -519,6 +600,56 @@ function mountAuthRoutes(app, { db, security }) {
    * Verify current password under lockout rules (Settings -> change password).
    * Body: { email?, password } - email defaults from Bearer user.
    */
+  app.get("/auth/session", async (req, res) => {
+    if (!authConfigured(res)) return;
+    try {
+      const refresh = readCookie(req, "ms_rt");
+      if (!refresh || sessionIsIdle(req)) {
+        clearAuthCookies(req, res);
+        return res.status(401).json({ error: "Session expired", code: "session_expired" });
+      }
+      const { data, error } = await authClient().auth.refreshSession({ refresh_token: refresh });
+      if (error || !data?.session) {
+        clearAuthCookies(req, res);
+        return res.status(401).json({ error: "Session expired", code: "session_expired" });
+      }
+      writeAuthCookies(req, res, data.session);
+      res.json(sessionJson(data.session, data.user));
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Session check failed" });
+    }
+  });
+
+  app.post("/auth/session", async (req, res) => {
+    if (!authConfigured(res)) return;
+    try {
+      if (sessionIsIdle(req) && readCookie(req, "ms_seen")) {
+        clearAuthCookies(req, res);
+        return res.status(401).json({ error: "Session expired", code: "session_expired" });
+      }
+      const refresh = String(req.body?.refresh_token || readCookie(req, "ms_rt") || "");
+      if (!refresh) {
+        return res.status(401).json({ error: "Session expired", code: "session_expired" });
+      }
+      const { data, error } = await authClient().auth.refreshSession({ refresh_token: refresh });
+      if (error || !data?.session) {
+        clearAuthCookies(req, res);
+        return res.status(401).json({ error: "Session expired", code: "session_expired" });
+      }
+      writeAuthCookies(req, res, data.session);
+      res.json({ ok: true });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Session check failed" });
+    }
+  });
+
+  app.post("/auth/signout", async (req, res) => {
+    clearAuthCookies(req, res);
+    res.json({ ok: true });
+  });
+
   app.post("/auth/verify-password", authIpLimiter, verifyPasswordLimiter, async (req, res) => {
     if (!authConfigured(res)) return;
     try {
@@ -567,7 +698,7 @@ function mountAuthRoutes(app, { db, security }) {
       res.json({ ok: true });
     } catch (e) {
       console.error(e);
-      res.status(500).json({ error: e.message || "Verify failed" });
+      res.status(500).json({ error: clientError(e, "Verify failed") });
     }
   });
 }

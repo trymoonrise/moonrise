@@ -10054,10 +10054,13 @@
           });
           const data = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(data.error || "Unlock failed");
+          const amount = String(data.receipt?.amountLabel || "").trim();
+          const hosting = String(data.receipt?.hostingLabel || "").trim();
+          const bought = amount
+            ? "We received " + amount + " for this website" + (hosting ? " and hosting at " + hosting : "") + "."
+            : "Payment confirmed for this website.";
           window.StudioToast?.success?.(
-            data.redeployed
-              ? "Payment confirmed - watermark removed and live site updated."
-              : "Payment confirmed - watermark removed."
+            data.redeployed ? bought + " The watermark is off and the live site is updated." : bought + " The watermark is off."
           );
         } catch (e) {
           window.StudioToast?.error?.(e.message || "Could not unlock after payment");

@@ -370,7 +370,8 @@
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not confirm payment");
-      setOk("Thank you! Your one-time support was received.");
+      const amount = String(data.receipt?.amountLabel || "").trim();
+      setOk(amount ? "Thank you. We received your " + amount + " donation." : "Thank you. We received your donation.");
       try {
         localStorage.removeItem(MESSAGE_KEY);
       } catch (_) {

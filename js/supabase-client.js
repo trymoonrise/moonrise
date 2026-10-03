@@ -1,14 +1,31 @@
 /**
- * Shared Supabase browser client with Auth session persistence.
- * "Auto save" on login stores the session in localStorage (stay signed in).
- * When that switch is off, the session lives in sessionStorage only (sign in each visit).
+ * Shared Supabase browser client.
+ * The access token stays in memory. The refresh token stays in an HttpOnly cookie
+ * (ms_rt) that expires after a day without use. localStorage is not a session store.
  */
 (function (global) {
   const AUTH_STORAGE_KEY = "moonrise-studio-auth";
   const REMEMBER_LOGIN_KEY = "ms_auth_autosave_enabled";
+  const memory = new Map();
+  let lastSyncedRefresh = "";
 
   let client = null;
   let rememberForClient = null;
+
+  function purgeLegacyTokenStorage() {
+    try {
+      global.localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch (_) {
+      /* ignore */
+    }
+    try {
+      global.sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  purgeLegacyTokenStorage();
 
   function cfg() {
     const c = global.SITE_CONFIG || {};
@@ -38,66 +55,61 @@
     } catch (_) {
       /* ignore */
     }
-    try {
-      if (enabled) {
-        // Promote tab session -> durable so Auto save ON actually stays signed in.
-        const raw = global.sessionStorage.getItem(AUTH_STORAGE_KEY);
-        if (raw && !global.localStorage.getItem(AUTH_STORAGE_KEY)) {
-          global.localStorage.setItem(AUTH_STORAGE_KEY, raw);
-        }
-        global.sessionStorage.removeItem(AUTH_STORAGE_KEY);
-      } else {
-        // Max security: keep this tab only; never leave a durable session on disk.
-        const raw = global.localStorage.getItem(AUTH_STORAGE_KEY);
-        if (raw && !global.sessionStorage.getItem(AUTH_STORAGE_KEY)) {
-          global.sessionStorage.setItem(AUTH_STORAGE_KEY, raw);
-        }
-        global.localStorage.removeItem(AUTH_STORAGE_KEY);
-      }
-    } catch (_) {
-      /* ignore */
-    }
+    purgeLegacyTokenStorage();
     if (rememberForClient !== null && rememberForClient !== enabled) {
       resetClient();
     }
   }
 
-  function authStorage() {
+  function syncRefreshCookie(raw) {
+    let refresh = "";
     try {
-      return isRememberLoginEnabled() ? global.localStorage : global.sessionStorage;
+      const parsed = JSON.parse(raw);
+      refresh =
+        parsed?.refresh_token ||
+        parsed?.session?.refresh_token ||
+        parsed?.currentSession?.refresh_token ||
+        "";
     } catch (_) {
-      return global.localStorage;
+      return;
     }
+    if (!refresh || refresh === lastSyncedRefresh) return;
+    lastSyncedRefresh = refresh;
+    const base = String(global.SITE_CONFIG?.workerUrl || "").replace(/\/$/, "");
+    if (!base) return;
+    fetch(base + "/auth/session", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh_token: refresh, remember: isRememberLoginEnabled() }),
+    }).catch(() => {});
+  }
+
+  function memoryStorage() {
+    return {
+      getItem(key) {
+        return memory.has(key) ? memory.get(key) : null;
+      },
+      setItem(key, value) {
+        const raw = String(value);
+        memory.set(key, raw);
+        if (key === AUTH_STORAGE_KEY) syncRefreshCookie(raw);
+        purgeLegacyTokenStorage();
+      },
+      removeItem(key) {
+        memory.delete(key);
+      },
+    };
   }
 
   function readStoredAuthRaw() {
-    try {
-      return authStorage().getItem(AUTH_STORAGE_KEY);
-    } catch (_) {
-      return null;
-    }
+    return memory.has(AUTH_STORAGE_KEY) ? memory.get(AUTH_STORAGE_KEY) : null;
   }
 
   function clearPersistedAuth() {
-    try {
-      global.localStorage.removeItem(AUTH_STORAGE_KEY);
-    } catch (_) {
-      /* ignore */
-    }
-    try {
-      global.sessionStorage.removeItem(AUTH_STORAGE_KEY);
-    } catch (_) {
-      /* ignore */
-    }
-  }
-
-  function dropInactiveAuthCopy(remember) {
-    try {
-      if (remember) global.sessionStorage.removeItem(AUTH_STORAGE_KEY);
-      else global.localStorage.removeItem(AUTH_STORAGE_KEY);
-    } catch (_) {
-      /* ignore */
-    }
+    memory.delete(AUTH_STORAGE_KEY);
+    lastSyncedRefresh = "";
+    purgeLegacyTokenStorage();
   }
 
   function resetClient() {
@@ -132,9 +144,9 @@
       auth: {
         storageKey: AUTH_STORAGE_KEY,
         persistSession: true,
-        autoRefreshToken: true,
+        autoRefreshToken: false,
         detectSessionInUrl: true,
-        storage: authStorage(),
+        storage: memoryStorage(),
         // Password sign-in goes through the worker then setSession - not PKCE.
         flowType: "implicit",
         // WebAuthn passkeys (Face ID / fingerprint / password manager).
@@ -142,12 +154,7 @@
       },
     });
     rememberForClient = remember;
-    try {
-      // Always drop the inactive store so Auto save off cannot leave a durable session behind.
-      dropInactiveAuthCopy(remember);
-    } catch (_) {
-      /* ignore */
-    }
+    purgeLegacyTokenStorage();
     return client;
   }
 

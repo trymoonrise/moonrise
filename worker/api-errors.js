@@ -60,10 +60,41 @@ function stripePermissionMessage(err) {
   return STRIPE_GENERIC_PERM_MSG;
 }
 
+function isProduction() {
+  return process.env.NODE_ENV === "production" || !!process.env.VERCEL;
+}
+
+function looksInternal(message) {
+  return /select |insert |update |delete from|syntax error|postgres|postgrest|supabase|stack|node_modules|ECONN|ENOTFOUND|service_role|STRIPE_|OPENROUTER_|VERCEL_|process\.env|duplicate key|violates |relation |column |jwt|secret key|password authentication|\/worker\/|at \w+ \(|resend\.com|environment variable/i.test(
+    String(message || "")
+  );
+}
+
+const PUBLIC_SETUP = {
+  STRIPE_PERMISSION_DENIED: "Payment could not be started. Please try again later.",
+  STRIPE_NOT_CONFIGURED: "Payment is unavailable right now. Please try again later.",
+  OPENROUTER_NOT_CONFIGURED: "Website generation is unavailable right now. Please try again later.",
+  SUPABASE_NOT_CONFIGURED: "The studio is unavailable right now. Please try again later.",
+  VERCEL_NOT_CONFIGURED: "Publishing is unavailable right now. Please try again later.",
+};
+
+function clientError(err, fallback, status) {
+  const safe = fallback || "Something went wrong. Please try again.";
+  const raw = String(err?.message || "").trim();
+  const code = Number(status || err?.status) || 500;
+  if (!isProduction()) return raw || safe;
+  if (code >= 500 || looksInternal(raw)) return safe;
+  return raw || safe;
+}
+
 function formatApiError(err, fallback) {
   const stripeMsg = stripePermissionMessage(err);
   if (stripeMsg) {
-    return { message: stripeMsg, status: 403, code: "STRIPE_PERMISSION_DENIED" };
+    return hideSetupDetail(err, {
+      message: stripeMsg,
+      status: 403,
+      code: "STRIPE_PERMISSION_DENIED",
+    }, fallback);
   }
 
   const raw = String(err?.message || "").trim();
@@ -74,34 +105,53 @@ function formatApiError(err, fallback) {
   }
 
   if (/^stripe not configured$/i.test(raw)) {
-    return { message: STRIPE_NOT_CONFIGURED_MSG, status: 500, code: "STRIPE_NOT_CONFIGURED" };
+    return hideSetupDetail(err, { message: STRIPE_NOT_CONFIGURED_MSG, status: 500, code: "STRIPE_NOT_CONFIGURED" }, fallback);
   }
 
   if (/openrouter is not configured|website generation is not configured|minimax website generation is not configured/i.test(raw)) {
-    return { message: OPENROUTER_NOT_CONFIGURED_MSG, status: 503, code: "OPENROUTER_NOT_CONFIGURED" };
+    return hideSetupDetail(err, { message: OPENROUTER_NOT_CONFIGURED_MSG, status: 503, code: "OPENROUTER_NOT_CONFIGURED" }, fallback);
   }
 
   if (/supabase is not configured|supabase_url and supabase_service_role_key are required/i.test(lower)) {
-    return { message: SUPABASE_NOT_CONFIGURED_MSG, status: 503, code: "SUPABASE_NOT_CONFIGURED" };
+    return hideSetupDetail(err, { message: SUPABASE_NOT_CONFIGURED_MSG, status: 503, code: "SUPABASE_NOT_CONFIGURED" }, fallback);
   }
 
   if (/vercel.*not configured|vercel_token is required/i.test(lower)) {
-    return { message: VERCEL_NOT_CONFIGURED_MSG, status: 500, code: "VERCEL_NOT_CONFIGURED" };
+    return hideSetupDetail(err, { message: VERCEL_NOT_CONFIGURED_MSG, status: 500, code: "VERCEL_NOT_CONFIGURED" }, fallback);
   }
 
   if (err?.code === "INSUFFICIENT_CREDITS") {
-    return {
-      message: raw || "This action is no longer credit-gated.",
-      status: 402,
-      code: "INSUFFICIENT_CREDITS",
-    };
+    return hideSetupDetail(
+      err,
+      {
+        message: raw || "This action is no longer credit-gated.",
+        status: 402,
+        code: "INSUFFICIENT_CREDITS",
+      },
+      "Not enough credits for this action."
+    );
   }
 
-  return {
-    message: raw || fallback || "Something went wrong. Please try again.",
-    status: err?.status || 500,
-    code: err?.code || undefined,
-  };
+  return hideSetupDetail(
+    err,
+    {
+      message: raw || fallback || "Something went wrong. Please try again.",
+      status: err?.status || 500,
+      code: err?.code || undefined,
+    },
+    fallback
+  );
+}
+
+function hideSetupDetail(err, result, fallback) {
+  if (!isProduction()) return result;
+  const safe = fallback || "Something went wrong. Please try again.";
+  const status = result.status || 500;
+  let message = result.message;
+  if (PUBLIC_SETUP[result.code]) message = PUBLIC_SETUP[result.code];
+  else if (status >= 500 || looksInternal(message)) message = safe;
+  if (message !== result.message) console.error(err);
+  return { ...result, message };
 }
 
 function stripeMissingResponse() {
@@ -118,7 +168,8 @@ function respondApiError(res, err, fallback, defaultStatus = 500) {
 
 function sendStripeMissing(res) {
   const formatted = stripeMissingResponse();
-  return res.status(formatted.status).json({ error: formatted.message, code: formatted.code });
+  const hidden = hideSetupDetail(new Error("Stripe is not configured"), formatted, PUBLIC_SETUP.STRIPE_NOT_CONFIGURED);
+  return res.status(hidden.status).json({ error: hidden.message, code: hidden.code });
 }
 
 module.exports = {
@@ -127,5 +178,7 @@ module.exports = {
   sendStripeMissing,
   stripeMissingResponse,
   stripePermissionMessage,
+  clientError,
+  isProduction,
   STRIPE_CHECKOUT_WRITE_MSG,
 };

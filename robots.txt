@@ -7,6 +7,8 @@ Allow: /orders.html
 Allow: /contact.html
 Allow: /privacy.html
 Allow: /terms.html
+Allow: /refund.html
+Allow: /report.html
 Allow: /download.html
 Allow: /doc/
 

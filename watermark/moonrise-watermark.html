@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Moonrise Watermark</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
+<style>
     :root {
       --mr-ink: #0f172a;
       --mr-muted: #64748b;
@@ -620,6 +617,7 @@
       .mr-wm-faq summary::after { animation: none; transition: none; }
     }
   </style>
+  <link rel="stylesheet" href="/css/fonts.css?v=20261003-fonts">
 </head>
 <body>
   <main class="demo">
@@ -862,7 +860,7 @@
 
           const headers = { "Content-Type": "application/json" };
           try {
-            const raw = localStorage.getItem("moonrise-studio-auth");
+            const raw = window.SiteSupabase?.readStoredAuthRaw?.() || "";
             const parsed = raw ? JSON.parse(raw) : null;
             const token =
               parsed?.access_token ||

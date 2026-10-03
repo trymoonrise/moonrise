@@ -33,7 +33,7 @@
 
   function css() {
     return `
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap");
+@import url("https://trymoonrise.com/css/fonts.css?v=20261003-fonts");
 .mr-wm{--mr-brand:#3b82f6;--mr-ink:#0f172a;--mr-muted:#64748b;--mr-line:#e8edf3;--mr-font:"DM Sans",system-ui,sans-serif;position:fixed;bottom:max(1.75rem,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:2147483000;pointer-events:none;font-family:var(--mr-font);width:max-content;max-width:calc(100vw - 1.5rem);box-sizing:border-box}
 .mr-wm.mr-wm--hosted{position:absolute;width:max-content;max-width:calc(100% - 1.5rem)}
 .mr-wm.is-hidden{visibility:hidden;opacity:0;pointer-events:none}
@@ -298,7 +298,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       ),
       wrap(
         "What do I get?",
-        "Stripe confirms instantly. The watermark is removed and your site stays published with hosting included."
+        "Stripe confirms instantly. The watermark is removed and your site stays published. Hosting renews every month until you cancel."
       ),
       wrap(
         "Do I own the website?",
@@ -327,7 +327,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       '<p class="mr-wm-timer" id="mr-wm-timer" aria-live="polite"></p>' +
       '<button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>' +
       '<p class="mr-wm-error" id="mr-wm-error" hidden></p>' +
-      '<p class="mr-wm-note">Secure Stripe checkout &middot; promo codes accepted &middot; hosting included</p>' +
+      '<p class="mr-wm-note">Secure Stripe checkout. Hosting renews every month until you cancel. <a href="https://trymoonrise.com/refund.html">Refund and cancellation policy</a></p>' +
       '<button type="button" class="mr-wm-help" id="mr-wm-help" aria-expanded="false" aria-controls="mr-wm-help-panel">' +
       "Help" +
       '<svg class="mr-wm-help-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +
@@ -430,18 +430,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     } catch (_) {
       /* ignore */
     }
-    try {
-      const raw = localStorage.getItem("moonrise-studio-auth");
-      const parsed = raw ? JSON.parse(raw) : null;
-      return (
-        parsed?.access_token ||
-        parsed?.currentSession?.access_token ||
-        parsed?.session?.access_token ||
-        ""
-      );
-    } catch (_) {
-      return "";
-    }
+    return "";
   }
 
   function stopTimer() {
@@ -733,6 +722,32 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     }
   }
 
+  function showPaymentReceipt(receipt) {
+    const amount = String(receipt?.amountLabel || "").trim();
+    const item = String(receipt?.item || "Website purchase").trim();
+    const hosting = String(receipt?.hostingLabel || "").trim();
+    const box = document.createElement("div");
+    box.setAttribute("role", "status");
+    box.style.cssText =
+      "position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:#0f172a;color:#f8fafc;font:16px/1.5 system-ui,sans-serif;padding:24px;text-align:center";
+    const card = document.createElement("div");
+    const title = document.createElement("h1");
+    title.textContent = "Payment confirmed";
+    title.style.cssText = "font-size:1.5rem;margin:0 0 8px";
+    const line = document.createElement("p");
+    line.textContent = amount ? "We received " + amount + " for " + item + "." : "We received your payment for " + item + ".";
+    card.appendChild(title);
+    card.appendChild(line);
+    if (hosting) {
+      const extra = document.createElement("p");
+      extra.textContent = "Hosting renews at " + hosting + " until you cancel.";
+      card.appendChild(extra);
+    }
+    box.appendChild(card);
+    (document.body || document.documentElement).appendChild(box);
+    return new Promise((resolve) => setTimeout(resolve, 2500));
+  }
+
   /**
    * After Stripe redirects back with ?paid=1&session_id=, verify + unlock
    * even if the webhook is delayed or misconfigured, then hard-reload so
@@ -755,6 +770,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Unlock failed");
+      await showPaymentReceipt(data.receipt);
       const next = data.url || location.href.split("?")[0];
       location.replace(next);
       return true;

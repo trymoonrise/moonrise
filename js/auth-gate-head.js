@@ -19,7 +19,10 @@
     "contact.html": 1,
     "privacy.html": 1,
     "terms.html": 1,
+    "refund.html": 1,
+    "report.html": 1,
     "download.html": 1,
+    "404.html": 1,
   };
 
   var file = location.pathname.split("/").pop() || "index.html";
@@ -45,7 +48,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20260909-discord", "js/app.js?v=20261002-owner"].forEach(function (href) {
+  ["js/config.js?v=20260909-discord", "js/app.js?v=20261003-session"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -62,56 +65,16 @@
     location.replace("login.html?next=" + next);
   }
 
-  function rememberLoginEnabled() {
-    try {
-      return localStorage.getItem("ms_auth_autosave_enabled") !== "0";
-    } catch (_) {
-      return true;
-    }
+  try {
+    localStorage.removeItem("moonrise-studio-auth");
+    sessionStorage.removeItem("moonrise-studio-auth");
+  } catch (e) {}
+
+  function hasSessionCookie() {
+    return /(?:^|;\s*)ms_on=1(?:;|$)/.test(document.cookie || "");
   }
 
-  function readStoredSession() {
-    function tokenFromRaw(raw) {
-      if (!raw) return null;
-      try {
-        var parsed = JSON.parse(raw);
-        var token =
-          parsed?.access_token ||
-          parsed?.session?.access_token ||
-          parsed?.currentSession?.access_token ||
-          parsed?.user?.access_token;
-        var refresh =
-          parsed?.refresh_token ||
-          parsed?.session?.refresh_token ||
-          parsed?.currentSession?.refresh_token;
-        if (!token || !refresh) return null;
-        var exp =
-          parsed?.expires_at ||
-          parsed?.session?.expires_at ||
-          parsed?.currentSession?.expires_at;
-        var fresh = !(exp && Number(exp) * 1000 < Date.now() - 60000);
-        return { fresh: fresh };
-      } catch (_) {
-        return null;
-      }
-    }
-    try {
-      // Auto save ON = durable localStorage session (auto login).
-      // Auto save OFF = sessionStorage only (must sign in every browser visit).
-      if (rememberLoginEnabled()) {
-        return (
-          tokenFromRaw(localStorage.getItem("moonrise-studio-auth")) ||
-          tokenFromRaw(sessionStorage.getItem("moonrise-studio-auth"))
-        );
-      }
-      return tokenFromRaw(sessionStorage.getItem("moonrise-studio-auth"));
-    } catch (_) {
-      return null;
-    }
-  }
-
-  var stored = readStoredSession();
-  if (!stored) {
+  if (!hasSessionCookie()) {
     redirectToLogin();
     return;
   }
@@ -121,16 +84,9 @@
     document.documentElement.classList.add("ms-auth-ready");
   };
 
-  if (stored.fresh) {
-    // Access token still valid - show page immediately; requireAuth() validates in background.
-    window.__msReleaseAuthGate();
-  } else {
-    // Access token expired but a refresh token is saved. Keep the page hidden
-    // until requireAuth() refreshes it. If that never happens, send them to sign in.
-    setTimeout(function () {
-      if (document.documentElement.classList.contains("ms-auth-gating")) redirectToLogin();
-    }, 12000);
-  }
+  setTimeout(function () {
+    if (document.documentElement.classList.contains("ms-auth-gating")) redirectToLogin();
+  }, 12000);
 
   mountTabBarEarly();
   warmChannels();

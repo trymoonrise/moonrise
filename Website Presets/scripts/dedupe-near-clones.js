@@ -33,7 +33,7 @@ function write(m, style, body, script = '') {
   console.log('rewrote', m.file);
 }
 
-const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=Outfit:wght@400;500;600&display=swap');`;
+const FONTS = ``;
 
 const recipes = [
   // --- Docks (differentiate from 0134–0137) ---

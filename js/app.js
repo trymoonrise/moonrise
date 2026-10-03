@@ -115,7 +115,7 @@
     }
     try {
       const remember = localStorage.getItem("ms_auth_autosave_enabled") !== "0";
-      return (remember ? localStorage : sessionStorage).getItem("moonrise-studio-auth");
+      return null;
     } catch (_) {
       return null;
     }
@@ -577,7 +577,6 @@
 
   /** Keys that must survive a deep hard reset so the user stays signed in. */
   const DEEP_RESET_KEEP_KEYS = new Set([
-    "moonrise-studio-auth",
     "ms_auth_autosave_enabled",
     "ms_auth_autosave_email",
     "ms_auth_autosave_handle",

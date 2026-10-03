@@ -182,6 +182,7 @@
       res = await withTimeout(
         fetch(base + path, {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             ...(headers || {}),
@@ -228,34 +229,6 @@
       if (!session?.access_token || !session?.refresh_token) {
         throw new Error("Could not save your session. Try again.");
       }
-      // Persist only in the store that matches Auto save.
-      // Writing to both stores previously kept people signed in after browser restart
-      // even when Auto save was off (max-security mode).
-      try {
-        const key = global.SiteSupabase?.AUTH_STORAGE_KEY || "moonrise-studio-auth";
-        const raw = JSON.stringify({
-          access_token: session.access_token,
-          refresh_token: session.refresh_token,
-          expires_at: session.expires_at,
-          expires_in: session.expires_in,
-          token_type: session.token_type || "bearer",
-          user: session.user || null,
-        });
-        const remember =
-          typeof global.SiteSupabase?.isRememberLoginEnabled === "function"
-            ? global.SiteSupabase.isRememberLoginEnabled()
-            : true;
-        const active = remember ? global.localStorage : global.sessionStorage;
-        const inactive = remember ? global.sessionStorage : global.localStorage;
-        active.setItem(key, raw);
-        try {
-          inactive.removeItem(key);
-        } catch (_) {
-          /* ignore */
-        }
-      } catch (_) {
-        /* ignore */
-      }
       global.MsAuthSecurity?.scrubUrlAuthFragments?.();
       return { ...(data || {}), session, user: session.user || data?.user };
     } catch (e) {
@@ -266,13 +239,47 @@
     }
   }
 
+  let hydratePromise = null;
+
+  function hasSessionCookie() {
+    try {
+      return /(?:^|;\s*)ms_on=1(?:;|$)/.test(global.document.cookie || "");
+    } catch (_) {
+      return false;
+    }
+  }
+
+  async function hydrateSessionFromCookie() {
+    if (!hasSessionCookie()) return null;
+    const base = workerUrl();
+    if (!base) return null;
+    const res = await fetch(base + "/auth/session", { method: "GET", credentials: "include" });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data?.access_token || !data?.refresh_token) return null;
+    const applied = await applySessionTokens(data);
+    return applied?.session || null;
+  }
+
   async function getSession() {
     const sb = getClient();
     if (!sb) return null;
     try {
       const { data, error } = await withTimeout(sb.auth.getSession(), AUTH_TIMEOUT_MS, "Session");
-      if (error) return null;
-      return data?.session || null;
+      const session = data?.session;
+      const expiresAt = Number(session?.expires_at || 0);
+      const fresh = !!(session?.access_token && expiresAt * 1000 > Date.now() + 60000);
+      if (!error && fresh) return session;
+    } catch (e) {
+      console.warn(e);
+    }
+    if (!hasSessionCookie()) return null;
+    if (!hydratePromise) {
+      hydratePromise = hydrateSessionFromCookie().finally(() => {
+        hydratePromise = null;
+      });
+    }
+    try {
+      return (await hydratePromise) || null;
     } catch (e) {
       console.warn(e);
       return null;
@@ -410,6 +417,7 @@
     const payload = await workerAuth("/auth/signin", {
       email: String(email || "").trim(),
       password: String(password || ""),
+      remember: global.SiteSupabase?.isRememberLoginEnabled?.() !== false,
     });
     const sessionData = await applySessionTokens(payload);
     const user = sessionData?.user || payload.user;
@@ -668,11 +676,20 @@
     } catch (_) {
       /* ignore */
     }
-    if (!sb) return;
     try {
-      await withTimeout(sb.auth.signOut(), 4000, "Sign out");
-    } catch (e) {
-      /* still clear local session best-effort */
+      const base = workerUrl();
+      if (base) {
+        await fetch(base + "/auth/signout", { method: "POST", credentials: "include" });
+      }
+    } catch (_) {
+      /* still clear the in-memory session */
+    }
+    if (sb) {
+      try {
+        await withTimeout(sb.auth.signOut(), 4000, "Sign out");
+      } catch (e) {
+        /* still clear local session best-effort */
+      }
     }
     try {
       global.SiteSupabase?.clearPersistedAuth?.();

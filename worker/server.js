@@ -49,7 +49,7 @@ const express = require("express");
 const cors = require("cors");
 const Stripe = require("stripe");
 const { createClient } = require("@supabase/supabase-js");
-const { formatApiError, respondApiError, sendStripeMissing } = require("./api-errors");
+const { formatApiError, respondApiError, sendStripeMissing, clientError, isProduction } = require("./api-errors");
 const { resolveAssistantContent, hasHtmlDocumentStart } = require("./openrouter-message");
 const { applyToHtml: applySiteFeatureBlocks, readConfig: readSiteFeatureConfig, hasActiveServices } = require("../js/site-features");
 
@@ -341,6 +341,13 @@ const HOSTING_MONTHLY_CENTS = Math.max(
   0,
   Number(process.env.STRIPE_HOSTING_MONTHLY_CENTS || 2000)
 );
+
+function formatUsd(cents) {
+  const n = Math.round(Number(cents) || 0);
+  const dollars = Math.abs(n) / 100;
+  const text = n % 100 === 0 ? String(dollars) : dollars.toFixed(2);
+  return (n < 0 ? "-$" : "$") + text;
+}
 
 function hostingMaintenanceLineItem() {
   return {
@@ -980,6 +987,7 @@ app.use(
     },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Request-Id"],
+    credentials: true,
   })
 );
 
@@ -1076,7 +1084,7 @@ app.get("/studio-last-commit", async (_req, res) => {
   } catch (e) {
     return res.status(502).json({
       ok: false,
-      error: e.message || "github_fetch_failed",
+      error: clientError(e, "github_fetch_failed", 502),
     });
   }
 });
@@ -1084,7 +1092,7 @@ app.get("/studio-last-commit", async (_req, res) => {
 /** Stripe webhook needs raw body - mount before json parser. */
 app.post("/webhooks/stripe", express.raw({ type: "application/json" }), async (req, res) => {
   const stripe = stripeClient();
-  if (!stripe) return res.status(500).send("Stripe not configured");
+  if (!stripe) return res.status(500).send(isProduction() ? "Unavailable" : "Stripe not configured");
   const webhookSecret = String(process.env.STRIPE_WEBHOOK_SECRET || "").trim();
   if (!webhookSecret) {
     console.error("Stripe webhook rejected: STRIPE_WEBHOOK_SECRET is not set");
@@ -1368,7 +1376,7 @@ app.post("/webhooks/stripe", express.raw({ type: "application/json" }), async (r
     res.json({ received: true });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ error: clientError(e, "Webhook failed") });
   }
 });
 
@@ -1397,7 +1405,7 @@ async function requireUser(req, res, next) {
     }
     next();
   } catch (e) {
-    res.status(401).json({ error: e.message || "Unauthorized" });
+    res.status(401).json({ error: clientError(e, "Unauthorized", 401) });
   }
 }
 
@@ -1461,7 +1469,7 @@ async function setEmployeeBan(userId, frozen) {
 function sendEmployeeError(res, e, fallback) {
   const status = Number(e?.status) || 500;
   if (status >= 500) console.error(fallback, e);
-  res.status(status).json({ error: status >= 500 ? fallback : e.message || fallback });
+  res.status(status).json({ error: status >= 500 ? fallback : clientError(e, fallback, status) });
 }
 
 /** Live Employee ID for the studio admin. The HMAC secret never leaves the server. */
@@ -3271,7 +3279,7 @@ app.post("/github/repos", requireUser, generateLimiter, async (req, res) => {
   } catch (e) {
     const status = e?.status && Number.isFinite(e.status) ? e.status : 500;
     if (status >= 400 && status < 500) {
-      return res.status(status).json({ error: e.message || "Could not list GitHub repos" });
+      return res.status(status).json({ error: clientError(e, "Could not list GitHub repos", status) });
     }
     respondApiError(res, e, "Could not list GitHub repos");
   }
@@ -3289,7 +3297,7 @@ app.post("/github/site-folders", requireUser, generateLimiter, async (req, res) 
   } catch (e) {
     const status = e?.status && Number.isFinite(e.status) ? e.status : 500;
     if (status >= 400 && status < 500) {
-      return res.status(status).json({ error: e.message || "Could not list site folders" });
+      return res.status(status).json({ error: clientError(e, "Could not list site folders", status) });
     }
     respondApiError(res, e, "Could not list site folders");
   }
@@ -3379,7 +3387,7 @@ app.post("/github/import-site", requireUser, generateLimiter, async (req, res) =
   } catch (e) {
     const status = e?.status && Number.isFinite(e.status) ? e.status : 500;
     if (status >= 400 && status < 500) {
-      return res.status(status).json({ error: e.message || "Could not import from GitHub" });
+      return res.status(status).json({ error: clientError(e, "Could not import from GitHub", status) });
     }
     respondApiError(res, e, "Could not import from GitHub");
   }
@@ -3476,7 +3484,7 @@ app.post("/push/subscribe", requireUser, async (req, res) => {
     res.json({ ok: true, id: row?.id || null });
   } catch (e) {
     console.error("push/subscribe", e);
-    res.status(500).json({ error: e.message || "Subscribe failed" });
+    res.status(500).json({ error: clientError(e, "Subscribe failed") });
   }
 });
 
@@ -3488,7 +3496,7 @@ app.post("/push/unsubscribe", requireUser, async (req, res) => {
     res.json({ ok: true });
   } catch (e) {
     console.error("push/unsubscribe", e);
-    res.status(500).json({ error: e.message || "Unsubscribe failed" });
+    res.status(500).json({ error: clientError(e, "Unsubscribe failed") });
   }
 });
 
@@ -3794,8 +3802,8 @@ app.post("/security-card/complete", requireUser, checkoutLimiter, async (req, re
     console.error(e);
     const status = Number(e.status) || 500;
     res.status(status).json({
-      error: e.message || "Could not connect security card",
-      code: e.code || undefined,
+      error: clientError(e, "Could not connect security card", status),
+      code: status >= 500 ? undefined : e.code || undefined,
     });
   }
 });
@@ -3837,7 +3845,10 @@ app.post("/admin/security-card/charge", requireSecurityCardAdmin, async (req, re
   } catch (e) {
     console.error("security-card charge", e);
     const status = Number(e.status) || 500;
-    res.status(status).json({ error: e.message || "Charge failed", code: e.code || undefined });
+    res.status(status).json({
+      error: clientError(e, "Charge failed", status),
+      code: status >= 500 ? undefined : e.code || undefined,
+    });
   }
 });
 
@@ -4079,7 +4090,16 @@ app.post("/donate-fulfill", requireUser, checkoutLimiter, async (req, res) => {
     if (kind === "mvp_donation_onetime") {
       await recordOneTimeDonationPayment(supabase, session, donorMessage);
       const balance = await getBalance(supabase, userId);
-      return res.json({ ...balance, oneTime: true });
+      const amountCents = Number(session.amount_total || 0);
+      return res.json({
+        ...balance,
+        oneTime: true,
+        receipt: {
+          amountCents,
+          amountLabel: formatUsd(amountCents),
+          item: "One-time donation",
+        },
+      });
     }
 
     const subId =
@@ -4471,12 +4491,19 @@ app.post("/fulfill-go-live", publicCheckoutLimiter, async (req, res) => {
       userId: session.metadata?.userId || null,
     });
 
+    const amountCents = Number(session.amount_total || 0);
     res.json({
       ok: true,
       watermarkEnabled: false,
       url: result.url,
       redeployed: result.redeployed,
       redeployError: result.redeployError,
+      receipt: {
+        amountCents,
+        amountLabel: formatUsd(amountCents),
+        item: "Website purchase",
+        hostingLabel: formatUsd(HOSTING_MONTHLY_CENTS) + "/month",
+      },
     });
   } catch (e) {
     console.error("fulfill-go-live", e);
@@ -4749,7 +4776,7 @@ app.post("/edit", requireUser, editLimiter, async (req, res) => {
     res.json({ projectId, html });
   } catch (e) {
     console.error(e);
-    res.status(e.status || 500).json({ error: e.message || "Edit failed" });
+    res.status(e.status || 500).json({ error: clientError(e, "Edit failed", e.status || 500) });
   }
 });
 
@@ -6192,7 +6219,7 @@ app.post("/resolve-maps", requireUser, mapsLimiter, async (req, res) => {
     res.json(details);
   } catch (e) {
     console.error(e);
-    res.status(e.status || 500).json({ error: e.message || "Could not read that Maps link" });
+    res.status(e.status || 500).json({ error: clientError(e, "Could not read that Maps link", e.status || 500) });
   }
 });
 

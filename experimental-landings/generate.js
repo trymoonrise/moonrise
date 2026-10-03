@@ -76,47 +76,6 @@ const HEADS = [
   ["Sparse. Sharp.","Unforgettable."]
 ];
 
-function encFont(name) {
-  const special = {
-    "Bricolage Grotesque":"Bricolage+Grotesque:opsz,wght@12..96,500;700",
-    "Fraunces":"Fraunces:opsz,wght@9..144,500;700",
-    "Playfair Display":"Playfair+Display:wght@500;700",
-    "Cormorant Garamond":"Cormorant+Garamond:wght@500;700",
-    "Libre Baskerville":"Libre+Baskerville:wght@400;700",
-    "Source Serif 4":"Source+Serif+4:opsz,wght@8..60,500;700",
-    "Source Sans 3":"Source+Sans+3:wght@400;600",
-    "IBM Plex Sans":"IBM+Plex+Sans:wght@400;600",
-    "IBM Plex Mono":"IBM+Plex+Mono:wght@400;600",
-    "Plus Jakarta Sans":"Plus+Jakarta+Sans:wght@400;600;700",
-    "Space Grotesk":"Space+Grotesk:wght@500;700",
-    "Nunito Sans":"Nunito+Sans:wght@400;700",
-    "Work Sans":"Work+Sans:wght@400;600",
-    "Newsreader":"Newsreader:opsz,wght@6..72,500;700",
-    "Libre Franklin":"Libre+Franklin:wght@400;700",
-    "Instrument Serif":"Instrument+Serif:ital@0;1",
-    "Archivo Black":"Archivo+Black",
-    "Bebas Neue":"Bebas+Neue",
-    "Unbounded":"Unbounded:wght@500;700",
-    "Bodoni Moda":"Bodoni+Moda:opsz,wght@6..96,500;700",
-    "Barlow Condensed":"Barlow+Condensed:wght@500;700",
-    "Cinzel":"Cinzel:wght@500;700",
-    "Oswald":"Oswald:wght@500;700",
-    "Mulish":"Mulish:wght@400;700",
-    "Karla":"Karla:wght@400;700",
-    "Literata":"Literata:opsz,wght@7..72,500;700",
-    "Figtree":"Figtree:wght@400;600;700",
-    "Barlow":"Barlow:wght@400;600;700",
-    "Lora":"Lora:wght@500;700",
-    "Sora":"Sora:wght@400;600;700",
-    "Outfit":"Outfit:wght@400;600;700",
-    "Syne":"Syne:wght@600;700",
-    "Manrope":"Manrope:wght@400;600;700",
-    "DM Sans":"DM+Sans:wght@400;500;700",
-    "Inter":"Inter:wght@400;600;700"
-  };
-  return special[name] || (name.replace(/ /g,"+") + ":wght@400;600;700");
-}
-
 function motionCss(motion, accent) {
   const m = motion.toLowerCase();
   if (m.includes("scan") || m.includes("glitch") || m.includes("flash") || m.includes("stamp")) {
@@ -182,7 +141,6 @@ function page(t) {
     ? "linear-gradient(180deg, rgba(255,255,255,.2), rgba(244,241,234,.92))"
     : "linear-gradient(180deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,.16) 45%, rgba(0,0,0,.84) 100%)";
   const btnText = light ? "#fff" : "#0a0a0a";
-  const fonts = `https://fonts.googleapis.com/css2?family=${encFont(t.display)}&family=${encFont(t.font)}&display=swap`;
   const nn = String(t.n).padStart(2, "0");
 
   return `<!DOCTYPE html>
@@ -192,9 +150,6 @@ function page(t) {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${t.name} · Experimental ${nn}</title>
 <meta name="description" content="Moonrise experimental landing - ${t.vibe}. Motion: ${t.motion}." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="${fonts}" rel="stylesheet" />
 <style>
 :root{--bg:${t.bg};--text:${t.text};--muted:${t.muted};--accent:${t.accent};--line:${line}}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -291,9 +246,6 @@ function indexHtml() {
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Experimental Landings</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 :root{--bg:#0b0c0e;--text:#eee;--muted:#7a7f88;--line:#22262c;--accent:#ff6a00}
 *{box-sizing:border-box;margin:0;padding:0}

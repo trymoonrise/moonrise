@@ -2,7 +2,7 @@
 
 const base = 'font-family:"DM Sans",system-ui,-apple-system,sans-serif';
 const display = 'font-family:"Syne",system-ui,sans-serif';
-const fonts = `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600;700&family=Syne:wght@600;700;800&display=swap');`;
+const fonts = ``;
 const reduced = '@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.marq-track{animation:none!important}}';
 
 const tickDHMS = (days = 7) =>

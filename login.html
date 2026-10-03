@@ -35,9 +35,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Login - Moonrise Studio</title>
   <meta name="description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Moonrise Studio">
+  <meta property="og:title" content="Login - Moonrise Studio">
+  <meta property="og:description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
+  <meta property="og:url" content="https://trymoonrise.com/login.html">
+  <meta property="og:image" content="https://trymoonrise.com/doc/embed.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Login - Moonrise Studio">
+  <meta name="twitter:description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
+  <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
+  <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="stylesheet" href="css/studio.css?v=20261002-login-bg">
   <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg" onload="document.documentElement.classList.remove('ms-hold')">
   <meta name="color-scheme" content="light">
@@ -200,9 +208,9 @@
   <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/handles.js"></script>
-  <script defer src="js/auth-security.js?v=20260911-passkey4"></script>
-  <script defer src="js/supabase-client.js?v=20260911-passkey4"></script>
-  <script defer src="js/auth.js?v=20261002-freeze"></script>
+  <script defer src="js/auth-security.js?v=20261003-session"></script>
+  <script defer src="js/supabase-client.js?v=20261003-session"></script>
+  <script defer src="js/auth.js?v=20261003-session"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();
