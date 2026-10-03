@@ -33,7 +33,7 @@
 
   function canDeleteProject(p) {
     if (window.StudioProjects?.canDeleteProject) return window.StudioProjects.canDeleteProject(p);
-    return p?.watermark_enabled !== false;
+    return true;
   }
 
   function projectContext(p) {

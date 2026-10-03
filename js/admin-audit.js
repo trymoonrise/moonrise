@@ -17,7 +17,9 @@
   let subscriberFilter = "all";
   let loading = false;
   let playtestOn = false;
+  let siteCheckGen = 0;
   const openIds = new Set();
+  const siteCheckCache = new Map();
 
   const $ = (id) => document.getElementById(id);
   const esc = (value) =>
@@ -405,11 +407,13 @@
           '<article class="ms-admin-website">' +
           '<header class="ms-admin-website-head"><strong>' +
           esc(site.name || "Untitled business") +
-          '</strong><span class="ms-admin-badge is-' +
+          '</strong><span class="ms-admin-website-marks">' +
+          uptimeHtml(site) +
+          '<span class="ms-admin-badge is-' +
           esc(site.status) +
           '">' +
           esc(site.status || "draft") +
-          "</span></header>" +
+          "</span></span></header>" +
           '<dl class="ms-admin-website-grid">' +
           fields
             .map(([label, value]) => fieldHtml(label, value, label === "Link"))
@@ -418,6 +422,77 @@
         );
       })
       .join("");
+    scheduleSiteChecks(visible);
+  }
+
+  function uptimeTitle(state, code) {
+    const status = Number(code) || 0;
+    if (state === "up") return status ? "Responded · HTTP " + status : "Responded";
+    if (state === "down") return status ? "Not running · HTTP " + status : "No response";
+    return "Checking the live site";
+  }
+
+  function uptimeHtml(site) {
+    if (!site.href || String(site.id || "").startsWith("play-")) return "";
+    const cached = siteCheckCache.get(site.id);
+    const fresh = cached && Date.now() - cached.at < 60000;
+    const state = fresh && (cached.state === "up" || cached.state === "down") ? cached.state : "checking";
+    const label = state === "up" ? "Up" : state === "down" ? "Down" : "Checking";
+    return (
+      '<span class="ms-admin-uptime is-' +
+      state +
+      '" data-site-check="' +
+      esc(site.id) +
+      '" title="' +
+      esc(uptimeTitle(state, fresh ? cached.code : 0)) +
+      '">' +
+      label +
+      "</span>"
+    );
+  }
+
+  function paintSiteCheck(id, row) {
+    const el = document.querySelector('[data-site-check="' + String(id).replace(/"/g, "") + '"]');
+    if (!el) return;
+    const state = row?.state === "up" || row?.state === "down" ? row.state : "checking";
+    el.className = "ms-admin-uptime is-" + state;
+    el.textContent = state === "up" ? "Up" : state === "down" ? "Down" : "Checking";
+    el.title = uptimeTitle(state, row?.code);
+  }
+
+  function scheduleSiteChecks(sites) {
+    const gen = ++siteCheckGen;
+    if (playtestOn) return;
+    const ids = (sites || [])
+      .filter((site) => site.href && site.id && !String(site.id).startsWith("play-"))
+      .filter((site) => {
+        const cached = siteCheckCache.get(site.id);
+        return !cached || Date.now() - cached.at >= 60000;
+      })
+      .map((site) => site.id);
+    if (!ids.length) return;
+    void checkSites(ids, gen);
+  }
+
+  async function checkSites(ids, gen) {
+    try {
+      for (let i = 0; i < ids.length; i += 24) {
+        const data = await adminEmployee("/admin/site-checks", {
+          method: "POST",
+          body: { ids: ids.slice(i, i + 24) },
+        });
+        (data.checks || []).forEach((row) => {
+          if (!row?.id || row.state === "none") return;
+          siteCheckCache.set(row.id, { state: row.state, code: row.code, at: Date.now() });
+        });
+        if (gen !== siteCheckGen) return;
+        (data.checks || []).forEach((row) => {
+          if (row?.id) paintSiteCheck(row.id, row);
+        });
+      }
+    } catch (_) {
+      if (gen !== siteCheckGen) return;
+    }
   }
 
   function fieldHtml(label, value, raw) {

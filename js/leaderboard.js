@@ -9,6 +9,7 @@
     return {
       listEl: document.getElementById("leaderboard-full-list"),
       countEl: document.getElementById("leaderboard-stat-count"),
+      labelEl: document.getElementById("leaderboard-stat-label"),
       totalEl: document.getElementById("leaderboard-stat-total"),
     };
   }

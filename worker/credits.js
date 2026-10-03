@@ -60,7 +60,7 @@ const DONATE_DEFAULT_DOLLARS = Math.min(
 
 const DONATE_BENEFITS = [
   "View code and download HTML in Builder",
-  "Everything free in the Store",
+  "Lifetime MVP+ after one donation of any amount",
   "Support Moonrise - keep generation free for everyone",
 ];
 
@@ -229,7 +229,7 @@ function donateSubscriptionLineItem(quote) {
         product_data: {
           name: "Moonrise MVP+ Support",
           description:
-            "Monthly support - MVP+ perks: Builder code access and free Store items while subscribed.",
+            "Monthly support. One paid donation keeps MVP+ for life.",
         },
         unit_amount: cents,
         recurring: { interval: "month" },
@@ -341,10 +341,21 @@ async function revokeMvpDonation(supabase, userId) {
     if (accountErr) throw accountErr;
   }
 
-  const keepMvpPlus = hasCreditPlanSubscription({
-    planId: account?.plan_id,
-    planStatus: account?.plan_status,
-  });
+  const { data: donations, error: donationErr } = await supabase
+    .from("payments")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("status", "paid")
+    .eq("kind", "mvp_donation")
+    .gt("amount_cents", 0)
+    .limit(1);
+  if (donationErr) throw donationErr;
+  const keepMvpPlus =
+    (Array.isArray(donations) && donations.length > 0) ||
+    hasCreditPlanSubscription({
+      planId: account?.plan_id,
+      planStatus: account?.plan_status,
+    });
   if (!keepMvpPlus) {
     const { error: profileErr } = await supabase
       .from("profiles")

@@ -749,6 +749,7 @@
     const bootHandle = String(bootProfile?.handle || bootAuth?.handle || "")
       .replace(/^@/, "")
       .trim();
+    const bootName = String(bootProfile?.displayName || bootAuth?.displayName || bootHandle || "").trim();
     const bootAvatar = resolveAvatarUrl(bootProfile?.avatarUrl || cachedAvatarUrl() || "");
     const bootIncome = readIncomeCache();
     const bootIncomeLabel =
@@ -801,7 +802,7 @@
       "</div>" +
       '<div class="ms-user-meta">' +
       '<strong class="ms-user-name" id="ms-user-name">' +
-      (bootHandle || "") +
+      (bootName || "") +
       "</strong>" +
       "</div>" +
       "</a>" +
@@ -1307,6 +1308,7 @@
         PROFILE_CACHE_KEY,
         JSON.stringify({
           handle: clean,
+          displayName: String(extras?.displayName || "").trim(),
           avatarUrl: String(avatarUrl || "").trim(),
           mvpPlus: !!(extras && extras.mvpPlus),
           at: Date.now(),
@@ -1368,8 +1370,11 @@
       )
         .replace(/^@/, "")
         .trim();
-      if (!handle) return null;
-      return { handle, avatarUrl: "" };
+      const displayName = String(
+        user.user_metadata?.display_name || user.user_metadata?.full_name || ""
+      ).trim();
+      if (!handle && !displayName) return null;
+      return { handle, displayName, avatarUrl: "" };
     } catch (_) {
       return null;
     }
@@ -1381,8 +1386,9 @@
     const handle = String(cached?.handle || auth?.handle || "")
       .replace(/^@/, "")
       .trim();
+    const displayName = String(cached?.displayName || auth?.displayName || "").trim();
     const nameEl = document.getElementById("ms-user-name");
-    if (nameEl && handle) nameEl.textContent = handle;
+    if (nameEl && (displayName || handle)) nameEl.textContent = displayName || handle;
 
     const avatar = cached?.avatarUrl || cachedAvatarUrl() || auth?.avatarUrl || "";
     setSidebarAvatar(avatar, handle || "M");
@@ -1638,7 +1644,8 @@
     if (!nameEl) return { handle: "", avatarUrl: "" };
 
     try {
-      const user = await window.StudioAuth?.getUser?.();
+      if (!window.StudioAuth?.getUser) return { handle: "", avatarUrl: "" };
+      const user = await window.StudioAuth.getUser();
       if (!user) {
         nameEl.textContent = "Guest";
         setSidebarAvatar("", "Guest");
@@ -1649,6 +1656,9 @@
         user.user_metadata?.handle ||
         user.email?.split("@")[0] ||
         "moonrise";
+      let displayName = String(
+        user.user_metadata?.display_name || user.user_metadata?.full_name || ""
+      ).trim();
       let avatarUrl = "";
 
       try {
@@ -1660,17 +1670,18 @@
             .eq("id", user.id)
             .maybeSingle();
           if (data?.handle) handle = data.handle;
-          else if (data?.display_name) handle = data.display_name;
+          if (data?.display_name) displayName = String(data.display_name).trim();
           avatarUrl = String(data?.avatar_url || "").trim();
 
           const clean = String(handle).replace(/^@/, "").trim() || "moonrise";
+          const label = displayName || clean;
           const isOwner = ownerHandles().includes(normalizeHandle(clean));
           writeOwnerNavCache(isOwner, clean);
           const mvpPlus = !!data?.mvp_plus || isOwner;
-          nameEl.textContent = clean;
-          setSidebarAvatar(avatarUrl, clean);
+          nameEl.textContent = label;
+          setSidebarAvatar(avatarUrl, label);
           clearLegacyProfileCosmetics();
-          rememberProfileCache(clean, avatarUrl, { mvpPlus });
+          rememberProfileCache(clean, avatarUrl, { mvpPlus, displayName: label });
           injectOwnerNav(document.body?.dataset?.page || "");
           return { handle: clean, avatarUrl };
         } else {
@@ -1682,11 +1693,12 @@
       }
 
       const clean = String(handle).replace(/^@/, "").trim() || "moonrise";
+      const label = displayName || clean;
       const isOwner = ownerHandles().includes(normalizeHandle(clean));
       writeOwnerNavCache(isOwner, clean);
-      nameEl.textContent = clean;
-      setSidebarAvatar(avatarUrl, clean);
-      rememberProfileCache(clean, avatarUrl);
+      nameEl.textContent = label;
+      setSidebarAvatar(avatarUrl, label);
+      rememberProfileCache(clean, avatarUrl, { displayName: label });
       injectOwnerNav(document.body?.dataset?.page || "");
       return { handle: clean, avatarUrl };
     } catch (e) {
@@ -1700,9 +1712,12 @@
     document.addEventListener("ms:avatar-changed", (e) => {
       const nameEl = document.getElementById("ms-user-name");
       const handle = e.detail?.handle || nameEl?.textContent || "M";
-      if (nameEl && e.detail?.handle) nameEl.textContent = e.detail.handle;
-      setSidebarAvatar(e.detail?.url || "", handle);
-      if (e.detail?.handle) rememberProfileCache(e.detail.handle, e.detail?.url || "");
+      const label = String(e.detail?.displayName || e.detail?.handle || "").trim();
+      if (nameEl && label) nameEl.textContent = label;
+      setSidebarAvatar(e.detail?.url || "", label || handle);
+      if (e.detail?.handle) {
+        rememberProfileCache(e.detail.handle, e.detail?.url || "", { displayName: label || e.detail.handle });
+      }
     });
     document.addEventListener("ms:income-changed", (e) => {
       if (e.detail?.income != null) setSidebarIncome(e.detail.income);
@@ -1762,6 +1777,7 @@
     try {
       const session = await window.StudioAuth.requireAuth();
       if (!session) return;
+      await hydrateUser();
       await finishSession(session);
     } catch (e) {
       console.warn(e);

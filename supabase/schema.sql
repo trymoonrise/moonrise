@@ -22,7 +22,7 @@ create table if not exists public.profiles (
 );
 
 comment on column public.profiles.mvp_plus is
-  'MVP+ supporter: Builder code access, free Store items, and related perks while active.';
+  'MVP+ supporter: Builder code access. Lifetime after one paid donation of any amount.';
 
 create index if not exists profiles_handle_idx on public.profiles (lower(handle));
 

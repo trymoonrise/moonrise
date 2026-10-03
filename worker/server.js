@@ -1554,6 +1554,279 @@ app.delete("/admin/employees/:id", requireUser, async (req, res) => {
   }
 });
 
+const siteCheckCache = new Map();
+const SITE_CHECK_TTL_MS = 60 * 1000;
+
+function publicProjectUrl(project) {
+  const ctx =
+    project?.business_context && typeof project.business_context === "object" && !Array.isArray(project.business_context)
+      ? project.business_context
+      : {};
+  const direct = String(project?.vercel_url || "").trim();
+  const custom = String(ctx.customDomain || "").trim();
+  const slug = String(ctx.vercelSlug || "").trim();
+  const raw = direct || custom || (slug ? slug + ".vercel.app" : "");
+  if (!raw) return "";
+  const withProto = /^https?:\/\//i.test(raw) ? raw : "https://" + raw.replace(/^\/+/, "");
+  try {
+    const url = new URL(withProto);
+    if (url.protocol !== "https:") return "";
+    url.hash = "";
+    url.search = "";
+    return url.href;
+  } catch (_) {
+    return "";
+  }
+}
+
+function isBlockedProbeAddress(address) {
+  const host = String(address || "")
+    .toLowerCase()
+    .replace(/^\[|\]$/g, "")
+    .replace(/:\d+$/, "");
+  if (!host) return true;
+  if (host === "localhost" || host.endsWith(".localhost") || host.endsWith(".local") || host.endsWith(".internal")) {
+    return true;
+  }
+  if (host === "metadata.google.internal" || host.endsWith(".metadata.google.internal")) return true;
+  if (host.endsWith(".test")) return true;
+  if (isPrivateLanHost(host)) return true;
+  if (/^(0\.|127\.|169\.254\.|100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.)/.test(host)) return true;
+  if (host === "::1" || host.startsWith("fe80:") || host.startsWith("fc") || host.startsWith("fd")) return true;
+  return false;
+}
+
+async function hostIsPublic(hostname) {
+  if (isBlockedProbeAddress(hostname)) return false;
+  let records = [];
+  try {
+    records = await dns.lookup(hostname, { all: true, verbatim: true });
+  } catch (_) {
+    return false;
+  }
+  return records.length > 0 && records.every((row) => !isBlockedProbeAddress(row.address));
+}
+
+async function probeOnce(url, method) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 4000);
+  try {
+    const res = await fetch(url, {
+      method,
+      redirect: "manual",
+      signal: controller.signal,
+      headers: { "User-Agent": "MoonriseUptime/1.0" },
+    });
+    const code = Number(res.status) || 0;
+    try {
+      await res.body?.cancel?.();
+    } catch (_) {
+      /* ignore */
+    }
+    return code;
+  } catch (_) {
+    return 0;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function probeState(code) {
+  const up = (code >= 200 && code < 400) || code === 401 || code === 403 || code === 405 || code === 429;
+  return up ? "up" : "down";
+}
+
+async function probePublicSite(url) {
+  const cached = siteCheckCache.get(url);
+  if (cached && Date.now() - cached.at < SITE_CHECK_TTL_MS) return cached.result;
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch (_) {
+    return { state: "down", code: 0 };
+  }
+  if (parsed.protocol !== "https:" || !(await hostIsPublic(parsed.hostname))) {
+    const result = { state: "down", code: 0 };
+    siteCheckCache.set(url, { at: Date.now(), result });
+    return result;
+  }
+  let code = await probeOnce(parsed.href, "HEAD");
+  if (code === 404 || code === 405 || code === 501) code = await probeOnce(parsed.href, "GET");
+  const result = { state: probeState(code), code };
+  siteCheckCache.set(url, { at: Date.now(), result });
+  return result;
+}
+
+async function mapPool(items, limit, fn) {
+  const out = new Array(items.length);
+  let cursor = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (cursor < items.length) {
+      const index = cursor;
+      cursor += 1;
+      out[index] = await fn(items[index]);
+    }
+  });
+  await Promise.all(workers);
+  return out;
+}
+
+app.post("/admin/site-checks", requireUser, async (req, res) => {
+  try {
+    if (!isStudioAdmin(req.user)) return res.status(404).json({ error: "Not found" });
+    const ids = [
+      ...new Set(
+        (Array.isArray(req.body?.ids) ? req.body.ids : [])
+          .map((id) => String(id || "").trim())
+          .filter((id) => /^[0-9a-z-]{8,80}$/i.test(id))
+      ),
+    ].slice(0, 40);
+    if (!ids.length) return res.json({ checks: [] });
+    const { data, error } = await db()
+      .from("projects")
+      .select("id, vercel_url, business_context")
+      .in("id", ids);
+    if (error) throw error;
+    const checks = await mapPool(data || [], 5, async (project) => {
+      const href = publicProjectUrl(project);
+      if (!href) return { id: project.id, state: "none", code: 0 };
+      const probe = await probePublicSite(href);
+      return { id: project.id, state: probe.state, code: probe.code };
+    });
+    res.setHeader("Cache-Control", "no-store");
+    res.json({ checks });
+  } catch (e) {
+    sendEmployeeError(res, e, "Could not check those websites");
+  }
+});
+
+const payoutPreviewHits = new Map();
+
+function allowPayoutPreview(userId) {
+  const now = Date.now();
+  const recent = (payoutPreviewHits.get(userId) || []).filter((at) => now - at < 60 * 1000);
+  if (recent.length >= 12) {
+    payoutPreviewHits.set(userId, recent);
+    return false;
+  }
+  recent.push(now);
+  payoutPreviewHits.set(userId, recent);
+  return true;
+}
+
+function readCashTag(raw) {
+  const text = String(raw || "").trim();
+  const fromUrl = text.match(/cash\.app\/\$([A-Za-z][A-Za-z0-9_]{0,19})/i);
+  const tag = (fromUrl ? fromUrl[1] : text.replace(/^\$+/, "")).trim();
+  if (!/^[A-Za-z][A-Za-z0-9_]{0,19}$/.test(tag)) return "";
+  return tag;
+}
+
+function readCashProfile(html) {
+  const marker = "var profile = ";
+  const start = String(html || "").indexOf(marker);
+  if (start < 0) return null;
+  const body = html.slice(start + marker.length, start + marker.length + 8000);
+  if (!body.startsWith("{")) return null;
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < body.length; i += 1) {
+    const ch = body[i];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') inString = true;
+    else if (ch === "{") depth += 1;
+    else if (ch === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        try {
+          return JSON.parse(body.slice(0, i + 1));
+        } catch (_) {
+          return null;
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function safeCashAvatar(url) {
+  try {
+    const parsed = new URL(String(url || ""));
+    const host = parsed.hostname.toLowerCase();
+    const allowed =
+      parsed.protocol === "https:" &&
+      (host === "cash.app" || host.endsWith(".squarecdn.com") || host === "franklin-assets.s3.amazonaws.com");
+    return allowed ? parsed.href : "";
+  } catch (_) {
+    return "";
+  }
+}
+
+app.post("/onboarding/payout-preview", requireUser, async (req, res) => {
+  try {
+    if (!allowPayoutPreview(req.user.id)) {
+      return res.status(429).json({ error: "Wait a moment, then check that account again." });
+    }
+    const method = String(req.body?.method || "").trim().toLowerCase();
+    const handle = String(req.body?.handle || "").trim().slice(0, 120);
+    if (method !== "cashapp") {
+      return res.json({ found: false, method, handle });
+    }
+    const tag = readCashTag(handle);
+    if (!tag) return res.status(400).json({ error: "Enter a Cash App $cashtag." });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    try {
+      const page = await fetch("https://cash.app/$" + encodeURIComponent(tag), {
+        method: "GET",
+        redirect: "manual",
+        signal: controller.signal,
+        headers: { "User-Agent": "MoonrisePayoutPreview/1.0", Accept: "text/html" },
+      });
+      const html = page.status === 200 ? await page.text() : "";
+      if (page.status !== 200) {
+        try {
+          await page.body?.cancel?.();
+        } catch (_) {
+          /* ignore */
+        }
+      }
+      const profile = readCashProfile(html.slice(0, 200000));
+      const displayName = String(profile?.display_name || "")
+        .replace(/[\u0000-\u001f]/g, "")
+        .trim()
+        .slice(0, 80);
+      const cashtag = "$" + tag.toUpperCase();
+      if (!displayName) {
+        res.setHeader("Cache-Control", "no-store");
+        return res.json({ found: false, method, handle: cashtag });
+      }
+      const accent = String(profile?.avatar?.accent_color || "");
+      res.setHeader("Cache-Control", "no-store");
+      res.json({
+        found: true,
+        method,
+        handle: cashtag,
+        displayName,
+        initial: String(profile?.avatar?.initial || displayName.charAt(0) || "").slice(0, 2),
+        avatarUrl: safeCashAvatar(profile?.avatar?.image_url),
+        accent: /^#[0-9a-fA-F]{6}$/.test(accent) ? accent : "",
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+  } catch (_) {
+    res.setHeader("Cache-Control", "no-store");
+    res.json({ found: false, method: "cashapp", handle: "" });
+  }
+});
+
 const rateLimit = (opts) => createDistributedRateLimiter(db, opts);
 
 const GLOBAL_RATE_SKIP = new Set([

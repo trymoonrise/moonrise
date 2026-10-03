@@ -132,11 +132,13 @@
 
   function notifyShell(handle, url) {
     const clean = String(handle || "").replace(/^@/, "").trim();
+    const displayName = String(document.getElementById("set-display")?.value || "").trim();
+    const label = displayName || clean;
     const nameEl = document.getElementById("ms-user-name");
-    if (nameEl && clean) nameEl.textContent = clean;
+    if (nameEl && label) nameEl.textContent = label;
     document.dispatchEvent(
       new CustomEvent("ms:avatar-changed", {
-        detail: { url: url || "", handle: clean },
+        detail: { url: url || "", handle: clean, displayName: label },
       })
     );
   }

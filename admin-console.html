@@ -371,6 +371,28 @@
       color: inherit;
       font-weight: 600;
     }
+    .ms-admin-website-marks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: center;
+    }
+    .ms-admin-uptime {
+      padding: 0.12rem 0.45rem;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #64748b;
+      font-size: 0.72rem;
+      font-weight: 650;
+    }
+    .ms-admin-uptime.is-up {
+      background: #ecfdf5;
+      color: #047857;
+    }
+    .ms-admin-uptime.is-down {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
     .ms-admin-badge {
       justify-self: start;
       padding: 0.12rem 0.45rem;
@@ -415,9 +437,22 @@
       margin-bottom: 1rem;
     }
     .ms-admin-toolbar .ms-clients-search-field {
-      flex: 1 1 14rem;
-      min-width: 0;
+      flex: 1 1 16rem;
+      align-self: center;
       width: auto;
+      max-width: 28rem;
+      height: 2.75rem;
+      min-height: 2.75rem;
+      max-height: 2.75rem;
+      min-width: 0;
+    }
+    .ms-admin-toolbar .ms-clients-search {
+      height: 2.5rem;
+      min-height: 0;
+      max-height: 2.5rem;
+      padding-top: 0;
+      padding-bottom: 0;
+      line-height: 2.5rem;
     }
     body[data-page="admin-console"] .ms-clients-card,
     body[data-page="admin-console"] .ms-payouts-item,
@@ -476,6 +511,18 @@
     html[data-ms-mode="dark"] .ms-admin-employee-name strong,
     html[data-ms-mode="dark"] .ms-admin-metric b {
       color: #f8fafc;
+    }
+    html[data-ms-mode="dark"] .ms-admin-uptime {
+      background: #243044;
+      color: #cbd5e1;
+    }
+    html[data-ms-mode="dark"] .ms-admin-uptime.is-up {
+      background: #064e3b;
+      color: #a7f3d0;
+    }
+    html[data-ms-mode="dark"] .ms-admin-uptime.is-down {
+      background: #450a0a;
+      color: #fecaca;
     }
     html[data-ms-mode="dark"] .ms-admin-badge {
       background: #243044;
@@ -579,15 +626,23 @@
       background: #0f172a;
     }
     .ms-admin-filter {
-      flex: 0 1 11rem;
+      box-sizing: border-box;
+      flex: 0 1 12rem;
       min-width: 0;
-      height: 2.5rem;
+      height: 2.75rem;
+      min-height: 2.75rem;
       border: 1px solid #e2e8f0;
       border-radius: 12px;
-      background: #fff;
+      background-color: #fff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
       color: inherit;
       font: inherit;
-      padding: 0 0.7rem;
+      font-size: 0.92rem;
+      line-height: 2.75rem;
+      padding: 0 2.2rem 0 0.9rem;
+      appearance: none;
     }
     .ms-admin-website-list {
       display: grid;
@@ -644,9 +699,13 @@
       overflow-wrap: anywhere;
     }
     html[data-ms-mode="dark"] .ms-admin-chart,
-    html[data-ms-mode="dark"] .ms-admin-website,
-    html[data-ms-mode="dark"] .ms-admin-filter {
+    html[data-ms-mode="dark"] .ms-admin-website {
       background: #171e2e;
+      border-color: #243044;
+      color: #f8fafc;
+    }
+    html[data-ms-mode="dark"] .ms-admin-filter {
+      background-color: #171e2e;
       border-color: #243044;
       color: #f8fafc;
     }
@@ -717,6 +776,14 @@
       .ms-admin-toolbar {
         flex-direction: column;
         align-items: stretch;
+      }
+      .ms-admin-toolbar .ms-clients-search-field {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: none;
+        height: 2.75rem;
+        min-height: 2.75rem;
+        max-height: 2.75rem;
       }
       .ms-admin-employee-head {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -952,7 +1019,7 @@
     </div>
   </div>
   <script defer src="js/config.js?v=20260909-discord"></script>
-  <script defer src="js/app.js?v=20261002-owner"></script>
+  <script defer src="js/app.js?v=20261002-display-name"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20260909-login3"></script>
@@ -964,6 +1031,6 @@
   <script defer src="js/payout-profile.js"></script>
   <script defer src="js/admin-console.js?v=20261002-expire6h"></script>
   <script defer src="js/pending-payouts.js?v=20261002-playtest"></script>
-  <script defer src="js/admin-audit.js?v=20261002-employees"></script>
+  <script defer src="js/admin-audit.js?v=20261002-uptime"></script>
 </body>
 </html>

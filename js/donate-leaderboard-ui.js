@@ -105,6 +105,7 @@
     const stats = computeStats(list);
 
     if (refs?.countEl) refs.countEl.textContent = String(stats.count);
+    if (refs?.labelEl) refs.labelEl.textContent = stats.count === 1 ? "supporter" : "supporters";
     if (refs?.totalEl) refs.totalEl.textContent = stats.totalLabel;
     clearLoading(refs?.listEl);
     renderRankList(refs?.listEl, list);

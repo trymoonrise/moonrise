@@ -5609,13 +5609,11 @@
       devUnlockBtn.hidden = !showDevUnlock;
       devUnlockBtn.disabled = !showDevUnlock;
     }
-    if (deleteBtn) deleteBtn.hidden = !state.projectId || paid;
+    if (deleteBtn) deleteBtn.hidden = !state.projectId;
     if (settingsDeleteBtn) {
-      settingsDeleteBtn.hidden = paid;
-      settingsDeleteBtn.disabled = paid;
-      settingsDeleteBtn.title = paid
-        ? "This website was paid for - it can't be deleted."
-        : "";
+      settingsDeleteBtn.hidden = !state.projectId;
+      settingsDeleteBtn.disabled = false;
+      settingsDeleteBtn.title = "";
     }
     syncRedesignButtonUi();
 
@@ -6882,10 +6880,6 @@
       setError("No project to delete");
       return;
     }
-    if (isPaidProject(state.project)) {
-      setError("This website was paid for - it can't be deleted.");
-      return;
-    }
     const confirmed = await confirmDeleteProject();
     if (!confirmed) return;
     setError("");
@@ -6910,7 +6904,7 @@
         .select("id");
       if (error) throw error;
       if (!data?.length) {
-        throw new Error("This website was paid for - it can't be deleted.");
+        throw new Error("Could not delete project. Refresh and try again.");
       }
       location.href = "dashboard.html";
     } catch (e) {

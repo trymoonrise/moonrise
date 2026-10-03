@@ -49,7 +49,6 @@
       "MVP+ perks while subscribed",
       "Up to " + sites + " websites per month",
       "View code and download HTML in Builder",
-      "Everything free in the Store",
       "Business Finder lead search",
       "Credits refresh monthly",
     ];

@@ -56,7 +56,7 @@
   </style>
   <link rel="stylesheet" href="css/studio.css?v=20260924-no-tabbar-ease">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-  <link rel="stylesheet" href="css/onboarding-premium.css?v=20260719-payout-locked">
+  <link rel="stylesheet" href="css/onboarding-premium.css?v=20261002-payout-confirm">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="onboarding" class="ms-onboard-page">
@@ -296,8 +296,8 @@
             <header class="ms-onboard-panel-head">
               <h1>Payout method</h1>
             </header>
-            <p class="ms-onboard-lead">Tell us where to deliver your payout when business owners purchase their website.</p>
-            <div class="ms-onboard-form-block">
+            <p class="ms-onboard-lead" id="onb-payout-lead">Tell us where to deliver your payout when business owners purchase their website.</p>
+            <div class="ms-onboard-form-block" id="onb-payout-form">
               <div class="ms-field">
                 <label class="ms-label" id="onb-payout-method-label">How you get paid</label>
                 <div class="ms-payout-picker" id="onb-payout-picker">
@@ -325,6 +325,19 @@
                 <input class="ms-input" id="onb-payout-handle" type="text" autocomplete="off" placeholder="Select a payout method first" disabled>
                 <p class="ms-settings-hint ms-muted" id="onb-payout-handle-hint">Choose how you get paid above, then enter your details here.</p>
               </div>
+            </div>
+            <div class="ms-onboard-payout-confirm" id="onb-payout-confirm" hidden>
+              <article class="ms-onboard-payout-preview">
+                <span class="ms-onboard-payout-preview-avatar" id="onb-payout-preview-avatar">
+                  <img id="onb-payout-preview-photo" alt="" hidden>
+                  <span id="onb-payout-preview-initial" hidden></span>
+                </span>
+                <span class="ms-onboard-payout-preview-copy">
+                  <strong id="onb-payout-preview-name"></strong>
+                  <span id="onb-payout-preview-meta"></span>
+                </span>
+              </article>
+              <p class="ms-onboard-payout-preview-note" id="onb-payout-preview-note" hidden></p>
             </div>
           </div>
           <footer class="ms-onboard-actions">
@@ -392,7 +405,7 @@
             </p>
             <div class="ms-course-video ms-onb-celebrate-video">
               <iframe
-                src="https://www.youtube.com/embed/9XvXF1LrWgA"
+                src="https://www.youtube.com/embed/9XvXF1LrWgA?rel=0&modestbranding=1"
                 title="Moonrise Studio course video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerpolicy="strict-origin-when-cross-origin"
@@ -418,6 +431,6 @@
   <script defer src="js/toast.js"></script>
   <script defer src="js/payout-profile.js?v=20260719-payout-other"></script>
   <script defer src="js/security-card.js?v=20260720-precheck-card"></script>
-  <script defer src="js/onboarding.js?v=20260719-payout-locked"></script>
+  <script defer src="js/onboarding.js?v=20261002-payout-confirm"></script>
 </body>
 </html>

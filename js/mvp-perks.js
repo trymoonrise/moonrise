@@ -3,6 +3,6 @@
  */
 window.MVP_PLUS_BENEFITS = [
   "View code and download HTML in Builder",
-  "Everything free in the Store",
+  "Lifetime MVP+ after one donation of any amount",
   "Support Moonrise - keep generation free for everyone",
 ];

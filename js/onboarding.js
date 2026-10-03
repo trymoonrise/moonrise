@@ -122,6 +122,8 @@
 
   let step = 1;
   let saving = false;
+  let payoutConfirmOpen = false;
+  let payoutPreviewBusy = false;
   let verifying = false;
   let cardVerified = false;
   let verifiedCard = null;
@@ -637,6 +639,7 @@
       const reduced = prefersReducedMotion();
 
       setTransitioning(true);
+      if (target === 5) closePayoutConfirm();
 
       if (main) {
         main.classList.remove("is-forward", "is-back", "is-entering");
@@ -677,6 +680,8 @@
         }
         if (step === 5) {
           syncPayoutHandleUi();
+        } else {
+          closePayoutConfirm();
         }
         window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
       } finally {
@@ -789,7 +794,7 @@
       }
       return null;
     }
-    if (step === 5) {
+    if (step === 5 && !payoutConfirmOpen) {
       const payoutErr = validatePayoutStep();
       if (payoutErr) return payoutErr;
       if (!cardVerified) {
@@ -909,6 +914,11 @@
     }
     collectStepDraft();
 
+    if (step === 5 && !payoutConfirmOpen) {
+      await openPayoutConfirm();
+      return;
+    }
+
     if (step === 6) {
       if (saving) return;
       saving = true;
@@ -937,9 +947,172 @@
     await showStep(step + 1, { direction: "forward" });
   }
 
+  function payoutStepButton(kind) {
+    return document.querySelector('[data-onb-step="5"] [data-onb-' + kind + "]");
+  }
+
+  function displayPayoutHandle(method, handle) {
+    const raw = String(handle || "").trim();
+    if (method !== "cashapp") return raw;
+    const fromUrl = raw.match(/cash\.app\/\$([A-Za-z][A-Za-z0-9_]{0,19})/i);
+    const tag = (fromUrl ? fromUrl[1] : raw.replace(/^\$+/, "")).trim();
+    return tag ? "$" + tag : raw;
+  }
+
+  function closePayoutConfirm() {
+    if (!payoutConfirmOpen && document.getElementById("onb-payout-confirm")?.hidden) {
+      const next = payoutStepButton("next");
+      const back = payoutStepButton("back");
+      if (next && next.textContent === "Yes, that's me") next.textContent = "Continue";
+      if (back && back.textContent === "Change") back.textContent = "Back";
+      return;
+    }
+    payoutConfirmOpen = false;
+    const heading = document.querySelector('[data-onb-step="5"] h1');
+    const lead = document.getElementById("onb-payout-lead");
+    const form = document.getElementById("onb-payout-form");
+    const confirm = document.getElementById("onb-payout-confirm");
+    if (heading) heading.textContent = "Payout method";
+    if (lead) {
+      lead.hidden = false;
+      lead.textContent = "Tell us where to deliver your payout when business owners purchase their website.";
+    }
+    if (form) form.hidden = false;
+    if (confirm) confirm.hidden = true;
+    const next = payoutStepButton("next");
+    const back = payoutStepButton("back");
+    if (next) next.textContent = "Continue";
+    if (back) back.textContent = "Back";
+  }
+
+  function paintPayoutAvatar(method, preview) {
+    const wrap = document.getElementById("onb-payout-preview-avatar");
+    const photo = document.getElementById("onb-payout-preview-photo");
+    const initial = document.getElementById("onb-payout-preview-initial");
+    if (!wrap || !photo || !initial) return;
+    wrap.style.background = "";
+    initial.style.color = "";
+    photo.hidden = true;
+    photo.removeAttribute("src");
+    initial.hidden = true;
+    initial.textContent = "";
+    const showInitial = () => {
+      const letter = String(preview.initial || preview.displayName || "?").trim().charAt(0) || "?";
+      initial.hidden = false;
+      initial.textContent = letter.toUpperCase();
+      if (preview.accent) {
+        wrap.style.background = preview.accent;
+        initial.style.color = "#fff";
+      }
+    };
+    photo.classList.toggle("is-logo", !preview.avatarUrl);
+    if (preview.avatarUrl) {
+      photo.alt = "";
+      photo.src = preview.avatarUrl;
+      photo.hidden = false;
+      photo.onerror = () => {
+        photo.hidden = true;
+        showInitial();
+      };
+      return;
+    }
+    if (preview.found) {
+      showInitial();
+      return;
+    }
+    const logo = PAYOUT_METHODS[method]?.logo || "";
+    if (!logo) return;
+    photo.alt = "";
+    photo.src = logo;
+    photo.hidden = false;
+    photo.onerror = () => {
+      photo.hidden = true;
+    };
+  }
+
+  function renderPayoutConfirm(form, preview) {
+    const meta = PAYOUT_METHODS[form.payoutMethod];
+    const handle = preview.handle || displayPayoutHandle(form.payoutMethod, form.payoutHandle);
+    const heading = document.querySelector('[data-onb-step="5"] h1');
+    const lead = document.getElementById("onb-payout-lead");
+    const formEl = document.getElementById("onb-payout-form");
+    const confirm = document.getElementById("onb-payout-confirm");
+    const name = document.getElementById("onb-payout-preview-name");
+    const detail = document.getElementById("onb-payout-preview-meta");
+    const note = document.getElementById("onb-payout-preview-note");
+    if (heading) heading.textContent = "Is this you?";
+    if (lead) {
+      lead.hidden = false;
+      lead.textContent = "Check this account before payouts are sent here.";
+    }
+    if (formEl) formEl.hidden = true;
+    if (confirm) confirm.hidden = false;
+    if (name) name.textContent = preview.found && preview.displayName ? preview.displayName : handle;
+    if (detail) detail.textContent = (preview.found ? handle + " · " : "") + (meta?.name || "Payout");
+    if (note) {
+      const missingCash = form.payoutMethod === "cashapp" && !preview.found;
+      note.hidden = !missingCash;
+      note.textContent = missingCash
+        ? "We couldn't find a public name for this $cashtag. Check the spelling before you continue."
+        : "";
+    }
+    paintPayoutAvatar(form.payoutMethod, preview);
+    const next = payoutStepButton("next");
+    const back = payoutStepButton("back");
+    if (next) next.textContent = "Yes, that's me";
+    if (back) back.textContent = "Change";
+  }
+
+  async function fetchPayoutPreview(method, handle) {
+    const session = await window.StudioAuth?.getSession?.();
+    const token = session?.access_token;
+    const base = window.StudioAuth?.workerUrl?.();
+    if (!token || !base) return { found: false };
+    const res = await fetch(base + "/onboarding/payout-preview", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ method, handle }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Could not look up that account.");
+    return data;
+  }
+
+  async function openPayoutConfirm() {
+    if (payoutPreviewBusy) return;
+    payoutPreviewBusy = true;
+    const next = payoutStepButton("next");
+    if (next) {
+      next.disabled = true;
+      next.textContent = "Checking...";
+    }
+    try {
+      const form = readPayoutForm();
+      let preview = { found: false };
+      if (form.payoutMethod === "cashapp") {
+        preview = await fetchPayoutPreview(form.payoutMethod, form.payoutHandle);
+      }
+      renderPayoutConfirm(form, preview);
+      payoutConfirmOpen = true;
+    } catch (e) {
+      setError(e.message || "Could not look up that account.");
+      if (next) next.textContent = "Continue";
+    } finally {
+      payoutPreviewBusy = false;
+      if (next) next.disabled = false;
+    }
+  }
+
   async function goBack() {
     if (stepTransition) return;
     setError("");
+    if (step === 5 && payoutConfirmOpen) {
+      closePayoutConfirm();
+      return;
+    }
     if (step <= 1) return;
     await showStep(step - 1, { direction: "back" });
   }

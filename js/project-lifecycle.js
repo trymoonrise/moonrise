@@ -12,8 +12,8 @@
     return !!String(project.vercel_url || "").trim();
   }
 
-  function canDeleteProject(project) {
-    return !isClientPaidProject(project);
+  function canDeleteProject() {
+    return true;
   }
 
   function workerUrl() {

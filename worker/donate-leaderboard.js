@@ -71,7 +71,16 @@ async function recordOneTimeDonationPayment(supabase, session, donorMessageOverr
     { onConflict: "stripe_session_id" },
   );
   if (error) throw error;
-  return { ok: true, paidCents };
+
+  if (paidCents > 0) {
+    const { error: mvpErr } = await supabase
+      .from("profiles")
+      .update({ mvp_plus: true, updated_at: new Date().toISOString() })
+      .eq("id", userId);
+    if (mvpErr) throw mvpErr;
+  }
+
+  return { ok: true, paidCents, mvpPlus: paidCents > 0 };
 }
 
 async function reconcilePendingDonationPayments(supabase, stripe, userId) {
