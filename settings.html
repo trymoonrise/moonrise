@@ -1,8 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style>html.ms-hold body{visibility:hidden!important}</style>
-<script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.15rem;background:#f3f5f8;color:#0f172a;visibility:visible!important}
+html[data-ms-mode="dark"] #ms-boot{background:#0e1320;color:#e8eef8}
+@media (prefers-color-scheme:dark){html:not([data-ms-mode="light"]) #ms-boot{background:#0e1320;color:#e8eef8}}
+#ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em}
+#ms-boot .ms-boot-bar{width:7.5rem;height:2px;border-radius:99px;background:rgba(15,23,42,.12);overflow:hidden}
+html[data-ms-mode="dark"] #ms-boot .ms-boot-bar{background:rgba(232,238,248,.16)}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:40%;border-radius:inherit;background:currentColor;animation:ms-boot 1.05s ease-in-out infinite}
+@keyframes ms-boot{0%{transform:translateX(-120%)}100%{transform:translateX(280%)}}
+@media (prefers-reduced-motion:reduce){#ms-boot .ms-boot-bar span{animation:none;width:100%;opacity:.45}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","status");
+  boot.setAttribute("aria-label","Loading");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  window.__msReleaseBoot=function(){
+    if(window.__msBootReleased)return;
+    window.__msBootReleased=1;
+    var finish=function(){
+      document.documentElement.classList.remove("ms-boot","ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    var paint=function(){requestAnimationFrame(function(){requestAnimationFrame(finish);});};
+    if(document.fonts&&document.fonts.ready){
+      Promise.race([document.fonts.ready.catch(function(){}),new Promise(function(r){setTimeout(r,800);})]).then(paint);
+    }else paint();
+  };
+  setTimeout(function(){ if(window.__msReleaseBoot) window.__msReleaseBoot(); },20000);
+})();
+</script>
   <script>
     (function () {
       var BUILD = "20260930-channel-instant";
@@ -33,10 +69,10 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261003-session"></script>
+  <script src="js/auth-gate-head.js?v=20261003-cal"></script>
   <title>Settings - Moonrise Studio</title>
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20260930-channel-instant">
+  <link rel="stylesheet" href="css/studio.css?v=20261003-cal">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 </head>
 <body data-page="settings">
@@ -273,12 +309,12 @@
   </div>
 
   <script defer src="js/config.js?v=20260909-discord"></script>
-  <script defer src="js/app.js?v=20261003-session"></script>
+  <script defer src="js/app.js?v=20261003-cal"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/handles.js"></script>
   <script defer src="js/supabase-client.js?v=20261003-session"></script>
-  <script defer src="js/auth.js?v=20261003-auth1"></script>
+  <script defer src="js/auth.js?v=20261003-nav"></script>
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
   <script defer src="js/toast.js"></script>

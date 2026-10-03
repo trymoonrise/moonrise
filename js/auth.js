@@ -953,6 +953,7 @@
     }
     const session = await getSession();
     if (!session) {
+      if (document.prerendering) return null;
       const next = encodeURIComponent(
         (location.pathname.split("/").pop() || "dashboard.html") + location.search + location.hash
       );
@@ -996,6 +997,7 @@
 
   function sendToLogin() {
     try {
+      if (document.prerendering) return;
       const file = (location.pathname.split("/").pop() || "index.html").split("?")[0];
       const page = file.replace(/\.html$/, "") || "index";
       if (PUBLIC_PAGES.has(page) || file === "login.html") return;

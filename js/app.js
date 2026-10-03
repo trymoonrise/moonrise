@@ -44,6 +44,13 @@
       icon: "discord",
       external: true,
     },
+    {
+      id: "download-app",
+      href: "download.html",
+      label: "Download app",
+      icon: "download",
+      download: true,
+    },
   ];
 
   const ICONS = {
@@ -67,12 +74,13 @@
     bag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
     heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
     external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
+    download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>',
     menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="7" x2="19" y2="7"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="17" x2="19" y2="17"/></svg>',
     info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.2V16"/><circle cx="12" cy="8" r="0.8" fill="currentColor" stroke="none"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>',
   };
 
-  const OWNER_NAV_KEY = "ms_owner_nav_v1";
+  const OWNER_NAV_KEY = "ms_owner_nav_v2";
 
   function ownerHandles() {
     return (window.SITE_CONFIG?.ownerHandles || ["moonrise"]).map((h) =>
@@ -100,10 +108,8 @@
       if (data.at && Date.now() - Number(data.at) > 30 * 24 * 60 * 60 * 1000) {
         return false;
       }
-      const allowed = ownerHandles();
-      if (data.handle && allowed.includes(normalizeHandle(data.handle))) return true;
-      // Owner flag without handle still trusted for first paint; verified after auth
-      return !!data.owner;
+      const handle = normalizeHandle(data.handle);
+      return !!(data.owner && handle && ownerHandles().includes(handle));
     } catch (_) {
       return false;
     }
@@ -196,8 +202,15 @@
     return items;
   }
 
+  function removeOwnerNav() {
+    document.querySelectorAll('[data-admin="true"]').forEach((el) => el.remove());
+  }
+
   function injectOwnerNav(page) {
-    if (!shouldIncludeOwnerNav()) return;
+    if (!shouldIncludeOwnerNav()) {
+      removeOwnerNav();
+      return;
+    }
     const nav = document.querySelector(".ms-sidebar-scroll .ms-nav-group nav.ms-nav");
     if (!nav) return;
     let added = false;
@@ -266,7 +279,8 @@
         String(item.label || "external site").replace(/"/g, "&quot;") +
         '"'
       : "";
-    const href = item.external ? "#" : item.href;
+    const href = item.external || item.download ? "#" : item.href;
+    const downloadAttrs = item.download ? ' data-download-app="true"' : "";
     const externalMark = item.external
       ? '<span class="ms-nav-external" aria-hidden="true" title="Opens externally">' +
         ICONS.external +
@@ -294,6 +308,7 @@
       item.id +
       '"' +
       (item.ownerOnly ? ' data-admin="true"' : "") +
+      downloadAttrs +
       externalAttrs +
       ">" +
       '<span class="ms-nav-ico" aria-hidden="true">' +
@@ -1067,6 +1082,7 @@
   }
 
   let pendingRedirectUrl = "";
+  let pendingRedirectKind = "external";
   let redirectBound = false;
 
   function setRedirectOpen(open) {
@@ -1079,23 +1095,69 @@
       document.getElementById("ms-redirect-go")?.focus();
     } else {
       pendingRedirectUrl = "";
+      pendingRedirectKind = "external";
     }
   }
 
-  function openRedirectConfirm(url, label) {
+  function downloadLogoHtml() {
+    const src = String(brandLogo() || "doc/MoonriseLogo.png").replace(/"/g, "");
+    return (
+      '<img class="ms-download-logo" src="' +
+      src +
+      '" alt="" width="68" height="68">'
+    );
+  }
+
+  function openDownloadConfirm() {
     ensureRedirectModal();
-    const name = String(label || "Telegram").trim() || "Telegram";
-    const isDiscord = /discord/i.test(name) || /discord\.gg/i.test(String(url || ""));
-    pendingRedirectUrl =
-      String(url || "").trim() || (isDiscord ? discordUrl() : telegramUrl());
+    ensureInstallHintScript();
+    pendingRedirectKind = "download";
+    pendingRedirectUrl = "download.html";
+    const installed = !!window.MoonriseInstall?.isStandalone?.();
     const title = document.getElementById("ms-redirect-title");
     const copy = document.querySelector("#ms-redirect-modal .ms-redirect-copy");
     const goBtn = document.getElementById("ms-redirect-go");
     const icon = document.getElementById("ms-redirect-icon");
     if (icon) {
-      icon.className =
-        "ms-redirect-icon " + (isDiscord ? "ms-redirect-icon--discord" : "ms-redirect-icon--telegram");
-      icon.innerHTML = isDiscord ? DISCORD_LOGO : TELEGRAM_LOGO;
+      icon.className = "ms-redirect-icon ms-redirect-icon--download";
+      icon.innerHTML = downloadLogoHtml();
+    }
+    if (title) title.textContent = installed ? "App installed" : "Download the app?";
+    if (copy) {
+      copy.innerHTML = installed
+        ? "You're already using the installed <strong>Moonrise</strong> app. Open it from your home screen anytime."
+        : "Install <strong>Moonrise</strong> on this phone or computer. It opens from your home screen, the same way as any other app.";
+    }
+    if (goBtn) goBtn.textContent = installed ? "Done" : "Download app";
+    setRedirectOpen(true);
+  }
+
+  function calLogoHtml() {
+    return '<img class="ms-cal-logo" src="doc/Cal.png" alt="" width="68" height="68">';
+  }
+
+  function redirectBrand(url, label) {
+    const name = String(label || "");
+    const href = String(url || "");
+    if (/discord/i.test(name) || /discord\.gg/i.test(href)) return "discord";
+    if (/cal\.com/i.test(name) || /cal\.com/i.test(href)) return "cal";
+    return "telegram";
+  }
+
+  function openRedirectConfirm(url, label) {
+    ensureRedirectModal();
+    const name = String(label || "Telegram").trim() || "Telegram";
+    const brand = redirectBrand(url, name);
+    pendingRedirectUrl =
+      String(url || "").trim() || (brand === "discord" ? discordUrl() : telegramUrl());
+    const title = document.getElementById("ms-redirect-title");
+    const copy = document.querySelector("#ms-redirect-modal .ms-redirect-copy");
+    const goBtn = document.getElementById("ms-redirect-go");
+    const icon = document.getElementById("ms-redirect-icon");
+    const logos = { discord: DISCORD_LOGO, cal: calLogoHtml(), telegram: TELEGRAM_LOGO };
+    if (icon) {
+      icon.className = "ms-redirect-icon ms-redirect-icon--" + brand;
+      icon.innerHTML = logos[brand] || TELEGRAM_LOGO;
     }
     if (title) title.textContent = "Open " + name + "?";
     if (copy) {
@@ -1114,9 +1176,16 @@
     redirectBound = true;
 
     document.addEventListener("click", (e) => {
+      const download = e.target.closest?.("[data-download-app]");
+      if (download) {
+        e.preventDefault();
+        openDownloadConfirm();
+        return;
+      }
       const link = e.target.closest?.("[data-external-redirect]");
       if (!link) return;
       e.preventDefault();
+      pendingRedirectKind = "external";
       const url = link.getAttribute("data-external-url") || telegramUrl();
       const label = link.getAttribute("data-external-label") || "Telegram";
       openRedirectConfirm(url, label);
@@ -1126,9 +1195,20 @@
       setRedirectOpen(false);
     });
 
-    document.getElementById("ms-redirect-go")?.addEventListener("click", () => {
+    document.getElementById("ms-redirect-go")?.addEventListener("click", async () => {
+      const kind = pendingRedirectKind;
       const url = pendingRedirectUrl || telegramUrl();
       setRedirectOpen(false);
+      if (kind === "download") {
+        const install = window.MoonriseInstall;
+        if (install?.isStandalone?.()) return;
+        if (install?.canPrompt?.()) {
+          await install.promptInstall();
+          return;
+        }
+        location.href = url || "download.html";
+        return;
+      }
       window.open(url, "_blank", "noopener,noreferrer");
     });
 
@@ -1674,8 +1754,11 @@
 
           const clean = String(handle).replace(/^@/, "").trim() || "moonrise";
           const label = displayName || clean;
-          const isOwner = ownerHandles().includes(normalizeHandle(clean));
-          writeOwnerNavCache(isOwner, clean);
+          const isOwner = ownerHandles().includes(
+            normalizeHandle(data?.handle || user.user_metadata?.handle || "")
+          );
+          writeOwnerNavCache(isOwner, isOwner ? data?.handle || user.user_metadata?.handle : "");
+          if (!isOwner) removeOwnerNav();
           const mvpPlus = !!data?.mvp_plus || isOwner;
           nameEl.textContent = label;
           setSidebarAvatar(avatarUrl, label);
@@ -1693,8 +1776,9 @@
 
       const clean = String(handle).replace(/^@/, "").trim() || "moonrise";
       const label = displayName || clean;
-      const isOwner = ownerHandles().includes(normalizeHandle(clean));
-      writeOwnerNavCache(isOwner, clean);
+      const isOwner = ownerHandles().includes(normalizeHandle(user.user_metadata?.handle || ""));
+      writeOwnerNavCache(isOwner, isOwner ? user.user_metadata?.handle : "");
+      if (!isOwner) removeOwnerNav();
       nameEl.textContent = label;
       setSidebarAvatar(avatarUrl, label);
       rememberProfileCache(clean, avatarUrl, { displayName: label });
@@ -1739,6 +1823,7 @@
     setChannelGenerating(null, false);
     document.body.classList.add("ms-ready");
     document.documentElement.classList.remove("ms-hold");
+    if (window.__msReleaseBoot) window.__msReleaseBoot();
     document.dispatchEvent(new Event("ms:shell-ready"));
     // Let scripts that load after app.js subscribe before the page starts fetching.
     setTimeout(function () {
@@ -1783,6 +1868,15 @@
     }
   }
 
+  async function allowThisPage() {
+    const page = document.body?.dataset?.page || "";
+    if (page !== "admin-console") return true;
+    const owner = await window.StudioOwner?.isSiteOwner?.();
+    if (owner) return true;
+    window.location.replace("dashboard.html");
+    return false;
+  }
+
   async function boot() {
     ensureTabBar(document.body?.dataset?.page || "");
     const gateOpen = document.documentElement.classList.contains("ms-auth-ready");
@@ -1799,6 +1893,7 @@
       return;
     }
     if (gateOpen) {
+      if (!(await allowThisPage())) return;
       paintApp();
       void continueSession();
       return;
@@ -1815,6 +1910,7 @@
       }
     }
 
+    if (!(await allowThisPage())) return;
     paintApp();
     await finishSession(session);
   }

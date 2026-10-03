@@ -32,7 +32,14 @@
     sessionStorage.removeItem("ms_channel_hop");
   } catch (e) {}
 
-  if (PUBLIC[file]) return;
+  if (PUBLIC[file]) {
+    var releasePublic = function () {
+      if (window.__msReleaseBoot) window.__msReleaseBoot();
+    };
+    if (document.readyState === "complete") releasePublic();
+    else window.addEventListener("load", releasePublic);
+    return;
+  }
 
   document.documentElement.classList.add("ms-auth-gating");
   document.documentElement.classList.add("ms-hold");
@@ -48,7 +55,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20260909-discord", "js/app.js?v=20261003-session"].forEach(function (href) {
+  ["js/config.js?v=20260909-discord", "js/app.js?v=20261003-cal"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -61,6 +68,8 @@
   document.head.appendChild(style);
 
   function redirectToLogin() {
+    // A prerender that sends itself to login is what the next channel shows.
+    if (document.prerendering) return;
     var next = encodeURIComponent(file + location.search + location.hash);
     location.replace("login.html?next=" + next);
   }
@@ -94,7 +103,9 @@
 
 function warmChannels() {
   if (!document.head || document.getElementById("ms-channel-speculation")) return;
-  var pages = ["dashboard.html", "builder.html", "leads.html", "clients.html", "settings.html", "admin-console.html", "projects.html", "help.html"];
+  // Prefetch only. Prerender runs the auth gate and can swap the next channel for the login page.
+  // Admin Console is not warmed for everyone.
+  var pages = ["dashboard.html", "builder.html", "leads.html", "clients.html", "settings.html", "projects.html", "help.html"];
   if (window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports("speculationrules")) {
     var rules = document.createElement("script");
     rules.id = "ms-channel-speculation";
@@ -103,14 +114,7 @@ function warmChannels() {
       prefetch: [
         {
           urls: pages,
-          eagerness: "eager",
-        },
-      ],
-      prerender: [
-        {
-          source: "document",
-          where: { selector_matches: "a.ms-tab[href], a.ms-nav-link[href]" },
-          eagerness: "moderate",
+          eagerness: "conservative",
         },
       ],
     });

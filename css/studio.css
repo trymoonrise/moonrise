@@ -10365,6 +10365,31 @@ body.ms-lb-fullscreen .ms-lb-price {
   box-shadow: 0 8px 20px rgba(88, 101, 242, 0.32);
 }
 
+.ms-redirect-icon--cal {
+  background: #111;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.28);
+}
+
+.ms-redirect-icon .ms-cal-logo {
+  width: 68px;
+  height: 68px;
+  display: block;
+  object-fit: cover;
+}
+
+.ms-redirect-icon--download {
+  background: transparent;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.ms-redirect-icon .ms-download-logo {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+  display: block;
+  object-fit: cover;
+}
+
 .ms-redirect-icon svg,
 .ms-redirect-icon .ms-telegram-logo,
 .ms-redirect-icon .ms-discord-logo {

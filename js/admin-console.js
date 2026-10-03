@@ -137,6 +137,7 @@
   }
 
   function sendToLogin() {
+    if (document.prerendering) return;
     const next = encodeURIComponent("admin-console.html" + location.search + location.hash);
     location.replace("login.html?next=" + next);
   }
@@ -212,11 +213,10 @@
   let pollTimer = 0;
 
   ensureDigits();
-  revealCard();
-  setStatus("Loading the Employee ID…");
-  refresh();
-  pollTimer = setInterval(refresh, 2000);
   window.StudioOwner?.gateOwnerPage?.("dashboard.html").then((ok) => {
-    if (!ok) clearInterval(pollTimer);
+    if (!ok) return;
+    setStatus("Loading the Employee ID…");
+    refresh();
+    pollTimer = setInterval(refresh, 2000);
   });
 })();

@@ -1224,6 +1224,7 @@
       location.replace(nextUrl);
       return;
     }
+    window.__msReleaseBoot?.();
 
     fillForm(profile, user);
     await hydrateVerifiedCard(profile);
