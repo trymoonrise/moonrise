@@ -686,7 +686,9 @@
     }
     if (sb) {
       try {
-        await withTimeout(sb.auth.signOut(), 4000, "Sign out");
+        // Local scope signs out this browser. A global sign-out revokes the
+        // shared session and leaves other open tabs with a dead access token.
+        await withTimeout(sb.auth.signOut({ scope: "local" }), 4000, "Sign out");
       } catch (e) {
         /* still clear local session best-effort */
       }
@@ -969,6 +971,92 @@
     }
     releaseAuthGate();
     return session;
+  }
+
+  const nativeFetch = global.fetch ? global.fetch.bind(global) : null;
+  let recoveringSession = null;
+
+  function requestAuthHeader(headers) {
+    if (!headers) return "";
+    if (typeof Headers !== "undefined" && headers instanceof Headers) {
+      return headers.get("Authorization") || headers.get("authorization") || "";
+    }
+    return headers.Authorization || headers.authorization || "";
+  }
+
+  function requestUrl(input) {
+    if (typeof input === "string") return input;
+    return String(input?.url || "");
+  }
+
+  function isDeadSessionPayload(data) {
+    const code = String(data?.code || "");
+    return code === "session_invalid" || code === "unauthorized" || code === "session_expired";
+  }
+
+  function sendToLogin() {
+    try {
+      const file = (location.pathname.split("/").pop() || "index.html").split("?")[0];
+      const page = file.replace(/\.html$/, "") || "index";
+      if (PUBLIC_PAGES.has(page) || file === "login.html") return;
+      const next = encodeURIComponent(file + location.search + location.hash);
+      location.replace("login.html?next=" + next);
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  async function recoverDeadSession() {
+    if (!recoveringSession) {
+      recoveringSession = (async () => {
+        try {
+          global.SiteSupabase?.clearPersistedAuth?.();
+        } catch (_) {
+          /* ignore */
+        }
+        return getSession();
+      })().finally(() => {
+        recoveringSession = null;
+      });
+    }
+    return recoveringSession;
+  }
+
+  if (nativeFetch && !global.__msAuthFetch) {
+    global.__msAuthFetch = true;
+    global.fetch = async function (input, init) {
+      const res = await nativeFetch(input, init);
+      const base = workerUrl();
+      const url = requestUrl(input);
+      if (!base || !url.startsWith(base) || res.status !== 401) return res;
+      if (url.indexOf("/auth/session") !== -1 || url.indexOf("/auth/signout") !== -1) return res;
+      const header = requestAuthHeader(init?.headers);
+      if (!header.startsWith("Bearer ")) return res;
+      const alreadyRetried =
+        (typeof Headers !== "undefined" && init?.headers instanceof Headers
+          ? init.headers.get("X-Ms-Auth-Retry")
+          : init?.headers?.["X-Ms-Auth-Retry"]) === "1";
+      let data = {};
+      try {
+        data = await res.clone().json();
+      } catch (_) {
+        data = {};
+      }
+      if (!isDeadSessionPayload(data) && data.error !== "Invalid auth token") return res;
+      if (alreadyRetried) {
+        sendToLogin();
+        return res;
+      }
+      const session = await recoverDeadSession();
+      if (!session?.access_token) {
+        sendToLogin();
+        return res;
+      }
+      const headers = new Headers(init?.headers || {});
+      headers.set("Authorization", "Bearer " + session.access_token);
+      headers.set("X-Ms-Auth-Retry", "1");
+      return nativeFetch(input, Object.assign({}, init, { headers }));
+    };
   }
 
   global.StudioAuth = {

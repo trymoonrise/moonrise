@@ -153,8 +153,13 @@
       text-align: center;
       margin: 0;
     }
-    .ms-admin-code-card.is-pending {
-      visibility: hidden;
+    .ms-admin-code-card h2 {
+      margin: 0;
+      font-size: 0.78rem;
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #64748b;
     }
     .ms-admin-ring {
       --ms-admin-progress: 0;
@@ -232,7 +237,8 @@
     html[data-ms-mode="dark"] .ms-admin-ring span {
       background: #121826;
     }
-    html[data-ms-mode="dark"] .ms-admin-status {
+    html[data-ms-mode="dark"] .ms-admin-status,
+    html[data-ms-mode="dark"] .ms-admin-code-card h2 {
       color: #94a3b8;
     }
     .ms-admin-overview {
@@ -820,9 +826,10 @@
       <button type="button" class="ms-btn ms-btn-secondary" id="admin-playtest-off">Turn off</button>
     </div>
     <div class="ms-admin-top">
-    <section class="ms-card ms-admin-code-card is-pending" aria-live="polite">
-      <div class="ms-admin-ring" id="admin-ring" style="--ms-admin-progress: 0">
-        <span><b class="ms-admin-seconds" id="admin-seconds"></b></span>
+    <section class="ms-card ms-admin-code-card" aria-live="polite">
+      <h2>Employee ID</h2>
+      <div class="ms-admin-ring" id="admin-ring" style="--ms-admin-progress: 1">
+        <span><b class="ms-admin-seconds" id="admin-seconds">…</b></span>
       </div>
       <p class="ms-admin-code" id="admin-code" aria-label="Employee ID"></p>
       <p class="ms-admin-status" id="admin-status">Copy this ID. It works once and expires in 6 hours if unused.</p>
@@ -1021,13 +1028,13 @@
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261003-session"></script>
-  <script defer src="js/auth.js?v=20261003-session"></script>
+  <script defer src="js/auth.js?v=20261003-auth1"></script>
   <script defer src="js/segment-switch.js?v=20261002-admin-toggle"></script>
   <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/payout-profile.js"></script>
-  <script defer src="js/admin-console.js?v=20261002-expire6h"></script>
+  <script defer src="js/admin-console.js?v=20261003-code"></script>
   <script defer src="js/pending-payouts.js?v=20261002-playtest"></script>
   <script defer src="js/admin-audit.js?v=20261002-uptime"></script>
 </body>

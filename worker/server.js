@@ -1388,7 +1388,12 @@ async function requireUser(req, res, next) {
     const token = header.startsWith("Bearer ") ? header.slice(7) : "";
     if (!token) return res.status(401).json({ error: "Missing auth token" });
     const { data, error } = await db().auth.getUser(token);
-    if (error || !data?.user) return res.status(401).json({ error: "Invalid auth token" });
+    if (error || !data?.user) {
+      return res.status(401).json({
+        error: "Your session ended. Sign in again.",
+        code: "session_invalid",
+      });
+    }
     req.user = data.user;
     if (!isStudioAdmin(req.user)) {
       const { data: profile, error: profileErr } = await db()

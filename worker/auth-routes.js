@@ -628,9 +628,16 @@ function mountAuthRoutes(app, { db, security }) {
         clearAuthCookies(req, res);
         return res.status(401).json({ error: "Session expired", code: "session_expired" });
       }
-      const refresh = String(req.body?.refresh_token || readCookie(req, "ms_rt") || "");
+      const cookieRefresh = readCookie(req, "ms_rt");
+      const refresh = String(req.body?.refresh_token || cookieRefresh || "");
       if (!refresh) {
         return res.status(401).json({ error: "Session expired", code: "session_expired" });
+      }
+      // The sign-in response already stored this token. Refreshing it again
+      // rotates it and races the next page, which revokes the session.
+      if (cookieRefresh && refresh === cookieRefresh) {
+        writeAuthCookies(req, res, { refresh_token: cookieRefresh });
+        return res.json({ ok: true });
       }
       const { data, error } = await authClient().auth.refreshSession({ refresh_token: refresh });
       if (error || !data?.session) {
@@ -664,7 +671,10 @@ function mountAuthRoutes(app, { db, security }) {
       if (token) {
         const { data, error } = await db().auth.getUser(token);
         if (error || !data?.user) {
-          return res.status(401).json({ error: "Invalid auth token", code: "unauthorized" });
+          return res.status(401).json({
+            error: "Your session ended. Sign in again.",
+            code: "session_invalid",
+          });
         }
         email = normalizeEmail(data.user.email || email);
       }

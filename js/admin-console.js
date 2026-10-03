@@ -136,13 +136,24 @@
     requestAnimationFrame(paint);
   }
 
+  function sendToLogin() {
+    const next = encodeURIComponent("admin-console.html" + location.search + location.hash);
+    location.replace("login.html?next=" + next);
+  }
+
   async function refresh() {
     if (refreshing) return;
     refreshing = true;
+    revealCard();
     try {
       const session = await window.StudioAuth?.getSession?.();
       const token = session?.access_token;
-      if (!token) return;
+      if (!token) {
+        clearInterval(pollTimer);
+        setStatus("Sign in again to see the Employee ID.");
+        sendToLogin();
+        return;
+      }
       const res = await fetch(workerBase() + "/admin/employee-code", {
         headers: { Accept: "application/json", Authorization: "Bearer " + token },
         cache: "no-store",
@@ -150,6 +161,12 @@
       const data = await res.json().catch(() => ({}));
       if (res.status === 404) {
         setStatus("This console is only available on the Moonrise admin account.");
+        return;
+      }
+      if (res.status === 401) {
+        clearInterval(pollTimer);
+        setStatus(data.error || "Your session ended. Sign in again.");
+        sendToLogin();
         return;
       }
       if (!res.ok) throw new Error(data.error || "Could not load the Employee ID");
@@ -192,9 +209,14 @@
     startPaint();
   });
 
+  let pollTimer = 0;
+
+  ensureDigits();
+  revealCard();
+  setStatus("Loading the Employee ID…");
+  refresh();
+  pollTimer = setInterval(refresh, 2000);
   window.StudioOwner?.gateOwnerPage?.("dashboard.html").then((ok) => {
-    if (!ok) return;
-    refresh();
-    setInterval(refresh, 2000);
+    if (!ok) clearInterval(pollTimer);
   });
 })();
