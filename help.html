@@ -69,11 +69,11 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261003-cal"></script>
+  <script src="js/auth-gate-head.js?v=20261003-avatar"></script>
   <title>Help - Moonrise Studio</title>
   <meta name="description" content="Help for Moonrise Studio creators: accounts, websites, payouts, and how to reach support.">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261003-cal">
+  <link rel="stylesheet" href="css/studio.css?v=20261003-ig">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 </head>
 <body data-page="help">
@@ -154,6 +154,25 @@ document.documentElement.classList.add("ms-boot");
           <li>
             <a
               class="ms-help-vcard-link"
+              href="https://www.instagram.com/trymoonrise/"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-external-redirect="true"
+              data-external-url="https://www.instagram.com/trymoonrise/"
+              data-external-label="Instagram"
+            >
+              <span class="ms-help-vcard-icon ms-help-vcard-icon--instagram" aria-hidden="true">
+                <img src="doc/Instagram.svg" alt="" width="46" height="46" loading="lazy" decoding="async">
+              </span>
+              <span class="ms-help-vcard-link-text">
+                <strong>Instagram</strong>
+                <em>@trymoonrise</em>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="ms-help-vcard-link"
               href="https://cal.com/moonrise"
               target="_blank"
               rel="noopener noreferrer"
@@ -193,8 +212,8 @@ document.documentElement.classList.add("ms-boot");
     </section>
   </div>
 
-  <script defer src="js/config.js?v=20260909-discord"></script>
-  <script defer src="js/app.js?v=20261003-cal"></script>
+  <script defer src="js/config.js?v=20261003-avatar"></script>
+  <script defer src="js/app.js?v=20261003-avatar"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261003-session"></script>
@@ -216,6 +235,7 @@ document.documentElement.classList.add("ms-boot");
         phoneDisplay: "(401) 300-0957",
         email: "trymoonrise@gmail.com",
         url: "https://trymoonrise.com",
+        instagram: "https://www.instagram.com/trymoonrise/",
       };
 
       function buildVCard() {
@@ -229,6 +249,7 @@ document.documentElement.classList.add("ms-boot");
           "TEL;TYPE=CELL,VOICE:" + CONTACT.phone,
           "EMAIL;TYPE=INTERNET:" + CONTACT.email,
           "URL:" + CONTACT.url,
+          "URL;TYPE=Instagram:" + CONTACT.instagram,
           "NOTE:trymoonrise.com ? Moonrise Studio",
           "END:VCARD",
         ].join("\r\n");
@@ -252,7 +273,7 @@ document.documentElement.classList.add("ms-boot");
       shareBtn?.addEventListener("click", async () => {
         const shareData = {
           title: "Moonrise",
-          text: "Moonrise ? trymoonrise.com\n" + CONTACT.phoneDisplay + "\n" + CONTACT.email,
+          text: "Moonrise ? trymoonrise.com\n" + CONTACT.phoneDisplay + "\n" + CONTACT.email + "\n" + CONTACT.instagram,
           url: location.href.split("#")[0],
         };
         try {

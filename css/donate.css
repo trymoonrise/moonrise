@@ -368,6 +368,30 @@
   cursor: wait;
 }
 
+.ms-donate-policy {
+  margin: 0.35rem 0 0;
+  text-align: center;
+}
+
+.ms-donate-policy a {
+  color: #94a3b8;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.ms-donate-policy a:hover {
+  color: #64748b;
+}
+
+.ms-donate-policy a:focus-visible {
+  outline: none;
+  color: #64748b;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
 .ms-donate-link {
   appearance: none;
   border: 0;

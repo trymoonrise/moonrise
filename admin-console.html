@@ -70,7 +70,7 @@ document.documentElement.classList.add("ms-boot");
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="robots" content="noindex">
-  <script src="js/auth-gate-head.js?v=20261003-cal"></script>
+  <script src="js/auth-gate-head.js?v=20261003-avatar"></script>
   <title>Admin Console - Moonrise Studio</title>
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="stylesheet" href="css/studio.css?v=20261003-cal">
@@ -360,6 +360,21 @@ document.documentElement.classList.add("ms-boot");
       color: inherit;
       font: inherit;
     }
+    .ms-admin-employee-person {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+    .ms-admin-employee-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 auto;
+      background: #f8fafc;
+      border: 1px solid #e8edf3;
+    }
     .ms-admin-employee-name {
       display: grid;
       gap: 0.1rem;
@@ -538,6 +553,10 @@ document.documentElement.classList.add("ms-boot");
     }
     html[data-ms-mode="dark"] .ms-admin-tabs.seg-switch.is-ready > .ms-payouts-tab.is-active {
       color: #f8fafc;
+    }
+    html[data-ms-mode="dark"] .ms-admin-employee-avatar {
+      background: #121826;
+      border-color: #243044;
     }
     html[data-ms-mode="dark"] .ms-admin-employee,
     html[data-ms-mode="dark"] .ms-payouts-stat {
@@ -784,7 +803,7 @@ document.documentElement.classList.add("ms-boot");
       .ms-admin-employee-head {
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
-      .ms-admin-employee-name {
+      .ms-admin-employee-person {
         grid-column: 1 / -1;
       }
     }
@@ -1059,8 +1078,8 @@ document.documentElement.classList.add("ms-boot");
       </footer>
     </div>
   </div>
-  <script defer src="js/config.js?v=20260909-discord"></script>
-  <script defer src="js/app.js?v=20261003-cal"></script>
+  <script defer src="js/config.js?v=20261003-avatar"></script>
+  <script defer src="js/app.js?v=20261003-avatar"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261003-session"></script>
@@ -1072,6 +1091,6 @@ document.documentElement.classList.add("ms-boot");
   <script defer src="js/payout-profile.js"></script>
   <script defer src="js/admin-console.js?v=20261003-code"></script>
   <script defer src="js/pending-payouts.js?v=20261002-playtest"></script>
-  <script defer src="js/admin-audit.js?v=20261002-uptime"></script>
+  <script defer src="js/admin-audit.js?v=20261003-avatar"></script>
 </body>
 </html>

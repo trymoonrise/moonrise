@@ -138,7 +138,7 @@
       `<li class="ms-donate-lb-item ms-donate-lb-item--placeholder has-message">` +
       `<span class="ms-donate-lb-rank" aria-hidden="true">#-</span>` +
       `<div class="ms-donate-lb-main">` +
-      `<img class="ms-donate-lb-avatar ms-donate-lb-avatar--placeholder" src="doc/pfp.png" alt="" width="32" height="32" loading="lazy" decoding="async">` +
+      `<img class="ms-donate-lb-avatar ms-donate-lb-avatar--placeholder" src="${escapeHtml((global.SITE_CONFIG && global.SITE_CONFIG.defaultAvatarUrl) || "doc/profilepicture.jpg")}" alt="" width="32" height="32" loading="lazy" decoding="async">` +
       `<div class="ms-donate-lb-copy">` +
       `<strong class="ms-donate-lb-name">Your profile here</strong>` +
       `<p class="ms-donate-lb-message is-muted">Be the first supporter - pick an amount and leave a wall note.</p>` +
@@ -199,7 +199,7 @@
     if (!list.length) {
       listEl.innerHTML = showPlaceholder
         ? `<span class="ms-donate-facepile-item is-placeholder" role="listitem" style="z-index:1" title="Be the first supporter">` +
-          `<img class="ms-donate-facepile-avatar" src="doc/pfp.png" alt="" width="44" height="44" loading="lazy" decoding="async">` +
+          `<img class="ms-donate-facepile-avatar" src="${escapeHtml((global.SITE_CONFIG && global.SITE_CONFIG.defaultAvatarUrl) || "doc/profilepicture.jpg")}" alt="" width="44" height="44" loading="lazy" decoding="async">` +
           `<span class="ms-sr-only">Be the first supporter</span>` +
           `</span>`
         : `<span class="ms-donate-facepile-empty">No supporters yet</span>`;

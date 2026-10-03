@@ -29,6 +29,13 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
 
+  function employeePhoto(employee) {
+    const fallback = (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) || "doc/profilepicture.jpg";
+    const raw = String(employee?.avatarUrl || "").trim();
+    if (!raw || /(?:^|\/)doc\/pfp\.png(?:\?.*)?$/i.test(raw)) return fallback;
+    return raw;
+  }
+
   function money(cents) {
     const n = Number(cents);
     const safe = Number.isFinite(n) ? n : 0;
@@ -743,6 +750,10 @@
           '" aria-expanded="' +
           (open ? "true" : "false") +
           '">' +
+          '<span class="ms-admin-employee-person">' +
+          '<img class="ms-admin-employee-avatar" src="' +
+          esc(employeePhoto(employee)) +
+          '" alt="" width="40" height="40" decoding="async" onerror="this.onerror=null;this.src=\'doc/profilepicture.jpg\'">' +
           '<span class="ms-admin-employee-name"><strong>' +
           esc(employee.handle ? "@" + employee.handle : "Account") +
           (employee.owner ? " · Owner" : "") +
@@ -757,7 +768,7 @@
               .filter(Boolean)
               .join(" · ") || "Account"
           ) +
-          "</span></span>" +
+          "</span></span></span>" +
           '<span class="ms-admin-metric"><span>Websites</span><b>' +
           employee.sites.length +
           "</b></span>" +
@@ -1018,7 +1029,7 @@
     try {
       const [profiles, projects, payments] = await Promise.all([
         fetchAll(() =>
-          sb.from("profiles").select("id, handle, display_name, frozen, created_at").order("created_at", { ascending: true })
+          sb.from("profiles").select("id, handle, display_name, avatar_url, frozen, created_at").order("created_at", { ascending: true })
         ),
         fetchAll(() => sb.from("projects").select(PROJECT_SELECT).order("created_at", { ascending: false })),
         fetchAll(() =>
@@ -1139,6 +1150,7 @@
           id,
           handle,
           displayName: String(profile.display_name || "").trim(),
+          avatarUrl: String(profile.avatar_url || "").trim(),
           joinedAt: profile.created_at,
           owner: handle.toLowerCase() === "moonrise",
           frozen: profile.frozen === true,

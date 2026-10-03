@@ -1,6 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.15rem;background:#f3f5f8;color:#0f172a;visibility:visible!important}
+html[data-ms-mode="dark"] #ms-boot{background:#0e1320;color:#e8eef8}
+@media (prefers-color-scheme:dark){html:not([data-ms-mode="light"]) #ms-boot{background:#0e1320;color:#e8eef8}}
+#ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em}
+#ms-boot .ms-boot-bar{width:7.5rem;height:2px;border-radius:99px;background:rgba(15,23,42,.12);overflow:hidden}
+html[data-ms-mode="dark"] #ms-boot .ms-boot-bar{background:rgba(232,238,248,.16)}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:40%;border-radius:inherit;background:currentColor;animation:ms-boot 1.05s ease-in-out infinite}
+@keyframes ms-boot{0%{transform:translateX(-120%)}100%{transform:translateX(280%)}}
+@media (prefers-reduced-motion:reduce){#ms-boot .ms-boot-bar span{animation:none;width:100%;opacity:.45}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","status");
+  boot.setAttribute("aria-label","Loading");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  function reveal(){
+    if(window.__msBootReleased)return;
+    window.__msBootReleased=1;
+    var finish=function(){
+      document.documentElement.classList.remove("ms-boot","ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    requestAnimationFrame(function(){requestAnimationFrame(finish);});
+  }
+  window.__msReleaseBoot=function(){
+    if(window.__msBootReleased)return;
+    var fonts=document.fonts&&document.fonts.ready?document.fonts.ready.catch(function(){}):Promise.resolve();
+    var loaded=document.readyState==="complete"?Promise.resolve():new Promise(function(r){window.addEventListener("load",r,{once:true});});
+    Promise.all([fonts,loaded]).then(reveal);
+  };
+  window.__msReleaseBoot();
+  setTimeout(reveal,20000);
+})();
+</script>
+  <script>
+    (function () {
+      var BUILD = "20260924-drawer-ease";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Report content - Moonrise Studio</title>
@@ -16,33 +86,80 @@
   <meta name="twitter:description" content="Report a donation note or published site so Moonrise can review it and remove content that should not be online.">
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
   <link rel="canonical" href="https://trymoonrise.com/report.html">
-  <link rel="stylesheet" href="css/studio.css?v=20261003-cal">
+  <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
+  <link rel="stylesheet" href="css/studio.css?v=20261003-legalfoot">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+  <script defer src="js/config.js?v=20261003-avatar"></script>
+  <script defer src="js/site-branding.js?v=20260719-seo"></script>
 </head>
-<body class="ms-legal-site">
+<body data-page="report" class="ms-legal-site">
   <header class="ms-legal-top">
-    <a class="ms-legal-brand" href="index.html">moonrise.</a>
+    <a class="ms-legal-brand" href="index.html" aria-label="moonrise.">
+      <img src="doc/MoonriseLogo.png" alt="" width="28" height="28">
+      <span>moonrise.</span>
+    </a>
     <nav class="ms-legal-nav" aria-label="Legal">
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
       <a href="refund.html">Refunds</a>
       <a href="report.html" class="is-active">Report</a>
+      <a href="guide.html">Guide</a>
     </nav>
   </header>
+
   <main class="ms-legal-wrap">
     <header class="ms-legal-hero">
       <h1>Report and remove content</h1>
     </header>
     <p class="ms-legal-updated">Last updated: October 3, 2026</p>
-    <article>
-      <h2>What you can report</h2>
-      <p>Donation notes and published websites are written by users. Report a note or a site if it should come down.</p>
-      <h2>What is not allowed</h2>
-      <p>Do not publish illegal content, someone else's copyrighted work, private data you do not have rights to, or anything that impersonates a business you do not represent.</p>
-      <h2>How to ask for removal</h2>
-      <p>Email <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> with the page address, what is wrong, and how to reach you. Moonrise reviews the report and removes donation notes and published sites that break these rules.</p>
-      <h2>Copyright</h2>
-      <p>The designated agent for copyright complaints is Moonrise Studio, at <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>. Send the work you own, the Moonrise URL, and a statement that the use is not authorized. The Copyright Office directory is at <a href="https://www.copyright.gov/dmca-directory/">copyright.gov/dmca-directory</a>.</p>
-    </article>
+
+    <div class="ms-legal-doc">
+      <article class="ms-card ms-legal-article">
+        <h2>1. What you can report</h2>
+        <p>
+          Donation notes and published websites are written by users. Report a note or a site if it should come down.
+        </p>
+
+        <h2>2. What is not allowed</h2>
+        <p>
+          Do not publish illegal content, someone else's copyrighted work, private data you do not have rights to, or
+          anything that impersonates a business you do not represent.
+        </p>
+
+        <h2>3. How to ask for removal</h2>
+        <p>
+          Email <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> with the page address, what is wrong,
+          and how to reach you. Moonrise reviews the report and removes donation notes and published sites that break
+          these rules.
+        </p>
+
+        <h2>4. Copyright</h2>
+        <p>
+          The designated agent for copyright complaints is Moonrise Studio, at
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>. Send the work you own, the Moonrise URL, and
+          a statement that the use is not authorized. The Copyright Office directory is at
+          <a href="https://www.copyright.gov/dmca-directory/">copyright.gov/dmca-directory</a>.
+        </p>
+
+        <h2>5. Contact</h2>
+        <p>
+          Questions about a report:
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
+          or <a href="tel:+14013000957">(401) 300-0957</a>.
+        </p>
+        <p>
+          Related pages: <a href="privacy.html">Privacy Policy</a> ·
+          <a href="terms.html">Terms of Service</a> ·
+          <a href="refund.html">Refunds</a> ·
+          <a href="guide.html">Creator Guide</a> ·
+          <a href="help.html">Help</a>.
+        </p>
+      </article>
+    </div>
   </main>
+
+  <footer class="ms-legal-foot">
+    <a href="index.html">Back to Moonrise</a>
+  </footer>
 </body>
 </html>

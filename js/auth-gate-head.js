@@ -55,7 +55,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20260909-discord", "js/app.js?v=20261003-cal"].forEach(function (href) {
+  ["js/config.js?v=20261003-avatar", "js/app.js?v=20261003-avatar"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";

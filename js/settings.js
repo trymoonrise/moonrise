@@ -24,7 +24,7 @@
   function defaultAvatar() {
     return (
       (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) ||
-      "doc/pfp.png"
+      "doc/profilepicture.jpg"
     );
   }
 
@@ -196,6 +196,7 @@
         .replace(/^@/, "");
       document.getElementById("set-display").value = profile.display_name || "";
       avatarUrl = String(profile.avatar_url || "").trim();
+      if (/(?:^|\/)doc\/pfp\.png(?:\?.*)?$/i.test(avatarUrl)) avatarUrl = "";
     } else {
       const fallback =
         user.user_metadata?.handle ||

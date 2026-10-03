@@ -234,19 +234,24 @@
     const c = window.SITE_CONFIG || {};
     return (
       c.defaultAvatarUrl ||
-      "doc/pfp.png"
+      "doc/profilepicture.jpg"
     );
+  }
+
+  function isLegacyDefaultAvatar(url) {
+    return /(?:^|\/)doc\/pfp\.png(?:\?.*)?$/i.test(String(url || "").trim());
   }
 
   function isCustomAvatarUrl(url) {
     const raw = String(url || "").trim();
-    if (!raw) return false;
+    if (!raw || isLegacyDefaultAvatar(raw)) return false;
     return raw !== defaultAvatarUrl();
   }
 
   function resolveAvatarUrl(url) {
     const raw = String(url || "").trim();
-    return raw || defaultAvatarUrl();
+    if (!raw || isLegacyDefaultAvatar(raw)) return defaultAvatarUrl();
+    return raw;
   }
 
   function companyName() {
@@ -1141,6 +1146,7 @@
     const href = String(url || "");
     if (/discord/i.test(name) || /discord\.gg/i.test(href)) return "discord";
     if (/cal\.com/i.test(name) || /cal\.com/i.test(href)) return "cal";
+    if (/instagram/i.test(name) || /instagram\.com/i.test(href)) return "instagram";
     return "telegram";
   }
 
@@ -1154,7 +1160,12 @@
     const copy = document.querySelector("#ms-redirect-modal .ms-redirect-copy");
     const goBtn = document.getElementById("ms-redirect-go");
     const icon = document.getElementById("ms-redirect-icon");
-    const logos = { discord: DISCORD_LOGO, cal: calLogoHtml(), telegram: TELEGRAM_LOGO };
+    const logos = {
+      discord: DISCORD_LOGO,
+      cal: calLogoHtml(),
+      instagram: '<img class="ms-instagram-logo" src="doc/Instagram.svg" alt="" width="68" height="68">',
+      telegram: TELEGRAM_LOGO,
+    };
     if (icon) {
       icon.className = "ms-redirect-icon ms-redirect-icon--" + brand;
       icon.innerHTML = logos[brand] || TELEGRAM_LOGO;

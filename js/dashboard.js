@@ -78,7 +78,7 @@
     if (projectMaker.avatar) return projectMaker.avatar;
     const sideImg = document.getElementById("ms-user-avatar-img");
     const painted = sideImg && !sideImg.hidden ? String(sideImg.getAttribute("src") || "").trim() : "";
-    return safeAvatarUrl(painted) || "doc/pfp.png";
+    return safeAvatarUrl(painted) || (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) || "doc/profilepicture.jpg";
   }
 
   function setProjectMaker(user, profile) {
