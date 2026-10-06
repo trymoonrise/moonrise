@@ -100,6 +100,8 @@
     { "source": "/auth/status", "destination": "/api" },
     { "source": "/auth/signin", "destination": "/api" },
     { "source": "/auth/signup", "destination": "/api" },
+    { "source": "/auth/handoff", "destination": "/api" },
+    { "source": "/auth/pending", "destination": "/api" },
     { "source": "/auth/forgot", "destination": "/api" },
     { "source": "/auth/resend-confirm", "destination": "/api" },
     { "source": "/auth/verify-password", "destination": "/api" },

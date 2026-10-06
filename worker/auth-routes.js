@@ -1,9 +1,10 @@
 /**
  * Secured auth routes - lockouts + rate limits in front of Supabase Auth.
  */
+const crypto = require("crypto");
 const { createClient } = require("@supabase/supabase-js");
 const { clientError, isProduction } = require("./api-errors");
-const { sendPasswordResetEmail } = require("./contact-mail");
+const { sendEmailVerifyLink } = require("./contact-mail");
 const {
   redeemEmployeeId,
   releaseEmployeeId,
@@ -322,6 +323,13 @@ function mountAuthRoutes(app, { db, security }) {
     keyFn: (req) => "verify-pw-ip:" + clientIp(req),
   });
 
+  const pendingLimiter = limit({
+    windowMs: 15 * 60 * 1000,
+    max: 400,
+    name: "auth-pending",
+    keyFn: (req) => "pending:" + String(req.body?.pendingId || clientIp(req)),
+  });
+
   let _auth = null;
   function authClient() {
     if (!_auth) _auth = createAuthClient();
@@ -357,14 +365,155 @@ function mountAuthRoutes(app, { db, security }) {
     }
   });
 
+  function emailLinkRedirect() {
+    return `${publicAppBase()}/login.html?confirmed=1`;
+  }
+
+  function browserVerifyUrl({ tokenHash, verifyType, pendingId }) {
+    const url = new URL(`${publicAppBase()}/login.html`);
+    url.searchParams.set("confirmed", "1");
+    url.searchParams.set("token_hash", tokenHash);
+    url.searchParams.set("type", verifyType || "magiclink");
+    if (pendingId) url.searchParams.set("pending", pendingId);
+    return url.toString();
+  }
+
+  function verifyUrlFromLink(link, pendingId) {
+    if (link?.tokenHash) {
+      return browserVerifyUrl({
+        tokenHash: link.tokenHash,
+        verifyType: link.verifyType,
+        pendingId,
+      });
+    }
+    return link?.actionLink || "";
+  }
+
+  function hashPendingSecret(secret) {
+    return crypto.createHash("sha256").update(String(secret || "")).digest("hex");
+  }
+
+  function pendingSecretMatches(secret, hash) {
+    const got = Buffer.from(hashPendingSecret(secret), "hex");
+    const want = Buffer.from(String(hash || ""), "hex");
+    if (!want.length || got.length !== want.length) return false;
+    return crypto.timingSafeEqual(got, want);
+  }
+
+  function isPendingId(value) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      String(value || "")
+    );
+  }
+
+  async function beginEmailHandoff(email) {
+    const id = crypto.randomUUID();
+    const secret = crypto.randomBytes(32).toString("base64url");
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    await db()
+      .from("auth_email_handoffs")
+      .delete()
+      .lt("expires_at", new Date().toISOString());
+    const { error } = await db().from("auth_email_handoffs").insert({
+      id,
+      email,
+      secret_hash: hashPendingSecret(secret),
+      expires_at: expiresAt,
+    });
+    if (error) throw error;
+    return { id, secret };
+  }
+
+  async function dropEmailHandoff(id) {
+    if (!id) return;
+    try {
+      await db().from("auth_email_handoffs").delete().eq("id", id);
+    } catch (err) {
+      console.warn("dropEmailHandoff", err);
+    }
+  }
+
+  function actionLinkFrom(data) {
+    return (
+      data?.properties?.action_link ||
+      data?.action_link ||
+      data?.user?.action_link ||
+      ""
+    );
+  }
+
+  function matchAuthUserByEmail(users, email) {
+    const target = normalizeEmail(email);
+    if (!target) return null;
+    return (
+      (Array.isArray(users) ? users : []).find((user) => normalizeEmail(user?.email) === target) ||
+      null
+    );
+  }
+
+  /** Existing auth user only. Magic-link generation creates an account when none exists. */
+  async function findAuthUserByEmail(email) {
+    const target = normalizeEmail(email);
+    if (!target) return null;
+    const url = String(process.env.SUPABASE_URL || "").replace(/\/$/, "");
+    const key = String(process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+    if (!url || !key) {
+      const err = new Error("Supabase is not configured");
+      err.status = 503;
+      err.code = "auth_unavailable";
+      throw err;
+    }
+    const perPage = 200;
+    for (let page = 1; page <= 20; page += 1) {
+      const endpoint = new URL(url + "/auth/v1/admin/users");
+      endpoint.searchParams.set("page", String(page));
+      endpoint.searchParams.set("per_page", String(perPage));
+      endpoint.searchParams.set("filter", target);
+      const res = await fetch(endpoint, {
+        headers: {
+          Authorization: "Bearer " + key,
+          apikey: key,
+        },
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const err = new Error("Could not check that email");
+        err.status = 503;
+        err.code = "user_lookup_failed";
+        throw err;
+      }
+      const users = Array.isArray(body?.users) ? body.users : [];
+      const match = matchAuthUserByEmail(users, target);
+      if (match) return match;
+      if (users.length < perPage) return null;
+    }
+    return null;
+  }
+
+  async function createEmailLink(type, email, extra) {
+    const options = { redirectTo: emailLinkRedirect() };
+    if (extra?.data) options.data = extra.data;
+    const { data, error } = await db().auth.admin.generateLink({
+      type,
+      email,
+      options,
+    });
+    return {
+      data,
+      error,
+      actionLink: actionLinkFrom(data),
+      tokenHash: data?.properties?.hashed_token || "",
+      verifyType: String(data?.properties?.verification_type || type || "magiclink"),
+    };
+  }
+
   app.post("/auth/signin", authIpLimiter, signinEmailLimiter, async (req, res) => {
     if (!authConfigured(res)) return;
     try {
       const email = normalizeEmail(req.body?.email);
-      const password = String(req.body?.password || "");
       const ip = clientIp(req);
-      if (!email || !password) {
-        return res.status(400).json({ error: "Email and password are required", code: "invalid_input" });
+      if (!email) {
+        return res.status(400).json({ error: "Email is required", code: "invalid_input" });
       }
 
       const gate = await assertNotLocked(db(), { email, ip });
@@ -376,52 +525,72 @@ function mountAuthRoutes(app, { db, security }) {
         });
       }
 
-      const { data, error } = await authClient().auth.signInWithPassword({ email, password });
-      if (error || !data?.session) {
-        const authMessage = String(error?.message || "");
-        if (/banned|disabled user/i.test(authMessage)) {
+      const existing = await findAuthUserByEmail(email);
+      if (!existing) {
+        return res.status(404).json({
+          error: "No Moonrise account for that email. Sign up with your Employee ID first.",
+          code: "no_account",
+        });
+      }
+
+      const { data, error, actionLink, tokenHash, verifyType } = await createEmailLink("magiclink", email);
+      if (error || (!actionLink && !tokenHash)) {
+        const msg = String(error?.message || "");
+        const code = String(error?.code || "");
+        if (/user not found|unable to find|not found/i.test(msg) || code === "user_not_found") {
+          return res.status(404).json({
+            error: "No Moonrise account for that email. Sign up with your Employee ID first.",
+            code: "no_account",
+          });
+        }
+        if (/rate limit|over_email_send_rate_limit/i.test(msg) || code === "over_email_send_rate_limit") {
+          return res.status(429).json({
+            error: "Too many verification emails were sent. Wait a minute and try again.",
+            code: "email_rate_limited",
+          });
+        }
+        console.warn("generateLink magiclink", msg || error);
+        return res.status(503).json({
+          error: "Could not send a sign-in email right now. Try again in a minute.",
+          code: "email_send_failed",
+        });
+      }
+
+      const userId = data?.user?.id;
+      if (userId) {
+        const { data: profile } = await db()
+          .from("profiles")
+          .select("frozen")
+          .eq("id", userId)
+          .maybeSingle();
+        if (profile?.frozen) {
           return res.status(403).json({
             error: "This account is frozen. Ask the studio owner to turn it back on.",
             code: "account_frozen",
           });
         }
-        if (/email not confirmed/i.test(authMessage)) {
-          return res.status(403).json({
-            error:
-              "Verify your email first. Check your inbox for the Moonrise confirmation link, then sign in.",
-            code: "email_not_confirmed",
-          });
-        }
-        const fail = await recordAuthFailure(db(), { email, ip });
-        const status = fail.locked ? 429 : 401;
-        return res.status(status).json({
-          error: fail.message,
-          code: fail.code,
-          retryAfterMs: fail.retryAfterMs || 0,
-          remainingTries: fail.remainingTries,
-        });
       }
 
-      const { data: profile } = await db()
-        .from("profiles")
-        .select("frozen")
-        .eq("id", data.user.id)
-        .maybeSingle();
-      if (profile?.frozen) {
-        try {
-          await db().auth.admin.signOut(data.session.access_token, "global");
-        } catch (_) {
-          /* The frozen flag still blocks the next page load. */
-        }
-        return res.status(403).json({
-          error: "This account is frozen. Ask the studio owner to turn it back on.",
-          code: "account_frozen",
+      const handoff = await beginEmailHandoff(email);
+      const verifyUrl = verifyUrlFromLink({ tokenHash, verifyType, actionLink }, handoff.id);
+      try {
+        await sendEmailVerifyLink({ to: email, verifyUrl, kind: "signin" });
+      } catch (mailErr) {
+        console.error("sendEmailVerifyLink signin", mailErr);
+        await dropEmailHandoff(handoff.id);
+        return res.status(503).json({
+          error: "Moonrise couldn't send the sign-in email. Check spam in a minute, or try again.",
+          code: "email_send_failed",
         });
       }
 
       await clearAuthFailures(db(), { email, ip });
-      writeAuthCookies(req, res, data.session);
-      res.json(sessionJson(data.session, data.user));
+      res.json({
+        ok: true,
+        needsEmailConfirm: true,
+        pendingId: handoff.id,
+        pendingSecret: handoff.secret,
+      });
     } catch (e) {
       console.error(e);
       res.status(500).json({ error: clientError(e, "Sign in failed") });
@@ -432,20 +601,14 @@ function mountAuthRoutes(app, { db, security }) {
     if (!authConfigured(res)) return;
     try {
       const email = normalizeEmail(req.body?.email);
-      const password = String(req.body?.password || "");
       const handle = String(req.body?.handle || "")
         .trim()
         .replace(/^@/, "")
         .toLowerCase();
       const authCode = String(req.body?.authCode || req.body?.auth_code || "").trim();
       const ip = clientIp(req);
-      if (!email || !password) {
-        return res.status(400).json({ error: "Email and password are required", code: "invalid_input" });
-      }
-
-      const pwCheck = validatePassword(password, email);
-      if (!pwCheck.ok) {
-        return res.status(400).json({ error: pwCheck.error, code: pwCheck.code });
+      if (!email) {
+        return res.status(400).json({ error: "Email is required", code: "invalid_input" });
       }
 
       const gate = await assertNotLocked(db(), { email, ip });
@@ -462,43 +625,44 @@ function mountAuthRoutes(app, { db, security }) {
         return res.status(codeGate.status).json({ error: codeGate.error, code: codeGate.code });
       }
 
-      const publicAppUrl = String(process.env.PUBLIC_APP_URL || "https://trymoonrise.com").replace(/\/$/, "");
-      const { data, error } = await authClient().auth.signUp({
-        email,
-        password,
-        options: {
-          data: handle ? { handle } : undefined,
-          emailRedirectTo: `${publicAppUrl}/login.html?confirmed=1`,
-        },
+      const { data, error, actionLink, tokenHash, verifyType } = await createEmailLink("invite", email, {
+        data: handle ? { handle } : undefined,
       });
-      if (error) {
+      if (error || (!actionLink && !tokenHash)) {
         await releaseEmployeeId(db(), codeGate.step);
-        const mapped = mapSignupAuthError(error);
+        const mapped = mapSignupAuthError(error || { message: "missing action link" });
         return res.status(mapped.status).json({ error: mapped.error, code: mapped.code });
       }
 
-      if (data?.user && !data?.session) {
-        const identities = data.user.identities;
-        if (!identities || identities.length === 0) {
-          await releaseEmployeeId(db(), codeGate.step);
-          return res.status(400).json({
-            error: "An account with this email already exists. Sign in instead.",
-            code: "signup_exists",
-          });
+      const handoff = await beginEmailHandoff(email);
+      const verifyUrl = verifyUrlFromLink({ tokenHash, verifyType, actionLink }, handoff.id);
+      try {
+        await sendEmailVerifyLink({ to: email, verifyUrl, kind: "signup" });
+      } catch (mailErr) {
+        console.error("sendEmailVerifyLink signup", mailErr);
+        await dropEmailHandoff(handoff.id);
+        const createdId = data?.user?.id;
+        if (createdId) {
+          try {
+            await db().auth.admin.deleteUser(createdId);
+          } catch (deleteErr) {
+            console.warn("delete invited user after email failure", deleteErr);
+          }
         }
+        await releaseEmployeeId(db(), codeGate.step);
+        return res.status(503).json({
+          error: "Moonrise couldn't send the confirmation email. Try again in a minute.",
+          code: "email_send_failed",
+        });
       }
 
       await attachEmployeeIdUser(db(), codeGate.step, data?.user?.id);
-
-      if (data?.session) {
-        await clearAuthFailures(db(), { email, ip });
-        writeAuthCookies(req, res, data.session);
-        return res.json(sessionJson(data.session, data.user, { needsEmailConfirm: false }));
-      }
-
+      await clearAuthFailures(db(), { email, ip });
       res.json({
         user: data?.user || null,
         needsEmailConfirm: true,
+        pendingId: handoff.id,
+        pendingSecret: handoff.secret,
       });
     } catch (e) {
       console.error(e);
@@ -510,26 +674,30 @@ function mountAuthRoutes(app, { db, security }) {
     if (!authConfigured(res)) return;
     try {
       const email = normalizeEmail(req.body?.email);
-      const redirectTo = safeAuthRedirect(req.body?.redirectTo, "/login.html?mode=recover");
       if (!email) {
         return res.status(400).json({ error: "Enter your email", code: "invalid_input" });
       }
 
-      // Generate the recovery link with the service role, then deliver via Resend.
-      // Supabase SMTP recover was rate-limited and the old handler still told the UI
-      // "link sent" even when nothing went out.
-      const { data, error } = await db().auth.admin.generateLink({
-        type: "recovery",
-        email,
-        options: { redirectTo },
-      });
+      // Passwords are retired. A forgotten-password request sends a sign-in link instead.
+      // Do not call magic-link generation for an unknown email: that creates an account.
+      const existing = await findAuthUserByEmail(email);
+      if (!existing) {
+        return res.json({
+          ok: true,
+          message: "If that email has an account, a sign-in link is on the way.",
+        });
+      }
+      const { error, actionLink } = await createEmailLink("magiclink", email);
 
       if (error) {
         const msg = String(error.message || "");
         const code = String(error.code || "");
         // Unknown account - same success shape (no email enumeration).
         if (/user not found|unable to find|not found/i.test(msg) || code === "user_not_found") {
-          return res.json({ ok: true, message: "If that email exists, a reset link is on the way." });
+          return res.json({
+            ok: true,
+            message: "If that email has an account, a sign-in link is on the way.",
+          });
         }
         if (/rate limit|over_email_send_rate_limit/i.test(msg) || code === "over_email_send_rate_limit") {
           return res.status(429).json({
@@ -544,33 +712,32 @@ function mountAuthRoutes(app, { db, security }) {
         });
       }
 
-      const actionLink =
-        data?.properties?.action_link ||
-        data?.action_link ||
-        data?.user?.action_link ||
-        "";
       if (!actionLink) {
-        console.warn("generateLink recovery missing action_link", data);
+        console.warn("generateLink magiclink missing action_link");
         return res.status(503).json({
-          error: "Could not create a reset link right now. Please try again in a minute.",
-          code: "reset_link_failed",
+          error: "Could not send a sign-in email right now. Please try again in a minute.",
+          code: "email_send_failed",
         });
       }
 
       try {
-        await sendPasswordResetEmail({ to: email, resetUrl: actionLink });
+        await sendEmailVerifyLink({ to: email, verifyUrl: actionLink, kind: "signin" });
       } catch (mailErr) {
-        console.error("sendPasswordResetEmail", mailErr);
+        console.error("sendEmailVerifyLink forgot", mailErr);
         return res.status(503).json({
           error:
-            "Moonrise couldn't send the reset email. Check spam in a minute, or try again. If it keeps failing, contact " +
+            "Moonrise couldn't send the sign-in email. Check spam in a minute, or try again. If it keeps failing, contact " +
             SUPPORT_EMAIL +
             ".",
           code: "email_send_failed",
         });
       }
 
-      res.json({ ok: true, message: "If that email exists, a reset link is on the way." });
+      res.json({
+        ok: true,
+        needsEmailConfirm: true,
+        message: "Passwords are no longer used. If that email has an account, a sign-in link is on the way.",
+      });
     } catch (e) {
       console.error(e);
       res.status(500).json({ error: clientError(e, "Reset failed") });
@@ -584,19 +751,27 @@ function mountAuthRoutes(app, { db, security }) {
       if (!email) {
         return res.status(400).json({ error: "Enter your email", code: "invalid_input" });
       }
-      const publicAppUrl = String(process.env.PUBLIC_APP_URL || "https://trymoonrise.com").replace(/\/$/, "");
-      const { error } = await authClient().auth.resend({
-        type: "signup",
-        email,
-        options: {
-          emailRedirectTo: `${publicAppUrl}/login.html?confirmed=1`,
-        },
-      });
-      if (error) {
-        const mapped = mapSignupAuthError(error);
+      const existing = await findAuthUserByEmail(email);
+      if (!existing) {
+        return res.status(404).json({
+          error: "No Moonrise account for that email. Sign up first.",
+          code: "no_account",
+        });
+      }
+      const { error, actionLink } = await createEmailLink("magiclink", email);
+      if (error || !actionLink) {
+        const msg = String(error?.message || "");
+        if (/user not found|not found/i.test(msg)) {
+          return res.status(404).json({
+            error: "No Moonrise account for that email. Sign up first.",
+            code: "no_account",
+          });
+        }
+        const mapped = mapSignupAuthError(error || { message: "missing action link" });
         return res.status(mapped.status).json({ error: mapped.error, code: mapped.code });
       }
-      res.json({ ok: true, message: "Confirmation email sent. Check your inbox." });
+      await sendEmailVerifyLink({ to: email, verifyUrl: actionLink, kind: "signin" });
+      res.json({ ok: true, message: "Verification email sent. Check your inbox." });
     } catch (e) {
       console.error(e);
       res.status(500).json({ error: clientError(e, "Resend failed") });
@@ -657,7 +832,11 @@ function mountAuthRoutes(app, { db, security }) {
         return res.status(401).json({ error: "Session expired", code: "session_expired" });
       }
       writeAuthCookies(req, res, data.session);
-      res.json({ ok: true });
+      res.json({
+        ok: true,
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+      });
     } catch (e) {
       console.error(e);
       res.status(500).json({ error: "Session check failed" });
@@ -669,59 +848,124 @@ function mountAuthRoutes(app, { db, security }) {
     res.json({ ok: true });
   });
 
-  app.post("/auth/verify-password", authIpLimiter, verifyPasswordLimiter, async (req, res) => {
+  app.post("/auth/handoff", authIpLimiter, async (req, res) => {
     if (!authConfigured(res)) return;
     try {
-      const password = String(req.body?.password || "");
-      if (!password) {
-        return res.status(400).json({ error: "Password required", code: "invalid_input" });
+      const pendingId = String(req.body?.pendingId || "").trim();
+      const accessToken = String(req.body?.access_token || "").trim();
+      const refreshToken = String(req.body?.refresh_token || "").trim();
+      if (!isPendingId(pendingId) || !accessToken || !refreshToken) {
+        return res.status(400).json({ error: "Missing sign-in handoff", code: "invalid_input" });
       }
-
-      const header = String(req.headers.authorization || "");
-      const token = header.startsWith("Bearer ") ? header.slice(7) : "";
-      let email = normalizeEmail(req.body?.email);
-      if (token) {
-        const { data, error } = await db().auth.getUser(token);
-        if (error || !data?.user) {
-          return res.status(401).json({
-            error: "Your session ended. Sign in again.",
-            code: "session_invalid",
-          });
-        }
-        email = normalizeEmail(data.user.email || email);
+      const { data: userData, error: userError } = await db().auth.getUser(accessToken);
+      const email = normalizeEmail(userData?.user?.email);
+      if (userError || !email) {
+        return res.status(401).json({ error: "That email link is no longer valid.", code: "session_invalid" });
       }
-      if (!email) {
-        return res.status(400).json({ error: "Email required", code: "invalid_input" });
-      }
-
-      const ip = clientIp(req);
-      const gate = await assertNotLocked(db(), { email, ip });
-      if (!gate.ok) {
-        return res.status(429).json({
-          error: gate.message,
-          code: gate.code || "auth_locked",
-          retryAfterMs: gate.retryAfterMs,
+      const { data: row, error } = await db()
+        .from("auth_email_handoffs")
+        .select("id, email, expires_at, claimed_at, ready_at")
+        .eq("id", pendingId)
+        .maybeSingle();
+      if (error) throw error;
+      if (!row || row.claimed_at || new Date(row.expires_at).getTime() <= Date.now()) {
+        return res.status(410).json({
+          error: "That sign-in request expired. Go back and request a new email.",
+          code: "pending_expired",
         });
       }
-
-      const { data, error } = await authClient().auth.signInWithPassword({ email, password });
-      if (error || !data?.session) {
-        const fail = await recordAuthFailure(db(), { email, ip });
-        const status = fail.locked ? 429 : 401;
-        return res.status(status).json({
-          error: fail.message,
-          code: fail.code,
-          retryAfterMs: fail.retryAfterMs || 0,
-          remainingTries: fail.remainingTries,
-        });
+      if (normalizeEmail(row.email) !== email) {
+        return res.status(403).json({ error: "This link does not match the sign-in request.", code: "pending_mismatch" });
       }
-
-      await clearAuthFailures(db(), { email, ip });
+      if (row.ready_at) {
+        return res.json({ ok: true });
+      }
+      const { error: updateError } = await db()
+        .from("auth_email_handoffs")
+        .update({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+          ready_at: new Date().toISOString(),
+        })
+        .eq("id", pendingId)
+        .is("claimed_at", null)
+        .is("ready_at", null);
+      if (updateError) throw updateError;
       res.json({ ok: true });
     } catch (e) {
       console.error(e);
-      res.status(500).json({ error: clientError(e, "Verify failed") });
+      res.status(500).json({ error: clientError(e, "Could not finish email verification") });
     }
+  });
+
+  app.post("/auth/pending", authIpLimiter, pendingLimiter, async (req, res) => {
+    if (!authConfigured(res)) return;
+    try {
+      const pendingId = String(req.body?.pendingId || "").trim();
+      const pendingSecret = String(req.body?.pendingSecret || "");
+      if (!isPendingId(pendingId) || !pendingSecret) {
+        return res.status(400).json({ error: "Missing sign-in request", code: "invalid_input" });
+      }
+      const { data: row, error } = await db()
+        .from("auth_email_handoffs")
+        .select("id, secret_hash, access_token, refresh_token, expires_at, claimed_at, ready_at")
+        .eq("id", pendingId)
+        .maybeSingle();
+      if (error) throw error;
+      if (!row || !pendingSecretMatches(pendingSecret, row.secret_hash)) {
+        return res.status(404).json({
+          error: "That sign-in request is no longer waiting. Request a new email.",
+          code: "pending_missing",
+        });
+      }
+      if (req.body?.abandon === true) {
+        await db().from("auth_email_handoffs").delete().eq("id", pendingId);
+        return res.json({ ok: true, abandoned: true });
+      }
+      if (row.claimed_at || new Date(row.expires_at).getTime() <= Date.now()) {
+        return res.status(410).json({
+          error: "That email link expired. Request a new one.",
+          code: "pending_expired",
+        });
+      }
+      if (!row.ready_at || !row.access_token || !row.refresh_token) {
+        return res.json({ ok: true, pending: true });
+      }
+      const accessToken = row.access_token;
+      const refreshToken = row.refresh_token;
+      const { data: claimed, error: claimError } = await db()
+        .from("auth_email_handoffs")
+        .update({
+          claimed_at: new Date().toISOString(),
+          access_token: null,
+          refresh_token: null,
+        })
+        .eq("id", pendingId)
+        .is("claimed_at", null)
+        .select("id")
+        .maybeSingle();
+      if (claimError) throw claimError;
+      if (!claimed) {
+        return res.json({ ok: true, pending: true });
+      }
+      res.json({
+        ok: true,
+        pending: false,
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: clientError(e, "Could not finish signing in") });
+    }
+  });
+
+  app.post("/auth/verify-password", authIpLimiter, verifyPasswordLimiter, async (req, res) => {
+    if (!authConfigured(res)) return;
+    res.status(410).json({
+      error: "Moonrise no longer uses passwords. Sign in with the link we email you.",
+      code: "password_disabled",
+    });
   });
 }
 

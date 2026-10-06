@@ -18,6 +18,7 @@
   let projectLiveFilter = "all";
   let projectSuggestIndex = -1;
   let projectPaintToken = 0;
+  let previewObserver = null;
   let projectMaker = { name: "You", avatar: "", initial: "Y" };
   let statsAnimFrame = 0;
   let statsIntroPlayed = false;
@@ -78,7 +79,7 @@
     if (projectMaker.avatar) return projectMaker.avatar;
     const sideImg = document.getElementById("ms-user-avatar-img");
     const painted = sideImg && !sideImg.hidden ? String(sideImg.getAttribute("src") || "").trim() : "";
-    return safeAvatarUrl(painted) || (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) || "doc/profilepicture.jpg";
+    return safeAvatarUrl(painted) || (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) || "doc/profilepicture.jpg?v=20261006-blue";
   }
 
   function setProjectMaker(user, profile) {
@@ -311,9 +312,11 @@
       );
     }
     if (ringEl) {
+      const shown = Math.max(0, Math.min(100, pct));
       ringEl.style.strokeDasharray = "100";
-      ringEl.style.strokeDashoffset = String(Math.max(0, 100 - pct));
-      ringEl.style.opacity = pct <= 0 ? "0" : "1";
+      ringEl.style.strokeDashoffset = String(100 - shown);
+      ringEl.style.width = shown + "%";
+      ringEl.style.opacity = shown <= 0 ? "0" : "1";
     }
   }
 
@@ -721,6 +724,7 @@
     if (!host) return;
 
     if (!projects.length) {
+      stopPreviewHydration();
       host.innerHTML =
         '<div class="ms-dash-empty ms-dash-empty--dotted"><p>No projects yet.</p></div>';
       if (hint) {
@@ -763,6 +767,7 @@
 
     if (!shown.length) {
       if (token !== projectPaintToken) return;
+      stopPreviewHydration();
       host.innerHTML =
         '<div class="ms-dash-empty ms-dash-empty--dotted"><p>' +
         (q
@@ -776,10 +781,11 @@
       return;
     }
 
-    const withHtml = await fetchPreviewHtml(shown);
     if (token !== projectPaintToken) return;
-    host.innerHTML = withHtml.map(projectPreview).join("");
-    mountPreviewFrames(withHtml);
+    host.innerHTML = shown.map(projectPreview).join("");
+    const ready = shown.filter((p) => p.html && String(p.html).trim());
+    if (ready.length) mountPreviewFrames(ready);
+    queuePreviewHydration(token);
   }
 
   function projectDetails(p) {
@@ -810,12 +816,16 @@
       ? '<span class="ms-dash-preview-live" aria-label="Live site">Live</span>'
       : "";
     const shot = hasHtml
-      ? '<div class="ms-dash-preview-shot" aria-hidden="true">' +
+      ? '<div class="ms-dash-preview-shot" data-preview-id="' +
+        escapeAttr(p.id) +
+        '" aria-hidden="true">' +
         liveBadge +
         '<iframe class="ms-dash-preview-iframe" data-preview-id="' +
         escapeAttr(p.id) +
         '" title="" tabindex="-1" loading="lazy" scrolling="no" sandbox=""></iframe></div>'
-      : '<div class="ms-dash-preview-shot ms-dash-preview-shot--empty" aria-hidden="true">' +
+      : '<div class="ms-dash-preview-shot ms-dash-preview-shot--empty" data-preview-id="' +
+        escapeAttr(p.id) +
+        '" aria-hidden="true">' +
         liveBadge +
         '<span class="ms-dash-preview-placeholder">' +
         escapeHtml(name.slice(0, 1).toUpperCase()) +
@@ -890,6 +900,90 @@
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/'/g, "&#39;");
+  }
+
+  function stopPreviewHydration() {
+    if (previewObserver) {
+      previewObserver.disconnect();
+      previewObserver = null;
+    }
+  }
+
+  function previewShotSelector(id) {
+    return (
+      '#dash-projects-list .ms-dash-preview-shot[data-preview-id="' +
+      String(id || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"') +
+      '"]'
+    );
+  }
+
+  async function hydratePreviewShots(shots, token) {
+    const ids = [];
+    (shots || []).forEach((shot) => {
+      const id = shot?.getAttribute?.("data-preview-id") || "";
+      if (id && !ids.includes(id)) ids.push(id);
+    });
+    if (!ids.length || token !== projectPaintToken) return;
+    const withHtml = await fetchPreviewHtml(ids.map((id) => ({ id })));
+    if (token !== projectPaintToken) return;
+    const htmlById = Object.fromEntries((withHtml || []).map((p) => [p.id, p.html || ""]));
+    allProjects.forEach((p) => {
+      if (Object.prototype.hasOwnProperty.call(htmlById, p.id)) p.html = htmlById[p.id];
+    });
+    const mounted = [];
+    ids.forEach((id) => {
+      const html = htmlById[id];
+      if (!html || !String(html).trim()) return;
+      const shot = document.querySelector(previewShotSelector(id));
+      if (!shot || shot.querySelector("iframe")) return;
+      const live = shot.querySelector(".ms-dash-preview-live");
+      const badge = live ? live.outerHTML : "";
+      shot.classList.remove("ms-dash-preview-shot--empty");
+      shot.innerHTML =
+        badge +
+        '<iframe class="ms-dash-preview-iframe" data-preview-id="' +
+        escapeAttr(id) +
+        '" title="" tabindex="-1" loading="lazy" scrolling="no" sandbox=""></iframe>';
+      mounted.push({ id, html });
+    });
+    if (mounted.length) mountPreviewFrames(mounted);
+  }
+
+  function queuePreviewHydration(token) {
+    stopPreviewHydration();
+    const host = document.getElementById("dash-projects-list");
+    if (!host || token !== projectPaintToken) return;
+    const shots = [...host.querySelectorAll(".ms-dash-preview-shot--empty[data-preview-id]")];
+    if (!shots.length) return;
+    const first = shots.slice(0, 4);
+    const rest = shots.slice(4);
+    void hydratePreviewShots(first, token);
+    if (!rest.length) return;
+    if (typeof IntersectionObserver !== "function") {
+      void hydratePreviewShots(rest, token);
+      return;
+    }
+    let bucket = [];
+    let timer = 0;
+    const flushPreviewBucket = () => {
+      if (token !== projectPaintToken || !bucket.length) return;
+      const batch = bucket.splice(0, 6);
+      void hydratePreviewShots(batch, token);
+      if (bucket.length) timer = window.setTimeout(flushPreviewBucket, 120);
+    };
+    previewObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          previewObserver?.unobserve(entry.target);
+          bucket.push(entry.target);
+        });
+        window.clearTimeout(timer);
+        timer = window.setTimeout(flushPreviewBucket, 50);
+      },
+      { rootMargin: "280px 0px" }
+    );
+    rest.forEach((shot) => previewObserver.observe(shot));
   }
 
   async function fetchPreviewHtml(projects) {

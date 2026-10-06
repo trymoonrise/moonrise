@@ -2,6 +2,41 @@
  * Send transactional email via Resend (https://resend.com).
  * Used for contact-form leads and website purchase invoices.
  */
+const fs = require("fs");
+const path = require("path");
+
+const MOONRISE_LOGO_URL = "https://trymoonrise.com/doc/MoonriseLogo.png";
+let moonriseLogoAttachmentCache;
+
+function moonriseLogoAttachment() {
+  if (moonriseLogoAttachmentCache !== undefined) return moonriseLogoAttachmentCache;
+  try {
+    const file = path.join(__dirname, "..", "doc", "MoonriseLogo.png");
+    const content = fs.readFileSync(file).toString("base64");
+    moonriseLogoAttachmentCache = {
+      filename: "MoonriseLogo.png",
+      content,
+      content_id: "moonrise-logo",
+    };
+  } catch (_) {
+    moonriseLogoAttachmentCache = null;
+  }
+  return moonriseLogoAttachmentCache;
+}
+
+function moonriseProfilePictureHtml(font) {
+  const src = moonriseLogoAttachment() ? "cid:moonrise-logo" : MOONRISE_LOGO_URL;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" align="center">
+  <tr>
+    <td align="center" width="72" height="72" bgcolor="#f8fafc" style="width:72px;height:72px;background:#f8fafc;border-radius:50%;overflow:hidden;">
+      <img src="${src}" width="72" height="72" alt="Moonrise" style="display:block;width:72px;height:72px;border:0;border-radius:50%;outline:none;text-decoration:none;">
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding-top:12px;font-family:${font};font-size:16px;font-weight:600;letter-spacing:-0.03em;color:#0f172a;">moonrise</td>
+  </tr>
+</table>`;
+}
 function formatLeadPlain({ businessName, fields, projectId }) {
   const lines = [
     `New lead for ${businessName || "your website"}`,
@@ -259,10 +294,108 @@ async function sendPasswordResetEmail({ to, resetUrl }) {
   return sendResendEmail({ to: email, subject, text, html });
 }
 
+/**
+ * Branded email-verification link for passwordless sign-in and sign-up.
+ * kind: "signin" | "signup"
+ */
+async function sendEmailVerifyLink({ to, verifyUrl, kind }) {
+  const email = String(to || "").trim();
+  const link = String(verifyUrl || "").trim();
+  const signup = kind === "signup";
+  if (!email || !link) throw new Error("Missing verification email or link");
+
+  const subject = signup ? "Confirm your Moonrise email" : "Sign in to Moonrise";
+  const heading = signup ? "Confirm your email" : "Sign in to Moonrise";
+  const lead = signup
+    ? "Open this link to verify your email. Only the device where you started sign-up will be signed in."
+    : "Open this link to verify your email. Only the device where you requested sign-in will be signed in. This link works once.";
+  const button = "Verify email";
+  const text = [heading, "", lead, "", `Sent to ${email}`, "", button, link, "", "If you did not ask for this email, you can ignore it.", "", "Moonrise", "https://trymoonrise.com"].join("\n");
+  const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>${escapeHtml(heading)}</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f6f8;">
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${escapeHtml(lead)}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#f4f6f8" style="background:#f4f6f8;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="max-width:520px;background:#ffffff;border:1px solid #e6eaf0;border-radius:20px;">
+          <tr>
+            <td align="center" style="padding:36px 36px 8px;">
+              ${moonriseProfilePictureHtml(font)}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 36px 0;">
+              <h1 style="margin:0;font-family:${font};font-size:28px;line-height:1.2;font-weight:600;letter-spacing:-0.035em;color:#0f172a;">${escapeHtml(heading)}</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:14px 36px 0;font-family:${font};font-size:16px;line-height:1.6;color:#334155;">
+              ${escapeHtml(lead)}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 36px 0;font-family:${font};font-size:14px;line-height:1.5;color:#64748b;">
+              Sent to <span style="color:#0f172a;font-weight:600;">${escapeHtml(email)}</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 36px 8px;">
+              <table role="presentation" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td bgcolor="#2563eb" style="border-radius:12px;background:#2563eb;">
+                    <a href="${escapeAttr(link)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:14px 22px;font-family:${font};font-size:15px;font-weight:600;letter-spacing:-0.01em;color:#ffffff;text-decoration:none;">${escapeHtml(button)}</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 36px 0;font-family:${font};font-size:13px;line-height:1.5;color:#64748b;">
+              If you did not ask for this email, you can ignore it.
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 36px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="border-top:1px solid #eef2f6;font-size:0;line-height:0;">&nbsp;</td>
+                </tr>
+              </table>
+              <p style="margin:16px 0 0;font-family:${font};font-size:12px;line-height:1.5;color:#94a3b8;">
+                Moonrise · <a href="https://trymoonrise.com" style="color:#64748b;text-decoration:none;">trymoonrise.com</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  const logo = moonriseLogoAttachment();
+  return sendResendEmail({
+    to: email,
+    subject,
+    text,
+    html,
+    attachments: logo ? [logo] : undefined,
+  });
+}
+
 module.exports = {
   sendContactLeadEmail,
   sendPurchaseInvoiceEmail,
   sendPasswordResetEmail,
+  sendEmailVerifyLink,
   sendResendEmail,
   formatLeadPlain,
   formatLeadHtml,

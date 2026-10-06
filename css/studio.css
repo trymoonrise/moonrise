@@ -8,20 +8,24 @@ html.ms-auth-gating body {
 /* Moonrise Studio ΓÇö SiteDrop-style app shell */
 
 :root {
-  --ms-bg: #f3f5f8;
+  --ms-bg: #ffffff;
   --ms-surface: #ffffff;
-  --ms-ink: #1e293b;
-  --ms-muted: #64748b;
-  --ms-line: #e8edf3;
-  --ms-accent: #3b82f6;
-  --ms-accent-soft: #e8f1ff;
-  --ms-brand: #6d5efc;
+  --ms-ink: #1d1d1f;
+  --ms-muted: #6e6e73;
+  --ms-line: #d2d2d7;
+  --ms-accent: #1d1d1f;
+  --ms-accent-bright: #1d1d1f;
+  --ms-accent-strong: #000000;
+  --ms-accent-soft: #f5f5f7;
+  --ms-accent-rgb: 29, 29, 31;
+  --ms-brand: #1d1d1f;
+  --ms-link: #0066cc;
   --ms-danger: #b91c1c;
   --ms-sidebar-w: 268px;
   --ms-sidebar-min: 220px;
   --ms-sidebar-max: 420px;
-  --ms-radius: 14px;
-  --ms-font: "DM Sans", system-ui, sans-serif;
+  --ms-radius: 1.15rem;
+  --ms-font: Manrope, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --ms-mono: "IBM Plex Mono", ui-monospace, monospace;
   --ms-channel-w: 1420px;
   --ms-content-scale: 1.2;
@@ -47,18 +51,27 @@ body {
   max-width: 100%;
 }
 
-body[data-page="login"],
 body[data-page="login"] {
-  display: grid;
-  place-items: center;
-  align-content: center;
+  --ms-login-top: max(5.5rem, calc(env(safe-area-inset-top, 0px) + 4.75rem));
+  --ms-login-bottom: max(0.85rem, env(safe-area-inset-bottom, 0px));
+  --ms-login-x: max(0.75rem, env(safe-area-inset-left, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-content: safe center;
   color-scheme: light;
-  padding: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
   min-height: 100dvh;
-  background:
-    radial-gradient(1200px 600px at 10% -10%, #bfdbfe 0%, transparent 55%),
-    radial-gradient(900px 500px at 100% 0%, #ddd6fe 0%, transparent 50%),
-    var(--ms-bg);
+  overflow-x: clip;
+  padding:
+    var(--ms-login-top)
+    max(0.75rem, env(safe-area-inset-right, 0px))
+    var(--ms-login-bottom)
+    var(--ms-login-x);
+  background: var(--ms-bg);
 }
 
 body[data-page="home"] {
@@ -2895,12 +2908,13 @@ body[data-page="dashboard"] {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 12px;
-  padding: 0.85rem 1.35rem;
+  border: 1px solid transparent;
+  border-radius: 980px;
+  min-height: 2.15rem;
+  padding: 0 1.1rem;
   font: inherit;
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 0.84rem;
+  font-weight: 500;
   letter-spacing: -0.01em;
   cursor: pointer;
   color: #fff;
@@ -2908,14 +2922,8 @@ body[data-page="dashboard"] {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 42%),
-    linear-gradient(135deg, #60a5fa 0%, #3b82f6 48%, #2563eb 100%);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.28) inset,
-    0 -1px 0 rgba(15, 23, 42, 0.12) inset,
-    0 8px 18px rgba(37, 99, 235, 0.28),
-    0 2px 4px rgba(37, 99, 235, 0.18);
+  background: var(--ms-accent);
+  box-shadow: none;
   transition:
     transform 0.32s cubic-bezier(0.33, 1, 0.32, 1),
     box-shadow 0.32s cubic-bezier(0.33, 1, 0.32, 1),
@@ -2924,13 +2932,10 @@ body[data-page="dashboard"] {
 }
 
 .ms-btn:hover:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger) {
-  filter: brightness(1.03);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.32) inset,
-    0 -1px 0 rgba(15, 23, 42, 0.1) inset,
-    0 10px 20px rgba(37, 99, 235, 0.3),
-    0 3px 6px rgba(37, 99, 235, 0.18);
-  transform: translateY(-0.5px);
+  filter: none;
+  background: var(--ms-accent-strong, #000);
+  box-shadow: none;
+  transform: none;
 }
 
 .ms-btn:active:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger),
@@ -2953,13 +2958,10 @@ body[data-page="dashboard"] {
   box-shadow: none;
 }
 .ms-btn-danger {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 40%),
-    linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.2) inset,
-    0 8px 16px rgba(185, 28, 28, 0.25);
+  background: #b91c1c;
+  border-color: transparent;
+  border-radius: 980px;
+  box-shadow: none;
 }
 
 /* Beat site.css `input:not(...)` (dark --input-bg) with higher specificity */
@@ -3887,7 +3889,8 @@ input.ms-input:-webkit-autofill:focus {
 
 /* Auth */
 .ms-auth-file-warning {
-  width: min(400px, calc(100vw - 1.5rem));
+  width: min(400px, 100%);
+  max-width: 100%;
   margin: 0 auto 0.75rem;
   padding: 0.75rem 0.9rem;
   border-radius: 12px;
@@ -3904,9 +3907,12 @@ input.ms-input:-webkit-autofill:focus {
 }
 
 .ms-auth-card {
-  width: min(400px, calc(100vw - 1.5rem));
-  max-height: calc(100dvh - 1.5rem);
+  width: min(400px, 100%);
+  max-width: 100%;
+  max-height: calc(100dvh - var(--ms-login-top, 5.5rem) - var(--ms-login-bottom, 0.85rem));
+  margin-inline: auto;
   overflow: auto;
+  overscroll-behavior: contain;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 16px;
@@ -3967,6 +3973,35 @@ input.ms-input:-webkit-autofill:focus {
   isolation: isolate;
 }
 
+.ms-auth-tabs[hidden],
+#auth-form[hidden],
+.ms-email-verified[hidden] {
+  display: none !important;
+}
+
+.ms-email-verified h1 {
+  margin: 0.2rem 0 0.4rem;
+  font-size: 1.4rem;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 650;
+}
+
+.ms-email-verified .ms-muted {
+  margin: 0 0 1rem;
+  line-height: 1.45;
+}
+
+.ms-email-verified .ms-error {
+  margin: 0 0 0.75rem;
+}
+
+.ms-email-verified .ms-btn {
+  width: 100%;
+  margin-top: 0.15rem;
+  padding: 0.68rem 1rem;
+}
+
 .ms-auth-tab {
   border: none;
   background: transparent;
@@ -3979,7 +4014,7 @@ input.ms-input:-webkit-autofill:focus {
   color: #64748b;
   position: relative;
   z-index: 1;
-  transition: color 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color 0.56s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .ms-auth-tab.is-active {
@@ -4150,9 +4185,17 @@ input.ms-input:-webkit-autofill:focus {
   margin-bottom: 0.7rem;
 }
 
-/* Mode switch: height and the gap ease together so the card extends instead of jumping. */
+/* Mode switch: height, gap, and fade share one ease so the card grows instead of jumping. */
 .ms-auth-card .ms-auth-collapse {
   overflow: hidden;
+}
+
+.ms-auth-card .ms-auth-collapse:not(.is-open) {
+  opacity: 0;
+}
+
+.ms-auth-card .ms-auth-collapse.is-open {
+  opacity: 1;
 }
 
 .ms-auth-card .ms-field.ms-auth-collapse:not(.is-open) {
@@ -4180,6 +4223,21 @@ input.ms-input:-webkit-autofill:focus {
 .ms-auth-card .ms-auth-forgot-wrap.ms-auth-collapse.is-open {
   margin-top: -0.35rem;
   margin-bottom: 0.85rem;
+}
+
+.ms-auth-card .ms-auth-autosave.ms-auth-collapse:not(.is-open),
+.ms-auth-card #passkey-wrap.ms-auth-collapse:not(.is-open) {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+}
+
+.ms-auth-card .ms-auth-autosave.ms-auth-collapse.is-open {
+  margin-top: 0.15rem;
+  margin-bottom: 1rem;
 }
 
 .ms-auth-pw-shell {
@@ -4398,13 +4456,13 @@ input.ms-input:-webkit-autofill:focus {
 /* Phones, and short landscape viewports: keep sign-in / sign-up on one screen. */
 @media (max-width: 640px), (max-height: 520px) {
   .ms-auth-card {
-    padding: 0.7rem 0.8rem 0.6rem;
-    border-radius: 14px;
+    padding: 1.15rem 1.15rem 1.1rem;
+    border-radius: 16px;
   }
 
   .ms-auth-brand {
-    gap: 0.45rem;
-    margin-bottom: 0.45rem;
+    gap: 0.55rem;
+    margin-bottom: 0.85rem;
   }
 
   .ms-auth-brand img {
@@ -4509,6 +4567,7 @@ input.ms-input:-webkit-autofill:focus {
     line-height: 1.25 !important;
   }
 
+  .ms-auth-card .ms-auth-autosave.ms-auth-collapse.is-open,
   .ms-auth-autosave {
     margin: 0.05rem 0 0.5rem;
     padding: 0.45rem 0.6rem;
@@ -4536,10 +4595,25 @@ input.ms-input:-webkit-autofill:focus {
   }
 
   .ms-auth-card .ms-btn {
-    margin-top: 0.05rem;
-    padding: 0.5rem 0.85rem;
+    margin-top: 0.15rem;
+    padding: 0.62rem 0.95rem;
     font-size: 0.92rem;
-    border-radius: 10px;
+    border-radius: 12px;
+  }
+
+  .ms-email-verified h1 {
+    margin: 0.05rem 0 0.35rem;
+    font-size: 1.28rem;
+  }
+
+  .ms-email-verified .ms-muted {
+    margin: 0 0 0.9rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .ms-email-verified .ms-btn {
+    padding: 0.62rem 0.95rem;
   }
 
   .ms-auth-home-wrap {
@@ -4559,10 +4633,13 @@ input.ms-input:-webkit-autofill:focus {
 
 @media (max-width: 640px) {
   body[data-page="login"] {
-    padding: 0.45rem 0.55rem 0.5rem;
-    align-items: start;
-    align-content: start;
-    justify-items: stretch;
+    --ms-login-top: max(4.75rem, calc(env(safe-area-inset-top, 0px) + 4.15rem));
+    --ms-login-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+    --ms-login-x: max(1rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    align-items: center;
+    justify-content: center;
+    justify-content: safe center;
     background:
       radial-gradient(700px 360px at 0% 0%, #dbeafe 0%, transparent 55%),
       radial-gradient(600px 320px at 100% 0%, #e0e7ff 0%, transparent 50%),
@@ -4570,11 +4647,9 @@ input.ms-input:-webkit-autofill:focus {
   }
 
   .ms-auth-card {
-    width: 100%;
-    max-width: none;
-    max-height: none;
+    width: min(400px, 100%);
+    max-width: 100%;
     margin: 0 auto;
-    overflow: visible;
     box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
   }
 }
@@ -14091,7 +14166,7 @@ body.ms-home-booting.is-home-ready .ms-home-shell {
   height: min(70vw, 820px);
   right: -18%;
   top: -22%;
-  background: radial-gradient(circle at 40% 40%, rgba(191, 219, 254, 0.7), transparent 68%);
+  background: radial-gradient(circle at 40% 40%, rgba(0, 0, 0, 0.045), transparent 68%);
   animation: ms-home-drift 18s ease-in-out infinite alternate;
 }
 
@@ -14230,9 +14305,7 @@ body.ms-home-booting.is-home-ready .ms-home-shell {
   position: fixed;
   inset: 0;
   z-index: 55;
-  background:
-    radial-gradient(ellipse 60% 50% at 80% 10%, rgba(59, 130, 246, 0.28), transparent 55%),
-    #0f172a;
+  background: #1d1d1f;
   clip-path: circle(0% at calc(100% - 2.6rem) 2.4rem);
   visibility: hidden;
   display: grid;
@@ -14298,7 +14371,7 @@ body.ms-home-booting.is-home-ready .ms-home-shell {
 }
 
 .ms-home-bloom-nav a:hover {
-  color: #93c5fd;
+  color: #a1a1a6;
 }
 
 .ms-home-bloom-nav a:hover::after {
@@ -14328,7 +14401,7 @@ body[data-page="download"] .ms-home-nav {
 }
 
 body[data-page="login"] {
-  padding-top: max(4.75rem, calc(env(safe-area-inset-top, 0px) + 4rem));
+  padding-top: var(--ms-login-top, max(5.5rem, calc(env(safe-area-inset-top, 0px) + 4.75rem)));
 }
 
 .ms-home-hero {
@@ -14761,19 +14834,16 @@ body.is-home-ready .ms-home-hero-copy {
   letter-spacing: -0.01em;
   padding: 0.85rem 1.35rem;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 45%),
-    linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.3) inset,
-    0 10px 22px rgba(59, 130, 246, 0.28);
+  border: 1px solid transparent;
+  background: #1d1d1f;
+  box-shadow: none;
   transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), filter 0.18s ease;
 }
 
 .ms-home-cta-primary:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
+  filter: none;
+  background: #000;
+  transform: none;
 }
 
 .ms-home-cta-secondary {
@@ -15937,6 +16007,15 @@ body.is-home-ready .ms-home-hero-copy {
 
 .ms-auth-tabs.seg-switch > .seg-switch-indicator {
   border-radius: 8px;
+  transition:
+    transform 0.56s cubic-bezier(0.25, 0.1, 0.25, 1),
+    width 0.56s cubic-bezier(0.25, 0.1, 0.25, 1),
+    height 0.56s cubic-bezier(0.25, 0.1, 0.25, 1),
+    opacity 0.22s ease;
+}
+
+.ms-auth-tabs.seg-switch > .ms-auth-tab {
+  transition: color 0.56s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* ΓÇöΓÇö Primary button premium press ΓÇöΓÇö */

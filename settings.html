@@ -69,11 +69,13 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261005-auth"></script>
+  <script src="js/auth-gate-head.js?v=20261006-chrome"></script>
   <title>Settings - Moonrise Studio</title>
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="stylesheet" href="css/studio.css?v=20261003-cal">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
+  <link rel="stylesheet" href="css/allero-ui.css?v=20261006-chrome">
 </head>
 <body data-page="settings">
   <div id="shell"></div>
@@ -153,22 +155,23 @@ document.documentElement.classList.add("ms-boot");
               <div class="ms-appearance-block">
                 <div class="ms-appearance-block-head">
                   <span>Theme color</span>
-                  <strong id="set-theme-name">Ocean</strong>
+                  <strong id="set-theme-name">Ink</strong>
                 </div>
                 <div class="ms-appearance-swatches" role="radiogroup" aria-label="Theme color">
+                  <button type="button" class="ms-appearance-swatch" role="radio" data-theme="ink" data-color="#1d1d1f" style="--swatch:#1d1d1f" aria-label="Ink"></button>
                   <button type="button" class="ms-appearance-swatch" role="radio" data-theme="violet" data-color="#8b5cf6" style="--swatch:#8b5cf6" aria-label="Violet"></button>
                   <button type="button" class="ms-appearance-swatch" role="radio" data-theme="ocean" data-color="#3b82f6" style="--swatch:#3b82f6" aria-label="Ocean"></button>
                   <button type="button" class="ms-appearance-swatch" role="radio" data-theme="rose" data-color="#ec4899" style="--swatch:#ec4899" aria-label="Rose"></button>
                   <button type="button" class="ms-appearance-swatch" role="radio" data-theme="forest" data-color="#10b981" style="--swatch:#10b981" aria-label="Forest"></button>
                   <button type="button" class="ms-appearance-swatch" role="radio" data-theme="sunset" data-color="#f97316" style="--swatch:#f97316" aria-label="Sunset"></button>
                   <label class="ms-appearance-swatch ms-appearance-swatch--custom" id="set-theme-custom-wrap" title="Custom color">
-                    <input type="color" id="set-theme-custom" value="#3b82f6" aria-label="Custom theme color">
+                    <input type="color" id="set-theme-custom" value="#1d1d1f" aria-label="Custom theme color">
                     <span class="ms-appearance-custom-face" aria-hidden="true"></span>
                   </label>
                 </div>
                 <label class="ms-appearance-hex">
                   <span>Custom hex</span>
-                  <input class="ms-input" id="set-theme-hex" maxlength="7" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="#3b82f6" aria-label="Custom theme color hex">
+                  <input class="ms-input" id="set-theme-hex" maxlength="7" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="#1d1d1f" aria-label="Custom theme color hex">
                 </label>
               </div>
 
@@ -254,10 +257,10 @@ document.documentElement.classList.add("ms-boot");
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                   Passkeys
                 </h2>
-                <p class="ms-settings-hint ms-muted">Add, change, or remove passkeys for one-tap sign-in. Sign-up can create one; Settings lets you replace it anytime.</p>
-                <p class="ms-muted" id="set-passkey-unavailable" hidden style="margin:0 0 0.75rem;font-size:0.9rem">Passkeys need a supported browser on trymoonrise.com (HTTPS). You can still sign in with email and password.</p>
+                <p class="ms-settings-hint ms-muted">Add, change, or remove passkeys for one-tap sign-in after your email is verified.</p>
+                <p class="ms-muted" id="set-passkey-unavailable" hidden style="margin:0 0 0.75rem;font-size:0.9rem">Passkeys need a supported browser on trymoonrise.com (HTTPS). You can still sign in with your email link.</p>
                 <ul class="ms-passkey-list" id="set-passkey-list"></ul>
-                <p class="ms-muted" id="set-passkey-empty" hidden style="margin:0 0 0.75rem;font-size:0.9rem">No passkeys yet. Add one here, or use Create account with passkey / Passkey on the login page.</p>
+                <p class="ms-muted" id="set-passkey-empty" hidden style="margin:0 0 0.75rem;font-size:0.9rem">No passkeys yet. Add one here after you sign in with your email link.</p>
                 <div class="ms-settings-actions" id="set-passkey-actions">
                   <button type="button" class="ms-btn" id="set-passkey-add">Add passkey</button>
                   <button type="button" class="ms-btn ms-btn-secondary" id="set-passkey-change" hidden>Change passkey</button>
@@ -271,24 +274,7 @@ document.documentElement.classList.add("ms-boot");
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                   Security
                 </h2>
-                <p class="ms-settings-hint ms-muted">Update the password for your account.</p>
-                <div class="ms-field">
-                  <label class="ms-label" for="set-pw-current">Current password</label>
-                  <input class="ms-input" id="set-pw-current" type="password" autocomplete="current-password">
-                </div>
-                <div class="ms-field">
-                  <label class="ms-label" for="set-pw-new">New password</label>
-                  <input class="ms-input" id="set-pw-new" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters">
-                </div>
-                <div class="ms-field">
-                  <label class="ms-label" for="set-pw-confirm">Confirm new password</label>
-                  <input class="ms-input" id="set-pw-confirm" type="password" autocomplete="new-password" minlength="8">
-                </div>
-                <div class="ms-settings-actions">
-                  <button type="button" class="ms-btn" id="set-pw-save">Update password</button>
-                </div>
-                <p class="ms-error" id="set-pw-error" hidden></p>
-                <p class="ms-settings-status is-ok" id="set-pw-ok" hidden>Password updated.</p>
+                <p class="ms-settings-hint ms-muted">Moonrise does not use passwords. Sign-in and sign-up both email you a link, and you have to open it to verify your email.</p>
               </section>
 
       <section class="ms-card ms-settings-card ms-settings-card--danger" id="settings-session">
@@ -308,7 +294,7 @@ document.documentElement.classList.add("ms-boot");
     </div>
   </div>
 
-  <script defer src="js/config.js?v=20261003-avatar"></script>
+  <script defer src="js/config.js?v=20261006-blue"></script>
   <script defer src="js/app.js?v=20261005-auth"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="js/site-branding.js"></script>

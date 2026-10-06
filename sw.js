@@ -3,7 +3,7 @@
  * Pages and app scripts stay network-first so a bad cached file cannot stick.
  * Other assets refresh in the background.
  */
-const CACHE_NAME = "ms-pwa-v73-auth";
+const CACHE_NAME = "ms-pwa-v74-allero";
 const CORE_ASSETS = ["./css/studio.css", "./css/studio-motion.css", "./index.html"];
 
 function isAssetPath(pathname) {
@@ -19,13 +19,13 @@ function isScriptOrStyle(pathname) {
 }
 
 function isCriticalStudioScript(pathname) {
-  return /\/js\/(?:config|builder|leads-search|auth-gate-head|auth|supabase-client|auth-security|app|install-hint)\.js$/i.test(
+  return /\/js\/(?:config|builder|leads-search|auth-gate-head|auth|supabase-client|auth-security|app|install-hint|appearance)\.js$/i.test(
     pathname
   );
 }
 
 function isCriticalStudioStyle(pathname) {
-  return /\/css\/(?:studio|leads-map|ms-lf-slide)\.css$/i.test(pathname);
+  return /\/css\/(?:studio|leads-map|ms-lf-slide|appearance|allero-ui)\.css$/i.test(pathname);
 }
 
 self.addEventListener("install", (event) => {

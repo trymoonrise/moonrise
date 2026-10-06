@@ -501,13 +501,16 @@
     if (fill) fill.style.setProperty("--onb-progress", String(pct / 100));
     if (bar) bar.setAttribute("aria-valuenow", String(step));
     if (label) {
-      label.textContent = step + " / " + TOTAL_STEPS;
+      label.textContent = step + " of " + TOTAL_STEPS;
       if (!prefersReducedMotion()) {
         label.classList.remove("is-bump");
         void label.offsetWidth;
         label.classList.add("is-bump");
       }
     }
+    const name = document.getElementById("onb-step-name");
+    const heading = document.querySelector('[data-onb-step="' + step + '"] h1');
+    if (name && heading) name.textContent = heading.textContent;
   }
 
   function pulseMainCard() {
@@ -972,10 +975,12 @@
     const lead = document.getElementById("onb-payout-lead");
     const form = document.getElementById("onb-payout-form");
     const confirm = document.getElementById("onb-payout-confirm");
-    if (heading) heading.textContent = "Payout method";
+    if (heading) heading.textContent = "Where we pay you";
+    const stepName = document.getElementById("onb-step-name");
+    if (stepName && heading) stepName.textContent = heading.textContent;
     if (lead) {
       lead.hidden = false;
-      lead.textContent = "Tell us where to deliver your payout when business owners purchase their website.";
+      lead.textContent = "When an owner buys their site, we send your 90% here.";
     }
     if (form) form.hidden = false;
     if (confirm) confirm.hidden = true;
@@ -1041,9 +1046,11 @@
     const detail = document.getElementById("onb-payout-preview-meta");
     const note = document.getElementById("onb-payout-preview-note");
     if (heading) heading.textContent = "Is this you?";
+    const stepName = document.getElementById("onb-step-name");
+    if (stepName) stepName.textContent = "Is this you?";
     if (lead) {
       lead.hidden = false;
-      lead.textContent = "Check this account before payouts are sent here.";
+      lead.textContent = "We'll send your 90% to this account. Check it before you continue.";
     }
     if (formEl) formEl.hidden = true;
     if (confirm) confirm.hidden = false;

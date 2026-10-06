@@ -1405,3 +1405,86 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
     filter: none !important;
   }
 }
+
+.ms-onboard-step-name {
+  margin: 0.35rem 0 0.55rem;
+  color: #1d1d1f;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.ms-onboard-preview,
+.ms-onboard-plain {
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.ms-onboard-preview li,
+.ms-onboard-plain li {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: start;
+  margin: 0;
+  padding: 0.75rem 0.8rem;
+  border: 1px solid rgb(0 0 0 / 8%);
+  border-radius: 0.9rem;
+  background: #fff;
+}
+
+.ms-onboard-preview li {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ms-onboard-preview li strong,
+.ms-onboard-plain li strong {
+  display: block;
+  color: #1d1d1f;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.ms-onboard-preview li span,
+.ms-onboard-plain li span span {
+  display: block;
+  margin-top: 0.15rem;
+  color: #6e6e73;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.ms-onboard-plain-num {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+html[data-ms-mode="dark"] .ms-onboard-card {
+  background: #fff !important;
+  color: #1d1d1f !important;
+}
+
+html[data-ms-mode="dark"] .ms-onboard-card :is(h1, h2, p, li, span, strong, label, a, div) {
+  color: #1d1d1f;
+}
+
+html[data-ms-mode="dark"] .ms-onboard-card :is(.ms-onboard-lead, .ms-onboard-preview li span, .ms-onboard-plain li span span) {
+  color: #6e6e73;
+}
+
+html[data-ms-mode="dark"] .ms-onboard-card .ms-btn-secondary {
+  background: #fff !important;
+  color: #1d1d1f !important;
+  border-color: #d2d2d7 !important;
+}

@@ -24,7 +24,7 @@
   function defaultAvatar() {
     return (
       (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) ||
-      "doc/profilepicture.jpg"
+      "doc/profilepicture.jpg?v=20261006-blue"
     );
   }
 
@@ -494,7 +494,7 @@
         remove.className = "ms-passkey-remove";
         remove.textContent = "Remove";
         remove.addEventListener("click", async () => {
-          if (!window.confirm("Remove this passkey? You can still sign in with your password.")) {
+          if (!window.confirm("Remove this passkey? You can still sign in with the link we email you.")) {
             return;
           }
           remove.disabled = true;

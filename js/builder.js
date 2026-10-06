@@ -1430,10 +1430,10 @@
     if (lead) {
       lead.textContent =
         next === 1
-          ? "Paste a GitHub token to connect your account."
+          ? "Paste a GitHub token."
           : next === 2
-            ? "Select the repository that contains your website."
-            : "Choose the site folder, then open in Editor.";
+            ? "Choose the repository."
+            : "Choose the site folder.";
     }
 
     const backBtn = document.getElementById("onboard-cancel");

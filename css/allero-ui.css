@@ -1,0 +1,1482 @@
+/* Tryallero visual system for Moonrise. Loaded after studio.css and appearance.css.
+   Surfaces stay black, white, and gray. Settings still recolors --ms-accent. */
+
+:root {
+  --ms-btn-h: 2.5rem;
+  --ms-content-scale: 1;
+  --ms-chrome-btn: 2.5rem;
+  --lf-action-h: 2.5rem;
+  --lf-btn-radius: 980px;
+}
+
+html:not([data-ms-mode="dark"]) {
+  --ms-bg: #ffffff;
+  --ms-surface: #ffffff;
+  --ms-ink: #1d1d1f;
+  --ms-muted: #6e6e73;
+  --ms-line: #d2d2d7;
+  --ms-link: #0066cc;
+  --ms-accent-soft: #f5f5f7;
+}
+
+body {
+  font-family: Manrope, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.011em;
+}
+
+html:not([data-ms-mode="dark"]) body,
+html:not([data-ms-mode="dark"]) body[data-page="login"],
+html:not([data-ms-mode="dark"]) body[data-page="home"] {
+  background: #ffffff;
+  color: #1d1d1f;
+}
+
+body[data-page]::before {
+  background: none !important;
+  animation: none !important;
+}
+
+html:has(body[data-page="home"]),
+body[data-page="home"] {
+  font-size: 100%;
+  scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+}
+
+.ms-btn,
+a.ms-btn,
+.ms-btn-secondary,
+.ms-btn-danger,
+.ms-dash-tool,
+.ms-home-cta-primary,
+.ms-home-cta-secondary,
+.ms-home-footer-signup,
+.ms-home-method-cta,
+.ms-lf-find,
+.ms-lb-publish-btn,
+.ms-paywall-pay,
+.ms-fin-save,
+.ms-fin-next,
+.ms-store-buy,
+.lf-action-builder,
+.ms-lf-map-scan,
+#btn-checkout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: var(--ms-btn-h) !important;
+  min-height: var(--ms-btn-h) !important;
+  padding: 0 1.15rem !important;
+  border-radius: 980px !important;
+  font-family: inherit;
+  font-size: 0.92rem !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.01em;
+  box-shadow: none !important;
+  filter: none !important;
+  text-decoration: none;
+}
+
+.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+.ms-home-cta-primary,
+.ms-home-method-cta,
+.ms-lf-find,
+.ms-lb-publish-btn,
+.ms-paywall-pay,
+.ms-fin-save,
+.ms-fin-next,
+.ms-store-buy:not(.is-ghost),
+.lf-action-builder,
+.ms-lf-map-scan,
+#btn-checkout {
+  border: 1px solid transparent !important;
+  background: var(--ms-accent) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+.ms-btn:hover:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger),
+.ms-home-cta-primary:hover,
+.ms-home-footer-signup:hover,
+.ms-home-method-cta:hover,
+.ms-lf-find:hover,
+.ms-lb-publish-btn:hover,
+.ms-paywall-pay:hover,
+.ms-fin-save:hover,
+.ms-fin-next:hover,
+.ms-store-buy:not(.is-ghost):hover,
+.lf-action-builder:hover,
+.ms-lf-map-scan:hover,
+#btn-checkout:hover {
+  background: var(--ms-accent-strong, #000) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none;
+}
+
+.ms-store-buy.is-ghost,
+.ms-store-buy.is-ghost:hover {
+  background: #fff !important;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  border: 1px solid #1d1d1f !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-btn-secondary,
+html:not([data-ms-mode="dark"]) .ms-home-cta-secondary,
+html:not([data-ms-mode="dark"]) .ms-dash-tool {
+  border: 1px solid #d2d2d7 !important;
+  background: #fff !important;
+  color: #1d1d1f !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-dash-tool svg,
+html:not([data-ms-mode="dark"]) .ms-dash-overview .ms-dash-tool svg,
+html:not([data-ms-mode="dark"]) .ms-dash-metric-edit {
+  color: #1d1d1f;
+}
+
+html:not([data-ms-mode="dark"]) .ms-btn-secondary:hover:not(:disabled),
+html:not([data-ms-mode="dark"]) .ms-home-cta-secondary:hover,
+html:not([data-ms-mode="dark"]) .ms-dash-tool:hover {
+  background: #fff !important;
+  border-color: #1d1d1f !important;
+  color: #1d1d1f !important;
+  filter: none;
+  transform: none;
+  box-shadow: none !important;
+}
+
+.ms-btn-danger,
+.ms-btn-danger:hover:not(:disabled) {
+  border: 1px solid transparent !important;
+  background: #b91c1c !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none;
+}
+
+.ms-lb-send {
+  width: var(--ms-btn-h) !important;
+  height: var(--ms-btn-h) !important;
+  min-width: var(--ms-btn-h) !important;
+  min-height: var(--ms-btn-h) !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  border: 0 !important;
+  background: var(--ms-accent) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+.ms-menu-toggle {
+  border-radius: 980px;
+  border: 1px solid #d2d2d7;
+  background: #fff;
+  color: #1d1d1f;
+  box-shadow: none;
+}
+
+.ms-dash-island.is-open .ms-dash-island-toggle {
+  background: #f5f5f7;
+  border-bottom-color: #d2d2d7;
+}
+
+html:not([data-ms-mode="dark"]) input.ms-input,
+html:not([data-ms-mode="dark"]) .ms-auth-card input.ms-input {
+  height: 2.5rem;
+  padding: 0 0.9rem;
+  border: 1px solid #d2d2d7;
+  border-radius: 0.7rem;
+  background: #fff !important;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f;
+  caret-color: #1d1d1f;
+  font-size: 0.95rem;
+  box-shadow: none;
+}
+
+html:not([data-ms-mode="dark"]) select.ms-select {
+  height: 2.5rem;
+  padding: 0 2.4rem 0 0.9rem;
+  border: 1px solid #d2d2d7;
+  border-radius: 0.7rem;
+  background-color: #fff !important;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f;
+  font-size: 0.95rem;
+  box-shadow: none;
+}
+
+html:not([data-ms-mode="dark"]) textarea.ms-textarea {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #d2d2d7;
+  border-radius: 0.7rem;
+  background: #fff !important;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f;
+  font-size: 0.95rem;
+  box-shadow: none;
+}
+
+input.ms-input:focus,
+textarea.ms-textarea:focus,
+.ms-auth-card input.ms-input:focus,
+select.ms-select:focus {
+  border-color: var(--ms-accent) !important;
+  box-shadow: none !important;
+  outline: none;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-card,
+  .ms-dash-island,
+  .ms-dash-metric,
+  .ms-settings-card,
+  .ms-project-card,
+  .ms-auth-card
+) {
+  background: #fff;
+  border: 1px solid rgb(0 0 0 / 8%);
+  border-radius: 1.15rem;
+  box-shadow: none;
+}
+
+html:not([data-ms-mode="dark"]) .ms-project-card:hover {
+  border-color: #1d1d1f;
+  box-shadow: none;
+}
+
+html:not([data-ms-mode="dark"]) h1,
+html:not([data-ms-mode="dark"]) .ms-page-head h1,
+html:not([data-ms-mode="dark"]) .ms-settings-card-title,
+html:not([data-ms-mode="dark"]) .ms-brand-name {
+  color: #1d1d1f;
+  letter-spacing: -0.03em;
+}
+
+html:not([data-ms-mode="dark"]) .ms-sidebar {
+  background: #fff;
+  border-right: 1px solid rgb(0 0 0 / 8%);
+  box-shadow: none;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-pill {
+  background: #f5f5f7;
+  border-radius: 0.85rem;
+  box-shadow: none;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link {
+  color: #1d1d1f;
+  font-weight: 500;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-active {
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+html:not([data-ms-mode="dark"]) .ms-user-avatar,
+html:not([data-ms-mode="dark"]) .ms-dash-preview-placeholder,
+html:not([data-ms-mode="dark"]) .ms-dash-post-avatar,
+html:not([data-ms-mode="dark"]) .ms-set-photo-preview {
+  background: var(--ms-accent);
+}
+
+.ms-lf-slide-track {
+  background: var(--ms-accent);
+}
+
+.ms-switch input:checked + .ms-switch-track {
+  background: var(--ms-accent) !important;
+}
+
+.ms-auth-tabs {
+  background: #f5f5f7;
+  border-radius: 980px;
+  padding: 0.2rem;
+}
+
+.ms-auth-tab,
+.ms-auth-tabs.seg-switch > .seg-switch-indicator {
+  border-radius: 980px;
+}
+
+html:not([data-ms-mode="dark"]) .ms-auth-tab {
+  color: #6e6e73;
+  font-weight: 500;
+}
+
+html:not([data-ms-mode="dark"]) .ms-auth-tab.is-active {
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+html:not([data-ms-mode="dark"]) .ms-toast-inner {
+  border-radius: 1.15rem;
+  border: 1px solid rgb(0 0 0 / 8%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
+}
+
+.ms-home-wash {
+  display: none;
+}
+
+.ms-home-cascade {
+  filter: grayscale(1);
+}
+
+.ms-home-nav {
+  min-height: 4.75rem;
+  padding: 0.85rem clamp(1.25rem, 4vw, 3rem);
+  background: rgb(251 251 253 / 80%);
+  border-bottom: 1px solid rgb(0 0 0 / 8%);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.ms-home-title {
+  color: #1d1d1f;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+.ms-home-title-accent {
+  background: none;
+  -webkit-text-fill-color: #1d1d1f;
+  color: #1d1d1f;
+}
+
+.ms-home-sub,
+.ms-home-section-lead {
+  color: #6e6e73;
+}
+
+.ms-home-method-num {
+  color: #1d1d1f;
+}
+
+.ms-home-tile-inner {
+  border-radius: 1.15rem;
+  box-shadow: none;
+  outline: 1px solid rgb(0 0 0 / 8%);
+}
+
+.ms-home-footer {
+  max-width: none;
+  width: 100vw;
+  margin: 4rem calc(50% - 50vw) 0;
+  padding: 2.4rem clamp(1.25rem, 4vw, 3rem) 2.6rem;
+  background: #000;
+  color: #fff;
+  border-top: 0;
+  box-sizing: border-box;
+}
+
+.ms-home-footer .ms-home-brand,
+.ms-home-footer .ms-home-brand strong,
+.ms-home-footer-copy p {
+  color: #fff;
+}
+
+.ms-home-footer-legal a,
+.ms-home-footer-signin {
+  color: #a1a1a6;
+}
+
+.ms-home-footer-legal a:hover,
+.ms-home-footer-signin:hover {
+  color: #fff;
+}
+
+.ms-home-footer-signup {
+  background: #fff !important;
+  color: #1d1d1f !important;
+}
+
+.ms-home-footer-signup:hover {
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+}
+
+html:not([data-ms-mode="dark"]) a.ms-sidebar-legal-link,
+html:not([data-ms-mode="dark"]) .ms-help a,
+html:not([data-ms-mode="dark"]) .ms-prose a {
+  color: #0066cc;
+}
+
+/* Mobile app bar: logo on the left, channel menu on the right. */
+@media (max-width: 900px) {
+  .ms-quick-nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: calc(env(safe-area-inset-top, 0px) + 3.75rem) !important;
+    padding: env(safe-area-inset-top, 0px) 0.45rem 0 1.15rem !important;
+    justify-content: flex-start;
+    background: #fff !important;
+    border-bottom: 1px solid rgb(0 0 0 / 8%);
+    box-shadow: none;
+    z-index: 220 !important;
+    overflow: visible;
+  }
+
+  .ms-help-btn {
+    display: none !important;
+  }
+
+  /* Cover the strip above the bar so the page cannot show through. */
+  .ms-quick-nav::before {
+    display: block !important;
+    content: "" !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: 10rem;
+    background: #fff;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .ms-top-brand {
+    justify-content: flex-start;
+    gap: 0.7rem;
+  }
+
+  .ms-top-brand-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 6%);
+  }
+
+  .ms-top-brand-name {
+    color: #1d1d1f;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+  }
+
+  .ms-menu-toggle {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    margin-left: auto;
+    transform: none !important;
+    width: 2.75rem;
+    height: 2.75rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    border: 0 !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #1d1d1f;
+    pointer-events: auto;
+    z-index: 2;
+  }
+
+  .ms-menu-toggle svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .ms-page-head,
+  .ms-dash-head,
+  .ms-page-head.ms-dash-head {
+    position: relative;
+    z-index: 0;
+    margin-top: 0 !important;
+    padding-top: 0.35rem !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  body:not([data-page="leads"]) #page-body,
+  #page-body.ms-dash-page,
+  #page-body.ms-content-page,
+  #page-body.ms-settings-page,
+  #page-body.ms-clients-page,
+  #page-body.ms-projects-page,
+  #page-body.ms-store-page,
+  #page-body.ms-pricing-page,
+  body[data-page="builder"].ms-lb-setup #page-body,
+  body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 5rem) !important;
+  }
+}
+
+html[data-ms-mode="dark"] .ms-quick-nav,
+html[data-ms-mode="dark"] .ms-quick-nav::before {
+  background: #0c0c0e !important;
+  border-bottom-color: rgb(255 255 255 / 10%);
+}
+
+/* Ink: leftover blue chrome follows the black and white palette. */
+html[data-ms-accent-tone="dark"]:not([data-ms-mode="dark"]) :is(
+  a:not(.ms-btn):not(.ms-store-buy):not(.ms-home-cta-primary):not(.ms-home-method-cta):not(.ms-lf-find):not(.ms-lb-publish-btn):not(.ms-paywall-pay):not(.ms-fin-save):not(.ms-fin-next):not(.ms-dash-tool):not(.lf-action-builder):not(.ms-lf-map-scan):not(.ms-home-footer-signup):not(.ms-home-footer a),
+  .ms-nav-link.is-active .ms-nav-ico,
+  .ms-nav-link.is-generating,
+  .ms-nav-link.is-generating .ms-nav-ico,
+  .ms-tab.is-active,
+  .ms-tab.is-active .ms-tab-ico,
+  .ms-tab-main,
+  .ms-dash-ring-sub,
+  .ms-dash-metric-edit,
+  .ms-dash-card .ms-settings-card-title svg,
+  .ms-settings-card-title svg,
+  .ms-help-btn.is-current,
+  .ms-hard-refresh,
+  .ms-auth-home
+) {
+  color: var(--ms-ink) !important;
+}
+
+html[data-ms-accent-tone="dark"]:not([data-ms-mode="dark"]) .ms-dash-count-badge {
+  color: #1d1d1f !important;
+  background: #f5f5f7 !important;
+  border-color: #d2d2d7 !important;
+}
+
+html[data-ms-accent-tone="dark"] :is(
+  .ms-btn,
+  .ms-nav-link,
+  .ms-nav-link.is-generating,
+  .ms-toast-inner,
+  .ms-tabbar,
+  .ms-auth-card,
+  .ms-card,
+  .ms-dash-card,
+  .ms-project-card,
+  .ms-dash-metric
+) {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+html[data-ms-accent-tone="dark"] .ms-nav-link.is-generating,
+html[data-ms-accent-tone="dark"] .ms-nav-link.is-generating .ms-nav-ico {
+  animation: none !important;
+  background: transparent !important;
+}
+
+/* Dark mode: light type, flat surfaces, buttons that stay readable. */
+html[data-ms-mode="dark"] {
+  --ms-bg: #0c0c0e;
+  --ms-surface: #1c1c1e;
+  --ms-ink: #f5f5f7;
+  --ms-muted: #a1a1a6;
+  --ms-line: rgb(255 255 255 / 14%);
+}
+
+html[data-ms-mode="dark"] body,
+html[data-ms-mode="dark"] #page-body {
+  background: #0c0c0e !important;
+  color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] :is(
+  h1, h2, h3, h4, h5, h6,
+  p, li, label, span, strong, em, small,
+  td, th, dt, dd, legend, figcaption, div, a
+):not(.ms-btn):not(.ms-btn *):not(.ms-home-cta-primary):not(.ms-home-cta-primary *):not(.ms-home-footer-signup):not(.ms-error) {
+  color: #f5f5f7;
+}
+
+html[data-ms-mode="dark"] :is(
+  .ms-muted,
+  .ms-label,
+  .ms-nav-section,
+  .ms-dash-metric-label,
+  .ms-dash-section-lead,
+  .ms-user-email
+) {
+  color: #a1a1a6 !important;
+}
+
+html[data-ms-mode="dark"] .ms-error {
+  color: #fca5a5 !important;
+}
+
+html[data-ms-mode="dark"] :is(
+  .ms-sidebar,
+  .ms-card,
+  .ms-dash-card,
+  .ms-dash-island,
+  .ms-dash-metric,
+  .ms-settings-card,
+  .ms-project-card,
+  .ms-auth-card,
+  .ms-toast-inner
+) {
+  background: #1c1c1e !important;
+  color: #f5f5f7 !important;
+  border-color: rgb(255 255 255 / 10%) !important;
+  box-shadow: none !important;
+}
+
+html[data-ms-mode="dark"] .ms-nav {
+  background: transparent !important;
+}
+
+html[data-ms-mode="dark"] .ms-nav-link,
+html[data-ms-mode="dark"] .ms-nav-link .ms-nav-ico,
+html[data-ms-mode="dark"] .ms-tab,
+html[data-ms-mode="dark"] .ms-brand-name,
+html[data-ms-mode="dark"] .ms-user-name,
+html[data-ms-mode="dark"] .ms-top-brand-name,
+html[data-ms-mode="dark"] .ms-menu-toggle,
+html[data-ms-mode="dark"] .ms-help-btn {
+  color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-nav-pill,
+html[data-ms-mode="dark"] .ms-tab.is-active,
+html[data-ms-mode="dark"] .ms-tab-pill {
+  background: #2c2c2e !important;
+  box-shadow: none !important;
+}
+
+html[data-ms-mode="dark"] .ms-quick-nav {
+  background: #0c0c0e !important;
+  border-bottom-color: rgb(255 255 255 / 10%) !important;
+}
+
+html[data-ms-mode="dark"] .ms-menu-toggle,
+html[data-ms-mode="dark"] .ms-help-btn {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] :is(input.ms-input, textarea.ms-textarea, select.ms-select):focus {
+  border-color: #f5f5f7 !important;
+  box-shadow: none !important;
+}
+
+html[data-ms-mode="dark"] .ms-tabbar {
+  background: rgb(28 28 30 / 92%) !important;
+  border-color: rgb(255 255 255 / 10%) !important;
+  box-shadow: none !important;
+}
+
+html[data-ms-mode="dark"][data-ms-accent-tone="dark"] :is(
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  .ms-home-cta-primary,
+  .ms-lf-find,
+  .ms-paywall-pay,
+  .ms-fin-save,
+  .ms-fin-next,
+  .ms-store-buy:not(.is-ghost),
+  .lf-action-builder,
+  .ms-lf-map-scan,
+  #btn-checkout,
+  .ms-lb-publish-btn
+) {
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  border-color: transparent !important;
+}
+
+html[data-ms-mode="dark"][data-ms-accent-tone="dark"] :is(
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  .ms-home-cta-primary,
+  .ms-lf-find,
+  .ms-paywall-pay,
+  .ms-store-buy:not(.is-ghost)
+):hover {
+  background: #ffffff !important;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+}
+
+html[data-ms-mode="dark"] .ms-store-buy.is-ghost,
+html[data-ms-mode="dark"] .ms-store-buy.is-ghost:hover {
+  background: transparent !important;
+  color: #f5f5f7 !important;
+  -webkit-text-fill-color: #f5f5f7 !important;
+  border-color: rgb(255 255 255 / 28%) !important;
+}
+
+html[data-ms-mode="dark"] :is(.ms-btn-secondary, .ms-dash-tool, .ms-home-cta-secondary) {
+  background: transparent !important;
+  color: #f5f5f7 !important;
+  border-color: rgb(255 255 255 / 18%) !important;
+}
+
+html[data-ms-mode="dark"] :is(.ms-btn-secondary, .ms-dash-tool, .ms-home-cta-secondary):hover {
+  background: rgb(255 255 255 / 6%) !important;
+  color: #fff !important;
+  border-color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-btn-danger,
+html[data-ms-mode="dark"] .ms-btn-danger:hover {
+  background: #b91c1c !important;
+  color: #fff !important;
+}
+
+html[data-ms-mode="dark"] :is(
+  input.ms-input,
+  textarea.ms-textarea,
+  select.ms-select,
+  .ms-auth-card input.ms-input
+) {
+  background: #1c1c1e !important;
+  background-color: #1c1c1e !important;
+  color: #f5f5f7 !important;
+  -webkit-text-fill-color: #f5f5f7 !important;
+  caret-color: #f5f5f7;
+  border-color: rgb(255 255 255 / 16%) !important;
+  box-shadow: none !important;
+}
+
+html[data-ms-mode="dark"][data-ms-accent-tone="dark"] .ms-switch input:checked + .ms-switch-track {
+  background: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] h1,
+html[data-ms-mode="dark"] h2,
+html[data-ms-mode="dark"] .ms-page-head h1,
+html[data-ms-mode="dark"] .ms-settings-card-title {
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+/* Dashboard overview: one income figure, a thin goal line, then three quiet stats. */
+.ms-dash-progress-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.35rem 1.25rem 1.15rem !important;
+}
+
+.ms-dash-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ms-dash-hero-label,
+.ms-dash-hero-hint,
+.ms-dash-hero-pct .ms-dash-ring-kicker {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: #6e6e73;
+}
+
+.ms-dash-hero-value {
+  margin: 0.12rem 0 0.15rem;
+  font-size: clamp(2.15rem, 7vw, 2.8rem);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  color: #1d1d1f;
+  font-variant-numeric: tabular-nums;
+}
+
+.ms-dash-hero-pct {
+  text-align: right;
+  padding-bottom: 0.15rem;
+}
+
+.ms-dash-hero-pct .ms-dash-ring-progress {
+  margin: 0;
+}
+
+.ms-dash-hero-pct .ms-dash-ring-value {
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  color: #1d1d1f;
+}
+
+.ms-dash-bar {
+  margin-top: 1.15rem;
+  height: 6px;
+  border-radius: 99px;
+  background: #e8e8ed;
+  overflow: hidden;
+}
+
+.ms-dash-bar-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--ms-accent, #1d1d1f);
+  transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ms-dash-bar-caption {
+  margin: 0.55rem 0 0 !important;
+  font-size: 0.84rem !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  color: #6e6e73 !important;
+}
+
+.ms-dash-progress-card .ms-dash-overview {
+  gap: 1rem;
+  margin-top: 1.15rem;
+}
+
+.ms-dash-progress-card .ms-dash-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(0 0 0 / 8%);
+}
+
+.ms-dash-progress-card .ms-dash-metric {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 0.85rem !important;
+  gap: 0.2rem;
+}
+
+.ms-dash-progress-card .ms-dash-metric + .ms-dash-metric {
+  border-left: 1px solid rgb(0 0 0 / 8%) !important;
+}
+
+.ms-dash-progress-card .ms-dash-metric:first-child {
+  padding-left: 0 !important;
+}
+
+.ms-dash-progress-card .ms-dash-metric:last-child {
+  padding-right: 0 !important;
+}
+
+.ms-dash-progress-card .ms-dash-metric-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: #6e6e73;
+}
+
+.ms-dash-progress-card .ms-dash-metric-hint {
+  font-size: 0.75rem;
+  color: #6e6e73;
+}
+
+.ms-dash-progress-card .ms-dash-metric-value,
+.ms-dash-progress-card .ms-dash-goal-display {
+  font-size: 1.2rem !important;
+  font-weight: 650;
+  color: #1d1d1f;
+}
+
+.ms-dash-progress-card .ms-dash-metric--goal:hover,
+.ms-dash-progress-card .ms-dash-metric--goal:focus-within {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.ms-dash-progress-card .ms-dash-goal-input {
+  height: auto;
+  min-height: 0;
+  border: 0;
+  border-bottom: 1px solid #1d1d1f;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 1.2rem;
+  font-weight: 650;
+  color: #1d1d1f;
+}
+
+.ms-dash-progress-card .ms-dash-goal-input:focus {
+  outline: none;
+  box-shadow: none !important;
+}
+
+.ms-dash-progress-card .ms-dash-overview .ms-dash-tool {
+  width: 100%;
+  margin: 0;
+  border-radius: 980px !important;
+}
+
+@media (max-width: 420px) {
+  .ms-dash-progress-card .ms-dash-metric {
+    padding: 0 0.5rem !important;
+  }
+
+  .ms-dash-progress-card .ms-dash-metric-value,
+  .ms-dash-progress-card .ms-dash-goal-display,
+  .ms-dash-progress-card .ms-dash-goal-input {
+    font-size: 1.02rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-dash-bar-fill {
+    transition: none;
+  }
+}
+
+html[data-ms-mode="dark"] .ms-dash-hero-value,
+html[data-ms-mode="dark"] .ms-dash-hero-pct .ms-dash-ring-value,
+html[data-ms-mode="dark"] .ms-dash-progress-card .ms-dash-metric-value,
+html[data-ms-mode="dark"] .ms-dash-progress-card .ms-dash-goal-display,
+html[data-ms-mode="dark"] .ms-dash-progress-card .ms-dash-goal-input {
+  color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-dash-hero-label,
+html[data-ms-mode="dark"] .ms-dash-hero-hint,
+html[data-ms-mode="dark"] .ms-dash-hero-pct .ms-dash-ring-kicker,
+html[data-ms-mode="dark"] .ms-dash-bar-caption,
+html[data-ms-mode="dark"] .ms-dash-progress-card .ms-dash-metric-label,
+html[data-ms-mode="dark"] .ms-dash-progress-card .ms-dash-metric-hint {
+  color: #a1a1a6 !important;
+}
+
+html[data-ms-mode="dark"] .ms-dash-bar {
+  background: #2c2c2e;
+}
+
+html[data-ms-mode="dark"][data-ms-accent-tone="dark"] .ms-dash-bar-fill {
+  background: #f5f5f7;
+}
+
+html[data-ms-mode="dark"] .ms-dash-progress-card .ms-dash-overview-grid,
+html[data-ms-mode="dark"] .ms-dash-progress-card .ms-dash-metric + .ms-dash-metric {
+  border-color: rgb(255 255 255 / 12%) !important;
+}
+
+html[data-ms-mode="dark"] .ms-dash-progress-card .ms-dash-metric {
+  background: transparent !important;
+}
+
+html[data-ms-mode="dark"] .ms-dash-progress-card .ms-dash-goal-input {
+  background: transparent !important;
+  border-bottom-color: #f5f5f7;
+}
+
+/* Builder start: one tab row, one short line, then the fields. */
+body[data-page="builder"].ms-lb-setup .ms-bs-layout {
+  width: min(100%, 34rem);
+  margin-inline: auto;
+}
+
+.ms-bs-hero .lead {
+  margin: 0.35rem 0 0;
+  color: #6e6e73;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.ms-bs-mode-tabs,
+.ms-bs-mode-tabs.seg-switch {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgb(0 0 0 / 8%) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  overflow: visible !important;
+}
+
+.ms-bs-mode-tabs > .seg-switch-indicator {
+  display: none !important;
+}
+
+.ms-bs-mode-tab,
+.ms-bs-mode-tabs.seg-switch > .ms-bs-mode-tab,
+.ms-bs-mode-tabs.seg-switch.is-ready > .ms-bs-mode-tab.is-active {
+  height: 2.65rem;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #6e6e73 !important;
+  font-size: 0.92rem !important;
+  font-weight: 500 !important;
+}
+
+.ms-bs-mode-tab.is-active,
+.ms-bs-mode-tabs.seg-switch.is-ready > .ms-bs-mode-tab.is-active {
+  color: #1d1d1f !important;
+  font-weight: 650 !important;
+  box-shadow: inset 0 -2px 0 #1d1d1f !important;
+}
+
+.ms-bs-card,
+#builder-setup-card {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.ms-bs-path,
+.ms-bs-path--google,
+.ms-bs-path--manual,
+.ms-bs-path--upload {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 1rem 0 0 !important;
+  gap: 0.85rem;
+}
+
+.ms-bs-path-icon,
+.ms-bs-path-head h3,
+.ms-bs-gh-provider,
+.ms-bs-gh-progress-dot,
+.ms-bs-gh-progress-line {
+  display: none !important;
+}
+
+.ms-bs-path-head {
+  margin: 0;
+}
+
+.ms-bs-path-copy p,
+#bs-path-upload-lead {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.ms-bs-gh-progress {
+  gap: 1rem;
+}
+
+.ms-bs-gh-progress-item,
+.ms-bs-gh-progress-item.is-done,
+.ms-bs-gh-progress-item.is-active {
+  color: #6e6e73;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.ms-bs-gh-progress-item.is-active {
+  color: #1d1d1f;
+  font-weight: 650;
+}
+
+.ms-builder-setup-page #builder-setup-card .ms-lb-onboard-label,
+.ms-bs-path .ms-lb-onboard-label {
+  margin-bottom: 0.35rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none !important;
+  color: #6e6e73 !important;
+}
+
+.ms-builder-setup-page .ms-lb-onboard-input,
+.ms-builder-setup-page .ms-bs-gh-select-trigger,
+.ms-builder-setup-page .ms-bs-gh-path {
+  height: 2.5rem !important;
+  min-height: 2.5rem !important;
+  padding: 0 0.9rem !important;
+  border: 1px solid #d2d2d7 !important;
+  border-radius: 0.7rem !important;
+  background: #fff !important;
+  color: #1d1d1f !important;
+  box-shadow: none !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+}
+
+.ms-builder-setup-page .ms-lb-onboard-input:focus,
+.ms-builder-setup-page .ms-bs-gh-select-trigger:focus-visible,
+.ms-builder-setup-page .ms-bs-gh-select.is-open .ms-bs-gh-select-trigger {
+  border-color: #1d1d1f !important;
+  box-shadow: none !important;
+  outline: none;
+}
+
+.ms-builder-setup-page .ms-lb-onboard-maps-icon {
+  display: none;
+}
+
+.ms-builder-setup-page #builder-setup-card .ms-lb-onboard-maps-shell,
+.ms-bs-path .ms-lb-onboard-maps-shell {
+  min-height: 2.5rem;
+  padding: 0 !important;
+  border: 1px solid #d2d2d7 !important;
+  border-radius: 0.7rem !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.ms-builder-setup-page .ms-lb-onboard-maps-shell .ms-lb-onboard-input {
+  border: 0 !important;
+  height: 2.5rem !important;
+  padding: 0 0.9rem !important;
+}
+
+.ms-bs-path--manual .ms-lb-onboard-fields,
+.ms-bs-path--manual .ms-lb-onboard-fields-extra,
+.ms-builder-setup-page #builder-setup-card .ms-lb-onboard-fields,
+.ms-builder-setup-page #builder-setup-card .ms-lb-onboard-fields-extra {
+  grid-template-columns: 1fr !important;
+  gap: 0.75rem !important;
+}
+
+.ms-builder-setup-page #builder-setup-card .ms-lb-onboard-foot {
+  border-top: 0;
+  background: none;
+  padding: 1.15rem 0 0;
+  position: static;
+}
+
+.ms-builder-setup-page #builder-setup-card .ms-lb-onboard-back {
+  height: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0 1.15rem;
+  border: 1px solid #d2d2d7 !important;
+  border-radius: 980px;
+  background: #fff !important;
+  color: #1d1d1f !important;
+  font-size: 0.92rem !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
+}
+
+.ms-builder-setup-page #builder-setup-card .ms-lb-onboard-next {
+  height: 2.5rem !important;
+  min-height: 2.5rem !important;
+  padding: 0 1.15rem !important;
+  border-radius: 980px !important;
+  font-size: 0.92rem !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
+}
+
+.ms-bs-recent-link {
+  min-height: 0;
+  padding: 0.2rem 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #1d1d1f !important;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.ms-bs-recent-link svg {
+  display: none;
+}
+
+.ms-bs-recent-link:hover {
+  background: transparent !important;
+  color: #1d1d1f !important;
+  box-shadow: none !important;
+}
+
+.ms-bs-gh-hint,
+.ms-bs-upload-watermark-note {
+  color: #6e6e73;
+  font-size: 0.8rem;
+}
+
+html[data-ms-mode="dark"] .ms-bs-hero .lead,
+html[data-ms-mode="dark"] .ms-bs-path-copy p,
+html[data-ms-mode="dark"] .ms-bs-gh-progress-item,
+html[data-ms-mode="dark"] .ms-builder-setup-page .ms-lb-onboard-label,
+html[data-ms-mode="dark"] .ms-bs-gh-hint,
+html[data-ms-mode="dark"] .ms-bs-upload-watermark-note {
+  color: #a1a1a6 !important;
+}
+
+html[data-ms-mode="dark"] .ms-bs-mode-tabs {
+  border-bottom-color: rgb(255 255 255 / 12%) !important;
+}
+
+html[data-ms-mode="dark"] .ms-bs-mode-tab.is-active,
+html[data-ms-mode="dark"] .ms-bs-mode-tabs.seg-switch.is-ready > .ms-bs-mode-tab.is-active {
+  color: #f5f5f7 !important;
+  box-shadow: inset 0 -2px 0 #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-bs-gh-progress-item.is-active,
+html[data-ms-mode="dark"] .ms-bs-recent-link,
+html[data-ms-mode="dark"] .ms-bs-recent-link:hover {
+  color: #f5f5f7 !important;
+  box-shadow: none !important;
+}
+
+html[data-ms-mode="dark"] .ms-builder-setup-page .ms-lb-onboard-input,
+html[data-ms-mode="dark"] .ms-builder-setup-page .ms-bs-gh-select-trigger,
+html[data-ms-mode="dark"] .ms-builder-setup-page .ms-lb-onboard-maps-shell,
+html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onboard-back {
+  background: #1c1c1e !important;
+  color: #f5f5f7 !important;
+  border-color: rgb(255 255 255 / 16%) !important;
+}
+
+/* Mobile toolbar: flush to the bottom, no floating pill. */
+@media (max-width: 900px) {
+  .ms-tabbar {
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding: 0.15rem 0.2rem calc(0.15rem + env(safe-area-inset-bottom, 0px)) !important;
+    border: 0 !important;
+    border-top: 1px solid rgb(0 0 0 / 8%) !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .ms-tab-pill {
+    display: none !important;
+  }
+
+  .ms-tab,
+  .ms-tab.is-active,
+  .ms-tabbar.is-pill-ready .ms-tab.is-active {
+    height: 3rem;
+    min-height: 3rem;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #6e6e73 !important;
+    transform: none;
+  }
+
+  .ms-tab.is-active,
+  .ms-tabbar.is-pill-ready .ms-tab.is-active,
+  .ms-tab.is-active .ms-tab-ico,
+  .ms-tab.is-active .ms-tab-label {
+    color: #1d1d1f !important;
+  }
+
+  .ms-tab-ico svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ms-tab.is-active .ms-tab-ico svg {
+    stroke-width: 2;
+  }
+
+  .ms-tab-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .ms-tab.is-active .ms-tab-label {
+    font-weight: 650;
+  }
+
+  .ms-top-brand-logo {
+    box-shadow: none;
+  }
+
+  body[data-page="dashboard"] #page-body,
+  body[data-page="clients"] #page-body,
+  body[data-page="settings"] #page-body,
+  body[data-page="builder"].ms-lb-setup #page-body,
+  body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
+    padding-bottom: calc(4.4rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+html[data-ms-mode="dark"] .ms-tabbar {
+  background: #0c0c0e !important;
+  border-top-color: rgb(255 255 255 / 12%) !important;
+  box-shadow: none !important;
+}
+
+html[data-ms-mode="dark"] .ms-tab,
+html[data-ms-mode="dark"] .ms-tab .ms-tab-ico {
+  color: #a1a1a6 !important;
+  background: transparent !important;
+}
+
+html[data-ms-mode="dark"] .ms-tab.is-active,
+html[data-ms-mode="dark"] .ms-tab.is-active .ms-tab-ico,
+html[data-ms-mode="dark"] .ms-tab.is-active .ms-tab-label,
+html[data-ms-mode="dark"] .ms-tabbar.is-pill-ready .ms-tab.is-active {
+  color: #f5f5f7 !important;
+  background: transparent !important;
+}
+
+/* List-view business cards, same flat treatment as the map cards. */
+.ms-lead-card.ms-lf-pro {
+  border: 1px solid rgb(0 0 0 / 8%) !important;
+  border-radius: 1.15rem !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.ms-lead-card.ms-lf-pro.is-saved {
+  box-shadow: none !important;
+}
+
+.ms-lf-pro-avatar {
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+  box-shadow: none !important;
+}
+
+.ms-lf-pro-name {
+  color: #1d1d1f !important;
+  font-weight: 650;
+}
+
+.ms-lf-pro-category,
+.ms-lf-pro-row.is-empty .ms-lf-pro-row-text,
+.ms-lf-pro-row.is-empty .ms-lf-pro-no-site,
+.ms-lf-pro-row.is-closed .ms-lf-pro-row-text {
+  color: #6e6e73 !important;
+  font-style: normal;
+}
+
+.ms-lf-pro-row.is-link .ms-lf-pro-row-text,
+.ms-lf-pro-row.is-open .ms-lf-pro-row-text,
+.ms-lf-pro-row-text {
+  color: #1d1d1f !important;
+}
+
+.ms-lf-pro-foot {
+  background: transparent !important;
+  border-top-color: rgb(0 0 0 / 8%) !important;
+}
+
+.ms-lf-slide-track {
+  border-radius: 980px !important;
+  background: #e8e8ed !important;
+  box-shadow: none !important;
+}
+
+.ms-lf-slide-fill {
+  background: #d2d2d7 !important;
+  border-radius: 980px !important;
+}
+
+.ms-lf-slide-thumb {
+  border-radius: 980px !important;
+  background: #fff !important;
+  color: #1d1d1f !important;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 8%) !important;
+}
+
+.ms-lf-slide-label {
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  font-weight: 500 !important;
+  text-shadow: none !important;
+}
+
+html[data-ms-mode="dark"] .ms-lead-card.ms-lf-pro {
+  background: #1c1c1e !important;
+  border-color: rgb(255 255 255 / 10%) !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-pro-avatar {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-pro-name,
+html[data-ms-mode="dark"] .ms-lf-pro-row-text,
+html[data-ms-mode="dark"] .ms-lf-pro-row.is-link .ms-lf-pro-row-text,
+html[data-ms-mode="dark"] .ms-lf-pro-row.is-open .ms-lf-pro-row-text {
+  color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-pro-category,
+html[data-ms-mode="dark"] .ms-lf-pro-row.is-empty .ms-lf-pro-row-text,
+html[data-ms-mode="dark"] .ms-lf-pro-row.is-closed .ms-lf-pro-row-text {
+  color: #a1a1a6 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-slide-track {
+  background: #2c2c2e !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-slide-fill {
+  background: #3a3a3c !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-slide-label {
+  color: #f5f5f7 !important;
+  -webkit-text-fill-color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-slide-thumb {
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+  box-shadow: none !important;
+}
+
+/* Public pages stay black, white, and gray. Settings color applies inside the app. */
+body[data-page="home"] :is(.ms-home-cta-primary, .ms-home-method-cta, .ms-home-footer-signup),
+body[data-page="download"] :is(.ms-download-install-btn, .ms-download-actions .ms-btn:not(.ms-btn-secondary)) {
+  background: #1d1d1f !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body[data-page="home"] .ms-home-cta-secondary,
+body[data-page="download"] .ms-download-actions .ms-btn-secondary {
+  background: #fff !important;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  border: 1px solid #d2d2d7 !important;
+  box-shadow: none !important;
+}
+
+.ms-home-bloom {
+  background: #1d1d1f !important;
+}
+
+.ms-home-bloom-nav a:hover {
+  color: #a1a1a6 !important;
+}
+
+body.ms-home-menu-open .ms-home-nav {
+  background: #1d1d1f !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.ms-home-menu-open .ms-home-brand {
+  color: #f5f5f7 !important;
+}
+
+body.ms-home-menu-open .ms-home-orb.is-open i {
+  background: #f5f5f7 !important;
+}

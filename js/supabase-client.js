@@ -8,6 +8,8 @@
   const REMEMBER_LOGIN_KEY = "ms_auth_autosave_enabled";
   const memory = new Map();
   let lastSyncedRefresh = "";
+  let sessionCookieSync = Promise.resolve(true);
+  let sessionCookieSyncHeld = false;
 
   let client = null;
   let rememberForClient = null;
@@ -61,7 +63,12 @@
     }
   }
 
+  function setSessionCookieSyncHeld(held) {
+    sessionCookieSyncHeld = !!held;
+  }
+
   function syncRefreshCookie(raw) {
+    if (sessionCookieSyncHeld) return sessionCookieSync;
     let refresh = "";
     try {
       const parsed = JSON.parse(raw);
@@ -71,18 +78,79 @@
         parsed?.currentSession?.refresh_token ||
         "";
     } catch (_) {
-      return;
+      return sessionCookieSync;
     }
-    if (!refresh || refresh === lastSyncedRefresh) return;
+    if (!refresh || refresh === lastSyncedRefresh) return sessionCookieSync;
     lastSyncedRefresh = refresh;
     const base = String(global.SITE_CONFIG?.workerUrl || "").replace(/\/$/, "");
-    if (!base) return;
-    fetch(base + "/auth/session", {
+    if (!base) {
+      lastSyncedRefresh = "";
+      sessionCookieSync = Promise.resolve(false);
+      return sessionCookieSync;
+    }
+    sessionCookieSync = fetch(base + "/auth/session", {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refresh_token: refresh, remember: isRememberLoginEnabled() }),
-    }).catch(() => {});
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          lastSyncedRefresh = "";
+          return false;
+        }
+        const data = await res.json().catch(() => ({}));
+        if (data?.access_token && data?.refresh_token) {
+          lastSyncedRefresh = data.refresh_token;
+          rememberRefreshedSession(data.access_token, data.refresh_token);
+          return {
+            ok: true,
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
+          };
+        }
+        return true;
+      })
+      .catch(() => {
+        lastSyncedRefresh = "";
+        return false;
+      });
+    return sessionCookieSync;
+  }
+
+  function rememberRefreshedSession(accessToken, refreshToken) {
+    const raw = readStoredAuthRaw();
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw);
+      const apply = (obj) => {
+        if (!obj || typeof obj !== "object") return;
+        if (!obj.access_token && !obj.refresh_token) return;
+        obj.access_token = accessToken;
+        obj.refresh_token = refreshToken;
+      };
+      apply(parsed);
+      apply(parsed.session);
+      apply(parsed.currentSession);
+      memory.set(AUTH_STORAGE_KEY, JSON.stringify(parsed));
+    } catch (_) {
+      /* the cookie still holds the refreshed session */
+    }
+  }
+
+  function waitForSessionCookie() {
+    return sessionCookieSync;
+  }
+
+  /** Write the in-memory refresh token into the sign-in cookie. */
+  function flushSessionCookie() {
+    sessionCookieSyncHeld = false;
+    const raw = readStoredAuthRaw();
+    if (!raw) {
+      sessionCookieSync = Promise.resolve(false);
+      return sessionCookieSync;
+    }
+    return syncRefreshCookie(raw);
   }
 
   function memoryStorage() {
@@ -168,5 +236,8 @@
     setRememberLoginEnabled,
     readStoredAuthRaw,
     clearPersistedAuth,
+    waitForSessionCookie,
+    flushSessionCookie,
+    setSessionCookieSyncHeld,
   };
 })(window);

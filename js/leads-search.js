@@ -65,6 +65,7 @@
   let mapIconSelected = null;
   let lastMarkerSignature = "";
   let lastMarkerIdsSignature = "";
+  let mapUserNavigated = false;
   let mapIdlePreloadTimer = null;
 
   function readAreaPref() {
@@ -2338,8 +2339,9 @@
       }
     });
 
-    // Pull-down from top of list collapses (touch / mobile primarily).
-    const LIST_PULL_SLOP = 8;
+    // Pull-down from the top of the list collapses the sheet. Ordinary
+    // scrolling must win: only a clear downward pull takes over.
+    const LIST_PULL_SLOP = 36;
     let listPullStartY = 0;
     let listPulling = false;
     resultsEl?.addEventListener(
@@ -2367,7 +2369,12 @@
           return;
         }
         const dy = e.touches[0].clientY - listPullStartY;
-        if (dy <= LIST_PULL_SLOP) return;
+        // Finger moving up is a list scroll. Never cancel that gesture.
+        if (dy < -8) {
+          listPulling = false;
+          return;
+        }
+        if (dy < LIST_PULL_SLOP) return;
         if ((resultsEl.scrollTop || 0) > 2 && !dragMoved) {
           listPulling = false;
           return;
@@ -3263,6 +3270,7 @@
       moreLabel = "Show more";
     }
 
+    const keepScroll = resultsEl.scrollTop || 0;
     resultsEl.innerHTML =
       shown.map((lead, index) => renderLeadCard(lead, index)).join("") +
       (hasMore
@@ -3270,6 +3278,7 @@
           escapeHtml(moreLabel || "Show more") +
           "</button></div>"
         : "");
+    if (keepScroll > 0) resultsEl.scrollTop = keepScroll;
 
     observeLeadReveals(resultsEl);
     window.MsLfSlide?.prime(resultsEl);
@@ -3578,6 +3587,7 @@
   }
 
   async function findLeads(options) {
+    mapUserNavigated = false;
     if (inMyArea) {
       await findNearbyLeads(options);
       return;
@@ -3649,7 +3659,7 @@
 
       // Paint DB hits immediately; live scrape can still fill gaps afterward.
       if (leads.length && MAP_UI) {
-        setStatus(shouldTryLiveScrape() ? "Showing saved leads - refreshing from OpenStreetMap..." : "");
+        setStatus("");
         setError("");
         renderLeads(rankLeadList(leads), query);
       }
@@ -4234,6 +4244,11 @@
         dragRotate: false,
       });
       lfMap.touchZoomRotate?.disableRotation?.();
+      const noteUserNav = (ev) => {
+        if (ev && ev.originalEvent) mapUserNavigated = true;
+      };
+      lfMap.on("dragstart", noteUserNav);
+      lfMap.on("zoomstart", noteUserNav);
       if (window.innerWidth > 900) {
         lfMap.addControl(
           new maplibregl.NavigationControl({ showCompass: false, visualizePitch: false }),
@@ -4378,8 +4393,10 @@
       pointCount += 1;
     });
 
-    // Fit bounds only when the business set changes (initial scan / new results).
-    if (opts.fit === false || !pointCount) return;
+    const draggingMap =
+      typeof lfMap.dragPan?.isActive === "function" && lfMap.dragPan.isActive();
+    // Fit bounds only for a fresh scan. Once the user pans or zooms, leave the camera alone.
+    if (opts.fit === false || mapUserNavigated || draggingMap || !pointCount) return;
     try {
       if (pointCount === 1) {
         lfMap.easeTo({

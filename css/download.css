@@ -3,9 +3,8 @@
 body.ms-download-page {
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(37, 99, 235, 0.08), transparent 58%),
-    #f3f5f8;
+  background: #fff;
+  color: #1d1d1f;
 }
 
 .ms-download-main {
@@ -25,12 +24,12 @@ body.ms-download-page {
   margin: 0 auto 0.85rem;
   font-size: 0.88rem;
   font-weight: 650;
-  color: #64748b;
+  color: #6e6e73;
   text-decoration: none;
 }
 
 .ms-download-back:hover {
-  color: #2563eb;
+  color: #1d1d1f;
 }
 
 .ms-download-card {
@@ -38,8 +37,8 @@ body.ms-download-page {
   padding: 1.35rem 1.25rem 1.4rem;
   border-radius: 20px;
   background: #fff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e8e8ed;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
 }
 
 .ms-download-brand {
@@ -63,7 +62,7 @@ body.ms-download-page {
   font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #0f172a;
+  color: #1d1d1f;
 }
 
 .ms-download-brand p {
@@ -76,14 +75,14 @@ body.ms-download-page {
   font-size: clamp(1.55rem, 5vw, 1.85rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #0f172a;
+  color: #1d1d1f;
 }
 
 .ms-download-lead {
   margin: 0 0 1.15rem;
   font-size: 0.94rem;
   line-height: 1.55;
-  color: #64748b;
+  color: #6e6e73;
 }
 
 .ms-download-install-btn {
@@ -102,7 +101,21 @@ body.ms-download-page {
   gap: 0.55rem;
   margin-top: 1.15rem;
   padding-top: 1rem;
-  border-top: 1px solid #eef2f7;
+  border-top: 1px solid #e8e8ed;
+}
+
+body.ms-download-page .ms-settings-install-preview {
+  background: #f5f5f7;
+  border-color: #e8e8ed;
+}
+
+body.ms-download-page .ms-download-install-btn,
+body.ms-download-page .ms-download-actions .ms-btn:not(.ms-btn-secondary) {
+  background: #1d1d1f !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 .ms-download-actions .ms-btn {

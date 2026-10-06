@@ -363,12 +363,17 @@
 
   /** Finish email confirm / magic-link / recovery callbacks and persist session. */
   async function completeAuthCallbackFromUrl() {
-    const sb = getClient();
-    if (!sb || typeof location === "undefined") return null;
-
+    if (typeof location === "undefined") return null;
     const { hash, query } = readAuthCallbackParams();
     const accessToken = hash.get("access_token") || query.get("access_token");
     const refreshToken = hash.get("refresh_token") || query.get("refresh_token");
+    const code = query.get("code");
+    const tokenHash = query.get("token_hash");
+    if (!((accessToken && refreshToken) || code || tokenHash)) return null;
+
+    const sb = getClient();
+    if (!sb) return null;
+
     if (accessToken && refreshToken) {
       const data = await applySessionTokens({
         access_token: accessToken,
@@ -378,7 +383,6 @@
       return data?.session || (await getSession());
     }
 
-    const code = query.get("code");
     if (code) {
       try {
         const { data, error } = await withTimeout(
@@ -393,9 +397,9 @@
       } catch (e) {
         console.warn(e);
       }
+      if (!tokenHash) return null;
     }
 
-    const tokenHash = query.get("token_hash");
     const otpType = String(query.get("type") || hash.get("type") || "signup").toLowerCase();
     if (tokenHash) {
       const verifyType =
@@ -405,7 +409,9 @@
             ? "email_change"
             : otpType === "invite"
               ? "invite"
-              : "signup";
+              : otpType === "magiclink" || otpType === "email"
+                ? "email"
+                : "signup";
       try {
         const { data, error } = await withTimeout(
           sb.auth.verifyOtp({ token_hash: tokenHash, type: verifyType }),
@@ -419,6 +425,7 @@
       } catch (e) {
         console.warn(e);
       }
+      return null;
     }
 
     return (await getSession()) || null;
@@ -451,7 +458,7 @@
     return session?.user || null;
   }
 
-  async function signUp(email, password, handle, authCode) {
+  async function signUp(email, handle, authCode) {
     const sb = getClient();
     if (!sb) throw new Error("Supabase is not configured");
     const handles = global.StudioHandles;
@@ -461,7 +468,6 @@
     const cleanHandle = handles.assertHandleAllowed(handle);
     const payload = await workerAuth("/auth/signup", {
       email: String(email || "").trim(),
-      password: String(password || ""),
       handle: cleanHandle,
       authCode: String(authCode || "").trim(),
     });
@@ -474,15 +480,39 @@
       user: user || null,
       session: sessionData?.session || null,
       needsEmailConfirm: !!payload.needsEmailConfirm,
+      pendingId: payload.pendingId || "",
+      pendingSecret: payload.pendingSecret || "",
     };
   }
 
-  async function signIn(email, password) {
+  async function publishEmailHandoff(pendingId, session) {
+    const accessToken = session?.access_token;
+    const refreshToken = session?.refresh_token;
+    if (!pendingId || !accessToken || !refreshToken) return null;
+    return workerAuth("/auth/handoff", {
+      pendingId,
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+  }
+
+  async function claimEmailHandoff(pendingId, pendingSecret) {
+    const payload = await workerAuth("/auth/pending", { pendingId, pendingSecret });
+    if (payload?.pending) return { pending: true };
+    await applySessionTokens(payload);
+    return { pending: false };
+  }
+
+  async function abandonEmailHandoff(pendingId, pendingSecret) {
+    if (!pendingId || !pendingSecret) return null;
+    return workerAuth("/auth/pending", { pendingId, pendingSecret, abandon: true });
+  }
+
+  async function signIn(email) {
     const sb = getClient();
     if (!sb) throw new Error("Supabase is not configured");
     const payload = await workerAuth("/auth/signin", {
       email: String(email || "").trim(),
-      password: String(password || ""),
       remember: global.SiteSupabase?.isRememberLoginEnabled?.() !== false,
     });
     const sessionData = await applySessionTokens(payload);
@@ -529,7 +559,7 @@
     }
     const { data, error } = await withTimeout(
       sb.auth.signInWithPasskey(),
-      AUTH_TIMEOUT_MS,
+      120000,
       "Passkey sign-in"
     );
     if (error) {
@@ -552,11 +582,26 @@
           : error.code || (cancelled ? "passkey_cancelled" : "passkey_failed"),
       });
     }
-    const user = data?.user || data?.session?.user;
+    const session = data?.session || null;
+    const user = data?.user || session?.user;
+    if (!session?.access_token || !session?.refresh_token) {
+      throw authError({
+        error: "Passkey sign-in did not start a session. Use the email link instead.",
+        code: "passkey_failed",
+      });
+    }
+    markClientSession();
+    const synced = await global.SiteSupabase?.waitForSessionCookie?.();
+    if (synced === false) {
+      throw authError({
+        error: "Passkey worked, but this browser could not keep you signed in. Use the email link instead.",
+        code: "session_error",
+      });
+    }
     if (user) {
       Promise.resolve(ensureProfile(user)).catch(() => {});
     }
-    return { ...(data || {}), created: false };
+    return { ...(data || {}), session, user, created: false };
   }
 
   /**
@@ -594,7 +639,13 @@
           code: "passkey_needs_password",
         });
       }
-      await signIn(email, password);
+      const signedIn = await signIn(email);
+      if (signedIn?.needsEmailConfirm && !signedIn?.access_token) {
+        throw authError({
+          error: "Check your email and open the sign-in link, then try the passkey again.",
+          code: "email_not_confirmed",
+        });
+      }
       try {
         await registerPasskey();
         return { created: true };
@@ -618,8 +669,8 @@
   }
 
   /** Sign up, then create a passkey while the new session is active. */
-  async function signUpWithPasskey(email, password, handle, authCode) {
-    const data = await signUp(email, password, handle, authCode);
+  async function signUpWithPasskey(email, handle, authCode) {
+    const data = await signUp(email, handle, authCode);
     if (!(data?.session || data?.access_token || data?.user)) {
       return { ...(data || {}), created: false, needsEmailConfirm: true };
     }
@@ -1151,6 +1202,9 @@
     setForceOnboardingReplay,
     signUp,
     signIn,
+    publishEmailHandoff,
+    claimEmailHandoff,
+    abandonEmailHandoff,
     canUsePasskeys,
     passkeyHostAllowed,
     signInWithPasskey,

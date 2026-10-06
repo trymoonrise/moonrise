@@ -30,7 +30,7 @@
       .replace(/"/g, "&quot;");
 
   function employeePhoto(employee) {
-    const fallback = (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) || "doc/profilepicture.jpg";
+    const fallback = (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) || "doc/profilepicture.jpg?v=20261006-blue";
     const raw = String(employee?.avatarUrl || "").trim();
     if (!raw || /(?:^|\/)doc\/pfp\.png(?:\?.*)?$/i.test(raw)) return fallback;
     return raw;
@@ -753,7 +753,7 @@
           '<span class="ms-admin-employee-person">' +
           '<img class="ms-admin-employee-avatar" src="' +
           esc(employeePhoto(employee)) +
-          '" alt="" width="40" height="40" decoding="async" onerror="this.onerror=null;this.src=\'doc/profilepicture.jpg\'">' +
+          '" alt="" width="40" height="40" decoding="async" onerror="this.onerror=null;this.src=\'doc/profilepicture.jpg?v=20261006-blue\'">' +
           '<span class="ms-admin-employee-name"><strong>' +
           esc(employee.handle ? "@" + employee.handle : "Account") +
           (employee.owner ? " · Owner" : "") +

@@ -41,7 +41,7 @@ window.SITE_CONFIG = {
   /** Social / link preview image (Discord, iMessage, Twitter, etc.). */
   embedImageUrl: "https://trymoonrise.com/doc/embed.png",
   /** Default profile picture when a user has not uploaded one. */
-  defaultAvatarUrl: "doc/profilepicture.jpg",
+  defaultAvatarUrl: "doc/profilepicture.jpg?v=20261006-blue",
   docBaseUrl: "doc/",
 
   /** Moonrise Studio Supabase project (public anon / publishable key only). */

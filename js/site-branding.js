@@ -110,7 +110,7 @@
   upsertMeta("name", "author", siteName);
   upsertMeta("name", "robots", isPublicPage() ? "index,follow,max-image-preview:large" : "noindex,nofollow");
   upsertMeta("name", "googlebot", isPublicPage() ? "index,follow" : "noindex,nofollow");
-  upsertMeta("name", "theme-color", "#2563eb");
+  upsertMeta("name", "theme-color", "#fbfbfd");
 
   upsertMeta("property", "og:type", "website");
   upsertMeta("property", "og:site_name", siteName);

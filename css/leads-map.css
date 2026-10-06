@@ -842,7 +842,7 @@
   position: relative;
   z-index: 6;
   pointer-events: auto;
-  touch-action: none;
+  touch-action: pan-y;
 }
 
 .ms-lf-map-card .ms-lf-slide-track {
@@ -853,7 +853,7 @@
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: var(--lf-btn-shadow) !important;
   cursor: grab;
-  touch-action: none !important;
+  touch-action: pan-y !important;
 }
 
 .ms-lf-map-card .ms-lf-slide-fill {
@@ -879,7 +879,7 @@
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.95) inset,
     0 3px 10px rgba(15, 23, 42, 0.2) !important;
-  touch-action: none !important;
+  touch-action: pan-y !important;
 }
 
 .ms-lf-map-card .ms-lf-slide-thumb .ms-lf-pro-ico,
@@ -2365,4 +2365,211 @@ body[data-page="leads"] #ms-hard-refresh,
     clip-path: none;
     filter: none;
   }
+}
+
+/* Business cards: flat white, ink type, one black slide control. */
+.ms-lf-map-card {
+  border: 1px solid rgb(0 0 0 / 8%) !important;
+  border-radius: 1.15rem !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  color: #1d1d1f;
+}
+
+.ms-lf-map-card.is-selected {
+  border-color: #1d1d1f !important;
+  box-shadow: none !important;
+}
+
+.ms-lf-map-card .ms-lf-pro-avatar {
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  box-shadow: none !important;
+  font-family: Manrope, "Segoe UI", sans-serif;
+  font-weight: 650;
+}
+
+.ms-lf-map-card-titles h3 {
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  font-weight: 650 !important;
+}
+
+.ms-lf-map-card-titles p,
+.ms-lf-map-card-distance {
+  color: #6e6e73 !important;
+  -webkit-text-fill-color: #6e6e73 !important;
+  font-weight: 500 !important;
+}
+
+.ms-lf-map-card-details .ms-lf-pro-row-text,
+.ms-lf-map-card-details .ms-lf-pro-row-main,
+.ms-lf-map-card-details .ms-lf-pro-row-aside,
+.ms-lf-map-card-details .ms-lf-pro-row-main.is-link,
+.ms-lf-map-card-details .ms-lf-pro-row-aside.is-link,
+.ms-lf-map-card-details .ms-lf-pro-row.is-link .ms-lf-pro-row-text,
+.ms-lf-map-card-details .ms-lf-pro-row-main.is-has-site,
+.ms-lf-map-card-details .ms-lf-pro-has-site {
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  font-weight: 500 !important;
+}
+
+.ms-lf-map-card-details .ms-lf-pro-row-main.is-empty,
+.ms-lf-map-card-details .ms-lf-pro-row-aside.is-empty,
+.ms-lf-map-card-details .ms-lf-pro-row-main.is-no-site,
+.ms-lf-map-card-details .ms-lf-pro-no-site,
+.ms-lf-map-card-details .ms-lf-pro-site-check,
+.ms-lf-map-card-details .ms-lf-pro-row-aside.is-closed,
+.ms-lf-map-card-details .ms-lf-pro-row.is-closed .ms-lf-pro-row-text {
+  color: #6e6e73 !important;
+  -webkit-text-fill-color: #6e6e73 !important;
+  font-weight: 500 !important;
+  font-style: normal;
+}
+
+.ms-lf-map-card-details .ms-lf-pro-row-aside.is-open,
+.ms-lf-map-card-details .ms-lf-pro-row.is-open .ms-lf-pro-row-text {
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  font-weight: 650 !important;
+}
+
+.ms-lf-map-card .ms-lf-pro-foot {
+  background: transparent !important;
+  border-top: 0 !important;
+  padding: 0.45rem 0.7rem 0.7rem !important;
+}
+
+.ms-lf-map-card .ms-lf-slide {
+  --ms-lf-slide-radius: 980px;
+  --ms-lf-slide-thumb-radius: 980px;
+}
+
+.ms-lf-map-card .ms-lf-slide-track {
+  border: 0 !important;
+  border-radius: 980px !important;
+  background: #e8e8ed !important;
+  box-shadow: none !important;
+}
+
+.ms-lf-map-card .ms-lf-slide-fill {
+  background: #d2d2d7 !important;
+  border-radius: 980px !important;
+}
+
+.ms-lf-map-card .ms-lf-slide-thumb {
+  border-radius: 980px !important;
+  background: #fff !important;
+  color: #1d1d1f !important;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 8%) !important;
+}
+
+.ms-lf-map-card .ms-lf-slide-label {
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  font-weight: 500 !important;
+  text-shadow: none !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-map-card {
+  background: #1c1c1e !important;
+  border-color: rgb(255 255 255 / 10%) !important;
+  color: #f5f5f7;
+}
+
+html[data-ms-mode="dark"] .ms-lf-map-card.is-selected {
+  border-color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-pro-avatar {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  -webkit-text-fill-color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-map-card-titles h3,
+html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-text,
+html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-main,
+html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-main.is-link,
+html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row.is-link .ms-lf-pro-row-text,
+html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-aside.is-open {
+  color: #f5f5f7 !important;
+  -webkit-text-fill-color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-map-card-titles p,
+html[data-ms-mode="dark"] .ms-lf-map-card-distance,
+html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-aside,
+html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-no-site,
+html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-main.is-no-site,
+html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-aside.is-closed {
+  color: #a1a1a6 !important;
+  -webkit-text-fill-color: #a1a1a6 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-track {
+  background: #2c2c2e !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-fill {
+  background: #3a3a3c !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-label {
+  color: #f5f5f7 !important;
+  -webkit-text-fill-color: #f5f5f7 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+  box-shadow: none !important;
+}
+
+/* Vertical drags scroll the list. The thumb only captures a sideways slide. */
+.ms-lf-map-card .ms-lf-slide,
+.ms-lf-map-card .ms-lf-slide-track,
+.ms-lf-map-card .ms-lf-slide-thumb {
+  touch-action: pan-y !important;
+}
+
+.ms-lf-map-card .ms-lf-slide.is-dragging,
+.ms-lf-map-card .ms-lf-slide.is-dragging .ms-lf-slide-track,
+.ms-lf-map-card .ms-lf-slide.is-dragging .ms-lf-slide-thumb {
+  touch-action: none !important;
+}
+
+.ms-lf-map,
+.ms-lf-map .maplibregl-canvas-container,
+.ms-lf-map .maplibregl-canvas {
+  touch-action: none;
+}
+
+.ms-lf-map-actions {
+  padding: 0.95rem var(--lf-chrome-x, 1rem) calc(0.95rem + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+.ms-lf-map-actions-tray {
+  padding: 0.7rem !important;
+  gap: 0.7rem !important;
+  border-radius: 22px !important;
+}
+
+.ms-lf-map-actions .ms-lf-map-scan,
+.ms-lf-map-actions .ms-lf-map-all {
+  height: 3.15rem !important;
+  min-height: 3.15rem !important;
+  font-size: 1.08rem !important;
+}
+
+.ms-lf-map-actions .ms-lf-map-scan {
+  padding: 0 1.4rem !important;
+}
+
+.ms-lf-map-actions .ms-lf-map-all {
+  width: 3.15rem !important;
+  min-width: 3.15rem !important;
+  padding: 0 !important;
 }

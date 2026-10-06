@@ -7,6 +7,7 @@
 
   var KEY = "ms_appearance";
   var PRESETS = [
+    { id: "ink", name: "Ink", color: "#1d1d1f" },
     { id: "violet", name: "Violet", color: "#8b5cf6" },
     { id: "ocean", name: "Ocean", color: "#3b82f6" },
     { id: "rose", name: "Rose", color: "#ec4899" },
@@ -19,7 +20,7 @@
     large: "Large",
     xlarge: "Extra large",
   };
-  var DEFAULTS = { mode: "light", color: "#3b82f6", text: "medium" };
+  var DEFAULTS = { mode: "light", color: "#1d1d1f", text: "medium" };
 
   function clamp(n) {
     return Math.max(0, Math.min(255, Math.round(n)));
@@ -102,7 +103,7 @@
   }
 
   function chromeColor() {
-    return document.documentElement.getAttribute("data-ms-mode") === "dark" ? "#0e1320" : "#eef3f8";
+    return document.documentElement.getAttribute("data-ms-mode") === "dark" ? "#0e1320" : "#fbfbfd";
   }
 
   function paintChrome() {
@@ -121,13 +122,16 @@
     var text = TEXT[prefs.text] ? prefs.text : DEFAULTS.text;
     var color = normalizeHex(prefs.color) || DEFAULTS.color;
     var rgb = hexToRgb(color);
-    var bright = color === "#3b82f6" ? "#60a5fa" : rgbToHex(mix(rgb, { r: 255, g: 255, b: 255 }, 0.28));
-    var strong = color === "#3b82f6" ? "#2563eb" : rgbToHex(mix(rgb, { r: 0, g: 0, b: 0 }, 0.2));
+    var ink = color === "#1d1d1f";
+    var bright = ink ? "#1d1d1f" : color === "#3b82f6" ? "#60a5fa" : rgbToHex(mix(rgb, { r: 255, g: 255, b: 255 }, 0.28));
+    var strong = ink ? "#000000" : color === "#3b82f6" ? "#2563eb" : rgbToHex(mix(rgb, { r: 0, g: 0, b: 0 }, 0.2));
     var softBase = mode === "dark" ? { r: 18, g: 24, b: 38 } : { r: 255, g: 255, b: 255 };
     var soft = rgbToHex(mix(rgb, softBase, mode === "dark" ? 0.82 : 0.88));
 
+    var tone = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255 < 0.4 ? "dark" : "light";
     root.setAttribute("data-ms-mode", mode);
     root.setAttribute("data-ms-text", text);
+    root.setAttribute("data-ms-accent-tone", tone);
     root.style.setProperty("--ms-accent", color);
     root.style.setProperty("--ms-accent-bright", bright);
     root.style.setProperty("--ms-accent-strong", strong);
@@ -156,15 +160,31 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261002-appearance5";
+      link.href = "css/appearance.css?v=20261006-allero";
     }
+    var ui = document.getElementById("ms-allero-css");
+    if (!ui) {
+      ui = document.createElement("link");
+      ui.id = "ms-allero-css";
+      ui.rel = "stylesheet";
+      ui.href = "css/allero-ui.css?v=20261006-chrome";
+    }
+    var font = document.getElementById("ms-allero-font");
+    if (!font) {
+      font = document.createElement("link");
+      font.id = "ms-allero-font";
+      font.rel = "stylesheet";
+      font.href = "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap";
+    }
+    if (!font.parentNode) document.head.appendChild(font);
     if (studio && studio.parentNode) {
       if (link.parentNode !== studio.parentNode || studio.nextElementSibling !== link) {
         studio.insertAdjacentElement("afterend", link);
       }
-      return;
+    } else if (!link.parentNode) {
+      document.head.appendChild(link);
     }
-    if (!link.parentNode) document.head.appendChild(link);
+    if (document.head.lastElementChild !== ui) document.head.appendChild(ui);
   }
 
   function watchCss() {

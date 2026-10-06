@@ -7,7 +7,7 @@
 (function () {
   if (!window.__msAppearanceBoot) {
     window.__msAppearanceBoot = 1;
-    document.write('<script src="js/appearance.js?v=20261002-appearance5"><\/script>');
+    document.write('<script src="js/appearance.js?v=20261006-chrome"><\/script>');
   }
 
   var PUBLIC = {
@@ -55,7 +55,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261003-avatar", "js/app.js?v=20261005-auth"].forEach(function (href) {
+  ["js/config.js?v=20261006-blue", "js/app.js?v=20261006-menu"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";

@@ -69,7 +69,7 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261005-auth"></script>
+  <script src="js/auth-gate-head.js?v=20261006-chrome"></script>
   <title>Welcome - Moonrise Studio</title>
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
 <style>
@@ -90,7 +90,9 @@ document.documentElement.classList.add("ms-boot");
   </style>
   <link rel="stylesheet" href="css/studio.css?v=20261003-cal">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-  <link rel="stylesheet" href="css/onboarding-premium.css?v=20261002-payout-confirm">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
+  <link rel="stylesheet" href="css/allero-ui.css?v=20261006-chrome">
+  <link rel="stylesheet" href="css/onboarding-premium.css?v=20261006-plain">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="onboarding" class="ms-onboard-page">
@@ -104,9 +106,10 @@ document.documentElement.classList.add("ms-boot");
             <span>moonrise.</span>
           </a>
           <div class="ms-onboard-card-head-actions">
-            <span class="ms-onboard-step-pill" id="onb-progress-label">1 / 7</span>
+            <span class="ms-onboard-step-pill" id="onb-progress-label">1 of 7</span>
           </div>
         </div>
+        <p class="ms-onboard-step-name" id="onb-step-name">Welcome</p>
         <div class="ms-onboard-progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1" id="onb-progress-bar">
           <div class="ms-onboard-progress-fill" id="onb-progress-fill"></div>
         </div>
@@ -120,8 +123,13 @@ document.documentElement.classList.add("ms-boot");
               <h1>Welcome</h1>
             </header>
             <p class="ms-onboard-lead">
-              Create free websites for local businesses and get paid when they unlock the site for commercial use.
+              You make a free website for a local business. They pay on that site if they want to keep it. You keep 90%.
             </p>
+            <ol class="ms-onboard-preview">
+              <li><strong>Learn the steps</strong><span>How a sale works, from the first search to your payout.</span></li>
+              <li><strong>Agree to the rule</strong><span>Owners pay on Moonrise. You never charge them yourself.</span></li>
+              <li><strong>Set up payouts</strong><span>A card on file, where we send your money, and how clients reach you.</span></li>
+            </ol>
           </div>
           <footer class="ms-onboard-actions">
             <button type="button" class="ms-btn ms-onboard-next" data-onb-next>Continue</button>
@@ -132,87 +140,33 @@ document.documentElement.classList.add("ms-boot");
         <section class="ms-onboard-panel ms-onboard-panel--path" data-onb-step="2" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head">
-              <h1>How it works</h1>
+              <h1>How you get paid</h1>
             </header>
-            <p class="ms-onboard-lead">From finding a business to getting paid.</p>
-            <ol class="ms-onboard-path ms-onboard-path--flip">
+            <p class="ms-onboard-lead">Six steps. Nothing here is hidden.</p>
+            <ol class="ms-onboard-plain">
               <li>
-                <button type="button" class="ms-onboard-flip-card" aria-pressed="false" aria-label="Step 1: Find a business">
-                  <span class="ms-onboard-flip-card-inner">
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-front">
-                      <span class="ms-onboard-path-num" aria-hidden="true">1</span>
-                      <strong class="ms-onboard-flip-card-title">Find a business</strong>
-                    </span>
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-back">
-                      <p>Search local businesses that need a website.</p>
-                    </span>
-                  </span>
-                </button>
+                <span class="ms-onboard-plain-num">1</span>
+                <span><strong>Find a business</strong><span>Search for a local business that needs a website.</span></span>
               </li>
               <li>
-                <button type="button" class="ms-onboard-flip-card" aria-pressed="false" aria-label="Step 2: Swipe to build Website">
-                  <span class="ms-onboard-flip-card-inner">
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-front">
-                      <span class="ms-onboard-path-num" aria-hidden="true">2</span>
-                      <strong class="ms-onboard-flip-card-title">Swipe to build Website</strong>
-                    </span>
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-back">
-                      <p>Generate the site and set the Website Price in the editor.</p>
-                    </span>
-                  </span>
-                </button>
+                <span class="ms-onboard-plain-num">2</span>
+                <span><strong>Build the site</strong><span>Swipe to generate it, then set the price the owner will pay.</span></span>
               </li>
               <li>
-                <button type="button" class="ms-onboard-flip-card" aria-pressed="false" aria-label="Step 3: Publish it">
-                  <span class="ms-onboard-flip-card-inner">
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-front">
-                      <span class="ms-onboard-path-num" aria-hidden="true">3</span>
-                      <strong class="ms-onboard-flip-card-title">Publish it</strong>
-                    </span>
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-back">
-                      <p>Publish the live site with a watermark until the owner pays.</p>
-                    </span>
-                  </span>
-                </button>
+                <span class="ms-onboard-plain-num">3</span>
+                <span><strong>Publish it</strong><span>The site goes live with a small watermark until they pay.</span></span>
               </li>
               <li>
-                <button type="button" class="ms-onboard-flip-card" aria-pressed="false" aria-label="Step 4: Send client the link">
-                  <span class="ms-onboard-flip-card-inner">
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-front">
-                      <span class="ms-onboard-path-num" aria-hidden="true">4</span>
-                      <strong class="ms-onboard-flip-card-title">Send client the link</strong>
-                    </span>
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-back">
-                      <p>Share the live site link. They pay only through Moonrise.</p>
-                    </span>
-                  </span>
-                </button>
+                <span class="ms-onboard-plain-num">4</span>
+                <span><strong>Send the link</strong><span>Share the live site. They pay only on Moonrise, never to you directly.</span></span>
               </li>
               <li>
-                <button type="button" class="ms-onboard-flip-card" aria-pressed="false" aria-label="Step 5: They pay">
-                  <span class="ms-onboard-flip-card-inner">
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-front">
-                      <span class="ms-onboard-path-num" aria-hidden="true">5</span>
-                      <strong class="ms-onboard-flip-card-title">They pay</strong>
-                    </span>
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-back">
-                      <p>They tap the watermark, pay once, and it is removed automatically.</p>
-                    </span>
-                  </span>
-                </button>
+                <span class="ms-onboard-plain-num">5</span>
+                <span><strong>They pay</strong><span>They tap the watermark and pay once. The watermark comes off.</span></span>
               </li>
               <li>
-                <button type="button" class="ms-onboard-flip-card" aria-pressed="false" aria-label="Step 6: You get paid">
-                  <span class="ms-onboard-flip-card-inner">
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-front">
-                      <span class="ms-onboard-path-num" aria-hidden="true">6</span>
-                      <strong class="ms-onboard-flip-card-title">You get paid</strong>
-                    </span>
-                    <span class="ms-onboard-flip-card-face ms-onboard-flip-card-back">
-                      <p>You keep 90%. Find the next business and repeat.</p>
-                    </span>
-                  </span>
-                </button>
+                <span class="ms-onboard-plain-num">6</span>
+                <span><strong>You get paid</strong><span>You keep 90%. Then find the next business.</span></span>
               </li>
             </ol>
           </div>
@@ -226,13 +180,13 @@ document.documentElement.classList.add("ms-boot");
         <section class="ms-onboard-panel" data-onb-step="3" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head">
-              <h1>Policies</h1>
+              <h1>The one rule</h1>
             </header>
-            <p class="ms-onboard-lead">Read these before you start selling.</p>
+            <p class="ms-onboard-lead">Owners pay on their website. You do not collect the money yourself.</p>
             <div class="ms-creator-policy-notice ms-onboard-policy" role="note">
-              <strong>Creators never charge business owners directly.</strong>
-              <p>Business owners pay through the watermark on their live website. After payment, the watermark is removed automatically and you receive 90% of the sale. Add payout details in Settings to get paid.</p>
-              <p>Off-platform payments (cash, Venmo, PayPal, invoices, etc.) are not allowed and may result in account termination and forfeited payouts.</p>
+              <strong>Never charge a business owner directly.</strong>
+              <p>They pay through the watermark. After they pay, the watermark comes off and you receive 90%.</p>
+              <p>Cash, Venmo, PayPal, invoices, or any other off-site payment is not allowed. It can close your account and cancel payouts.</p>
             </div>
             <div class="ms-onboard-legal-links">
               <a class="ms-onboard-legal-card" href="privacy.html" target="_blank" rel="noopener">
@@ -242,7 +196,7 @@ document.documentElement.classList.add("ms-boot");
                 <span class="ms-onboard-legal-copy">
                   <strong>Privacy Policy</strong>
                 </span>
-                <span class="ms-onboard-legal-arrow" aria-hidden="true">?</span>
+                <span class="ms-onboard-legal-arrow" aria-hidden="true">→</span>
               </a>
               <a class="ms-onboard-legal-card" href="terms.html" target="_blank" rel="noopener">
                 <span class="ms-onboard-legal-icon" aria-hidden="true">
@@ -251,7 +205,7 @@ document.documentElement.classList.add("ms-boot");
                 <span class="ms-onboard-legal-copy">
                   <strong>Terms of Service</strong>
                 </span>
-                <span class="ms-onboard-legal-arrow" aria-hidden="true">?</span>
+                <span class="ms-onboard-legal-arrow" aria-hidden="true">→</span>
               </a>
             </div>
             <label class="ms-onboard-check">
@@ -269,7 +223,7 @@ document.documentElement.classList.add("ms-boot");
         <section class="ms-onboard-panel" data-onb-step="4" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head ms-onboard-panel-head--stripe">
-              <h1>Security card</h1>
+              <h1>Card on file</h1>
               <a
                 class="ms-onboard-stripe-partner"
                 id="onb-stripe-partner"
@@ -287,7 +241,7 @@ document.documentElement.classList.add("ms-boot");
                 </span>
               </a>
             </header>
-            <p class="ms-onboard-lead">Add a card we keep on file to prevent fraud, scam, chargebacks, or violations of the Terms of Service. Verification is handled by Stripe, our payments partner. We run a temporary $1 charge to confirm the card is valid, then refund it immediately.</p>
+            <p class="ms-onboard-lead">Add a card so the account stays in good standing. Stripe checks it with a $1 charge, then refunds that $1 right away. You are not paying to join.</p>
             <div class="ms-onboard-form-block">
               <div class="ms-sec-card-panel" id="onb-security-card-panel">
                 <div id="onb-security-card-mount"></div>
@@ -328,9 +282,9 @@ document.documentElement.classList.add("ms-boot");
         <section class="ms-onboard-panel" data-onb-step="5" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head">
-              <h1>Payout method</h1>
+              <h1>Where we pay you</h1>
             </header>
-            <p class="ms-onboard-lead" id="onb-payout-lead">Tell us where to deliver your payout when business owners purchase their website.</p>
+            <p class="ms-onboard-lead" id="onb-payout-lead">When an owner buys their site, we send your 90% here.</p>
             <div class="ms-onboard-form-block" id="onb-payout-form">
               <div class="ms-field">
                 <label class="ms-label" id="onb-payout-method-label">How you get paid</label>
@@ -384,10 +338,10 @@ document.documentElement.classList.add("ms-boot");
         <section class="ms-onboard-panel" data-onb-step="6" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head">
-              <h1>Contact information</h1>
+              <h1>How clients reach you</h1>
             </header>
             <p class="ms-onboard-lead">
-              How clients and Moonrise can reach you. Clients may call for small site changes - feel free to use a virtual number to keep your personal line private.
+              Add an email and phone clients can use for small edits. A free virtual number is fine if you want to keep your personal number private.
             </p>
             <div class="ms-onboard-form-block">
               <div class="ms-field">
@@ -426,7 +380,7 @@ document.documentElement.classList.add("ms-boot");
         <section class="ms-onboard-panel ms-onboard-panel--celebrate" data-onb-step="7" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head ms-onboard-panel-head--celebrate">
-              <h1>You're ready!</h1>
+              <h1>You're ready</h1>
               <div class="ms-onb-celebrate-mark" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="9"/>
@@ -435,7 +389,7 @@ document.documentElement.classList.add("ms-boot");
               </div>
             </header>
             <p class="ms-onboard-lead">
-              Open Business Finder and build your first free site.
+              Next, find a local business and build their site. The short video shows the whole flow.
             </p>
             <div class="ms-course-video ms-onb-celebrate-video">
               <iframe
@@ -456,7 +410,7 @@ document.documentElement.classList.add("ms-boot");
     </div>
   </div>
 
-  <script defer src="js/config.js?v=20261003-avatar"></script>
+  <script defer src="js/config.js?v=20261006-blue"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261005-auth"></script>
   <script defer src="js/auth.js?v=20261005-auth"></script>
@@ -465,6 +419,6 @@ document.documentElement.classList.add("ms-boot");
   <script defer src="js/toast.js"></script>
   <script defer src="js/payout-profile.js?v=20260719-payout-other"></script>
   <script defer src="js/security-card.js?v=20260720-precheck-card"></script>
-  <script defer src="js/onboarding.js?v=20261003-boot"></script>
+  <script defer src="js/onboarding.js?v=20261006-plain"></script>
 </body>
 </html>

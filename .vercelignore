@@ -19,3 +19,4 @@ accesstokens.env
 .env.vercel.production
 **/secrets/**
 **/*credentials*
+_allero-preview

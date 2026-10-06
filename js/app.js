@@ -234,7 +234,7 @@
     const c = window.SITE_CONFIG || {};
     return (
       c.defaultAvatarUrl ||
-      "doc/profilepicture.jpg"
+      "doc/profilepicture.jpg?v=20261006-blue"
     );
   }
 
@@ -1952,21 +1952,15 @@
     } catch (_) {
       /* ignore */
     }
-    const onHelp = page === "help";
     bar.innerHTML =
       '<span class="ms-top-brand">' +
       '<img class="ms-top-brand-logo" src="' +
       brandLogo() +
-      '" alt="" width="28" height="28" decoding="async">' +
+      '" alt="" width="36" height="36" decoding="async">' +
       '<span class="ms-top-brand-name">moonrise.</span>' +
-      "</span>" +
-      '<a class="ms-help-btn' +
-      (onHelp ? " is-current" : "") +
-      '" href="help.html" aria-label="Help"' +
-      (onHelp ? ' aria-current="page"' : "") +
-      ">" +
-      ICONS.info +
-      "</a>";
+      "</span>";
+    const menuToggle = document.getElementById("ms-menu-toggle");
+    if (menuToggle) bar.appendChild(menuToggle);
   }
 
   const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings"];

@@ -178,6 +178,7 @@
     const { track, thumb } = gestureMetrics;
 
     const startX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+    const startY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
     const onThumb = !!e.target.closest?.(".ms-lf-slide-thumb");
     let originLeft = readX(slide);
     if (!onThumb) {
@@ -191,36 +192,13 @@
     const pointerOriginX = startX;
     let current = Math.max(0, Math.min(max, originLeft));
     let finished = false;
-    let moved = Math.abs(current) > 1;
+    let locked = false;
+    let moved = false;
     let raf = 0;
     let latestX = startX;
     const pointerId = e.pointerId ?? 1;
     const usePointer = e.pointerId != null;
-
-    // Lock the gesture immediately so parent scroll / list refresh cannot steal it.
-    try {
-      e.preventDefault();
-      if (typeof e.stopPropagation === "function") e.stopPropagation();
-    } catch (_) {
-      /* ignore */
-    }
-
-    slide.dataset.msLfSlideDragging = "1";
-    slide.classList.add("is-dragging");
-    global.document.body.classList.add("ms-lf-slide-dragging");
-    setX(slide, current, gestureMetrics);
-
-    if (usePointer) {
-      try {
-        thumb.setPointerCapture(pointerId);
-      } catch (_) {
-        try {
-          track.setPointerCapture(pointerId);
-        } catch (_) {
-          /* ignore */
-        }
-      }
-    }
+    const AXIS = 10;
 
     function clientX(ev) {
       if (ev && ev.clientX != null) return ev.clientX;
@@ -277,9 +255,41 @@
       }
     }
 
+    function pointY(ev) {
+      if (ev && ev.clientY != null) return ev.clientY;
+      const touch = ev?.changedTouches?.[0] || ev?.touches?.[0];
+      return touch ? touch.clientY : startY;
+    }
+
+    function lockGesture() {
+      if (locked || finished) return;
+      locked = true;
+      slide.dataset.msLfSlideDragging = "1";
+      slide.classList.add("is-dragging");
+      global.document.body.classList.add("ms-lf-slide-dragging");
+      setX(slide, current, gestureMetrics);
+      if (usePointer) {
+        try {
+          thumb.setPointerCapture(pointerId);
+        } catch (_) {
+          try {
+            track.setPointerCapture(pointerId);
+          } catch (_) {
+            /* ignore */
+          }
+        }
+      }
+    }
+
+    function abortPending() {
+      if (finished || locked) return;
+      finished = true;
+      teardownListeners();
+    }
+
     function applyFrame() {
       raf = 0;
-      if (finished) return;
+      if (finished || !locked) return;
       const next = originLeft + (latestX - pointerOriginX);
       current = setX(slide, next, gestureMetrics, { drag: true });
       if (Math.abs(latestX - pointerOriginX) >= 3) moved = true;
@@ -291,17 +301,33 @@
     function onMove(ev) {
       if (finished) return;
       if (usePointer && ev.pointerId != null && ev.pointerId !== pointerId) return;
+      const x = clientX(ev);
+      if (!locked) {
+        const dx = Math.abs(x - pointerOriginX);
+        const dy = Math.abs(pointY(ev) - startY);
+        // Vertical wins: leave the gesture to the list scroll or map pan.
+        if (dy >= AXIS && dy >= dx) {
+          abortPending();
+          return;
+        }
+        if (dx < AXIS || dx <= dy) return;
+        lockGesture();
+      }
       try {
         ev.preventDefault();
       } catch (_) {
         /* ignore */
       }
-      latestX = clientX(ev);
+      latestX = x;
       if (!raf) raf = global.requestAnimationFrame(applyFrame);
     }
 
     function onRelease(ev) {
       if (usePointer && ev?.pointerId != null && ev.pointerId !== pointerId) return;
+      if (!locked) {
+        abortPending();
+        return;
+      }
       latestX = clientX(ev || {});
       current = setX(slide, originLeft + (latestX - pointerOriginX), gestureMetrics, { drag: true });
       if (Math.abs(latestX - pointerOriginX) >= 3) moved = true;
@@ -310,6 +336,10 @@
 
     function onCancel(ev) {
       if (usePointer && ev?.pointerId != null && ev.pointerId !== pointerId) return;
+      if (!locked) {
+        abortPending();
+        return;
+      }
       // Browser stole the gesture (scroll/refresh). Keep progress: complete if far enough,
       // otherwise soft-hold then return - never hard-clear mid-slide without animation.
       latestX = clientX(ev || {});
@@ -318,12 +348,13 @@
       finish(false);
     }
 
+    const moveOpts = { capture: true, passive: false };
     if (usePointer) {
-      global.addEventListener("pointermove", onMove, true);
+      global.addEventListener("pointermove", onMove, moveOpts);
       global.addEventListener("pointerup", onRelease, true);
       global.addEventListener("pointercancel", onCancel, true);
     } else if (e.type === "touchstart") {
-      global.addEventListener("touchmove", onMove, { capture: true, passive: false });
+      global.addEventListener("touchmove", onMove, moveOpts);
       global.addEventListener("touchend", onRelease, true);
       global.addEventListener("touchcancel", onCancel, true);
     } else {
@@ -372,15 +403,7 @@
       if (!track) return;
       const slide = track.closest(".ms-lf-slide");
       if (!slide) return;
-      const started = beginDrag(e, slide, hooks);
-      if (started) {
-        try {
-          e.preventDefault();
-          e.stopPropagation();
-        } catch (_) {
-          /* ignore */
-        }
-      }
+      beginDrag(e, slide, hooks);
     }
 
     container.addEventListener("pointerdown", onStart, true);
