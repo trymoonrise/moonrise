@@ -148,6 +148,7 @@ const {
   buildEditUserPrompt,
   buildBusinessBrief,
   buildVariationBrief,
+  applyStyleFamily,
   selectStockMedia,
   ensureStockMediaInHtml,
   ensurePaletteContrast,
@@ -2251,6 +2252,17 @@ function scorePresetCandidate(item, { sectionRole, moodAnchor, layoutAnchor, see
   }
   const layout = String(item.layout || "").trim();
   if (layoutAnchor && layout && layout === layoutAnchor) score += 10;
+  const blob = [
+    moods.join(" "),
+    Array.isArray(item.tags) ? item.tags.join(" ") : "",
+    item.title || "",
+    item.summary || "",
+    item.slug || "",
+  ]
+    .join(" ")
+    .toLowerCase();
+  if (/quiet|minimal|editorial|clean|modern|premium|simple|studio/.test(blob)) score += 18;
+  if (/kinetic|neon|glitch|3d|glow|playful|loud|particle|marquee|experimental/.test(blob)) score -= 24;
   // Tiny seeded jitter so ties still vary by business/variation.
   score += hashPick(`${seedKey}:${item.id}`, 7);
   return score;
@@ -2588,14 +2600,14 @@ function buildLocalPlan(ctx) {
   const profile = ATMOSPHERE_PROFILES.find((p) => p.match.test(hay)) || DEFAULT_ATMOSPHERE;
   const structure = getBusinessStructure(ctx);
   const variation = buildVariationBrief(ctx?.variationSeed);
-  return {
+  return applyStyleFamily({
     atmosphere: profile.atmosphere,
     voice: profile.voice,
     palette: { ...profile.palette },
     type: { ...profile.type },
     structure,
     variation,
-  };
+  });
 }
 
 /**
@@ -3073,6 +3085,7 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       ({ plan, ids, roleById } = await planAtmosphereAndPicks(ctx));
       plan.structure = getBusinessStructure(ctx);
       plan.variation = buildVariationBrief(ctx.variationSeed);
+      applyStyleFamily(plan);
     } else {
       plan = buildLocalPlan(ctx);
       ({ ids, roleById } = selectKitIdsLocally(ctx));

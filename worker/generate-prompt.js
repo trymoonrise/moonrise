@@ -32,21 +32,21 @@ const HEADLINE_ANGLES = [
 ];
 
 const LAYOUT_EMPHASIS = [
-  "Hero: full-bleed photo or muted looping video covering the first viewport; copy overlays the media with a purposeful gradient - never an inset card.",
-  "Hero: floating island nav over a full-bleed media plane; brand left, links center, book CTA right.",
-  "Hero: one composition only - brand signal + one headline + one short line + CTA pair on edge-to-edge imagery.",
-  "Services: alternate text/image rows with editorial rhythm (title | lede across a hairline) instead of a flat icon grid.",
-  "Services: photo-filled tiles only when the kit supports real imagery - never empty icon cards as the main idea.",
-  "Proof + CTA: quiet trust footnotes or a mid-page photo band before contact - not a neon promo strip.",
+  "Keep the style family's hero. Do not add a second hero treatment.",
+  "Services as a short numbered list with hairline rows.",
+  "One wide photo between two text sections.",
+  "Gallery as edge-to-edge images, no frames.",
+  "FAQ as a simple hairline accordion.",
+  "Contact as stacked fields on the family's surface, same button as the hero.",
 ];
 
 const VISUAL_RHYTHM = [
-  "Alternate white and softly tinted sections; use photo/video and radial washes so the page never reads as one flat color.",
-  "Deep hero media, light mid sections, one grounded footer - atmosphere from imagery, not purple gradients.",
-  "Generous vertical spacing, narrow body measure, oversized editorial section titles.",
-  "Crisp type hierarchy with minimal shadows; avoid multi-layer glow and card-everywhere layouts.",
-  "Island nav + full-bleed hero, then open sections - cards only where the user interacts (menu, form, hours, team).",
-  "Material surfaces: subtle contrast/brightness on photos, soft tonal shifts between bands, one deep brand hue.",
+  "Generous vertical space. Section titles are large and tight. Body copy stays short.",
+  "Hairline rules instead of cards and shadows.",
+  "One type pairing for the whole page.",
+  "Photos sit full-bleed or in a clean half. No tilted frames.",
+  "Muted gray for secondary text. Ink for headlines.",
+  "The footer closes the page. It does not introduce a new accent color.",
 ];
 
 const COPY_TONE_VARIANTS = [
@@ -58,12 +58,90 @@ const COPY_TONE_VARIANTS = [
 ];
 
 const COMPONENT_TWISTS = [
-  "Primary CTA solid near-black or brand ink; secondary ghost outline - radius ~10-14px, never rounded-full pills.",
-  "Floating frosted island nav over the hero media (not a full-bleed dark bar).",
-  "Put trust lines as hero footnotes or a post-hero strip - never floating badges stuck on the hero photo.",
-  "Ken-Burns drift or subtle media parallax on the hero image/video when motion is allowed.",
-  "End with a split contact block: form + NAP side by side on desktop.",
-  "Ship 2-3 intentional motions (hero enter, scroll reveal, hover wipe) and honor prefers-reduced-motion.",
+  "One motion only: a soft fade on the hero headline. Honor prefers-reduced-motion.",
+  "Hairline rules between sections instead of cards.",
+  "A numbered list for services or how-it-works, with the number in muted type.",
+  "One full-width photo band in the middle of the page, no frame, no shadow.",
+  "Contact sits on a plain surface with stacked fields and the same button as the hero.",
+  "Footer is a solid ink or black band with small muted type.",
+];
+
+/**
+ * Clean modern families. Same language (ink, paper, hairlines, huge type,
+ * almost no chrome) with different compositions so sites are not one template.
+ */
+const STYLE_FAMILIES = [
+  {
+    id: "paper",
+    name: "Paper",
+    atmosphere:
+      "Super-modern paper site. White page, ink type, hairline rules, huge tight headlines, full-bleed hero with centered light type and a white pill, black footer. Quiet and current.",
+    palette: { bg: "#ffffff", surface: "#ffffff", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
+    type: { display: "Manrope", body: "Manrope" },
+    layout:
+      "Sticky full-width white bar, 1px hairline, optional light blur. Hero is edge-to-edge media with centered copy: small kicker, huge headline, one short line, white pill. Later sections are open white bands separated by hairlines, not cards. Footer is solid black.",
+    button:
+      "Primary is a pill (border-radius 980px), about 2.5rem tall, no shadow. On the dark hero it is white with ink text. Elsewhere it is ink with white text. Secondary is a text link, not a second filled button.",
+  },
+  {
+    id: "night",
+    name: "Night",
+    atmosphere:
+      "Near-black modern site. Ink page, off-white type, one full-bleed hero, white pills, a single light band for the form. Still minimal.",
+    palette: { bg: "#0c0c0e", surface: "#161618", ink: "#f5f5f7", muted: "#a1a1a6", accent: "#f5f5f7" },
+    type: { display: "Manrope", body: "Manrope" },
+    layout:
+      "Sticky dark bar with a hairline. Centered type on full-bleed media. Sections stay dark and are separated by hairlines. One light #f5f5f7 band holds the contact form. Footer blends into the dark page.",
+    button:
+      "Primary is a white pill with ink text. Secondary is a hairline pill in off-white. No glow.",
+  },
+  {
+    id: "stone",
+    name: "Stone",
+    atmosphere:
+      "Soft gray modern site. #f5f5f7 page, white only where someone types, left-aligned hero type over media, quiet 12px corners.",
+    palette: { bg: "#f5f5f7", surface: "#ffffff", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
+    type: { display: "Outfit", body: "Outfit" },
+    layout:
+      "Sticky light bar. Hero copy sits lower-left on the media, not centered. Services are a simple list or two columns of text, not icon cards. Images are full-bleed bands. Footer is ink.",
+    button:
+      "Primary is a solid ink rectangle, radius 12px, no shadow. Secondary is a hairline rectangle.",
+  },
+  {
+    id: "split",
+    name: "Split",
+    atmosphere:
+      "Split modern site. White page, hero is two halves (words on the left, photo on the right), huge type, hairline service grid, black footer.",
+    palette: { bg: "#ffffff", surface: "#f5f5f7", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
+    type: { display: "Manrope", body: "Manrope" },
+    layout:
+      "Sticky white bar. First screen is a 50/50 split, not an overlay. On phones the photo stacks under the headline. Services are a two-column hairline grid. Gallery is edge-to-edge. Footer is black.",
+    button:
+      "Primary is an ink pill. Secondary is a text link. Do not add a second filled button.",
+  },
+  {
+    id: "quiet",
+    name: "Quiet",
+    atmosphere:
+      "Type-first modern site. White page, enormous headline with no photo behind it, one wide photo under the headline, then a short numbered list. Almost no chrome.",
+    palette: { bg: "#ffffff", surface: "#ffffff", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
+    type: { display: "Manrope", body: "Manrope" },
+    layout:
+      "Sticky white bar. Hero is type on white. A single full-width image sits under the CTA. Services or how-it-works is a numbered list. FAQ is a hairline accordion. Footer is black.",
+    button: "Primary is an ink pill. The other action is a text link.",
+  },
+  {
+    id: "editorial",
+    name: "Editorial",
+    atmosphere:
+      "Editorial modern site. White page, serif headlines, grotesk body, thin rules, left-aligned, one photo per section. Current, not vintage.",
+    palette: { bg: "#ffffff", surface: "#fafafa", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
+    type: { display: "Newsreader", body: "Manrope" },
+    layout:
+      "Sticky white bar, wordmark in the serif. Hero is left-aligned type beside a tall photo. Sections are separated by 1px rules. No cards and no shadows. Footer is a rule plus small type, or a solid black close.",
+    button:
+      "Primary is an ink rectangle with radius 2px. Secondary is an underlined text link.",
+  },
 ];
 
 function hashFromString(input) {
@@ -84,8 +162,10 @@ function pickFrom(list, seed) {
 /** Per-generation creative brief so every site feels fresh but stays on-brand. */
 function buildVariationBrief(seed) {
   const s = String(seed || `${Date.now()}-${Math.random()}`);
+  const family = pickFrom(STYLE_FAMILIES, `${s}:family`);
   return {
     seed: s,
+    family,
     headlineAngle: pickFrom(HEADLINE_ANGLES, `${s}:headline`),
     layoutEmphasis: pickFrom(LAYOUT_EMPHASIS, `${s}:layout`),
     visualRhythm: pickFrom(VISUAL_RHYTHM, `${s}:rhythm`),
@@ -94,9 +174,30 @@ function buildVariationBrief(seed) {
   };
 }
 
+/** Force the chosen modern family onto a plan so trade heuristics cannot recolor it. */
+function applyStyleFamily(plan) {
+  const family = plan?.variation?.family;
+  if (!family || typeof family !== "object") return plan;
+  plan.atmosphere = family.atmosphere;
+  plan.palette = { ...family.palette };
+  plan.type = { ...family.type };
+  return plan;
+}
+
 function formatVariationBrief(variation) {
   if (!variation) return "";
   return [
+    "## Style family (mandatory - this decides the look)",
+    variation.family
+      ? [
+          `Family: ${variation.family.name}`,
+          `Look: ${variation.family.atmosphere}`,
+          `Layout: ${variation.family.layout}`,
+          `Buttons: ${variation.family.button}`,
+          "The style family wins over kit chrome. Strip neon, glow, 3D, clip-path, heavy shadows, mixed radii, and demo colors.",
+        ].join("\n")
+      : "Family: Paper. White page, ink type, hairlines, huge type, black footer.",
+    "",
     "## Creative variation (mandatory - unique every generation)",
     `Variation seed: ${variation.seed}`,
     `- Hero headline angle: ${variation.headlineAngle}`,
@@ -104,9 +205,9 @@ function formatVariationBrief(variation) {
     `- Visual rhythm: ${variation.visualRhythm}`,
     `- Copy tone nuance: ${variation.copyTone}`,
     `- Component twist: ${variation.componentTwist}`,
-    "Same business facts every time, but never clone a prior layout or headline pattern.",
-    "Vary section emphasis, media treatment, and copy angles while keeping one cohesive design system.",
-    "Reject AI-template tells: flat navy hero, Inter/Roboto brand type, orange pill CTAs, hero chip clusters.",
+    "Same business facts every time, but never clone a prior headline.",
+    "Stay inside the style family. Do not invent a second color theme.",
+    "Reject AI-template tells: navy heroes, Inter/Roboto, orange or neon CTAs, purple gradients, icon-card walls, hero chip clusters.",
   ].join("\n");
 }
 
@@ -154,12 +255,10 @@ Rules:
 - Use each entry's summary + slots to judge fit. Prefer shared mood tags across picks so the kit feels cohesive.
 - Cohesion: prefer presets that share a visual language (similar mood/tags: minimal, card-led, modern, media-forward). Avoid mixing flashy kinetic ornaments with ultra-minimal footers unless you can unify them.
 - Prefer kit combinations that reuse the same layout primitives (card grids, button styles, section headers) so the assembler can normalize them into one design system.
-- Color palette (critical): invent a cohesive 5-color scheme - harmonious, intentional, and distinctive for THIS trade. Not a generic blue/orange SaaS kit.
-  - bg / surface / ink / muted / accent must work together as one palette (shared undertone or clear complementary accent).
-  - ink on bg and ink on surface must stay highly readable (strong contrast). Accent must pop on both light and dark surfaces used in the plan.
-  - Prefer rich, designed hues over muddy grays or neon clash. Ban default AI orange CTAs, purple-indigo SaaS, and flat navy-with-no-photo heroes.
-  - Trade cues: trades/home services -> charcoal/ink + steel or warm neutral (black/white CTAs beat safety-orange pills); beauty/wellness -> soft neutrals + one deep brand hue or script brand; law/finance -> deep ink + restrained gold or teal; food -> appetite-friendly warm tones; outdoor -> natural greens - always refined, never clipart-loud.
-  - Type vibe: distinctive display (serif, script, or characterful grotesk) + solid body sans - never Inter/Roboto as the brand voice.
+- Color palette (critical): stay inside a clean modern family. Paper white (#ffffff) and ink (#1d1d1f), or near-black (#0c0c0e) with off-white type. Accent is ink or off-white, never a bright hue.
+  - bg / surface / ink / muted / accent must read as one quiet system. Muted is a gray (#6e6e73 or #a1a1a6), not a tinted brand color.
+  - Ban orange, neon, purple, indigo, navy, teal, and gold accents. Ban script and decorative display faces.
+  - Type vibe: Manrope or Outfit for both display and body. Newsreader is allowed only for editorial headlines. Never Inter/Roboto.
 - Do not write HTML. Do not invent contact facts.`;
 
 /** Stage 2 - assemble collected components into one site. */
@@ -169,24 +268,23 @@ You receive business facts, an atmosphere/palette plan, a trade-specific page bo
 
 Return ONLY one complete HTML document (doctype + html). No markdown fences. No preamble. No commentary.
 
-## Design north star (critical - anti AI-template)
-Build sites that feel like a careful local craftsperson designed them (MindWell / boutique studio energy), NOT a generic AI landing page.
-Banned AI tells (never ship these):
-- Flat dark navy/black hero with NO real photo or video
-- Inter / Roboto / Arial / system-ui as the brand voice
-- Orange (#ea580c / safety-orange) pill CTAs as the default trade look
-- Purple-to-indigo SaaS gradients, glow effects, rounded-full marketing pills
-- Hero packed with stats chips, address blocks, schedules, icon rows, or floating badges on the media
-- Inset hero image cards, side-panel heroes, or collage tiles in the first viewport
-- "Welcome to...", "Your trusted...", "Quality you can count on" cookie headlines
+## Design north star (critical)
+Build a super-modern, clean, minimal business site. Think a current product site: lots of white or near-black, ink type, hairline rules, huge tight headlines, one strong photo or video, almost no chrome.
+Follow the Style family in the user message. That family is the design. Do not copy a raffle, a SaaS dashboard, or a craft-template brochure.
+Banned (never ship these):
+- Orange, neon, purple, indigo, navy, teal, or gold accents
+- Inter / Roboto / Arial as the brand face
+- Glow, glassmorphism, 3D tilt, clip-path, torn edges, heavy shadows
+- Icon-card walls, stat chips, floating badges, or a collage in the first viewport
+- A different color theme per section
+- "Welcome to...", "Your trusted...", "Quality you can count on"
 
-Handmade bar (must pass):
-- Brand-test: if you remove the nav, the first viewport still feels brand-specific via imagery + type - not a reusable template.
-- First viewport = ONE composition: full-bleed media + brand signal + one headline + one short support line + CTA group.
-- Real photography/video is the visual idea. Decorative gradients alone do not count as the hero.
-- CTAs: solid near-black / brand ink + outline ghost. Radius ~10-14px. Not rounded-full pills.
-- Prefer floating island nav (frosted or solid, subtle border) over a full-bleed dark bar.
-- Cards are the exception: only for interaction (services menu, form, hours, team). Hero never uses cards.
+Modern bar (must pass):
+- One composition in the first viewport, exactly as the style family describes.
+- Real photography or video is the visual idea when the family uses media. Decorative gradients do not replace it.
+- Buttons follow the family's button rule everywhere, including the form.
+- Nav is a simple sticky bar (wordmark, a few links, one action). Not a floating island and not a dark marketing bar unless the family is Night.
+- Open sections. Cards only for the contact form, and only if the family uses a surface. No drop shadows.
 
 ## Assembly method (read first)
 1) Define ONE unified design system (:root tokens + shared utility classes) in a single <style> block.
@@ -216,28 +314,27 @@ Handmade bar (must pass):
 5) Load ONE distinctive Google Fonts pairing in <head> (never Inter/Roboto as primary) and use it consistently - no per-section font swaps.
 6) Merge ALL CSS into ONE compact <style> block. Deduplicate repeated rules from kit snippets.
 
-## Handmade craft quality bar
-- Target careful boutique / local craft polish: confident whitespace, expressive type, real media, restrained motion - NOT Stripe/Linear SaaS chrome.
-- Hero (mandatory): edge-to-edge photo OR muted looping video (100svh/min-height full viewport). Overlay with linear and/or radial gradient for legibility - never a flat navy fill with no media.
-- Hero copy budget: brand wordmark + one headline (3-7 words) + one short support line (max ~10 words) + primary + secondary CTA. No paragraph under the hero headline.
-- Nav: follow the navigation kit first. If no nav kit, prefer a floating centered island (brand left, 3-5 links, one book CTA). Wordmark may use a distinctive brand face (serif or script) when the trade fits.
-- Services/features: photo-led or editorial rows preferred; if cards are used, fill them with pack imagery - not a wall of generic icons. Each card: short title (2-4 words) + one short line (max ~12 words).
-- Proof: quiet trust strip, footnotes, or 2-3 real testimonial cards - no fake star counts, review scores, or invented awards.
-- CTA band: short headline (3-6 words) + one button, visually distinct but same design system.
-- Contact form: clean stacked fields - can sit in a light panel; not a bare unstyled form.
-- Footer: dark or muted surface, business name, phone, address, hours when provided.
-- Motion: ship 2-3 intentional motions (Ken-Burns/drift on hero media, staggered hero enter, soft scroll reveals, hover wipe). Honor prefers-reduced-motion.
-- Avoid: AI orange pill CTAs, purple/indigo SaaS, neon gradients, clip-art icons, busy chip clusters, mismatched border radii, lorem-style filler, per-section color themes.
+## Modern quality bar
+- Whitespace, tight type, hairlines, and one media idea. No craft-template ornaments and no SaaS chrome.
+- Hero: follow the style family. When it calls for full-bleed media, use an edge-to-edge photo or muted looping video. When it calls for type-first or a split, do that instead. Never a flat navy fill with no media.
+- Hero copy budget: one headline (3-7 words) + one short support line (max ~10 words) + the family's primary action. No paragraph under the headline.
+- Nav: simple sticky bar. Brand left, a few links, one action. Do not import a decorative nav from the kit.
+- Services: a short list, a numbered list, or a hairline grid. Not a wall of icon cards. Title (2-4 words) + one short line.
+- Proof: a quiet line or omit it. No fake stars, scores, or awards.
+- Contact form: stacked fields, same button as the rest of the page.
+- Footer: business name, phone, address, and hours when provided. Match the family (black band, or a hairline on a dark page).
+- Motion: at most one soft fade. Honor prefers-reduced-motion.
+- Avoid: orange, neon, purple, clip-art icons, chip clusters, mixed radii, filler, per-section themes.
 
 ## Website Presets kit rule (critical)
 1) The kit is NOT optional inspiration. When a Kit skeleton draft is provided, START FROM THAT MARKUP. Your page must be an adaptation of those components - never a freestyle rewrite that drops kit structure.
 2) For every kit item, keep that preset's real HTML structure and CSS patterns in the matching bone-structure section.
-3) Keep the preset's layout skeleton: wrappers, grids, media placement, spacing rhythm, border-radius, shadows, and button shapes. Recolor to the palette. Rewrite ALL demo/placeholder copy with THIS business's facts (short copy).
+3) Keep the preset's content structure: section order, grid or split, media slot, form fields. Restyle it to the style family. Drop the preset's colors, shadows, glow, 3D, clip-path, and button shape. Rewrite ALL demo copy with THIS business's facts (short copy).
 4) Do NOT invent a generic centered-hero + plain stacked sections when kit markup already covers those roles.
 5) Merge kit CSS into ONE <style> block. Port preset selectors into shared classes (.btn, .card, .section-head) instead of leaving orphaned one-off rules.
 6) Sections without a kit preset: still build them using the shared design system (palette, fonts, spacing, stock media) - match the visual language of the kits you did use.
-7) Component fidelity bar: at least 6 page sections (nav, hero, 2+ content blocks, contact form, footer) must visibly inherit kit structure - a visitor should see preset-quality polish, not a generic template.
-8) When a kit shows a card grid, split hero, sticky nav, fieldset form, or accent CTA band - reproduce that composition. Do not flatten it into plain stacked divs.
+7) Structure bar: nav, hero, 2+ content blocks, contact form, and footer must be real sections. Visual finish comes from the style family, not from leftover preset chrome.
+8) Use a kit's grid, split, or media slot when it fits the family. If the kit is a card wall, icon row, or effect demo, simplify it into the family's list, hairline grid, or photo band.
 
 ## Component adaptation workflow (follow for EVERY kit item)
 1) READ the kit snippet's HTML tree: outer wrapper, grid/flex classes, media slots, heading hierarchy, button markup.
@@ -261,9 +358,9 @@ Handmade bar (must pass):
    - Avoid default "AI purple / indigo on white", flat #3b82f6-only looks, and default trade orange (#ea580c) pill accents.
    - Optional tasteful gradients or soft tints must stay inside the same palette - no random rainbow. Surfaces should shift (photo, soft tint, deep band) - never one flat color for the whole page.
 3) Typography: fluid scale with clamp() - optional eyebrow, h1 hero, h2 section titles, body, muted captions.
-   - Pair a distinctive display (Fraunces / DM Serif Display / Playfair / characterful grotesk / optional script for brand wordmark) with a solid body sans (Sora, DM Sans, Manrope, Source Sans 3).
-   - NEVER use Inter, Roboto, Arial, or system-ui as the primary brand/display voice.
-   - Hero titles: large, tight tracking (~-0.02em), line-height ~0.98-1.15.
+   - Use the style family's fonts only. Manrope or Outfit for a modern grotesk. Newsreader only when the family is Editorial.
+   - NEVER use Inter, Roboto, Arial, script faces, or a different font per section.
+   - Hero titles: large, tracking about -0.04em to -0.05em, line-height about 0.92-1.05.
 4) Map each bone-structure section to a kit preset by role when available; normalize all adapted presets through the shared utility classes.
 5) Adapt presets: rewrite demo copy with business facts, recolor every hard-coded demo color to palette variables, strip demo chrome/toggles.
 6) Prefer short selectors. No CSS comments. No unused rules.
@@ -271,7 +368,7 @@ Handmade bar (must pass):
 ## Media (mandatory aesthetics)
 - Use ONLY URLs from the stock media pack. Never invent URLs. Never leave ../stock/ relative paths.
 - If you need more images than unique pack slots, REUSE pack URLs (hero, about, service*, gallery*, portrait, detail*). Never invent a substitute URL.
-- Hero MUST be a full-bleed media plane: muted autoplay loop playsinline <video> (poster = hero image) OR edge-to-edge <img> with object-fit: cover. No inset cards, no side-panel hero images, no floating media tiles in the first viewport.
+- Hero media follows the style family. Full-bleed families use a muted autoplay loop <video> or an edge-to-edge <img> with object-fit: cover. Split uses a half-width photo. Quiet puts one full-width photo under the headline. No inset cards, no collage, no floating tiles.
 - Darken media with purposeful overlays (linear + optional radial) so white/light type stays readable - do not replace media with a solid color block.
 - About, services, and gallery sections MUST use pack images with meaningful alt text. Apply subtle object-position / contrast / brightness when it helps atmosphere.
 - Videos: muted playsinline autoplay loop preload="metadata"; add a poster image.
@@ -324,7 +421,7 @@ Handmade bar (must pass):
 - Hero height grows with its content. A fixed header must not cover the headline or CTAs. On small screens, nav links stay visible and wrap. Never use display:none on the menu unless a working button opens it.
 - Single file: CSS in <style>, minimal JS only if needed.
 - No Moonrise watermark / paywall / studio branding.
-- Hero: full-bleed media + brand signal + one short headline (3-7 words) + one short support line (max ~10 words) + primary + secondary CTA. No hero paragraphs, stats, chips, or cards.
+- Hero follows the style family: one short headline (3-7 words) + one short support line (max ~10 words) + the family's primary action. No hero paragraphs, stats, chips, or cards.
 
 ## Output budget
 - Deliver one COMPLETE document that closes </html>. Prefer compact CSS and lean markup so the full page fits in a single response.
@@ -489,8 +586,8 @@ function formatKitUsagePlaybook(presetPack) {
   }
 
   const lines = [
-    "## Kit usage playbook (mandatory - compose presets into one premium site)",
-    "The finished page must LOOK like these Website Presets were professionally assembled - not a generic AI layout.",
+    "## Kit usage playbook",
+    "Use preset structure (grid, split, media slot, form fields). Restyle every piece to the style family. Do not keep preset colors, shadows, or effects.",
     "",
   ];
 
@@ -526,12 +623,10 @@ function formatKitUsagePlaybook(presetPack) {
   lines.push(
     "",
     "Cohesion rules:",
-    "- When a kit lists Slots / Adapt hint, fill every slot and follow the adapt hint before inventing layout changes.",
-    "- Merge CSS from ALL kits into one stylesheet. Extract the best button rule from hero/cta kits -> apply globally as .btn--primary.",
-    "- Extract card padding, radius, and shadow from the services/cards kit -> apply to every .card (services, testimonials, pricing, team).",
-    "- Extract section header rhythm (eyebrow + title + lead) from the strongest kit and reuse via .section-head on every section.",
-    "- Do NOT write generic Bootstrap-style sections when a kit exists for that role.",
-    "- Minimum bar: nav, hero, 2+ content sections, contact form, and footer must clearly inherit kit structure."
+    "- Fill real content slots (name, services, phone, address) from the business facts.",
+    "- One stylesheet. One button. One type pairing. Colors come from the style family, not from the kits.",
+    "- If a kit is an effect demo, icon wall, or card mosaic, simplify it into the family's list, hairline grid, or photo band.",
+    "- Minimum bar: nav, hero, 2+ content sections, contact form, and footer, all in the same family."
   );
 
   return lines.join("\n");
@@ -587,8 +682,8 @@ function formatKitSkeletonDraft(presetPack, structure, media) {
   return [
     "## Kit skeleton draft (START HERE - mandatory)",
     `Real Website Presets markup (${ordered.length} components) stitched for this page.`,
-    "Your job: unify into ONE complete HTML document. Keep each kit's DOM (grids, media frames, cards, forms, nav/footer). Do not replace with plain stacked sections.",
-    "Rewrite demo copy with business facts (short). Merge CSS into one <style> with :root palette + shared .btn/.card/.section. Fill stock media slots from the pack.",
+    "Your job: unify into ONE complete HTML document in the style family. Keep useful grids, media frames, and form fields. Drop kit colors, shadows, and effects.",
+    "Rewrite demo copy with business facts (short). Merge CSS into one <style> using the family palette and one .btn. Fill stock media slots from the pack.",
     "Add any missing bone sections only if no kit covers them - match kit visual language. Output full <!DOCTYPE html>...</html>.",
     "",
     "```html",
@@ -713,25 +808,12 @@ function formatPlanForAssembly(plan) {
 
 /** Concrete Google Fonts pairing from atmosphere type hints. Never default to Inter. */
 function suggestGoogleFontsHint(type) {
-  const display = String(type?.display || "").toLowerCase();
-  const body = String(type?.body || "").toLowerCase();
-  const combined = `${display} ${body}`;
-  if (/script|handwritten|scripted|calligraphy|nail|beauty|boutique/.test(combined)) {
-    return "Fonts: load `Dancing Script` (brand wordmark) + `Fraunces` (headings) + `DM Sans` (body) from Google Fonts. Never Inter/Roboto.";
+  const display = String(type?.display || "Manrope").trim();
+  const body = String(type?.body || "Manrope").trim();
+  if (display.toLowerCase() === body.toLowerCase()) {
+    return `Fonts: load \`${display}:wght@400;500;600;700;800\` from Google Fonts for both headlines and body. Never Inter/Roboto.`;
   }
-  if (/serif|elegant|refined|characterful|classic|editorial|wellness|spa/.test(combined)) {
-    return "Fonts: load `Fraunces` (headings) + `Sora` (body) from Google Fonts. Optional `Barlow Condensed` for uppercase labels. Never Inter/Roboto.";
-  }
-  if (/rounded|friendly|playful|warm|pet|food/.test(combined)) {
-    return "Fonts: load `Fraunces` (headings) + `Nunito` (body) from Google Fonts. Never Inter/Roboto.";
-  }
-  if (/condensed|bold|kinetic|gym|athletic/.test(combined)) {
-    return "Fonts: load `Barlow Condensed` (headings) + `Manrope` (body) from Google Fonts. Never Inter/Roboto.";
-  }
-  if (/grotesk|sharp|modern|studio|tech|trade|sturdy|dependable/.test(combined)) {
-    return "Fonts: load `Syne` (headings) + `Manrope` (body) from Google Fonts. Never Inter/Roboto.";
-  }
-  return "Fonts: load `Fraunces` (headings) + `Sora` (body) from Google Fonts. Never Inter/Roboto.";
+  return `Fonts: load \`${display}\` for headlines and \`${body}:wght@400;500;600;700\` for body from Google Fonts. Never Inter/Roboto.`;
 }
 
 /**
@@ -749,20 +831,22 @@ function formatDesignSystemBlueprint(plan) {
     "## Unified design system blueprint (define ONCE - reuse in every section)",
     `Palette lock: bg=${bg} surface=${surface} ink=${ink} muted=${muted} accent=${accent}`,
     suggestGoogleFontsHint(type),
+    plan?.variation?.family?.button ? `Buttons: ${plan.variation.family.button}` : "",
+    plan?.variation?.family?.layout ? `Layout: ${plan.variation.family.layout}` : "",
     "",
-    "Required :root tokens (derive --accent-soft and --border from palette):",
-    "--bg, --surface, --ink, --muted, --accent, --accent-soft, --border,",
-    "--radius-sm (8px), --radius-md (12px), --radius-lg (18px) - never rounded-full pills for primary CTAs,",
-    "--shadow-sm, --shadow-md, --section-y (clamp(3rem, 6vw, 5.5rem)), --container-max (min(1120px, 92vw)),",
-    "--font-display, --font-body (optional --font-brand for script/wordmark)",
+    "Required :root tokens:",
+    "--bg, --surface, --ink, --muted, --accent, --border (1px solid rgb(0 0 0 / 8%) or the night equivalent),",
+    "--radius-btn (980px for pills, 12px for stone, 2px for editorial),",
+    "--section-y (clamp(4rem, 8vw, 7rem)), --container-max (min(1120px, calc(100% - 2.5rem))),",
+    "--font-display, --font-body",
+    "Do not add drop shadows.",
     "",
-    "Required shared classes (same markup patterns on nav, hero, CTA, form, footer):",
-    ".container | .section | .section-head | .eyebrow | .section-title | .section-lead",
-    ".btn | .btn--primary | .btn--secondary | .card (interaction containers only) | .grid | .grid--2 | .grid--3",
+    "Required shared classes:",
+    ".container | .section | .section-title",
+    ".btn | .btn--primary | .btn--secondary",
     "",
-    "Kit adaptation rule: preserve each preset's grid/media hierarchy; remap colors to vars; map buttons -> .btn; map interactive tiles -> .card.",
-    "Hero rule: full-bleed media plane + overlay type. Do not wrap hero copy in a bordered/shadowed card.",
-    "Component quality bar: must feel handmade and brand-specific - if the hero could belong to any business after removing the name, redesign it.",
+    "Kit rule: keep useful grids and media slots; restyle everything to this palette, type, and button. The style family wins.",
+    "Do not wrap hero copy in a bordered or shadowed card.",
   ].join("\n");
 }
 
@@ -1128,6 +1212,7 @@ module.exports = {
   buildGenerationUserPrompt,
   buildEditUserPrompt,
   buildVariationBrief,
+  applyStyleFamily,
   formatVariationBrief,
   formatPresetPack,
   formatPresetCatalog,
