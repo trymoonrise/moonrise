@@ -7,7 +7,7 @@
 (function () {
   if (!window.__msAppearanceBoot) {
     window.__msAppearanceBoot = 1;
-    document.write('<script src="js/appearance.js?v=20261006-chrome"><\/script>');
+    document.write('<script src="js/appearance.js?v=20261006-tab"><\/script>');
   }
 
   var PUBLIC = {
