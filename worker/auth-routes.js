@@ -42,6 +42,11 @@ function safeAuthRedirect(raw, fallbackPath) {
 }
 
 const SESSION_IDLE_SECONDS = 24 * 60 * 60;
+const REMEMBER_SECONDS = 30 * 24 * 60 * 60;
+
+function idleLimitSeconds(req) {
+  return readCookie(req, "ms_keep") === "1" ? REMEMBER_SECONDS : SESSION_IDLE_SECONDS;
+}
 
 function cookieSecure(req) {
   const proto = String(req.headers["x-forwarded-proto"] || "").split(",")[0].trim();
@@ -90,7 +95,7 @@ function rememberRequested(req) {
 function writeAuthCookies(req, res, session) {
   const remember = rememberRequested(req);
   const secure = cookieSecure(req);
-  const maxAge = remember ? SESSION_IDLE_SECONDS : undefined;
+  const maxAge = remember ? REMEMBER_SECONDS : undefined;
   const refresh = String(session?.refresh_token || "");
   if (!refresh) return;
   appendCookies(res, [
@@ -113,8 +118,10 @@ function clearAuthCookies(req, res) {
 
 function sessionIsIdle(req) {
   const seen = Number(readCookie(req, "ms_seen") || 0);
-  if (!Number.isFinite(seen) || seen <= 0) return true;
-  return Date.now() - seen > SESSION_IDLE_SECONDS * 1000;
+  // A missing stamp is not proof the session died. Wiping cookies here
+  // logged people out on the next channel and flashed the login page.
+  if (!Number.isFinite(seen) || seen <= 0) return false;
+  return Date.now() - seen > idleLimitSeconds(req) * 1000;
 }
 
 function sessionJson(session, user, extra) {
@@ -602,15 +609,20 @@ function mountAuthRoutes(app, { db, security }) {
    */
   app.get("/auth/session", async (req, res) => {
     if (!authConfigured(res)) return;
+    res.set("Cache-Control", "no-store");
     try {
       const refresh = readCookie(req, "ms_rt");
-      if (!refresh || sessionIsIdle(req)) {
+      if (!refresh) {
+        return res.status(401).json({ error: "Session expired", code: "session_expired" });
+      }
+      if (sessionIsIdle(req)) {
         clearAuthCookies(req, res);
         return res.status(401).json({ error: "Session expired", code: "session_expired" });
       }
       const { data, error } = await authClient().auth.refreshSession({ refresh_token: refresh });
       if (error || !data?.session) {
-        clearAuthCookies(req, res);
+        // A parallel channel load may have already rotated this token.
+        // Clearing cookies here deletes the session the other request just saved.
         return res.status(401).json({ error: "Session expired", code: "session_expired" });
       }
       writeAuthCookies(req, res, data.session);
@@ -623,6 +635,7 @@ function mountAuthRoutes(app, { db, security }) {
 
   app.post("/auth/session", async (req, res) => {
     if (!authConfigured(res)) return;
+    res.set("Cache-Control", "no-store");
     try {
       if (sessionIsIdle(req) && readCookie(req, "ms_seen")) {
         clearAuthCookies(req, res);
@@ -641,7 +654,6 @@ function mountAuthRoutes(app, { db, security }) {
       }
       const { data, error } = await authClient().auth.refreshSession({ refresh_token: refresh });
       if (error || !data?.session) {
-        clearAuthCookies(req, res);
         return res.status(401).json({ error: "Session expired", code: "session_expired" });
       }
       writeAuthCookies(req, res, data.session);

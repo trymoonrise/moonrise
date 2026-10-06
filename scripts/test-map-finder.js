@@ -1,5 +1,5 @@
 /**
- * Smoke tests for Business Finder map + LeadFinder search pipeline.
+ * Smoke tests for Business Finder map + OpenStreetMap search.
  * Run: node scripts/test-map-finder.js
  */
 const fs = require("fs");
@@ -59,136 +59,96 @@ async function main() {
   const searchJs = fs.readFileSync(path.join(ROOT, "js/leads-search.js"), "utf8");
   const configJs = fs.readFileSync(path.join(ROOT, "js/config.js"), "utf8");
 
-  ok("leads.html has Leaflet CSS CDN", /cdn\.jsdelivr\.net\/npm\/leaflet@1\.9\.4\/dist\/leaflet\.css/.test(html));
-  ok("leads.html has Leaflet JS CDN", /cdn\.jsdelivr\.net\/npm\/leaflet@1\.9\.4\/dist\/leaflet\.js/.test(html));
+  const osmJs = fs.readFileSync(path.join(ROOT, "js/osm-finder.js"), "utf8");
+
+  ok("leads.html has MapLibre CSS CDN", /cdn\.jsdelivr\.net\/npm\/maplibre-gl@5\.6\.2\/dist\/maplibre-gl\.css/.test(html));
+  ok("leads.html has MapLibre JS CDN", /cdn\.jsdelivr\.net\/npm\/maplibre-gl@5\.6\.2\/dist\/maplibre-gl\.js/.test(html));
+  ok("leads.html loads osm-finder.js", html.includes("js/osm-finder.js"));
   ok("leads.html has #lf-map", html.includes('id="lf-map"'));
   ok("leads.html has Scan Near Me + All", html.includes("lf-scan-near") && html.includes("lf-scan-all"));
   ok("CSS has dark map stage", css.includes(".ms-lf-map-stage") && css.includes("#0f172a"));
-  ok("JS uses Esri World Dark Gray tiles", searchJs.includes("World_Dark_Gray_Base"));
+  ok("JS uses OpenFreeMap styles", searchJs.includes("tiles.openfreemap.org/styles/"));
+  ok("JS searches via OsmFinder", searchJs.includes("searchViaOpenStreetMap") && osmJs.includes("overpass-api.de"));
   ok("JS has map init + markers", searchJs.includes("initLeadMap") && searchJs.includes("syncMapMarkers"));
-  ok("Local LeadFinder preferred on localDevHost", /isLocalDevHost[\s\S]*leadFinderUrl[\s\S]*resolveWorkerUrl/.test(configJs));
+  ok("CSP allows OpenFreeMap and Overpass", /tiles\.openfreemap\.org/.test(fs.readFileSync(path.join(ROOT, "vercel.json"), "utf8")) && /overpass-api\.de/.test(fs.readFileSync(path.join(ROOT, "vercel.json"), "utf8")));
+  ok("config still exposes leadFinderUrl", /leadFinderUrl/.test(configJs));
 
-  // Tile connectivity (Esri dark basemap - CARTO now requires an API key)
   try {
-    const tile = await fetchText(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/8/101/44",
+    const style = await fetchText("https://tiles.openfreemap.org/styles/positron", { timeout: 15000 });
+    ok(
+      "OpenFreeMap style reachable",
+      style.status === 200 && style.body.includes("openfreemap"),
+      "status=" + style.status
+    );
+  } catch (e) {
+    ok("OpenFreeMap style reachable", false, String(e.message || e));
+  }
+
+  try {
+    const maplibre = await fetchText("https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.2/dist/maplibre-gl.js", {
+      timeout: 15000,
+    });
+    ok(
+      "MapLibre CDN reachable",
+      maplibre.status === 200 && maplibre.body.includes("maplibregl"),
+      "status=" + maplibre.status
+    );
+  } catch (e) {
+    ok("MapLibre CDN reachable", false, String(e.message || e));
+  }
+
+  try {
+    const geo = await fetchText(
+      "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=" +
+        encodeURIComponent("Laguna Beach, CA"),
       {
-      timeout: 15000,
-    });
-    ok("Esri dark basemap tile reachable", tile.status === 200, "status=" + tile.status);
-  } catch (e) {
-    ok("Esri dark basemap tile reachable", false, String(e.message || e));
-  }
-
-  try {
-    const leaflet = await fetchText("https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js", {
-      timeout: 15000,
-    });
-    ok("Leaflet CDN reachable", leaflet.status === 200 && leaflet.body.includes("Leaflet"), "status=" + leaflet.status);
-  } catch (e) {
-    ok("Leaflet CDN reachable", false, String(e.message || e));
-  }
-
-  // LeadFinder health
-  try {
-    const health = await fetchText("http://127.0.0.1:8790/health", { timeout: 5000 });
-    let json = {};
+        timeout: 15000,
+        headers: {
+          "User-Agent": "MoonriseStudio/1.0 (business finder smoke test)",
+          Accept: "application/json",
+        },
+      }
+    );
+    let places = [];
     try {
-      json = JSON.parse(health.body);
+      places = JSON.parse(geo.body);
     } catch (_) {}
     ok(
-      "LeadFinder search:server healthy on :8790",
-      health.status === 200 && (json.ok === true || /ok|ready|up/i.test(health.body)),
-      health.body.slice(0, 120)
+      "Nominatim geocodes a city",
+      geo.status === 200 && Array.isArray(places) && places.length > 0 && places[0].lat,
+      "status=" + geo.status
     );
   } catch (e) {
-    ok("LeadFinder search:server healthy on :8790", false, String(e.message || e));
+    ok("Nominatim geocodes a city", false, String(e.message || e));
   }
 
-  // LeadFinder endpoint wiring (dry-run - no Playwright)
   try {
-    const body = JSON.stringify({
-      type: "coffee",
-      location: "Laguna Beach, CA",
-      minResults: 1,
-      dryRun: true,
-      upload: false,
-    });
-    const search = await fetchText("http://127.0.0.1:8790/search", {
+    const query =
+      '[out:json][timeout:20];node["name"]["amenity"="cafe"](around:1200,33.5427,-117.7854);out center 5;';
+    const body = "data=" + encodeURIComponent(query);
+    const overpass = await fetchText("https://overpass-api.de/api/interpreter", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(body) },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "Content-Length": Buffer.byteLength(body),
+        Accept: "application/json",
+        "User-Agent": "MoonriseStudio/1.0 (business finder smoke test)",
+      },
       body,
-      timeout: 10000,
+      timeout: 25000,
     });
     let data = {};
     try {
-      data = JSON.parse(search.body);
+      data = JSON.parse(overpass.body);
     } catch (_) {}
+    const elements = Array.isArray(data.elements) ? data.elements : [];
     ok(
-      "LeadFinder /search dry-run accepts request",
-      search.status === 200 && data.ok === true && data.dryRun === true && Array.isArray(data.leads),
-      "status=" + search.status + " body=" + search.body.slice(0, 120)
+      "Overpass returns named cafes",
+      overpass.status === 200 && elements.some((el) => el.tags && el.tags.name),
+      "status=" + overpass.status + " count=" + elements.length
     );
   } catch (e) {
-    ok("LeadFinder /search dry-run accepts request", false, String(e.message || e));
-  }
-
-  // Live scrape (Playwright against Google Maps - can take 2-3 minutes)
-  try {
-    const body = JSON.stringify({
-      type: "plumbers",
-      location: "Irvine, CA",
-      minResults: 3,
-      upload: false,
-    });
-    const search = await fetchText("http://127.0.0.1:8790/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(body) },
-      body,
-      timeout: 200000,
-    });
-    let data = {};
-    try {
-      data = JSON.parse(search.body);
-    } catch (_) {}
-    const hasLeads = Array.isArray(data.leads) && data.leads.length > 0;
-    if (search.status === 200 && data.ok === true && hasLeads) {
-      ok(
-        "LeadFinder /search live scrape returns leads",
-        true,
-        "leads=" + data.leads.length + " ms=" + data.durationMs
-      );
-      const sample = data.leads[0] || {};
-      const hasCoords =
-        Number.isFinite(Number(sample.latitude)) ||
-        /@-?\d|!3d-?\d/.test(String(sample.maps_url || sample.mapsUrl || ""));
-      ok("Sample lead has name", Boolean(sample.business_name || sample.name), JSON.stringify(sample).slice(0, 80));
-      ok(
-        "Sample lead has coords or maps URL (for map pins)",
-        hasCoords || Boolean(sample.maps_url || sample.mapsUrl),
-        "lat=" + sample.latitude + " maps=" + String(sample.maps_url || sample.mapsUrl || "").slice(0, 60)
-      );
-    } else {
-      // Google Maps can flake; health + dry-run already prove the API is up.
-      console.log(
-        "WARN  LeadFinder live scrape flaked (Google timeout/rate-limit). status=" +
-          search.status +
-          " err=" +
-          (data.error || search.body.slice(0, 160))
-      );
-      console.log(
-        "WARN  Treating live scrape as soft-fail: map tiles + search server are healthy. Retry Scan Near Me / All after a minute."
-      );
-      passed += 1;
-      console.log("PASS  LeadFinder /search live scrape returns leads (soft - server healthy; Google flaked)");
-    }
-  } catch (e) {
-    console.log("WARN  LeadFinder live scrape error: " + String(e.message || e));
-    console.log(
-      "WARN  Treating live scrape as soft-fail: map tiles + search server are healthy."
-    );
-    passed += 1;
-    console.log("PASS  LeadFinder /search live scrape returns leads (soft - server healthy; Google flaked)");
+    ok("Overpass returns named cafes", false, String(e.message || e));
   }
 
   console.log("");

@@ -213,6 +213,18 @@
       };
     }
     try {
+      if (typeof window.OsmFinder?.reverse === "function") {
+        const geo = await window.OsmFinder.reverse(coords.lat, coords.lng);
+        if (geo && (geo.city || geo.state || geo.label)) {
+          const region = geo.region || geo.state || "";
+          const state = stateDisplayName(geo.state || region);
+          coords.searchCity = geo.city || "";
+          coords.searchRegion = region;
+          coords.searchState = state;
+          coords.searchLabel = geo.label || "";
+          return { city: geo.city || "", region, state, label: geo.label || "" };
+        }
+      }
       const url =
         "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" +
         encodeURIComponent(coords.lat) +
@@ -652,8 +664,42 @@
   }
 
   function shouldTryLiveScrape() {
-    // Live Maps via local :8790 (dev) or worker -> LEADFINDER_SEARCH_URL (prod).
-    return Boolean(leadFinderBaseUrl());
+    // Live search is OpenStreetMap (Overpass). LeadFinder remains an optional extra.
+    return typeof window.OsmFinder?.search === "function" || Boolean(leadFinderBaseUrl());
+  }
+
+  async function searchViaOpenStreetMap(type, location, query, geo) {
+    if (typeof window.OsmFinder?.search !== "function") {
+      return { ok: false, skipped: true, reason: "not_configured" };
+    }
+    const t = String(type || "").trim();
+    const loc = String(location || "").trim();
+    const hasGeo =
+      geo &&
+      Number.isFinite(Number(geo.latitude)) &&
+      Number.isFinite(Number(geo.longitude));
+    if (!t && !loc && !hasGeo) {
+      return { ok: false, skipped: true, reason: "empty_query" };
+    }
+    try {
+      const data = await window.OsmFinder.search({
+        type: t,
+        location: loc,
+        query: String(query || "").trim(),
+        latitude: hasGeo ? Number(geo.latitude) : undefined,
+        longitude: hasGeo ? Number(geo.longitude) : undefined,
+        radiusMiles: hasGeo ? Number(geo.radiusMiles) || NEARBY_RADIUS_MILES : undefined,
+      });
+      const leads = (data?.leads || []).map((lead) => hydrateLeadCoords(lead));
+      return {
+        ok: true,
+        query: data?.placeLabel || query || "",
+        leads,
+        rowCount: leads.length,
+      };
+    } catch (e) {
+      return { ok: false, error: scrapeErrorMessage(e) };
+    }
   }
 
   function restoreNormalList() {
@@ -1725,6 +1771,16 @@
       return { type: "", location: type };
     }
 
+    // "Austin, TX" parses as type=Austin, location=TX. Treat that as a place.
+    if (
+      type &&
+      /^[A-Za-z]{2}$/.test(location) &&
+      !TYPE_CATALOG.some((label) => label.toLowerCase() === type.toLowerCase())
+    ) {
+      const combined = type + ", " + location.toUpperCase();
+      if (isLikelyPlaceText(combined)) return { type: "", location: combined };
+    }
+
     return { type, location };
   }
 
@@ -2529,10 +2585,11 @@
     }
     const hours = String(lead.hours || "").trim();
     if (!hours) return { text: "", kind: "" };
-    if (/open 24/i.test(hours)) return { text: "Open 24h", kind: "open" };
+    if (/open 24|24\/7|24 hours/i.test(hours)) return { text: "Open 24h", kind: "open" };
     if (/\bclosed\b/i.test(hours)) return { text: "Closed", kind: "closed" };
     if (/^opens?\b/i.test(hours)) return { text: hours.slice(0, 28), kind: "open" };
     if (/^open\b/i.test(hours)) return { text: "Open", kind: "open" };
+    if (hours.length <= 36) return { text: hours, kind: "" };
     return { text: "", kind: "" };
   }
 
@@ -2849,6 +2906,13 @@
     });
   }
 
+  function mapLinkLabel(url) {
+    const href = String(url || "");
+    if (/openstreetmap\.org/i.test(href)) return "OpenStreetMap";
+    if (/google\./i.test(href)) return "Google Maps";
+    return href ? "Map" : "";
+  }
+
   function renderMapLeadCard(lead, index) {
     const id = leadId(lead);
     const name = displayName(lead);
@@ -2916,9 +2980,9 @@
       ),
       renderProRowPair(
         ICO.globe,
-        "Website and Google Maps",
+        "Website and map",
         websiteLabel,
-        mapsUrl ? "Google Maps" : "Maps unavailable",
+        mapsUrl ? mapLinkLabel(mapsUrl) : "Maps unavailable",
         {
           rowClass: "ms-lf-map-card-website",
           leftHref: websiteHref,
@@ -3035,9 +3099,9 @@
       ),
       renderProRowPair(
         ICO.globe,
-        "Website and Google Maps",
+        "Website and map",
         renderWebsiteCell(lead),
-        mapsUrl ? "Google Maps" : "Maps link unavailable",
+        mapsUrl ? mapLinkLabel(mapsUrl) : "Maps link unavailable",
         {
           rowClass: "ms-lf-pro-row--website",
           leftHref: hasSite && website ? website : undefined,
@@ -3423,7 +3487,7 @@
       }
 
       if (leads.length && MAP_UI) {
-        setStatus(shouldTryLiveScrape() ? "Showing nearby businesses - refreshing..." : "");
+        setStatus(shouldTryLiveScrape() ? "Showing nearby businesses - refreshing from OpenStreetMap..." : "");
         setError("");
         renderLeads(
           rankLeadsForView(leads, { trustScrapeRadius: false }),
@@ -3432,8 +3496,8 @@
       }
 
       if ((!leads.length || (MAP_UI && leads.length < 8)) && shouldTryLiveScrape()) {
-        if (MAP_UI && !leads.length) setStatus("Scanning Google Maps near you...");
-        const scraped = await scrapeViaLeadFinder(scrapeType, nearbyLocation, "", {
+        if (MAP_UI && !leads.length) setStatus("Scanning OpenStreetMap near you...");
+        const scraped = await searchViaOpenStreetMap(scrapeType, nearbyLocation, "", {
           latitude: userCoords.lat,
           longitude: userCoords.lng,
           radiusMiles: NEARBY_RADIUS_MILES,
@@ -3563,7 +3627,7 @@
 
     setFindBusy(true, MAP_UI ? "all" : "find");
     if (!opts.fromAreaToggle) showLoadingCards();
-    if (MAP_UI) setStatus("Scanning Google Maps...");
+    if (MAP_UI) setStatus("Scanning OpenStreetMap...");
 
     let leads = [];
     let remoteError = "";
@@ -3585,14 +3649,27 @@
 
       // Paint DB hits immediately; live scrape can still fill gaps afterward.
       if (leads.length && MAP_UI) {
-        setStatus(shouldTryLiveScrape() ? "Showing saved leads - refreshing from Maps..." : "");
+        setStatus(shouldTryLiveScrape() ? "Showing saved leads - refreshing from OpenStreetMap..." : "");
         setError("");
         renderLeads(rankLeadList(leads), query);
       }
 
       if ((!leads.length || (MAP_UI && leads.length < MIN_SEARCH_RESULTS)) && shouldTryLiveScrape() && (searchType || location.trim())) {
-        if (MAP_UI && !leads.length) setStatus("Scanning Google Maps...");
-        const scraped = await scrapeViaLeadFinder(searchType, location, "", null);
+        if (MAP_UI && !leads.length) setStatus("Scanning OpenStreetMap...");
+        const statewide =
+          US_STATE_NAMES.has(String(location || "").trim().toLowerCase()) && userCoords;
+        const scraped = await searchViaOpenStreetMap(
+          searchType,
+          location,
+          "",
+          statewide
+            ? {
+                latitude: userCoords.lat,
+                longitude: userCoords.lng,
+                radiusMiles: 12,
+              }
+            : null
+        );
         if (scraped.ok && scraped.leads?.length) {
           scrapedFresh = true;
           mergeScrapedIntoAllLeads(scraped.leads);
@@ -4075,38 +4152,48 @@
     }
   }
 
+  const MAP_PIN_SVG =
+    '<svg class="ms-lf-map-pin-svg" viewBox="0 0 28 36" aria-hidden="true" focusable="false">' +
+    '<path class="ms-lf-map-pin-body" d="M14 1.2C7.1 1.2 1.5 6.8 1.5 13.7c0 8.6 10.1 18.8 12.05 20.7a.7.7 0 0 0 1.1 0C16.7 32.5 26.5 22.3 26.5 13.7 26.5 6.8 20.9 1.2 14 1.2z"/>' +
+    '<circle class="ms-lf-map-pin-dot" cx="14" cy="13.5" r="4.2"/>' +
+    "</svg>";
+  const MAP_STYLE_DARK = "https://tiles.openfreemap.org/styles/dark";
+  const MAP_STYLE_LIGHT = "https://tiles.openfreemap.org/styles/positron";
+
+  function openFreeMapStyle() {
+    const mode = document.documentElement.getAttribute("data-ms-mode");
+    const dark =
+      mode === "dark" ||
+      (!mode && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    return dark ? MAP_STYLE_DARK : MAP_STYLE_LIGHT;
+  }
+
   function scheduleMapInvalidate() {
-    if (!lfMap) return;
+    if (!lfMap || typeof lfMap.resize !== "function") return;
     if (mapResizeTimer) window.clearTimeout(mapResizeTimer);
     mapResizeTimer = window.setTimeout(() => {
       mapResizeTimer = null;
-      lfMap?.invalidateSize({ animate: false });
+      try {
+        lfMap.resize();
+      } catch (_) {
+        /* ignore */
+      }
     }, 120);
   }
 
-  function getMapIcons() {
-    const pinSvg =
-      '<svg class="ms-lf-map-pin-svg" viewBox="0 0 28 36" aria-hidden="true" focusable="false">' +
-      '<path class="ms-lf-map-pin-body" d="M14 1.2C7.1 1.2 1.5 6.8 1.5 13.7c0 8.6 10.1 18.8 12.05 20.7a.7.7 0 0 0 1.1 0C16.7 32.5 26.5 22.3 26.5 13.7 26.5 6.8 20.9 1.2 14 1.2z"/>' +
-      '<circle class="ms-lf-map-pin-dot" cx="14" cy="13.5" r="4.2"/>' +
-      "</svg>";
-    if (!mapIconDefault) {
-      mapIconDefault = L.divIcon({
-        className: "ms-lf-map-marker",
-        html: '<div class="ms-lf-map-pin">' + pinSvg + "</div>",
-        iconSize: [28, 36],
-        iconAnchor: [14, 34],
-      });
-    }
-    if (!mapIconSelected) {
-      mapIconSelected = L.divIcon({
-        className: "ms-lf-map-marker",
-        html: '<div class="ms-lf-map-pin is-selected">' + pinSvg + "</div>",
-        iconSize: [32, 40],
-        iconAnchor: [16, 38],
-      });
-    }
-    return { def: mapIconDefault, sel: mapIconSelected };
+  function createBusinessMarkerElement(selected) {
+    const wrap = document.createElement("div");
+    wrap.className = "ms-lf-map-marker";
+    const pin = document.createElement("div");
+    pin.className = "ms-lf-map-pin" + (selected ? " is-selected" : "");
+    pin.innerHTML = MAP_PIN_SVG;
+    wrap.appendChild(pin);
+    return wrap;
+  }
+
+  function setMarkerSelected(marker, selected) {
+    const pin = marker?.getElement?.()?.querySelector(".ms-lf-map-pin");
+    if (pin) pin.classList.toggle("is-selected", !!selected);
   }
 
   function setMapLoading(isLoading) {
@@ -4119,7 +4206,7 @@
 
   function initLeadMap(attempt) {
     if (!MAP_UI || lfMap) return;
-    if (typeof L === "undefined") {
+    if (typeof maplibregl === "undefined") {
       const n = Number(attempt) || 0;
       if (n < 60) window.setTimeout(() => initLeadMap(n + 1), 50);
       else setMapLoading(false);
@@ -4135,26 +4222,24 @@
       const reduceMotion =
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
         document.documentElement.getAttribute("data-reduce-motion") === "1";
-      lfMap = L.map(el, {
-        zoomControl: true,
+      const styleUrl = openFreeMapStyle();
+      lfMap = new maplibregl.Map({
+        container: el,
+        style: styleUrl,
+        center: [MAP_DEFAULT.lng, MAP_DEFAULT.lat],
+        zoom: MAP_DEFAULT.zoom,
         attributionControl: true,
-        preferCanvas: false,
-        fadeAnimation: !reduceMotion,
-        zoomAnimation: !reduceMotion,
-        markerZoomAnimation: !reduceMotion,
-      }).setView([MAP_DEFAULT.lat, MAP_DEFAULT.lng], MAP_DEFAULT.zoom);
-      const tiles = L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-        {
-          attribution:
-            "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
-          maxZoom: 16,
-          updateWhenIdle: false,
-          updateWhenZooming: true,
-          keepBuffer: 2,
-          crossOrigin: true,
-        }
-      );
+        fadeDuration: reduceMotion ? 0 : 250,
+        pitchWithRotate: false,
+        dragRotate: false,
+      });
+      lfMap.touchZoomRotate?.disableRotation?.();
+      if (window.innerWidth > 900) {
+        lfMap.addControl(
+          new maplibregl.NavigationControl({ showCompass: false, visualizePitch: false }),
+          "bottom-right"
+        );
+      }
       let revealed = false;
       const revealMap = () => {
         if (revealed) return;
@@ -4162,30 +4247,34 @@
         setMapLoading(false);
         scheduleMapInvalidate();
       };
-      tiles.once("tileload", revealMap);
-      tiles.once("load", revealMap);
-      tiles.on("tileerror", () => {
+      lfMap.on("load", revealMap);
+      lfMap.on("idle", revealMap);
+      lfMap.on("error", () => {
         window.setTimeout(revealMap, 200);
       });
-      tiles.addTo(lfMap);
-      lfMap.whenReady(() => {
-        scheduleMapInvalidate();
-        window.setTimeout(revealMap, 700);
-      });
       window.setTimeout(revealMap, 1600);
-      lfMarkersLayer = L.layerGroup().addTo(lfMap);
+      lfMarkersLayer = true;
+      let appliedStyle = styleUrl;
+      const styleObserver = new MutationObserver(() => {
+        const next = openFreeMapStyle();
+        if (!lfMap || next === appliedStyle) return;
+        appliedStyle = next;
+        try {
+          lfMap.setStyle(next);
+        } catch (_) {
+          /* ignore */
+        }
+      });
+      styleObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-ms-mode"],
+      });
       const scrollSafe = [
         resultsPanel,
         document.querySelector(".ms-lf-map-top"),
         document.querySelector(".ms-lf-map-actions"),
       ].filter(Boolean);
       scrollSafe.forEach((node) => {
-        try {
-          L.DomEvent.disableScrollPropagation(node);
-          L.DomEvent.disableClickPropagation(node);
-        } catch (_) {
-          /* ignore */
-        }
         node.addEventListener(
           "wheel",
           (e) => {
@@ -4199,6 +4288,7 @@
     } catch (e) {
       console.error("Business Finder map init failed", e);
       lfMap = null;
+      lfMarkersLayer = null;
       setMapLoading(false);
     }
   }
@@ -4208,14 +4298,9 @@
     if (selectedLeadId === next && !scrollCard) return;
     const prev = selectedLeadId;
     selectedLeadId = next;
-    const icons = typeof L !== "undefined" ? getMapIcons() : null;
-    if (icons) {
-      if (prev && lfMarkerById.has(prev)) {
-        lfMarkerById.get(prev).setIcon(icons.def);
-      }
-      if (selectedLeadId && lfMarkerById.has(selectedLeadId)) {
-        lfMarkerById.get(selectedLeadId).setIcon(icons.sel);
-      }
+    if (prev && lfMarkerById.has(prev)) setMarkerSelected(lfMarkerById.get(prev), false);
+    if (selectedLeadId && lfMarkerById.has(selectedLeadId)) {
+      setMarkerSelected(lfMarkerById.get(selectedLeadId), true);
     }
     resultsEl?.querySelectorAll(".ms-lf-map-card.is-selected").forEach((card) => {
       if (card.getAttribute("data-lead-id") !== selectedLeadId) {
@@ -4236,9 +4321,8 @@
   }
 
   function syncMapMarkers(leads, options) {
-    if (!MAP_UI || !lfMap || !lfMarkersLayer) return;
+    if (!MAP_UI || !lfMap || typeof maplibregl === "undefined") return;
     const opts = options && typeof options === "object" ? options : {};
-    const icons = getMapIcons();
     const pool = Array.isArray(leads) ? leads : [];
     const withCoords = [];
     for (let i = 0; i < pool.length && withCoords.length < MAP_MARKER_LIMIT; i += 1) {
@@ -4257,64 +4341,78 @@
     lastMarkerIdsSignature = idsSignature;
     lastMarkerSignature = signature;
 
-    // Selection-only change: swap icons in place - never pan/zoom the map.
+    // Selection-only change: swap pin color in place - never pan/zoom the map.
     if (!leadsChanged && lfMarkerById.size === withCoords.length) {
       withCoords.forEach(({ id }) => {
         const marker = lfMarkerById.get(id);
         if (!marker) return;
-        marker.setIcon(id === selectedLeadId ? icons.sel : icons.def);
+        setMarkerSelected(marker, id === selectedLeadId);
       });
       return;
     }
 
-    lfMarkersLayer.clearLayers();
-    lfMarkerById = new Map();
-    const bounds = [];
-    withCoords.forEach(({ lead, coords, id }) => {
-      const marker = L.marker([coords.lat, coords.lng], {
-        icon: id === selectedLeadId ? icons.sel : icons.def,
-        title: displayName(lead),
-        keyboard: false,
-        riseOnHover: true,
-      });
-      marker.on("click", () => {
-        // Highlight + scroll the card only - keep current map center/zoom.
-        revealResults();
-        selectLeadOnMap(id, { scrollCard: true });
-      });
-      marker.addTo(lfMarkersLayer);
-      lfMarkerById.set(id, marker);
-      bounds.push([coords.lat, coords.lng]);
-    });
-
-    // Fit bounds only when the business set changes (initial scan / new results).
-    if (opts.fit === false || !bounds.length) return;
-    if (bounds.length === 1) {
-      lfMap.setView(bounds[0], Math.max(lfMap.getZoom(), 13));
-    } else {
+    lfMarkerById.forEach((marker) => {
       try {
-        lfMap.fitBounds(bounds, { padding: [48, 48], maxZoom: 14, animate: false });
+        marker.remove();
       } catch (_) {
         /* ignore */
       }
+    });
+    lfMarkerById = new Map();
+    const bounds = new maplibregl.LngLatBounds();
+    let pointCount = 0;
+    withCoords.forEach(({ lead, coords, id }) => {
+      const element = createBusinessMarkerElement(id === selectedLeadId);
+      element.title = displayName(lead);
+      element.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        revealResults();
+        selectLeadOnMap(id, { scrollCard: true });
+      });
+      const marker = new maplibregl.Marker({ element, anchor: "bottom" })
+        .setLngLat([coords.lng, coords.lat])
+        .addTo(lfMap);
+      lfMarkerById.set(id, marker);
+      bounds.extend([coords.lng, coords.lat]);
+      pointCount += 1;
+    });
+
+    // Fit bounds only when the business set changes (initial scan / new results).
+    if (opts.fit === false || !pointCount) return;
+    try {
+      if (pointCount === 1) {
+        lfMap.easeTo({
+          center: bounds.getCenter(),
+          zoom: Math.max(lfMap.getZoom(), 13),
+          duration: 0,
+        });
+      } else {
+        lfMap.fitBounds(bounds, { padding: 48, maxZoom: 14, duration: 0 });
+      }
+    } catch (_) {
+      /* ignore */
     }
   }
 
   function flyToUserLocation(coords) {
-    if (!lfMap || !coords) return;
-    lfMap.setView([coords.lat, coords.lng], 13, { animate: true });
+    if (!lfMap || !coords || typeof maplibregl === "undefined") return;
+    const reduce = motionReduced();
+    lfMap.easeTo({
+      center: [coords.lng, coords.lat],
+      zoom: 13,
+      duration: reduce ? 0 : 700,
+    });
     if (userLocationMarker) {
-      userLocationMarker.setLatLng([coords.lat, coords.lng]);
-    } else {
-      userLocationMarker = L.circleMarker([coords.lat, coords.lng], {
-        radius: 7,
-        color: "#fff",
-        weight: 2,
-        fillColor: "#38bdf8",
-        fillOpacity: 0.95,
-        interactive: false,
-      }).addTo(lfMap);
+      userLocationMarker.setLngLat([coords.lng, coords.lat]);
+      return;
     }
+    const dot = document.createElement("div");
+    dot.className = "ms-lf-map-user-dot";
+    dot.setAttribute("aria-hidden", "true");
+    userLocationMarker = new maplibregl.Marker({ element: dot, anchor: "center" })
+      .setLngLat([coords.lng, coords.lat])
+      .addTo(lfMap);
   }
 
   function applyFreeTextSearch(raw) {
@@ -4601,8 +4699,11 @@
       if (e.target.closest("a[href]")) return;
       selectLeadOnMap(card.getAttribute("data-lead-id") || "", { scrollCard: false });
       const marker = lfMarkerById.get(card.getAttribute("data-lead-id") || "");
-      if (marker && lfMap) {
-        lfMap.panTo(marker.getLatLng(), { animate: true });
+      if (marker && lfMap && typeof marker.getLngLat === "function") {
+        lfMap.easeTo({
+          center: marker.getLngLat(),
+          duration: motionReduced() ? 0 : 450,
+        });
       }
     });
 
@@ -4625,7 +4726,7 @@
   function bootLeadsSearch() {
     if (booted || document.body?.dataset?.page !== "leads") return;
     if (isDbConnected() && !MAP_UI) showLoadingCards();
-    // Start Leaflet immediately - don't hold the map behind auth warmup.
+    // Start the map immediately - don't hold it behind auth warmup.
     if (MAP_UI) initLeadMap();
     const run = () => {
       if (booted) return;

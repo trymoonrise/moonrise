@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style>html.ms-hold body{visibility:hidden!important}</style>
-<script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
+<style>html.ms-hold body{visibility:hidden!important}.ms-auth-autosave[hidden]{display:none!important}</style>
+<script>
+document.documentElement.classList.add("ms-hold");
+window.__msRevealLogin = function () {
+  document.documentElement.classList.remove("ms-hold");
+};
+// Stay blank until the session check finishes. A signed-in visit goes
+// straight to the next page and never paints this card.
+setTimeout(function () {
+  if (document.documentElement.classList.contains("ms-hold")) window.__msRevealLogin();
+}, 8000);
+</script>
   <script>
     (function () {
       var BUILD = "20260924-signup-authcode";
@@ -46,8 +56,8 @@
   <meta name="twitter:description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261003-cal">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg" onload="document.documentElement.classList.remove('ms-hold')">
+  <link rel="stylesheet" href="css/studio.css?v=20261005-auth-compact">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg">
   <meta name="color-scheme" content="light">
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <script defer src="js/config.js?v=20261003-avatar"></script>
@@ -103,7 +113,7 @@
       </div>
       <div class="ms-field" id="email-field">
         <label class="ms-label" for="email">Email</label>
-        <input class="ms-input" id="email" name="email" type="email" required autocomplete="email">
+        <input class="ms-input" id="email" name="email" type="text" inputmode="email" required autocomplete="username">
       </div>
       <div class="ms-field" id="password-field">
         <label class="ms-label" for="password">Password</label>
@@ -209,8 +219,8 @@
   <script defer src="js/toast.js"></script>
   <script defer src="js/handles.js"></script>
   <script defer src="js/auth-security.js?v=20261003-session"></script>
-  <script defer src="js/supabase-client.js?v=20261003-session"></script>
-  <script defer src="js/auth.js?v=20261003-nav"></script>
+  <script defer src="js/supabase-client.js?v=20261005-auth"></script>
+  <script defer src="js/auth.js?v=20261005-auth"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();
@@ -366,10 +376,10 @@
         try {
           const email = String(emailInput?.value || "").trim();
           const handle = String(handleInput?.value || "").trim();
+          // An empty read must not wipe a saved email. Autofill and the
+          // toggle can run before the field is filled.
           if (email) localStorage.setItem(AUTOSAVE_EMAIL_KEY, email);
-          else localStorage.removeItem(AUTOSAVE_EMAIL_KEY);
           if (handle) localStorage.setItem(AUTOSAVE_HANDLE_KEY, handle);
-          else localStorage.removeItem(AUTOSAVE_HANDLE_KEY);
         } catch (_) {
           /* ignore */
         }
@@ -377,7 +387,19 @@
 
       function scheduleAutosave() {
         clearTimeout(autosaveTimer);
-        autosaveTimer = setTimeout(() => persistAutosavedFields(), 250);
+        autosaveTimer = setTimeout(() => {
+          if (!isAutosaveEnabled()) return;
+          const email = String(emailInput?.value || "").trim();
+          const handle = String(handleInput?.value || "").trim();
+          try {
+            if (email) localStorage.setItem(AUTOSAVE_EMAIL_KEY, email);
+            else localStorage.removeItem(AUTOSAVE_EMAIL_KEY);
+            if (handle) localStorage.setItem(AUTOSAVE_HANDLE_KEY, handle);
+            else localStorage.removeItem(AUTOSAVE_HANDLE_KEY);
+          } catch (_) {
+            /* ignore */
+          }
+        }, 200);
       }
 
       function restoreAutosavedFields() {
@@ -425,7 +447,9 @@
         }
       });
       emailInput?.addEventListener("input", scheduleAutosave);
+      emailInput?.addEventListener("change", scheduleAutosave);
       handleInput?.addEventListener("input", scheduleAutosave);
+      handleInput?.addEventListener("change", scheduleAutosave);
 
       function bindTogglePassword(input, button) {
         if (!input || !button) return;
@@ -645,6 +669,13 @@
         return window.StudioAuth || null;
       }
 
+      function revealLoginForm() {
+        window.__msRevealLogin?.();
+        if (mode === "signin" && emailInput?.value && passwordInput && !passwordInput.value) {
+          passwordInput.focus();
+        }
+      }
+
       async function bootstrapAuthSession() {
         await waitForStudioAuth(60);
         const sb = window.StudioAuth?.getClient?.();
@@ -703,9 +734,10 @@
           sessionStorage.removeItem(CHECK_EMAIL_FLAG);
         }
         if (recoveryPending && sessionNow) setMode("recover", true);
+        revealLoginForm();
       }
 
-      void bootstrapAuthSession();
+      void bootstrapAuthSession().catch(() => revealLoginForm());
 
       function clearSignupEmailPrompt() {
         try {

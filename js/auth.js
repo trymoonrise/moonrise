@@ -229,6 +229,7 @@
       if (!session?.access_token || !session?.refresh_token) {
         throw new Error("Could not save your session. Try again.");
       }
+      markClientSession();
       global.MsAuthSecurity?.scrubUrlAuthFragments?.();
       return { ...(data || {}), session, user: session.user || data?.user };
     } catch (e) {
@@ -249,30 +250,94 @@
     }
   }
 
-  async function hydrateSessionFromCookie() {
-    if (!hasSessionCookie()) return null;
+  function hasSessionHint() {
+    try {
+      return global.sessionStorage?.getItem("ms_session_hint") === "1";
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function markClientSession() {
+    try {
+      global.sessionStorage?.setItem("ms_session_hint", "1");
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function clearClientSessionMarker() {
+    try {
+      global.sessionStorage?.removeItem("ms_session_hint");
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  let lastSessionProbe = "unknown";
+
+  async function readWorkerSession() {
     const base = workerUrl();
-    if (!base) return null;
-    const res = await fetch(base + "/auth/session", { method: "GET", credentials: "include" });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data?.access_token || !data?.refresh_token) return null;
-    const applied = await applySessionTokens(data);
-    return applied?.session || null;
+    if (!base || !getClient()) return { status: "unavailable" };
+    try {
+      const res = await withTimeout(
+        fetch(base + "/auth/session", {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+        }),
+        8000,
+        "Session"
+      );
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 401) return { status: "expired" };
+      if (!res.ok || !data?.access_token || !data?.refresh_token) return { status: "unavailable" };
+      return { status: "ok", data };
+    } catch (_) {
+      return { status: "unavailable" };
+    }
+  }
+
+  async function hydrateSessionFromCookie() {
+    let result = await readWorkerSession();
+    // The other channel may have rotated the refresh token first.
+    // Only wait when this browser still looks signed in.
+    const retry = hasSessionCookie() || hasSessionHint();
+    if (result.status === "expired" && retry) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      result = await readWorkerSession();
+    }
+    if (result.status === "expired" && retry) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      result = await readWorkerSession();
+    }
+    lastSessionProbe = result.status;
+    if (result.status !== "ok") return null;
+    const applied = await applySessionTokens(result.data);
+    const session = applied?.session || null;
+    if (session) markClientSession();
+    return session;
   }
 
   async function getSession() {
     const sb = getClient();
-    if (!sb) return null;
+    if (!sb) {
+      lastSessionProbe = "unavailable";
+      return null;
+    }
     try {
       const { data, error } = await withTimeout(sb.auth.getSession(), AUTH_TIMEOUT_MS, "Session");
       const session = data?.session;
       const expiresAt = Number(session?.expires_at || 0);
       const fresh = !!(session?.access_token && expiresAt * 1000 > Date.now() + 60000);
-      if (!error && fresh) return session;
+      if (!error && fresh) {
+        lastSessionProbe = "ok";
+        markClientSession();
+        return session;
+      }
     } catch (e) {
       console.warn(e);
     }
-    if (!hasSessionCookie()) return null;
     if (!hydratePromise) {
       hydratePromise = hydrateSessionFromCookie().finally(() => {
         hydratePromise = null;
@@ -282,6 +347,7 @@
       return (await hydratePromise) || null;
     } catch (e) {
       console.warn(e);
+      lastSessionProbe = "unavailable";
       return null;
     }
   }
@@ -671,6 +737,7 @@
 
   async function signOut() {
     const sb = getClient();
+    clearClientSessionMarker();
     try {
       global.MsAuthSecurity?.clearSensitiveClientStorage?.();
     } catch (_) {
@@ -954,6 +1021,11 @@
     const session = await getSession();
     if (!session) {
       if (document.prerendering) return null;
+      // Worker blip or scripts still loading. Stay on the loader instead of
+      // painting the login page and bouncing back.
+      if (lastSessionProbe === "unavailable") return null;
+      global.__msAuthRedirecting = true;
+      clearClientSessionMarker();
       const next = encodeURIComponent(
         (location.pathname.split("/").pop() || "dashboard.html") + location.search + location.hash
       );

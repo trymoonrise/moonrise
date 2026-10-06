@@ -41,7 +41,7 @@ document.documentElement.classList.add("ms-boot");
 </script>
   <script>
     (function () {
-      var BUILD = "20260930-gate-fix";
+      var BUILD = "20261005-osm";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -70,17 +70,19 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261003-avatar"></script>
+  <script src="js/auth-gate-head.js?v=20261005-auth"></script>
   <title>Business Finder - Moonrise Studio</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="preconnect" href="https://server.arcgisonline.com" crossorigin>
-  <link rel="dns-prefetch" href="https://server.arcgisonline.com">
+  <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+  <link rel="dns-prefetch" href="https://tiles.openfreemap.org">
+  <link rel="dns-prefetch" href="https://nominatim.openstreetmap.org">
+  <link rel="dns-prefetch" href="https://overpass-api.de">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.2/dist/maplibre-gl.css" crossorigin="">
   <link rel="stylesheet" href="css/studio.css?v=20261003-cal">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <link rel="stylesheet" href="css/ms-lf-slide.css?v=20260924-finder-fix">
-  <link rel="stylesheet" href="css/leads-map.css?v=20260929-search-click">
+  <link rel="stylesheet" href="css/leads-map.css?v=20261005-osm">
   <style id="lf-map-bar-width-fix">
     /* Inline so PWA cache cannot leave search/filter bars narrow */
     @media (max-width: 900px) {
@@ -261,12 +263,12 @@ document.documentElement.classList.add("ms-boot");
   </div>
 
   <script defer src="js/config.js?v=20261003-avatar"></script>
-  <script defer src="js/app.js?v=20261003-avatar"></script>
+  <script defer src="js/app.js?v=20261005-auth"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.2/dist/maplibre-gl.js" crossorigin=""></script>
   <script defer src="js/site-branding.js"></script>
-  <script defer src="js/supabase-client.js?v=20261003-session"></script>
-  <script defer src="js/auth.js?v=20261003-nav"></script>
+  <script defer src="js/supabase-client.js?v=20261005-auth"></script>
+  <script defer src="js/auth.js?v=20261005-auth"></script>
   <script defer src="js/lead-csv-format.js?v=20260811-website-recheck"></script>
   <script defer src="js/lead-display.js?v=20260718-swipe-site"></script>
   <script defer src="js/lead-website-enrich.js?v=20260811-website-recheck"></script>
@@ -278,6 +280,7 @@ document.documentElement.classList.add("ms-boot");
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/ms-lf-slide.js?v=20260924-finder-fix"></script>
   <script defer src="js/thinking-orb.js?v=20260923-orb-solid"></script>
-  <script defer src="js/leads-search.js?v=20260930-gate-fix"></script>
+  <script defer src="js/osm-finder.js?v=20261005-osm"></script>
+  <script defer src="js/leads-search.js?v=20261005-osm"></script>
 </body>
 </html>

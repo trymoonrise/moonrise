@@ -2210,18 +2210,21 @@ function extractPresetSnippet(html) {
   // Drop demo chrome panels so the model sees real layout, not gallery toggles.
   let body = compactSnippet(bodyMatch ? bodyMatch[1] : text)
     .replace(/<aside\b[^>]*>[\s\S]*?<\/aside>/gi, "")
-    .replace(/<div[^>]*(?:demo-controls|preset-controls|section-toggles)[^>]*>[\s\S]*?<\/div>/gi, "");
-  // Keep most of the budget for markup structure; CSS is supporting context.
-  const styleBudget = Math.floor(PRESET_MAX_CHARS_EACH * 0.35);
-  const bodyBudget = Math.max(900, PRESET_MAX_CHARS_EACH - styleBudget - 40);
-  const stylePart = style
-    ? `<style>${style.length > styleBudget ? style.slice(0, styleBudget) : style}</style>`
-    : "";
-  if (body.length > bodyBudget) body = body.slice(0, bodyBudget);
-  let out = stylePart + body;
-  if (out.length > PRESET_MAX_CHARS_EACH) {
-    return out.slice(0, PRESET_MAX_CHARS_EACH);
+    .replace(/<div[^>]*(?:demo-controls|preset-controls|section-toggles)[^>]*>[\s\S]*?<\/div>/gi, "")
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+  const cap = PRESET_MAX_CHARS_EACH;
+  // Keep the full design system when it fits. Trim markup before clipping CSS.
+  let stylePart = style ? `<style>${style}</style>` : "";
+  if (stylePart.length + body.length > cap) {
+    const bodyRoom = Math.max(900, cap - Math.min(stylePart.length, Math.floor(cap * 0.62)));
+    if (body.length > bodyRoom) body = body.slice(0, bodyRoom);
   }
+  if (stylePart.length + body.length > cap) {
+    const styleRoom = Math.max(480, cap - body.length - 16);
+    stylePart = `<style>${style.slice(0, styleRoom)}</style>`;
+  }
+  let out = stylePart + body;
+  if (out.length > cap) return out.slice(0, cap);
   return out;
 }
 

@@ -122,8 +122,12 @@ async function ensureManifest({ force = false } = {}) {
 }
 
 async function loadPresetHtml(filename) {
-  const safeName = String(filename || "").trim();
-  if (!safeName || safeName.includes("..") || safeName.includes("/") || safeName.includes("\\")) {
+  const safeName = String(filename || "")
+    .trim()
+    .replace(/\\/g, "/");
+  const flat = /^[a-z0-9][a-z0-9.-]*\.html$/i.test(safeName);
+  const nested = /^[a-z0-9-]+\/[a-z0-9][a-z0-9.-]*\.html$/i.test(safeName);
+  if (!safeName || safeName.includes("..") || (!flat && !nested)) {
     throw new Error("Invalid preset filename");
   }
 

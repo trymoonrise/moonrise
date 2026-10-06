@@ -1867,18 +1867,6 @@
 
   let authWait = 0;
 
-  async function continueSession() {
-    if (!window.StudioAuth?.requireAuth) return;
-    try {
-      const session = await window.StudioAuth.requireAuth();
-      if (!session) return;
-      await hydrateUser();
-      await finishSession(session);
-    } catch (e) {
-      console.warn(e);
-    }
-  }
-
   async function allowThisPage() {
     const page = document.body?.dataset?.page || "";
     if (page !== "admin-console") return true;
@@ -1890,35 +1878,39 @@
 
   async function boot() {
     ensureTabBar(document.body?.dataset?.page || "");
-    const gateOpen = document.documentElement.classList.contains("ms-auth-ready");
-    // Shell paint must not wait on the Supabase CDN. Auth runs on the next turn
-    // if this file executed before auth.js.
+    if (window.__msAuthRedirecting) return;
+    // This file runs before auth.js. Keep waiting so a half-loaded page
+    // does not give up and send the user to the login screen.
     if (!window.StudioAuth?.requireAuth) {
-      if (gateOpen) paintApp();
-      if (authWait < 1) {
+      if (authWait < 200) {
         authWait += 1;
         setTimeout(() => {
           void boot();
-        }, 0);
+        }, 50);
       }
-      return;
-    }
-    if (gateOpen) {
-      if (!(await allowThisPage())) return;
-      paintApp();
-      void continueSession();
       return;
     }
 
     let session = null;
-    if (window.StudioAuth?.requireAuth) {
-      try {
-        session = await window.StudioAuth.requireAuth();
-        if (!session) return;
-      } catch (e) {
-        console.warn(e);
-        return;
+    try {
+      session = await window.StudioAuth.requireAuth();
+    } catch (e) {
+      console.warn(e);
+    }
+    if (!session) {
+      if (window.__msAuthRedirecting || document.prerendering) return;
+      // Public pages release the gate and return no session. Protected pages
+      // stay gated while the worker is briefly unreachable.
+      if (
+        document.documentElement.classList.contains("ms-auth-gating") &&
+        authWait < 200
+      ) {
+        authWait += 1;
+        setTimeout(() => {
+          void boot();
+        }, 250);
       }
+      return;
     }
 
     if (!(await allowThisPage())) return;

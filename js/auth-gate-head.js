@@ -55,7 +55,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261003-avatar", "js/app.js?v=20261003-avatar"].forEach(function (href) {
+  ["js/config.js?v=20261003-avatar", "js/app.js?v=20261005-auth"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -70,6 +70,8 @@
   function redirectToLogin() {
     // A prerender that sends itself to login is what the next channel shows.
     if (document.prerendering) return;
+    if (window.__msAuthRedirecting) return;
+    window.__msAuthRedirecting = true;
     var next = encodeURIComponent(file + location.search + location.hash);
     location.replace("login.html?next=" + next);
   }
@@ -79,11 +81,16 @@
     sessionStorage.removeItem("moonrise-studio-auth");
   } catch (e) {}
 
-  function hasSessionCookie() {
+  function looksSignedIn() {
+    try {
+      if (sessionStorage.getItem("ms_session_hint") === "1") return true;
+    } catch (e) {}
     return /(?:^|;\s*)ms_on=1(?:;|$)/.test(document.cookie || "");
   }
 
-  if (!hasSessionCookie()) {
+  // No saved sign-in: go to login before the page paints.
+  // A saved sign-in stays on this channel under the loader until auth.js confirms it.
+  if (!looksSignedIn()) {
     redirectToLogin();
     return;
   }
@@ -95,46 +102,10 @@
 
   setTimeout(function () {
     if (document.documentElement.classList.contains("ms-auth-gating")) redirectToLogin();
-  }, 12000);
+  }, 20000);
 
   mountTabBarEarly();
-  warmChannels();
 })();
-
-function warmChannels() {
-  if (!document.head || document.getElementById("ms-channel-speculation")) return;
-  // Prefetch only. Prerender runs the auth gate and can swap the next channel for the login page.
-  // Admin Console is not warmed for everyone.
-  var pages = ["dashboard.html", "builder.html", "leads.html", "clients.html", "settings.html", "projects.html", "help.html"];
-  if (window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports("speculationrules")) {
-    var rules = document.createElement("script");
-    rules.id = "ms-channel-speculation";
-    rules.type = "speculationrules";
-    rules.textContent = JSON.stringify({
-      prefetch: [
-        {
-          urls: pages,
-          eagerness: "conservative",
-        },
-      ],
-    });
-    document.head.appendChild(rules);
-    return;
-  }
-  var here = (location.pathname.split("/").pop() || "").split("?")[0];
-  function prefetch() {
-    pages.forEach(function (href) {
-      if (href === here) return;
-      var link = document.createElement("link");
-      link.rel = "prefetch";
-      link.as = "document";
-      link.href = href;
-      document.head.appendChild(link);
-    });
-  }
-  if (window.requestIdleCallback) requestIdleCallback(prefetch, { timeout: 800 });
-  else setTimeout(prefetch, 250);
-}
 
 function mountTabBarEarly() {
   var stem = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/i, "") || "index";

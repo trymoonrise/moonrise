@@ -142,6 +142,8 @@ const ORNAMENT_CATEGORIES = new Set([
   'comparisons',
 ]);
 
+const LIST_KEYS = new Set(['tags', 'mood', 'slots']);
+
 function parsePresetMeta(html) {
   const match = html.match(/<!--\s*@preset\s*([\s\S]*?)-->/);
   if (!match) return null;
@@ -150,15 +152,27 @@ function parsePresetMeta(html) {
     const m = line.match(/^\s*(\w+):\s*(.+)/);
     if (m) {
       const key = m[1].trim();
-      let val = m[2].trim();
-      if (key === 'tags') {
-        meta.tags = val.split(',').map((t) => t.trim()).filter(Boolean);
+      const val = m[2].trim();
+      if (LIST_KEYS.has(key)) {
+        meta[key] = val.split(',').map((t) => t.trim()).filter(Boolean);
       } else {
         meta[key] = val;
       }
     }
   });
   return meta;
+}
+
+function listHtmlFiles(dir, rel = '') {
+  const out = [];
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (ent.name.startsWith('_') || ent.name === 'node_modules') continue;
+    const abs = path.join(dir, ent.name);
+    const next = rel ? `${rel}/${ent.name}` : ent.name;
+    if (ent.isDirectory()) out.push(...listHtmlFiles(abs, next));
+    else if (ent.isFile() && ent.name.endsWith('.html')) out.push(next.replace(/\\/g, '/'));
+  }
+  return out;
 }
 
 function normalizeCategory(category) {
@@ -397,11 +411,19 @@ function enrichEntry(meta, file, html) {
   const tags = Array.isArray(meta.tags) ? meta.tags : [];
   const hay = haystack(meta, category);
   const structureRaw = analyzeStructure(html);
-  const role = inferRole(category, hay);
-  const layout = inferLayout(hay, structureRaw, role);
-  const slots = inferSlots(role, layout, structureRaw, hay);
-  const mood = inferMood(hay, structureRaw, role);
-  const pageReady = isPageReady(role, category, hay, structureRaw);
+  const role = meta.role || inferRole(category, hay);
+  const layout = meta.layout || inferLayout(hay, structureRaw, role);
+  const slots =
+    Array.isArray(meta.slots) && meta.slots.length
+      ? meta.slots
+      : inferSlots(role, layout, structureRaw, hay);
+  const mood =
+    Array.isArray(meta.mood) && meta.mood.length
+      ? meta.mood.slice(0, 4)
+      : inferMood(hay, structureRaw, role);
+  let pageReady = isPageReady(role, category, hay, structureRaw);
+  if (meta.pageReady === 'true') pageReady = true;
+  if (meta.pageReady === 'false') pageReady = false;
   const structure = {
     layout: structureRaw.layout,
     patterns: structureRaw.patterns,
@@ -419,7 +441,7 @@ function enrichEntry(meta, file, html) {
     role,
     pageReady,
     layout,
-    summary: buildSummary(meta.title, role, layout, structureRaw),
+    summary: meta.summary || buildSummary(meta.title, role, layout, structureRaw),
     slots,
     mood,
     adaptHint: buildAdaptHint(role, layout, structureRaw, slots),
@@ -428,7 +450,7 @@ function enrichEntry(meta, file, html) {
 }
 
 function main() {
-  const files = fs.readdirSync(PRESETS_DIR).filter((f) => f.endsWith('.html') && !f.startsWith('_'));
+  const files = listHtmlFiles(PRESETS_DIR);
   const entries = [];
   let pageReadyCount = 0;
 

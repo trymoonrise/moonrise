@@ -58,7 +58,7 @@ window.SITE_CONFIG = {
 
   /**
    * Optional local LeadFinderCloud scrape API (npm run search:server).
-   * Live Maps search defaults to the cloud worker proxy (/lead-finder -> Render).
+   * Business Finder live search uses OpenStreetMap (Overpass + Nominatim) in the browser.
    * Opt into local :8790 with: localStorage.setItem("ms_use_local_leadfinder", "1")
    */
   leadFinderUrl: "http://127.0.0.1:8790",
@@ -115,7 +115,7 @@ window.isLocalDevHost = function isLocalDevHost() {
   }
 };
 
-// Local Finder uses live Maps scrape; production keeps the Supabase leads table.
+// Local Finder searches OpenStreetMap live; production also keeps the Supabase leads table.
 try {
   if (window.SITE_CONFIG && typeof window.SITE_CONFIG === "object") {
     window.SITE_CONFIG.useSupabaseLeads = !window.isLocalDevHost();

@@ -1192,6 +1192,39 @@
   fill: #be123c;
 }
 
+.ms-lf-map-user-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #38bdf8;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.28);
+  pointer-events: none;
+}
+
+.ms-lf-map .maplibregl-ctrl-attrib {
+  font-size: 10px;
+  line-height: 1.3;
+  background: rgba(15, 23, 42, 0.62);
+  color: #e2e8f0;
+}
+
+.ms-lf-map .maplibregl-ctrl-attrib a {
+  color: #93c5fd;
+}
+
+.ms-lf-map .maplibregl-ctrl-bottom-left,
+.ms-lf-map .maplibregl-ctrl-bottom-right {
+  bottom: 5.25rem;
+}
+
+.ms-lf-map .maplibregl-ctrl-group {
+  border: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+}
+
 .leaflet-control-attribution {
   font-size: 9px !important;
   background: rgba(15, 23, 42, 0.55) !important;
@@ -1570,12 +1603,18 @@ body[data-page="leads"] #ms-hard-refresh,
     font-weight: 700;
   }
 
-  .leaflet-control-zoom {
+  .leaflet-control-zoom,
+  .ms-lf-map .maplibregl-ctrl-zoom {
     display: none !important;
   }
 
   .leaflet-control-attribution {
     display: none !important;
+  }
+
+  .ms-lf-map .maplibregl-ctrl-bottom-left,
+  .ms-lf-map .maplibregl-ctrl-bottom-right {
+    bottom: 6.5rem;
   }
 
   .leaflet-bottom.leaflet-right {
@@ -1585,6 +1624,11 @@ body[data-page="leads"] #ms-hard-refresh,
 
   .ms-lf-map-stage:has(#lf-results-panel:not([hidden])) .leaflet-bottom.leaflet-right {
     bottom: calc(var(--lf-sheet-dock, 7.75rem) + var(--lf-sheet-h, 36dvh) + 0.4rem) !important;
+  }
+
+  .ms-lf-map-stage:has(#lf-results-panel:not([hidden])) .maplibregl-ctrl-bottom-left,
+  .ms-lf-map-stage:has(#lf-results-panel:not([hidden])) .maplibregl-ctrl-bottom-right {
+    bottom: calc(var(--lf-sheet-dock, 7.75rem) + var(--lf-sheet-h, 36dvh) + 0.4rem);
   }
 }
 
