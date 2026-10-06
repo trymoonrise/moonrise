@@ -10641,6 +10641,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
+  margin-left: auto;
   padding: 0.55rem 0.35rem;
   cursor: pointer;
   border-radius: 8px;
@@ -10654,7 +10655,7 @@ body.ms-lb-fullscreen .ms-lb-price {
 
 .ms-redirect-go {
   min-width: 8.5rem;
-  margin-left: auto;
+  margin-left: 0;
   border-radius: 12px !important;
   padding: 0.72rem 1.25rem !important;
   font-weight: 650 !important;

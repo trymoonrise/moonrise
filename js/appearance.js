@@ -167,7 +167,7 @@
       ui = document.createElement("link");
       ui.id = "ms-allero-css";
       ui.rel = "stylesheet";
-      ui.href = "css/allero-ui.css?v=20261006-tab";
+      ui.href = "css/allero-ui.css?v=20261006-slidedark";
     }
     var font = document.getElementById("ms-allero-font");
     if (!font) {

@@ -884,6 +884,8 @@
     document.addEventListener("click", (event) => {
       if (!window.matchMedia("(max-width: 900px)").matches) return;
       if (!document.body.classList.contains("ms-nav-open")) return;
+      const redirect = document.getElementById("ms-redirect-modal");
+      if (redirect && !redirect.hidden && redirect.contains(event.target)) return;
       const finderMenu = document.getElementById("lf-menu-toggle");
       if (
         sidebar?.contains(event.target) ||
@@ -898,13 +900,8 @@
     sidebar?.addEventListener("click", (event) => {
       if (!window.matchMedia("(max-width: 900px)").matches) return;
       const link = event.target.closest?.("a[href]");
-      if (link?.dataset.externalRedirect === "true") {
+      if (link?.dataset.externalRedirect === "true" || link?.hasAttribute("data-download-app")) {
         event.preventDefault();
-        setNavOpen(false);
-        openRedirectConfirm(
-          link.getAttribute("data-external-url") || telegramUrl(),
-          link.getAttribute("data-external-label") || "Telegram"
-        );
         return;
       }
       if (
@@ -931,6 +928,7 @@
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" || !document.body.classList.contains("ms-nav-open")) return;
+      if (document.body.classList.contains("ms-redirect-open")) return;
       setNavOpen(false);
       menuToggle?.focus();
     });
@@ -1078,8 +1076,8 @@
       '<p class="ms-redirect-copy">You are about to open <strong>Telegram</strong> in a new tab. You will leave Moonrise Studio temporarily.</p>' +
       "</header>" +
       '<footer class="ms-redirect-actions">' +
-      '<button type="button" class="ms-redirect-cancel" id="ms-redirect-cancel">Stay here</button>' +
-      '<button type="button" class="ms-btn ms-redirect-go" id="ms-redirect-go">Continue to Telegram</button>' +
+      '<button type="button" class="ms-btn ms-redirect-go" id="ms-redirect-go" style="margin-left:0">Continue to Telegram</button>' +
+      '<button type="button" class="ms-redirect-cancel" id="ms-redirect-cancel" style="margin-left:auto">Stay here</button>' +
       "</footer>" +
       "</div>";
     document.body.appendChild(el);
