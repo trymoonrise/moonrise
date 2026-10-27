@@ -1933,7 +1933,9 @@ function cleanGeneratedCss(css) {
     "/* moonrise: stripped-universal-div-overflow */"
   );
   // Only a bare `div { overflow:hidden }` traps the page. Keep `.faq-panel > div`.
-  out = out.replace(/(^|[{};])(\s*)div\s*\{([^{}]*)\}/gi, (full, lead, space, body) => {
+  out = out.replace(/(^|[{};])(\s*)div\s*\{([^{}]*)\}/gi, (full, lead, space, body, offset, source) => {
+    const before = String(source || "").slice(Math.max(0, Number(offset) - 48), offset);
+    if (/faq/i.test(before)) return full;
     if (!/overflow\s*:\s*hidden/i.test(body)) return full;
     if (/^\s*overflow\s*:\s*hidden\s*;?\s*$/i.test(body)) {
       return lead + "/* moonrise: stripped-universal-div-overflow */";

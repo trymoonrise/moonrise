@@ -160,19 +160,19 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261006-allero";
+      link.href = "css/appearance.css?v=20261027-studio";
     }
-    var ui = document.getElementById("ms-allero-css");
+    var ui = document.getElementById("ms-studio-ui-css");
     if (!ui) {
       ui = document.createElement("link");
-      ui.id = "ms-allero-css";
+      ui.id = "ms-studio-ui-css";
       ui.rel = "stylesheet";
-      ui.href = "css/allero-ui.css?v=20261006-slidedark";
+      ui.href = "css/studio-ui.css?v=20261027-slim";
     }
-    var font = document.getElementById("ms-allero-font");
+    var font = document.getElementById("ms-studio-font");
     if (!font) {
       font = document.createElement("link");
-      font.id = "ms-allero-font";
+      font.id = "ms-studio-font";
       font.rel = "stylesheet";
       font.href = "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap";
     }

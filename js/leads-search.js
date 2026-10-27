@@ -998,6 +998,7 @@
       name: String(lead?.name || lead?.businessName || "").trim(),
       mapsUrl: String(lead?.mapsUrl || lead?.maps_url || "").trim(),
       at: new Date().toISOString(),
+      from: "finder",
     };
     persistClaimedMap();
     if (savedMap[id]) {
@@ -1007,12 +1008,16 @@
     return true;
   }
 
-  function releaseLeadClaim(leadOrId) {
+  function releaseLeadClaim(leadOrId, options) {
+    const force = !!(options && options.force);
     const id =
       typeof leadOrId === "string" || typeof leadOrId === "number"
         ? String(leadOrId || "").trim()
         : leadId(leadOrId);
-    if (!id || !claimedMap[id] || claimedMap[id].from === "project") return false;
+    if (!id || !claimedMap[id]) return false;
+    // Project-sourced claims stay until the website is deleted (force) or
+    // hydrateClaimedFromProjects reconciles against live projects.
+    if (!force && claimedMap[id].from === "project") return false;
     delete claimedMap[id];
     persistClaimedMap();
     if (lastLeads.length) refreshVisibleLeads();
@@ -1053,9 +1058,17 @@
     let changed = false;
     (ids || []).forEach((raw) => {
       const id = String(raw || "").trim();
-      if (!id || claimedMap[id]) return;
-      claimedMap[id] = { id, at: new Date().toISOString(), from: "project" };
-      changed = true;
+      if (!id) return;
+      if (!claimedMap[id]) {
+        claimedMap[id] = { id, at: new Date().toISOString(), from: "project" };
+        changed = true;
+        return;
+      }
+      // Upgrade finder/editor claims once a project exists so delete hydrate can clear them.
+      if (claimedMap[id].from !== "project") {
+        claimedMap[id] = { ...claimedMap[id], from: "project" };
+        changed = true;
+      }
     });
     if (changed) persistClaimedMap();
     return changed;
@@ -1077,10 +1090,26 @@
         .not("lead_id", "is", null)
         .limit(2000);
       if (error) throw error;
-      const ids = (data || [])
-        .map((row) => String(row.lead_id || "").trim())
-        .filter(Boolean);
-      return mergeClaimedIds(ids);
+      const liveIds = new Set(
+        (data || [])
+          .map((row) => String(row.lead_id || "").trim())
+          .filter(Boolean)
+      );
+      let changed = false;
+      // Deleted websites should reappear as new leads — drop stale project claims.
+      // Keep editor/finder claims (in-progress builds) until delete releases them.
+      Object.keys(claimedMap).forEach((id) => {
+        const entry = claimedMap[id];
+        if (!entry || liveIds.has(id)) return;
+        if (entry.from === "project") {
+          delete claimedMap[id];
+          changed = true;
+        }
+      });
+      if (mergeClaimedIds([...liveIds])) changed = true;
+      else if (changed) persistClaimedMap();
+      if (changed && lastLeads.length) refreshVisibleLeads();
+      return changed;
     } catch (e) {
       console.warn("hydrateClaimedFromProjects", e);
       return false;

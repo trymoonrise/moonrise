@@ -1111,6 +1111,7 @@
         }
         throw new Error("Could not delete project. Refresh and try again.");
       }
+      window.StudioProjects?.releaseClaimedLead?.(project);
       allProjects = allProjects.filter((p) => p.id !== deleteProjectId);
       setStats(allProjects.filter(isSale));
       await renderProjects(allProjects);

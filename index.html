@@ -1,8 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style>html.ms-hold body{visibility:hidden!important}</style>
-<script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.15rem;background:#fff;color:#1d1d1f;visibility:visible!important}
+#ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em}
+#ms-boot .ms-boot-bar{width:7.5rem;height:2px;border-radius:99px;background:rgba(29,29,31,.12);overflow:hidden}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:40%;border-radius:inherit;background:currentColor;animation:ms-boot 1.05s ease-in-out infinite}
+@keyframes ms-boot{0%{transform:translateX(-120%)}100%{transform:translateX(280%)}}
+@media (prefers-reduced-motion:reduce){#ms-boot .ms-boot-bar span{animation:none;width:100%;opacity:.45}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","status");
+  boot.setAttribute("aria-label","Loading");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  window.__msReleaseBoot=function(){
+    if(window.__msBootReleased)return;
+    window.__msBootReleased=1;
+    var finish=function(){
+      document.documentElement.classList.remove("ms-boot","ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+      document.body&&document.body.classList.remove("ms-home-booting");
+      document.body&&document.body.classList.add("is-home-ready");
+    };
+    var paint=function(){requestAnimationFrame(function(){requestAnimationFrame(finish);});};
+    if(document.fonts&&document.fonts.ready){
+      Promise.race([document.fonts.ready.catch(function(){}),new Promise(function(r){setTimeout(r,800);})]).then(paint);
+    }else paint();
+  };
+  setTimeout(function(){ if(window.__msReleaseBoot) window.__msReleaseBoot(); },20000);
+})();
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
@@ -81,9 +116,9 @@
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="stylesheet" href="css/studio.css?v=20261006-menu">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="document.documentElement.classList.remove('ms-hold')">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
-  <link rel="stylesheet" href="css/allero-ui.css?v=20261006-tiles">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261027-slim">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261006-blue"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
@@ -150,10 +185,6 @@
   </script>
 </head>
 <body data-page="home" class="ms-home-booting">
-  <div class="ms-home-greet" id="ms-home-greet" aria-hidden="false">
-    <p class="ms-home-greet-word">moonrise.</p>
-  </div>
-
   <div class="ms-home-shell">
     <div class="ms-home-field" aria-hidden="true">
       <div class="ms-home-wash ms-home-wash-a"></div>
@@ -378,83 +409,17 @@
   <script defer src="js/toast.js"></script>
   <script defer>
     (function () {
-      const body = document.body;
-      const greet = document.getElementById("ms-home-greet");
-      const word = greet?.querySelector(".ms-home-greet-word");
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      let revealed = false;
-      let revealFailsafeTimer = 0;
-
-      function revealHome() {
-        if (revealed) return;
-        revealed = true;
-        if (revealFailsafeTimer) {
-          clearTimeout(revealFailsafeTimer);
-          revealFailsafeTimer = 0;
-        }
-        if (greet) {
-          greet.classList.add("is-done");
-          greet.setAttribute("aria-hidden", "true");
-          greet.addEventListener(
-            "transitionend",
-            () => {
-              greet.remove();
-            },
-            { once: true }
-          );
-          setTimeout(() => greet.remove(), 700);
-        }
-        body.classList.remove("ms-home-booting");
-        body.classList.add("is-home-ready");
-      }
-
-      revealFailsafeTimer = setTimeout(revealHome, 2800);
-
-      if (!greet || !word || reduce) {
-        revealHome();
-      } else {
-        (async function playGreet() {
-          word.classList.remove("is-playing");
-          word.style.transform = "scale(1)";
-          word.style.opacity = "0.001";
-          try {
-            if (document.fonts?.ready) {
-              await Promise.race([
-                document.fonts.ready,
-                new Promise((resolve) => setTimeout(resolve, 350)),
-              ]);
-            }
-          } catch (_) {}
-
-          const rect = word.getBoundingClientRect();
-          const maxW = window.innerWidth * 0.92;
-          const maxH = window.innerHeight * 0.78;
-          const scale = Math.min(
-            maxW / Math.max(rect.width, 1),
-            maxH / Math.max(rect.height, 1)
-          );
-          word.style.setProperty("--ms-greet-max", String(Math.max(1.2, scale)));
-          word.style.removeProperty("transform");
-          word.style.removeProperty("opacity");
-
-          // Restart the pop/shrink with a device-fit peak scale
-          void word.offsetWidth;
-          word.classList.add("is-playing");
-
-          // Reveal the UI only once the word has visibly shrunk (near the end)
-          setTimeout(revealHome, 900);
-          setTimeout(() => {
-            if (greet?.parentNode) greet.remove();
-          }, 2400);
-        })();
+      if (window.__msReleaseBoot) window.__msReleaseBoot();
+      else {
+        document.body.classList.remove("ms-home-booting");
+        document.body.classList.add("is-home-ready");
       }
 
       function bindPointerTilt(selector, options) {
         if (reduce || window.matchMedia("(pointer: coarse)").matches) return;
         const nodes = document.querySelectorAll(selector);
         const maxTilt = options.maxTilt || 10;
-        const waitAnim = !!options.waitAnim;
         const mode = options.mode || "tilt";
         if (mode === "none") return;
 
@@ -462,14 +427,7 @@
           let rect = null;
           let raf = 0;
           let pending = null;
-
-          const enableTilt = () => node.classList.add("is-tiltable");
-          if (waitAnim) {
-            node.addEventListener("animationend", enableTilt, { once: true });
-            setTimeout(enableTilt, 1200 + Number(node.style.getPropertyValue("--i") || 0) * 70);
-          } else {
-            enableTilt();
-          }
+          node.classList.add("is-tiltable");
 
           if (mode === "lift") {
             node.addEventListener("pointerenter", () => {
@@ -501,7 +459,6 @@
           });
 
           node.addEventListener("pointermove", (e) => {
-            if (!node.classList.contains("is-tiltable")) return;
             if (!rect) rect = node.getBoundingClientRect();
             pending = { x: e.clientX, y: e.clientY };
             if (!raf) raf = requestAnimationFrame(applyTilt);
@@ -519,7 +476,7 @@
         });
       }
 
-      bindPointerTilt(".ms-home-method-card", { maxTilt: 5, mode: "tilt", waitAnim: false });
+      bindPointerTilt(".ms-home-method-card", { maxTilt: 5, mode: "tilt" });
     })();
   </script>
 </body>

@@ -1,4 +1,4 @@
-/* Tryallero visual system for Moonrise. Loaded after studio.css and appearance.css.
+/* Moonrise studio surface styles. Loaded after studio.css and appearance.css.
    Surfaces stay black, white, and gray. Settings still recolors --ms-accent. */
 
 :root {
@@ -1587,4 +1587,128 @@ body.ms-home-menu-open .ms-home-brand {
 
 body.ms-home-menu-open .ms-home-orb.is-open i {
   background: #f5f5f7 !important;
+}
+
+/* Slim type + padding across public surfaces */
+body[data-page="home"] .ms-home-title,
+body[data-page="orders"] .ms-orders-head h1,
+body[data-page="contact"] .ms-page-head h1,
+body[data-page="download"] .ms-download-card h1,
+body[data-page="login"] .ms-auth-card h1,
+body[data-page="help"] .ms-page-head h1,
+body[data-page="pricing"] .ms-page-head h1,
+.ms-page-head h1 {
+  font-weight: 700 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 1.05 !important;
+  color: #1d1d1f !important;
+}
+
+body[data-page="home"] .ms-home-title {
+  font-size: clamp(2.75rem, 7vw, 4.25rem) !important;
+  font-weight: 800 !important;
+}
+
+body[data-page="orders"] .ms-orders-head h1,
+body[data-page="contact"] .ms-page-head h1,
+body[data-page="download"] .ms-download-card h1,
+body[data-page="help"] .ms-page-head h1,
+body[data-page="pricing"] .ms-page-head h1,
+.ms-page-head h1 {
+  font-size: clamp(2.1rem, 5vw, 2.85rem) !important;
+}
+
+body[data-page="home"] .ms-home-sub,
+body[data-page="home"] .ms-home-section-lead,
+body[data-page="orders"] .ms-orders-head p,
+body[data-page="contact"] .ms-contact-lead,
+body[data-page="download"] .ms-download-lead,
+body[data-page="login"] .ms-auth-brand .ms-muted,
+body[data-page="help"] .ms-page-head-copy .lead,
+.ms-page-head-copy .lead,
+.ms-page-head-copy p {
+  color: #6e6e73 !important;
+  font-size: 0.98rem !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  letter-spacing: -0.01em !important;
+}
+
+body[data-page="home"] .ms-home-sub {
+  font-size: 1.05rem !important;
+  max-width: 34rem;
+}
+
+.ms-orders-nav {
+  min-height: 4.75rem;
+  padding: 0.85rem clamp(1.25rem, 4vw, 3rem) !important;
+  background: rgb(251 251 253 / 80%);
+  border-bottom: 1px solid rgb(0 0 0 / 8%);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.ms-orders-nav-link {
+  color: #6e6e73 !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em;
+}
+
+.ms-orders-nav-link:hover {
+  color: #1d1d1f !important;
+}
+
+.ms-orders-main,
+.ms-contact-main,
+.ms-download-main {
+  padding-left: clamp(1.25rem, 4vw, 3rem) !important;
+  padding-right: clamp(1.25rem, 4vw, 3rem) !important;
+}
+
+.ms-orders-main {
+  width: min(1120px, 100%) !important;
+  padding-top: 1.5rem !important;
+  padding-bottom: max(3rem, env(safe-area-inset-bottom)) !important;
+}
+
+.ms-contact-main {
+  width: min(1120px, 100%);
+  margin-inline: auto;
+  padding-top: 1.5rem !important;
+  padding-bottom: max(3rem, env(safe-area-inset-bottom)) !important;
+}
+
+.ms-download-card,
+.ms-auth-card,
+.ms-help-vcard {
+  border: 1px solid rgb(0 0 0 / 8%) !important;
+  border-radius: 1.15rem !important;
+  box-shadow: none !important;
+  background: #fff !important;
+}
+
+.ms-download-card {
+  padding: 1.6rem 1.45rem 1.65rem !important;
+}
+
+.ms-auth-card {
+  padding: 1.6rem 1.45rem !important;
+}
+
+.ms-home-hero-copy {
+  padding-inline: clamp(1.25rem, 4vw, 3rem) !important;
+  gap: 1.15rem !important;
+}
+
+.ms-home-section,
+.ms-home-method,
+.ms-home-footer {
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+.ms-muted,
+.ms-orders-search-hint,
+.ms-orders-status {
+  color: #6e6e73 !important;
+  font-weight: 400;
 }

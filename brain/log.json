@@ -1,0 +1,45 @@
+{
+  "repo": "trymoonrise/moonrise",
+  "product": "Moonrise",
+  "updates": [
+    {
+      "version": "1.0.1",
+      "date": "2026-10-27",
+      "title": "Simple boot, fresh leads after delete, shared slim UI",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home uses the same simple moonrise loading bar as the rest of the app instead of a logo splash animation.",
+            "Public pages share one slim type scale with larger titles, lighter body copy, and consistent padding."
+          ]
+        },
+        {
+          "heading": "Finder",
+          "fixes": [
+            "Deleting a website clears its lead claim so scanning or building that business again treats it as a new lead."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Surface styles ship as studio-ui with Moonrise-only naming in cache keys and asset links."
+          ]
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-10-06",
+      "title": "Moonrise Studio baseline",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Moonrise Studio ships the static app and worker for building, selling, and publishing local business websites."
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+---
+description: On every commit, update, or deploy request, bump Moonrise version, update the brain log, commit, push, publish the GitHub Release, and redeploy Vercel production
+alwaysApply: true
+---
+
+# Commit and deploy Moonrise
+
+Whenever the user asks to **commit**, **update**, **push**, **release**, or **deploy** Moonrise / trymoonrise.com, raise the version first, then ship that same source. Do this before you tell the user the update is done. Do not wait to be asked for the version bump. Do not ship two commits on the same version.
+
+Follow the same discipline as sibling MasterVault products: brain log → notes → commit → push → GitHub Release → production deploy.
+
+Prefer working directory `E:\MasterVault\Moonrise\moonrise-studio`. Load secrets from `E:\MasterVault\Moonrise\accesstokens.env` (never print tokens; never commit that file). Fall back to `moonrise-studio/worker/.env` only for keys missing from accesstokens.env.
+
+The version is one number. If the user did not name the next one, raise the patch number. Write that same number in every place below before you commit or deploy:
+
+- `moonrise-studio/package.json` `version` (and lockfile root when present)
+- `moonrise-studio/brain/log.json`: this commit's notes go on a **new top entry** for that version, dated today. Leave shipped versions as they are. If the top entry is still the shipped version, add the new entry and move the unreleased notes into it. Run `npm run notes` so `brain/releases.json` and `doc/releases.json` match.
+
+1. Raise the version. Add unlogged changes to the new `brain/log.json` entry under `added` or `fixes` (headings from the brain-log rule), then run `npm run notes`.
+2. Smoke-check public or studio surfaces when UI changed.
+3. Commit source, brain log, and rendered release notes together from `moonrise-studio`. Never commit `accesstokens.env`, `.env`, or secrets. Prefer `E:\MasterVault\Moonrise\moonrise-studio`. If git reports dubious ownership, pass `-c safe.directory=E:/MasterVault/Moonrise/moonrise-studio` on the command. Do not change git config.
+4. Commit message from the new version title + `added`/`fixes` (concise, why-focused). Follow git safety rules.
+5. Push when the user asked to push, update, or deploy. Remote is `moonrise` → `https://github.com/trymoonrise/moonrise.git` (create / fix if missing). Use `GITHUB_TOKEN` / `GH_TOKEN` from `accesstokens.env` when `gh` is not signed in; never print the token.
+6. After every successful **push** to GitHub, publish the matching GitHub Release so notes appear under the repo **Releases** tab: run `npm run notes` then `npm run release:github`. Set `GITHUB_RELEASE_TARGET` to the pushed commit SHA when useful. Do not skip this when a token is available.
+7. On **update**, **push**, or **deploy**, publish production from that same commit:
+   - **Vercel production** (required for site changes): from `moonrise-studio/`, run `npx vercel --prod --yes` with `VERCEL_TOKEN` from `accesstokens.env` (never print it). Confirm `https://trymoonrise.com` serves this commit.
+   - **GitHub Release** (required): step 6.
+8. Report the version, commit summary, GitHub Release URL, and `https://trymoonrise.com`.
+
+If the user only asked to commit, do steps 1–4. If they also asked to update, push, or deploy, do the push, the GitHub Release, and the Vercel production deploy. If they only asked to update the brain log, do not bump or commit.
+
+Do not mention other MasterVault product names in Moonrise UI, filenames shown to users, or release notes.

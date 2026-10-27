@@ -1,6 +1,6 @@
 {
   "name": "moonrise",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Moonrise static app + API worker entry for Vercel",
   "engines": {
@@ -9,7 +9,9 @@
   "scripts": {
     "vercel-build": "node worker/scripts/ensure-website-presets.js && node worker/scripts/sync-last-commit.js",
     "presets:link": "node worker/scripts/ensure-website-presets.js",
-    "presets:manifest": "node \"Website Presets/scripts/generate-manifest.js\""
+    "presets:manifest": "node \"Website Presets/scripts/generate-manifest.js\"",
+    "notes": "node scripts/render-release-notes.mjs",
+    "release:github": "node scripts/publish-github-release.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",

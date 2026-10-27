@@ -3449,7 +3449,9 @@
     }
 
     // AI sometimes emits `div { overflow: hidden }` which traps scroll on wrappers.
-    out = out.replace(/\bdiv\s*\{([^{}]*)\}/gi, function (full, body) {
+    out = out.replace(/\bdiv\s*\{([^{}]*)\}/gi, function (full, body, offset, source) {
+      const before = String(source || "").slice(Math.max(0, Number(offset) - 48), offset);
+      if (/faq/i.test(before)) return full;
       if (!/overflow\s*:\s*hidden/i.test(body)) return full;
       if (/^\s*overflow\s*:\s*hidden\s*;?\s*$/i.test(body)) {
         return "/* moonrise: stripped-universal-div-overflow */";
@@ -6906,6 +6908,12 @@
       if (!data?.length) {
         throw new Error("Could not delete project. Refresh and try again.");
       }
+      window.StudioProjects?.releaseClaimedLead?.({
+        lead_id: state.leadId || state.project?.lead_id || null,
+        business_context: state.project?.business_context || {
+          mapsUrl: businessValue("mapsUrl") || "",
+        },
+      });
       location.href = "dashboard.html";
     } catch (e) {
       setStatus("");
