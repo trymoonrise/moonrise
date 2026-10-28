@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.15rem;background:#f3f5f8;color:#0f172a;visibility:visible!important}
+html[data-ms-mode="dark"] #ms-boot{background:#0e1320;color:#e8eef8}
+@media (prefers-color-scheme:dark){html:not([data-ms-mode="light"]) #ms-boot{background:#0e1320;color:#e8eef8}}
+#ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em}
+#ms-boot .ms-boot-bar{width:7.5rem;height:2px;border-radius:99px;background:rgba(15,23,42,.12);overflow:hidden}
+html[data-ms-mode="dark"] #ms-boot .ms-boot-bar{background:rgba(232,238,248,.16)}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:40%;border-radius:inherit;background:currentColor;animation:ms-boot 1.05s ease-in-out infinite}
+@keyframes ms-boot{0%{transform:translateX(-120%)}100%{transform:translateX(280%)}}
+@media (prefers-reduced-motion:reduce){#ms-boot .ms-boot-bar span{animation:none;width:100%;opacity:.45}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.setAttribute("role","status");
+  boot.setAttribute("aria-label","Loading");
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  function reveal(){
+    if(window.__msBootReleased)return;
+    window.__msBootReleased=1;
+    var finish=function(){
+      document.documentElement.classList.remove("ms-boot","ms-hold");
+      document.documentElement.classList.add("ms-boot-done");
+      var el=document.getElementById("ms-boot");
+      if(el)el.remove();
+    };
+    requestAnimationFrame(function(){requestAnimationFrame(finish);});
+  }
+  window.__msReleaseBoot=function(){
+    if(window.__msBootReleased)return;
+    var fonts=document.fonts&&document.fonts.ready?document.fonts.ready.catch(function(){}):Promise.resolve();
+    var loaded=document.readyState==="complete"?Promise.resolve():new Promise(function(r){window.addEventListener("load",r,{once:true});});
+    Promise.all([fonts,loaded]).then(reveal);
+  };
+  window.__msReleaseBoot();
+  setTimeout(reveal,20000);
+})();
+</script>
+  <script>
+    (function () {
+      var BUILD = "20260924-drawer-ease";
+      try {
+        var prev = localStorage.getItem("ms_asset_build");
+        localStorage.setItem("ms_asset_build", BUILD);
+        if (prev && prev !== BUILD && !sessionStorage.getItem("ms_build_reloaded_" + BUILD)) {
+          sessionStorage.setItem("ms_build_reloaded_" + BUILD, "1");
+          var jobs = [];
+          if ("serviceWorker" in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all((regs || []).map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if ("caches" in window) {
+            jobs.push(caches.keys().then(function (keys) {
+              return Promise.all((keys || []).map(function (k) { return caches.delete(k); }));
+            }));
+          }
+          Promise.allSettled(jobs).then(function () {
+            var url = new URL(location.href);
+            url.searchParams.set("_ms_b", BUILD);
+            location.replace(url.pathname + url.search + url.hash);
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Legal - Moonrise Studio</title>
+  <meta name="description" content="Moonrise Studio legal policies: Privacy Policy, Terms of Service, and Refund and cancellation.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Moonrise Studio">
+  <meta property="og:title" content="Legal - Moonrise Studio">
+  <meta property="og:description" content="Moonrise Studio legal policies: Privacy Policy, Terms of Service, and Refund and cancellation.">
+  <meta property="og:url" content="https://trymoonrise.com/legal.html">
+  <meta property="og:image" content="https://trymoonrise.com/doc/embed.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Legal - Moonrise Studio">
+  <meta name="twitter:description" content="Moonrise Studio legal policies: Privacy Policy, Terms of Service, and Refund and cancellation.">
+  <link rel="canonical" href="https://trymoonrise.com/legal.html">
+  <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
+  <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
+  <link rel="icon" href="doc/MoonriseLogo.png" type="image/png">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-blue">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-blue">
+  <script defer src="js/config.js?v=20261006-blue"></script>
+  <script defer src="js/site-branding.js?v=20260719-seo"></script>
+<style>
+.ms-legal-intro{margin:0.35rem 0 0;color:var(--ms-muted);font-size:0.98rem;line-height:1.55;max-width:42rem}
+.ms-legal-toc{position:sticky;top:calc(2.75rem + env(safe-area-inset-top,0px));z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:0.35rem 0.45rem;margin:1.1rem 0 1.25rem;padding:0.55rem 0 0.75rem;background:rgba(243,245,248,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(226,232,240,0.85)}
+html[data-ms-mode="dark"] .ms-legal-toc{background:rgba(14,19,32,0.88);border-bottom-color:rgba(51,65,85,0.55)}
+@media (prefers-color-scheme:dark){html:not([data-ms-mode="light"]) .ms-legal-toc{background:rgba(14,19,32,0.88);border-bottom-color:rgba(51,65,85,0.55)}}
+.ms-legal-toc-label{font-size:0.78rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ms-muted);margin-right:0.15rem}
+.ms-legal-toc a{flex:0 0 auto;text-decoration:none;color:var(--ms-muted);font-size:0.88rem;font-weight:600;padding:0.35rem 0.65rem;border-radius:999px;background:rgba(255,255,255,0.65);box-shadow:0 1px 2px rgba(15,23,42,0.04)}
+html[data-ms-mode="dark"] .ms-legal-toc a{background:rgba(30,41,59,0.55)}
+.ms-legal-toc a:hover{color:var(--ms-ink);background:#fff}
+.ms-legal-section-head{margin:0 0 0.15rem;font-size:clamp(1.25rem,3vw,1.45rem);font-weight:700;letter-spacing:-0.02em;color:#0f172a}
+html[data-ms-mode="dark"] .ms-legal-section-head{color:#e8eef8}
+@media (prefers-color-scheme:dark){html:not([data-ms-mode="light"]) .ms-legal-section-head{color:#e8eef8}}
+</style>
+
+</head>
+<body data-page="legal" class="ms-legal-site">
+  <header class="ms-legal-top">
+    <a class="ms-legal-brand" href="index.html" aria-label="moonrise.">
+      <img src="doc/MoonriseLogo.png" alt="" width="28" height="28">
+      <span>moonrise.</span>
+    </a>
+    <nav class="ms-legal-nav" aria-label="Site">
+      <a href="legal.html" class="is-active">Legal</a>
+      <a href="report.html">Report</a>
+      <a href="guide.html">Guide</a>
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+
+  <main class="ms-legal-wrap">
+    <header class="ms-legal-hero">
+      <h1>Legal</h1>
+      <p class="ms-legal-intro">Privacy Policy, Terms of Service, and Refund and cancellation policies for Moonrise Studio.</p>
+    </header>
+
+    <nav class="ms-legal-toc" aria-label="On this page">
+      <span class="ms-legal-toc-label">On this page</span>
+      <a href="#privacy">Privacy</a>
+      <a href="#terms">Terms</a>
+      <a href="#refunds">Refunds</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="ms-legal-doc">
+      <section id="privacy" class="ms-card ms-legal-article" aria-labelledby="privacy-heading">
+        <h2 class="ms-legal-section-head" id="privacy-heading">Privacy Policy</h2>
+        <p class="ms-legal-updated">Last updated: September 24, 2026</p>
+<h2>1. Introduction</h2>
+        <p>
+          This Privacy Policy explains how Moonrise Studio (&ldquo;Moonrise,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo;
+          or &ldquo;our&rdquo;) collects, uses, stores, shares, and protects information when you use Moonrise Studio,
+          including trymoonrise.com, related apps, dashboards, Business Finder, Builder and Editor, published websites we
+          host or process, watermark checkout, payouts, donations, MVP+ features, and related support channels
+          (collectively, the &ldquo;Service&rdquo;).
+        </p>
+        <p>
+          Please read this Policy together with our <a href="legal.html#terms">Terms of Service</a>. By using the Service, you
+          acknowledge this Policy. If you do not agree, do not use the Service.
+        </p>
+        <p>
+          Moonrise provides software tools. How you use those tools, what you collect from third parties, what you publish,
+          and how you communicate with businesses or clients remain your responsibility.
+        </p>
+
+        <h2>2. Who this Policy covers</h2>
+        <p>This Policy applies to information we process about:</p>
+        <ul>
+          <li>Creators and other registered users of the Service.</li>
+          <li>Visitors to our marketing and product pages.</li>
+          <li>Business owners who pay through watermark checkout or contact us about a published site.</li>
+          <li>People who submit contact forms on published sites when a creator enables Moonrise form delivery.</li>
+          <li>People who email, call, or otherwise contact Moonrise for support or business purposes.</li>
+        </ul>
+        <p>
+          This Policy does not replace privacy notices you may need to provide on websites you create for clients. If you
+          publish a site, collect form submissions, or process client information, you are responsible for lawful notices
+          and consents for that activity.
+        </p>
+
+        <h2>3. Categories of information we collect</h2>
+        <h3>3.1 Account and profile information</h3>
+        <p>
+          When you register or update Settings, we may collect display name, handle, email address, password or passkey
+          credentials, profile photo, communication preferences, session preferences (such as remember-me), and other
+          details you choose to store in your profile.
+        </p>
+        <h3>3.2 Workspace and project information</h3>
+        <p>
+          We may store business names, addresses, phone numbers, map links, notes, categories, Website Price and related
+          pricing selections, website HTML and project files, publish status, watermark status, QR business-card links,
+          redesign history, upload or GitHub import metadata, and other content you enter, generate, edit, upload, or
+          save while using Builder, Editor, Projects, or related tools.
+        </p>
+        <h3>3.3 Contact form and custom domain settings</h3>
+        <p>
+          Contact-form delivery and custom-domain connection are optional and enabled only when you turn them on. If
+          enabled, we may store whether the feature is on, notification email or custom endpoint URL, domain hostname,
+          DNS or verification status from hosting providers, and related configuration.
+        </p>
+        <h3>3.4 Lead and Business Finder activity</h3>
+        <p>
+          We may process search queries, place or category filters, saved leads, status markers, and related workspace
+          actions. Some lead information reflects publicly available business details or data from third-party sources.
+          We do not guarantee accuracy or completeness of that information.
+        </p>
+        <h3>3.5 Published-site and form submission information</h3>
+        <p>
+          If a creator enables Moonrise contact-form delivery, submissions may include names, phone numbers, messages,
+          and other fields on the form. Those submissions may be stored in our systems and/or emailed or forwarded to the
+          destination the creator configured.
+        </p>
+        <h3>3.6 Business-owner checkout information</h3>
+        <p>
+          When an owner pays through the watermark, we may process payment status, Stripe checkout or session identifiers,
+          invoice or receipt email if provided, project identifiers, and limited billing metadata needed to unlock the
+          site and credit the creator. Full card numbers and sensitive payment credentials are handled by Stripe, not
+          stored by Moonrise in full.
+        </p>
+        <h3>3.7 Creator payout and earnings information</h3>
+        <p>
+          We may store revenue-share records, Dashboard income figures, payout method details you provide (for example,
+          Cash App, Venmo, PayPal, or other methods you enter), MVP+ or donation status, Store purchases, and related
+          transaction identifiers.
+        </p>
+        <h3>3.8 Creator contact shown on watermarked sites</h3>
+        <p>
+          Display name, handle, email, or phone you add for client contact may be embedded on watermarked published sites
+          so owners can reach you about changes. Moonrise HQ contact details may also appear for billing and platform
+          support.
+        </p>
+        <h3>3.9 Support and correspondence</h3>
+        <p>
+          Emails, help requests, phone communications, Discord or Telegram messages you send us, and related records may
+          be retained to resolve your request and improve support quality.
+        </p>
+        <h3>3.10 Technical, device, and usage data</h3>
+        <p>
+          We may collect IP address, device and browser type, approximate location derived from network data, pages and
+          features used, timestamps, diagnostic logs, error reports, performance metrics, cookies or similar storage, and
+          security events. This helps us operate, secure, debug, and improve the Service.
+        </p>
+        <h3>3.11 Optional push notifications</h3>
+        <p>
+          If you enable browser push notifications, we may store a push subscription endpoint and related metadata needed
+          to deliver messages you requested.
+        </p>
+
+        <h2>4. Sources of information</h2>
+        <p>We collect information from:</p>
+        <ul>
+          <li>You, when you create an account, fill forms, upload projects, configure settings, or contact us.</li>
+          <li>Your devices and browsers, through cookies, local storage, logs, and similar technologies.</li>
+          <li>Automated systems that process generation jobs, publishes, domain checks, and form delivery.</li>
+          <li>Service providers such as authentication, hosting, payment, email, and AI providers acting on our behalf.</li>
+          <li>Third-party or public business-data sources used by lead tools, where enabled.</li>
+          <li>Other people, when they submit a contact form on a site you published with form delivery enabled, or when they pay at watermark checkout.</li>
+        </ul>
+
+        <h2>5. How we use information</h2>
+        <p>We use information to:</p>
+        <ul>
+          <li>Provide, maintain, personalize, and improve the Service.</li>
+          <li>Create and authenticate accounts (including password and passkey flows).</li>
+          <li>Generate, edit, save, preview, publish, and unpublish websites.</li>
+          <li>Inject and remove watermarks and redeploy sites after successful payment.</li>
+          <li>Process payments, donations, subscriptions, Store purchases, and creator revenue share.</li>
+          <li>Deliver contact-form submissions when that feature is enabled.</li>
+          <li>Connect or verify custom domains when you request that feature.</li>
+          <li>Provide customer support and respond to inquiries.</li>
+          <li>Prevent fraud, abuse, spam, and security incidents.</li>
+          <li>Enforce our Terms of Service and investigate violations.</li>
+          <li>Comply with legal obligations and respond to lawful requests.</li>
+          <li>Analyze product performance and reliability using aggregated or de-identified data where appropriate.</li>
+          <li>Send service communications about account activity, security, billing, and material policy changes.</li>
+        </ul>
+        <p>
+          We do not sell your personal information. We may use aggregated or de-identified information that does not
+          reasonably identify you for analytics, reporting, and product improvement.
+        </p>
+
+        <h2>6. How we share information</h2>
+        <p>We share information only as needed to operate the Service and as described here:</p>
+        <ul>
+          <li><strong>Service providers.</strong> Hosting, databases, authentication, email delivery, payment processing (Stripe), AI model providers, analytics, and similar vendors that process data on our behalf.</li>
+          <li><strong>At your direction.</strong> When you publish a site, share a link, enable form delivery, connect a domain, or otherwise make information available through a feature you choose.</li>
+          <li><strong>Business owners and site visitors.</strong> Published site content is publicly reachable; watermark pages may show creator contact details you configured.</li>
+          <li><strong>Legal and safety.</strong> When we believe disclosure is required by law or needed to protect rights, safety, or investigate fraud or Terms violations.</li>
+          <li><strong>Business transfers.</strong> In connection with a merger, acquisition, financing, reorganization, bankruptcy, or sale of assets, subject to appropriate protections.</li>
+        </ul>
+        <p>
+          Providers are expected to use information to perform services for us or as otherwise required by law. They are
+          not permitted to use your information for their own unrelated marketing where our agreements restrict that.
+        </p>
+
+        <h2>7. Your responsibilities when using tools</h2>
+        <p>
+          If you use Business Finder, project tools, forms, websites, messaging, or payment features to interact with
+          businesses, clients, or customers, you are solely responsible for that activity. This includes how you collect,
+          store, use, share, and delete information about other people or businesses, and compliance with applicable
+          privacy, marketing, and consumer laws.
+        </p>
+        <p>
+          We are not responsible for privacy practices on websites you create or publish for yourself or others, except
+          to the limited extent those sites are hosted or processed through our Service. You should ensure published sites
+          include appropriate notices and that form submissions and client interactions are handled lawfully.
+        </p>
+
+        <h2>8. Cookies and similar technologies</h2>
+        <p>
+          We and our service providers may use cookies, local storage, session storage, and similar technologies to:
+        </p>
+        <ul>
+          <li>Keep you signed in and manage sessions.</li>
+          <li>Remember preferences (for example, theme or remember-me choices where offered).</li>
+          <li>Maintain security and detect abuse.</li>
+          <li>Measure usage of core product features.</li>
+          <li>Support progressive web app or offline caching where enabled.</li>
+        </ul>
+        <p>
+          Disabling certain storage may limit or break parts of the Service. Browser settings that block third-party
+          cookies or storage may affect authentication or payment flows that rely on providers such as Stripe or Supabase.
+        </p>
+
+        <h2>9. Data retention</h2>
+        <p>
+          We retain information for as long as needed to provide the Service, maintain your account, resolve disputes,
+          enforce agreements, detect abuse, meet legal and accounting requirements, and support legitimate business needs.
+          Retention periods vary by data type. When information is no longer needed, we may delete it, aggregate it, or
+          de-identify it. Residual copies may remain in backups for a limited period until those backups are cycled.
+        </p>
+        <p>
+          Published sites, form logs, and payment records may be retained longer when needed for fraud prevention,
+          chargebacks, tax, or legal compliance.
+        </p>
+
+        <h2>10. Security</h2>
+        <p>
+          We use commercially reasonable administrative, technical, and organizational measures designed to protect
+          information against unauthorized access, loss, misuse, or alteration. No method of transmission or storage is
+          completely secure. You use the Service at your own risk and are responsible for protecting credentials and
+          devices.
+        </p>
+        <p>
+          If you believe your account has been compromised, contact
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> promptly. To the fullest extent permitted by
+          law, Moonrise is not liable for unauthorized access resulting from your failure to protect credentials or devices.
+        </p>
+
+        <h2>11. Your choices and privacy requests</h2>
+        <p>
+          Depending on your location and applicable law, you may have rights to access, correct, update, delete, or obtain
+          a copy of certain personal information, or to object to or restrict certain processing. You can update many
+          account fields directly in <a href="settings.html">Settings</a>.
+        </p>
+        <p>
+          You can permanently delete your account and associated product data in
+          <a href="settings.html">Settings → Delete account</a>. For other privacy assistance, email
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> or call
+          <a href="tel:+14013000957">(401) 300-0957</a>. We may need to verify your identity before fulfilling a request.
+          We may retain certain information when required or permitted by law (for example, security, fraud prevention,
+          accounting, or disputes).
+        </p>
+        <p>
+          Some processing is necessary to operate your account. If you delete your account or withdraw consent where
+          consent is the legal basis, you may lose access to the Service and associated data.
+        </p>
+        <p>
+          You may also control push notifications in your browser settings, and marketing preferences where we offer them.
+          Transactional and security messages may still be sent when needed to operate the Service.
+        </p>
+
+        <h2>12. Children&rsquo;s privacy</h2>
+        <p>
+          The Service is not directed to children under 13, and we do not knowingly collect personal information from
+          children under 13. If you believe a child has provided personal information to us, contact us and we will take
+          appropriate steps to delete it where required. If local law sets a higher age for digital consent, we do not
+          knowingly collect from children under that age either.
+        </p>
+
+        <h2>13. International processing</h2>
+        <p>
+          We may process and store information in the United States and in other locations where we or our service
+          providers operate. If you access the Service from elsewhere, you understand information may be transferred to
+          and processed in countries that may have different data-protection rules from your jurisdiction.
+        </p>
+
+        <h2>14. Region-specific notices</h2>
+        <p>
+          Depending on where you live, local laws (for example, certain U.S. state privacy laws or the GDPR/UK GDPR) may
+          grant additional rights such as access, deletion, portability, correction, or the right to appeal a denial.
+          To exercise those rights, contact us using the details below. We will not discriminate against you for
+          exercising privacy rights available under applicable law.
+        </p>
+        <p>
+          If we rely on consent for a particular processing activity, you may withdraw consent for future processing
+          without affecting the lawfulness of processing before withdrawal, subject to other legal bases that may still
+          apply (such as contract performance or legal obligation).
+        </p>
+
+        <h2>15. Automated processing and AI features</h2>
+        <p>
+          Website generation and related features may send business context and prompts to AI model providers to produce
+          site content. Those providers process that input to return generated output. Do not include sensitive personal
+          data in prompts or business fields unless necessary for the site you intend to publish. You remain responsible
+          for reviewing generated content before use.
+        </p>
+
+        <h2>16. No liability for outcomes of tool use</h2>
+        <p>
+          To the fullest extent permitted by law, Moonrise is not responsible for damages, losses, claims, or disputes
+          arising from your use of the Service or from information you collect, generate, publish, or share using our
+          tools. We provide software utilities. We do not control your business practices, client relationships, marketing
+          campaigns, published websites, or third-party interactions.
+        </p>
+
+        <h2>17. Enforcement and misuse</h2>
+        <p>
+          If you misuse personal information obtained through or in connection with the Service, violate privacy laws,
+          abuse the platform, or otherwise create risk or harm, we may suspend or permanently ban your account, remove
+          content or sites, and report conduct to payment processors, regulators, law enforcement, or affected parties
+          where appropriate. Misuse may also result in civil or criminal consequences under applicable law.
+        </p>
+
+        <h2>18. Changes to this Policy</h2>
+        <p>
+          We may update this Privacy Policy from time to time. When we do, we will revise the &ldquo;Last updated&rdquo;
+          date. Continued use of the Service after an update becomes effective constitutes acceptance of the revised
+          Policy. If you do not agree, stop using the Service. For material changes, we may also provide additional notice
+          in the product or by email where appropriate.
+        </p>
+
+        <h2>19. Contact</h2>
+        <p>
+          Privacy questions or requests:
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
+          or <a href="tel:+14013000957">(401) 300-0957</a>.
+        </p>
+        <p>
+          Related pages: <a href="legal.html#terms">Terms of Service</a> ·
+          <a href="guide.html">Creator Guide</a> ·
+          <a href="help.html">Help</a>.
+        </p>
+      </section>
+
+      <section id="terms" class="ms-card ms-legal-article" aria-labelledby="terms-heading">
+        <h2 class="ms-legal-section-head" id="terms-heading">Terms of Service</h2>
+        <p class="ms-legal-updated">Last updated: September 24, 2026</p>
+<h2>1. Agreement to these Terms</h2>
+        <p>
+          These Terms of Service (&ldquo;Terms&rdquo;) are a binding agreement between you and Moonrise Studio
+          (&ldquo;Moonrise,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;). They govern your access to and use of
+          Moonrise Studio, including trymoonrise.com, related domains, mobile or desktop apps, dashboards, Business Finder,
+          Builder and Editor tools, published websites, watermark checkout, payment and payout features, donations and
+          MVP+ perks, help materials, and any other products or services we offer (collectively, the &ldquo;Service&rdquo;).
+        </p>
+        <p>
+          By creating an account, signing in, browsing authenticated areas, generating or editing a website, publishing
+          a site, connecting a domain, enabling a contact form, initiating or completing a payment, donating, or otherwise
+          using the Service in any way, you confirm that you have read, understood, and agree to these Terms and to our
+          <a href="legal.html#privacy">Privacy Policy</a>. If you do not agree, do not use the Service.
+        </p>
+        <p>
+          If you use the Service on behalf of a company, organization, or other entity, you represent that you have
+          authority to bind that entity, and &ldquo;you&rdquo; means both you personally and that entity.
+        </p>
+
+        <h2>2. Plain-language overview</h2>
+        <p>
+          Moonrise is a software platform for creators who build websites for local businesses. Creators can find leads,
+          generate and edit sites with AI-assisted tools, publish a live preview with a Moonrise watermark, and share that
+          link with the business owner. The business owner pays Moonrise through the watermark checkout on the live site
+          to remove the watermark and keep the site live. Creators typically receive 90% of the go-live amount; Moonrise
+          retains 10% as a platform fee (subject to processor fees, taxes, chargebacks, and the other adjustments in these
+          Terms).
+        </p>
+        <p>
+          Important: creators do not charge business owners directly for go-live, watermark removal, or the same unlock.
+          The watermark checkout on the published site is the exclusive payment path for that purchase. Building and
+          previewing are free for creators unless we clearly state otherwise in the product.
+        </p>
+        <p>
+          This overview is for convenience only. If it conflicts with a numbered section below, the numbered section
+          controls.
+        </p>
+
+        <h2>3. Nature of the Service; tools only</h2>
+        <p>
+          Moonrise provides software tools and related infrastructure. We do not operate your sales business, close your
+          deals, make promises to your prospects, supervise your client relationships, or guarantee income, conversions,
+          lead quality, search rankings, uptime of third-party systems, or any particular business outcome.
+        </p>
+        <p>
+          You alone decide what information you enter, what content you generate or edit, what you publish, what Website
+          Price you set, what you say to businesses, and how you fulfill any promises you make outside the scope of the
+          watermark checkout. Any outcome of your use of the Service is your responsibility.
+        </p>
+
+        <h2>4. Roles on the platform</h2>
+        <h3>4.1 Creators</h3>
+        <p>
+          A &ldquo;creator&rdquo; is a user who builds, edits, publishes, or manages websites through Moonrise with the
+          intent of offering those sites to businesses or other clients. Creators are independent users of the Service,
+          not employees, partners, or agents of Moonrise unless we have a separate written agreement that says otherwise.
+        </p>
+        <h3>4.2 Business owners / clients</h3>
+        <p>
+          A &ldquo;business owner&rdquo; or &ldquo;client&rdquo; is a person or company that views, uses, or pays for a
+          website published through Moonrise. Business owners typically do not need a creator account to pay through the
+          watermark. When they pay through watermark checkout, they purchase go-live access and related hosting services
+          from Moonrise as described at checkout&mdash;not a direct payment to the creator.
+        </p>
+        <h3>4.3 Visitors</h3>
+        <p>
+          Visitors to public marketing pages, published client sites, or help materials may be subject to these Terms to
+          the extent they use interactive features or submit information through Moonrise-operated systems.
+        </p>
+
+        <h2>5. Eligibility and accounts</h2>
+        <p>
+          You must be legally able to enter a binding contract to use the Service. You agree to provide accurate, current,
+          and complete registration and profile information, and to keep it updated. You are responsible for safeguarding
+          passwords, passkeys, session tokens, and devices used to access your account, and for all activity under your
+          account except where a court finds the activity was caused solely by our gross negligence or willful misconduct.
+        </p>
+        <p>
+          Notify us promptly at <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> if you suspect
+          unauthorized access. We may refuse registration, require identity or payment verification, limit features,
+          freeze payouts, or terminate accounts when reasonably necessary to protect the Service, users, third parties,
+          or Moonrise.
+        </p>
+        <p>
+          Creating multiple accounts to evade bans, fees, rate limits, watermark rules, or payout restrictions is
+          prohibited.
+        </p>
+
+        <h2>6. Your responsibilities</h2>
+        <p>You are solely responsible for:</p>
+        <ul>
+          <li>Your conduct and all content, websites, offers, prices, messages, and marketing connected to your use of the Service.</li>
+          <li>The accuracy of business information you collect, display, or publish.</li>
+          <li>Compliance with consumer protection, advertising, telemarketing, privacy, data-protection, intellectual-property, tax, and other laws that apply to you.</li>
+          <li>Reviewing every site, form, domain setting, and checkout-related display before you publish or share it.</li>
+          <li>Your contracts and disputes with businesses, clients, subcontractors, and other third parties.</li>
+          <li>Taxes on your earnings and any amounts owed due to chargebacks, refunds, or misuse.</li>
+        </ul>
+        <p>
+          Moonrise does not review, approve, endorse, or guarantee any site, lead, message, price, or transaction you
+          create or pursue.
+        </p>
+
+        <h2>7. Acceptable use</h2>
+        <p>You may use the Service only for lawful purposes and in accordance with these Terms. You agree not to:</p>
+        <ul>
+          <li>Harass, defraud, deceive, threaten, impersonate, or harm any person or business.</li>
+          <li>Spam, scrape unlawfully, or collect data in violation of law, third-party rights, or third-party terms.</li>
+          <li>Publish false, misleading, defamatory, infringing, or illegal content.</li>
+          <li>Infringe copyrights, trademarks, publicity rights, privacy rights, or other rights.</li>
+          <li>Interfere with, disrupt, overload, reverse engineer (except where law forbids this restriction), or compromise the Service.</li>
+          <li>Bypass security, access controls, watermarks, payment requirements, rate limits, or usage restrictions.</li>
+          <li>Charge business owners for website go-live or watermark removal outside Moonrise watermark checkout.</li>
+          <li>Remove, hide, or bypass watermarks before the owner pays through Moonrise.</li>
+          <li>Facilitate money laundering, fraud, stolen payment methods, or other financial crime.</li>
+          <li>Distribute malware, phishing materials, or other harmful code.</li>
+          <li>Use the Service in any way that could expose Moonrise, users, or third parties to liability, regulatory risk, or serious reputational harm.</li>
+        </ul>
+        <p>
+          We may investigate suspected violations. You agree to cooperate reasonably with investigations related to your
+          account or activity.
+        </p>
+
+        <h2>8. Violations, bans, and real-world consequences</h2>
+        <p>
+          If you violate these Terms, misuse the Service, abuse others, engage in fraud, attempt to circumvent security
+          or payment systems, or otherwise create risk or harm, we may take any action we deem appropriate, including
+          immediate suspension, permanent ban, removal of content or published sites, delay or reversal of payouts where
+          permitted by law, cancellation of access to tools and data, and reporting to law enforcement, payment
+          processors, regulators, or affected third parties.
+        </p>
+        <p>
+          A permanent ban means you may not create new accounts, access the Service through another person or entity, or
+          otherwise regain access without our express written permission. Evading a ban is itself a material breach.
+        </p>
+        <p>
+          Depending on severity, your conduct may also lead to civil claims, payment-network disputes, and referral to
+          authorities where we reasonably believe unlawful activity has occurred. Nothing in these Terms limits your
+          liability under applicable law for your own acts or omissions.
+        </p>
+
+        <h2>9. Business Finder and lead tools</h2>
+        <p>
+          Business Finder and related lead tools may display business names, ratings, categories, contact details, map
+          links, and similar information drawn from public sources, third-party providers, or user input. We do not
+          warrant accuracy, ownership, currency, completeness, or legality of that information.
+        </p>
+        <p>
+          You use lead data at your own risk. You are solely responsible for how you contact, market to, contract with,
+          or otherwise deal with any business or person, including compliance with do-not-call rules, consent
+          requirements, and anti-spam laws. Moonrise is not a party to your outreach or sales conversations.
+        </p>
+
+        <h2>10. Website generation, editing, and AI-assisted output</h2>
+        <p>
+          The Service may use templates, presets, automation, and AI-assisted generation to produce HTML, copy, layouts,
+          images references, forms, and related materials. Outputs are tools to assist you&mdash;not professional advice
+          and not guaranteed to be accurate, complete, lawful, non-infringing, accessible, or fit for your purpose.
+        </p>
+        <p>
+          You must independently review and verify all output before publishing or relying on it. You remain responsible
+          for claims, warranties, pricing, contact details, legal pages, and regulatory disclosures on sites you publish.
+        </p>
+
+        <h2>11. Contact forms, custom domains, and optional site features</h2>
+        <p>
+          Features such as contact-form delivery and custom-domain connection are optional and must be enabled manually
+          by you in the product. Enabling them does not transfer responsibility for form submissions, DNS configuration,
+          email deliverability, or domain ownership disputes to Moonrise.
+        </p>
+        <p>
+          If you enable contact-form delivery, you are responsible for the notification email or endpoint you configure,
+          for lawful handling of submissions, and for providing any required notices on the published site. If you connect
+          a custom domain, you are responsible for DNS records at your registrar and for having rights to use that domain.
+        </p>
+
+        <h2>12. Publishing, hosting, and watermarks</h2>
+        <p>
+          When you publish, Moonrise may deploy your site to hosting infrastructure we operate or arrange (for example,
+          via Vercel or similar providers). Published sites that have not completed go-live payment typically display a
+          Moonrise watermark. The watermark is a material part of the Service economics and security model.
+        </p>
+        <p>
+          You may not remove, obscure, block, or instruct others to bypass the watermark before successful payment through
+          Moonrise checkout. After successful payment, Moonrise will remove the watermark and redeploy a clean version
+          according to our systems. Hosting continuity, SSL, and domain behavior may depend on third-party providers and
+          on correct DNS configuration by you or the domain owner.
+        </p>
+        <p>
+          We may unpublish, suspend, or remove sites that violate these Terms, create legal risk, fail payment verification,
+          or otherwise threaten the Service.
+        </p>
+
+        <h2>13. Payments, fees, and creator revenue share</h2>
+        <h3>13.1 Creator subscriptions, credits, donations, and MVP+</h3>
+        <p>
+          Certain features may require payment, including optional subscriptions, credit plans, top-ups, donations, MVP+
+          perks, Store items, or other fees described at purchase time. Prices and billing terms may change. By submitting
+          a payment, you authorize charges through our payment processor (currently Stripe) under its terms.
+        </p>
+        <h3>13.2 Website Price and watermark checkout</h3>
+        <p>
+          Building, previewing, and publishing watermarked sites is free for creators unless we state otherwise.
+          Creators set a &ldquo;Website Price&rdquo; (or equivalent) shown to the business owner before or at publish.
+          The business owner pays that go-live amount through the Moonrise watermark checkout on the live website.
+        </p>
+        <p>
+          When a business owner completes watermark checkout, Moonrise typically retains <strong>10%</strong> of the
+          go-live amount and the creator receives <strong>90%</strong>, before payment-processor fees, chargebacks,
+          refunds, taxes, offsets, and other adjustments permitted under these Terms. Exact timing and payout method
+          depend on the payout details you provide and on processor and platform rules.
+        </p>
+        <h3>13.3 Exclusive payment path for go-live</h3>
+        <p>
+          Watermark checkout on the published Moonrise-hosted site is the exclusive method for the owner to pay to go
+          live and for you to earn your creator share for that unlock. You may not charge, invoice, or collect payment
+          from a business owner outside Moonrise for the same website go-live, watermark removal, hosting unlock, or
+          equivalent service&mdash;including cash, check, Venmo, Zelle, PayPal, Stripe Payment Links, invoices, or any
+          other off-platform method. You may not instruct owners to bypass the watermark or pay you instead of Moonrise
+          checkout.
+        </p>
+        <p>
+          Violating this payment policy is a material breach. In addition to Section 8 remedies, we may permanently
+          terminate your account, withhold or reverse payouts, remove published sites, and pursue other legal remedies.
+        </p>
+        <h3>13.4 Hosting and recurring charges</h3>
+        <p>
+          Go-live checkout may include recurring hosting or related charges described at checkout. Optional creator tools
+          (credits, donations, MVP+) are separate from the owner&rsquo;s watermark payment unless clearly stated otherwise.
+        </p>
+        <h3>13.5 Delays, offsets, chargebacks, and taxes</h3>
+        <p>
+          Where the Service facilitates payouts or client payments, we may delay, withhold, offset, or reverse amounts
+          when we reasonably believe there is fraud, error, chargeback risk, policy violation, legal requirement, or
+          dispute. You remain responsible for taxes on your earnings and for amounts owed due to chargebacks, refunds,
+          or improper use. Except where required by law, fees charged by Moonrise for creator tools are non-refundable
+          once charged. Nothing in this section guarantees income or conversion.
+        </p>
+        <h3>13.6 Business owners paying at checkout</h3>
+        <p>
+          If you are a business owner paying through a Moonrise watermark, you are purchasing go-live access and related
+          services described at checkout from Moonrise. Additional custom work or ongoing marketing beyond checkout should
+          be arranged separately with your creator and must not replace or circumvent watermark payment for the same unlock.
+        </p>
+
+        <h2>14. Third-party services</h2>
+        <p>
+          The Service may rely on third parties such as Stripe (payments), Supabase (auth and data), Vercel or other hosts,
+          email providers, mapping or business-data sources, analytics, and AI model providers. Your use of those services
+          may be subject to their terms and privacy policies. Moonrise is not responsible for third-party acts, omissions,
+          outages, fees, errors, or decisions.
+        </p>
+
+        <h2>15. Intellectual property</h2>
+        <p>
+          Moonrise and its licensors own the Service, including software, branding, interfaces, documentation, and related
+          IP. These Terms do not transfer ownership of the Service to you. We grant you a limited, revocable,
+          non-exclusive, non-transferable right to use the Service for lawful purposes while your account remains in good
+          standing.
+        </p>
+        <p>
+          Subject to these Terms and third-party rights, you retain rights in content you lawfully own and upload. You
+          grant Moonrise a worldwide license to host, process, transmit, display, and use that content as needed to
+          operate and improve the Service, provide support, enforce these Terms, and comply with law. You represent that
+          you have all rights necessary to provide such content and grant this license.
+        </p>
+        <p>
+          Feedback you send us may be used freely by Moonrise without obligation to you.
+        </p>
+
+        <h2>16. Confidentiality of platform non-public features</h2>
+        <p>
+          You agree not to disclose non-public technical details, security vulnerabilities, unpublished product features,
+          or confidential business information about Moonrise except as required by law or with our prior written consent.
+          Responsible vulnerability reports may be sent to <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>.
+        </p>
+
+        <h2>17. Disclaimer of warranties</h2>
+        <p>
+          TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SERVICE IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE,&rdquo;
+          WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING MERCHANTABILITY, FITNESS FOR A
+          PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, AND QUIET ENJOYMENT.
+        </p>
+        <p>
+          We do not warrant that the Service will be uninterrupted, secure, or error-free; that defects will be corrected;
+          that leads will convert; that websites will perform as expected; that payments will succeed; that data will never
+          be lost; or that the Service will meet your requirements. You use the Service entirely at your own risk.
+        </p>
+
+        <h2>18. Limitation of liability</h2>
+        <p>
+          TO THE MAXIMUM EXTENT PERMITTED BY LAW, MOONRISE AND ITS OWNERS, OFFICERS, EMPLOYEES, CONTRACTORS, AGENTS, AND
+          AFFILIATES SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE
+          DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, GOODWILL, OR BUSINESS OPPORTUNITY, ARISING OUT OF OR RELATED
+          TO THE SERVICE, REGARDLESS OF THEORY OF LIABILITY AND EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+        </p>
+        <p>
+          Without limiting the foregoing, Moonrise is not liable for claims arising from your misuse of tools; websites
+          you create or publish; communications you send; deals you make or fail to make; client disputes; third-party
+          actions; payment-processor decisions; hosting or domain issues; downtime; data loss; unauthorized access caused
+          by your failure to secure credentials; AI or template output; or lead quality.
+        </p>
+        <p>
+          TO THE MAXIMUM EXTENT PERMITTED BY LAW, OUR TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF OR RELATING TO THE
+          SERVICE OR THESE TERMS SHALL NOT EXCEED THE GREATER OF (A) THE AMOUNT YOU PAID TO MOONRISE FOR THE SERVICE IN
+          THE THREE (3) MONTHS IMMEDIATELY PRECEDING THE EVENT GIVING RISE TO THE CLAIM, OR (B) ONE HUNDRED U.S. DOLLARS
+          (US $100). SOME JURISDICTIONS DO NOT ALLOW CERTAIN LIMITATIONS; THERE, OUR LIABILITY IS LIMITED TO THE FULLEST
+          EXTENT PERMITTED BY LAW.
+        </p>
+
+        <h2>19. Indemnification</h2>
+        <p>
+          You agree to defend, indemnify, and hold harmless Moonrise and its owners, officers, employees, contractors,
+          agents, and affiliates from and against any claims, damages, liabilities, costs, and expenses (including
+          reasonable attorneys&rsquo; fees) arising out of or related to: your use of the Service; your websites, content,
+          offers, and communications; your dealings with businesses or clients; your violation of these Terms or any law;
+          your infringement of third-party rights; or any dispute between you and a third party.
+        </p>
+
+        <h2>20. Suspension and termination</h2>
+        <p>
+          You may stop using the Service at any time. We may suspend, restrict, or terminate your access immediately,
+          with or without notice, if we believe you violated these Terms, created risk or harm, failed to pay required
+          fees, or if we discontinue all or part of the Service. Upon termination, your right to use the Service ends.
+          Provisions that by nature should survive will survive, including ownership, payment obligations, disclaimers,
+          limitations of liability, indemnity, bans, and dispute-related terms.
+        </p>
+
+        <h2>21. Changes to the Service and to these Terms</h2>
+        <p>
+          We may modify, suspend, or discontinue any part of the Service at any time. We may update these Terms from time
+          to time. When we do, we will revise the &ldquo;Last updated&rdquo; date. Continued use after changes become
+          effective constitutes acceptance. If you do not agree, stop using the Service.
+        </p>
+
+        <h2>22. Export, sanctions, and geographic restrictions</h2>
+        <p>
+          You may not use the Service if you are prohibited from receiving U.S. or other applicable services under export
+          control or sanctions laws, or if you are located in a jurisdiction where providing the Service would be unlawful.
+        </p>
+
+        <h2>23. General</h2>
+        <p>
+          These Terms, together with the Privacy Policy and any feature-specific notices presented in the product,
+          constitute the entire agreement between you and Moonrise regarding the Service and supersede prior understandings
+          on that subject. If any provision is unenforceable, the rest remain in effect. Failure to enforce a provision is
+          not a waiver. You may not assign these Terms without our prior written consent; we may assign them in connection
+          with a merger, acquisition, reorganization, or sale of assets. Nothing here creates a partnership, joint venture,
+          employment, or agency relationship.
+        </p>
+        <p>
+          These Terms are intended to be interpreted under applicable law. Where a court or arbitrator decides a dispute,
+          you agree the dispute will be handled in a manner consistent with Moonrise&rsquo;s role as a tool provider and
+          with the liability limits stated here, to the fullest extent permitted by law.
+        </p>
+
+        <h2>24. Contact</h2>
+        <p>
+          Questions about these Terms:
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
+          or <a href="tel:+14013000957">(401) 300-0957</a>.
+        </p>
+        <p>
+          Related pages: <a href="legal.html#privacy">Privacy Policy</a> ·
+          <a href="legal.html#refunds">Refunds</a> ·
+          <a href="report.html">Report content</a> ·
+          <a href="guide.html">Creator Guide</a> ·
+          <a href="help.html">Help</a>.
+        </p>
+      </section>
+
+      <section id="refunds" class="ms-card ms-legal-article" aria-labelledby="refunds-heading">
+        <h2 class="ms-legal-section-head" id="refunds-heading">Refund and cancellation</h2>
+        <p class="ms-legal-updated">Last updated: October 3, 2026</p>
+<h2>1. One-time donations</h2>
+        <p>
+          Support donations are voluntary gifts that keep Moonrise running. They are not refunded after Stripe confirms
+          them, except where the law requires a refund.
+        </p>
+
+        <h2>2. Website unlock</h2>
+        <p>
+          The website purchase is charged once, at checkout, when a business owner unlocks the live site. Email
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> within 7 days if the site was charged in
+          error or never published. Moonrise reviews those requests.
+        </p>
+
+        <h2>3. Hosting</h2>
+        <p>
+          Hosting renews every month until you cancel. Cancel from the billing link in your Stripe receipt, or email
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> and we will stop the next renewal. A month
+          that has already started is not refunded. The live site can be unpublished after cancellation.
+        </p>
+
+        <h2>4. Contact</h2>
+        <p>
+          Questions about a charge or a cancellation:
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
+          or <a href="tel:+14013000957">(401) 300-0957</a>.
+        </p>
+        <p>
+          Related pages: <a href="legal.html#privacy">Privacy Policy</a> ·
+          <a href="legal.html#terms">Terms of Service</a> ·
+          <a href="report.html">Report content</a> ·
+          <a href="guide.html">Creator Guide</a> ·
+          <a href="help.html">Help</a>.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="ms-legal-foot">
+    <a href="contact.html">Contact</a>
+    ·
+    <a href="report.html">Report</a>
+    ·
+    <a href="index.html">Home</a>
+  </footer>
+</body>
+</html>

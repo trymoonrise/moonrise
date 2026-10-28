@@ -3,6 +3,26 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "1.0.102",
+      "date": "2026-10-28",
+      "title": "Blue home style restored and legal pages unified",
+      "tag": "v1.0.102",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.102",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home restores the blue and white look from commit 043f8dc, including blue accent titles, wash backgrounds, cascade gallery, Method cards, and bloom menu.",
+            "Primary buttons across studio use the blue gradient CTA style again.",
+            "Privacy, Terms, and Refunds live together on legal.html with redirects from the old URLs."
+          ],
+          "fixes": [
+            "Home subtitle stays an honest product description instead of a fixed earnings claim."
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.0.101",
       "date": "2026-10-28",
       "title": "Simple home landing and checklist gate cleared",

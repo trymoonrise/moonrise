@@ -327,7 +327,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       '<p class="mr-wm-timer" id="mr-wm-timer" aria-live="polite"></p>' +
       '<button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>' +
       '<p class="mr-wm-error" id="mr-wm-error" hidden></p>' +
-      '<p class="mr-wm-note">Secure Stripe checkout. Hosting renews every month until you cancel. <a href="https://trymoonrise.com/refund.html">Refund and cancellation policy</a></p>' +
+      '<p class="mr-wm-note">Secure Stripe checkout. Hosting renews every month until you cancel. <a href="https://trymoonrise.com/legal.html#refunds">Refund and cancellation policy</a></p>' +
       '<button type="button" class="mr-wm-help" id="mr-wm-help" aria-expanded="false" aria-controls="mr-wm-help-panel">' +
       "Help" +
       '<svg class="mr-wm-help-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +

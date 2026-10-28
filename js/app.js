@@ -554,8 +554,8 @@
 
   const SIDEBAR_LEGAL = [
     { id: "guide", href: "guide.html", label: "Guide" },
-    { id: "privacy", href: "privacy.html", label: "Privacy" },
-    { id: "terms", href: "terms.html", label: "Terms" },
+    { id: "privacy", href: "legal.html#privacy", label: "Privacy" },
+    { id: "terms", href: "legal.html#terms", label: "Terms" },
   ];
 
   function sidebarLegal(page) {

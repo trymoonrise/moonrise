@@ -26,19 +26,9 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://trymoonrise.com/privacy.html</loc>
+    <loc>https://trymoonrise.com/legal.html</loc>
     <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://trymoonrise.com/terms.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://trymoonrise.com/refund.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://trymoonrise.com/report.html</loc>

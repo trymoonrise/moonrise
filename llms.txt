@@ -1,4 +1,4 @@
-﻿# Moonrise Studio
+# Moonrise Studio
 # https://trymoonrise.com
 # Last updated: 2026-07-19
 
@@ -29,8 +29,8 @@ Moonrise Studio (trymoonrise.com) is an AI-powered web platform for selling webs
 - Locate a published order: https://trymoonrise.com/orders.html
 - Download app / install: https://trymoonrise.com/download.html
 - Contact: https://trymoonrise.com/contact.html
-- Privacy: https://trymoonrise.com/privacy.html
-- Terms: https://trymoonrise.com/terms.html
+- Privacy: https://trymoonrise.com/legal.html#privacy
+- Terms: https://trymoonrise.com/legal.html#terms
 
 ## Support
 

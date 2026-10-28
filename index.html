@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-ms-mode="light">
+<html lang="en">
 <head>
 <style>
 html.ms-boot body{visibility:hidden!important}
-#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.15rem;background:#fff;color:#1d1d1f;visibility:visible!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.15rem;background:#f3f5f8;color:#0f172a;visibility:visible!important}
 #ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em}
-#ms-boot .ms-boot-bar{width:7.5rem;height:2px;border-radius:99px;background:rgba(29,29,31,.12);overflow:hidden}
+#ms-boot .ms-boot-bar{width:7.5rem;height:2px;border-radius:99px;background:rgba(15,23,42,.12);overflow:hidden}
 #ms-boot .ms-boot-bar span{display:block;height:100%;width:40%;border-radius:inherit;background:currentColor;animation:ms-boot 1.05s ease-in-out infinite}
 @keyframes ms-boot{0%{transform:translateX(-120%)}100%{transform:translateX(280%)}}
 @media (prefers-reduced-motion:reduce){#ms-boot .ms-boot-bar span{animation:none;width:100%;opacity:.45}}
@@ -27,13 +27,8 @@ document.documentElement.classList.add("ms-boot");
       document.documentElement.classList.add("ms-boot-done");
       var el=document.getElementById("ms-boot");
       if(el)el.remove();
-      document.body&&document.body.classList.remove("ms-home-booting");
-      document.body&&document.body.classList.add("is-home-ready");
     };
-    var paint=function(){requestAnimationFrame(function(){requestAnimationFrame(finish);});};
-    if(document.fonts&&document.fonts.ready){
-      Promise.race([document.fonts.ready.catch(function(){}),new Promise(function(r){setTimeout(r,800);})]).then(paint);
-    }else paint();
+    requestAnimationFrame(function(){requestAnimationFrame(finish);});
   };
   setTimeout(function(){ if(window.__msReleaseBoot) window.__msReleaseBoot(); },20000);
 })();
@@ -42,6 +37,9 @@ document.documentElement.classList.add("ms-boot");
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
     (function () {
+      // Home-screen / installed app opens the site root. If a session is saved,
+      // continue to the dashboard before the landing page paints. A normal browser
+      // visit stays on this page, including when an old token is sitting in storage.
       var params;
       try {
         params = new URLSearchParams(location.search);
@@ -94,7 +92,7 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <title>trymoonrise.com - Build websites. Get paid.</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#fbfbfd">
+  <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
@@ -114,7 +112,10 @@ document.documentElement.classList.add("ms-boot");
   <meta name="twitter:description" content="Moonrise is an AI-powered platform that lets you create professional websites with 1 click for local business owners, creators, and more! It's designed to make website creation fast, simple, effortless, and get paid.">
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/home.css?v=20261028-simple" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-blue">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-blue">
+  <link rel="stylesheet" href="css/home.css?v=20261028-blue">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261006-blue"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
@@ -182,81 +183,295 @@ document.documentElement.classList.add("ms-boot");
 </head>
 <body data-page="home" class="ms-home-booting">
   <a class="ms-skip" href="#main">Skip to content</a>
+  <div class="ms-home-greet" id="ms-home-greet" aria-hidden="false">
+    <p class="ms-home-greet-word">moonrise.</p>
+  </div>
+
   <div class="ms-home-shell">
+    <div class="ms-home-field" aria-hidden="true">
+      <div class="ms-home-wash ms-home-wash-a"></div>
+      <div class="ms-home-wash ms-home-wash-b"></div>
+    </div>
+
     <header class="ms-home-nav">
       <a class="ms-home-brand" href="index.html">
-        <img src="doc/MoonriseLogo.png" alt="" width="36" height="36">
+        <img src="doc/MoonriseLogo.png" alt="" width="40" height="40">
         <strong>moonrise.</strong>
       </a>
-      <nav class="ms-home-nav-links" aria-label="Primary">
-        <a href="#features">Features</a>
-        <a href="#faq">FAQ</a>
-        <a href="login.html">Sign in</a>
-        <a class="ms-home-nav-cta" href="login.html">Start earning</a>
-      </nav>
+      <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
+        <i></i><i></i><i></i>
+      </button>
     </header>
 
+    <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
+      <nav class="ms-home-bloom-nav" aria-label="Primary">
+        <a href="index.html" style="--nav-i:0">Home</a>
+        <a href="login.html" style="--nav-i:1">Start earning</a>
+        <a href="#method" style="--nav-i:2">Learn More</a>
+        <a href="download.html" style="--nav-i:3">Download app</a>
+        <a href="orders.html" style="--nav-i:4">Locate my order</a>
+        <a href="login.html" style="--nav-i:5">Sign in</a>
+      </nav>
+    </div>
+
     <main id="main" class="ms-home-hero">
-      <h1 class="ms-home-title">Build websites.<br>Get paid.</h1>
-      <p class="ms-home-sub">Build beautiful websites for local business owners with just one swipe — and get paid when they go live.</p>
-      <div class="ms-home-ctas">
-        <a class="ms-home-cta-primary" href="login.html">Start earning</a>
-        <a class="ms-home-cta-secondary" href="#features">Learn more</a>
+      <div class="ms-home-hero-stage">
+        <div class="ms-home-hero-copy">
+          <h1 class="ms-home-title">Build websites.&nbsp;<span class="ms-home-title-accent">Get paid.</span></h1>
+          <p class="ms-home-sub">Build beautiful websites for local business owners with just one swipe — and get paid when they go live.</p>
+          <div class="ms-home-ctas">
+            <a class="ms-home-cta-primary" href="login.html">Start earning</a>
+            <a class="ms-home-cta-secondary" href="#method">Learn More</a>
+          </div>
+        </div>
+
+        <div class="ms-home-cascade" id="gallery" aria-label="Gallery">
+          <div class="ms-home-tile" style="--i:1;--a:#2563eb;--b:#60a5fa">
+            <div class="ms-home-tile-inner">
+              <div class="ms-home-tile-face ms-home-tile-face--front">
+                <div class="ms-home-preset ms-home-preset--agency" aria-hidden="true">
+                  <span class="ms-home-preset-kicker">Sell</span>
+                  <strong>Client sites</strong>
+                  <i></i><i></i><i></i>
+                </div>
+              </div>
+              <div class="ms-home-tile-face ms-home-tile-face--back">
+                <span>Sell</span>
+                <strong>Build &amp; close</strong>
+                <p>Ship polished sites for free. Owners pay on the watermark - you keep 90%.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ms-home-tile" style="--i:2;--a:#93c5fd;--b:#dbeafe">
+            <div class="ms-home-tile-inner">
+              <div class="ms-home-tile-face ms-home-tile-face--front">
+                <div class="ms-home-preset ms-home-preset--creator" aria-hidden="true">
+                  <strong>Leads</strong>
+                  <i></i><i></i>
+                </div>
+              </div>
+              <div class="ms-home-tile-face ms-home-tile-face--back">
+                <span>Leads</span>
+                <strong>Find buyers</strong>
+                <p>Discover businesses that still need a real website.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ms-home-tile" style="--i:3;--a:#0f172a;--b:#334155">
+            <div class="ms-home-tile-inner">
+              <div class="ms-home-tile-face ms-home-tile-face--front">
+                <div class="ms-home-preset ms-home-preset--restaurant" aria-hidden="true">
+                  <span class="ms-home-preset-kicker">Local</span>
+                  <strong>Shops &amp; cafes</strong>
+                  <i></i><i></i><i></i>
+                </div>
+              </div>
+              <div class="ms-home-tile-face ms-home-tile-face--back">
+                <span>Local</span>
+                <strong>Nearby clients</strong>
+                <p>Menus, hours, and contact pages owners will buy.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ms-home-tile" style="--i:4;--a:#3b82f6;--b:#7dd3fc">
+            <div class="ms-home-tile-inner">
+              <div class="ms-home-tile-face ms-home-tile-face--front">
+                <div class="ms-home-preset ms-home-preset--booking" aria-hidden="true">
+                  <strong>Build</strong>
+                  <i></i><i></i>
+                </div>
+              </div>
+              <div class="ms-home-tile-face ms-home-tile-face--back">
+                <span>Build</span>
+                <strong>Generate fast</strong>
+                <p>Create a clean site in the builder, then refine and deliver.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ms-home-tile" style="--i:5;--a:#1d4ed8;--b:#38bdf8">
+            <div class="ms-home-tile-inner">
+              <div class="ms-home-tile-face ms-home-tile-face--front">
+                <div class="ms-home-preset ms-home-preset--portfolio" aria-hidden="true">
+                  <span class="ms-home-preset-kicker">Creators</span>
+                  <strong>Sell presence</strong>
+                  <i></i><i></i><i></i>
+                </div>
+              </div>
+              <div class="ms-home-tile-face ms-home-tile-face--back">
+                <span>Creators</span>
+                <strong>Creator sites</strong>
+                <p>Offer branded pages creators can launch and own.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ms-home-tile" style="--i:6;--a:#e2e8f0;--b:#94a3b8">
+            <div class="ms-home-tile-inner">
+              <div class="ms-home-tile-face ms-home-tile-face--front">
+                <div class="ms-home-preset ms-home-preset--checkout" aria-hidden="true">
+                  <span class="ms-home-preset-kicker">Paid</span>
+                  <strong>Get paid</strong>
+                  <i></i><i></i>
+                </div>
+              </div>
+              <div class="ms-home-tile-face ms-home-tile-face--back">
+                <span>Paid</span>
+                <strong>Collect &amp; publish</strong>
+                <p>Publish the watermarked preview. The owner pays on the live site - not to you.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ms-home-tile" style="--i:7;--a:#1e3a8a;--b:#3b82f6">
+            <div class="ms-home-tile-inner">
+              <div class="ms-home-tile-face ms-home-tile-face--front">
+                <div class="ms-home-preset ms-home-preset--saas" aria-hidden="true">
+                  <span class="ms-home-preset-kicker">Edit</span>
+                  <strong>Make it theirs</strong>
+                  <i></i><i></i><i></i>
+                </div>
+              </div>
+              <div class="ms-home-tile-face ms-home-tile-face--back">
+                <span>Edit</span>
+                <strong>Client-ready polish</strong>
+                <p>Tweak copy, images, and layout until it feels premium.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ms-home-tile" style="--i:8;--a:#64748b;--b:#cbd5e1">
+            <div class="ms-home-tile-inner">
+              <div class="ms-home-tile-face ms-home-tile-face--front">
+                <div class="ms-home-preset ms-home-preset--local" aria-hidden="true">
+                  <strong>Earn</strong>
+                  <i></i><i></i>
+                </div>
+              </div>
+              <div class="ms-home-tile-face ms-home-tile-face--back">
+                <span>Earn</span>
+                <strong>Turn sites into income</strong>
+                <p>Find. Build. Close - free to start, paid when they unlock.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ms-home-tile" style="--i:9;--a:#2563eb;--b:#93c5fd">
+            <div class="ms-home-tile-inner">
+              <div class="ms-home-tile-face ms-home-tile-face--front">
+                <div class="ms-home-preset ms-home-preset--shop" aria-hidden="true">
+                  <strong>Host</strong>
+                  <i></i><i></i>
+                </div>
+              </div>
+              <div class="ms-home-tile-face ms-home-tile-face--back">
+                <span>Host</span>
+                <strong>Go live</strong>
+                <p>Publish client sites and keep the relationship going.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
 
-    <section class="ms-home-section" id="features" aria-labelledby="features-title">
-      <h2 id="features-title">Features</h2>
-      <ul class="ms-home-feature-list">
-        <li>
-          <strong>Business Finder</strong>
-          <span>Scan nearby shops that need a website.</span>
-        </li>
-        <li>
-          <strong>One swipe</strong>
-          <span>Slide once to generate a clean site preview.</span>
-        </li>
-        <li>
-          <strong>Watermark sell</strong>
-          <span>Publish free. Get paid when the owner unlocks.</span>
-        </li>
-        <li>
-          <strong>Keep 90%</strong>
-          <span>You earn 90%. Moonrise keeps 10%.</span>
-        </li>
-      </ul>
+    <section class="ms-home-section ms-home-method-section" id="method">
+      <div class="ms-home-method-head">
+        <p class="ms-home-method-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.8"/>
+          </svg>
+          Method
+        </p>
+        <h2>Find. Build. <span>Close.</span></h2>
+        <p class="ms-home-section-lead">
+          Find a business, build their site for free, send the link - get paid when they unlock it. @moonrise keeps 10% of each sale.
+        </p>
+      </div>
+
+      <div class="ms-home-method" id="ms-home-method">
+        <article class="ms-home-method-card is-tiltable">
+          <div class="ms-home-method-viz" aria-hidden="true">
+            <div class="ms-home-method-mock ms-home-method-mock--find">
+              <div class="ms-home-method-prompt">
+                <span>Find cafes nearby that need a site</span>
+                <i></i>
+              </div>
+              <div class="ms-home-method-chips">
+                <em>Leads</em>
+                <em>Map</em>
+              </div>
+            </div>
+          </div>
+          <div class="ms-home-method-body">
+            <span class="ms-home-method-num">01</span>
+            <strong>Find</strong>
+            <p>Search for businesses without a website by using our <strong>Business Finder</strong>.</p>
+          </div>
+        </article>
+
+        <article class="ms-home-method-card is-tiltable">
+          <div class="ms-home-method-viz" aria-hidden="true">
+            <div class="ms-home-method-mock ms-home-method-mock--form">
+              <span class="ms-home-method-tag">Text Edit</span>
+              <div class="ms-home-method-select">Customize an<span></span></div>
+            </div>
+          </div>
+          <div class="ms-home-method-body">
+            <span class="ms-home-method-num">02</span>
+            <strong>Build</strong>
+            <p>Generate a clean page, refine until it feels inevitable.</p>
+          </div>
+        </article>
+
+        <article class="ms-home-method-card is-tiltable">
+          <div class="ms-home-method-viz" aria-hidden="true">
+            <div class="ms-home-method-mock ms-home-method-mock--close">
+              <div class="ms-home-method-payhead">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3 7h18v12H3V7zm0 0l9 6 9-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                </svg>
+                <b>Checkout</b>
+              </div>
+              <div class="ms-home-method-domain">
+                <span>studio.site</span>
+                <em>Ready</em>
+              </div>
+              <div class="ms-home-method-bar"></div>
+            </div>
+          </div>
+          <div class="ms-home-method-body">
+            <span class="ms-home-method-num">03</span>
+            <strong>Close</strong>
+            <p>Publish the watermarked preview, send the link, and earn when the owner pays on the site.</p>
+          </div>
+        </article>
+      </div>
+
+      <a class="ms-home-method-cta" href="login.html">Start earning</a>
     </section>
 
-    <section class="ms-home-section" id="about" aria-labelledby="about-title">
-      <h2 id="about-title">What is Moonrise?</h2>
-      <p class="ms-home-about-copy">Moonrise is a studio for building and selling websites to local businesses. Find a lead, swipe to generate, send the link, and get paid when they go live.</p>
-    </section>
-
-    <section class="ms-home-section" id="faq" aria-labelledby="faq-title">
-      <h2 id="faq-title">FAQ</h2>
+    <section class="ms-home-section ms-home-faq" id="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">Questions about Moonrise</h2>
+      <p class="ms-home-section-lead">Quick answers for creators, clients, and search engines.</p>
       <div class="ms-home-faq-list">
-        <details class="ms-home-faq-item">
+        <details class="ms-home-faq-item" open>
           <summary>What is Moonrise Studio?</summary>
-          <p>An AI studio that helps creators build professional websites for local businesses and earn when clients unlock the live site.</p>
+          <p>Moonrise Studio is an AI-powered platform that helps creators build professional websites for local businesses and earn when clients unlock the live site.</p>
         </details>
         <details class="ms-home-faq-item">
           <summary>How does Moonrise work?</summary>
-          <p>Find businesses that need a site, build their preview for free, send the link, and get paid when the owner unlocks the watermark.</p>
+          <p>Find businesses that need a site, build their preview for free in Moonrise, send the link, and get paid when the owner unlocks the watermark on the live website.</p>
         </details>
         <details class="ms-home-faq-item">
           <summary>How much does it cost to go live?</summary>
-          <p>Creators build free. Owners pay on the watermarked site. You keep 90%. Moonrise keeps 10%. The watermark drops after payment.</p>
+          <p>Creators build and preview for free. When a business owner goes live, they pay through the watermark checkout on the published site. Moonrise keeps 10% and the creator keeps 90%. The watermark is removed automatically after payment.</p>
         </details>
         <details class="ms-home-faq-item">
-          <summary>Can owners pay without signing up?</summary>
-          <p>Yes. They pay on the live site through Stripe. They do not need a creator account.</p>
+          <summary>Can business owners pay without signing up?</summary>
+          <p>Yes. Owners pay on the live watermarked site through secure Stripe checkout. They do not need a Moonrise creator account.</p>
+        </details>
+        <details class="ms-home-faq-item">
+          <summary>Who is Moonrise for?</summary>
+          <p>Moonrise is for creators, freelancers, and side hustlers who want to sell websites to local shops, cafes, salons, and other small businesses without coding.</p>
         </details>
       </div>
-    </section>
-
-    <section class="ms-home-cta-band" aria-label="Start earning">
-      <h2>Start earning</h2>
-      <a href="login.html">Open Studio</a>
     </section>
 
     <footer class="ms-home-footer">
@@ -268,9 +483,7 @@ document.documentElement.classList.add("ms-boot");
         <p>Build websites and get paid when owners unlock on the watermark. Invite-only for Moonrise staff.</p>
         <nav class="ms-home-footer-legal" aria-label="Legal and support">
           <a href="contact.html">Contact</a>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
-          <a href="refund.html">Refunds</a>
+          <a href="legal.html">Legal</a>
           <a href="report.html">Report content</a>
         </nav>
       </div>
@@ -281,13 +494,188 @@ document.documentElement.classList.add("ms-boot");
     </footer>
   </div>
 
+  <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
+  <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
+  <script defer src="js/toast.js"></script>
   <script defer>
     (function () {
       if (window.__msReleaseBoot) window.__msReleaseBoot();
-      else {
-        document.body.classList.remove("ms-home-booting");
-        document.body.classList.add("is-home-ready");
+      const body = document.body;
+      const greet = document.getElementById("ms-home-greet");
+      const word = greet?.querySelector(".ms-home-greet-word");
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      let revealed = false;
+      let revealFailsafeTimer = 0;
+
+      function revealHome() {
+        if (revealed) return;
+        revealed = true;
+        if (revealFailsafeTimer) {
+          clearTimeout(revealFailsafeTimer);
+          revealFailsafeTimer = 0;
+        }
+        if (greet) {
+          greet.classList.add("is-done");
+          greet.setAttribute("aria-hidden", "true");
+          greet.addEventListener(
+            "transitionend",
+            () => {
+              greet.remove();
+            },
+            { once: true }
+          );
+          setTimeout(() => greet.remove(), 700);
+        }
+        body.classList.remove("ms-home-booting");
+        body.classList.add("is-home-ready");
       }
+
+      revealFailsafeTimer = setTimeout(revealHome, 2800);
+
+      if (!greet || !word || reduce) {
+        revealHome();
+      } else {
+        (async function playGreet() {
+          word.classList.remove("is-playing");
+          word.style.transform = "scale(1)";
+          word.style.opacity = "0.001";
+          try {
+            if (document.fonts?.ready) {
+              await Promise.race([
+                document.fonts.ready,
+                new Promise((resolve) => setTimeout(resolve, 350)),
+              ]);
+            }
+          } catch (_) {}
+
+          const rect = word.getBoundingClientRect();
+          const maxW = window.innerWidth * 0.92;
+          const maxH = window.innerHeight * 0.78;
+          const scale = Math.min(
+            maxW / Math.max(rect.width, 1),
+            maxH / Math.max(rect.height, 1)
+          );
+          word.style.setProperty("--ms-greet-max", String(Math.max(1.2, scale)));
+          word.style.removeProperty("transform");
+          word.style.removeProperty("opacity");
+
+          // Restart the pop/shrink with a device-fit peak scale
+          void word.offsetWidth;
+          word.classList.add("is-playing");
+
+          // Reveal the UI only once the word has visibly shrunk (near the end)
+          setTimeout(revealHome, 900);
+          setTimeout(() => {
+            if (greet?.parentNode) greet.remove();
+          }, 2400);
+        })();
+      }
+
+      function bindPointerTilt(selector, options) {
+        if (reduce || window.matchMedia("(pointer: coarse)").matches) return;
+        const nodes = document.querySelectorAll(selector);
+        const maxTilt = options.maxTilt || 10;
+        const waitAnim = !!options.waitAnim;
+        const mode = options.mode || "tilt";
+        if (mode === "none") return;
+
+        nodes.forEach((node) => {
+          let rect = null;
+          let raf = 0;
+          let pending = null;
+
+          const enableTilt = () => node.classList.add("is-tiltable");
+          if (waitAnim) {
+            node.addEventListener("animationend", enableTilt, { once: true });
+            setTimeout(enableTilt, 1200 + Number(node.style.getPropertyValue("--i") || 0) * 70);
+          } else {
+            enableTilt();
+          }
+
+          if (mode === "lift") {
+            node.addEventListener("pointerenter", () => {
+              node.classList.remove("is-settling");
+              node.style.setProperty("--lift", "1.015");
+            });
+            node.addEventListener("pointerleave", () => {
+              node.classList.add("is-settling");
+              node.style.setProperty("--lift", "1");
+            });
+            return;
+          }
+
+          const applyTilt = () => {
+            raf = 0;
+            if (!pending || !rect) return;
+            const x = (pending.x - rect.left) / Math.max(rect.width, 1);
+            const y = (pending.y - rect.top) / Math.max(rect.height, 1);
+            const nx = Math.min(1, Math.max(0, x));
+            const ny = Math.min(1, Math.max(0, y));
+            node.style.setProperty("--ry", ((nx - 0.5) * maxTilt * 2).toFixed(2) + "deg");
+            node.style.setProperty("--rx", ((0.5 - ny) * maxTilt * 2).toFixed(2) + "deg");
+            pending = null;
+          };
+
+          node.addEventListener("pointerenter", () => {
+            node.classList.remove("is-settling");
+            rect = node.getBoundingClientRect();
+          });
+
+          node.addEventListener("pointermove", (e) => {
+            if (!node.classList.contains("is-tiltable")) return;
+            if (!rect) rect = node.getBoundingClientRect();
+            pending = { x: e.clientX, y: e.clientY };
+            if (!raf) raf = requestAnimationFrame(applyTilt);
+          });
+
+          node.addEventListener("pointerleave", () => {
+            if (raf) cancelAnimationFrame(raf);
+            raf = 0;
+            pending = null;
+            rect = null;
+            node.classList.add("is-settling");
+            node.style.setProperty("--rx", "0deg");
+            node.style.setProperty("--ry", "0deg");
+          });
+        });
+      }
+
+      bindPointerTilt(".ms-home-tile", { mode: "none", waitAnim: true });
+      // Enable entrance completion class for gallery flips
+      (function readyGalleryTiles() {
+        document.querySelectorAll(".ms-home-tile").forEach((tile) => {
+          const ready = () => tile.classList.add("is-ready");
+          tile.addEventListener("animationend", ready, { once: true });
+          setTimeout(ready, 1200 + Number(tile.style.getPropertyValue("--i") || 0) * 70);
+        });
+      })();
+
+      // Touch: tap to flip (hover does not work on phones)
+      (function bindGalleryTapFlip() {
+        if (reduce) return;
+        const coarse = window.matchMedia("(pointer: coarse)").matches;
+        const noHover = window.matchMedia("(hover: none)").matches;
+        if (!coarse && !noHover) return;
+        const tiles = Array.from(document.querySelectorAll(".ms-home-tile"));
+        tiles.forEach((tile) => {
+          tile.setAttribute("tabindex", "0");
+          tile.setAttribute("role", "button");
+          tile.setAttribute("aria-label", "Flip gallery card");
+          tile.addEventListener("click", () => {
+            const open = tile.classList.contains("is-flipped");
+            tiles.forEach((t) => t.classList.remove("is-flipped"));
+            if (!open) tile.classList.add("is-flipped");
+          });
+          tile.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            tile.click();
+          });
+        });
+      })();
+
+      bindPointerTilt(".ms-home-method-card", { maxTilt: 5, mode: "tilt", waitAnim: false });
     })();
   </script>
 </body>
