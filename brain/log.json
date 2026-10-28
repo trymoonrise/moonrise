@@ -3,6 +3,44 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "1.0.100",
+      "date": "2026-10-27",
+      "title": "Home bands, age gate, and in-app account delete",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home adds Features, About, and FAQ bands with scroll motion under the hero.",
+            "Home CTAs sit centered with a clearer expand hover.",
+            "Public pages include a static Moonrise favicon in the document head."
+          ],
+          "fixes": [
+            "Home subtitle no longer promises a fixed dollar earnings outcome."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Signup requires confirming you are 13 or older in the form and on the API.",
+            "Settings lets you permanently delete your account and product data in-app.",
+            "Privacy points people to Settings for self-serve account deletion."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "Authenticated delete-account removes the auth user, related rows, and avatar storage."
+          ]
+        },
+        {
+          "heading": "Security",
+          "fixes": [
+            "Production npm audit no longer reports high or critical advisories."
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.0.99",
       "date": "2026-10-27",
       "title": "Point GitHub Latest at the current ship",

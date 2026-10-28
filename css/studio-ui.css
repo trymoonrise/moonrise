@@ -1565,6 +1565,54 @@ body[data-page="download"] .ms-download-actions .ms-btn-secondary {
   box-shadow: none !important;
 }
 
+/* Hero CTAs: larger + slight expand on hover/press */
+body[data-page="home"] .ms-home-ctas {
+  width: 100%;
+  justify-content: center;
+  gap: 0.85rem;
+}
+
+body[data-page="home"] :is(.ms-home-cta-primary, .ms-home-cta-secondary) {
+  height: 3.15rem !important;
+  min-height: 3.15rem !important;
+  padding: 0 1.55rem !important;
+  font-size: 1.02rem !important;
+  font-weight: 600 !important;
+  transform: scale(1);
+  transform-origin: center;
+  transition:
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease !important;
+  will-change: transform;
+}
+
+body[data-page="home"] .ms-home-cta-primary:hover,
+body[data-page="home"] .ms-home-cta-secondary:hover,
+body[data-page="home"] .ms-home-cta-primary:focus-visible,
+body[data-page="home"] .ms-home-cta-secondary:focus-visible {
+  transform: scale(1.055) !important;
+}
+
+body[data-page="home"] .ms-home-cta-primary:active,
+body[data-page="home"] .ms-home-cta-secondary:active {
+  transform: scale(1.08) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] :is(.ms-home-cta-primary, .ms-home-cta-secondary),
+  body[data-page="home"] .ms-home-cta-primary:hover,
+  body[data-page="home"] .ms-home-cta-secondary:hover,
+  body[data-page="home"] .ms-home-cta-primary:focus-visible,
+  body[data-page="home"] .ms-home-cta-secondary:focus-visible,
+  body[data-page="home"] .ms-home-cta-primary:active,
+  body[data-page="home"] .ms-home-cta-secondary:active {
+    transform: none !important;
+    transition: background 0.15s ease, border-color 0.15s ease !important;
+  }
+}
+
 .ms-home-bloom {
   background: #1d1d1f !important;
 }
@@ -1696,8 +1744,24 @@ body[data-page="home"] .ms-home-sub {
 }
 
 .ms-home-hero-copy {
-  padding-inline: clamp(1.25rem, 4vw, 3rem) !important;
-  gap: 1.15rem !important;
+  width: min(100%, 42rem) !important;
+  margin-inline: auto !important;
+  padding-inline: clamp(1rem, 3.5vw, 2.5rem) !important;
+  gap: 1.25rem !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.ms-home-hero-copy .ms-home-title,
+.ms-home-hero-copy .ms-home-sub,
+.ms-home-hero-copy .ms-home-ctas {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.ms-home-hero-copy .ms-home-sub {
+  max-width: min(34rem, 100%);
 }
 
 .ms-home-section,

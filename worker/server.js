@@ -176,6 +176,7 @@ githubPresets.ensureManifest().catch((e) => {
 
 const security = require("./security");
 const { mountAuthRoutes } = require("./auth-routes");
+const { deleteUserAccount } = require("./delete-account");
 const {
   currentEmployeeCode,
   isStudioAdmin,
@@ -1911,7 +1912,46 @@ const contactSubmitLimiter = rateLimit({
   name: "contact-submit",
   keyFn: (req) => "cform:" + clientIp(req) + ":" + String(req.body?.projectId || ""),
 });
+const deleteAccountLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  name: "delete-account",
+  keyFn: (req) => "delete-account:" + (req.user?.id || clientIp(req)),
+});
 
+app.post("/auth/delete-account", requireUser, deleteAccountLimiter, async (req, res) => {
+  try {
+    const confirm = String(req.body?.confirm || "").trim().toLowerCase();
+    if (confirm !== "delete") {
+      return res.status(400).json({
+        error: 'Type "delete" to confirm account deletion.',
+        code: "confirm_required",
+      });
+    }
+
+    const { data: profile, error: profileErr } = await db()
+      .from("profiles")
+      .select("handle")
+      .eq("id", req.user.id)
+      .maybeSingle();
+    if (profileErr) throw profileErr;
+    const handle = String(profile?.handle || "")
+      .replace(/^@+/, "")
+      .toLowerCase();
+    if (handle === "moonrise") {
+      return res.status(403).json({
+        error: "The studio owner account cannot be deleted from Settings. Contact support if you need help.",
+        code: "protected_account",
+      });
+    }
+
+    await deleteUserAccount(db(), req.user);
+    res.json({ ok: true });
+  } catch (e) {
+    console.error("delete-account", e);
+    res.status(500).json({ error: clientError(e, "Could not delete account") });
+  }
+});
 
 function stripDemoChrome(html) {
   return String(html || "")

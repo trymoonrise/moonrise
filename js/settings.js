@@ -591,6 +591,50 @@
     location.href = "index.html";
   });
 
+  document.getElementById("set-delete-account")?.addEventListener("click", async () => {
+    const btn = document.getElementById("set-delete-account");
+    const input = document.getElementById("set-delete-confirm");
+    const errEl = document.getElementById("set-delete-error");
+    const confirm = String(input?.value || "").trim();
+    if (errEl) {
+      errEl.hidden = true;
+      errEl.textContent = "";
+    }
+    if (confirm.toLowerCase() !== "delete") {
+      const msg = 'Type "delete" to confirm account deletion.';
+      if (errEl) {
+        errEl.hidden = false;
+        errEl.textContent = msg;
+      }
+      window.StudioToast?.error?.(msg);
+      input?.focus();
+      return;
+    }
+    const sure = window.confirm(
+      "Delete your Moonrise account permanently? Sites, leads, and payout records tied to this account will be removed. This cannot be undone."
+    );
+    if (!sure) return;
+    if (btn) btn.disabled = true;
+    const idle = btn?.textContent || "Delete my account";
+    if (btn) btn.textContent = "Deleting...";
+    try {
+      await window.StudioAuth.deleteAccount(confirm);
+      window.StudioToast?.info?.("Your account was deleted.");
+      location.href = "index.html";
+    } catch (e) {
+      const msg = friendlyMessage(e, "Could not delete account");
+      if (errEl) {
+        errEl.hidden = false;
+        errEl.textContent = msg;
+      }
+      window.StudioToast?.error?.(msg);
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = idle;
+      }
+    }
+  });
+
   document.getElementById("set-replay-onboarding")?.addEventListener("click", async () => {
     const btn = document.getElementById("set-replay-onboarding");
     const errEl = document.getElementById("set-onboard-error");

@@ -101,6 +101,8 @@ document.documentElement.classList.add("ms-boot");
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="icon" href="doc/MoonriseLogo.png" type="image/png">
+  <link rel="shortcut icon" href="doc/MoonriseLogo.png" type="image/png">
   <link rel="apple-touch-icon" href="doc/MoonriseLogo.png">
   <meta name="description" content="Moonrise is an AI-powered platform that lets you create professional websites with 1 click for local business owners, creators, and more! It's designed to make website creation fast, simple, effortless, and get paid.">
   <link rel="canonical" href="https://trymoonrise.com/">
@@ -115,10 +117,11 @@ document.documentElement.classList.add("ms-boot");
   <meta name="twitter:description" content="Moonrise is an AI-powered platform that lets you create professional websites with 1 click for local business owners, creators, and more! It's designed to make website creation fast, simple, effortless, and get paid.">
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261006-menu">
+  <link rel="stylesheet" href="css/studio.css?v=20261027-hero-cta">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
-  <link rel="stylesheet" href="css/studio-ui.css?v=20261027-slim">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261027-hero-cta">
+  <link rel="stylesheet" href="css/home-bands.css?v=20261027-bands">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261006-blue"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
@@ -205,10 +208,12 @@ document.documentElement.classList.add("ms-boot");
       <nav class="ms-home-bloom-nav" aria-label="Primary">
         <a href="index.html" style="--nav-i:0">Home</a>
         <a href="login.html" style="--nav-i:1">Start earning</a>
-        <a href="#method" style="--nav-i:2">Learn More</a>
-        <a href="download.html" style="--nav-i:3">Download app</a>
-        <a href="orders.html" style="--nav-i:4">Locate my order</a>
-        <a href="login.html" style="--nav-i:5">Sign in</a>
+        <a href="#features" style="--nav-i:2">Features</a>
+        <a href="#about" style="--nav-i:3">About</a>
+        <a href="#faq" style="--nav-i:4">FAQ</a>
+        <a href="download.html" style="--nav-i:5">Download app</a>
+        <a href="orders.html" style="--nav-i:6">Locate my order</a>
+        <a href="login.html" style="--nav-i:7">Sign in</a>
       </nav>
     </div>
 
@@ -216,10 +221,10 @@ document.documentElement.classList.add("ms-boot");
       <div class="ms-home-hero-stage">
         <div class="ms-home-hero-copy">
           <h1 class="ms-home-title">Build websites.&nbsp;<span class="ms-home-title-accent">Get paid.</span></h1>
-          <p class="ms-home-sub">Turn $0 into $1,000 by building beautiful websites for local business owners with just one swipe.</p>
+          <p class="ms-home-sub">Build beautiful websites for local business owners with just one swipe — and get paid when they go live.</p>
           <div class="ms-home-ctas">
             <a class="ms-home-cta-primary" href="login.html">Start earning</a>
-            <a class="ms-home-cta-secondary" href="#method">Learn More</a>
+            <a class="ms-home-cta-secondary" href="#features">Learn More</a>
           </div>
         </div>
 
@@ -278,108 +283,73 @@ document.documentElement.classList.add("ms-boot");
       </div>
     </main>
 
-    <section class="ms-home-section ms-home-method-section" id="method">
-      <div class="ms-home-method-head">
-        <p class="ms-home-method-badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.8"/>
-          </svg>
-          Method
-        </p>
-        <h2>Find. Build. <span>Close.</span></h2>
-        <p class="ms-home-section-lead">
-          Find a business, build their site for free, send the link - get paid when they unlock it. @moonrise keeps 10% of each sale.
-        </p>
-      </div>
-
-      <div class="ms-home-method" id="ms-home-method">
-        <article class="ms-home-method-card is-tiltable">
-          <div class="ms-home-method-viz" aria-hidden="true">
-            <div class="ms-home-method-mock ms-home-method-mock--find">
-              <div class="ms-home-method-prompt">
-                <span>Find cafes nearby that need a site</span>
-                <i></i>
-              </div>
-              <div class="ms-home-method-chips">
-                <em>Leads</em>
-                <em>Map</em>
-              </div>
-            </div>
+    <section class="ms-band" id="features">
+      <h2>Features</h2>
+      <div class="ms-band-cards">
+        <article>
+          <div>
+            <h3>Business Finder</h3>
+            <p>Scan nearby shops that need a site.</p>
           </div>
-          <div class="ms-home-method-body">
-            <span class="ms-home-method-num">01</span>
-            <strong>Find</strong>
-            <p>Search for businesses without a website by using our <strong>Business Finder</strong>.</p>
-          </div>
+          <div class="ms-feat ms-feat-finder" aria-hidden="true"><span>Map</span><span>Leads</span><span>Near me</span></div>
         </article>
-
-        <article class="ms-home-method-card is-tiltable">
-          <div class="ms-home-method-viz" aria-hidden="true">
-            <div class="ms-home-method-mock ms-home-method-mock--form">
-              <span class="ms-home-method-tag">Text Edit</span>
-              <div class="ms-home-method-select">Customize an<span></span></div>
-            </div>
+        <article>
+          <div>
+            <h3>One swipe</h3>
+            <p>Slide once. Get a clean site.</p>
           </div>
-          <div class="ms-home-method-body">
-            <span class="ms-home-method-num">02</span>
-            <strong>Build</strong>
-            <p>Generate a clean page, refine until it feels inevitable.</p>
-          </div>
+          <div class="ms-feat ms-feat-swipe" aria-hidden="true"><i></i></div>
         </article>
-
-        <article class="ms-home-method-card is-tiltable">
-          <div class="ms-home-method-viz" aria-hidden="true">
-            <div class="ms-home-method-mock ms-home-method-mock--close">
-              <div class="ms-home-method-payhead">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M3 7h18v12H3V7zm0 0l9 6 9-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-                </svg>
-                <b>Checkout</b>
-              </div>
-              <div class="ms-home-method-domain">
-                <span>studio.site</span>
-                <em>Ready</em>
-              </div>
-              <div class="ms-home-method-bar"></div>
-            </div>
+        <article>
+          <div>
+            <h3>Watermark sell</h3>
+            <p>Publish free. Get paid on unlock.</p>
           </div>
-          <div class="ms-home-method-body">
-            <span class="ms-home-method-num">03</span>
-            <strong>Close</strong>
-            <p>Publish the watermarked preview, send the link, and earn when the owner pays on the site.</p>
+          <div class="ms-feat ms-feat-pay" aria-hidden="true"><kbd>Live</kbd><em>→</em><kbd>Pay</kbd></div>
+        </article>
+        <article>
+          <div>
+            <h3>Keep 90%</h3>
+            <p>You earn. Moonrise keeps 10%.</p>
           </div>
+          <div class="ms-feat ms-feat-cut" aria-hidden="true"><i></i></div>
         </article>
       </div>
-
-      <a class="ms-home-method-cta" href="login.html">Start earning</a>
     </section>
 
-    <section class="ms-home-section ms-home-faq" id="faq" aria-labelledby="faq-title">
-      <h2 id="faq-title">Questions about Moonrise</h2>
-      <p class="ms-home-section-lead">Quick answers for creators, clients, and search engines.</p>
-      <div class="ms-home-faq-list">
-        <details class="ms-home-faq-item" open>
-          <summary>What is Moonrise Studio?</summary>
-          <p>Moonrise Studio is an AI-powered platform that helps creators build professional websites for local businesses and earn when clients unlock the live site.</p>
-        </details>
-        <details class="ms-home-faq-item">
-          <summary>How does Moonrise work?</summary>
-          <p>Find businesses that need a site, build their preview for free in Moonrise, send the link, and get paid when the owner unlocks the watermark on the live website.</p>
-        </details>
-        <details class="ms-home-faq-item">
-          <summary>How much does it cost to go live?</summary>
-          <p>Creators build and preview for free. When a business owner goes live, they pay through the watermark checkout on the published site. Moonrise keeps 10% and the creator keeps 90%. The watermark is removed automatically after payment.</p>
-        </details>
-        <details class="ms-home-faq-item">
-          <summary>Can business owners pay without signing up?</summary>
-          <p>Yes. Owners pay on the live watermarked site through secure Stripe checkout. They do not need a Moonrise creator account.</p>
-        </details>
-        <details class="ms-home-faq-item">
-          <summary>Who is Moonrise for?</summary>
-          <p>Moonrise is for creators, freelancers, and side hustlers who want to sell websites to local shops, cafes, salons, and other small businesses without coding.</p>
-        </details>
+    <section class="ms-about" id="about">
+      <h2>What is Moonrise?</h2>
+      <p
+        data-about-line
+        data-about-text="Moonrise is a studio for building and selling websites to local businesses. Find a lead, swipe to generate, send the link, and get paid when they go live."
+      >Moonrise is a studio for building and selling websites to local businesses. Find a lead, swipe to generate, send the link, and get paid when they go live.</p>
+    </section>
+
+    <section class="ms-faq-home" id="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">FAQ</h2>
+      <div class="ms-faq-list">
+        <div class="ms-faq-item">
+          <button class="ms-faq-q" type="button" aria-expanded="false">What is Moonrise Studio?<span aria-hidden="true"></span></button>
+          <div class="ms-faq-a"><p>An AI studio that helps creators build professional websites for local businesses and earn when clients unlock the live site.</p></div>
+        </div>
+        <div class="ms-faq-item">
+          <button class="ms-faq-q" type="button" aria-expanded="false">How does Moonrise work?<span aria-hidden="true"></span></button>
+          <div class="ms-faq-a"><p>Find businesses that need a site, build their preview for free, send the link, and get paid when the owner unlocks the watermark.</p></div>
+        </div>
+        <div class="ms-faq-item">
+          <button class="ms-faq-q" type="button" aria-expanded="false">How much does it cost to go live?<span aria-hidden="true"></span></button>
+          <div class="ms-faq-a"><p>Creators build free. Owners pay on the watermarked site. You keep 90%. Moonrise keeps 10%. The watermark drops after payment.</p></div>
+        </div>
+        <div class="ms-faq-item">
+          <button class="ms-faq-q" type="button" aria-expanded="false">Can owners pay without signing up?<span aria-hidden="true"></span></button>
+          <div class="ms-faq-a"><p>Yes. They pay on the live site through Stripe. They do not need a creator account.</p></div>
+        </div>
       </div>
+    </section>
+
+    <section class="ms-home-cta-band" aria-label="Start earning">
+      <h2>Start earning</h2>
+      <a href="login.html">Open Studio</a>
     </section>
 
     <footer class="ms-home-footer">
@@ -406,77 +376,15 @@ document.documentElement.classList.add("ms-boot");
 
   <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
   <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
+  <script defer src="js/home-bands.js?v=20261027-bands"></script>
   <script defer src="js/toast.js"></script>
   <script defer>
     (function () {
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (window.__msReleaseBoot) window.__msReleaseBoot();
       else {
         document.body.classList.remove("ms-home-booting");
         document.body.classList.add("is-home-ready");
       }
-
-      function bindPointerTilt(selector, options) {
-        if (reduce || window.matchMedia("(pointer: coarse)").matches) return;
-        const nodes = document.querySelectorAll(selector);
-        const maxTilt = options.maxTilt || 10;
-        const mode = options.mode || "tilt";
-        if (mode === "none") return;
-
-        nodes.forEach((node) => {
-          let rect = null;
-          let raf = 0;
-          let pending = null;
-          node.classList.add("is-tiltable");
-
-          if (mode === "lift") {
-            node.addEventListener("pointerenter", () => {
-              node.classList.remove("is-settling");
-              node.style.setProperty("--lift", "1.015");
-            });
-            node.addEventListener("pointerleave", () => {
-              node.classList.add("is-settling");
-              node.style.setProperty("--lift", "1");
-            });
-            return;
-          }
-
-          const applyTilt = () => {
-            raf = 0;
-            if (!pending || !rect) return;
-            const x = (pending.x - rect.left) / Math.max(rect.width, 1);
-            const y = (pending.y - rect.top) / Math.max(rect.height, 1);
-            const nx = Math.min(1, Math.max(0, x));
-            const ny = Math.min(1, Math.max(0, y));
-            node.style.setProperty("--ry", ((nx - 0.5) * maxTilt * 2).toFixed(2) + "deg");
-            node.style.setProperty("--rx", ((0.5 - ny) * maxTilt * 2).toFixed(2) + "deg");
-            pending = null;
-          };
-
-          node.addEventListener("pointerenter", () => {
-            node.classList.remove("is-settling");
-            rect = node.getBoundingClientRect();
-          });
-
-          node.addEventListener("pointermove", (e) => {
-            if (!rect) rect = node.getBoundingClientRect();
-            pending = { x: e.clientX, y: e.clientY };
-            if (!raf) raf = requestAnimationFrame(applyTilt);
-          });
-
-          node.addEventListener("pointerleave", () => {
-            if (raf) cancelAnimationFrame(raf);
-            raf = 0;
-            pending = null;
-            rect = null;
-            node.classList.add("is-settling");
-            node.style.setProperty("--rx", "0deg");
-            node.style.setProperty("--ry", "0deg");
-          });
-        });
-      }
-
-      bindPointerTilt(".ms-home-method-card", { maxTilt: 5, mode: "tilt" });
     })();
   </script>
 </body>

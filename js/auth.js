@@ -458,18 +458,26 @@
     return session?.user || null;
   }
 
-  async function signUp(email, handle, authCode) {
+  async function signUp(email, handle, authCode, opts) {
     const sb = getClient();
     if (!sb) throw new Error("Supabase is not configured");
     const handles = global.StudioHandles;
     if (!handles?.assertHandleAllowed) {
       throw new Error("Handle validation is unavailable");
     }
+    const ageConfirmed = !!(opts && (opts.ageConfirmed === true || opts.age_confirmed === true));
+    if (!ageConfirmed) {
+      throw authError({
+        error: "Confirm you are 13 or older to create an account.",
+        code: "age_required",
+      });
+    }
     const cleanHandle = handles.assertHandleAllowed(handle);
     const payload = await workerAuth("/auth/signup", {
       email: String(email || "").trim(),
       handle: cleanHandle,
       authCode: String(authCode || "").trim(),
+      ageConfirmed: true,
     });
     const sessionData = await applySessionTokens(payload);
     const user = sessionData?.user || payload.user;
@@ -669,8 +677,8 @@
   }
 
   /** Sign up, then create a passkey while the new session is active. */
-  async function signUpWithPasskey(email, handle, authCode) {
-    const data = await signUp(email, handle, authCode);
+  async function signUpWithPasskey(email, handle, authCode, opts) {
+    const data = await signUp(email, handle, authCode, opts);
     if (!(data?.session || data?.access_token || data?.user)) {
       return { ...(data || {}), created: false, needsEmailConfirm: true };
     }
@@ -1050,6 +1058,30 @@
     return data;
   }
 
+  /** Permanently delete the signed-in account and related Studio data. */
+  async function deleteAccount(confirmText) {
+    const session = await getSession();
+    if (!session?.access_token) throw new Error("Not signed in");
+    const confirm = String(confirmText || "").trim().toLowerCase();
+    if (confirm !== "delete") {
+      throw authError({
+        error: 'Type "delete" to confirm account deletion.',
+        code: "confirm_required",
+      });
+    }
+    await workerAuth(
+      "/auth/delete-account",
+      { confirm: "delete" },
+      { Authorization: "Bearer " + session.access_token }
+    );
+    try {
+      await signOut();
+    } catch (_) {
+      /* account already gone */
+    }
+    return { ok: true };
+  }
+
   function releaseAuthGate() {
     try {
       if (typeof global.__msReleaseAuthGate === "function") {
@@ -1222,6 +1254,7 @@
     resendConfirmationEmail,
     setPassword,
     changePassword,
+    deleteAccount,
     ensureProfile,
     requireAuth,
     withTimeout,

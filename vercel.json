@@ -107,6 +107,7 @@
     { "source": "/auth/verify-password", "destination": "/api" },
     { "source": "/auth/session", "destination": "/api" },
     { "source": "/auth/signout", "destination": "/api" },
+    { "source": "/auth/delete-account", "destination": "/api" },
     { "source": "/admin/employee-code", "destination": "/api" },
     { "source": "/admin/employees/:path*", "destination": "/api" },
     { "source": "/admin/site-checks", "destination": "/api" },

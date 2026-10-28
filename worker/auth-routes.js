@@ -606,9 +606,20 @@ function mountAuthRoutes(app, { db, security }) {
         .replace(/^@/, "")
         .toLowerCase();
       const authCode = String(req.body?.authCode || req.body?.auth_code || "").trim();
+      const ageConfirmed =
+        req.body?.ageConfirmed === true ||
+        req.body?.age_confirmed === true ||
+        String(req.body?.ageConfirmed || req.body?.age_confirmed || "").toLowerCase() === "true" ||
+        String(req.body?.ageConfirmed || req.body?.age_confirmed || "") === "1";
       const ip = clientIp(req);
       if (!email) {
         return res.status(400).json({ error: "Email is required", code: "invalid_input" });
+      }
+      if (!ageConfirmed) {
+        return res.status(400).json({
+          error: "Confirm you are 13 or older to create an account.",
+          code: "age_required",
+        });
       }
 
       const gate = await assertNotLocked(db(), { email, ip });

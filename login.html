@@ -55,6 +55,9 @@ setTimeout(function () {
   <meta name="twitter:title" content="Login - Moonrise Studio">
   <meta name="twitter:description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
+  <link rel="icon" href="doc/MoonriseLogo.png" type="image/png">
+  <link rel="shortcut icon" href="doc/MoonriseLogo.png" type="image/png">
+  <link rel="apple-touch-icon" href="doc/MoonriseLogo.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="stylesheet" href="css/studio.css?v=20261006-menu">
   <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg">
@@ -143,6 +146,15 @@ setTimeout(function () {
         <p class="ms-muted" id="auth-code-hint" style="margin:0.4rem 0 0;font-size:0.8rem;line-height:1.35">
           Ask your admin for this. You only need it once, and it expires 6 hours after they give it to you.
         </p>
+      </div>
+      <div class="ms-field" id="age-confirm-field" hidden>
+        <label class="ms-check" for="age-confirm">
+          <input type="checkbox" id="age-confirm" name="age_confirm" value="1">
+          <span class="ms-check-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>I confirm I am 13 or older</span>
+        </label>
       </div>
       <div class="ms-auth-autosave" id="autosave-wrap">
         <div class="ms-auth-autosave-copy">
@@ -586,6 +598,12 @@ setTimeout(function () {
             authCodeInput?.focus();
             return;
           }
+          const ageOk = document.getElementById("age-confirm")?.checked;
+          if (!ageOk) {
+            showAuthError("Confirm you are 13 or older to create an account.");
+            document.getElementById("age-confirm")?.focus();
+            return;
+          }
         }
         submit.disabled = true;
         if (mode === "signin") submit.textContent = "Sending link...";
@@ -595,7 +613,9 @@ setTimeout(function () {
           if (mode === "signup") {
             const handleVal = form.handle.value;
             const authCode = String(authCodeInput?.value || "").trim();
-            const signedUp = await window.StudioAuth.signUp(email, handleVal, authCode);
+            const signedUp = await window.StudioAuth.signUp(email, handleVal, authCode, {
+              ageConfirmed: true,
+            });
             savePendingSignIn(signedUp);
             window.StudioToast?.info?.("We sent a confirmation email - open it to finish signing up");
             void watchPendingSignIn();
@@ -1006,6 +1026,14 @@ setTimeout(function () {
           authCodeInput.disabled = !showSignup;
           authCodeInput.required = showSignup;
           if (!showSignup) authCodeInput.value = "";
+        }
+        const ageField = document.getElementById("age-confirm-field");
+        const ageInput = document.getElementById("age-confirm");
+        if (ageField) setOpen(ageField, showSignup, instant);
+        if (ageInput) {
+          ageInput.disabled = !showSignup;
+          ageInput.required = showSignup;
+          if (!showSignup) ageInput.checked = false;
         }
         if (emailInput) {
           emailInput.type = "email";
