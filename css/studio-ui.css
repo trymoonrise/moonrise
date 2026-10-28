@@ -83,6 +83,7 @@ a.ms-btn,
 .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
 a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
 .ms-home-cta-primary,
+.ms-home-footer-signup,
 .ms-home-method-cta,
 .ms-lf-find,
 .ms-lb-publish-btn,
@@ -105,6 +106,12 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
     0 8px 18px rgba(37, 99, 235, 0.28),
     0 2px 4px rgba(37, 99, 235, 0.18) !important;
   filter: none !important;
+  transform: scale(1);
+  transform-origin: center;
+  transition:
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: transform;
 }
 
 .ms-btn:hover:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger),
@@ -120,18 +127,36 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
 .lf-action-builder:hover,
 .ms-lf-map-scan:hover,
 #btn-checkout:hover {
+  /* Keep the same blue fill — expand only, no lighten */
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 42%),
-    linear-gradient(135deg, #93c5fd 0%, #3b82f6 48%, #1d4ed8 100%) !important;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 42%),
+    linear-gradient(135deg, #60a5fa 0%, #3b82f6 48%, #2563eb 100%) !important;
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.32) inset,
-    0 -1px 0 rgba(15, 23, 42, 0.1) inset,
-    0 10px 20px rgba(37, 99, 235, 0.3),
-    0 3px 6px rgba(37, 99, 235, 0.18) !important;
-  filter: brightness(1.03) !important;
-  transform: translateY(-0.5px);
+    0 1px 0 rgba(255, 255, 255, 0.28) inset,
+    0 -1px 0 rgba(15, 23, 42, 0.12) inset,
+    0 8px 18px rgba(37, 99, 235, 0.28),
+    0 2px 4px rgba(37, 99, 235, 0.18) !important;
+  filter: none !important;
+  transform: scale(1.055) !important;
+}
+
+.ms-btn:active:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger),
+.ms-home-cta-primary:active,
+.ms-home-footer-signup:active,
+.ms-home-method-cta:active,
+.ms-lf-find:active,
+.ms-lb-publish-btn:active,
+.ms-paywall-pay:active,
+.ms-fin-save:active,
+.ms-fin-next:active,
+.ms-store-buy:not(.is-ghost):active,
+.lf-action-builder:active,
+.ms-lf-map-scan:active,
+#btn-checkout:active {
+  filter: none !important;
+  transform: scale(1.08) !important;
 }
 
 .ms-store-buy.is-ghost,

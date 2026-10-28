@@ -3,6 +3,25 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "1.0.104",
+      "date": "2026-10-28",
+      "title": "Editor fullscreen fix and printable website flyer",
+      "tag": "v1.0.104",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.104",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Editor adds a Flyer button beside QR Code that builds a printable personalized flyer with the domain, a short website preview from site images, and a QR code to the published URL.",
+            "Primary blue buttons expand slightly on hover and press instead of lightening."
+          ],
+          "fixes": [
+            "Editor fullscreen expand fills the whole viewport again instead of staying boxed in the preview column."
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.0.103",
       "date": "2026-10-28",
       "title": "Match pre-B&W blue home CSS exactly",

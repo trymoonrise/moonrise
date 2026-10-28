@@ -41,7 +41,7 @@ document.documentElement.classList.add("ms-boot");
 </script>
   <script>
     (function () {
-      var BUILD = "20260924-fs-mobile";
+      var BUILD = "20261028-flyer";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -74,7 +74,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="stylesheet" href="css/generation-announce.css?v=20260721-float">
-  <link rel="stylesheet" href="css/studio.css?v=20261003-cal">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-flyer">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261027-slim">
@@ -138,6 +138,9 @@ document.documentElement.classList.add("ms-boot");
             </button>
             <button type="button" class="ms-lb-icon-btn" id="btn-qr-code" title="QR Code business card" aria-label="QR Code business card">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v6M14 20h3"/></svg>
+            </button>
+            <button type="button" class="ms-lb-icon-btn" id="btn-flyer" title="Printable website flyer" aria-label="Printable website flyer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h4M7 12h10M7 16h7"/></svg>
             </button>
             <span class="ms-lb-viewports-sep" aria-hidden="true"></span>
             <button type="button" class="ms-lb-icon-btn is-vp is-active" data-vp="desktop" title="Desktop" aria-label="Desktop">
@@ -727,6 +730,40 @@ document.documentElement.classList.add("ms-boot");
     </div>
   </div>
 
+  <div class="ms-lb-flyer" id="lb-flyer-modal" hidden>
+    <button type="button" class="ms-lb-flyer-backdrop" id="lb-flyer-close-backdrop" aria-label="Close"></button>
+    <div class="ms-lb-flyer-stage" role="dialog" aria-modal="true" aria-labelledby="lb-flyer-domain">
+      <button type="button" class="ms-lb-flyer-close" id="lb-flyer-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="ms-lb-flyer-sheet" id="lb-flyer-sheet">
+        <div class="ms-lb-flyer-left">
+          <a class="ms-lb-flyer-domain" id="lb-flyer-domain" href="#" target="_blank" rel="noopener noreferrer">example.com</a>
+          <a class="ms-lb-flyer-qr-wrap" id="lb-flyer-qr-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open live site">
+            <canvas id="lb-flyer-qr-canvas" width="192" height="192" aria-hidden="true"></canvas>
+          </a>
+          <p class="ms-lb-flyer-cta" id="lb-flyer-cta">Scan to visit the live site</p>
+        </div>
+        <div class="ms-lb-flyer-right">
+          <div class="ms-lb-flyer-preview" id="lb-flyer-preview">
+            <div class="ms-lb-flyer-preview-chrome" aria-hidden="true">
+              <span></span><span></span><span></span>
+              <em id="lb-flyer-preview-host">example.com</em>
+            </div>
+            <div class="ms-lb-flyer-preview-stage" id="lb-flyer-preview-stage">
+              <iframe class="ms-lb-flyer-preview-frame" id="lb-flyer-preview-frame" title="Website preview" sandbox="allow-same-origin" tabindex="-1"></iframe>
+              <div class="ms-lb-flyer-preview-collage" id="lb-flyer-preview-collage" hidden></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ms-lb-flyer-actions">
+        <button type="button" class="ms-lb-flyer-btn ms-lb-flyer-btn--ghost" id="lb-flyer-print">Print</button>
+        <button type="button" class="ms-lb-flyer-btn ms-lb-flyer-btn--primary" id="lb-flyer-download">Download</button>
+      </div>
+    </div>
+  </div>
+
   <script defer src="js/config.js?v=20261006-blue"></script>
   <script defer src="js/app.js?v=20261006-stay"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
@@ -742,6 +779,7 @@ document.documentElement.classList.add("ms-boot");
   <script defer src="js/creator-contact.js?v=20260719-watermark-contact"></script>
   <script defer src="js/generation-lock.js?v=20260721-one-gen"></script>
   <script defer src="js/site-features.js?v=20260930-seed"></script>
-  <script defer src="js/builder.js?v=20261003-receipt"></script>
+  <script defer src="js/preview-thumb.js?v=20260924-console"></script>
+  <script defer src="js/builder.js?v=20261028-flyer"></script>
 </body>
 </html>

@@ -7384,6 +7384,403 @@
       if (e.key === "Escape" && !document.getElementById("lb-qr-modal")?.hidden) {
         closeQrBusinessCard();
       }
+      if (e.key === "Escape" && !document.getElementById("lb-flyer-modal")?.hidden) {
+        closeWebsiteFlyer();
+      }
+    });
+  }
+
+  function flyerSiteLabel(url) {
+    const details = qrBusinessDetails();
+    if (details.siteLabel) return details.siteLabel;
+    try {
+      return new URL(url).hostname.replace(/^www\./i, "");
+    } catch (_) {
+      return String(url || "")
+        .replace(/^https?:\/\//i, "")
+        .replace(/\/$/, "");
+    }
+  }
+
+  function collectFlyerImageUrls(html, limit) {
+    const max = Math.max(1, Number(limit) || 4);
+    const urls = [];
+    const seen = new Set();
+    const push = (raw) => {
+      const src = String(raw || "").trim();
+      if (!src || src.startsWith("data:image/svg")) return;
+      if (/^(javascript|vbscript):/i.test(src)) return;
+      if (seen.has(src)) return;
+      seen.add(src);
+      urls.push(src);
+    };
+    try {
+      const doc = new DOMParser().parseFromString(String(html || ""), "text/html");
+      const og = doc.querySelector('meta[property="og:image"], meta[name="twitter:image"]');
+      if (og) push(og.getAttribute("content"));
+      doc.querySelectorAll("img[src]").forEach((img) => {
+        if (urls.length >= max) return;
+        push(img.getAttribute("src"));
+      });
+      doc.querySelectorAll("[style*='background']").forEach((el) => {
+        if (urls.length >= max) return;
+        const style = String(el.getAttribute("style") || "");
+        const match = style.match(/url\((['"]?)([^'")]+)\1\)/i);
+        if (match) push(match[2]);
+      });
+    } catch (_) {
+      /* ignore parse errors */
+    }
+    return urls.slice(0, max);
+  }
+
+  function loadFlyerImage(src) {
+    return new Promise((resolve) => {
+      if (!src) {
+        resolve(null);
+        return;
+      }
+      const img = new Image();
+      img.decoding = "async";
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      try {
+        if (!/^data:|^blob:|^https?:/i.test(src)) {
+          /* relative / same-origin preview assets */
+        } else if (/^https?:/i.test(src)) {
+          img.crossOrigin = "anonymous";
+        }
+      } catch (_) {
+        /* ignore */
+      }
+      img.src = src;
+    });
+  }
+
+  function fitFlyerPreviewFrame() {
+    const stage = document.getElementById("lb-flyer-preview-stage");
+    const frame = document.getElementById("lb-flyer-preview-frame");
+    if (!stage || !frame || frame.hidden) return;
+    const rect = stage.getBoundingClientRect();
+    if (rect.width < 40 || rect.height < 40) return;
+    const scale = Math.min(rect.width / 1440, rect.height / 900);
+    frame.style.transform = "scale(" + scale + ")";
+    frame.style.width = "1440px";
+    frame.style.height = "900px";
+  }
+
+  async function populateFlyerPreview(html) {
+    const frame = document.getElementById("lb-flyer-preview-frame");
+    const collage = document.getElementById("lb-flyer-preview-collage");
+    if (!frame || !collage) return;
+
+    const sanitize = window.MsPreviewThumb?.sanitize;
+    const safeHtml = typeof sanitize === "function" ? sanitize(html) : String(html || "");
+    let frameOk = false;
+    if (safeHtml.trim()) {
+      try {
+        frame.hidden = false;
+        frame.removeAttribute("hidden");
+        collage.hidden = true;
+        collage.innerHTML = "";
+        frame.srcdoc = safeHtml;
+        frameOk = true;
+        requestAnimationFrame(() => {
+          fitFlyerPreviewFrame();
+          window.setTimeout(fitFlyerPreviewFrame, 80);
+        });
+      } catch (_) {
+        frameOk = false;
+      }
+    }
+
+    const imageUrls = collectFlyerImageUrls(html, 4);
+    const loaded = (await Promise.all(imageUrls.map(loadFlyerImage))).filter(Boolean);
+    if (!frameOk || loaded.length) {
+      collage.innerHTML = "";
+      const tiles = loaded.length ? loaded : [];
+      if (!frameOk && tiles.length) {
+        frame.hidden = true;
+        collage.hidden = false;
+        tiles.slice(0, 4).forEach((img) => {
+          const node = document.createElement("img");
+          node.src = img.src;
+          node.alt = "";
+          collage.appendChild(node);
+        });
+      } else if (!frameOk) {
+        frame.hidden = true;
+        collage.hidden = false;
+        const empty = document.createElement("div");
+        empty.style.cssText =
+          "grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;color:#64748b;font-weight:700;font-size:0.95rem;padding:1rem;text-align:center";
+        empty.textContent = qrBusinessName();
+        collage.appendChild(empty);
+      }
+    }
+    return loaded;
+  }
+
+  function closeWebsiteFlyer() {
+    const modal = document.getElementById("lb-flyer-modal");
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.classList.remove("ms-lb-flyer-open");
+    const frame = document.getElementById("lb-flyer-preview-frame");
+    if (frame) {
+      try {
+        frame.removeAttribute("srcdoc");
+        frame.src = "about:blank";
+      } catch (_) {
+        /* ignore */
+      }
+    }
+  }
+
+  async function openWebsiteFlyer() {
+    setError("");
+    const url = publicSiteUrl();
+    if (!url) {
+      setError("Publish your website first before creating a flyer.");
+      return;
+    }
+    const html = currentPublishHtml();
+    if (!String(html || "").trim()) {
+      setError("Generate a website first before creating a flyer.");
+      return;
+    }
+
+    const modal = document.getElementById("lb-flyer-modal");
+    const domainEl = document.getElementById("lb-flyer-domain");
+    const hostEl = document.getElementById("lb-flyer-preview-host");
+    const qrLink = document.getElementById("lb-flyer-qr-link");
+    const canvas = document.getElementById("lb-flyer-qr-canvas");
+    const cta = document.getElementById("lb-flyer-cta");
+    if (!modal || !domainEl || !qrLink || !canvas) return;
+
+    const label = flyerSiteLabel(url);
+    const name = qrBusinessName();
+    domainEl.href = url;
+    domainEl.textContent = label || name;
+    if (hostEl) hostEl.textContent = label || name;
+    qrLink.href = url;
+    if (cta) cta.textContent = "Scan to visit " + (label || "the live site");
+
+    try {
+      await renderQrToCanvas(canvas, url);
+    } catch (e) {
+      setError(e.message || "Could not create flyer QR code");
+      return;
+    }
+
+    await populateFlyerPreview(html);
+
+    modal.hidden = false;
+    document.body.classList.add("ms-lb-flyer-open");
+    requestAnimationFrame(fitFlyerPreviewFrame);
+  }
+
+  function drawImageCover(ctx, img, x, y, w, h, radius) {
+    if (!img) {
+      roundRect(ctx, x, y, w, h, radius || 0);
+      ctx.fillStyle = "#e2e8f0";
+      ctx.fill();
+      return;
+    }
+    const iw = img.naturalWidth || img.width || 1;
+    const ih = img.naturalHeight || img.height || 1;
+    const scale = Math.max(w / iw, h / ih);
+    const dw = iw * scale;
+    const dh = ih * scale;
+    const dx = x + (w - dw) / 2;
+    const dy = y + (h - dh) / 2;
+    ctx.save();
+    roundRect(ctx, x, y, w, h, radius || 0);
+    ctx.clip();
+    ctx.drawImage(img, dx, dy, dw, dh);
+    ctx.restore();
+  }
+
+  async function downloadWebsiteFlyerPng() {
+    const url = publicSiteUrl();
+    const name = qrBusinessName();
+    if (!url) {
+      setError("Publish your website first before creating a flyer.");
+      return;
+    }
+    const html = currentPublishHtml();
+    const label = flyerSiteLabel(url);
+    const images = (await Promise.all(collectFlyerImageUrls(html, 4).map(loadFlyerImage))).filter(Boolean);
+
+    const canvas = document.createElement("canvas");
+    const w = 1600;
+    const h = 1000;
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.fillStyle = "#e8edf3";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "rgba(148, 163, 184, 0.35)";
+    for (let x = 18; x < w; x += 18) {
+      for (let y = 18; y < h; y += 18) {
+        ctx.beginPath();
+        ctx.arc(x, y, 1.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const pad = 36;
+    const gap = 28;
+    const leftW = 420;
+    const sheetX = pad;
+    const sheetY = pad;
+    const sheetW = w - pad * 2;
+    const sheetH = h - pad * 2;
+
+    roundRect(ctx, sheetX, sheetY, sheetW, sheetH, 42);
+    ctx.fillStyle = "rgba(232, 237, 243, 0.92)";
+    ctx.fill();
+
+    const leftX = sheetX + 28;
+    const leftY = sheetY + 28;
+    const leftH = sheetH - 56;
+    const domainH = 78;
+    const ctaH = 72;
+    const qrBox = leftH - domainH - ctaH - gap * 2;
+
+    roundRect(ctx, leftX, leftY, leftW, domainH, 26);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "800 34px DM Sans, system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(label || name, leftX + leftW / 2, leftY + domainH / 2, leftW - 48);
+
+    const qrY = leftY + domainH + gap;
+    roundRect(ctx, leftX, qrY, leftW, qrBox, 30);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    const qrCanvas = document.createElement("canvas");
+    await renderQrToCanvas(qrCanvas, url);
+    const qrDraw = Math.min(320, leftW - 72, qrBox - 72);
+    ctx.drawImage(
+      qrCanvas,
+      leftX + (leftW - qrDraw) / 2,
+      qrY + (qrBox - qrDraw) / 2,
+      qrDraw,
+      qrDraw
+    );
+
+    const ctaY = qrY + qrBox + gap;
+    roundRect(ctx, leftX, ctaY, leftW, ctaH, 26);
+    const ctaGrad = ctx.createLinearGradient(leftX, ctaY, leftX, ctaY + ctaH);
+    ctaGrad.addColorStop(0, "#3b82f6");
+    ctaGrad.addColorStop(1, "#2563eb");
+    ctx.fillStyle = ctaGrad;
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "700 24px DM Sans, system-ui, sans-serif";
+    ctx.fillText("Scan to visit the live site", leftX + leftW / 2, ctaY + ctaH / 2, leftW - 40);
+
+    const rightX = leftX + leftW + gap;
+    const rightW = sheetX + sheetW - 28 - rightX;
+    const rightY = leftY;
+    const rightH = leftH;
+    roundRect(ctx, rightX, rightY, rightW, rightH, 30);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+
+    const chromeH = 54;
+    ctx.fillStyle = "#eef2f7";
+    roundRect(ctx, rightX, rightY, rightW, chromeH, 30);
+    ctx.fill();
+    ctx.fillRect(rightX, rightY + 24, rightW, chromeH - 24);
+    const dots = ["#f87171", "#fbbf24", "#34d399"];
+    dots.forEach((color, i) => {
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(rightX + 28 + i * 22, rightY + chromeH / 2, 7, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    roundRect(ctx, rightX + 110, rightY + 14, Math.min(360, rightW - 140), 26, 13);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.fillStyle = "#64748b";
+    ctx.font = "600 16px DM Sans, system-ui, sans-serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillText(label || name, rightX + 126, rightY + chromeH / 2, Math.min(330, rightW - 160));
+
+    const previewX = rightX + 18;
+    const previewY = rightY + chromeH + 16;
+    const previewW = rightW - 36;
+    const previewH = rightH - chromeH - 34;
+    const gapImg = 14;
+    if (images.length >= 3) {
+      const leftPanelW = previewW * 0.58;
+      const rightPanelW = previewW - leftPanelW - gapImg;
+      const topH = previewH * 0.58;
+      const bottomH = previewH - topH - gapImg;
+      drawImageCover(ctx, images[0], previewX, previewY, leftPanelW, previewH, 18);
+      drawImageCover(ctx, images[1], previewX + leftPanelW + gapImg, previewY, rightPanelW, topH, 18);
+      drawImageCover(
+        ctx,
+        images[2],
+        previewX + leftPanelW + gapImg,
+        previewY + topH + gapImg,
+        rightPanelW,
+        bottomH,
+        18
+      );
+    } else if (images.length === 2) {
+      const half = (previewW - gapImg) / 2;
+      drawImageCover(ctx, images[0], previewX, previewY, half, previewH, 18);
+      drawImageCover(ctx, images[1], previewX + half + gapImg, previewY, half, previewH, 18);
+    } else if (images.length === 1) {
+      drawImageCover(ctx, images[0], previewX, previewY, previewW, previewH, 18);
+    } else {
+      roundRect(ctx, previewX, previewY, previewW, previewH, 18);
+      const wash = ctx.createLinearGradient(previewX, previewY, previewX + previewW, previewY + previewH);
+      wash.addColorStop(0, "#dbeafe");
+      wash.addColorStop(1, "#eff6ff");
+      ctx.fillStyle = wash;
+      ctx.fill();
+      ctx.fillStyle = "#1e3a8a";
+      ctx.font = "800 42px Syne, DM Sans, system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(name, previewX + previewW / 2, previewY + previewH / 2 - 18, previewW - 48);
+      ctx.fillStyle = "#2563eb";
+      ctx.font = "600 22px DM Sans, system-ui, sans-serif";
+      ctx.fillText(label || "Your live website", previewX + previewW / 2, previewY + previewH / 2 + 28, previewW - 48);
+    }
+
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download =
+      (name.replace(/[^\w\-]+/g, "-").replace(/-+/g, "-").toLowerCase().replace(/^-|-$/g, "") ||
+        "website") + "-flyer.png";
+    a.click();
+    window.StudioToast?.success?.("Flyer downloaded");
+  }
+
+  function bindWebsiteFlyerUi() {
+    document.getElementById("lb-flyer-close")?.addEventListener("click", closeWebsiteFlyer);
+    document.getElementById("lb-flyer-close-backdrop")?.addEventListener("click", closeWebsiteFlyer);
+    document.getElementById("lb-flyer-download")?.addEventListener("click", () => {
+      void downloadWebsiteFlyerPng();
+    });
+    document.getElementById("lb-flyer-print")?.addEventListener("click", () => {
+      window.print();
+    });
+    window.addEventListener("resize", () => {
+      if (!document.getElementById("lb-flyer-modal")?.hidden) fitFlyerPreviewFrame();
     });
   }
 
@@ -9871,6 +10268,9 @@
     document.getElementById("btn-qr-code")?.addEventListener("click", () => {
       void openQrBusinessCard();
     });
+    document.getElementById("btn-flyer")?.addEventListener("click", () => {
+      void openWebsiteFlyer();
+    });
     document.getElementById("btn-contact-owner")?.addEventListener("click", contactOwner);
     document.getElementById("btn-publish-top")?.addEventListener("click", publish);
     document.getElementById("lb-payment-policy-agree")?.addEventListener("change", () => {
@@ -9951,6 +10351,7 @@
     bindPaneResizer();
     bindToolbar();
     bindQrBusinessCardUi();
+    bindWebsiteFlyerUi();
     bindUnpublishConfirm();
     bindDeleteConfirm();
     bindRedesignConfirm();
