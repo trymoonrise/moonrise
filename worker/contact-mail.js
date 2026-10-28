@@ -133,6 +133,29 @@ async function sendResendEmail({ to, subject, text, html, attachments }) {
   return data;
 }
 
+/** User-facing copy when Resend rejects send (domain claim, verification, etc.). */
+function resendSendErrorMessage(err) {
+  const msg = String(err?.message || err || "").trim();
+  if (
+    /another team|claim has(n't| not) completed|domain claim|registered on another team/i.test(msg)
+  ) {
+    return (
+      "Moonrise can't send sign-in email yet: trymoonrise.com is still transferring from another Resend account. " +
+      "Add the resend-domain-verification TXT at your domain host, finish the claim in Resend, then update the DKIM TXT on resend._domainkey to match Resend's current value."
+    );
+  }
+  if (/domain is not verified|verify your domain|add and verify your domain/i.test(msg)) {
+    return (
+      "Moonrise can't send sign-in email until trymoonrise.com is verified in Resend. " +
+      "Check resend._domainkey (DKIM), send (MX + SPF), then click Verify in Resend Domains."
+    );
+  }
+  if (/invalid from|from address/i.test(msg)) {
+    return "Moonrise email is misconfigured (from address). Contact support.";
+  }
+  return "";
+}
+
 async function sendContactLeadEmail({ to, businessName, fields, projectId }) {
   const subject = `New lead for ${businessName || "your website"}`;
   const text = formatLeadPlain({ businessName, fields, projectId });
@@ -397,6 +420,7 @@ module.exports = {
   sendPasswordResetEmail,
   sendEmailVerifyLink,
   sendResendEmail,
+  resendSendErrorMessage,
   formatLeadPlain,
   formatLeadHtml,
 };

@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "1.0.105",
+      "date": "2026-10-28",
+      "title": "Clearer sign-in email errors when Resend domain pending",
+      "sections": [
+        {
+          "heading": "Worker",
+          "fixes": [
+            "Sign-in and signup explain when trymoonrise.com is still in Resend domain claim or DNS verification instead of a generic email failure."
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.0.104",
       "date": "2026-10-28",
       "title": "Editor fullscreen fix and printable website flyer",

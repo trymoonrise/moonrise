@@ -4,7 +4,7 @@
 const crypto = require("crypto");
 const { createClient } = require("@supabase/supabase-js");
 const { clientError, isProduction } = require("./api-errors");
-const { sendEmailVerifyLink } = require("./contact-mail");
+const { sendEmailVerifyLink, resendSendErrorMessage } = require("./contact-mail");
 const {
   redeemEmployeeId,
   releaseEmployeeId,
@@ -151,6 +151,10 @@ function createAuthClient() {
   return createClient(url, anon, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+}
+
+function resendHandoffError(mailErr, fallback) {
+  return resendSendErrorMessage(mailErr) || fallback;
 }
 
 function mapSignupAuthError(error) {
@@ -579,7 +583,10 @@ function mountAuthRoutes(app, { db, security }) {
         console.error("sendEmailVerifyLink signin", mailErr);
         await dropEmailHandoff(handoff.id);
         return res.status(503).json({
-          error: "Moonrise couldn't send the sign-in email. Check spam in a minute, or try again.",
+          error: resendHandoffError(
+            mailErr,
+            "Moonrise couldn't send the sign-in email. Check spam in a minute, or try again."
+          ),
           code: "email_send_failed",
         });
       }
@@ -662,7 +669,10 @@ function mountAuthRoutes(app, { db, security }) {
         }
         await releaseEmployeeId(db(), codeGate.step);
         return res.status(503).json({
-          error: "Moonrise couldn't send the confirmation email. Try again in a minute.",
+          error: resendHandoffError(
+            mailErr,
+            "Moonrise couldn't send the confirmation email. Try again in a minute."
+          ),
           code: "email_send_failed",
         });
       }
@@ -736,10 +746,12 @@ function mountAuthRoutes(app, { db, security }) {
       } catch (mailErr) {
         console.error("sendEmailVerifyLink forgot", mailErr);
         return res.status(503).json({
-          error:
+          error: resendHandoffError(
+            mailErr,
             "Moonrise couldn't send the sign-in email. Check spam in a minute, or try again. If it keeps failing, contact " +
-            SUPPORT_EMAIL +
-            ".",
+              SUPPORT_EMAIL +
+              "."
+          ),
           code: "email_send_failed",
         });
       }
