@@ -7474,50 +7474,56 @@
     const collage = document.getElementById("lb-flyer-preview-collage");
     if (!frame || !collage) return;
 
+    const imageUrls = collectFlyerImageUrls(html, 4);
+    const loaded = (await Promise.all(imageUrls.map(loadFlyerImage))).filter(Boolean);
+
+    // Prefer a clean image collage so the flyer stays organized and print-matched.
+    if (loaded.length) {
+      frame.hidden = true;
+      try {
+        frame.removeAttribute("srcdoc");
+        frame.src = "about:blank";
+      } catch (_) {
+        /* ignore */
+      }
+      collage.hidden = false;
+      collage.innerHTML = "";
+      loaded.slice(0, 4).forEach((img) => {
+        const node = document.createElement("img");
+        node.src = img.currentSrc || img.src;
+        node.alt = "";
+        collage.appendChild(node);
+      });
+      return loaded;
+    }
+
     const sanitize = window.MsPreviewThumb?.sanitize;
     const safeHtml = typeof sanitize === "function" ? sanitize(html) : String(html || "");
-    let frameOk = false;
     if (safeHtml.trim()) {
       try {
-        frame.hidden = false;
-        frame.removeAttribute("hidden");
         collage.hidden = true;
         collage.innerHTML = "";
+        frame.hidden = false;
+        frame.removeAttribute("hidden");
         frame.srcdoc = safeHtml;
-        frameOk = true;
         requestAnimationFrame(() => {
           fitFlyerPreviewFrame();
           window.setTimeout(fitFlyerPreviewFrame, 80);
         });
+        return loaded;
       } catch (_) {
-        frameOk = false;
+        /* fall through */
       }
     }
 
-    const imageUrls = collectFlyerImageUrls(html, 4);
-    const loaded = (await Promise.all(imageUrls.map(loadFlyerImage))).filter(Boolean);
-    if (!frameOk || loaded.length) {
-      collage.innerHTML = "";
-      const tiles = loaded.length ? loaded : [];
-      if (!frameOk && tiles.length) {
-        frame.hidden = true;
-        collage.hidden = false;
-        tiles.slice(0, 4).forEach((img) => {
-          const node = document.createElement("img");
-          node.src = img.src;
-          node.alt = "";
-          collage.appendChild(node);
-        });
-      } else if (!frameOk) {
-        frame.hidden = true;
-        collage.hidden = false;
-        const empty = document.createElement("div");
-        empty.style.cssText =
-          "grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;color:#64748b;font-weight:700;font-size:0.95rem;padding:1rem;text-align:center";
-        empty.textContent = qrBusinessName();
-        collage.appendChild(empty);
-      }
-    }
+    frame.hidden = true;
+    collage.hidden = false;
+    collage.innerHTML = "";
+    const empty = document.createElement("div");
+    empty.style.cssText =
+      "grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;color:#64748b;font-weight:700;font-size:0.95rem;padding:1.25rem;text-align:center";
+    empty.textContent = qrBusinessName();
+    collage.appendChild(empty);
     return loaded;
   }
 
@@ -7601,173 +7607,256 @@
     ctx.restore();
   }
 
-  async function downloadWebsiteFlyerPng() {
+  function flyerFileSlug(name) {
+    return (
+      String(name || "")
+        .replace(/[^\w\-]+/g, "-")
+        .replace(/-+/g, "-")
+        .toLowerCase()
+        .replace(/^-|-$/g, "") || "website"
+    );
+  }
+
+  async function renderWebsiteFlyerCanvas() {
     const url = publicSiteUrl();
     const name = qrBusinessName();
     if (!url) {
-      setError("Publish your website first before creating a flyer.");
-      return;
+      throw new Error("Publish your website first before creating a flyer.");
     }
     const html = currentPublishHtml();
     const label = flyerSiteLabel(url);
     const images = (await Promise.all(collectFlyerImageUrls(html, 4).map(loadFlyerImage))).filter(Boolean);
 
     const canvas = document.createElement("canvas");
-    const w = 1600;
-    const h = 1000;
+    const w = 1800;
+    const h = 1125;
     canvas.width = w;
     canvas.height = h;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) throw new Error("Could not create flyer canvas");
 
-    ctx.fillStyle = "#e8edf3";
+    // Outer page wash
+    ctx.fillStyle = "#f4f6f8";
     ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = "rgba(148, 163, 184, 0.35)";
-    for (let x = 18; x < w; x += 18) {
-      for (let y = 18; y < h; y += 18) {
+
+    const pagePad = 48;
+    const sheetX = pagePad;
+    const sheetY = pagePad;
+    const sheetW = w - pagePad * 2;
+    const sheetH = h - pagePad * 2;
+    const pad = 48;
+    const gap = 36;
+    const leftW = 460;
+    const radius = 44;
+
+    roundRect(ctx, sheetX, sheetY, sheetW, sheetH, radius);
+    ctx.save();
+    ctx.clip();
+    ctx.fillStyle = "#e8edf3";
+    ctx.fill();
+    ctx.fillStyle = "rgba(148, 163, 184, 0.42)";
+    for (let x = sheetX + 18; x < sheetX + sheetW; x += 18) {
+      for (let y = sheetY + 18; y < sheetY + sheetH; y += 18) {
         ctx.beginPath();
-        ctx.arc(x, y, 1.1, 0, Math.PI * 2);
+        ctx.arc(x, y, 1.15, 0, Math.PI * 2);
         ctx.fill();
       }
     }
+    ctx.restore();
 
-    const pad = 36;
-    const gap = 28;
-    const leftW = 420;
-    const sheetX = pad;
-    const sheetY = pad;
-    const sheetW = w - pad * 2;
-    const sheetH = h - pad * 2;
+    const leftX = sheetX + pad;
+    const leftY = sheetY + pad;
+    const leftH = sheetH - pad * 2;
+    const domainH = 88;
+    const ctaH = 84;
+    const qrOuterH = leftH - domainH - ctaH - gap * 2;
+    const cardR = 30;
 
-    roundRect(ctx, sheetX, sheetY, sheetW, sheetH, 42);
-    ctx.fillStyle = "rgba(232, 237, 243, 0.92)";
-    ctx.fill();
-
-    const leftX = sheetX + 28;
-    const leftY = sheetY + 28;
-    const leftH = sheetH - 56;
-    const domainH = 78;
-    const ctaH = 72;
-    const qrBox = leftH - domainH - ctaH - gap * 2;
-
-    roundRect(ctx, leftX, leftY, leftW, domainH, 26);
+    // Domain card
+    roundRect(ctx, leftX, leftY, leftW, domainH, cardR);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
     ctx.fillStyle = "#0f172a";
-    ctx.font = "800 34px DM Sans, system-ui, sans-serif";
+    ctx.font = "800 36px DM Sans, system-ui, sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(label || name, leftX + leftW / 2, leftY + domainH / 2, leftW - 48);
+    ctx.fillText(label || name, leftX + leftW / 2, leftY + domainH / 2, leftW - 56);
 
+    // QR card + inset frame
     const qrY = leftY + domainH + gap;
-    roundRect(ctx, leftX, qrY, leftW, qrBox, 30);
+    roundRect(ctx, leftX, qrY, leftW, qrOuterH, cardR);
     ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    const insetPad = 28;
+    const insetSize = Math.min(leftW - insetPad * 2, qrOuterH - insetPad * 2);
+    const insetX = leftX + (leftW - insetSize) / 2;
+    const insetY = qrY + (qrOuterH - insetSize) / 2;
+    roundRect(ctx, insetX, insetY, insetSize, insetSize, 24);
+    ctx.fillStyle = "#eef2f7";
     ctx.fill();
     const qrCanvas = document.createElement("canvas");
     await renderQrToCanvas(qrCanvas, url);
-    const qrDraw = Math.min(320, leftW - 72, qrBox - 72);
+    const qrDraw = insetSize - 44;
     ctx.drawImage(
       qrCanvas,
-      leftX + (leftW - qrDraw) / 2,
-      qrY + (qrBox - qrDraw) / 2,
+      insetX + (insetSize - qrDraw) / 2,
+      insetY + (insetSize - qrDraw) / 2,
       qrDraw,
       qrDraw
     );
 
-    const ctaY = qrY + qrBox + gap;
-    roundRect(ctx, leftX, ctaY, leftW, ctaH, 26);
+    // CTA card
+    const ctaY = qrY + qrOuterH + gap;
+    roundRect(ctx, leftX, ctaY, leftW, ctaH, cardR);
     const ctaGrad = ctx.createLinearGradient(leftX, ctaY, leftX, ctaY + ctaH);
     ctaGrad.addColorStop(0, "#3b82f6");
     ctaGrad.addColorStop(1, "#2563eb");
     ctx.fillStyle = ctaGrad;
     ctx.fill();
     ctx.fillStyle = "#ffffff";
-    ctx.font = "700 24px DM Sans, system-ui, sans-serif";
-    ctx.fillText("Scan to visit the live site", leftX + leftW / 2, ctaY + ctaH / 2, leftW - 40);
+    ctx.font = "700 26px DM Sans, system-ui, sans-serif";
+    ctx.fillText("Scan to visit the live site", leftX + leftW / 2, ctaY + ctaH / 2, leftW - 48);
 
+    // Preview card
     const rightX = leftX + leftW + gap;
-    const rightW = sheetX + sheetW - 28 - rightX;
+    const rightW = sheetX + sheetW - pad - rightX;
     const rightY = leftY;
     const rightH = leftH;
-    roundRect(ctx, rightX, rightY, rightW, rightH, 30);
+    roundRect(ctx, rightX, rightY, rightW, rightH, cardR);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
 
-    const chromeH = 54;
+    const chromeH = 64;
     ctx.fillStyle = "#eef2f7";
-    roundRect(ctx, rightX, rightY, rightW, chromeH, 30);
+    roundRect(ctx, rightX, rightY, rightW, chromeH + 18, cardR);
     ctx.fill();
-    ctx.fillRect(rightX, rightY + 24, rightW, chromeH - 24);
+    ctx.fillRect(rightX, rightY + 28, rightW, chromeH - 10);
     const dots = ["#f87171", "#fbbf24", "#34d399"];
     dots.forEach((color, i) => {
       ctx.beginPath();
       ctx.fillStyle = color;
-      ctx.arc(rightX + 28 + i * 22, rightY + chromeH / 2, 7, 0, Math.PI * 2);
+      ctx.arc(rightX + 32 + i * 24, rightY + chromeH / 2, 7.5, 0, Math.PI * 2);
       ctx.fill();
     });
-    roundRect(ctx, rightX + 110, rightY + 14, Math.min(360, rightW - 140), 26, 13);
+    const pillW = Math.min(420, rightW - 160);
+    roundRect(ctx, rightX + 120, rightY + 18, pillW, 28, 14);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
     ctx.fillStyle = "#64748b";
-    ctx.font = "600 16px DM Sans, system-ui, sans-serif";
+    ctx.font = "600 18px DM Sans, system-ui, sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText(label || name, rightX + 126, rightY + chromeH / 2, Math.min(330, rightW - 160));
+    ctx.fillText(label || name, rightX + 136, rightY + chromeH / 2, pillW - 28);
 
-    const previewX = rightX + 18;
-    const previewY = rightY + chromeH + 16;
-    const previewW = rightW - 36;
-    const previewH = rightH - chromeH - 34;
-    const gapImg = 14;
+    const previewPad = 28;
+    const previewX = rightX + previewPad;
+    const previewY = rightY + chromeH + 12;
+    const previewW = rightW - previewPad * 2;
+    const previewH = rightH - chromeH - previewPad - 12;
+    roundRect(ctx, previewX, previewY, previewW, previewH, 22);
+    ctx.fillStyle = "#e8edf3";
+    ctx.fill();
+
+    const gapImg = 16;
+    const innerPad = 16;
+    const ix = previewX + innerPad;
+    const iy = previewY + innerPad;
+    const iw = previewW - innerPad * 2;
+    const ih = previewH - innerPad * 2;
     if (images.length >= 3) {
-      const leftPanelW = previewW * 0.58;
-      const rightPanelW = previewW - leftPanelW - gapImg;
-      const topH = previewH * 0.58;
-      const bottomH = previewH - topH - gapImg;
-      drawImageCover(ctx, images[0], previewX, previewY, leftPanelW, previewH, 18);
-      drawImageCover(ctx, images[1], previewX + leftPanelW + gapImg, previewY, rightPanelW, topH, 18);
-      drawImageCover(
-        ctx,
-        images[2],
-        previewX + leftPanelW + gapImg,
-        previewY + topH + gapImg,
-        rightPanelW,
-        bottomH,
-        18
-      );
+      const leftPanelW = iw * 0.58;
+      const rightPanelW = iw - leftPanelW - gapImg;
+      const topH = ih * 0.58;
+      const bottomH = ih - topH - gapImg;
+      drawImageCover(ctx, images[0], ix, iy, leftPanelW, ih, 18);
+      drawImageCover(ctx, images[1], ix + leftPanelW + gapImg, iy, rightPanelW, topH, 18);
+      drawImageCover(ctx, images[2], ix + leftPanelW + gapImg, iy + topH + gapImg, rightPanelW, bottomH, 18);
     } else if (images.length === 2) {
-      const half = (previewW - gapImg) / 2;
-      drawImageCover(ctx, images[0], previewX, previewY, half, previewH, 18);
-      drawImageCover(ctx, images[1], previewX + half + gapImg, previewY, half, previewH, 18);
+      const half = (iw - gapImg) / 2;
+      drawImageCover(ctx, images[0], ix, iy, half, ih, 18);
+      drawImageCover(ctx, images[1], ix + half + gapImg, iy, half, ih, 18);
     } else if (images.length === 1) {
-      drawImageCover(ctx, images[0], previewX, previewY, previewW, previewH, 18);
+      drawImageCover(ctx, images[0], ix, iy, iw, ih, 18);
     } else {
-      roundRect(ctx, previewX, previewY, previewW, previewH, 18);
-      const wash = ctx.createLinearGradient(previewX, previewY, previewX + previewW, previewY + previewH);
+      roundRect(ctx, ix, iy, iw, ih, 18);
+      const wash = ctx.createLinearGradient(ix, iy, ix + iw, iy + ih);
       wash.addColorStop(0, "#dbeafe");
       wash.addColorStop(1, "#eff6ff");
       ctx.fillStyle = wash;
       ctx.fill();
       ctx.fillStyle = "#1e3a8a";
-      ctx.font = "800 42px Syne, DM Sans, system-ui, sans-serif";
+      ctx.font = "800 46px Syne, DM Sans, system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(name, previewX + previewW / 2, previewY + previewH / 2 - 18, previewW - 48);
+      ctx.fillText(name, ix + iw / 2, iy + ih / 2 - 18, iw - 56);
       ctx.fillStyle = "#2563eb";
-      ctx.font = "600 22px DM Sans, system-ui, sans-serif";
-      ctx.fillText(label || "Your live website", previewX + previewW / 2, previewY + previewH / 2 + 28, previewW - 48);
+      ctx.font = "600 24px DM Sans, system-ui, sans-serif";
+      ctx.fillText(label || "Your live website", ix + iw / 2, iy + ih / 2 + 30, iw - 56);
     }
 
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
+    return { canvas, name, label, url };
+  }
 
-    const a = document.createElement("a");
-    a.href = canvas.toDataURL("image/png");
-    a.download =
-      (name.replace(/[^\w\-]+/g, "-").replace(/-+/g, "-").toLowerCase().replace(/^-|-$/g, "") ||
-        "website") + "-flyer.png";
-    a.click();
-    window.StudioToast?.success?.("Flyer downloaded");
+  async function downloadWebsiteFlyerPng() {
+    try {
+      const { canvas, name } = await renderWebsiteFlyerCanvas();
+      const a = document.createElement("a");
+      a.href = canvas.toDataURL("image/png");
+      a.download = flyerFileSlug(name) + "-flyer.png";
+      a.click();
+      window.StudioToast?.success?.("Flyer downloaded");
+    } catch (e) {
+      setError(e.message || "Could not download flyer");
+    }
+  }
+
+  async function printWebsiteFlyer() {
+    try {
+      const { canvas, name } = await renderWebsiteFlyerCanvas();
+      const dataUrl = canvas.toDataURL("image/png");
+      const win = window.open("", "_blank", "noopener,noreferrer,width=1100,height=780");
+      if (!win) {
+        setError("Allow pop-ups to print the flyer, or use Download.");
+        return;
+      }
+      const title = (name || "Website") + " flyer";
+      win.document.open();
+      win.document.write(
+        "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>" +
+          title.replace(/[<>&]/g, "") +
+          "</title><style>" +
+          "@page{size:landscape;margin:0.35in}" +
+          "html,body{margin:0;padding:0;background:#fff}" +
+          "body{display:grid;place-items:center;min-height:100vh}" +
+          "img{display:block;width:100%;max-width:100%;height:auto;page-break-inside:avoid}" +
+          "@media print{html,body{height:auto;min-height:0} img{width:100%;max-height:100vh;object-fit:contain}}" +
+          "</style></head><body><img src=\"" +
+          dataUrl +
+          "\" alt=\"" +
+          title.replace(/"/g, "") +
+          "\"></body></html>"
+      );
+      win.document.close();
+      const img = win.document.querySelector("img");
+      const doPrint = () => {
+        try {
+          win.focus();
+          win.print();
+        } catch (_) {
+          /* ignore */
+        }
+      };
+      if (img?.complete) {
+        window.setTimeout(doPrint, 120);
+      } else {
+        img?.addEventListener("load", () => window.setTimeout(doPrint, 120), { once: true });
+        window.setTimeout(doPrint, 700);
+      }
+    } catch (e) {
+      setError(e.message || "Could not print flyer");
+    }
   }
 
   function bindWebsiteFlyerUi() {
@@ -7777,7 +7866,7 @@
       void downloadWebsiteFlyerPng();
     });
     document.getElementById("lb-flyer-print")?.addEventListener("click", () => {
-      window.print();
+      void printWebsiteFlyer();
     });
     window.addEventListener("resize", () => {
       if (!document.getElementById("lb-flyer-modal")?.hidden) fitFlyerPreviewFrame();

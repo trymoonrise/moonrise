@@ -41,7 +41,7 @@ document.documentElement.classList.add("ms-boot");
 </script>
   <script>
     (function () {
-      var BUILD = "20261028-flyer";
+      var BUILD = "20261028-flyer2";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -74,7 +74,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="stylesheet" href="css/generation-announce.css?v=20260721-float">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-flyer">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-flyer2">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261027-slim">
@@ -740,7 +740,9 @@ document.documentElement.classList.add("ms-boot");
         <div class="ms-lb-flyer-left">
           <a class="ms-lb-flyer-domain" id="lb-flyer-domain" href="#" target="_blank" rel="noopener noreferrer">example.com</a>
           <a class="ms-lb-flyer-qr-wrap" id="lb-flyer-qr-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open live site">
-            <canvas id="lb-flyer-qr-canvas" width="192" height="192" aria-hidden="true"></canvas>
+            <span class="ms-lb-flyer-qr-frame">
+              <canvas id="lb-flyer-qr-canvas" width="192" height="192" aria-hidden="true"></canvas>
+            </span>
           </a>
           <p class="ms-lb-flyer-cta" id="lb-flyer-cta">Scan to visit the live site</p>
         </div>
@@ -750,9 +752,11 @@ document.documentElement.classList.add("ms-boot");
               <span></span><span></span><span></span>
               <em id="lb-flyer-preview-host">example.com</em>
             </div>
-            <div class="ms-lb-flyer-preview-stage" id="lb-flyer-preview-stage">
-              <iframe class="ms-lb-flyer-preview-frame" id="lb-flyer-preview-frame" title="Website preview" sandbox="allow-same-origin" tabindex="-1"></iframe>
-              <div class="ms-lb-flyer-preview-collage" id="lb-flyer-preview-collage" hidden></div>
+            <div class="ms-lb-flyer-preview-pad">
+              <div class="ms-lb-flyer-preview-stage" id="lb-flyer-preview-stage">
+                <iframe class="ms-lb-flyer-preview-frame" id="lb-flyer-preview-frame" title="Website preview" sandbox="allow-same-origin" tabindex="-1"></iframe>
+                <div class="ms-lb-flyer-preview-collage" id="lb-flyer-preview-collage" hidden></div>
+              </div>
             </div>
           </div>
         </div>
@@ -780,6 +784,6 @@ document.documentElement.classList.add("ms-boot");
   <script defer src="js/generation-lock.js?v=20260721-one-gen"></script>
   <script defer src="js/site-features.js?v=20260930-seed"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
-  <script defer src="js/builder.js?v=20261028-flyer"></script>
+  <script defer src="js/builder.js?v=20261028-flyer2"></script>
 </body>
 </html>

@@ -3,6 +3,24 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "1.0.106",
+      "date": "2026-10-28",
+      "title": "Polished flyer layout and reliable print",
+      "tag": "v1.0.106",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.106",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Website flyer uses tighter padding, a framed QR card, and a padded preview panel so the sheet looks organized and print-ready."
+          ],
+          "fixes": [
+            "Flyer Print renders the same polished canvas as Download in a landscape print window, so the printed page no longer looks off."
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.0.105",
       "date": "2026-10-28",
       "title": "Clearer sign-in email errors when Resend domain pending",
