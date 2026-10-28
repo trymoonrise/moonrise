@@ -1,5 +1,5 @@
 /* Moonrise studio surface styles. Loaded after studio.css and appearance.css.
-   Blue/white product chrome; Settings can still recolor --ms-accent. */
+   Matches the pre-B&W blue/white chrome (043f8dc). Do not load on home. */
 
 :root {
   --ms-btn-h: 2.5rem;
@@ -21,16 +21,16 @@ html:not([data-ms-mode="dark"]) {
   --ms-accent-strong: #2563eb;
   --ms-accent-soft: #e8f1ff;
   --ms-accent-rgb: 59, 130, 246;
+  --ms-brand: #6d5efc;
 }
 
 body {
-  font-family: Manrope, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  font-family: "DM Sans", system-ui, sans-serif;
   letter-spacing: -0.011em;
 }
 
 html:not([data-ms-mode="dark"]) body,
-html:not([data-ms-mode="dark"]) body[data-page="login"],
-html:not([data-ms-mode="dark"]) body[data-page="home"] {
+html:not([data-ms-mode="dark"]) body[data-page="login"] {
   background: #f3f5f8;
   color: #1e293b;
 }

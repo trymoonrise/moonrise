@@ -3,6 +3,24 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "1.0.103",
+      "date": "2026-10-28",
+      "title": "Match pre-B&W blue home CSS exactly",
+      "tag": "v1.0.103",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.103",
+      "sections": [
+        {
+          "heading": "Site",
+          "fixes": [
+            "Home drops the black-and-white studio-ui overlay and uses the pre-B&W studio.css home styles from commit 043f8dc again."
+          ],
+          "added": [
+            "Studio tokens return to DM Sans, purple brand accent, and blue gradient primary buttons from the pre-B&W era."
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.0.102",
       "date": "2026-10-28",
       "title": "Blue home style restored and legal pages unified",

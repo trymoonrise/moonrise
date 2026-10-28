@@ -1,15 +1,5 @@
-/* Blue/white home restoration (style from commit 043f8dc). Loaded after studio-ui. */
-
-html:not([data-ms-mode="dark"]) body[data-page="home"] {
-  --ms-bg: #f3f5f8;
-  --ms-ink: #1e293b;
-  --ms-muted: #64748b;
-  --ms-line: #e8edf3;
-  --ms-accent: #3b82f6;
-  background: #f3f5f8 !important;
-  color: #1e293b !important;
-  font-family: "DM Sans", system-ui, sans-serif;
-}
+/* Home-only helpers on top of pre-B&W studio.css (commit 043f8dc).
+   Do not load studio-ui.css on the home page — that file is the B&W overlay. */
 
 body[data-page="home"] .ms-skip {
   position: absolute;
@@ -32,151 +22,13 @@ body[data-page="home"] .ms-skip:focus {
   outline-offset: 2px;
 }
 
-body[data-page="home"] .ms-home-wash {
-  display: block !important;
-}
-
-body[data-page="home"] .ms-home-field {
-  background: #f3f5f8 !important;
-}
-
-body[data-page="home"] .ms-home-nav {
-  background: transparent !important;
-  border-bottom: 0 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-body[data-page="home"] .ms-home-brand,
-body[data-page="home"] .ms-home-brand strong {
-  color: #0f172a !important;
-}
-
-body[data-page="home"] .ms-home-title {
-  color: #0f172a !important;
-  -webkit-text-fill-color: #0f172a !important;
-}
-
-body[data-page="home"] .ms-home-title-accent {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 45%, #2563eb 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  color: transparent !important;
-  -webkit-text-fill-color: transparent !important;
-}
-
-body[data-page="home"] .ms-home-sub,
-body[data-page="home"] .ms-home-section-lead {
-  color: #64748b !important;
-  -webkit-text-fill-color: #64748b !important;
-}
-
-body[data-page="home"] .ms-home-cta-primary,
-body[data-page="home"] .ms-home-method-cta,
-body[data-page="home"] .ms-home-footer-signup {
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-radius: 12px !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 45%),
-    linear-gradient(135deg, #60a5fa 0%, #3b82f6 48%, #2563eb 100%) !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.3) inset,
-    0 10px 22px rgba(59, 130, 246, 0.28) !important;
-  filter: none !important;
-}
-
-body[data-page="home"] .ms-home-cta-primary:hover,
-body[data-page="home"] .ms-home-method-cta:hover,
-body[data-page="home"] .ms-home-footer-signup:hover,
-body[data-page="home"] .ms-home-cta-primary:focus-visible,
-body[data-page="home"] .ms-home-method-cta:focus-visible {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 45%),
-    linear-gradient(135deg, #93c5fd 0%, #3b82f6 48%, #1d4ed8 100%) !important;
-  filter: brightness(1.03) !important;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.32) inset,
-    0 12px 26px rgba(37, 99, 235, 0.34) !important;
-}
-
-body[data-page="home"] .ms-home-cta-secondary {
-  background: #fff !important;
-  color: #1e293b !important;
-  -webkit-text-fill-color: #1e293b !important;
-  border: 1px solid #e8edf3 !important;
-  border-radius: 12px !important;
-  box-shadow: none !important;
-}
-
-body[data-page="home"] .ms-home-method-badge,
-body[data-page="home"] .ms-home-method-num,
-body[data-page="home"] .ms-home-method-section h2 span {
-  color: #2563eb !important;
-  -webkit-text-fill-color: #2563eb !important;
-}
-
-body[data-page="home"] .ms-home-method-section h2,
-body[data-page="home"] .ms-home-faq h2,
-body[data-page="home"] .ms-home-method-body strong,
-body[data-page="home"] .ms-home-faq-item summary {
-  color: #0f172a !important;
-  -webkit-text-fill-color: #0f172a !important;
-}
-
-body[data-page="home"] .ms-home-method-body p,
-body[data-page="home"] .ms-home-faq-item p {
-  color: #64748b !important;
-}
-
-/* Undo B&W tile flattening from studio-ui so the blue cascade can paint. */
-body[data-page="home"] .ms-home-cascade {
-  filter: none;
-}
-
-body[data-page="home"] .ms-home-tile,
-body[data-page="home"] .ms-home-tile-inner,
-body[data-page="home"] .ms-home-tile-face {
-  animation: revert-layer;
-}
-
-body[data-page="home"] .ms-home-tile {
-  background: transparent !important;
-  border-radius: 16px !important;
-  overflow: visible !important;
-}
-
-body[data-page="home"] .ms-home-tile-face {
-  background: transparent !important;
-}
-
-body[data-page="home"] .ms-home-bloom {
-  background: #0b1121 !important;
-}
-
-body[data-page="home"] .ms-home-bloom-nav a {
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-}
-
-body[data-page="home"] .ms-home-footer {
-  background: #0f172a !important;
-  color: #fff !important;
-}
-
-body[data-page="home"] .ms-home-footer .ms-home-brand,
-body[data-page="home"] .ms-home-footer .ms-home-brand strong {
-  color: #fff !important;
-}
-
-body[data-page="home"] .ms-home-footer-copy p,
+/* Keep footer legal row on the blue navy footer readable. */
 body[data-page="home"] .ms-home-footer-legal a,
 body[data-page="home"] .ms-home-footer-signin {
-  color: #94a3b8 !important;
+  color: #94a3b8;
 }
 
 body[data-page="home"] .ms-home-footer-legal a:hover,
 body[data-page="home"] .ms-home-footer-signin:hover {
-  color: #fff !important;
+  color: #fff;
 }
