@@ -52,18 +52,30 @@ if (!targets.length) {
   process.exit(1);
 }
 
+// Publish oldest first so a bulk backfill does not leave v1.0.0 as GitHub "Latest".
+// The current package version is always marked make_latest after the loop.
+const ordered = [...targets].sort((a, b) => compareSemver(a.version, b.version));
+const latestVersion = String(pkg.version);
+
 const results = [];
-for (const update of targets) {
-  results.push(await publishOne(update));
+for (const update of ordered) {
+  results.push(await publishOne(update, update.version === latestVersion));
+}
+if (!results.some((r) => r.action === "error")) {
+  const tip = ordered.find((u) => u.version === latestVersion) || ordered[ordered.length - 1];
+  if (tip) results.push(await publishOne(tip, true));
 }
 
 console.log(
   JSON.stringify(
     {
       repo: `${OWNER}/${REPO}`,
-      published: results.filter((r) => r.action === "created").map((r) => r.tag),
+      published: results
+        .filter((r) => r.action === "created" || r.action === "created-latest")
+        .map((r) => r.tag),
       existed: results.filter((r) => r.action === "exists").map((r) => r.tag),
-      updated: results.filter((r) => r.action === "updated").map((r) => r.tag),
+      updated: results.filter((r) => r.action === "updated" || r.action === "latest").map((r) => r.tag),
+      latest: results.filter((r) => r.action === "latest" || r.action === "created-latest").map((r) => r.tag),
       failed: results.filter((r) => r.action === "error"),
     },
     null,
@@ -72,11 +84,12 @@ console.log(
 );
 if (results.some((r) => r.action === "error")) process.exit(1);
 
-async function publishOne(update) {
+async function publishOne(update, makeLatest = false) {
   const tag = update.tag || `v${update.version}`;
   const name = `${releasesDoc.product || "Moonrise"} ${update.version}: ${update.title}`;
   const body = formatReleaseBody(update);
   const targetCommitish = resolveTarget(process.env.GITHUB_RELEASE_TARGET || "main");
+  const latestFlag = makeLatest ? "true" : "false";
 
   const existing = await api("GET", `/repos/${OWNER}/${REPO}/releases/tags/${tag}`);
   if (existing.ok) {
@@ -86,12 +99,13 @@ async function publishOne(update) {
       body,
       draft: false,
       prerelease: false,
+      make_latest: latestFlag,
     });
     if (!patch.ok) {
       const text = await patch.text();
       return { tag, action: "error", status: patch.status, detail: text.slice(0, 200) };
     }
-    return { tag, action: "updated", url: release.html_url };
+    return { tag, action: makeLatest ? "latest" : "updated", url: release.html_url };
   }
 
   if (existing.status !== 404) {
@@ -107,13 +121,25 @@ async function publishOne(update) {
     draft: false,
     prerelease: false,
     generate_release_notes: false,
+    make_latest: latestFlag,
   });
   if (!created.ok) {
     const text = await created.text();
     return { tag, action: "error", status: created.status, detail: text.slice(0, 300) };
   }
   const release = await created.json();
-  return { tag, action: "created", url: release.html_url };
+  return { tag, action: makeLatest ? "created-latest" : "created", url: release.html_url };
+}
+
+function compareSemver(a, b) {
+  const pa = String(a).split(".").map((n) => parseInt(n, 10) || 0);
+  const pb = String(b).split(".").map((n) => parseInt(n, 10) || 0);
+  const len = Math.max(pa.length, pb.length);
+  for (let i = 0; i < len; i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d) return d;
+  }
+  return 0;
 }
 
 function formatReleaseBody(update) {

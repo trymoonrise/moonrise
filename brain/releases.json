@@ -3,6 +3,24 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "1.0.99",
+      "date": "2026-10-27",
+      "title": "Point GitHub Latest at the current ship",
+      "tag": "v1.0.99",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.99",
+      "sections": [
+        {
+          "heading": "Studio",
+          "fixes": [
+            "GitHub Releases Latest no longer sticks on the oldest backfilled tag after a bulk publish."
+          ],
+          "added": [
+            "Release publishing marks the current package version as Latest and ships older tags without stealing that badge."
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.0.98",
       "date": "2026-10-27",
       "title": "Simple boot, fresh leads after delete, shared slim UI",
