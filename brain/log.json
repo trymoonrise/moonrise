@@ -14,7 +14,8 @@
             "Primary blue buttons expand slightly on hover and press instead of lightening."
           ],
           "fixes": [
-            "Editor fullscreen expand fills the whole viewport again instead of staying boxed in the preview column."
+            "Editor fullscreen expand fills the whole viewport again instead of staying boxed in the preview column.",
+            "Home Start earning hover expands instead of lightening the blue fill."
           ]
         }
       ]

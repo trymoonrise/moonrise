@@ -1563,6 +1563,46 @@ body[data-page="home"] .ms-home-cta-secondary:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  .ms-home-cta-primary,
+  .ms-home-footer-signup,
+  .ms-home-method-cta,
+  .ms-lf-find,
+  .ms-lb-publish-btn,
+  .ms-paywall-pay,
+  .ms-fin-save,
+  .ms-fin-next,
+  .ms-store-buy:not(.is-ghost),
+  .lf-action-builder,
+  .ms-lf-map-scan,
+  #btn-checkout,
+  .ms-btn:hover:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger),
+  .ms-home-cta-primary:hover,
+  .ms-home-footer-signup:hover,
+  .ms-home-method-cta:hover,
+  .ms-lf-find:hover,
+  .ms-lb-publish-btn:hover,
+  .ms-paywall-pay:hover,
+  .ms-fin-save:hover,
+  .ms-fin-next:hover,
+  .ms-store-buy:not(.is-ghost):hover,
+  .lf-action-builder:hover,
+  .ms-lf-map-scan:hover,
+  #btn-checkout:hover,
+  .ms-btn:active:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger),
+  .ms-home-cta-primary:active,
+  .ms-home-footer-signup:active,
+  .ms-home-method-cta:active,
+  .ms-lf-find:active,
+  .ms-lb-publish-btn:active,
+  .ms-paywall-pay:active,
+  .ms-fin-save:active,
+  .ms-fin-next:active,
+  .ms-store-buy:not(.is-ghost):active,
+  .lf-action-builder:active,
+  .ms-lf-map-scan:active,
+  #btn-checkout:active,
   body[data-page="home"] :is(.ms-home-cta-primary, .ms-home-cta-secondary),
   body[data-page="home"] .ms-home-cta-primary:hover,
   body[data-page="home"] .ms-home-cta-secondary:hover,
@@ -1571,7 +1611,7 @@ body[data-page="home"] .ms-home-cta-secondary:active {
   body[data-page="home"] .ms-home-cta-primary:active,
   body[data-page="home"] .ms-home-cta-secondary:active {
     transform: none !important;
-    transition: background 0.15s ease, border-color 0.15s ease !important;
+    transition: box-shadow 0.15s ease !important;
   }
 }
 

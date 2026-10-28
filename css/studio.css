@@ -14869,8 +14869,12 @@ body.is-home-ready .ms-home-hero-copy {
 }
 
 .ms-home-cta-primary:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
+  filter: none;
+  transform: scale(1.055);
+}
+.ms-home-cta-primary:active {
+  filter: none;
+  transform: scale(1.08);
 }
 
 .ms-home-cta-secondary {
