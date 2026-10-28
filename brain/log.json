@@ -3,6 +3,30 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "1.0.101",
+      "date": "2026-10-28",
+      "title": "Simple home landing and checklist gate cleared",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home is a simple self-contained landing with nav, hero, features, about, FAQ, and footer.",
+            "Public pages drop the Google Fonts stylesheet and use self-hosted fonts.css.",
+            "Home and login include a Skip to content link."
+          ],
+          "fixes": [
+            "Home no longer goes blank from studio FAQ and dark-mode CSS colliding with the old bands layout."
+          ]
+        },
+        {
+          "heading": "Security",
+          "added": [
+            "site-branding treats refund and report pages as public and keeps private studio pages noindex."
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.0.100",
       "date": "2026-10-27",
       "title": "Home bands, age gate, and in-app account delete",

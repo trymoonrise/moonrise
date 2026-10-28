@@ -61,7 +61,6 @@ setTimeout(function () {
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="stylesheet" href="css/studio.css?v=20261006-menu">
   <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261027-slim">
   <meta name="color-scheme" content="light">
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
@@ -70,6 +69,7 @@ setTimeout(function () {
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="login">
+  <a class="ms-skip" href="#main">Skip to content</a>
   <header class="ms-home-nav">
     <a class="ms-home-brand" href="index.html">
       <img src="doc/MoonriseLogo.png" alt="" width="40" height="40">
@@ -93,7 +93,7 @@ setTimeout(function () {
     This page was opened as a local file, so sign-in cannot connect to Moonrise.
     <a href="https://trymoonrise.com/login.html">Open the live login page</a> instead.
   </p>
-  <div class="ms-auth-card">
+  <main id="main" class="ms-auth-card">
     <div class="ms-auth-brand">
       <img src="doc/MoonriseLogo.png" alt="" width="36" height="36">
       <div>
@@ -184,7 +184,7 @@ setTimeout(function () {
         <button type="button" class="ms-auth-forgot" id="back-to-signin">Back to sign in</button>
       </p>
     </form>
-  </div>
+  </main>
 
   <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
   <script defer src="js/segment-switch.js"></script>

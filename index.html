@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-ms-mode="light">
 <head>
 <style>
 html.ms-boot body{visibility:hidden!important}
@@ -42,9 +42,6 @@ document.documentElement.classList.add("ms-boot");
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
     (function () {
-      // Home-screen / installed app opens the site root. If a session is saved,
-      // continue to the dashboard before the landing page paints. A normal browser
-      // visit stays on this page, including when an old token is sitting in storage.
       var params;
       try {
         params = new URLSearchParams(location.search);
@@ -97,7 +94,7 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <title>trymoonrise.com - Build websites. Get paid.</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#fbfbfd">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
@@ -117,11 +114,7 @@ document.documentElement.classList.add("ms-boot");
   <meta name="twitter:description" content="Moonrise is an AI-powered platform that lets you create professional websites with 1 click for local business owners, creators, and more! It's designed to make website creation fast, simple, effortless, and get paid.">
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261027-hero-cta">
-  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
-  <link rel="stylesheet" href="css/studio-ui.css?v=20261027-hero-cta">
-  <link rel="stylesheet" href="css/home-bands.css?v=20261027-bands">
+  <link rel="stylesheet" href="css/home.css?v=20261028-simple" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261006-blue"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
@@ -188,162 +181,76 @@ document.documentElement.classList.add("ms-boot");
   </script>
 </head>
 <body data-page="home" class="ms-home-booting">
+  <a class="ms-skip" href="#main">Skip to content</a>
   <div class="ms-home-shell">
-    <div class="ms-home-field" aria-hidden="true">
-      <div class="ms-home-wash ms-home-wash-a"></div>
-      <div class="ms-home-wash ms-home-wash-b"></div>
-    </div>
-
     <header class="ms-home-nav">
       <a class="ms-home-brand" href="index.html">
-        <img src="doc/MoonriseLogo.png" alt="" width="40" height="40">
+        <img src="doc/MoonriseLogo.png" alt="" width="36" height="36">
         <strong>moonrise.</strong>
       </a>
-      <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
-        <i></i><i></i><i></i>
-      </button>
+      <nav class="ms-home-nav-links" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+        <a href="login.html">Sign in</a>
+        <a class="ms-home-nav-cta" href="login.html">Start earning</a>
+      </nav>
     </header>
 
-    <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
-      <nav class="ms-home-bloom-nav" aria-label="Primary">
-        <a href="index.html" style="--nav-i:0">Home</a>
-        <a href="login.html" style="--nav-i:1">Start earning</a>
-        <a href="#features" style="--nav-i:2">Features</a>
-        <a href="#about" style="--nav-i:3">About</a>
-        <a href="#faq" style="--nav-i:4">FAQ</a>
-        <a href="download.html" style="--nav-i:5">Download app</a>
-        <a href="orders.html" style="--nav-i:6">Locate my order</a>
-        <a href="login.html" style="--nav-i:7">Sign in</a>
-      </nav>
-    </div>
-
-    <main class="ms-home-hero">
-      <div class="ms-home-hero-stage">
-        <div class="ms-home-hero-copy">
-          <h1 class="ms-home-title">Build websites.&nbsp;<span class="ms-home-title-accent">Get paid.</span></h1>
-          <p class="ms-home-sub">Build beautiful websites for local business owners with just one swipe — and get paid when they go live.</p>
-          <div class="ms-home-ctas">
-            <a class="ms-home-cta-primary" href="login.html">Start earning</a>
-            <a class="ms-home-cta-secondary" href="#features">Learn More</a>
-          </div>
-        </div>
-
-        <div class="ms-home-cascade" id="gallery" aria-label="Gallery">
-          <div class="ms-home-tile" style="--i:1">
-            <div class="ms-home-tile-face">
-              <span>Sell</span>
-              <strong>Client sites</strong>
-            </div>
-          </div>
-          <div class="ms-home-tile" style="--i:2">
-            <div class="ms-home-tile-face">
-              <strong>Leads</strong>
-            </div>
-          </div>
-          <div class="ms-home-tile" style="--i:3">
-            <div class="ms-home-tile-face">
-              <span>Local</span>
-              <strong>Shops &amp; cafes</strong>
-            </div>
-          </div>
-          <div class="ms-home-tile" style="--i:4">
-            <div class="ms-home-tile-face">
-              <strong>Build</strong>
-            </div>
-          </div>
-          <div class="ms-home-tile" style="--i:5">
-            <div class="ms-home-tile-face">
-              <span>Creators</span>
-              <strong>Sell presence</strong>
-            </div>
-          </div>
-          <div class="ms-home-tile" style="--i:6">
-            <div class="ms-home-tile-face">
-              <span>Paid</span>
-              <strong>Get paid</strong>
-            </div>
-          </div>
-          <div class="ms-home-tile" style="--i:7">
-            <div class="ms-home-tile-face">
-              <span>Edit</span>
-              <strong>Make it theirs</strong>
-            </div>
-          </div>
-          <div class="ms-home-tile" style="--i:8">
-            <div class="ms-home-tile-face">
-              <strong>Earn</strong>
-            </div>
-          </div>
-          <div class="ms-home-tile" style="--i:9">
-            <div class="ms-home-tile-face">
-              <strong>Host</strong>
-            </div>
-          </div>
-        </div>
+    <main id="main" class="ms-home-hero">
+      <h1 class="ms-home-title">Build websites.<br>Get paid.</h1>
+      <p class="ms-home-sub">Build beautiful websites for local business owners with just one swipe — and get paid when they go live.</p>
+      <div class="ms-home-ctas">
+        <a class="ms-home-cta-primary" href="login.html">Start earning</a>
+        <a class="ms-home-cta-secondary" href="#features">Learn more</a>
       </div>
     </main>
 
-    <section class="ms-band" id="features">
-      <h2>Features</h2>
-      <div class="ms-band-cards">
-        <article>
-          <div>
-            <h3>Business Finder</h3>
-            <p>Scan nearby shops that need a site.</p>
-          </div>
-          <div class="ms-feat ms-feat-finder" aria-hidden="true"><span>Map</span><span>Leads</span><span>Near me</span></div>
-        </article>
-        <article>
-          <div>
-            <h3>One swipe</h3>
-            <p>Slide once. Get a clean site.</p>
-          </div>
-          <div class="ms-feat ms-feat-swipe" aria-hidden="true"><i></i></div>
-        </article>
-        <article>
-          <div>
-            <h3>Watermark sell</h3>
-            <p>Publish free. Get paid on unlock.</p>
-          </div>
-          <div class="ms-feat ms-feat-pay" aria-hidden="true"><kbd>Live</kbd><em>→</em><kbd>Pay</kbd></div>
-        </article>
-        <article>
-          <div>
-            <h3>Keep 90%</h3>
-            <p>You earn. Moonrise keeps 10%.</p>
-          </div>
-          <div class="ms-feat ms-feat-cut" aria-hidden="true"><i></i></div>
-        </article>
-      </div>
+    <section class="ms-home-section" id="features" aria-labelledby="features-title">
+      <h2 id="features-title">Features</h2>
+      <ul class="ms-home-feature-list">
+        <li>
+          <strong>Business Finder</strong>
+          <span>Scan nearby shops that need a website.</span>
+        </li>
+        <li>
+          <strong>One swipe</strong>
+          <span>Slide once to generate a clean site preview.</span>
+        </li>
+        <li>
+          <strong>Watermark sell</strong>
+          <span>Publish free. Get paid when the owner unlocks.</span>
+        </li>
+        <li>
+          <strong>Keep 90%</strong>
+          <span>You earn 90%. Moonrise keeps 10%.</span>
+        </li>
+      </ul>
     </section>
 
-    <section class="ms-about" id="about">
-      <h2>What is Moonrise?</h2>
-      <p
-        data-about-line
-        data-about-text="Moonrise is a studio for building and selling websites to local businesses. Find a lead, swipe to generate, send the link, and get paid when they go live."
-      >Moonrise is a studio for building and selling websites to local businesses. Find a lead, swipe to generate, send the link, and get paid when they go live.</p>
+    <section class="ms-home-section" id="about" aria-labelledby="about-title">
+      <h2 id="about-title">What is Moonrise?</h2>
+      <p class="ms-home-about-copy">Moonrise is a studio for building and selling websites to local businesses. Find a lead, swipe to generate, send the link, and get paid when they go live.</p>
     </section>
 
-    <section class="ms-faq-home" id="faq" aria-labelledby="faq-title">
+    <section class="ms-home-section" id="faq" aria-labelledby="faq-title">
       <h2 id="faq-title">FAQ</h2>
-      <div class="ms-faq-list">
-        <div class="ms-faq-item">
-          <button class="ms-faq-q" type="button" aria-expanded="false">What is Moonrise Studio?<span aria-hidden="true"></span></button>
-          <div class="ms-faq-a"><p>An AI studio that helps creators build professional websites for local businesses and earn when clients unlock the live site.</p></div>
-        </div>
-        <div class="ms-faq-item">
-          <button class="ms-faq-q" type="button" aria-expanded="false">How does Moonrise work?<span aria-hidden="true"></span></button>
-          <div class="ms-faq-a"><p>Find businesses that need a site, build their preview for free, send the link, and get paid when the owner unlocks the watermark.</p></div>
-        </div>
-        <div class="ms-faq-item">
-          <button class="ms-faq-q" type="button" aria-expanded="false">How much does it cost to go live?<span aria-hidden="true"></span></button>
-          <div class="ms-faq-a"><p>Creators build free. Owners pay on the watermarked site. You keep 90%. Moonrise keeps 10%. The watermark drops after payment.</p></div>
-        </div>
-        <div class="ms-faq-item">
-          <button class="ms-faq-q" type="button" aria-expanded="false">Can owners pay without signing up?<span aria-hidden="true"></span></button>
-          <div class="ms-faq-a"><p>Yes. They pay on the live site through Stripe. They do not need a creator account.</p></div>
-        </div>
+      <div class="ms-home-faq-list">
+        <details class="ms-home-faq-item">
+          <summary>What is Moonrise Studio?</summary>
+          <p>An AI studio that helps creators build professional websites for local businesses and earn when clients unlock the live site.</p>
+        </details>
+        <details class="ms-home-faq-item">
+          <summary>How does Moonrise work?</summary>
+          <p>Find businesses that need a site, build their preview for free, send the link, and get paid when the owner unlocks the watermark.</p>
+        </details>
+        <details class="ms-home-faq-item">
+          <summary>How much does it cost to go live?</summary>
+          <p>Creators build free. Owners pay on the watermarked site. You keep 90%. Moonrise keeps 10%. The watermark drops after payment.</p>
+        </details>
+        <details class="ms-home-faq-item">
+          <summary>Can owners pay without signing up?</summary>
+          <p>Yes. They pay on the live site through Stripe. They do not need a creator account.</p>
+        </details>
       </div>
     </section>
 
@@ -374,10 +281,6 @@ document.documentElement.classList.add("ms-boot");
     </footer>
   </div>
 
-  <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
-  <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
-  <script defer src="js/home-bands.js?v=20261027-bands"></script>
-  <script defer src="js/toast.js"></script>
   <script defer>
     (function () {
       if (window.__msReleaseBoot) window.__msReleaseBoot();

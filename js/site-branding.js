@@ -21,6 +21,9 @@
     "privacy.html": 1,
     "terms.html": 1,
     "download.html": 1,
+    "refund.html": 1,
+    "report.html": 1,
+    "404.html": 1,
   };
 
   function absoluteUrl(pathOrUrl) {

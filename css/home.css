@@ -1,0 +1,391 @@
+/* Simple Moonrise home — self-contained so studio FAQ / dark overrides cannot blank the page. */
+
+body[data-page="home"] {
+  --home-ink: #1d1d1f;
+  --home-muted: #6e6e73;
+  --home-line: #e8e8ed;
+  --home-bg: #fbfbfd;
+  --home-card: #ffffff;
+  margin: 0;
+  background: var(--home-bg) !important;
+  color: var(--home-ink) !important;
+  font-family: "DM Sans", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body[data-page="home"] .ms-home-shell {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+body[data-page="home"] .ms-skip {
+  position: absolute;
+  left: 1rem;
+  top: 0.75rem;
+  z-index: 100;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: var(--home-ink);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transform: translateY(-160%);
+}
+
+body[data-page="home"] .ms-skip:focus {
+  transform: translateY(0);
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+body[data-page="home"] .ms-home-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 4.25rem;
+  padding: 0.85rem clamp(1.1rem, 4vw, 2.5rem);
+  background: rgb(251 251 253 / 88%);
+  border-bottom: 1px solid rgb(0 0 0 / 8%);
+  backdrop-filter: saturate(160%) blur(16px);
+  -webkit-backdrop-filter: saturate(160%) blur(16px);
+}
+
+body[data-page="home"] .ms-home-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: var(--home-ink) !important;
+}
+
+body[data-page="home"] .ms-home-brand img {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+body[data-page="home"] .ms-home-brand strong {
+  color: var(--home-ink) !important;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+body[data-page="home"] .ms-home-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+body[data-page="home"] .ms-home-nav-links a {
+  color: var(--home-ink) !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+}
+
+body[data-page="home"] .ms-home-nav-links a.ms-home-nav-cta {
+  background: var(--home-ink);
+  color: #fff !important;
+  padding: 0.55rem 1rem;
+}
+
+body[data-page="home"] .ms-home-hero {
+  width: min(44rem, calc(100% - 2.4rem));
+  margin: 0 auto;
+  padding: clamp(3.5rem, 12vh, 7rem) 0 2.5rem;
+  text-align: center;
+}
+
+body[data-page="home"] .ms-home-title {
+  margin: 0;
+  color: var(--home-ink) !important;
+  font-size: clamp(2.5rem, 7vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+}
+
+body[data-page="home"] .ms-home-sub {
+  margin: 1.1rem auto 0;
+  max-width: 34rem;
+  color: var(--home-muted) !important;
+  font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+  line-height: 1.5;
+}
+
+body[data-page="home"] .ms-home-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+body[data-page="home"] .ms-home-cta-primary,
+body[data-page="home"] .ms-home-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.05rem;
+  padding: 0 1.35rem;
+  border-radius: 999px;
+  font-weight: 650;
+  font-size: 1.02rem;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+body[data-page="home"] .ms-home-cta-primary {
+  background: var(--home-ink) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border: 0;
+}
+
+body[data-page="home"] .ms-home-cta-secondary {
+  background: #fff !important;
+  color: var(--home-ink) !important;
+  -webkit-text-fill-color: var(--home-ink) !important;
+  border: 1px solid var(--home-line);
+}
+
+body[data-page="home"] .ms-home-cta-primary:hover,
+body[data-page="home"] .ms-home-cta-secondary:hover {
+  transform: scale(1.04);
+}
+
+body[data-page="home"] .ms-home-section {
+  width: min(42rem, calc(100% - 2.4rem));
+  margin: 3.5rem auto 0;
+  scroll-margin-top: 5rem;
+}
+
+body[data-page="home"] .ms-home-section > h2 {
+  margin: 0 0 1.25rem;
+  text-align: center;
+  color: var(--home-ink) !important;
+  font-size: clamp(1.85rem, 4vw, 2.4rem);
+  font-weight: 750;
+  letter-spacing: -0.04em;
+}
+
+body[data-page="home"] .ms-home-feature-list {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body[data-page="home"] .ms-home-feature-list li {
+  padding: 1.2rem 1.25rem;
+  border: 1px solid var(--home-line);
+  border-radius: 1.15rem;
+  background: var(--home-card);
+}
+
+body[data-page="home"] .ms-home-feature-list strong {
+  display: block;
+  color: var(--home-ink) !important;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="home"] .ms-home-feature-list span {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--home-muted) !important;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+body[data-page="home"] .ms-home-about-copy {
+  margin: 0 auto;
+  max-width: 36rem;
+  text-align: center;
+  color: var(--home-ink) !important;
+  font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+  font-weight: 550;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="home"] .ms-home-faq-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--home-line);
+}
+
+body[data-page="home"] .ms-home-faq-item {
+  border-bottom: 1px solid var(--home-line);
+}
+
+body[data-page="home"] .ms-home-faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  color: var(--home-ink) !important;
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="home"] .ms-home-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+body[data-page="home"] .ms-home-faq-item summary::after {
+  content: "";
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 1.75px solid currentColor;
+  border-bottom: 1.75px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+body[data-page="home"] .ms-home-faq-item[open] summary::after {
+  transform: rotate(225deg);
+}
+
+body[data-page="home"] .ms-home-faq-item p {
+  margin: 0 0 1.1rem;
+  color: var(--home-muted) !important;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+body[data-page="home"] .ms-home-cta-band {
+  width: min(42rem, calc(100% - 2.4rem));
+  margin: 4rem auto 1.5rem;
+  padding: clamp(2.5rem, 6vw, 3.75rem) 1.4rem;
+  border-radius: 1.75rem;
+  background: var(--home-ink);
+  text-align: center;
+}
+
+body[data-page="home"] .ms-home-cta-band h2 {
+  margin: 0;
+  color: #f5f5f7 !important;
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  font-weight: 750;
+  letter-spacing: -0.045em;
+}
+
+body[data-page="home"] .ms-home-cta-band a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.25rem;
+  min-height: 3.05rem;
+  padding: 0 1.4rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--home-ink) !important;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+body[data-page="home"] .ms-home-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding: 2.2rem clamp(1.1rem, 4vw, 2.5rem) 2.5rem;
+  background: #000;
+  color: #fff;
+}
+
+body[data-page="home"] .ms-home-footer .ms-home-brand,
+body[data-page="home"] .ms-home-footer .ms-home-brand strong {
+  color: #fff !important;
+}
+
+body[data-page="home"] .ms-home-footer-copy p {
+  margin: 0.75rem 0 0;
+  max-width: 28rem;
+  color: #a1a1a6 !important;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+body[data-page="home"] .ms-home-footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 1rem;
+}
+
+body[data-page="home"] .ms-home-footer-legal a,
+body[data-page="home"] .ms-home-footer-signin {
+  color: #a1a1a6 !important;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+body[data-page="home"] .ms-home-footer-legal a:hover,
+body[data-page="home"] .ms-home-footer-signin:hover {
+  color: #fff !important;
+}
+
+body[data-page="home"] .ms-home-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+body[data-page="home"] .ms-home-footer-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  padding: 0 1.1rem;
+  border-radius: 999px;
+  background: #fff !important;
+  color: var(--home-ink) !important;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  body[data-page="home"] .ms-home-nav-links a:not(.ms-home-nav-cta) {
+    display: none;
+  }
+
+  body[data-page="home"] .ms-home-footer {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] .ms-home-cta-primary,
+  body[data-page="home"] .ms-home-cta-secondary,
+  body[data-page="home"] .ms-home-faq-item summary::after {
+    transition: none;
+  }
+
+  body[data-page="home"] .ms-home-cta-primary:hover,
+  body[data-page="home"] .ms-home-cta-secondary:hover {
+    transform: none;
+  }
+}
