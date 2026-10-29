@@ -3,12 +3,12 @@
 <head>
 <style>
 html.ms-boot body{visibility:hidden!important}
-#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#fcfbef;color:#232427;visibility:visible!important;opacity:1;transition:opacity .56s cubic-bezier(.22,1,.36,1),visibility .56s linear}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#fcfbef;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
 #ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
-#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .85s cubic-bezier(.22,1,.36,1) .06s forwards}
-#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .85s cubic-bezier(.22,1,.36,1) .16s forwards}
-#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .45s cubic-bezier(.22,1,.36,1)}
-@keyframes ms-boot-word{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .2s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
 </style>
 <script>
@@ -31,8 +31,8 @@ document.documentElement.classList.add("ms-boot");
   var done=false;
   var started=performance.now();
   var readyAt=0;
-  var minMs=1100;
-  var maxMs=22000;
+  var minMs=220;
+  var maxMs=8000;
   var reduce=false;
   try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
 
@@ -49,7 +49,10 @@ document.documentElement.classList.add("ms-boot");
     window.__msBootReleased=1;
     setProgress(100);
     var hide=function(){
-      document.documentElement.classList.remove("ms-boot","ms-hold");
+      document.documentElement.classList.remove("ms-boot");
+      if(!document.documentElement.classList.contains("ms-auth-gating")){
+        document.documentElement.classList.remove("ms-hold");
+      }
       document.documentElement.classList.add("ms-boot-done");
       var el=document.getElementById("ms-boot");
       if(el)el.remove();
@@ -59,7 +62,7 @@ document.documentElement.classList.add("ms-boot");
       return;
     }
     boot.classList.add("is-leaving");
-    setTimeout(hide, 560);
+    setTimeout(hide, 220);
   }
 
   function markReady(){
@@ -80,20 +83,20 @@ document.documentElement.classList.add("ms-boot");
       }
       var sinceReady=Math.max(0,now-readyAt);
       var minLeft=Math.max(0,minMs-elapsed);
-      var fillMs=Math.max(520,minLeft);
+      var fillMs=Math.max(120,minLeft);
       var t=Math.min(1,sinceReady/fillMs);
-      var eased=1-Math.pow(1-t,3.4);
-      var from=Math.max(progress, 88);
+      var eased=1-Math.pow(1-t,3);
+      var from=Math.max(progress, 82);
       setProgress(from+((100-from)*eased));
-      if(t>=1 && progress>=99.6){
+      if(t>=1 && progress>=99.4){
         setProgress(100);
         finish();
         return;
       }
     }else{
-      var tWait=Math.min(1,elapsed/4200);
-      var target=86*(1-Math.pow(1-tWait,2.8));
-      setProgress(progress+(target-progress)*0.07);
+      var tWait=Math.min(1,elapsed/1600);
+      var target=84*(1-Math.pow(1-tWait,2.4));
+      setProgress(progress+(target-progress)*0.14);
       if(elapsed>=maxMs){
         appReady=true;
         assetsReady=true;
@@ -114,15 +117,20 @@ document.documentElement.classList.add("ms-boot");
     markReady();
   }
 
-  var assetJobs=[];
-  if(document.fonts&&document.fonts.ready){
-    assetJobs.push(document.fonts.ready.catch(function(){}));
+  function releasePublicApp(){
+    // Auth-gated studio pages wait for app.js; public pages lift as soon as the DOM is ready.
+    if(document.documentElement.classList.contains("ms-auth-gating")) return;
+    appReady=true;
+    markReady();
   }
-  assetJobs.push(new Promise(function(resolve){
-    if(document.readyState==="complete") resolve();
-    else window.addEventListener("load", resolve, { once:true });
-  }));
-  Promise.allSettled(assetJobs).then(markAssets);
+
+  function onDomReady(){
+    markAssets();
+    releasePublicApp();
+  }
+
+  if(document.readyState==="interactive"||document.readyState==="complete") onDomReady();
+  else document.addEventListener("DOMContentLoaded", onDomReady, { once:true });
   setTimeout(markAssets, maxMs);
   setTimeout(function(){ if(window.__msReleaseBoot) window.__msReleaseBoot(); },maxMs);
 })();
@@ -157,7 +165,7 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261028-no-settings-tab"></script>
+  <script src="js/auth-gate-head.js?v=20261028-boot-fast"></script>
   <title>Help - Moonrise Studio</title>
   <meta name="description" content="Help for Moonrise Studio creators: accounts, websites, payouts, and how to reach support.">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">

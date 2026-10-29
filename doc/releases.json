@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.3.8",
+      "date": "2026-10-28",
+      "title": "Faster page boot across the site",
+      "tag": "v2.3.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.3.8",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "Studio and public pages drop the long moonrise boot splash and open as soon as the page is ready."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.7",
       "date": "2026-10-28",
       "title": "Soft rounded home, no first-load scroll",

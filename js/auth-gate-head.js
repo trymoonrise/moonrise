@@ -37,8 +37,12 @@
     var releasePublic = function () {
       if (window.__msReleaseBoot) window.__msReleaseBoot();
     };
-    if (document.readyState === "complete") releasePublic();
-    else window.addEventListener("load", releasePublic);
+    // Release as soon as the DOM is ready — do not wait for window.load/fonts.
+    if (document.readyState === "interactive" || document.readyState === "complete") {
+      releasePublic();
+    } else {
+      document.addEventListener("DOMContentLoaded", releasePublic, { once: true });
+    }
     return;
   }
 
