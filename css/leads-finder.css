@@ -6,8 +6,8 @@
   --surface-2: #f5f4e8;
   --surface-elevated: #fff;
   --text: var(--ms-ink, #232427);
-  --text-muted: var(--ms-muted, #77776e);
-  --muted: var(--ms-muted, #77776e);
+  --text-muted: var(--ms-muted, #55574f);
+  --muted: var(--ms-muted, #55574f);
   --border: var(--ms-line, #e6e4d4);
   --accent: var(--ms-accent, #232427);
   --accent-soft: var(--ms-accent-soft, #cfe0ee);
@@ -2927,7 +2927,7 @@ html[data-theme="dark"] .lf-search-clear:hover {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #77776e;
+  color: #55574f;
   background: #f5f4e8;
   border: 1px solid #e6e4d4;
   vertical-align: middle;
@@ -3295,7 +3295,7 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 .lf-detail-val-missing,
 .lf-info-text.lf-detail-val-missing {
-  color: #77776e;
+  color: #55574f;
   font-style: italic;
   font-weight: 500;
 }

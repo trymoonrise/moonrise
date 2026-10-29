@@ -14,7 +14,7 @@ html.ms-auth-gating body {
   --ms-surface-alt: #f5f4e8;
   --ms-surface-prompt: #f2f0e1;
   --ms-ink: #232427;
-  --ms-muted: #6a6a62;
+  --ms-muted: #55574f;
   --ms-line: #e6e4d4;
   --ms-dashed: #d9d8cc;
   --ms-track-off: #ddddd3;
@@ -362,7 +362,7 @@ body.ms-sidebar-resizing iframe {
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1.35;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-nav {
@@ -587,7 +587,7 @@ body.ms-sidebar-resizing iframe {
 }
 
 .ms-nav-link.is-soon {
-  color: #77776e;
+  color: #55574f;
   cursor: default;
   pointer-events: none;
   opacity: 0.72;
@@ -596,17 +596,17 @@ body.ms-sidebar-resizing iframe {
 
 .ms-nav-link.is-soon:hover {
   background: transparent;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-nav-link.is-soon .ms-nav-ico {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-nav-link.is-soon .ms-nav-label s {
   text-decoration: line-through;
   text-decoration-thickness: 1.5px;
-  text-decoration-color: #77776e;
+  text-decoration-color: #55574f;
 }
 
 .ms-nav-soon {
@@ -615,7 +615,7 @@ body.ms-sidebar-resizing iframe {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-nav-external {
@@ -625,7 +625,7 @@ body.ms-sidebar-resizing iframe {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  color: #77776e;
+  color: #55574f;
   opacity: 0.85;
 }
 
@@ -636,7 +636,7 @@ body.ms-sidebar-resizing iframe {
 }
 
 .ms-nav-link.is-external:hover .ms-nav-external {
-  color: #77776e;
+  color: #55574f;
   opacity: 1;
 }
 
@@ -646,7 +646,7 @@ body.ms-sidebar-resizing iframe {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  color: #77776e;
+  color: #55574f;
   opacity: 1;
 }
 
@@ -660,7 +660,7 @@ body.ms-sidebar-resizing iframe {
   gap: 0.35rem 0.5rem;
   padding: 0.55rem 0.65rem 0.2rem;
   font-size: 0.74rem;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-sidebar-legal-link {
@@ -790,7 +790,7 @@ body.ms-sidebar-resizing iframe {
 
 .ms-user-avatar.has-photo.is-loading .ms-user-avatar-spin {
   border-color: rgba(100, 116, 139, 0.25);
-  border-top-color: #77776e;
+  border-top-color: #55574f;
 }
 
 @keyframes ms-avatar-spin {
@@ -864,7 +864,7 @@ body.ms-sidebar-resizing iframe {
   height: 34px;
   border: none;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   border-radius: 8px;
   cursor: pointer;
   display: grid;
@@ -1171,7 +1171,7 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     min-height: 52px;
     padding: 0 0.1rem;
     border-radius: 16px;
-    color: #77776e;
+    color: #55574f;
     background: transparent;
     text-decoration: none;
     line-height: 1;
@@ -1505,7 +1505,7 @@ body[data-page="guide"] #page-body.ms-help-guide-page {
 
 .ms-help-legal {
   margin: 1.1rem 0 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.88rem;
   display: flex;
   flex-wrap: wrap;
@@ -1780,7 +1780,7 @@ body[data-page="dashboard"] {
   font-weight: 650;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-dash-metric-edit {
@@ -1793,7 +1793,7 @@ body[data-page="dashboard"] {
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.3;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-dash-metric-value {
@@ -1940,7 +1940,7 @@ body[data-page="dashboard"] {
   font-weight: 650;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
   line-height: 1;
 }
 
@@ -1957,7 +1957,7 @@ body[data-page="dashboard"] {
 
 .ms-dash-stat-label {
   font-size: 0.78rem;
-  color: #77776e;
+  color: #55574f;
   font-weight: 500;
 }
 
@@ -2142,7 +2142,7 @@ body[data-page="dashboard"] {
   font: inherit;
   font-size: 0.74rem;
   font-weight: 650;
-  color: #77776e;
+  color: #55574f;
   background: #fbfaf1;
   cursor: pointer;
   transition:
@@ -2478,7 +2478,7 @@ body[data-page="dashboard"] {
 .ms-dash-count {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-dash-link {
@@ -2543,7 +2543,7 @@ body[data-page="dashboard"] {
 
 .ms-dash-row-date {
   font-size: 0.8rem;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-dash-pill {
@@ -2555,7 +2555,7 @@ body[data-page="dashboard"] {
   padding: 0.28rem 0.55rem;
   border-radius: 999px;
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-dash-pill--live {
@@ -2570,7 +2570,7 @@ body[data-page="dashboard"] {
 
 .ms-dash-pill--draft {
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-dash-empty {
@@ -2648,7 +2648,7 @@ body[data-page="dashboard"] {
 .ms-dash-island-count {
   font-size: 0.86rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   flex-shrink: 0;
 }
 
@@ -2774,7 +2774,7 @@ body[data-page="dashboard"] {
 }
 
 .ms-dash-projects-search-input::placeholder {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-dash-projects-search-clear {
@@ -2784,7 +2784,7 @@ body[data-page="dashboard"] {
   border: 0;
   border-radius: 8px;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   font-size: 1.15rem;
   line-height: 1;
   cursor: pointer;
@@ -2798,7 +2798,7 @@ body[data-page="dashboard"] {
 .ms-dash-projects-search-hint {
   margin: 0.45rem 0 0;
   font-size: 0.78rem;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-dash-projects-suggest {
@@ -2842,7 +2842,7 @@ body[data-page="dashboard"] {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-dash-projects-suggest-value {
@@ -3044,8 +3044,8 @@ select.ms-select option {
 input.ms-input::placeholder,
 textarea.ms-textarea::placeholder,
 .ms-auth-card input.ms-input::placeholder {
-  color: #77776e !important;
-  -webkit-text-fill-color: #77776e;
+  color: #55574f !important;
+  -webkit-text-fill-color: #55574f;
   opacity: 1;
 }
 
@@ -3254,7 +3254,7 @@ input.ms-input:-webkit-autofill:focus {
   left: 0.85rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #77776e;
+  color: #55574f;
   font-weight: 600;
   pointer-events: none;
   z-index: 1;
@@ -3375,7 +3375,7 @@ input.ms-input:-webkit-autofill:focus {
   display: grid;
   place-items: center;
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(60, 55, 30, 0.12);
   transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
@@ -3441,7 +3441,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-settings-card-title svg {
   width: 18px;
   height: 18px;
-  color: #77776e;
+  color: #55574f;
   flex-shrink: 0;
 }
 
@@ -3730,7 +3730,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-payout-item-handle {
   margin-top: 0.12rem;
   font-size: 0.84rem;
-  color: #77776e;
+  color: #55574f;
   word-break: break-word;
 }
 
@@ -3754,7 +3754,7 @@ input.ms-input:-webkit-autofill:focus {
   border-radius: 8px;
   border: 1px solid #e6e4d4;
   background: #fbfaf1;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 1.15rem;
   line-height: 1;
@@ -3941,7 +3941,7 @@ input.ms-input:-webkit-autofill:focus {
   display: inline-flex;
   align-items: center;
   gap: 0.2rem;
-  color: #77776e;
+  color: #55574f;
   text-decoration: none;
   font-size: 0.88rem;
   font-weight: 500;
@@ -3949,7 +3949,7 @@ input.ms-input:-webkit-autofill:focus {
 }
 
 .ms-auth-home:hover {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-auth-brand {
@@ -4023,7 +4023,7 @@ input.ms-input:-webkit-autofill:focus {
   font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
-  color: #77776e;
+  color: #55574f;
   position: relative;
   z-index: 1;
   transition: color 0.56s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -4075,7 +4075,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-auth-autosave-hint {
   font-size: 0.78rem;
   line-height: 1.35;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-auth-back-wrap {
@@ -4115,7 +4115,7 @@ input.ms-input:-webkit-autofill:focus {
   align-items: center;
   gap: 0.75rem;
   margin: 0.85rem 0 0.75rem;
-  color: var(--ms-muted, #77776e);
+  color: var(--ms-muted, #55574f);
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -4167,14 +4167,14 @@ input.ms-input:-webkit-autofill:focus {
 
 .ms-passkey-item-copy span {
   font-size: 0.8rem;
-  color: var(--ms-muted, #77776e);
+  color: var(--ms-muted, #55574f);
 }
 
 .ms-passkey-remove {
   flex: 0 0 auto;
   border: 0;
   background: transparent;
-  color: var(--ms-muted, #77776e);
+  color: var(--ms-muted, #55574f);
   font: inherit;
   font-size: 0.82rem;
   font-weight: 600;
@@ -4274,7 +4274,7 @@ input.ms-input:-webkit-autofill:focus {
   border: 0;
   border-radius: 10px;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
@@ -4377,10 +4377,10 @@ input.ms-input:-webkit-autofill:focus {
 .ms-pw-label {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
 }
 
-.ms-pw-meter[data-level="empty"] .ms-pw-label { color: #77776e; }
+.ms-pw-meter[data-level="empty"] .ms-pw-label { color: #55574f; }
 .ms-pw-meter[data-level="weak"] .ms-pw-label { color: #dc2626; }
 .ms-pw-meter[data-level="fair"] .ms-pw-label { color: #d97706; }
 .ms-pw-meter[data-level="good"] .ms-pw-label { color: #0f766e; }
@@ -4421,7 +4421,7 @@ input.ms-input:-webkit-autofill:focus {
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 50%;
-  background: #77776e;
+  background: #55574f;
 }
 
 .ms-pw-rules li.is-current {
@@ -4461,7 +4461,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-pw-hint {
   margin: 0.4rem 0 0;
   font-size: 0.7rem;
-  color: #77776e;
+  color: #55574f;
   line-height: 1.35;
 }
 
@@ -4685,12 +4685,12 @@ input.ms-input:-webkit-autofill:focus {
   gap: 0.4rem;
   align-items: center;
   font-size: 0.8rem;
-  color: #77776e;
+  color: #55574f;
   margin-bottom: 0.35rem;
 }
 
 .ms-lf-crumb a {
-  color: #77776e;
+  color: #55574f;
   text-decoration: none;
 }
 
@@ -4727,7 +4727,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-lf-ghost svg {
   width: 15px;
   height: 15px;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lf-icon {
@@ -4736,7 +4736,7 @@ input.ms-input:-webkit-autofill:focus {
   border: 1px solid var(--ms-line);
   background: #fbfaf1;
   border-radius: 10px;
-  color: #77776e;
+  color: #55574f;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -4791,7 +4791,7 @@ input.ms-input:-webkit-autofill:focus {
 
 .ms-lf-hero p {
   margin: 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.98rem;
   line-height: 1.5;
 }
@@ -4889,7 +4889,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-lf-area-toggle-label {
   font-size: 0.78rem;
   font-weight: 650;
-  color: #77776e;
+  color: #55574f;
   letter-spacing: -0.01em;
 }
 
@@ -4917,7 +4917,7 @@ input.ms-input:-webkit-autofill:focus {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
   margin-bottom: 0.4rem;
 }
 
@@ -4954,7 +4954,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-lf-input > svg {
   width: 18px;
   height: 18px;
-  color: #77776e;
+  color: #55574f;
   flex-shrink: 0;
 }
 
@@ -4981,7 +4981,7 @@ input.ms-input:-webkit-autofill:focus {
   border: 0;
   border-radius: 8px;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -5058,7 +5058,7 @@ input.ms-input:-webkit-autofill:focus {
   flex-shrink: 0;
   font-size: 0.72rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   letter-spacing: 0.02em;
 }
 
@@ -5149,7 +5149,7 @@ input.ms-input:-webkit-autofill:focus {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
   flex-shrink: 0;
 }
 
@@ -5167,7 +5167,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-lf-website-btn {
   border: 1px solid transparent;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 0.88rem;
   font-weight: 600;
@@ -5472,7 +5472,7 @@ input.ms-input:-webkit-autofill:focus {
   font-size: 0.84rem;
   font-weight: 500;
   line-height: 1.35;
-  color: #77776e;
+  color: #55574f;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -5506,7 +5506,7 @@ input.ms-input:-webkit-autofill:focus {
   border: 0;
   border-radius: 10px;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -5610,7 +5610,7 @@ input.ms-input:-webkit-autofill:focus {
 
 .ms-lf-pro-row-main.is-empty,
 .ms-lf-pro-row-aside.is-empty {
-  color: #77776e;
+  color: #55574f;
   font-style: italic;
   font-weight: 450;
 }
@@ -5623,7 +5623,7 @@ input.ms-input:-webkit-autofill:focus {
 }
 
 .ms-lf-pro-row-main .ms-lf-pro-site-check {
-  color: #77776e;
+  color: #55574f;
   font-style: normal;
   font-weight: 600;
 }
@@ -5657,7 +5657,7 @@ input.ms-input:-webkit-autofill:focus {
   justify-content: center;
   width: 18px;
   flex-shrink: 0;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lf-pro-ico {
@@ -5680,7 +5680,7 @@ input.ms-input:-webkit-autofill:focus {
 }
 
 .ms-lf-pro-row.is-empty .ms-lf-pro-row-text {
-  color: #77776e;
+  color: #55574f;
   font-style: italic;
   font-weight: 450;
 }
@@ -5780,7 +5780,7 @@ input.ms-input:-webkit-autofill:focus {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
   flex-shrink: 0;
   padding-top: 0;
 }
@@ -5888,7 +5888,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-lf-tip-close {
   border: none;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   font-size: 1.2rem;
   line-height: 1;
   cursor: pointer;
@@ -6155,7 +6155,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-projects-count {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-projects-list {
@@ -6166,7 +6166,7 @@ input.ms-input:-webkit-autofill:focus {
 .ms-projects-loading {
   padding: 1.5rem 0.5rem;
   text-align: center;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.92rem;
 }
 
@@ -6214,7 +6214,7 @@ input.ms-input:-webkit-autofill:focus {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.85rem;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.8rem;
 }
 
@@ -6258,7 +6258,7 @@ input.ms-input:-webkit-autofill:focus {
 
 .ms-projects-empty-desc {
   margin: 0 0 1.1rem;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.92rem;
   line-height: 1.5;
 }
@@ -6474,7 +6474,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-bs-recent-link:hover {
@@ -6501,7 +6501,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 .ms-page-crumb {
   margin: 0 0 0.35rem;
   font-size: 0.78rem;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-page-crumb a {
@@ -6531,7 +6531,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 .ms-projects-count {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-projects-filters {
@@ -6558,7 +6558,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   font-size: 0.78rem;
   font-weight: 650;
   letter-spacing: 0.01em;
-  color: #77776e;
+  color: #55574f;
   background: transparent;
   text-align: center;
   white-space: nowrap;
@@ -6669,7 +6669,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   font-size: 0.82rem;
   font-weight: 650;
   line-height: 1;
-  color: #77776e;
+  color: #55574f;
   background: transparent;
   cursor: pointer;
   text-align: center;
@@ -6825,7 +6825,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.72rem;
   font-weight: 650;
 }
@@ -6837,7 +6837,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   display: grid;
   place-items: center;
   background: #e6e4d4;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.68rem;
   font-weight: 750;
   line-height: 1;
@@ -6988,7 +6988,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 }
 
 .ms-bs-gh-select-label.is-placeholder {
-  color: #77776e;
+  color: #55574f;
   font-weight: 500;
 }
 
@@ -6996,7 +6996,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   flex: none;
   width: 16px;
   height: 16px;
-  color: #77776e;
+  color: #55574f;
   transition: transform 0.18s ease, color 0.15s ease;
 }
 
@@ -7076,7 +7076,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   padding: 0.12rem 0.45rem;
   border-radius: 999px;
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -7091,7 +7091,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 .ms-bs-gh-select-empty {
   margin: 0;
   padding: 0.85rem 0.75rem;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.84rem;
   text-align: center;
 }
@@ -7160,7 +7160,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 .ms-bs-upload-drop:hover,
 .ms-bs-upload-drop:focus-visible,
 .ms-bs-upload-drop.is-dragover {
-  border-color: #77776e;
+  border-color: #55574f;
   background: #fbfaf1;
   box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.18);
   outline: none;
@@ -7178,7 +7178,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   margin: 0;
   font-size: 0.74rem;
   line-height: 1.4;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-bs-upload-actions {
@@ -7217,7 +7217,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 }
 
 .ms-bs-upload-list .ms-bs-upload-file-size {
-  color: #77776e;
+  color: #55574f;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
@@ -7225,7 +7225,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 .ms-bs-upload-meta {
   margin: 0.45rem 0 0;
   font-size: 0.74rem;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-bs-upload-name-field {
@@ -7259,7 +7259,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   margin: 0;
   font-size: 0.72rem;
   line-height: 1.35;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-bs-path-split {
@@ -7267,7 +7267,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -7291,7 +7291,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   border-radius: 999px;
   border: 1px solid #e6e4d4;
   background: #fbfaf1;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-bs-path .ms-lb-onboard-maps,
@@ -7569,7 +7569,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 .ms-lb-back svg {
   width: 16px;
   height: 16px;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-mode {
@@ -7593,7 +7593,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
   gap: 0.35rem;
   border: none;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 0.86rem;
   font-weight: 600;
@@ -7623,11 +7623,11 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 }
 
 .ms-lb-mode-btn.is-mvp-locked {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-icon-btn.is-mvp-locked {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-mode.seg-switch.is-ready > .ms-lb-mode-btn.is-active {
@@ -7666,7 +7666,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -7903,7 +7903,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 }
 
 .ms-lb-price-title > div > span {
-  color: #77776e;
+  color: #55574f;
   font-size: 0.72rem;
   font-weight: 500;
 }
@@ -7940,7 +7940,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 }
 
 .ms-lb-price-eyebrow {
-  color: #77776e;
+  color: #55574f;
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -7973,7 +7973,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
   flex-shrink: 0;
   border-radius: 8px;
   background: #e6e4d4;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-price-stat-icon svg {
@@ -7986,7 +7986,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 }
 
 .ms-lb-price-stat--input:hover {
-  border-color: #77776e;
+  border-color: #55574f;
   background: #fbfaf1;
 }
 
@@ -8016,7 +8016,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 }
 
 .ms-lb-price-currency {
-  color: #77776e;
+  color: #55574f;
   font-size: 1.35rem;
   font-weight: 800;
   line-height: 1;
@@ -8044,13 +8044,13 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 }
 
 .ms-lb-price-input::placeholder {
-  color: #77776e;
+  color: #55574f;
   font-weight: 700;
 }
 
 .ms-lb-price-hint {
   margin: 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.72rem;
   font-weight: 500;
   line-height: 1.35;
@@ -8663,7 +8663,7 @@ body[data-page="editor"].ms-lb-workspace .ms-builder-page {
 .ms-lb-offline-banner-url {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -8790,7 +8790,7 @@ body.ms-lb-pane-resizing .ms-lb-pane-resizer::before {
   text-align: left;
   font-size: 0.78rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -8804,7 +8804,7 @@ body.ms-lb-pane-resizing .ms-lb-pane-resizer::before {
 .ms-lb-chrome-url.is-unpublished {
   font-weight: 500;
   font-style: italic;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-chrome-copy {
@@ -8816,7 +8816,7 @@ body.ms-lb-pane-resizing .ms-lb-pane-resizer::before {
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -8843,7 +8843,7 @@ body.ms-lb-pane-resizing .ms-lb-pane-resizer::before {
   place-content: center;
   justify-items: center;
   gap: 0.55rem;
-  color: #77776e;
+  color: #55574f;
   z-index: 2;
   pointer-events: none;
   background:
@@ -9606,7 +9606,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   padding: 0 0.15rem;
   font-size: 0.72rem;
   font-weight: 650;
-  color: #77776e;
+  color: #55574f;
   letter-spacing: 0.02em;
   min-height: 1rem;
 }
@@ -9682,7 +9682,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   border: 0;
   border-radius: 8px;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 0.75rem;
   font-weight: 650;
@@ -9753,7 +9753,7 @@ body.ms-lb-fullscreen .ms-lb-price {
 .ms-lb-edit-section-label {
   font-size: 0.64rem;
   font-weight: 700;
-  color: #77776e;
+  color: #55574f;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -9778,14 +9778,14 @@ body.ms-lb-fullscreen .ms-lb-price {
 .ms-lb-edit-empty {
   margin: 0;
   font-size: 0.78rem;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-edit-hint {
   margin: 0;
   font-size: 0.72rem;
   font-weight: 500;
-  color: #77776e;
+  color: #55574f;
   letter-spacing: 0.01em;
 }
 
@@ -9946,13 +9946,13 @@ body.ms-lb-fullscreen .ms-lb-price {
 }
 
 .ms-lb-edit-input::placeholder {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-edit-label {
   font-size: 0.7rem;
   font-weight: 650;
-  color: #77776e;
+  color: #55574f;
   letter-spacing: 0.01em;
   margin: 0;
 }
@@ -9976,7 +9976,7 @@ body.ms-lb-fullscreen .ms-lb-price {
 .ms-lb-edit-thumb.is-empty {
   display: grid;
   place-items: center;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.65rem;
   font-weight: 650;
 }
@@ -10028,7 +10028,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   margin: 0;
   font-size: 0.7rem;
   font-weight: 550;
-  color: #77776e;
+  color: #55574f;
   min-height: 1em;
 }
 
@@ -10147,7 +10147,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-onboard-divider {
@@ -10211,7 +10211,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   font-weight: 650;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-onboard-input {
@@ -10229,7 +10229,7 @@ body.ms-lb-fullscreen .ms-lb-price {
 }
 
 .ms-lb-onboard-input::placeholder {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-onboard-input:hover {
@@ -10252,7 +10252,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: none;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-bs-gen-prompt {
@@ -10311,7 +10311,7 @@ body.ms-lb-fullscreen .ms-lb-price {
 .ms-lb-onboard-maps-icon {
   width: 18px;
   height: 18px;
-  color: #77776e;
+  color: #55574f;
   flex-shrink: 0;
 }
 
@@ -10377,7 +10377,7 @@ body.ms-lb-fullscreen .ms-lb-price {
 .ms-lb-onboard-scrape {
   margin: 0.45rem 0 0;
   font-size: 0.8rem;
-  color: #77776e;
+  color: #55574f;
   min-height: 0;
 }
 
@@ -10412,7 +10412,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   appearance: none;
   border: 0;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
@@ -10637,7 +10637,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-redirect-copy strong {
@@ -10659,7 +10659,7 @@ body.ms-lb-fullscreen .ms-lb-price {
   appearance: none;
   border: 0;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
@@ -10743,7 +10743,7 @@ body.ms-redirect-open {
   text-align: center;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   font-variant-numeric: tabular-nums;
 }
 
@@ -10903,7 +10903,7 @@ body.ms-redirect-open {
   height: 100%;
   display: grid;
   place-items: center;
-  color: #77776e;
+  color: #55574f;
   font-weight: 600;
 }
 
@@ -10989,7 +10989,7 @@ body.ms-tpl-viewer-open {
 
 .ms-tpl-viewer-head p {
   margin: 0.15rem 0 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.8rem;
 }
 
@@ -11002,7 +11002,7 @@ body.ms-tpl-viewer-open {
   border: 0;
   border-radius: 10px;
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
   cursor: pointer;
 }
 
@@ -11138,7 +11138,7 @@ body.ms-lb-onboarding .ms-lb-mode {
   border-radius: 50%;
   border: 1px solid #e6e4d4;
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -11176,7 +11176,7 @@ body.ms-lb-onboarding .ms-lb-mode {
   border: 0;
   border-radius: 11px;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 0.72rem;
   font-weight: 600;
@@ -11440,7 +11440,7 @@ body.ms-lb-onboarding .ms-lb-mode {
 .ms-lb-settings-hint {
   margin: 0;
   font-size: 0.84rem;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-settings-link {
@@ -11598,11 +11598,11 @@ body.ms-lb-onboarding .ms-lb-mode {
 
 .ms-lb-widget--soon .ms-lb-widget-icon {
   background: #e6e4d4;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-widget--soon .ms-lb-widget-copy h3 {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-widget--soon .ms-lb-widget-toggle {
@@ -11677,7 +11677,7 @@ body.ms-lb-onboarding .ms-lb-mode {
   font: inherit;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   background: transparent;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
@@ -11698,7 +11698,7 @@ body.ms-lb-onboarding .ms-lb-mode {
   font-size: 0.64rem;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-widget-field .ms-input {
@@ -11817,12 +11817,12 @@ body.ms-lb-onboarding .ms-lb-mode {
 }
 
 .ms-lb-domain-select-trigger:focus-visible {
-  border-color: #77776e;
+  border-color: #55574f;
   box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.28);
 }
 
 .ms-lb-domain-select.is-open .ms-lb-domain-select-trigger {
-  border-color: #77776e;
+  border-color: #55574f;
   box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.22);
   background: #fbfaf1;
 }
@@ -11837,7 +11837,7 @@ body.ms-lb-onboarding .ms-lb-mode {
 }
 
 .ms-lb-domain-select-value.is-placeholder {
-  color: #77776e;
+  color: #55574f;
   font-weight: 400;
 }
 
@@ -11845,7 +11845,7 @@ body.ms-lb-onboarding .ms-lb-mode {
   width: 15px;
   height: 15px;
   flex-shrink: 0;
-  color: #77776e;
+  color: #55574f;
   transition: transform 0.18s ease, color 0.15s ease;
 }
 
@@ -11934,7 +11934,7 @@ body.ms-lb-onboarding .ms-lb-mode {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-domain-steps {
@@ -12010,7 +12010,7 @@ body.ms-lb-onboarding .ms-lb-mode {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-domain-dns-list {
@@ -12036,7 +12036,7 @@ body.ms-lb-onboarding .ms-lb-mode {
 }
 
 .ms-lb-domain-dns-name {
-  color: #77776e;
+  color: #55574f;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.72rem;
 }
@@ -12119,7 +12119,7 @@ body.ms-lb-onboarding .ms-lb-mode {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-settings-danger {
@@ -12259,7 +12259,7 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
 }
 
 .ms-lb-prompt-input::placeholder {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-lb-prompt-bar {
@@ -12274,7 +12274,7 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
   border: none;
   border-radius: 10px;
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -12305,7 +12305,7 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
   gap: 0.3rem;
   font-size: 0.78rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   cursor: pointer;
   user-select: none;
   flex-shrink: 0;
@@ -12361,7 +12361,7 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
 .ms-lb-bolt {
   width: 11px;
   height: 11px;
-  color: #77776e;
+  color: #55574f;
   flex-shrink: 0;
   transition: color 0.28s cubic-bezier(0.22, 1, 0.36, 1), transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -12438,7 +12438,7 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
 .ms-btn-ghost-danger {
   background: transparent;
   border: 1px solid transparent;
-  color: #77776e;
+  color: #55574f;
   box-shadow: none;
   font-weight: 500;
 }
@@ -12643,7 +12643,7 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
   border: 1px solid var(--ms-line);
   border-radius: 10px;
   background: #fbfaf1;
-  color: #77776e;
+  color: #55574f;
   font-size: 1.15rem;
   cursor: pointer;
   flex-shrink: 0;
@@ -12651,7 +12651,7 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
 }
 .ms-paywall-x:hover {
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-paywall-body {
@@ -12686,7 +12686,7 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
 .ms-paywall-price span {
   font-size: 0.9rem;
   font-weight: 500;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-paywall .ms-timer {
@@ -12730,7 +12730,7 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
   margin: 0;
   text-align: center;
   font-size: 0.78rem;
-  color: #77776e;
+  color: #55574f;
   line-height: 1.4;
 }
 
@@ -13165,7 +13165,7 @@ body.ms-contact-public {
 
 .ms-contact-lead {
   margin: 0.45rem 0 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.95rem;
   line-height: 1.45;
 }
@@ -13279,7 +13279,7 @@ body.ms-contact-public {
   margin: 0.35rem 0 0;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #77776e;
+  color: #55574f;
   letter-spacing: -0.01em;
 }
 
@@ -13389,7 +13389,7 @@ body.ms-contact-public {
 .ms-help-vcard-link-text em {
   font-style: normal;
   font-size: 0.82rem;
-  color: #77776e;
+  color: #55574f;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -13430,7 +13430,7 @@ body.ms-contact-public {
   width: 18px;
   height: 18px;
   margin-left: auto;
-  color: #77776e;
+  color: #55574f;
 }
 
 /* Standalone public Privacy / Terms (no app shell) */
@@ -14760,7 +14760,7 @@ body.is-home-ready .ms-home-hero-copy {
   letter-spacing: -0.03em;
   line-height: 1.1;
   color: #232427;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .ms-home-title-accent {
@@ -14869,7 +14869,7 @@ body.is-home-ready .ms-home-hero-copy {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-home-stat-value {
@@ -14915,10 +14915,11 @@ body.is-home-ready .ms-home-hero-copy {
 }
 
 .ms-home-faq-item {
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.72);
-  padding: 0.15rem 1rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  border-bottom: 1px solid #e6e4d4;
 }
 
 .ms-home-faq-item summary {
@@ -14947,7 +14948,7 @@ body.is-home-ready .ms-home-hero-copy {
 }
 
 .ms-home-footer-legal a {
-  color: #77776e;
+  color: #55574f;
   font-size: 0.88rem;
   text-decoration: none;
 }
@@ -16216,7 +16217,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 .ms-phone-chevron {
   width: 14px;
   height: 14px;
-  color: #77776e;
+  color: #55574f;
   transition: transform 0.18s ease;
 }
 
@@ -16296,7 +16297,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 .ms-phone-option-dial {
   font-size: 0.82rem;
   font-weight: 650;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-phone-option.is-selected .ms-phone-option-dial {
@@ -16386,7 +16387,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 .ms-fin-step-label {
   font-size: 0.72rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   white-space: nowrap;
 }
 
@@ -16395,7 +16396,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 }
 
 .ms-fin-step.is-done .ms-fin-step-label {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-fin-step-line {
@@ -16442,7 +16443,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 }
 
 .ms-optional {
-  color: #77776e;
+  color: #55574f;
   font-weight: 500;
 }
 
@@ -16456,7 +16457,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
   border: 1.5px dashed #d9d8cc;
   border-radius: 12px;
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
   cursor: pointer;
   padding: 0.85rem;
   transition: border-color 0.15s ease, background 0.15s ease;
@@ -16475,7 +16476,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 .ms-fin-upload-ico {
   width: 28px;
   height: 28px;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-fin-upload-ico svg {
@@ -16558,7 +16559,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 .ms-fin-method-hint {
   margin: 0.4rem 0 0;
   font-size: 0.8rem;
-  color: #77776e;
+  color: #55574f;
   line-height: 1.35;
 }
 
@@ -16644,7 +16645,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
   margin-bottom: 0.45rem;
 }
 
@@ -16823,7 +16824,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 }
 .ios-install-banner-text span {
   margin: 0;
-  color: #77776e;
+  color: #55574f;
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -16980,7 +16981,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 .ms-clients-count {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   font-variant-numeric: tabular-nums;
 }
 
@@ -17014,7 +17015,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
   font-weight: 650;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-payouts-stat-value {
@@ -17042,7 +17043,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
   font: inherit;
   font-size: 0.82rem;
   font-weight: 650;
-  color: #77776e;
+  color: #55574f;
   background: transparent;
   cursor: pointer;
 }
@@ -17096,7 +17097,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
   margin: 0.28rem 0 0;
   font-size: 0.84rem;
   line-height: 1.4;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-payouts-item-owed {
@@ -17110,7 +17111,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
   font-weight: 650;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-payouts-item-owed strong {
@@ -17134,7 +17135,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 .ms-payouts-item-meta em {
   font-style: normal;
   font-weight: 650;
-  color: #77776e;
+  color: #55574f;
   margin-right: 0.28rem;
 }
 
@@ -17163,7 +17164,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 .ms-payouts-item-details {
   margin: 0;
   font-size: 0.84rem;
-  color: #77776e;
+  color: #55574f;
   overflow-wrap: anywhere;
 }
 
@@ -17192,7 +17193,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
   display: inline-block;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   text-align: right;
 }
 
@@ -17249,7 +17250,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-payouts-modal-summary {
@@ -17271,7 +17272,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger).is-pressed,
 }
 
 .ms-payouts-modal-summary-row span {
-  color: #77776e;
+  color: #55574f;
   font-weight: 600;
 }
 
@@ -17547,7 +17548,7 @@ body.ms-payouts-modal-open {
   letter-spacing: 0.045em;
   text-transform: uppercase;
   text-align: left;
-  color: #77776e;
+  color: #55574f;
   white-space: nowrap;
 }
 
@@ -17625,7 +17626,7 @@ body.ms-payouts-modal-open {
 
 .ms-clients-badge--muted {
   background: #f5f4e8;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-clients-badge--neutral {
@@ -17655,7 +17656,7 @@ body.ms-payouts-modal-open {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.8125rem;
 }
 
@@ -17791,7 +17792,7 @@ body.ms-payouts-modal-open {
   margin: 0.35rem 0 0;
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-clients-dialog-warning {
@@ -17849,7 +17850,7 @@ body.ms-payouts-modal-open {
   font-weight: 650;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-clients-input,
@@ -17879,7 +17880,7 @@ body.ms-payouts-modal-open {
 
 .ms-clients-input::placeholder,
 .ms-clients-field input::placeholder {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-clients-input:hover,
@@ -17913,7 +17914,7 @@ body.ms-payouts-modal-open {
   appearance: none;
   border: 0;
   background: transparent;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
@@ -17940,7 +17941,7 @@ body.ms-payouts-modal-open {
   margin: 0.75rem 0 0;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-clients-form-status.is-error {
@@ -18072,7 +18073,7 @@ body.ms-payouts-modal-open {
 
 .ms-store-desc {
   margin: 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.88rem;
   font-weight: 500;
   line-height: 1.45;
@@ -18106,7 +18107,7 @@ body.ms-payouts-modal-open {
   font-size: 0.8rem;
   font-weight: 650;
   letter-spacing: -0.01em;
-  color: #77776e;
+  color: #55574f;
   font-variant-numeric: normal;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -18261,7 +18262,7 @@ body.ms-payouts-modal-open {
 }
 
 .ms-orders-nav-link {
-  color: #77776e;
+  color: #55574f;
   text-decoration: none;
   font-size: 0.92rem;
   font-weight: 650;
@@ -18295,7 +18296,7 @@ body.ms-payouts-modal-open {
 
 .ms-orders-head p {
   margin: 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 1.02rem;
   line-height: 1.55;
 }
@@ -18311,7 +18312,7 @@ body.ms-payouts-modal-open {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-orders-search input {
@@ -18336,7 +18337,7 @@ body.ms-payouts-modal-open {
 
 .ms-orders-status {
   margin: 0 0 1rem;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.95rem;
 }
 
@@ -18404,7 +18405,7 @@ body.ms-payouts-modal-open {
 
 .ms-orders-meta {
   margin: 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.82rem;
 }
 
@@ -18455,7 +18456,7 @@ body.ms-payouts-modal-open {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-orders-stats dd {
@@ -18487,7 +18488,7 @@ body.ms-payouts-modal-open {
   height: 16px;
   opacity: 0.45;
   background: currentColor;
-  color: #77776e;
+  color: #55574f;
   pointer-events: none;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") center / contain no-repeat;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") center / contain no-repeat;
@@ -18499,7 +18500,7 @@ body.ms-payouts-modal-open {
 
 .ms-orders-search-hint {
   font-size: 0.8rem;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-orders-years {
@@ -18537,7 +18538,7 @@ body.ms-payouts-modal-open {
 .ms-orders-year {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #77776e;
+  color: #55574f;
   font-variant-numeric: tabular-nums;
 }
 
@@ -18552,7 +18553,7 @@ body.ms-payouts-modal-open {
 }
 
 .ms-orders-status span {
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-orders-card:hover {
@@ -18567,7 +18568,7 @@ body.ms-payouts-modal-open {
   border-top: 1px solid #e6e4d4;
   display: grid;
   gap: 0.35rem;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.86rem;
   line-height: 1.5;
 }
@@ -18606,7 +18607,7 @@ body.ms-payouts-modal-open {
   letter-spacing: 0.06em;
   font-size: 0.62rem;
   font-weight: 700;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-credits-tag-value {
@@ -18716,13 +18717,13 @@ body.ms-payouts-modal-open {
   margin-left: 0.15rem;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-pricing-credit-count {
   margin: 0.15rem 0 0;
   font-size: 0.88rem;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-pricing-features {
@@ -18769,7 +18770,7 @@ body.ms-payouts-modal-open {
 
 .ms-pricing-plan:not(.is-popular) .ms-pricing-plan-btn:not(:disabled):hover {
   background: #f5f4e8;
-  border-color: #77776e;
+  border-color: #55574f;
   color: #232427;
 }
 
@@ -18798,7 +18799,7 @@ body.ms-payouts-modal-open {
 .ms-pricing-topup-label {
   font-size: 0.82rem;
   font-weight: 650;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-pricing-topup-input-wrap {
@@ -18869,7 +18870,7 @@ body.ms-payouts-modal-open {
 }
 
 .ms-pricing-topup-currency {
-  color: #77776e;
+  color: #55574f;
   font-size: 0.95rem;
   font-weight: 650;
 }
@@ -18924,7 +18925,7 @@ body.ms-payouts-modal-open {
   margin: 0;
   font-size: 0.82rem;
   font-weight: 500;
-  color: #77776e;
+  color: #55574f;
 }
 
 .ms-pricing-manage {
@@ -18933,7 +18934,7 @@ body.ms-payouts-modal-open {
   border-radius: 999px;
   background: #fbfaf1;
   padding: 0.18rem 0.55rem;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 0.65rem;
   font-weight: 600;
@@ -19667,7 +19668,7 @@ body.ms-lb-flyer-open {
   font-style: normal;
   font-size: 0.74rem;
   font-weight: 600;
-  color: #77776e;
+  color: #55574f;
   background: #fbfaf1;
   border: 1px solid rgba(226, 232, 240, 0.95);
   border-radius: 999px;
@@ -20150,7 +20151,7 @@ body.ms-onboard-page {
 
 .ms-onboard-lead {
   margin: 0 0 1.35rem;
-  color: #77776e;
+  color: #55574f;
   font-size: 1.08rem;
   line-height: 1.55;
   max-width: 36em;
@@ -20245,7 +20246,7 @@ body.ms-onboard-page {
 
 .ms-onboard-path-copy p {
   margin: 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.95rem;
   line-height: 1.45;
 }
@@ -20284,7 +20285,7 @@ body.ms-onboard-page {
 
 .ms-onboard-facts p {
   margin: 0;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.88rem;
   line-height: 1.45;
 }
@@ -20335,7 +20336,7 @@ body.ms-onboard-page {
 }
 
 .ms-onboard-legal-copy span {
-  color: #77776e;
+  color: #55574f;
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.35;
@@ -20368,7 +20369,7 @@ body.ms-onboard-page {
 
 .ms-onboard-chip-label {
   margin: 0.2rem 0 0.55rem;
-  color: #77776e;
+  color: #55574f;
   font-size: 0.88rem;
   font-weight: 650;
 }
@@ -20603,7 +20604,7 @@ body.ms-onboard-page {
   border: 1px solid #dbe3ee;
   border-radius: 10px;
   background: #fbfaf1;
-  color: #77776e;
+  color: #55574f;
   font: inherit;
   font-size: 0.84rem;
   font-weight: 600;

@@ -7,7 +7,7 @@
   --surface-2: #f5f4e8;
   --input-bg: #f5f4e8;
   --text: #232427;
-  --muted: #77776e;
+  --muted: #55574f;
   --border: #e6e4d4;
   --accent: #232427;
   --accent-soft: #f5f4e8;
@@ -1078,7 +1078,7 @@ html.site-lock-active body[data-legal-page="1"] #main-content {
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  color: #77776e;
+  color: #55574f;
 }
 .site-agreement-doc-ext svg {
   width: 13px;
@@ -1633,7 +1633,7 @@ body.sidebar-resizing .menu-btn {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #77776e;
+  color: #55574f;
 }
 
 .sign-out-float {
@@ -9342,7 +9342,7 @@ html[data-theme="dark"] .owner-contributor--share:focus-visible .owner-contribut
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
-  background: #77776e;
+  background: #55574f;
 }
 
 .owner-contributor-presence.is-online {
@@ -9351,7 +9351,7 @@ html[data-theme="dark"] .owner-contributor--share:focus-visible .owner-contribut
 }
 
 html[data-theme="dark"] .owner-contributor-presence.is-offline {
-  background: #77776e;
+  background: #55574f;
 }
 
 html[data-theme="dark"] .owner-contributor-presence.is-online {
@@ -12913,7 +12913,7 @@ html[data-theme="dark"] .lf-search-clear:hover {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #77776e;
+  color: #55574f;
   background: #f5f4e8;
   border: 1px solid #e6e4d4;
   vertical-align: middle;
@@ -13199,7 +13199,7 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 .lf-detail-val-missing,
 .lf-info-text.lf-detail-val-missing {
-  color: #77776e;
+  color: #55574f;
   font-style: italic;
   font-weight: 500;
 }
@@ -13736,7 +13736,7 @@ html[data-theme="dark"] .lf-call-btn:focus-visible {
 .payout-method-googlepay .payout-method-icon { background: #4285f4; }
 .payout-method-stripe .payout-method-icon { background: #635bff; }
 .payout-method-crypto .payout-method-icon { background: #f7931a; }
-.payout-method-other .payout-method-icon { background: #77776e; font-size: 20px; }
+.payout-method-other .payout-method-icon { background: #55574f; font-size: 20px; }
 .payout-method-label {
   font-size: 12px;
   font-weight: 700;
@@ -15336,15 +15336,15 @@ body.legal-standalone-mode .legal-plain {
   font-size: 0.65rem;
   line-height: 1.4;
   text-align: center;
-  color: #77776e;
+  color: #55574f;
 }
 .legal-standalone-foot a {
-  color: #77776e;
+  color: #55574f;
   text-decoration: none;
   font-weight: 500;
 }
 .legal-standalone-foot a:hover {
-  color: #77776e;
+  color: #55574f;
   text-decoration: underline;
 }
 body.legal-logged-in .legal-standalone-nav,
@@ -15626,7 +15626,7 @@ html[data-theme="dark"] .checklist-item-link {
 }
 html[data-theme="dark"] .checklist-step-dot {
   background: var(--surface);
-  border-color: color-mix(in srgb, var(--border) 60%, #77776e);
+  border-color: color-mix(in srgb, var(--border) 60%, #55574f);
 }
 html[data-theme="dark"] .checklist-progress-rail::before {
   background: color-mix(in srgb, var(--border) 50%, #232427);
@@ -16296,7 +16296,7 @@ html[data-theme="dark"] .settings-status.is-err { color: #f87171; }
 .settings-color-btn--white { --color-swatch: #ffffff; }
 .settings-color-btn--black { --color-swatch: #050505; }
 .settings-color-btn--green { --color-swatch: #16a34a; }
-.settings-color-btn--grey { --color-swatch: #77776e; }
+.settings-color-btn--grey { --color-swatch: #55574f; }
 .settings-color-btn--blue { --color-swatch: #232427; }
 .settings-color-btn--purple { --color-swatch: #232427; }
 .settings-color-btn--red { --color-swatch: #dc2626; }
@@ -18570,7 +18570,7 @@ html[data-theme="dark"] .daily-loop-nav-btn--next:not(:disabled) {
 .preferences-theme-choice--white { --preferences-theme-swatch: #ffffff; }
 .preferences-theme-choice--black { --preferences-theme-swatch: #050505; }
 .preferences-theme-choice--green { --preferences-theme-swatch: #16a34a; }
-.preferences-theme-choice--grey { --preferences-theme-swatch: #77776e; }
+.preferences-theme-choice--grey { --preferences-theme-swatch: #55574f; }
 .preferences-theme-choice--blue { --preferences-theme-swatch: #232427; }
 .preferences-theme-choice--purple { --preferences-theme-swatch: #232427; }
 .preferences-theme-choice--red { --preferences-theme-swatch: #dc2626; }
@@ -20829,7 +20829,7 @@ html[data-ui-color="white"] {
   --surface-2: #f3f6fa;
   --input-bg: #fbfdff;
   --text: #232427;
-  --muted: #77776e;
+  --muted: #55574f;
   --border: #dfe7f0;
   --accent: #1f2937;
   --accent-soft: #e6e4d4;
@@ -29328,7 +29328,7 @@ html[data-theme="dark"] .owner-console-view-banner:hover {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--muted, #77776e);
+  color: var(--muted, #55574f);
 }
 
 .owner-console-detail-row dd {
@@ -29353,7 +29353,7 @@ html[data-theme="dark"] .owner-console-view-banner:hover {
 .owner-console-dialog-credit {
   margin: 0 0 0.85rem;
   font-size: 0.82rem;
-  color: var(--muted, #77776e);
+  color: var(--muted, #55574f);
 }
 
 .owner-console-tier-field {
@@ -29366,7 +29366,7 @@ html[data-theme="dark"] .owner-console-view-banner:hover {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--muted, #77776e);
+  color: var(--muted, #55574f);
   margin-bottom: 0.4rem;
 }
 
@@ -31154,10 +31154,10 @@ html[data-theme="dark"] .ios-install-banner-icon {
   text-overflow: ellipsis;
 }
 .ios-install-banner-text span {
-  color: #77776e;
+  color: #55574f;
 }
 html[data-theme="dark"] .ios-install-banner-text span {
-  color: var(--muted, #77776e);
+  color: var(--muted, #55574f);
 }
 .ios-install-banner-text em {
   font-style: normal;
@@ -31185,7 +31185,7 @@ html[data-theme="dark"] .ios-install-banner-text em {
   justify-content: center;
   font-size: 20px;
   line-height: 1;
-  color: #77776e;
+  color: #55574f;
   background: transparent;
   border: 0;
   border-radius: 9px;
@@ -31194,11 +31194,11 @@ html[data-theme="dark"] .ios-install-banner-text em {
 }
 .ios-install-banner-close:hover {
   background: rgba(60, 55, 30, 0.06);
-  color: #77776e;
+  color: #55574f;
 }
 html[data-theme="dark"] .ios-install-banner-close:hover {
   background: rgba(255, 255, 255, 0.08);
-  color: var(--muted, #77776e);
+  color: var(--muted, #55574f);
 }
 
 @media (max-width: 380px) {

@@ -1,0 +1,83 @@
+/* Subtle motion for cream + ink UI. Respects reduced motion. */
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-ms-mode="dark"]) :where(
+    .ms-btn,
+    .ms-home-cta-primary,
+    .ms-home-cta-secondary,
+    .ms-home-footer-signup,
+    .ms-home-footer-signin,
+    .ms-home-method-cta,
+    .ms-menu-toggle,
+    .ms-nav-link,
+    .ms-tab,
+    .ms-auth-tab,
+    .ms-dash-tool,
+    .ms-project-card,
+    .ms-settings-row,
+    .ms-list-row
+  ) {
+    transition:
+      transform 0.15s ease-out,
+      opacity 0.15s ease-out,
+      background-color 0.18s ease-out,
+      border-color 0.18s ease-out,
+      color 0.18s ease-out,
+      box-shadow 0.18s ease-out;
+  }
+
+  html:not([data-ms-mode="dark"]) :where(
+    .ms-switch-track,
+    .ms-switch-track::after
+  ) {
+    transition:
+      transform 0.18s ease-out,
+      background-color 0.18s ease-out,
+      border-color 0.18s ease-out,
+      box-shadow 0.18s ease-out;
+  }
+
+  html:not([data-ms-mode="dark"]) :where(
+    input.ms-input,
+    textarea.ms-textarea,
+    select.ms-select,
+    .ms-auth-card input.ms-input
+  ) {
+    transition: border-color 0.15s ease-out, border-width 0.15s ease-out;
+  }
+
+  /* Soft page enter for studio shells */
+  html:not([data-ms-mode="dark"]) body[data-page]:not([data-page="home"]) .ms-app,
+  html:not([data-ms-mode="dark"]) body[data-page="login"] .ms-auth-card,
+  html:not([data-ms-mode="dark"]) body[data-page="download"] .ms-download-card,
+  html:not([data-ms-mode="dark"]) body[data-page="orders"] .ms-orders-card,
+  html:not([data-ms-mode="dark"]) body[data-page="contact"] .ms-card,
+  html:not([data-ms-mode="dark"]) body[data-page="legal"] .ms-card {
+    animation: ms-cream-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  html:not([data-ms-mode="dark"]) .ms-home-bloom-nav a {
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      color 0.2s ease;
+  }
+}
+
+@keyframes ms-cream-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-ms-mode="dark"]) * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

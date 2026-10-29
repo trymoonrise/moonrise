@@ -3,6 +3,34 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.1.1",
+      "date": "2026-10-28",
+      "title": "Minimal home, clearer contrast, subtle motion",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home is a narrow, minimal screen: short hero, three how-it-works rows, three FAQ rows, and a simple footer.",
+            "Public pages get soft enter animations and clearer cream-and-ink contrast on secondary text."
+          ],
+          "fixes": [
+            "Secondary text and inactive tabs use a darker warm gray so copy stays readable on cream.",
+            "Home no longer waits on a delayed opacity fade or wash blobs before content appears.",
+            "Padding and safe-area spacing are tightened so hero, steps, and CTAs fit cleanly on phones."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Buttons, switches, nav links, and cards use the same short press and enter motion as the public site."
+          ],
+          "fixes": [
+            "Muted labels, hints, and placeholders across studio pages are darkened for readable contrast."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.0",
       "date": "2026-10-28",
       "title": "Full cream and ink component pass",

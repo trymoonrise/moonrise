@@ -7,7 +7,7 @@
   --ms-surface-alt: #f5f4e8;
   --ms-surface-prompt: #f2f0e1;
   --ms-ink: #232427;
-  --ms-muted: #6a6a62;
+  --ms-muted: #55574f;
   --ms-line: #e6e4d4;
   --ms-dashed: #d9d8cc;
   --ms-track-off: #ddddd3;
@@ -327,7 +327,7 @@ html:not([data-ms-mode="dark"]) :where(
   .ms-tab:not(.is-active),
   .ms-auth-tab:not(.is-active)
 ) {
-  color: #9a9dae !important;
+  color: #55574f !important;
   background: transparent !important;
 }
 
@@ -394,7 +394,57 @@ body[data-page="home"] .ms-home-title-accent {
 }
 
 body[data-page="home"] .ms-home-sub {
+  color: #55574f !important;
+}
+
+/* Readable secondary text across studio */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-muted,
+  .ms-page-eyebrow,
+  .ms-auth-sub,
+  .ms-helper,
+  .ms-field-hint,
+  .ms-settings-hint,
+  .ms-home-section-lead,
+  .ms-dash-metric span,
+  .ms-stat-label,
+  label .ms-hint,
+  .ms-empty,
+  .ms-empty-copy,
+  .ms-toast,
+  .ms-footer-note
+) {
+  color: #55574f !important;
+  opacity: 1 !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input::placeholder,
+  textarea.ms-textarea::placeholder,
+  .ms-auth-card input.ms-input::placeholder
+) {
   color: #6a6a62 !important;
+  opacity: 1 !important;
+}
+
+/* Page padding rhythm for public / auth surfaces */
+html:not([data-ms-mode="dark"]) body[data-page="login"],
+html:not([data-ms-mode="dark"]) body[data-page="download"],
+html:not([data-ms-mode="dark"]) body[data-page="orders"],
+html:not([data-ms-mode="dark"]) body[data-page="contact"],
+html:not([data-ms-mode="dark"]) body[data-page="legal"],
+html:not([data-ms-mode="dark"]) body[data-page="report"] {
+  padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+}
+
+html:not([data-ms-mode="dark"]) body[data-page="login"] .ms-auth-card,
+html:not([data-ms-mode="dark"]) body[data-page="download"] .ms-download-card,
+html:not([data-ms-mode="dark"]) body[data-page="orders"] .ms-orders-card {
+  max-width: 26rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem 1.35rem !important;
 }
 
 body[data-page="home"] .ms-home-cta-primary {

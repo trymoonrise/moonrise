@@ -1,5 +1,10 @@
-/* Home-only cream + ink refinements on top of studio.css.
-   Do not load studio-ui.css on the home page. */
+/* Minimal cream + ink home. Do not load studio-ui.css here. */
+
+body[data-page="home"] {
+  --ms-muted: #55574f;
+  background: #fcfbef;
+  color: #232427;
+}
 
 body[data-page="home"] .ms-skip {
   position: absolute;
@@ -18,13 +23,259 @@ body[data-page="home"] .ms-skip {
 
 body[data-page="home"] .ms-skip:focus {
   transform: translateY(0);
-  outline: 2px solid #bfd3e3;
+  outline: 2px solid #8fb0d6;
   outline-offset: 2px;
+}
+
+/* Show content immediately — no wash field, no delayed opacity. */
+body[data-page="home"] .ms-home-shell {
+  opacity: 1;
+  transform: none;
+  animation: none;
+  max-width: 40rem;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+}
+
+body[data-page="home"] .ms-home-nav {
+  padding: max(1rem, env(safe-area-inset-top, 0px)) 1.25rem 0.75rem;
+}
+
+body[data-page="home"] .ms-home-brand strong {
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  color: #000;
+  -webkit-text-fill-color: #000;
+}
+
+body[data-page="home"] .ms-home-hero {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  max-width: none;
+  margin: 0;
+  padding: 1.5rem 1.25rem 2rem;
+}
+
+body[data-page="home"] .ms-home-hero-stage {
+  min-height: 0;
+  width: 100%;
+  justify-content: center;
+  padding: 0;
+}
+
+body[data-page="home"] .ms-home-hero-copy {
+  width: 100%;
+  max-width: 22rem;
+  margin: 0 auto;
+  text-align: center;
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+body[data-page="home"] .ms-home-title {
+  white-space: normal;
+  font-size: clamp(2.4rem, 9vw, 3.15rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: #232427;
+  -webkit-text-fill-color: #232427;
+}
+
+body[data-page="home"] .ms-home-title-accent {
+  color: #232427;
+  -webkit-text-fill-color: #232427;
+  background: none;
+}
+
+body[data-page="home"] .ms-home-sub {
+  margin: 0;
+  max-width: 18.5rem;
+  color: #55574f;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+body[data-page="home"] .ms-home-ctas {
+  width: 100%;
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+}
+
+body[data-page="home"] .ms-home-cta-primary,
+body[data-page="home"] .ms-home-cta-secondary {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+body[data-page="home"] .ms-home-cta-primary {
+  background: #232427;
+  color: #fcfbef;
+  -webkit-text-fill-color: #fcfbef;
+  border: 0;
+}
+
+body[data-page="home"] .ms-home-cta-secondary {
+  background: transparent;
+  color: #232427;
+  -webkit-text-fill-color: #232427;
+  border: 1.5px solid #232427;
+}
+
+/* How it works — plain list, no cards */
+body[data-page="home"] .ms-home-how {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 2.5rem 1.25rem 1.5rem;
+  text-align: left;
+}
+
+body[data-page="home"] .ms-home-how-title {
+  margin: 0 0 1.25rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-transform: lowercase;
+  color: #232427;
+  text-align: center;
+}
+
+body[data-page="home"] .ms-home-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+body[data-page="home"] .ms-home-steps li {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1.1rem 0.15rem;
+  border-bottom: 1px solid #e6e4d4;
+}
+
+body[data-page="home"] .ms-home-steps li:first-child {
+  border-top: 1px solid #e6e4d4;
+}
+
+body[data-page="home"] .ms-home-steps strong {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #232427;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="home"] .ms-home-steps span {
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: #55574f;
+  font-weight: 500;
+}
+
+body[data-page="home"] .ms-home-method-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 52px;
+  margin: 1.75rem 0 0;
+  padding: 0 1.25rem;
+  border-radius: 999px;
+  background: #232427;
+  color: #fcfbef;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.05rem;
+  box-shadow: none;
+}
+
+body[data-page="home"] .ms-home-method-cta:hover {
+  opacity: 0.85;
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+/* FAQ — hairline rows */
+body[data-page="home"] .ms-home-faq {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 1.5rem 1.25rem 2rem;
+  text-align: left;
+}
+
+body[data-page="home"] .ms-home-faq-list {
+  margin: 0;
+  display: grid;
+  gap: 0;
+}
+
+body[data-page="home"] .ms-home-faq-item {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  border-bottom: 1px solid #e6e4d4;
+}
+
+body[data-page="home"] .ms-home-faq-item:first-child {
+  border-top: 1px solid #e6e4d4;
+}
+
+body[data-page="home"] .ms-home-faq-item summary {
+  padding: 1.05rem 0.15rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #232427;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="home"] .ms-home-faq-item p {
+  margin: 0 0 1.05rem;
+  padding: 0 0.15rem;
+  color: #55574f;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Footer */
+body[data-page="home"] .ms-home-footer {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 1.5rem 1.25rem 0.5rem;
+  border-top: 1px solid #e6e4d4;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.15rem;
+}
+
+body[data-page="home"] .ms-home-footer-copy p {
+  display: none;
+}
+
+body[data-page="home"] .ms-home-footer-legal {
+  margin-top: 0.65rem;
 }
 
 body[data-page="home"] .ms-home-footer-legal a,
 body[data-page="home"] .ms-home-footer-signin {
-  color: #77776e;
+  color: #55574f;
+  font-weight: 600;
 }
 
 body[data-page="home"] .ms-home-footer-legal a:hover,
@@ -32,51 +283,100 @@ body[data-page="home"] .ms-home-footer-signin:hover {
   color: #232427;
 }
 
-/* Simple centered hero — no cascade gallery. */
-body[data-page="home"] .ms-home-hero {
-  min-height: calc(100svh - 5.75rem);
+body[data-page="home"] .ms-home-footer-actions {
+  justify-content: stretch;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
 }
 
-body[data-page="home"] .ms-home-hero-stage {
-  min-height: inherit;
+body[data-page="home"] .ms-home-footer-signup,
+body[data-page="home"] .ms-home-footer-signin {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-}
-
-body[data-page="home"] .ms-home-brand strong {
-  font-weight: 900;
-  letter-spacing: -0.06em;
-  color: #000;
-}
-
-body[data-page="home"] .ms-home-method-badge {
-  background: #cfe0ee;
-  color: #1d3a66;
-  border: 0;
   border-radius: 999px;
+  text-decoration: none;
 }
 
-body[data-page="home"] .ms-home-method-cta {
-  border-radius: 999px;
+body[data-page="home"] .ms-home-footer-signup {
   background: #232427;
   color: #fcfbef;
-  box-shadow: none;
+  border: 0;
 }
 
-body[data-page="home"] .ms-home-method-cta:hover {
-  box-shadow: none;
-  opacity: 0.85;
-  transform: scale(0.98);
+body[data-page="home"] .ms-home-footer-signin {
+  border: 1.5px solid #232427;
+  color: #232427;
+  background: transparent;
 }
 
-body[data-page="home"] .ms-home-stats {
-  background: #fbfaf1;
-  border-color: #e6e4d4;
-  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08);
+/* Menu on cream */
+body[data-page="home"] .ms-home-bloom {
+  background: #fcfbef;
 }
 
-body[data-page="home"] .card,
-body[data-page="home"] .ms-card {
-  background: #fbfaf1;
-  border-color: #e6e4d4;
-  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08);
+body[data-page="home"] .ms-home-bloom-nav a {
+  color: #232427;
+}
+
+body.ms-home-menu-open .ms-home-brand,
+body.ms-home-menu-open .ms-home-orb i {
+  color: #232427;
+  background: #232427;
+}
+
+body.ms-home-menu-open .ms-home-brand {
+  background: transparent;
+}
+
+/* Subtle entrance */
+@media (prefers-reduced-motion: no-preference) {
+  body[data-page="home"].is-home-ready .ms-home-hero-copy > * {
+    animation: ms-home-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  body[data-page="home"].is-home-ready .ms-home-hero-copy > *:nth-child(1) { animation-delay: 0.04s; }
+  body[data-page="home"].is-home-ready .ms-home-hero-copy > *:nth-child(2) { animation-delay: 0.1s; }
+  body[data-page="home"].is-home-ready .ms-home-hero-copy > *:nth-child(3) { animation-delay: 0.16s; }
+
+  body[data-page="home"] .ms-home-steps li,
+  body[data-page="home"] .ms-home-faq-item {
+    transition: background 0.18s ease;
+  }
+  body[data-page="home"] .ms-home-steps li:hover,
+  body[data-page="home"] .ms-home-faq-item:hover {
+    background: color-mix(in srgb, #f5f4e8 70%, transparent);
+  }
+}
+
+@keyframes ms-home-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (min-width: 720px) {
+  body[data-page="home"] .ms-home-shell {
+    max-width: 28rem;
+  }
+  body[data-page="home"] .ms-home-ctas {
+    grid-template-columns: 1fr 1fr;
+  }
+  body[data-page="home"] .ms-home-nav {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  body[data-page="home"] .ms-home-hero,
+  body[data-page="home"] .ms-home-how,
+  body[data-page="home"] .ms-home-faq,
+  body[data-page="home"] .ms-home-footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
