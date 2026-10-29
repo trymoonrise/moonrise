@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.6",
+      "date": "2026-10-28",
+      "title": "Softer home, no first-load scroll jump",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home uses soft rounded panels, gentler buttons, and a calmer cream stage."
+          ],
+          "fixes": [
+            "Landing no longer lets you scroll up a little on first visit."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.5",
       "date": "2026-10-28",
       "title": "Wider home desktop, drop Settings tab",
