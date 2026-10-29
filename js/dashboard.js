@@ -1338,6 +1338,20 @@
     window.addEventListener("focus", refreshDashboard);
   }
 
+  function bindRecentPostsToggle() {
+    const section = document.getElementById("recent-projects");
+    const btn = document.getElementById("dash-projects-toggle");
+    const panel = document.getElementById("dash-projects-reveal");
+    if (!section || !btn || !panel) return;
+    btn.addEventListener("click", () => {
+      const open = !section.classList.contains("is-open");
+      section.classList.toggle("is-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) panel.removeAttribute("hidden");
+      else panel.setAttribute("hidden", "");
+    });
+  }
+
   function start() {
     if (started) return;
     started = true;
@@ -1345,6 +1359,7 @@
     bindProjectLiveFilter();
     bindProjectSearch();
     bindProjectActions();
+    bindRecentPostsToggle();
     bindDashboardRefresh();
     paintDashboardFromCache();
     refreshDashboard();

@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.2.1",
+      "date": "2026-10-28",
+      "title": "Dashboard recent posts toggle",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Dashboard Recent posts heading opens and closes the project list again."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.0",
       "date": "2026-10-28",
       "title": "Studio sidebar cream selection",
