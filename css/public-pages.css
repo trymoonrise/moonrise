@@ -1,0 +1,409 @@
+/* Cream + ink for public / legal / contact / download / orders pages.
+   Load after cream-ink.css. Forces light theme so OS dark mode cannot discolor these pages. */
+
+html:has(body.ms-legal-site),
+html:has(body.ms-contact-public),
+html:has(body.ms-download-page),
+html:has(body[data-page="orders"]),
+html:has(body[data-page="login"]),
+html:has(body[data-page="home"]),
+html:has(body[data-page="guide"]),
+html:has(body[data-page="help"]),
+html:has(body[data-page="pricing"]) {
+  color-scheme: light;
+}
+
+:is(
+  body.ms-legal-site,
+  body.ms-contact-public,
+  body.ms-download-page,
+  body[data-page="orders"],
+  body[data-page="login"],
+  body[data-page="guide"],
+  body[data-page="help"],
+  body[data-page="pricing"],
+  body[data-page="report"],
+  body[data-page="contact"],
+  body[data-page="legal"],
+  body[data-page="download"]
+) {
+  --ms-bg: #fcfbef;
+  --ms-surface: #fbfaf1;
+  --ms-surface-alt: #f5f4e8;
+  --ms-ink: #232427;
+  --ms-muted: #55574f;
+  --ms-line: #e6e4d4;
+  --ms-link: #1d3a66;
+  --ms-accent: #bfd3e3;
+  --ms-accent-strong: #232427;
+  background: #fcfbef !important;
+  color: #232427 !important;
+  min-height: 100dvh;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Kill leftover gradient washes / dark chrome */
+body.ms-legal-site {
+  background: #fcfbef !important;
+  padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+}
+
+body.ms-legal-site .ms-orders-field,
+body.ms-contact-public .ms-orders-field,
+body[data-page="orders"] .ms-orders-field {
+  display: none !important;
+}
+
+/* —— Sticky top bar —— */
+.ms-legal-top,
+.ms-orders-nav {
+  background: rgba(252, 251, 239, 0.94) !important;
+  border-bottom: 1px solid #e6e4d4 !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: none !important;
+  padding-left: max(1.15rem, env(safe-area-inset-left, 0px)) !important;
+  padding-right: max(1.15rem, env(safe-area-inset-right, 0px)) !important;
+}
+
+.ms-legal-top {
+  padding-top: calc(0.85rem + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: 0.85rem !important;
+  max-width: 40rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ms-legal-brand,
+.ms-legal-brand span,
+.ms-orders-nav .ms-home-brand,
+.ms-orders-nav .ms-home-brand strong {
+  color: #000 !important;
+  -webkit-text-fill-color: #000;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+
+.ms-legal-nav {
+  gap: 0.2rem !important;
+  max-width: min(100%, 16rem);
+}
+
+.ms-legal-nav a,
+.ms-orders-nav-link {
+  color: #55574f !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 0.92rem !important;
+  font-weight: 650 !important;
+  padding: 0.4rem 0.65rem !important;
+  border-radius: 999px !important;
+}
+
+.ms-legal-nav a:hover,
+.ms-orders-nav-link:hover {
+  color: #232427 !important;
+  background: #f5f4e8 !important;
+}
+
+.ms-legal-nav a.is-active {
+  color: #232427 !important;
+  background: #bfd3e3 !important;
+  box-shadow: 0 2px 8px rgba(60, 80, 110, 0.12) !important;
+}
+
+/* —— Page width / padding —— */
+.ms-legal-wrap,
+.ms-contact-main,
+.ms-download-main,
+.ms-orders-main,
+body[data-page="guide"] #page-body,
+body[data-page="help"] #page-body {
+  width: min(40rem, calc(100% - 2.3rem)) !important;
+  max-width: 40rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box;
+}
+
+.ms-legal-wrap {
+  padding-top: 1.25rem !important;
+  padding-bottom: 2.5rem !important;
+}
+
+.ms-legal-hero h1,
+.ms-contact-head h1,
+.ms-download-card h1,
+.ms-orders-head h1,
+.ms-page-head h1 {
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  font-size: clamp(1.85rem, 6vw, 2.35rem) !important;
+}
+
+.ms-legal-intro,
+.ms-contact-lead,
+.ms-download-lead,
+.ms-page-head p,
+.ms-muted {
+  color: #55574f !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #55574f !important;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* —— On this page TOC —— */
+.ms-legal-toc {
+  position: sticky;
+  top: calc(3.4rem + env(safe-area-inset-top, 0px));
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 1.25rem 0 1.35rem !important;
+  padding: 0.65rem 0.15rem 0.85rem !important;
+  background: #fcfbef !important;
+  border: 0 !important;
+  border-bottom: 1px solid #e6e4d4 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.ms-legal-toc-label {
+  width: 100%;
+  margin: 0 0 0.15rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+  text-transform: lowercase !important;
+  color: #55574f !important;
+}
+
+.ms-legal-toc a {
+  color: #232427 !important;
+  background: #f5f4e8 !important;
+  border: 1px solid #e6e4d4 !important;
+  box-shadow: none !important;
+  font-size: 0.9rem !important;
+  font-weight: 650 !important;
+  padding: 0.4rem 0.75rem !important;
+  border-radius: 999px !important;
+  text-decoration: none !important;
+}
+
+.ms-legal-toc a:hover,
+.ms-legal-toc a:focus-visible {
+  background: #bfd3e3 !important;
+  border-color: transparent !important;
+  color: #232427 !important;
+}
+
+/* —— Content cards / articles —— */
+.ms-legal-doc {
+  display: grid;
+  gap: 1rem;
+}
+
+.ms-legal-doc .ms-card,
+.ms-legal-article,
+body.ms-legal-site .ms-card,
+body.ms-contact-public .ms-card,
+body.ms-download-page .ms-download-card,
+body[data-page="orders"] .ms-orders-card {
+  background: #fbfaf1 !important;
+  border: 1px solid #e6e4d4 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08) !important;
+  color: #232427 !important;
+  padding: 1.35rem 1.25rem !important;
+}
+
+.ms-legal-section-head,
+.ms-legal-doc .ms-card h2,
+.ms-legal-doc .ms-card h3 {
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+}
+
+.ms-legal-doc .ms-card p,
+.ms-legal-doc .ms-card li,
+.ms-legal-updated {
+  color: #55574f !important;
+  -webkit-text-fill-color: #55574f !important;
+  font-size: 0.98rem !important;
+  line-height: 1.6 !important;
+}
+
+.ms-legal-doc .ms-card a,
+.ms-legal-foot a,
+body.ms-legal-site a:not(.ms-legal-nav a):not(.ms-legal-toc a):not(.ms-legal-brand),
+body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-btn) {
+  color: #1d3a66 !important;
+  -webkit-text-fill-color: #1d3a66 !important;
+  font-weight: 650;
+}
+
+.ms-legal-doc .ms-card a:hover,
+.ms-legal-foot a:hover {
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+}
+
+/* —— Footer —— */
+.ms-legal-foot {
+  background: rgba(252, 251, 239, 0.96) !important;
+  border-top: 1px solid #e6e4d4 !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.ms-legal-foot a {
+  color: #55574f !important;
+}
+
+/* —— Contact / download / orders —— */
+.ms-help-vcard,
+.ms-download-card,
+.ms-orders-card,
+.ms-auth-card {
+  background: #fbfaf1 !important;
+  border: 1px solid #e6e4d4 !important;
+  border-radius: 28px !important;
+  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08) !important;
+  color: #232427 !important;
+}
+
+.ms-help-vcard-name,
+.ms-help-vcard-brand,
+.ms-download-brand,
+.ms-auth-title {
+  color: #232427 !important;
+}
+
+.ms-help-vcard-share,
+.ms-dash-tool {
+  border: 1.5px solid #232427 !important;
+  background: transparent !important;
+  color: #232427 !important;
+  border-radius: 999px !important;
+}
+
+/* Forms on public pages */
+body.ms-legal-site input,
+body.ms-legal-site textarea,
+body.ms-legal-site select,
+body.ms-contact-public input,
+body.ms-contact-public textarea,
+body[data-page="report"] input,
+body[data-page="report"] textarea,
+body[data-page="orders"] input,
+body[data-page="login"] input {
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+  caret-color: #232427;
+  background: transparent !important;
+  border-color: #232427 !important;
+}
+
+body.ms-legal-site ::placeholder,
+body.ms-contact-public ::placeholder,
+body[data-page="report"] ::placeholder,
+body[data-page="orders"] ::placeholder,
+body[data-page="login"] ::placeholder {
+  color: #6a6a62 !important;
+  opacity: 1 !important;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .ms-legal-top {
+    max-width: none;
+    padding-left: max(1rem, env(safe-area-inset-left, 0px)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right, 0px)) !important;
+  }
+
+  .ms-legal-wrap,
+  .ms-contact-main,
+  .ms-download-main,
+  .ms-orders-main {
+    width: min(100%, calc(100% - 2rem)) !important;
+  }
+
+  .ms-legal-nav {
+    max-width: min(58vw, 14rem);
+  }
+
+  .ms-legal-nav a {
+    font-size: 0.84rem !important;
+    padding: 0.35rem 0.55rem !important;
+  }
+
+  .ms-legal-toc {
+    top: calc(3.15rem + env(safe-area-inset-top, 0px));
+  }
+
+  .ms-legal-doc .ms-card,
+  .ms-legal-article {
+    padding: 1.15rem 1rem !important;
+    border-radius: 20px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .ms-legal-brand span {
+    font-size: 0.95rem;
+  }
+
+  .ms-legal-toc a {
+    font-size: 0.84rem !important;
+    padding: 0.35rem 0.6rem !important;
+  }
+}
+
+/* Never let prefers-color-scheme dark restyle these public cream pages */
+@media (prefers-color-scheme: dark) {
+  :is(
+    body.ms-legal-site,
+    body.ms-contact-public,
+    body.ms-download-page,
+    body[data-page="orders"],
+    body[data-page="login"],
+    body[data-page="report"],
+    body[data-page="contact"],
+    body[data-page="legal"],
+    body[data-page="download"],
+    body[data-page="home"]
+  ) {
+    background: #fcfbef !important;
+    color: #232427 !important;
+  }
+
+  .ms-legal-toc,
+  .ms-legal-top,
+  .ms-legal-foot,
+  .ms-orders-nav {
+    background: #fcfbef !important;
+    border-color: #e6e4d4 !important;
+  }
+
+  .ms-legal-toc a,
+  .ms-legal-nav a,
+  .ms-legal-section-head {
+    color: #232427 !important;
+  }
+
+  .ms-legal-toc-label,
+  .ms-legal-intro,
+  .ms-legal-doc .ms-card p,
+  .ms-legal-doc .ms-card li {
+    color: #55574f !important;
+  }
+}

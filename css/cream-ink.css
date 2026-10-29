@@ -381,8 +381,16 @@ html:not([data-ms-mode="dark"]) :where(
 }
 
 /* —— Links —— */
-html:not([data-ms-mode="dark"]) a:not(.ms-btn):not(.ms-home-cta-primary):not(.ms-home-cta-secondary):not(.ms-nav-link):not(.ms-home-bloom-nav a) {
-  color: var(--ms-link);
+html:not([data-ms-mode="dark"]) a:not(.ms-btn):not(.ms-home-cta-primary):not(.ms-home-cta-secondary):not(.ms-nav-link):not(.ms-home-bloom-nav a):not(.ms-legal-nav a):not(.ms-legal-toc a):not(.ms-orders-nav-link) {
+  color: #1d3a66;
+}
+
+/* Never use powder-blue accent as body link color */
+html:not([data-ms-mode="dark"]) .ms-card a,
+html:not([data-ms-mode="dark"]) .ms-legal-doc a,
+html:not([data-ms-mode="dark"]) .ms-help-card a,
+html:not([data-ms-mode="dark"]) .ms-settings-card a {
+  color: #1d3a66 !important;
 }
 
 /* —— Home polish —— */

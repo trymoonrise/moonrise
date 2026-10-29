@@ -2,16 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Page not found - Moonrise Studio</title>
   <meta name="description" content="This Moonrise Studio page does not exist. Go back home to find a business, build a site, or sign in.">
   <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#232427">
   <style>
-    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: #0f172a; color: #f8fafc; font: 16px/1.5 system-ui, sans-serif; }
-    main { max-width: 28rem; }
-    h1 { font-size: 1.75rem; margin: 0 0 0.5rem; }
-    p { margin: 0 0 1rem; color: #cbd5e1; }
-    a { color: #93c5fd; }
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: max(1.25rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+      background: #fcfbef;
+      color: #232427;
+      font: 500 16px/1.5 "DM Sans", Figtree, system-ui, sans-serif;
+    }
+    main {
+      width: min(22rem, 100%);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 0.55rem;
+      font-size: clamp(1.75rem, 7vw, 2.15rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    p {
+      margin: 0 0 1.35rem;
+      color: #55574f;
+      font-weight: 500;
+    }
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 1.4rem;
+      border-radius: 999px;
+      background: #232427;
+      color: #fcfbef;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    a:hover { opacity: 0.85; }
   </style>
 </head>
 <body>

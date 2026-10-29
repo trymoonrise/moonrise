@@ -4,11 +4,11 @@
 <style>
 html.ms-boot body{visibility:hidden!important}
 #ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.15rem;background:#fcfbef;color:#232427;visibility:visible!important}
-html[data-ms-mode="dark"] #ms-boot{background:#0e1320;color:#e8eef8}
-@media (prefers-color-scheme:dark){html:not([data-ms-mode="light"]) #ms-boot{background:#0e1320;color:#e8eef8}}
+
+
 #ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em}
 #ms-boot .ms-boot-bar{width:7.5rem;height:2px;border-radius:99px;background:rgba(15,23,42,.12);overflow:hidden}
-html[data-ms-mode="dark"] #ms-boot .ms-boot-bar{background:rgba(232,238,248,.16)}
+
 #ms-boot .ms-boot-bar span{display:block;height:100%;width:40%;border-radius:inherit;background:currentColor;animation:ms-boot 1.05s ease-in-out infinite}
 @keyframes ms-boot{0%{transform:translateX(-120%)}100%{transform:translateX(280%)}}
 @media (prefers-reduced-motion:reduce){#ms-boot .ms-boot-bar span{animation:none;width:100%;opacity:.45}}
@@ -88,25 +88,21 @@ document.documentElement.classList.add("ms-boot");
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="icon" href="doc/MoonriseLogo.png" type="image/png">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-menu1">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-public1">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-menu1">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-menu1">
-  <link rel="stylesheet" href="css/cream-motion.css?v=20261028-menu1">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-public1">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-public1">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261028-public1">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-public1">
   <script defer src="js/config.js?v=20261006-blue"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
 <style>
-.ms-legal-intro{margin:0.35rem 0 0;color:var(--ms-muted);font-size:0.98rem;line-height:1.55;max-width:42rem}
-.ms-legal-toc{position:sticky;top:calc(2.75rem + env(safe-area-inset-top,0px));z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:0.35rem 0.45rem;margin:1.1rem 0 1.25rem;padding:0.55rem 0 0.75rem;background:rgba(243,245,248,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(226,232,240,0.85)}
-html[data-ms-mode="dark"] .ms-legal-toc{background:rgba(14,19,32,0.88);border-bottom-color:rgba(51,65,85,0.55)}
-@media (prefers-color-scheme:dark){html:not([data-ms-mode="light"]) .ms-legal-toc{background:rgba(14,19,32,0.88);border-bottom-color:rgba(51,65,85,0.55)}}
-.ms-legal-toc-label{font-size:0.78rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ms-muted);margin-right:0.15rem}
-.ms-legal-toc a{flex:0 0 auto;text-decoration:none;color:var(--ms-muted);font-size:0.88rem;font-weight:600;padding:0.35rem 0.65rem;border-radius:999px;background:rgba(255,255,255,0.65);box-shadow:0 1px 2px rgba(15,23,42,0.04)}
-html[data-ms-mode="dark"] .ms-legal-toc a{background:rgba(30,41,59,0.55)}
-.ms-legal-toc a:hover{color:var(--ms-ink);background:#fff}
-.ms-legal-section-head{margin:0 0 0.15rem;font-size:clamp(1.25rem,3vw,1.45rem);font-weight:700;letter-spacing:-0.02em;color:#0f172a}
-html[data-ms-mode="dark"] .ms-legal-section-head{color:#e8eef8}
-@media (prefers-color-scheme:dark){html:not([data-ms-mode="light"]) .ms-legal-section-head{color:#e8eef8}}
+.ms-legal-intro{margin:0.35rem 0 0;color:#55574f;font-size:1.02rem;line-height:1.5;max-width:36rem;font-weight:500}
+.ms-legal-toc{position:sticky;top:calc(3.4rem + env(safe-area-inset-top,0px));z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:0.4rem;margin:1.25rem 0 1.35rem;padding:0.65rem 0.15rem 0.85rem;background:#fcfbef;border-bottom:1px solid #e6e4d4}
+.ms-legal-toc-label{width:100%;font-size:0.78rem;font-weight:700;letter-spacing:0.04em;text-transform:lowercase;color:#55574f;margin:0 0 0.15rem}
+.ms-legal-toc a{flex:0 0 auto;text-decoration:none;color:#232427;font-size:0.9rem;font-weight:650;padding:0.4rem 0.75rem;border-radius:999px;background:#f5f4e8;border:1px solid #e6e4d4}
+.ms-legal-toc a:hover,.ms-legal-toc a:focus-visible{color:#232427;background:#bfd3e3;border-color:transparent}
+.ms-legal-section-head{margin:0 0 0.15rem;font-size:clamp(1.25rem,3vw,1.45rem);font-weight:800;letter-spacing:-0.02em;color:#232427}
 </style>
 
 </head>

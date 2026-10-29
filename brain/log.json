@@ -3,6 +3,25 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.1.4",
+      "date": "2026-10-28",
+      "title": "Public pages cream polish and contrast",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Legal, report, contact, download, orders, login, and guide pages share one cream public layout with readable navy links and powder-blue active pills."
+          ],
+          "fixes": [
+            "Legal “On this page” bar no longer flips to a dark slate strip under system dark mode.",
+            "Body copy and TOC labels use darker warm gray so text stays clear on cream across phone and desktop widths.",
+            "Public page columns stay within a phone-friendly max width with safe-area padding.",
+            "404 page uses the same cream and ink look instead of a dark blue screen."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.3",
       "date": "2026-10-28",
       "title": "Centered home hero copy",

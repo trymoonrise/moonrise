@@ -13440,10 +13440,7 @@ body.ms-legal-site {
   flex-direction: column;
   min-height: 100dvh;
   padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
-  background:
-    radial-gradient(1000px 480px at 8% -8%, #bfd3e3 0%, transparent 55%),
-    radial-gradient(800px 420px at 100% 0%, #e0e7ff 0%, transparent 48%),
-    var(--ms-bg);
+  background: #fcfbef;
 }
 
 .ms-legal-top {
@@ -13458,11 +13455,11 @@ body.ms-legal-site {
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: calc(0.7rem + env(safe-area-inset-top, 0px)) max(1rem, calc((100% - 52rem) / 2)) 0.7rem;
-  background: rgba(243, 245, 248, 0.86);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  padding: calc(0.7rem + env(safe-area-inset-top, 0px)) max(1rem, calc((100% - 40rem) / 2)) 0.7rem;
+  background: rgba(252, 251, 239, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e6e4d4;
 }
 
 .ms-legal-brand {
@@ -13512,13 +13509,13 @@ body.ms-legal-site {
 
 .ms-legal-nav a.is-active {
   color: var(--ms-ink);
-  background: #fbfaf1;
-  box-shadow: 0 1px 2px rgba(60, 55, 30, 0.06);
+  background: #bfd3e3;
+  box-shadow: 0 2px 8px rgba(60, 80, 110, 0.12);
 }
 
 .ms-legal-wrap {
   flex: 1;
-  width: min(52rem, calc(100% - 2rem));
+  width: min(40rem, calc(100% - 2.3rem));
   margin: 0 auto 2rem;
   padding: 0.5rem 0 2rem;
 }
@@ -13543,10 +13540,10 @@ body.ms-legal-site {
   z-index: 40;
   padding: 0.85rem 1.25rem calc(0.85rem + env(safe-area-inset-bottom, 0px));
   text-align: center;
-  border-top: 1px solid rgba(226, 232, 240, 0.9);
-  background: rgba(243, 245, 248, 0.86);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid #e6e4d4;
+  background: rgba(252, 251, 239, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .ms-legal-foot a {
@@ -13588,8 +13585,8 @@ body.ms-legal-site {
 .ms-legal-doc .ms-card li {
   margin: 0 0 0.65rem;
   line-height: 1.62;
-  color: var(--ms-muted);
-  font-size: 0.92rem;
+  color: #55574f;
+  font-size: 0.98rem;
 }
 
 .ms-legal-doc .ms-card p:last-child,
@@ -13603,9 +13600,9 @@ body.ms-legal-site {
 }
 
 .ms-legal-doc .ms-card a {
-  color: var(--ms-accent);
+  color: #1d3a66;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .ms-legal-doc .ms-card a:hover {
@@ -14240,7 +14237,7 @@ body.is-home-ready .ms-home-shell {
 }
 
 .ms-home-orb.is-open i {
-  background: #232427;
+  background: #fcfbef;
 }
 
 .ms-home-orb.is-open i:nth-child(1) {
@@ -14261,9 +14258,8 @@ body.is-home-ready .ms-home-shell {
   inset: 0;
   z-index: 55;
   box-sizing: border-box;
-  background: #fcfbef;
+  background: #1d1d1f;
   visibility: hidden;
-  opacity: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14273,19 +14269,18 @@ body.is-home-ready .ms-home-shell {
     max(1rem, env(safe-area-inset-bottom, 0px))
     max(1.5rem, env(safe-area-inset-left, 0px));
   pointer-events: none;
-  clip-path: none;
-  transform: none;
+  clip-path: circle(0% at calc(100% - 2.6rem) 2.4rem);
   transition:
-    opacity 0.28s ease-out,
-    visibility 0s linear 0.28s;
+    clip-path 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.75s;
 }
 
 .ms-home-bloom.is-open {
   visibility: visible;
-  opacity: 1;
+  clip-path: circle(150% at calc(100% - 2.6rem) 2.4rem);
   pointer-events: auto;
   transition:
-    opacity 0.28s ease-out,
+    clip-path 0.75s cubic-bezier(0.22, 1, 0.36, 1),
     visibility 0s linear 0s;
 }
 
@@ -14306,17 +14301,17 @@ body.is-home-ready .ms-home-shell {
   font-size: clamp(1.45rem, min(5vw, 6svh), 2.65rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #232427;
+  color: #fcfbef;
   text-decoration: none;
   line-height: 1.12;
   white-space: nowrap;
   opacity: 0;
-  transform: translateY(12px);
+  transform: scale(0.94);
   position: relative;
   transition:
-    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.2s ease;
+    opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.25s ease;
 }
 
 .ms-home-bloom-nav a::after {
@@ -14336,7 +14331,7 @@ body.is-home-ready .ms-home-shell {
 .ms-home-bloom.is-open .ms-home-bloom-nav a {
   opacity: 1;
   transform: none;
-  transition-delay: calc(0.08s + var(--nav-i, 0) * 0.05s);
+  transition-delay: calc(0.18s + var(--nav-i, 0) * 0.08s);
 }
 
 .ms-home-bloom:not(.is-open) .ms-home-bloom-nav a {
@@ -14344,7 +14339,7 @@ body.is-home-ready .ms-home-shell {
 }
 
 .ms-home-bloom-nav a:hover {
-  color: #1d3a66;
+  color: #c8c8cc;
 }
 
 .ms-home-bloom-nav a:hover::after {
@@ -14355,14 +14350,18 @@ body.ms-home-menu-open {
   overflow: hidden;
 }
 
+body.ms-home-menu-open .ms-home-nav {
+  z-index: 60;
+}
+
 body.ms-home-menu-open .ms-home-brand {
-  color: #232427;
+  color: #fcfbef;
 }
 
 body.ms-home-menu-open .ms-home-brand img {
   box-shadow:
-    0 0 0 1px rgba(35, 36, 39, 0.08),
-    0 4px 14px rgba(60, 55, 30, 0.08);
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 4px 10px rgba(15, 23, 42, 0.2);
 }
 
 body[data-page="login"] .ms-home-nav,
@@ -15562,11 +15561,16 @@ body.is-home-ready .ms-home-hero-copy {
   }
 
   .ms-home-bloom {
+    clip-path: circle(0% at calc(100% - 2.1rem) 2.35rem);
     padding:
       max(1rem, env(safe-area-inset-top, 0px))
       max(1.5rem, env(safe-area-inset-right, 0px))
       max(1rem, env(safe-area-inset-bottom, 0px))
       max(1.5rem, env(safe-area-inset-left, 0px));
+  }
+
+  .ms-home-bloom.is-open {
+    clip-path: circle(160% at calc(100% - 2.1rem) 2.35rem);
   }
 
   .ms-home-bloom-nav {
