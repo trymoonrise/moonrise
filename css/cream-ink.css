@@ -812,23 +812,44 @@ html:not([data-ms-mode="dark"]) :where(
   background-image: none !important;
 }
 
+/* Slide-to-generate matches Scan nearby: ink track, cream thumb (not pale toggle grey). */
 html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb,
 html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:hover,
-html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:focus {
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:focus,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-thumb,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-thumb:hover,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-thumb:focus {
   background: var(--ms-surface) !important;
   color: var(--ms-ink) !important;
-  box-shadow: var(--ms-shadow-card) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 3px 10px rgba(60, 55, 30, 0.18) !important;
 }
 
-html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:focus-visible {
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:focus-visible,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-thumb:focus-visible {
   outline: 2px solid var(--ms-ink) !important;
   outline-offset: 2px !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-lf-slide-track,
 html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-track {
-  background: var(--ms-track-off) !important;
+  background: var(--ms-ink) !important;
   background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-slide-fill,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-fill {
+  background: #3a3c36 !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-slide-label,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-label {
+  color: #f5f4e8 !important;
+  -webkit-text-fill-color: #f5f4e8 !important;
 }
 
 /* —— Flat cream surfaces (no cool washes) —— */

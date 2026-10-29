@@ -3,6 +3,25 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.3.2",
+      "date": "2026-10-28",
+      "title": "Finder scan reliability, slide colors",
+      "tag": "v2.3.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.3.2",
+      "sections": [
+        {
+          "heading": "Finder",
+          "added": [],
+          "fixes": [
+            "Scan nearby no longer sticks on a busy button when location or geocode stalls.",
+            "Live business scrape falls back to the cloud scanner when OpenStreetMap returns empty.",
+            "Nearby OpenStreetMap searches try a tighter radius first to avoid timeouts.",
+            "Slide to generate uses a solid ink track again instead of a washed-out grey bar."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.1",
       "date": "2026-10-28",
       "title": "Smoother shell, Finder map fixes",

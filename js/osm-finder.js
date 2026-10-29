@@ -158,17 +158,24 @@
 
   async function nominatimGet(pathAndQuery) {
     await throttleNominatim();
-    const res = await fetch(NOMINATIM + pathAndQuery, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "MoonriseStudio/1.0 (business finder; https://trymoonrise.com)",
-      },
-    });
-    if (!res.ok) {
-      throw new Error("Place search failed (" + res.status + "). Try again in a moment.");
+    const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), 9000) : null;
+    try {
+      const res = await fetch(NOMINATIM + pathAndQuery, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "MoonriseStudio/1.0 (business finder; https://trymoonrise.com)",
+        },
+        signal: controller ? controller.signal : undefined,
+      });
+      if (!res.ok) {
+        throw new Error("Place search failed (" + res.status + "). Try again in a moment.");
+      }
+      return await res.json();
+    } finally {
+      if (timer) clearTimeout(timer);
     }
-    return res.json();
   }
 
   async function geocodePlace(query) {

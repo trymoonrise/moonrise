@@ -330,7 +330,7 @@ html:not([data-ms-mode="dark"]) .ms-set-photo-preview {
 }
 
 .ms-lf-slide-track {
-  background: var(--ms-accent);
+  background: #232427;
 }
 
 .ms-switch input:checked + .ms-switch-track {

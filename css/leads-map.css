@@ -855,9 +855,9 @@
   min-height: calc(var(--ms-lf-slide-thumb) + var(--ms-lf-slide-pad) * 2) !important;
   height: calc(var(--ms-lf-slide-thumb) + var(--ms-lf-slide-pad) * 2) !important;
   border-radius: var(--ms-lf-slide-radius) !important;
-  background: var(--lf-btn-bg) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: var(--lf-btn-shadow) !important;
+  background: #232427 !important;
+  border: 0 !important;
+  box-shadow: none !important;
   cursor: grab;
   touch-action: pan-y !important;
 }
@@ -865,7 +865,7 @@
 .ms-lf-map-card .ms-lf-slide-fill {
   border-radius: var(--ms-lf-slide-radius) 0 0 var(--ms-lf-slide-radius) !important;
   background: #3a3c36 !important;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .ms-lf-map-card .ms-lf-slide.is-dragging .ms-lf-slide-fill,
@@ -2487,12 +2487,12 @@ body[data-page="leads"] #ms-hard-refresh,
 .ms-lf-map-card .ms-lf-slide-track {
   border: 0 !important;
   border-radius: 980px !important;
-  background: #1d1d1f !important;
+  background: #232427 !important;
   box-shadow: none !important;
 }
 
 .ms-lf-map-card .ms-lf-slide-fill {
-  background: #3a3a3c !important;
+  background: #3a3c36 !important;
   border-radius: 980px !important;
 }
 

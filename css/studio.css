@@ -5831,14 +5831,12 @@ input.ms-input:-webkit-autofill:focus {
 
 /* Finder slide visuals - layout/physics live in css/ms-lf-slide.css */
 .ms-lf-slide-track {
-  background: linear-gradient(135deg, #8fb0d6, #232427);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.28) inset,
-    0 10px 22px rgba(35, 36, 39, 0.28);
+  background: #232427;
+  box-shadow: none;
 }
 
 .ms-lf-slide-fill {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.08));
+  background: #3a3c36;
 }
 
 .ms-lf-slide-label {

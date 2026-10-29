@@ -216,9 +216,19 @@
         label: coords.searchLabel || "",
       };
     }
+    const withTimeout = (promise, ms) =>
+      Promise.race([
+        promise,
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("geocode_timeout")), ms)
+        ),
+      ]);
     try {
       if (typeof window.OsmFinder?.reverse === "function") {
-        const geo = await window.OsmFinder.reverse(coords.lat, coords.lng);
+        const geo = await withTimeout(
+          window.OsmFinder.reverse(coords.lat, coords.lng),
+          10000
+        );
         if (geo && (geo.city || geo.state || geo.label)) {
           const region = geo.region || geo.state || "";
           const state = stateDisplayName(geo.state || region);
@@ -235,7 +245,7 @@
         "&longitude=" +
         encodeURIComponent(coords.lng) +
         "&localityLanguage=en";
-      const res = await fetch(url, { method: "GET" });
+      const res = await withTimeout(fetch(url, { method: "GET" }), 8000);
       const data = await res.json().catch(() => ({}));
       const city = String(data?.city || data?.locality || "").trim();
       const regionCode = String(data?.principalSubdivisionCode || "")
@@ -538,6 +548,7 @@
     const opts = options && typeof options === "object" ? options : {};
     const token = ++areaRequestToken;
     const willSearch = opts.autoSearch !== false;
+    let handedOffSearch = false;
     setError("");
     if (areaToggle) areaToggle.disabled = true;
     if (willSearch) {
@@ -556,7 +567,8 @@
       hideSuggest("location");
       setError("");
       if (willSearch) {
-        await findNearbyLeads({ fromAreaToggle: true });
+        handedOffSearch = true;
+        await findNearbyLeads({ fromAreaToggle: true, requestToken: token });
       }
       return true;
     } catch (e) {
@@ -566,10 +578,6 @@
       persistAreaPref(false);
       if (areaToggle) areaToggle.checked = false;
       syncAreaUi();
-      if (willSearch) {
-        clearLoadingCards();
-        setFindBusy(false);
-      }
       setError(e?.message || LOCATION_DENIED_MSG);
       if (MAP_UI) {
         setStatus("Allow location to scan businesses near you.");
@@ -578,6 +586,11 @@
       return false;
     } finally {
       if (areaToggle) areaToggle.disabled = false;
+      // findNearbyLeads clears busy when it runs; otherwise release the Scan button here.
+      if (willSearch && !handedOffSearch) {
+        clearLoadingCards();
+        setFindBusy(false);
+      }
     }
   }
 
@@ -700,10 +713,43 @@
         query: data?.placeLabel || query || "",
         leads,
         rowCount: leads.length,
+        source: "openstreetmap",
       };
     } catch (e) {
       return { ok: false, error: scrapeErrorMessage(e) };
     }
+  }
+
+  /** OSM first, then authenticated LeadFinder cloud when OSM is empty or down. */
+  async function liveScrapeLeads(type, location, query, geo) {
+    const osm = await searchViaOpenStreetMap(type, location, query, geo);
+    if (osm.ok && osm.leads?.length) return osm;
+    if (!leadFinderBaseUrl()) {
+      return osm.skipped && !osm.error
+        ? { ok: false, skipped: true, reason: osm.reason || "not_configured" }
+        : osm;
+    }
+    if (MAP_UI) setStatus("Refreshing live business results...");
+    const lf = await scrapeViaLeadFinder(type, location, query, geo);
+    if (lf.ok && lf.leads?.length) {
+      return {
+        ok: true,
+        query: lf.query || query || "",
+        leads: (lf.leads || []).map((lead) => hydrateLeadCoords(lead)),
+        rowCount: lf.leads?.length || 0,
+        source: "leadfinder",
+      };
+    }
+    if (osm.ok) return osm;
+    if (lf.ok) return { ok: true, leads: [], rowCount: 0, source: "leadfinder" };
+    if (lf.skipped && osm.skipped) {
+      return { ok: false, skipped: true, reason: "not_configured" };
+    }
+    return {
+      ok: false,
+      error: lf.error || osm.error || "Live scrape returned no leads",
+      skipped: !!(lf.skipped && osm.skipped),
+    };
   }
 
   function restoreNormalList() {
@@ -1588,7 +1634,7 @@
                   "Maps scanner is still busy. Wait about a minute, then try Near me again.",
               };
             }
-            setStatus(MAP_UI ? "Scanning Google Maps near you..." : "Scanning Google Maps...");
+            setStatus(MAP_UI ? "Scanning live maps near you..." : "Scanning live maps...");
           } else if (pre.ok && preData?.busy === true && preData?.queueMode === true) {
             setStatus("Maps scanner busy - your scan is queued...");
           }
@@ -1615,7 +1661,7 @@
                 "Maps scanner is still busy. Wait about a minute, then try Near me again.",
             };
           }
-          setStatus(MAP_UI ? "Scanning Google Maps near you..." : "Scanning Google Maps...");
+          setStatus(MAP_UI ? "Scanning live maps near you..." : "Scanning live maps...");
           res = await fetch(base + "/search", {
             method: "POST",
             headers,
@@ -2959,7 +3005,7 @@
   function mapLinkLabel(url) {
     const href = String(url || "");
     if (/openstreetmap\.org/i.test(href)) return "OpenStreetMap";
-    if (/google\./i.test(href)) return "Google Maps";
+    if (/google\./i.test(href) || /openstreetmap\.org/i.test(href)) return "Open map";
     return href ? "Map" : "";
   }
 
@@ -3439,37 +3485,50 @@
 
   async function findNearbyLeads(options) {
     const opts = options && typeof options === "object" ? options : {};
-    const token = areaRequestToken;
+    let token =
+      Number.isFinite(Number(opts.requestToken)) && Number(opts.requestToken) > 0
+        ? Number(opts.requestToken)
+        : areaRequestToken;
     mapUserNavigated = false;
     mapScanFrameId += 1;
     mapScanFramedId = 0;
+
+    setFindBusy(true, "near");
+    if (!opts.fromAreaToggle) showLoadingCards();
+    if (MAP_UI) setStatus("Scanning nearby...");
+
+    try {
     if (!userCoords) {
       const ok = await enableInMyArea({ autoSearch: false });
-      if (!ok || token !== areaRequestToken) return;
+      // Nested enableInMyArea bumps areaRequestToken - follow the latest scan id.
+      token = areaRequestToken;
+      if (!ok || !userCoords) {
+        setError(LOCATION_DENIED_MSG);
+        return;
+      }
     }
     if (!userCoords) {
       setError(LOCATION_DENIED_MSG);
       return;
     }
+    if (token !== areaRequestToken) return;
 
     const searchType = nearbySearchType(typeInput?.value || "");
     const scrapeType = searchType || "businesses";
     const websiteFilter = getWebsiteFilter();
     const query = searchType ? searchType + " near you" : "Businesses near you";
     const geoContext = await reverseGeocodeSearchContext(userCoords);
+    if (token !== areaRequestToken) return;
     const nearbyLocation =
       geoContext?.label ||
       [geoContext?.city, geoContext?.region].filter(Boolean).join(", ") ||
       "";
 
     setError("");
-    setStatus("");
+    setStatus(MAP_UI ? "Scanning nearby..." : "");
     hideAllSuggests();
     displayLimit = DISPLAY_PAGE;
     resetLeadReveals();
-    setFindBusy(true, "near");
-    if (!opts.fromAreaToggle) showLoadingCards();
-    if (MAP_UI) setStatus("Scanning nearby...");
     flyToUserLocation(userCoords);
 
     let leads = [];
@@ -3491,7 +3550,6 @@
       return Array.from(byId.values());
     }
 
-    try {
       // Prefer true distance from cached/local leads so "nearby" is geo-real.
       if (!allLeads.length && isDbConnected()) {
         try {
@@ -3552,11 +3610,21 @@
 
       if ((!leads.length || (MAP_UI && leads.length < 8)) && shouldTryLiveScrape()) {
         if (MAP_UI && !leads.length) setStatus("Scanning OpenStreetMap near you...");
-        const scraped = await searchViaOpenStreetMap(scrapeType, nearbyLocation, "", {
-          latitude: userCoords.lat,
-          longitude: userCoords.lng,
-          radiusMiles: NEARBY_RADIUS_MILES,
-        });
+        // Prefer a tighter Overpass radius first (fewer timeouts), then widen once.
+        const radii = [Math.min(4, NEARBY_RADIUS_MILES), NEARBY_RADIUS_MILES].filter(
+          (n, i, arr) => arr.indexOf(n) === i
+        );
+        let scraped = { ok: false, skipped: true };
+        for (let i = 0; i < radii.length; i += 1) {
+          if (token !== areaRequestToken) break;
+          scraped = await liveScrapeLeads(scrapeType, nearbyLocation, "", {
+            latitude: userCoords.lat,
+            longitude: userCoords.lng,
+            radiusMiles: radii[i],
+          });
+          if (scraped.ok && scraped.leads?.length) break;
+          if (scraped.skipped) break;
+        }
         if (scraped.ok && scraped.leads?.length) {
           scrapedFresh = true;
           const scrapedNearby = applyNearbyFilterAndSort(
@@ -3715,10 +3783,10 @@
       }
 
       if ((!leads.length || (MAP_UI && leads.length < MIN_SEARCH_RESULTS)) && shouldTryLiveScrape() && (searchType || location.trim())) {
-        if (MAP_UI && !leads.length) setStatus("Scanning OpenStreetMap...");
+        if (MAP_UI && !leads.length) setStatus("Scanning nearby businesses...");
         const statewide =
           US_STATE_NAMES.has(String(location || "").trim().toLowerCase()) && userCoords;
-        const scraped = await searchViaOpenStreetMap(
+        const scraped = await liveScrapeLeads(
           searchType,
           location,
           "",
