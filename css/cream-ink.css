@@ -12,6 +12,9 @@
   --ms-dashed: #d9d8cc;
   --ms-track-off: #ddddd3;
   --ms-segment: #f2f3f6;
+  /* Selection chrome stays powder blue even when theme accent is ink. */
+  --ms-select: #bfd3e3;
+  --ms-select-soft: #cfe0ee;
   --ms-accent: #bfd3e3;
   --ms-accent-bright: #8fb0d6;
   --ms-accent-strong: #232427;
@@ -255,22 +258,69 @@ html:not([data-ms-mode="dark"]) .ms-switch input:checked + .ms-switch-track::aft
 html:not([data-ms-mode="dark"]) .ms-sidebar {
   background: var(--ms-bg) !important;
   border-right: 1px solid var(--ms-line) !important;
+  box-shadow: none !important;
+}
+
+/* Drop cool-gray / taupe islands so the rail stays one cream plane */
+html:not([data-ms-mode="dark"]) .ms-nav,
+html:not([data-ms-mode="dark"]) .ms-nav-group {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-sidebar-foot {
+  background: var(--ms-surface-alt) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-user-avatar {
+  background: var(--ms-select) !important;
+  color: var(--ms-ink) !important;
+  box-shadow: 0 0 0 2px var(--ms-bg), 0 0 0 3.5px var(--ms-select) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-pill,
+html:not([data-ms-mode="dark"]) .ms-tab-pill {
+  background: var(--ms-select) !important;
+  box-shadow: var(--ms-shadow-segment) !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-nav-link {
   color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  background: transparent !important;
   border-radius: 14px;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link .ms-nav-ico,
+html:not([data-ms-mode="dark"]) .ms-nav-link .ms-nav-label {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-nav-link:hover {
   background: var(--ms-surface-alt) !important;
   color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
 }
 
+/* Powder-blue selected state — never follow theme --ms-accent (often ink) */
 html:not([data-ms-mode="dark"]) .ms-nav-link.is-active {
-  background: var(--ms-accent) !important;
+  background: transparent !important;
   color: var(--ms-ink) !important;
-  font-weight: 600;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  font-weight: 650;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav:not(:has(.ms-nav-pill)) .ms-nav-link.is-active,
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-active.is-generating {
+  background: var(--ms-select) !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
   box-shadow: var(--ms-shadow-segment) !important;
 }
 
@@ -280,8 +330,8 @@ html:not([data-ms-mode="dark"]) .ms-nav-link.is-active .ms-nav-ico {
 
 html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating {
   color: var(--ms-ink) !important;
-  background: color-mix(in srgb, var(--ms-accent) 55%, var(--ms-bg)) !important;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ms-accent) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--ms-select) 55%, var(--ms-bg)) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ms-select) 70%, transparent) !important;
   animation: none !important;
 }
 
@@ -321,7 +371,7 @@ html:not([data-ms-mode="dark"]) :where(
   .ms-auth-tab.is-active,
   .ms-tabs .is-active
 ) {
-  background: var(--ms-accent) !important;
+  background: var(--ms-select) !important;
   color: var(--ms-ink) !important;
   border-radius: 12px !important;
   box-shadow: var(--ms-shadow-segment) !important;
@@ -524,6 +574,32 @@ html:not([data-ms-mode="dark"]) :where(.ms-chip, .ms-tag, .ms-pill) {
   color: var(--ms-ink) !important;
   border: 1px solid var(--ms-line) !important;
   border-radius: var(--ms-radius-pill) !important;
+}
+
+/* Dashboard / project tiles: no cool-white or blue-tint cards on cream */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-post,
+  .ms-dash-preview,
+  .ms-dash-island,
+  .ms-dash-island-panel,
+  .ms-dash-progress-card
+) {
+  background: var(--ms-surface) !important;
+  border-color: var(--ms-line) !important;
+  box-shadow: var(--ms-shadow-card) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-dash-count-badge,
+html:not([data-ms-mode="dark"]) .ms-dash-projects-filter.is-active {
+  background: var(--ms-select) !important;
+  color: var(--ms-ink) !important;
+  border-color: transparent !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-dash-post-avatar,
+html:not([data-ms-mode="dark"]) .ms-dash-preview-placeholder {
+  background: var(--ms-select) !important;
+  color: var(--ms-ink) !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(.ms-skeleton, .ms-placeholder-block) {

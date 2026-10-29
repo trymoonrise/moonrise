@@ -306,19 +306,20 @@ html:not([data-ms-mode="dark"]) .ms-sidebar {
 }
 
 html:not([data-ms-mode="dark"]) .ms-nav-pill {
-  background: #f5f4e8;
+  background: #bfd3e3;
   border-radius: 0.85rem;
-  box-shadow: none;
+  box-shadow: 0 2px 8px rgba(60, 80, 110, 0.15);
 }
 
 html:not([data-ms-mode="dark"]) .ms-nav-link {
-  color: #1d1d1f;
+  color: #232427;
   font-weight: 500;
 }
 
 html:not([data-ms-mode="dark"]) .ms-nav-link.is-active {
-  color: #1d1d1f;
-  font-weight: 600;
+  color: #232427;
+  font-weight: 650;
+  background: transparent;
 }
 
 html:not([data-ms-mode="dark"]) .ms-user-avatar,
@@ -1270,7 +1271,7 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   border-color: rgb(255 255 255 / 16%) !important;
 }
 
-/* Mobile toolbar: flush to the bottom, no floating pill. */
+/* Mobile toolbar: flush bottom, icons only, roomy tap targets. */
 @media (max-width: 900px) {
   .ms-tabbar {
     left: 0 !important;
@@ -1279,7 +1280,7 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
     width: 100% !important;
     transform: none !important;
     margin: 0 !important;
-    padding: 0.15rem 0.2rem calc(0.15rem + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 0.35rem 0.25rem calc(0.35rem + env(safe-area-inset-bottom, 0px)) !important;
     border: 0 !important;
     border-top: 1px solid rgb(0 0 0 / 8%) !important;
     border-radius: 0 !important;
@@ -1296,8 +1297,9 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   .ms-tab,
   .ms-tab.is-active,
   .ms-tabbar.is-pill-ready .ms-tab.is-active {
-    height: 3rem;
-    min-height: 3rem;
+    height: 3.65rem;
+    min-height: 3.65rem;
+    gap: 0;
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
@@ -1313,8 +1315,8 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   }
 
   .ms-tab-ico svg {
-    width: 20px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
   }
 
   .ms-tab.is-active .ms-tab-ico svg {
@@ -1322,13 +1324,17 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   }
 
   .ms-tab-label {
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-  }
-
-  .ms-tab.is-active .ms-tab-label {
-    font-weight: 650;
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
   }
 
   .ms-top-brand-logo {
@@ -1340,7 +1346,7 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   body[data-page="settings"] #page-body,
   body[data-page="builder"].ms-lb-setup #page-body,
   body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
-    padding-bottom: calc(4.4rem + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 

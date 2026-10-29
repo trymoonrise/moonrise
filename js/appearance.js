@@ -185,6 +185,13 @@
       document.head.appendChild(link);
     }
     if (document.head.lastElementChild !== ui) document.head.appendChild(ui);
+    /* Keep cream layers after appearance + studio-ui so selection chrome stays powder blue. */
+    ["link[href*='cream-ink.css']", "link[href*='cream-motion.css']", "link[href*='public-pages.css']"].forEach(function (sel) {
+      var sheet = document.querySelector(sel);
+      if (sheet && sheet.parentNode && document.head.lastElementChild !== sheet) {
+        document.head.appendChild(sheet);
+      }
+    });
   }
 
   function watchCss() {
