@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.1",
+      "date": "2026-10-28",
+      "title": "Minimal full-stage landing",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home uses a minimal full-viewport stage, soft how-it-works panels, FAQ actions, and a black footer."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.4.0",
       "date": "2026-10-28",
       "title": "Stop cache-reload loops between pages",
