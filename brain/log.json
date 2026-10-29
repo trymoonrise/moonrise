@@ -3,6 +3,23 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.7",
+      "date": "2026-10-28",
+      "title": "Soft rounded home, no first-load scroll",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home uses soft rounded panels, gentler buttons, and a calmer cream stage.",
+            "Home loading splash finishes faster before the page shows."
+          ],
+          "fixes": [
+            "Landing no longer lets you scroll up a little on first visit."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.6",
       "date": "2026-10-28",
       "title": "Softer home, no first-load scroll jump",
