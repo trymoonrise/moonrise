@@ -3,6 +3,39 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.1",
+      "date": "2026-10-28",
+      "title": "Smoother shell, Finder map fixes",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Loading splash waits for page assets and fonts, then eases the bar and fade more smoothly."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Sidebar Workspace and Account lists sit in a super-light grey rounded container again.",
+            "Opening the mobile menu eases the bottom tab bar away; closing it brings the bar back.",
+            "Dashboard Recent posts opens and closes with a smooth expand animation."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Finder",
+          "added": [
+            "Business Finder search, cards, and Scan nearby controls are a bit larger."
+          ],
+          "fixes": [
+            "After Scan nearby, the map stays pannable instead of fighting camera refits.",
+            "Dragging the business results handle down minimizes and closes the sheet again."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.0",
       "date": "2026-10-28",
       "title": "Tighter tabs, simpler Settings",

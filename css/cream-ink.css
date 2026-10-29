@@ -332,8 +332,13 @@ html:not([data-ms-mode="dark"]) .ms-sidebar {
   box-shadow: none !important;
 }
 
-/* Drop cool-gray / taupe islands so the rail stays one cream plane */
-html:not([data-ms-mode="dark"]) .ms-nav,
+/* Category lists sit in a super-light grey shell on the cream rail */
+html:not([data-ms-mode="dark"]) .ms-nav {
+  background: #f0f1f3 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
 html:not([data-ms-mode="dark"]) .ms-nav-group {
   background: transparent !important;
   border: 0 !important;

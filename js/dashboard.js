@@ -1343,10 +1343,19 @@
     const btn = document.getElementById("dash-projects-toggle");
     const panel = document.getElementById("dash-projects-reveal");
     if (!section || !btn || !panel) return;
+    let busy = false;
     btn.addEventListener("click", () => {
+      if (busy) return;
       const open = !section.classList.contains("is-open");
       section.classList.toggle("is-open", open);
       btn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (window.StudioMotion?.setOpen) {
+        busy = true;
+        Promise.resolve(window.StudioMotion.setOpen(panel, open)).finally(() => {
+          busy = false;
+        });
+        return;
+      }
       if (open) panel.removeAttribute("hidden");
       else panel.setAttribute("hidden", "");
     });

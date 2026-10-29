@@ -53,22 +53,10 @@
     },
   ];
 
-  const LEGAL = [
-    { id: "guide", href: "guide.html", label: "Guide", icon: "book" },
-    {
-      id: "privacy",
-      href: "legal.html#privacy",
-      label: "Privacy",
-      icon: "shield",
-      legalHash: "privacy",
-    },
-    {
-      id: "terms",
-      href: "legal.html#terms",
-      label: "Terms",
-      icon: "scroll",
-      legalHash: "terms",
-    },
+  const SIDEBAR_LEGAL = [
+    { id: "guide", href: "guide.html", label: "Guide" },
+    { id: "privacy", href: "legal.html#privacy", label: "Privacy", legalHash: "privacy" },
+    { id: "terms", href: "legal.html#terms", label: "Terms", legalHash: "terms" },
   ];
 
   const ICONS = {
@@ -95,9 +83,6 @@
     download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>',
     menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="7" x2="19" y2="7"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="17" x2="19" y2="17"/></svg>',
     info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.2V16"/><circle cx="12" cy="8" r="0.8" fill="currentColor" stroke="none"/></svg>',
-    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
-    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-    scroll: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h6"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>',
   };
 
@@ -297,20 +282,7 @@
     }
 
     const activeIds = item.pages || [item.id];
-    let active = "";
-    if (!item.external) {
-      if (item.legalHash) {
-        const hash = String(location.hash || "")
-          .replace(/^#/, "")
-          .toLowerCase();
-        const onLegal = page === "legal";
-        const hashMatch =
-          hash === item.legalHash || (!hash && item.legalHash === "privacy");
-        if (onLegal && hashMatch) active = " is-active";
-      } else if (activeIds.includes(page)) {
-        active = " is-active";
-      }
-    }
+    const active = !item.external && activeIds.includes(page) ? " is-active" : "";
     const externalAttrs = item.external
       ? ' data-external-redirect="true" data-external-url="' +
         String(item.href || "").replace(/"/g, "&quot;") +
@@ -587,8 +559,50 @@
   }
 
   function sidebarLegal(page) {
-    const itemsHtml = LEGAL.map((item) => navLink(item, page)).join("");
-    return navGroup("Legal", "info", itemsHtml, "Legal");
+    const hash = String(location.hash || "")
+      .replace(/^#/, "")
+      .toLowerCase();
+    const links = SIDEBAR_LEGAL.map((item) => {
+      let active = "";
+      if (item.id === "guide" && page === "guide") active = " is-active";
+      if (item.legalHash && page === "legal") {
+        const on =
+          hash === item.legalHash || (!hash && item.legalHash === "privacy");
+        if (on) active = " is-active";
+      }
+      return (
+        '<a class="ms-sidebar-legal-link' +
+        active +
+        '" href="' +
+        item.href +
+        '">' +
+        item.label +
+        "</a>"
+      );
+    });
+    return (
+      '<nav class="ms-sidebar-legal" aria-label="Help and legal">' +
+      links.join('<span class="ms-sidebar-legal-sep" aria-hidden="true">·</span>') +
+      "</nav>"
+    );
+  }
+
+  function syncLegalNavActive() {
+    const page = document.body?.dataset?.page || "";
+    const hash = String(location.hash || "")
+      .replace(/^#/, "")
+      .toLowerCase();
+    const nav = document.querySelector(".ms-sidebar-legal");
+    if (!nav) return;
+    nav.querySelectorAll(".ms-sidebar-legal-link").forEach((link) => {
+      const href = String(link.getAttribute("href") || "");
+      let on = false;
+      if (href.indexOf("guide.html") !== -1) on = page === "guide";
+      else if (href.indexOf("#privacy") !== -1)
+        on = page === "legal" && (hash === "privacy" || !hash);
+      else if (href.indexOf("#terms") !== -1) on = page === "legal" && hash === "terms";
+      link.classList.toggle("is-active", on);
+    });
   }
 
   function initialFrom(text) {
@@ -801,7 +815,6 @@
       '<div class="ms-sidebar-scroll">' +
       navGroup("Workspace", "layers", menuHtml, "Main") +
       navGroup("Account", "user", accountHtml, "Account") +
-      sidebarLegal(page) +
       '<p class="ms-sidebar-updated" id="ms-sidebar-updated" hidden>Last updated: ...</p>' +
       "</div>" +
       '<a class="ms-credits-tag ms-income-tag" id="ms-user-income" href="dashboard.html" title="View income on Dashboard">' +
@@ -810,6 +823,7 @@
       bootIncomeLabel +
       "</strong>" +
       "</a>" +
+      sidebarLegal(page) +
       '<div class="ms-sidebar-foot">' +
       '<div class="ms-user-row">' +
       '<a class="ms-user-profile" href="settings.html" aria-label="Open settings">' +
@@ -1827,6 +1841,8 @@
     if (document.body.dataset.msShellPainted === "1") return;
     document.body.dataset.msShellPainted = "1";
     buildShell();
+    syncLegalNavActive();
+    window.addEventListener("hashchange", syncLegalNavActive);
     ensureHardRefreshButton();
     bindNavCancel();
     bindShellListeners();

@@ -37,10 +37,10 @@
   <meta name="description" content="Manage or cancel Moonrise website hosting after go-live payment.">
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-settings-ui" onload="document.documentElement.classList.remove('ms-hold')">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-motion-finder" onload="document.documentElement.classList.remove('ms-hold')">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
-  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-settings-ui">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-cream-full">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-motion-finder">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-motion-finder">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261028-boot-smooth">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-legal-min">
   <script defer src="js/config.js?v=20261006-blue"></script>
@@ -239,7 +239,7 @@
           title = "Hosting is active";
           body = [amount ? amount + " per month" : "", renews ? "renews " + renews : ""]
             .filter(Boolean)
-            .join(" · ") || "This site's hosting subscription is active.";
+            .join(" ï¿½ ") || "This site's hosting subscription is active.";
         }
         result.replaceChildren();
         const heading = document.createElement("strong");

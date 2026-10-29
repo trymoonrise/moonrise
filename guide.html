@@ -3,12 +3,12 @@
 <head>
 <style>
 html.ms-boot body{visibility:hidden!important}
-#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.2rem;background:#fcfbef;color:#232427;visibility:visible!important;opacity:1;transition:opacity .48s cubic-bezier(.22,1,.36,1),visibility .48s linear}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#fcfbef;color:#232427;visibility:visible!important;opacity:1;transition:opacity .56s cubic-bezier(.22,1,.36,1),visibility .56s linear}
 #ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
-#ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .7s cubic-bezier(.22,1,.36,1) .08s forwards}
-#ms-boot .ms-boot-bar{width:8.25rem;height:2.5px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .7s cubic-bezier(.22,1,.36,1) .18s forwards}
-#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform}
-@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .85s cubic-bezier(.22,1,.36,1) .06s forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .85s cubic-bezier(.22,1,.36,1) .16s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .45s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
 </style>
 <script>
@@ -25,12 +25,14 @@ document.documentElement.classList.add("ms-boot");
   document.documentElement.appendChild(boot);
   var bar=boot.querySelector(".ms-boot-bar span");
   var progress=0;
+  var appReady=false;
+  var assetsReady=false;
   var ready=false;
   var done=false;
   var started=performance.now();
   var readyAt=0;
-  var minMs=980;
-  var maxMs=20000;
+  var minMs=1100;
+  var maxMs=22000;
   var reduce=false;
   try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
 
@@ -57,7 +59,14 @@ document.documentElement.classList.add("ms-boot");
       return;
     }
     boot.classList.add("is-leaving");
-    setTimeout(hide, 480);
+    setTimeout(hide, 560);
+  }
+
+  function markReady(){
+    if(ready||done)return;
+    if(!(appReady&&assetsReady))return;
+    ready=true;
+    readyAt=performance.now();
   }
 
   function tick(now){
@@ -71,10 +80,10 @@ document.documentElement.classList.add("ms-boot");
       }
       var sinceReady=Math.max(0,now-readyAt);
       var minLeft=Math.max(0,minMs-elapsed);
-      var fillMs=Math.max(420,minLeft);
+      var fillMs=Math.max(520,minLeft);
       var t=Math.min(1,sinceReady/fillMs);
-      var eased=1-Math.pow(1-t,3.2);
-      var from=Math.max(progress, 86);
+      var eased=1-Math.pow(1-t,3.4);
+      var from=Math.max(progress, 88);
       setProgress(from+((100-from)*eased));
       if(t>=1 && progress>=99.6){
         setProgress(100);
@@ -82,12 +91,13 @@ document.documentElement.classList.add("ms-boot");
         return;
       }
     }else{
-      var tWait=Math.min(1,elapsed/3200);
-      var target=84*(1-Math.pow(1-tWait,2.6));
-      setProgress(progress+(target-progress)*0.085);
+      var tWait=Math.min(1,elapsed/4200);
+      var target=86*(1-Math.pow(1-tWait,2.8));
+      setProgress(progress+(target-progress)*0.07);
       if(elapsed>=maxMs){
-        ready=true;
-        readyAt=now;
+        appReady=true;
+        assetsReady=true;
+        markReady();
       }
     }
     requestAnimationFrame(tick);
@@ -95,10 +105,25 @@ document.documentElement.classList.add("ms-boot");
   requestAnimationFrame(tick);
 
   window.__msReleaseBoot=function(){
-    if(ready||done)return;
-    ready=true;
-    readyAt=performance.now();
+    appReady=true;
+    markReady();
   };
+
+  function markAssets(){
+    assetsReady=true;
+    markReady();
+  }
+
+  var assetJobs=[];
+  if(document.fonts&&document.fonts.ready){
+    assetJobs.push(document.fonts.ready.catch(function(){}));
+  }
+  assetJobs.push(new Promise(function(resolve){
+    if(document.readyState==="complete") resolve();
+    else window.addEventListener("load", resolve, { once:true });
+  }));
+  Promise.allSettled(assetJobs).then(markAssets);
+  setTimeout(markAssets, maxMs);
   setTimeout(function(){ if(window.__msReleaseBoot) window.__msReleaseBoot(); },maxMs);
 })();
 </script>
@@ -136,11 +161,11 @@ document.documentElement.classList.add("ms-boot");
   <title>Creator Guide - Moonrise Studio</title>
   <meta name="description" content="Complete Moonrise creator guide: Business Finder, Builder, publishing, watermark checkout, payouts, MVP+, contact forms, domains, and getting paid.">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-settings-ui">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-motion-finder">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
-  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-settings-ui">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-dash-min">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-motion-finder">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-motion-finder">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261028-boot-smooth">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-legal-min">
 </head>
@@ -501,13 +526,13 @@ document.documentElement.classList.add("ms-boot");
   </div>
 
   <script defer src="js/config.js?v=20261006-blue"></script>
-  <script defer src="js/app.js?v=20261028-legal-nav"></script>
+  <script defer src="js/app.js?v=20261028-legal-text"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261005-auth"></script>
   <script defer src="js/auth.js?v=20261005-auth"></script>
   <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20260924-static-nav"></script>
+  <script defer src="js/ui-motion.js?v=20261028-motion-finder"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
 </body>

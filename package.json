@@ -1,6 +1,6 @@
 {
   "name": "moonrise",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "private": true,
   "description": "Moonrise static app + API worker entry for Vercel",
   "engines": {

@@ -66,6 +66,9 @@
   let lastMarkerSignature = "";
   let lastMarkerIdsSignature = "";
   let mapUserNavigated = false;
+  /** One auto camera frame per scan; further marker updates must not steal the map. */
+  let mapScanFrameId = 0;
+  let mapScanFramedId = 0;
   let mapIdlePreloadTimer = null;
 
   function readAreaPref() {
@@ -2070,12 +2073,12 @@
   const SHEET_MQ = "(max-width: 900px)";
   /** Ratios of the free band between top chrome and Scan dock (not full viewport). */
   const SHEET_SNAPS = [
-    { id: "peek", ratio: 0.42 },
-    { id: "mid", ratio: 0.68 },
+    { id: "peek", ratio: 0.36 },
+    { id: "mid", ratio: 0.64 },
     { id: "full", ratio: 1 },
   ];
   /** While dragging, allow shrinking past peek so the sheet can be dismissed. */
-  const SHEET_DRAG_FLOOR_PX = 36;
+  const SHEET_DRAG_FLOOR_PX = 28;
   const SHEET_UI_GAP = 10;
   let sheetSnapIndex = 1;
   let sheetDragBound = false;
@@ -2188,22 +2191,32 @@
   function shouldDismissSheet(heightPx) {
     const peekH = sheetSnapHeights()[0]?.px || 0;
     if (!(peekH > 0)) return false;
-    const dismissAt = Math.max(SHEET_DRAG_FLOOR_PX + 24, Math.round(peekH * 0.62));
+    // Easier pull-to-close: dismiss once the sheet is clearly below peek.
+    const dismissAt = Math.max(SHEET_DRAG_FLOOR_PX + 18, Math.round(peekH * 0.82));
     return heightPx < dismissAt;
   }
 
-  function settleSheetAfterDrag(heightPx) {
+  function settleSheetAfterDrag(heightPx, dragMeta) {
     const h = Number(heightPx) || 0;
-    if (shouldDismissSheet(h)) {
+    const meta = dragMeta && typeof dragMeta === "object" ? dragMeta : {};
+    const startH = Number(meta.startH) || h;
+    const dyDown = startH - h;
+    if (shouldDismissSheet(h) || (sheetSnapIndex <= 0 && dyDown > 48)) {
       hideResultsPanel();
       return;
     }
     const snaps = sheetSnapHeights();
     let idx = nearestSheetSnapIndex(h);
     const cur = snaps[sheetSnapIndex]?.px || h;
-    if (h > cur + 28) idx = Math.min(snaps.length - 1, sheetSnapIndex + 1);
-    else if (h < cur - 28) idx = Math.max(0, sheetSnapIndex - 1);
-    else idx = nearestSheetSnapIndex(h);
+    if (h > cur + 24) idx = Math.min(snaps.length - 1, sheetSnapIndex + 1);
+    else if (h < cur - 24) {
+      idx = Math.max(0, sheetSnapIndex - 1);
+      // From peek, a clear downward drag minimizes (closes) instead of bouncing.
+      if (sheetSnapIndex <= 0 && dyDown > 28) {
+        hideResultsPanel();
+        return;
+      }
+    } else idx = nearestSheetSnapIndex(h);
     setSheetSnap(idx);
   }
 
@@ -2297,11 +2310,12 @@
         if (dragMoved) applyLiveHeight(pendingH);
       }
       const h = currentSheetHeightPx();
+      const startedAt = startH;
       dragMoved = false;
       scrollLock = null;
       resultsPanel.style.removeProperty("transition");
       sheetDragLimits = null;
-      settleSheetAfterDrag(h);
+      settleSheetAfterDrag(h, { startH: startedAt });
     };
 
     const onMove = (e) => {
@@ -3426,6 +3440,9 @@
   async function findNearbyLeads(options) {
     const opts = options && typeof options === "object" ? options : {};
     const token = areaRequestToken;
+    mapUserNavigated = false;
+    mapScanFrameId += 1;
+    mapScanFramedId = 0;
     if (!userCoords) {
       const ok = await enableInMyArea({ autoSearch: false });
       if (!ok || token !== areaRequestToken) return;
@@ -3595,7 +3612,9 @@
         rankLeadsForView(leads, { trustScrapeRadius: scrapedFresh }),
         query
       );
-      if (MAP_UI && leads.length) flyToUserLocation(userCoords);
+      if (MAP_UI && leads.length && !mapUserNavigated && mapScanFramedId !== mapScanFrameId) {
+        flyToUserLocation(userCoords);
+      }
     } finally {
       setFindBusy(false);
     }
@@ -3616,11 +3635,13 @@
   }
 
   async function findLeads(options) {
-    mapUserNavigated = false;
     if (inMyArea) {
       await findNearbyLeads(options);
       return;
     }
+    mapUserNavigated = false;
+    mapScanFrameId += 1;
+    mapScanFramedId = 0;
 
     const opts = options && typeof options === "object" ? options : {};
     const normalized = normalizeSearchInputs(typeInput?.value || "", locationInput?.value || "");
@@ -4273,6 +4294,17 @@
         dragRotate: false,
       });
       lfMap.touchZoomRotate?.disableRotation?.();
+      try {
+        lfMap.dragPan?.enable?.();
+        lfMap.scrollZoom?.enable?.();
+        lfMap.touchZoomRotate?.enable?.();
+        lfMap.touchZoomRotate?.disableRotation?.();
+        lfMap.boxZoom?.enable?.();
+        lfMap.keyboard?.enable?.();
+        lfMap.doubleClickZoom?.enable?.();
+      } catch (_) {
+        /* ignore */
+      }
       lfMap.addControl(
         new maplibregl.AttributionControl({ compact: false }),
         "bottom-right"
@@ -4442,8 +4474,16 @@
 
     const draggingMap =
       typeof lfMap.dragPan?.isActive === "function" && lfMap.dragPan.isActive();
-    // Fit bounds only for a fresh scan. Once the user pans or zooms, leave the camera alone.
-    if (opts.fit === false || mapUserNavigated || draggingMap || !pointCount) return;
+    // Fit bounds only once per scan. Later marker refreshes and user pans must keep the camera.
+    if (
+      opts.fit === false ||
+      mapUserNavigated ||
+      draggingMap ||
+      !pointCount ||
+      (mapScanFrameId > 0 && mapScanFramedId === mapScanFrameId)
+    ) {
+      return;
+    }
     try {
       if (pointCount === 1) {
         lfMap.easeTo({
@@ -4454,6 +4494,7 @@
       } else {
         lfMap.fitBounds(bounds, { padding: 48, maxZoom: 14, duration: 0 });
       }
+      if (mapScanFrameId) mapScanFramedId = mapScanFrameId;
     } catch (_) {
       /* ignore */
     }
@@ -4461,12 +4502,14 @@
 
   function flyToUserLocation(coords) {
     if (!lfMap || !coords || typeof maplibregl === "undefined") return;
+    if (mapUserNavigated) return;
     const reduce = motionReduced();
     lfMap.easeTo({
       center: [coords.lng, coords.lat],
       zoom: 13,
       duration: reduce ? 0 : 700,
     });
+    if (mapScanFrameId) mapScanFramedId = mapScanFrameId;
     if (userLocationMarker) {
       userLocationMarker.setLngLat([coords.lng, coords.lat]);
       return;

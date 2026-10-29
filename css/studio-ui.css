@@ -442,10 +442,18 @@ html:not([data-ms-mode="dark"]) .ms-toast-inner {
   color: #1d1d1f !important;
 }
 
-html:not([data-ms-mode="dark"]) a.ms-sidebar-legal-link,
 html:not([data-ms-mode="dark"]) .ms-help a,
 html:not([data-ms-mode="dark"]) .ms-prose a {
   color: #0066cc;
+}
+
+html:not([data-ms-mode="dark"]) a.ms-sidebar-legal-link {
+  color: #55574f !important;
+}
+
+html:not([data-ms-mode="dark"]) a.ms-sidebar-legal-link:hover,
+html:not([data-ms-mode="dark"]) a.ms-sidebar-legal-link.is-active {
+  color: #232427 !important;
 }
 
 /* Mobile: no top app bar — menu sits in the bottom tab bar after Settings. */
@@ -1295,7 +1303,7 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
     right: 0 !important;
     bottom: 0 !important;
     width: 100% !important;
-    transform: none !important;
+    transform: translate3d(0, 0, 0) !important;
     margin: 0 !important;
     padding: 0.3rem 0.5rem calc(0.3rem + env(safe-area-inset-bottom, 0px)) !important;
     border: 0 !important;
@@ -1313,6 +1321,21 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
     visibility: visible !important;
     pointer-events: auto !important;
     z-index: 220 !important;
+    transition:
+      transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.32s ease,
+      visibility 0s linear 0s !important;
+  }
+
+  body.ms-nav-open .ms-tabbar {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translate3d(0, 110%, 0) !important;
+    transition:
+      transform 0.38s cubic-bezier(0.4, 0, 0.7, 0.2),
+      opacity 0.28s ease,
+      visibility 0s linear 0.38s !important;
   }
 
   .ms-tab-pill {
@@ -1371,14 +1394,6 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
     width: 24px !important;
     height: 24px !important;
     display: block !important;
-  }
-
-  body.ms-nav-open .ms-tabbar,
-  body.ms-nav-open .ms-tabbar .ms-menu-toggle.ms-tab-menu {
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: none !important;
   }
 
   .ms-tab.is-active,
