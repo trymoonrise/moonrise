@@ -329,9 +329,9 @@ body[data-page="home"] .ms-home-footer-signin {
   background: transparent;
 }
 
-/* Menu overlay — fade + staggered link rise */
+/* Circular dark bloom expands from the menu button */
 body[data-page="home"] .ms-home-bloom {
-  background: #fcfbef;
+  background: #1d1d1f;
   z-index: 70;
 }
 
@@ -340,32 +340,20 @@ body[data-page="home"] .ms-home-nav {
 }
 
 body[data-page="home"] .ms-home-bloom-nav a {
-  color: #232427;
+  color: #fcfbef;
+}
+
+body[data-page="home"] .ms-home-bloom-nav a:hover {
+  color: #c8c8cc;
 }
 
 body.ms-home-menu-open .ms-home-brand {
-  color: #232427;
+  color: #fcfbef;
   background: transparent;
 }
 
-body.ms-home-menu-open .ms-home-orb i {
-  background: #232427;
-}
-
-/* Soften page under the open menu without fighting the fade */
-body[data-page="home"].ms-home-menu-open .ms-home-hero,
-body[data-page="home"].ms-home-menu-open .ms-home-how,
-body[data-page="home"].ms-home-menu-open .ms-home-faq,
-body[data-page="home"].ms-home-menu-open .ms-home-footer {
-  opacity: 0;
-  transition: opacity 0.22s ease-out;
-}
-
-body[data-page="home"] .ms-home-hero,
-body[data-page="home"] .ms-home-how,
-body[data-page="home"] .ms-home-faq,
-body[data-page="home"] .ms-home-footer {
-  transition: opacity 0.22s ease-out;
+body.ms-home-menu-open .ms-home-orb.is-open i {
+  background: #fcfbef;
 }
 
 /* Subtle entrance */

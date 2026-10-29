@@ -78,7 +78,11 @@
   .ms-home-bloom,
   .ms-home-bloom.is-open {
     transition: none !important;
-    opacity: 1;
+    clip-path: none !important;
+  }
+
+  .ms-home-bloom.is-open {
+    visibility: visible !important;
   }
 
   .ms-home-bloom-nav a,

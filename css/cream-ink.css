@@ -469,11 +469,23 @@ body[data-page="home"] .ms-home-cta-secondary {
 }
 
 body[data-page="home"] .ms-home-bloom {
-  background: #fcfbef !important;
+  background: #1d1d1f !important;
 }
 
 body[data-page="home"] .ms-home-bloom-nav a {
-  color: #232427 !important;
+  color: #fcfbef !important;
+}
+
+body[data-page="home"] .ms-home-bloom-nav a:hover {
+  color: #c8c8cc !important;
+}
+
+body[data-page="home"].ms-home-menu-open .ms-home-brand {
+  color: #fcfbef !important;
+}
+
+body[data-page="home"].ms-home-menu-open .ms-home-orb.is-open i {
+  background: #fcfbef !important;
 }
 
 body[data-page="home"] .ms-home-method-card {

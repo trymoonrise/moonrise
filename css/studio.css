@@ -13584,9 +13584,9 @@ body.ms-legal-site {
 .ms-legal-doc .ms-card p,
 .ms-legal-doc .ms-card li {
   margin: 0 0 0.65rem;
-  line-height: 1.62;
-  color: #55574f;
-  font-size: 0.98rem;
+  line-height: 1.65;
+  color: #3a3c36;
+  font-size: 1rem;
 }
 
 .ms-legal-doc .ms-card p:last-child,
@@ -15804,8 +15804,13 @@ body.is-home-ready .ms-home-hero-copy {
     animation: none;
   }
 
+  .ms-home-bloom,
   .ms-home-bloom.is-open {
+    clip-path: none;
     opacity: 1;
+  }
+
+  .ms-home-bloom.is-open {
     visibility: visible;
   }
 

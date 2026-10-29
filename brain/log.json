@@ -3,6 +3,34 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.1.5",
+      "date": "2026-10-28",
+      "title": "Darker legal body text",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "Legal policy paragraphs use a darker ink gray so long-form copy stays easy to read on cream cards."
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.5",
+      "date": "2026-10-28",
+      "title": "Circular dark menu bloom restored",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "Pages menu expands as a dark circle from the menu button again, with light link text."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.4",
       "date": "2026-10-28",
       "title": "Public pages cream polish and contrast",
