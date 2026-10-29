@@ -5,7 +5,7 @@
     {
       "version": "2.1.7",
       "date": "2026-10-28",
-      "title": "Legal page encoding and minimal layout",
+      "title": "Menu contrast, phone sizing, and legal polish",
       "tag": "v2.1.7",
       "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.7",
       "sections": [
@@ -15,7 +15,9 @@
             "Legal uses a quieter text TOC, roomier cream cards, and a spacer footer instead of broken separators."
           ],
           "fixes": [
-            "Legal, report, and related public pages no longer show diamond question marks between footer and related links."
+            "Legal, report, and related public pages no longer show diamond question marks between footer and related links.",
+            "Open menu keeps the moonrise brand wordmark light on the dark circle instead of black-on-black.",
+            "Phone menu uses compact wrapping link type so it no longer reads like the desktop wordmark layout."
           ]
         }
       ]
