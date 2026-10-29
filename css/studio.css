@@ -14070,66 +14070,7 @@ body.ms-legal-site {
   }
 }
 
-/* Marketing home ΓÇö dashboard-aligned studio chrome */
-.ms-home-greet {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  place-items: center;
-  background: #fff;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.ms-home-greet.is-done {
-  opacity: 0;
-}
-
-.ms-home-greet-word {
-  margin: 0;
-  font-family: var(--ms-font);
-  font-weight: 900;
-  font-size: clamp(2.25rem, 8vw, 4.5rem);
-  letter-spacing: -0.06em;
-  color: #000;
-  line-height: 1;
-  text-transform: lowercase;
-  user-select: none;
-  will-change: transform, opacity;
-  --ms-greet-max: 8;
-  transform: scale(0.15);
-  opacity: 0;
-  transform-origin: center center;
-  backface-visibility: hidden;
-  white-space: nowrap;
-}
-
-.ms-home-greet-word.is-playing {
-  animation: ms-home-greet-word 1.6s cubic-bezier(0.5, 0, 0.2, 1) forwards;
-}
-
-@keyframes ms-home-greet-word {
-  0% {
-    transform: scale(0.2) rotate(-4deg);
-    opacity: 0;
-  }
-  14% {
-    transform: scale(var(--ms-greet-max)) rotate(2deg);
-    opacity: 1;
-  }
-  34% {
-    transform: scale(var(--ms-greet-max)) rotate(-1deg);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.06) rotate(5deg);
-    opacity: 0;
-  }
-}
-
+/* Marketing home — dashboard-aligned studio chrome */
 .ms-home-shell {
   opacity: 0;
   transform: translateY(8px);
@@ -14139,19 +14080,9 @@ body.ms-legal-site {
   width: 100%;
   max-width: 100%;
   overflow-x: clip;
+  animation: ms-home-shell-failsafe 0.001s 2.5s forwards;
 }
 
-body.is-home-ready .ms-home-shell {
-  opacity: 1;
-  transform: none;
-  animation: none;
-}
-
-body.ms-home-booting {
-  overflow: hidden;
-}
-
-/* If greet JS stalls (e.g. fonts.ready never resolves), still reveal the homepage. */
 @keyframes ms-home-shell-failsafe {
   to {
     opacity: 1;
@@ -14159,11 +14090,9 @@ body.ms-home-booting {
   }
 }
 
-body.ms-home-booting .ms-home-shell {
-  animation: ms-home-shell-failsafe 0.001s 2.8s forwards;
-}
-
-body.ms-home-booting.is-home-ready .ms-home-shell {
+body.is-home-ready .ms-home-shell {
+  opacity: 1;
+  transform: none;
   animation: none;
 }
 
@@ -14327,13 +14256,20 @@ body.ms-home-booting.is-home-ready .ms-home-shell {
   position: fixed;
   inset: 0;
   z-index: 55;
+  box-sizing: border-box;
   background:
     radial-gradient(ellipse 60% 50% at 80% 10%, rgba(59, 130, 246, 0.28), transparent 55%),
     #0f172a;
   clip-path: circle(0% at calc(100% - 2.6rem) 2.4rem);
   visibility: hidden;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:
+    max(1rem, env(safe-area-inset-top, 0px))
+    max(1.5rem, env(safe-area-inset-right, 0px))
+    max(1rem, env(safe-area-inset-bottom, 0px))
+    max(1.5rem, env(safe-area-inset-left, 0px));
   pointer-events: none;
   transition:
     clip-path 0.75s cubic-bezier(0.22, 1, 0.36, 1),
@@ -14350,8 +14286,12 @@ body.ms-home-booting.is-home-ready .ms-home-shell {
 }
 
 .ms-home-bloom-nav {
+  width: max-content;
+  max-width: min(22rem, 100%);
+  margin: 0;
   text-align: center;
   display: grid;
+  justify-items: center;
   gap: clamp(1rem, 2.5vh, 1.75rem);
 }
 
@@ -14782,9 +14722,9 @@ body.is-home-ready .ms-home-tile:not(.is-ready) {
   z-index: 1;
   box-sizing: border-box;
   width: min(100%, 40rem);
-  min-height: calc(100svh - 5.75rem - clamp(10rem, 22vh, 16rem));
+  min-height: calc(100svh - 5.75rem);
   margin: 0 auto;
-  padding: 1.25rem 1.25rem 0;
+  padding: 1.25rem 1.25rem 2.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15461,9 +15401,9 @@ body.is-home-ready .ms-home-hero-copy {
   .ms-home-hero-copy {
     width: 100%;
     max-width: none;
-    min-height: calc(100svh - 5.75rem - clamp(12rem, 38vh, 22rem));
+    min-height: calc(100svh - 5.75rem);
     margin: 0 auto;
-    padding: clamp(1.25rem, 4vh, 2rem) 0 0.75rem;
+    padding: clamp(1.25rem, 4vh, 2rem) 0 2rem;
     gap: 0.85rem;
     justify-content: center;
     align-items: center;
@@ -15622,10 +15562,10 @@ body.is-home-ready .ms-home-hero-copy {
   .ms-home-bloom {
     clip-path: circle(0% at calc(100% - 2.1rem) 2.35rem);
     padding:
-      max(5.75rem, env(safe-area-inset-top))
-      max(1.5rem, env(safe-area-inset-right))
-      max(2.25rem, env(safe-area-inset-bottom))
-      max(1.5rem, env(safe-area-inset-left));
+      max(1rem, env(safe-area-inset-top, 0px))
+      max(1.5rem, env(safe-area-inset-right, 0px))
+      max(1rem, env(safe-area-inset-bottom, 0px))
+      max(1.5rem, env(safe-area-inset-left, 0px));
   }
 
   .ms-home-bloom.is-open {
@@ -15633,8 +15573,8 @@ body.is-home-ready .ms-home-hero-copy {
   }
 
   .ms-home-bloom-nav {
-    width: 100%;
-    max-width: 22rem;
+    width: max-content;
+    max-width: min(22rem, 100%);
     gap: 1.25rem;
   }
 
@@ -15652,7 +15592,7 @@ body.is-home-ready .ms-home-hero-copy {
 
   .ms-home-hero-copy {
     gap: 0.8rem;
-    min-height: calc(100svh - 5.75rem - clamp(11rem, 36vh, 20rem));
+    min-height: calc(100svh - 5.75rem);
   }
 
   .ms-home-ctas {
@@ -15702,8 +15642,8 @@ body.is-home-ready .ms-home-hero-copy {
   }
 
   .ms-home-hero-copy {
-    min-height: calc(100svh - 5.75rem - clamp(10rem, 34vh, 18rem));
-    padding: clamp(1rem, 3vh, 1.5rem) 0 0.5rem;
+    min-height: calc(100svh - 5.75rem);
+    padding: clamp(1rem, 3vh, 1.5rem) 0 1.75rem;
     gap: 0.75rem;
   }
 
@@ -15767,10 +15707,6 @@ body.is-home-ready .ms-home-hero-copy {
     display: none;
   }
 
-  .ms-home-greet-word {
-    font-size: clamp(1.85rem, 11vw, 3rem);
-    padding-inline: 1rem;
-  }
 }
 
 @media (max-width: 380px) {
@@ -15824,9 +15760,7 @@ body.is-home-ready .ms-home-hero-copy {
   .ms-home-bloom,
   .ms-home-bloom-nav a,
   .ms-home-orb i,
-  .ms-home-greet-word,
-  .ms-home-shell,
-  .ms-home-greet {
+  .ms-home-shell {
     animation: none;
     transition: none;
   }
@@ -15868,11 +15802,6 @@ body.is-home-ready .ms-home-hero-copy {
     animation: none;
   }
 
-  .ms-home-hero-copy {
-    opacity: 1;
-    transform: none;
-  }
-
   .ms-home-bloom.is-open .ms-home-bloom-nav a {
     opacity: 1;
     transform: none;
@@ -15881,10 +15810,6 @@ body.is-home-ready .ms-home-hero-copy {
   .ms-home-shell {
     opacity: 1;
     transform: none;
-  }
-
-  .ms-home-greet {
-    display: none;
   }
 }
 

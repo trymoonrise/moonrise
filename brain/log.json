@@ -3,7 +3,26 @@
   "product": "Moonrise",
   "updates": [
     {
-      "version": "1.0.106",
+      "version": "2.0.7",
+      "date": "2026-10-28",
+      "title": "Base-10 versions, simpler home load",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home uses the simple moonrise loading bar instead of a logo splash.",
+            "Landing hero is just the headline, supporting line, and Start earning / Learn More CTAs.",
+            "Version numbers use base-10 rollup: patch 0–9, then minor; minor 0–9, then major (1.0.9 → 1.1.0 → … → 2.0.0).",
+            "Historical release notes and GitHub Releases are remapped from the old 1.0.N patch line onto the new scheme."
+          ],
+          "fixes": [
+            "Pages menu links are centered in the full-screen overlay."
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.0.6",
       "date": "2026-10-28",
       "title": "Polished flyer layout and reliable print",
       "sections": [
@@ -19,7 +38,7 @@
       ]
     },
     {
-      "version": "1.0.105",
+      "version": "2.0.5",
       "date": "2026-10-28",
       "title": "Clearer sign-in email errors when Resend domain pending",
       "sections": [
@@ -32,7 +51,7 @@
       ]
     },
     {
-      "version": "1.0.104",
+      "version": "2.0.4",
       "date": "2026-10-28",
       "title": "Editor fullscreen fix and printable website flyer",
       "sections": [
@@ -50,7 +69,7 @@
       ]
     },
     {
-      "version": "1.0.103",
+      "version": "2.0.3",
       "date": "2026-10-28",
       "title": "Match pre-B&W blue home CSS exactly",
       "sections": [
@@ -66,7 +85,7 @@
       ]
     },
     {
-      "version": "1.0.102",
+      "version": "2.0.2",
       "date": "2026-10-28",
       "title": "Blue home style restored and legal pages unified",
       "sections": [
@@ -84,7 +103,7 @@
       ]
     },
     {
-      "version": "1.0.101",
+      "version": "2.0.1",
       "date": "2026-10-28",
       "title": "Simple home landing and checklist gate cleared",
       "sections": [
@@ -108,7 +127,7 @@
       ]
     },
     {
-      "version": "1.0.100",
+      "version": "2.0.0",
       "date": "2026-10-27",
       "title": "Home bands, age gate, and in-app account delete",
       "sections": [
@@ -146,7 +165,7 @@
       ]
     },
     {
-      "version": "1.0.99",
+      "version": "1.9.9",
       "date": "2026-10-27",
       "title": "Point GitHub Latest at the current ship",
       "sections": [
@@ -162,7 +181,7 @@
       ]
     },
     {
-      "version": "1.0.98",
+      "version": "1.9.8",
       "date": "2026-10-27",
       "title": "Simple boot, fresh leads after delete, shared slim UI",
       "sections": [
@@ -184,13 +203,13 @@
           "added": [
             "Surface styles ship as studio-ui with Moonrise-only naming in cache keys and asset links.",
             "Brain log and release-note scripts track Moonrise versions for GitHub Releases.",
-            "Release notes are backfilled from git history so versions run from 1.0.0 through this ship."
+            "Release notes are backfilled from git history across the remapped version line."
           ]
         }
       ]
     },
     {
-      "version": "1.0.97",
+      "version": "1.9.7",
       "date": "2026-10-06",
       "title": "Generate clean modern sites from a small set of simple style families",
       "sections": [
@@ -203,7 +222,7 @@
       ]
     },
     {
-      "version": "1.0.96",
+      "version": "1.9.6",
       "date": "2026-10-06",
       "title": "Flatten the homepage gallery, darken Slide to generate, and keep the channel menu open when staying here",
       "sections": [
@@ -216,7 +235,7 @@
       ]
     },
     {
-      "version": "1.0.95",
+      "version": "1.9.5",
       "date": "2026-10-06",
       "title": "Remove the grey chip behind the active mobile tab",
       "sections": [
@@ -229,7 +248,7 @@
       ]
     },
     {
-      "version": "1.0.94",
+      "version": "1.9.4",
       "date": "2026-10-06",
       "title": "Ship the black-and-white studio, finder navigation, and email sign-in handoff",
       "sections": [
@@ -242,7 +261,7 @@
       ]
     },
     {
-      "version": "1.0.93",
+      "version": "1.9.3",
       "date": "2026-10-05",
       "title": "Switch Business Finder to OpenStreetMap and ship the grouped preset library",
       "sections": [
@@ -255,7 +274,7 @@
       ]
     },
     {
-      "version": "1.0.92",
+      "version": "1.9.2",
       "date": "2026-10-03",
       "title": "Bring Refunds and Report in line with the other legal pages, pin that header and footer, and hold the moonrise. loader until those pages finish loading",
       "sections": [
@@ -268,7 +287,7 @@
       ]
     },
     {
-      "version": "1.0.91",
+      "version": "1.9.1",
       "date": "2026-10-03",
       "title": "Keep channel switches on a moonrise. loader until the page is ready, and stop the login page and Admin Console from flashing for the wrong account",
       "sections": [
@@ -281,7 +300,7 @@
       ]
     },
     {
-      "version": "1.0.90",
+      "version": "1.9.0",
       "date": "2026-10-03",
       "title": "Stop a dead sign-in from hiding the Employee ID and repeating an invalid-token error",
       "sections": [
@@ -294,7 +313,7 @@
       ]
     },
     {
-      "version": "1.0.89",
+      "version": "1.8.9",
       "date": "2026-10-03",
       "title": "Keep sign-in in an expiring cookie, and add the public pages, receipts, and local fonts the site was missing",
       "sections": [
@@ -307,7 +326,7 @@
       ]
     },
     {
-      "version": "1.0.88",
+      "version": "1.8.8",
       "date": "2026-10-02",
       "title": "Grant lifetime MVP+ after one donation, and keep the store, leaderboard, and owner tools aligned with production",
       "sections": [
@@ -320,7 +339,7 @@
       ]
     },
     {
-      "version": "1.0.87",
+      "version": "1.8.7",
       "date": "2026-10-02",
       "title": "Give the owner one Admin Console for employees, websites, subscribers, and payouts",
       "sections": [
@@ -333,7 +352,7 @@
       ]
     },
     {
-      "version": "1.0.86",
+      "version": "1.8.6",
       "date": "2026-10-02",
       "title": "Keep signup invite-only with a rotating Employee ID, and ship the dark UI, site shell, and hosting fixes",
       "sections": [
@@ -346,7 +365,7 @@
       ]
     },
     {
-      "version": "1.0.85",
+      "version": "1.8.5",
       "date": "2026-10-02",
       "title": "Add appearance controls and generate sites with DeepSeek V4.1 Flash",
       "sections": [
@@ -359,7 +378,7 @@
       ]
     },
     {
-      "version": "1.0.84",
+      "version": "1.8.4",
       "date": "2026-10-01",
       "title": "Replace broken punctuation with plain text so site copy stays readable",
       "sections": [
@@ -372,7 +391,7 @@
       ]
     },
     {
-      "version": "1.0.83",
+      "version": "1.8.3",
       "date": "2026-09-30",
       "title": "Publish site features from details already on the page, and keep generated layouts from clipping",
       "sections": [
@@ -385,7 +404,7 @@
       ]
     },
     {
-      "version": "1.0.82",
+      "version": "1.8.2",
       "date": "2026-09-30",
       "title": "Speed up channel switches and polish the dashboard, payouts, finder, and builder",
       "sections": [
@@ -398,7 +417,7 @@
       ]
     },
     {
-      "version": "1.0.81",
+      "version": "1.8.1",
       "date": "2026-09-24",
       "title": "Make channel switches and page enters static",
       "sections": [
@@ -411,7 +430,7 @@
       ]
     },
     {
-      "version": "1.0.80",
+      "version": "1.8.0",
       "date": "2026-09-24",
       "title": "Ship Support, Builder, and mobile UX polish",
       "sections": [
@@ -424,7 +443,7 @@
       ]
     },
     {
-      "version": "1.0.79",
+      "version": "1.7.9",
       "date": "2026-09-24",
       "title": "Fix mobile editor fullscreen preview",
       "sections": [
@@ -437,7 +456,7 @@
       ]
     },
     {
-      "version": "1.0.78",
+      "version": "1.7.8",
       "date": "2026-09-24",
       "title": "Gate signup behind an employee authorization code",
       "sections": [
@@ -450,7 +469,7 @@
       ]
     },
     {
-      "version": "1.0.77",
+      "version": "1.7.7",
       "date": "2026-09-24",
       "title": "Fix Business Finder empty results on No website, polish channel motion, and redesign leaderboard",
       "sections": [
@@ -463,7 +482,7 @@
       ]
     },
     {
-      "version": "1.0.76",
+      "version": "1.7.6",
       "date": "2026-09-24",
       "title": "Restore Finder asset paths, re-enable long cache for versioned static files, and ship perf1 build reload",
       "sections": [
@@ -476,7 +495,7 @@
       ]
     },
     {
-      "version": "1.0.75",
+      "version": "1.7.5",
       "date": "2026-09-24",
       "title": "Stop immutable JS caching, never defer install prompt, and force BUILD console5 reload so stale app.js cannot stick",
       "sections": [
@@ -489,7 +508,7 @@
       ]
     },
     {
-      "version": "1.0.74",
+      "version": "1.7.4",
       "date": "2026-09-24",
       "title": "Force asset BUILD reload, bump PWA cache, and stop stale SW from replaying old app.js on Donate/Clients",
       "sections": [
@@ -502,7 +521,7 @@
       ]
     },
     {
-      "version": "1.0.73",
+      "version": "1.7.3",
       "date": "2026-09-24",
       "title": "Stop loading install-hint off Settings and drop aria-hidden on the menu toggle; refresh app.js cache across pages",
       "sections": [
@@ -515,7 +534,7 @@
       ]
     },
     {
-      "version": "1.0.72",
+      "version": "1.7.2",
       "date": "2026-09-24",
       "title": "Strip scripts in builder edit-mode preview sandbox and only load install-hint on install pages",
       "sections": [
@@ -528,7 +547,7 @@
       ]
     },
     {
-      "version": "1.0.71",
+      "version": "1.7.1",
       "date": "2026-09-24",
       "title": "Quiet dashboard console: sanitize preview thumbs, defer PWA install only on settings, fix menu aria-hidden focus",
       "sections": [
@@ -541,7 +560,7 @@
       ]
     },
     {
-      "version": "1.0.70",
+      "version": "1.7.0",
       "date": "2026-09-24",
       "title": "Expand legal docs and guide, fix title encoding, add preview maximize",
       "sections": [
@@ -554,7 +573,7 @@
       ]
     },
     {
-      "version": "1.0.69",
+      "version": "1.6.9",
       "date": "2026-09-24",
       "title": "Keep contact form and custom domain manual, enlarge mobile mode switch",
       "sections": [
@@ -567,7 +586,7 @@
       ]
     },
     {
-      "version": "1.0.68",
+      "version": "1.6.8",
       "date": "2026-09-24",
       "title": "Stop slide-to-generate from resetting mid-drag",
       "sections": [
@@ -580,7 +599,7 @@
       ]
     },
     {
-      "version": "1.0.67",
+      "version": "1.6.7",
       "date": "2026-09-24",
       "title": "Smooth Finder slide-to-generate and polish mobile studio chrome",
       "sections": [
@@ -593,7 +612,7 @@
       ]
     },
     {
-      "version": "1.0.66",
+      "version": "1.6.6",
       "date": "2026-09-24",
       "title": "Refresh studio phone chrome and ship the waiting finder, dashboard, and storage updates",
       "sections": [
@@ -606,7 +625,7 @@
       ]
     },
     {
-      "version": "1.0.65",
+      "version": "1.6.5",
       "date": "2026-09-10",
       "title": "Add passkey signup and Settings change-passkey flows",
       "sections": [
@@ -619,7 +638,7 @@
       ]
     },
     {
-      "version": "1.0.64",
+      "version": "1.6.4",
       "date": "2026-09-10",
       "title": "Use one Passkey button for both sign-in and first-time create",
       "sections": [
@@ -632,7 +651,7 @@
       ]
     },
     {
-      "version": "1.0.63",
+      "version": "1.6.3",
       "date": "2026-09-10",
       "title": "Clarify passkey setup when none are saved yet",
       "sections": [
@@ -645,7 +664,7 @@
       ]
     },
     {
-      "version": "1.0.62",
+      "version": "1.6.2",
       "date": "2026-09-10",
       "title": "Keep sidebar Last updated in sync with every GitHub commit",
       "sections": [
@@ -658,7 +677,7 @@
       ]
     },
     {
-      "version": "1.0.61",
+      "version": "1.6.1",
       "date": "2026-09-10",
       "title": "Wait for StudioAuth before login bootstrap",
       "sections": [
@@ -671,7 +690,7 @@
       ]
     },
     {
-      "version": "1.0.60",
+      "version": "1.6.0",
       "date": "2026-09-10",
       "title": "Fix login auth race and force browsers off stale PWA caches",
       "sections": [
@@ -684,7 +703,7 @@
       ]
     },
     {
-      "version": "1.0.59",
+      "version": "1.5.9",
       "date": "2026-09-10",
       "title": "Bust immutable asset caches so passkeys and deep reset ship live",
       "sections": [
@@ -697,7 +716,7 @@
       ]
     },
     {
-      "version": "1.0.58",
+      "version": "1.5.8",
       "date": "2026-09-10",
       "title": "Make the hard-refresh control a deep hard reset",
       "sections": [
@@ -710,7 +729,7 @@
       ]
     },
     {
-      "version": "1.0.57",
+      "version": "1.5.7",
       "date": "2026-09-10",
       "title": "Fix Auto save session persistence and add passkey sign-in",
       "sections": [
@@ -723,7 +742,7 @@
       ]
     },
     {
-      "version": "1.0.56",
+      "version": "1.5.6",
       "date": "2026-09-10",
       "title": "Hide floating menu button while the sidebar is open",
       "sections": [
@@ -736,7 +755,7 @@
       ]
     },
     {
-      "version": "1.0.55",
+      "version": "1.5.5",
       "date": "2026-09-10",
       "title": "Keep install banner to two lines and scale it across devices",
       "sections": [
@@ -749,7 +768,7 @@
       ]
     },
     {
-      "version": "1.0.54",
+      "version": "1.5.4",
       "date": "2026-09-10",
       "title": "Move last-updated under Account and match mobile sidebar scroll",
       "sections": [
@@ -762,7 +781,7 @@
       ]
     },
     {
-      "version": "1.0.53",
+      "version": "1.5.3",
       "date": "2026-09-10",
       "title": "Fix mobile chrome, encoding, and admin nav polish",
       "sections": [
@@ -775,7 +794,7 @@
       ]
     },
     {
-      "version": "1.0.52",
+      "version": "1.5.2",
       "date": "2026-09-10",
       "title": "Update site description to say websites with 1 click",
       "sections": [
@@ -788,7 +807,7 @@
       ]
     },
     {
-      "version": "1.0.51",
+      "version": "1.5.1",
       "date": "2026-09-09",
       "title": "Polish QR card, watermark contacts, and preview reloads",
       "sections": [
@@ -801,7 +820,7 @@
       ]
     },
     {
-      "version": "1.0.50",
+      "version": "1.5.0",
       "date": "2026-09-09",
       "title": "Queue Maps scrapes instead of returning 409 Conflict",
       "sections": [
@@ -814,7 +833,7 @@
       ]
     },
     {
-      "version": "1.0.49",
+      "version": "1.4.9",
       "date": "2026-09-09",
       "title": "Wait out busy Maps scans instead of empty Near Me results",
       "sections": [
@@ -827,7 +846,7 @@
       ]
     },
     {
-      "version": "1.0.48",
+      "version": "1.4.8",
       "date": "2026-09-09",
       "title": "Ship auth, map, clients, and Discord invite fixes",
       "sections": [
@@ -840,7 +859,7 @@
       ]
     },
     {
-      "version": "1.0.47",
+      "version": "1.4.7",
       "date": "2026-09-09",
       "title": "Fix sign-in session sticking past the auth gate",
       "sections": [
@@ -853,7 +872,7 @@
       ]
     },
     {
-      "version": "1.0.46",
+      "version": "1.4.6",
       "date": "2026-09-09",
       "title": "Expose /push routes and enforce leadfinder search auth in production",
       "sections": [
@@ -866,7 +885,7 @@
       ]
     },
     {
-      "version": "1.0.45",
+      "version": "1.4.5",
       "date": "2026-07-21",
       "title": "Improve platform boot speed, slide physics, security, and generation UX",
       "sections": [
@@ -879,7 +898,7 @@
       ]
     },
     {
-      "version": "1.0.44",
+      "version": "1.4.4",
       "date": "2026-07-21",
       "title": "Fix contact form auto mode not applying on live sites",
       "sections": [
@@ -892,7 +911,7 @@
       ]
     },
     {
-      "version": "1.0.43",
+      "version": "1.4.3",
       "date": "2026-07-20",
       "title": "Lower Moonrise platform fee to 10% and raise creator share to 90%",
       "sections": [
@@ -905,7 +924,7 @@
       ]
     },
     {
-      "version": "1.0.42",
+      "version": "1.4.2",
       "date": "2026-07-20",
       "title": "Fix contact forms, card precheck, generation prompts, and mobile homepage",
       "sections": [
@@ -918,7 +937,7 @@
       ]
     },
     {
-      "version": "1.0.41",
+      "version": "1.4.1",
       "date": "2026-07-19",
       "title": "Fix recent projects not rendering on builder.html",
       "sections": [
@@ -931,7 +950,7 @@
       ]
     },
     {
-      "version": "1.0.40",
+      "version": "1.4.0",
       "date": "2026-07-19",
       "title": "Fix Business Finder slide-to-generate drag and require full slide",
       "sections": [
@@ -944,7 +963,7 @@
       ]
     },
     {
-      "version": "1.0.39",
+      "version": "1.3.9",
       "date": "2026-07-19",
       "title": "Require full slide-to-generate drag before launching builder",
       "sections": [
@@ -957,7 +976,7 @@
       ]
     },
     {
-      "version": "1.0.38",
+      "version": "1.3.8",
       "date": "2026-07-19",
       "title": "Ship studio UX, performance, and publish improvements",
       "sections": [
@@ -970,7 +989,7 @@
       ]
     },
     {
-      "version": "1.0.37",
+      "version": "1.3.7",
       "date": "2026-07-19",
       "title": "Fix preset kit loading so AI generation reliably uses Website Presets",
       "sections": [
@@ -983,7 +1002,7 @@
       ]
     },
     {
-      "version": "1.0.36",
+      "version": "1.3.6",
       "date": "2026-07-19",
       "title": "Load Website Presets from GitHub main for generation",
       "sections": [
@@ -996,7 +1015,7 @@
       ]
     },
     {
-      "version": "1.0.35",
+      "version": "1.3.5",
       "date": "2026-07-19",
       "title": "Ship editor, Business Finder, watermark, and platform updates",
       "sections": [
@@ -1009,7 +1028,7 @@
       ]
     },
     {
-      "version": "1.0.34",
+      "version": "1.3.4",
       "date": "2026-07-18",
       "title": "Use Render standard plan for LeadFinder Playwright memory",
       "sections": [
@@ -1022,7 +1041,7 @@
       ]
     },
     {
-      "version": "1.0.33",
+      "version": "1.3.3",
       "date": "2026-07-18",
       "title": "Fix LeadFinder live search Playwright image mismatch on Render",
       "sections": [
@@ -1035,7 +1054,7 @@
       ]
     },
     {
-      "version": "1.0.32",
+      "version": "1.3.2",
       "date": "2026-07-18",
       "title": "Use tryymoonrise.com as the canonical production URL",
       "sections": [
@@ -1048,7 +1067,7 @@
       ]
     },
     {
-      "version": "1.0.31",
+      "version": "1.3.1",
       "date": "2026-07-18",
       "title": "Clarify LeadFinder errors when Render search service is missing",
       "sections": [
@@ -1061,7 +1080,7 @@
       ]
     },
     {
-      "version": "1.0.30",
+      "version": "1.3.0",
       "date": "2026-07-18",
       "title": "Use relative brand asset paths for custom domain hosting",
       "sections": [
@@ -1074,7 +1093,7 @@
       ]
     },
     {
-      "version": "1.0.29",
+      "version": "1.2.9",
       "date": "2026-07-18",
       "title": "Improve onboarding, help, settings, and builder UX",
       "sections": [
@@ -1087,7 +1106,7 @@
       ]
     },
     {
-      "version": "1.0.28",
+      "version": "1.2.8",
       "date": "2026-07-18",
       "title": "Fix donation leaderboard fulfillment and public loading",
       "sections": [
@@ -1100,7 +1119,7 @@
       ]
     },
     {
-      "version": "1.0.27",
+      "version": "1.2.7",
       "date": "2026-07-18",
       "title": "Add LeadFinder live search server for Business Finder",
       "sections": [
@@ -1113,7 +1132,7 @@
       ]
     },
     {
-      "version": "1.0.26",
+      "version": "1.2.6",
       "date": "2026-07-18",
       "title": "Improve cloud API routing, Business Finder scrape, and editor mobile UX",
       "sections": [
@@ -1126,7 +1145,7 @@
       ]
     },
     {
-      "version": "1.0.25",
+      "version": "1.2.5",
       "date": "2026-07-18",
       "title": "Harden watermark publish flow and improve site generation prompts",
       "sections": [
@@ -1139,7 +1158,7 @@
       ]
     },
     {
-      "version": "1.0.24",
+      "version": "1.2.4",
       "date": "2026-07-18",
       "title": "Fix QR business card by vendoring the qrcode library locally",
       "sections": [
@@ -1152,7 +1171,7 @@
       ]
     },
     {
-      "version": "1.0.23",
+      "version": "1.2.3",
       "date": "2026-07-18",
       "title": "Ship Studio polish: donate redesign, download page, mobile home spacing, and project lifecycle fixes",
       "sections": [
@@ -1165,7 +1184,7 @@
       ]
     },
     {
-      "version": "1.0.22",
+      "version": "1.2.2",
       "date": "2026-07-18",
       "title": "Fix onboarding layout and ship donate flow, payout card, and Studio updates",
       "sections": [
@@ -1178,7 +1197,7 @@
       ]
     },
     {
-      "version": "1.0.21",
+      "version": "1.2.1",
       "date": "2026-07-18",
       "title": "Ship creator onboarding, public legal pages, and Studio sales polish",
       "sections": [
@@ -1191,7 +1210,7 @@
       ]
     },
     {
-      "version": "1.0.20",
+      "version": "1.2.0",
       "date": "2026-07-17",
       "title": "Fix builder mobile scroll and default Studio to the cloud worker",
       "sections": [
@@ -1204,7 +1223,7 @@
       ]
     },
     {
-      "version": "1.0.19",
+      "version": "1.1.9",
       "date": "2026-07-17",
       "title": "Ship go-live payment unlock, developer credit claims, and Studio polish",
       "sections": [
@@ -1217,7 +1236,7 @@
       ]
     },
     {
-      "version": "1.0.18",
+      "version": "1.1.8",
       "date": "2026-07-17",
       "title": "Improve mobile fit CSS and keep worker contact/watermark paths stable",
       "sections": [
@@ -1230,7 +1249,7 @@
       ]
     },
     {
-      "version": "1.0.17",
+      "version": "1.1.7",
       "date": "2026-07-17",
       "title": "Polish builder empty state with Moonrise logo branding",
       "sections": [
@@ -1243,7 +1262,7 @@
       ]
     },
     {
-      "version": "1.0.16",
+      "version": "1.1.6",
       "date": "2026-07-17",
       "title": "Ship contact forms, builder polish, and production-ready Studio updates",
       "sections": [
@@ -1256,7 +1275,7 @@
       ]
     },
     {
-      "version": "1.0.15",
+      "version": "1.1.5",
       "date": "2026-07-17",
       "title": "Restore watermark bio template with fixed logo URL",
       "sections": [
@@ -1269,7 +1288,7 @@
       ]
     },
     {
-      "version": "1.0.14",
+      "version": "1.1.4",
       "date": "2026-07-17",
       "title": "Fix live brand images and Vercel preset packaging",
       "sections": [
@@ -1282,7 +1301,7 @@
       ]
     },
     {
-      "version": "1.0.13",
+      "version": "1.1.3",
       "date": "2026-07-17",
       "title": "Harden Moonrise Studio with baseline web security controls",
       "sections": [
@@ -1295,7 +1314,7 @@
       ]
     },
     {
-      "version": "1.0.12",
+      "version": "1.1.2",
       "date": "2026-07-17",
       "title": "Fix live-site watermark not mounting after publish",
       "sections": [
@@ -1308,7 +1327,7 @@
       ]
     },
     {
-      "version": "1.0.11",
+      "version": "1.1.1",
       "date": "2026-07-17",
       "title": "Make generation actually adapt Website Presets kits",
       "sections": [
@@ -1321,7 +1340,7 @@
       ]
     },
     {
-      "version": "1.0.10",
+      "version": "1.1.0",
       "date": "2026-07-17",
       "title": "Fix broken brand images by serving assets from moonrise-studio",
       "sections": [

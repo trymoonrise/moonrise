@@ -32,3 +32,13 @@ body[data-page="home"] .ms-home-footer-legal a:hover,
 body[data-page="home"] .ms-home-footer-signin:hover {
   color: #fff;
 }
+
+/* Simple centered hero — no cascade gallery. */
+body[data-page="home"] .ms-home-hero {
+  min-height: calc(100svh - 5.75rem);
+}
+
+body[data-page="home"] .ms-home-hero-stage {
+  min-height: inherit;
+  justify-content: center;
+}

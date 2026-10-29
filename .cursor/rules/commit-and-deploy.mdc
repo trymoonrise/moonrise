@@ -9,16 +9,16 @@ Whenever the user asks to **commit**, **update**, **push**, **release**, or **de
 
 Follow the same discipline as sibling MasterVault products: brain log → notes → commit → push → GitHub Release → production deploy.
 
-Prefer working directory `E:\MasterVault\Moonrise\moonrise-studio`. Load secrets from `E:\MasterVault\Moonrise\accesstokens.env` (never print tokens; never commit that file). Fall back to `moonrise-studio/worker/.env` only for keys missing from accesstokens.env.
+Prefer working directory `D:\MasterVault\Moonrise\moonrise-studio` (or `E:\…` when that drive is present). Load secrets from the sibling `accesstokens.env` next to `moonrise-studio` (never print tokens; never commit that file). Fall back to `moonrise-studio/worker/.env` only for keys missing from accesstokens.env.
 
-The version is one number. If the user did not name the next one, raise the patch number. Write that same number in every place below before you commit or deploy:
+Versions use base-10 rollup: `MAJOR.MINOR.PATCH` where patch is 0–9 and minor is 0–9. If the user did not name the next version, raise patch by 1. When patch would become 10, set patch to 0 and raise minor by 1. When minor would become 10, set minor to 0 and raise major by 1. Examples: `1.0.9` → `1.1.0`; `1.1.5` → `1.1.6`; `1.1.9` → `1.2.0`; `1.9.9` → `2.0.0`. Write that same number in every place below before you commit or deploy:
 
 - `moonrise-studio/package.json` `version` (and lockfile root when present)
 - `moonrise-studio/brain/log.json`: this commit's notes go on a **new top entry** for that version, dated today. Leave shipped versions as they are. If the top entry is still the shipped version, add the new entry and move the unreleased notes into it. Run `npm run notes` so `brain/releases.json` and `doc/releases.json` match.
 
 1. Raise the version. Add unlogged changes to the new `brain/log.json` entry under `added` or `fixes` (headings from the brain-log rule), then run `npm run notes`.
 2. Smoke-check public or studio surfaces when UI changed.
-3. Commit source, brain log, and rendered release notes together from `moonrise-studio`. Never commit `accesstokens.env`, `.env`, or secrets. Prefer `E:\MasterVault\Moonrise\moonrise-studio`. If git reports dubious ownership, pass `-c safe.directory=E:/MasterVault/Moonrise/moonrise-studio` on the command. Do not change git config.
+3. Commit source, brain log, and rendered release notes together from `moonrise-studio`. Never commit `accesstokens.env`, `.env`, or secrets. Prefer `D:\MasterVault\Moonrise\moonrise-studio`. If git reports dubious ownership, pass `-c safe.directory=D:/MasterVault/Moonrise/moonrise-studio` on the command. Do not change git config.
 4. Commit message from the new version title + `added`/`fixes` (concise, why-focused). Follow git safety rules.
 5. Push when the user asked to push, update, or deploy. Remote is `moonrise` → `https://github.com/trymoonrise/moonrise.git` (create / fix if missing). Use `GITHUB_TOKEN` / `GH_TOKEN` from `accesstokens.env` when `gh` is not signed in; never print the token.
 6. After every successful **push** to GitHub, publish the matching GitHub Release so notes appear under the repo **Releases** tab: run `npm run notes` then `npm run release:github`. Set `GITHUB_RELEASE_TARGET` to the pushed commit SHA when useful. Do not skip this when a token is available.

@@ -3,11 +3,32 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
-      "version": "1.0.106",
+      "version": "2.0.7",
+      "date": "2026-10-28",
+      "title": "Base-10 versions, simpler home load",
+      "tag": "v2.0.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.0.7",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home uses the simple moonrise loading bar instead of a logo splash.",
+            "Landing hero is just the headline, supporting line, and Start earning / Learn More CTAs.",
+            "Version numbers use base-10 rollup: patch 0–9, then minor; minor 0–9, then major (1.0.9 → 1.1.0 → … → 2.0.0).",
+            "Historical release notes and GitHub Releases are remapped from the old 1.0.N patch line onto the new scheme."
+          ],
+          "fixes": [
+            "Pages menu links are centered in the full-screen overlay."
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.0.6",
       "date": "2026-10-28",
       "title": "Polished flyer layout and reliable print",
-      "tag": "v1.0.106",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.106",
+      "tag": "v2.0.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.0.6",
       "sections": [
         {
           "heading": "Studio",
@@ -21,11 +42,11 @@
       ]
     },
     {
-      "version": "1.0.105",
+      "version": "2.0.5",
       "date": "2026-10-28",
       "title": "Clearer sign-in email errors when Resend domain pending",
-      "tag": "v1.0.105",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.105",
+      "tag": "v2.0.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.0.5",
       "sections": [
         {
           "heading": "Worker",
@@ -36,11 +57,11 @@
       ]
     },
     {
-      "version": "1.0.104",
+      "version": "2.0.4",
       "date": "2026-10-28",
       "title": "Editor fullscreen fix and printable website flyer",
-      "tag": "v1.0.104",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.104",
+      "tag": "v2.0.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.0.4",
       "sections": [
         {
           "heading": "Studio",
@@ -56,11 +77,11 @@
       ]
     },
     {
-      "version": "1.0.103",
+      "version": "2.0.3",
       "date": "2026-10-28",
       "title": "Match pre-B&W blue home CSS exactly",
-      "tag": "v1.0.103",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.103",
+      "tag": "v2.0.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.0.3",
       "sections": [
         {
           "heading": "Site",
@@ -74,11 +95,11 @@
       ]
     },
     {
-      "version": "1.0.102",
+      "version": "2.0.2",
       "date": "2026-10-28",
       "title": "Blue home style restored and legal pages unified",
-      "tag": "v1.0.102",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.102",
+      "tag": "v2.0.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.0.2",
       "sections": [
         {
           "heading": "Site",
@@ -94,11 +115,11 @@
       ]
     },
     {
-      "version": "1.0.101",
+      "version": "2.0.1",
       "date": "2026-10-28",
       "title": "Simple home landing and checklist gate cleared",
-      "tag": "v1.0.101",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.101",
+      "tag": "v2.0.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.0.1",
       "sections": [
         {
           "heading": "Site",
@@ -120,11 +141,11 @@
       ]
     },
     {
-      "version": "1.0.100",
+      "version": "2.0.0",
       "date": "2026-10-27",
       "title": "Home bands, age gate, and in-app account delete",
-      "tag": "v1.0.100",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.100",
+      "tag": "v2.0.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.0.0",
       "sections": [
         {
           "heading": "Site",
@@ -160,11 +181,11 @@
       ]
     },
     {
-      "version": "1.0.99",
+      "version": "1.9.9",
       "date": "2026-10-27",
       "title": "Point GitHub Latest at the current ship",
-      "tag": "v1.0.99",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.99",
+      "tag": "v1.9.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.9",
       "sections": [
         {
           "heading": "Studio",
@@ -178,11 +199,11 @@
       ]
     },
     {
-      "version": "1.0.98",
+      "version": "1.9.8",
       "date": "2026-10-27",
       "title": "Simple boot, fresh leads after delete, shared slim UI",
-      "tag": "v1.0.98",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.98",
+      "tag": "v1.9.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.8",
       "sections": [
         {
           "heading": "Site",
@@ -202,17 +223,17 @@
           "added": [
             "Surface styles ship as studio-ui with Moonrise-only naming in cache keys and asset links.",
             "Brain log and release-note scripts track Moonrise versions for GitHub Releases.",
-            "Release notes are backfilled from git history so versions run from 1.0.0 through this ship."
+            "Release notes are backfilled from git history across the remapped version line."
           ]
         }
       ]
     },
     {
-      "version": "1.0.97",
+      "version": "1.9.7",
       "date": "2026-10-06",
       "title": "Generate clean modern sites from a small set of simple style families",
-      "tag": "v1.0.97",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.97",
+      "tag": "v1.9.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.7",
       "sections": [
         {
           "heading": "Studio",
@@ -223,11 +244,11 @@
       ]
     },
     {
-      "version": "1.0.96",
+      "version": "1.9.6",
       "date": "2026-10-06",
       "title": "Flatten the homepage gallery, darken Slide to generate, and keep the channel menu open when staying here",
-      "tag": "v1.0.96",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.96",
+      "tag": "v1.9.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.6",
       "sections": [
         {
           "heading": "Site",
@@ -238,11 +259,11 @@
       ]
     },
     {
-      "version": "1.0.95",
+      "version": "1.9.5",
       "date": "2026-10-06",
       "title": "Remove the grey chip behind the active mobile tab",
-      "tag": "v1.0.95",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.95",
+      "tag": "v1.9.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.5",
       "sections": [
         {
           "heading": "Studio",
@@ -253,11 +274,11 @@
       ]
     },
     {
-      "version": "1.0.94",
+      "version": "1.9.4",
       "date": "2026-10-06",
       "title": "Ship the black-and-white studio, finder navigation, and email sign-in handoff",
-      "tag": "v1.0.94",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.94",
+      "tag": "v1.9.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.4",
       "sections": [
         {
           "heading": "Finder",
@@ -268,11 +289,11 @@
       ]
     },
     {
-      "version": "1.0.93",
+      "version": "1.9.3",
       "date": "2026-10-05",
       "title": "Switch Business Finder to OpenStreetMap and ship the grouped preset library",
-      "tag": "v1.0.93",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.93",
+      "tag": "v1.9.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.3",
       "sections": [
         {
           "heading": "Finder",
@@ -283,11 +304,11 @@
       ]
     },
     {
-      "version": "1.0.92",
+      "version": "1.9.2",
       "date": "2026-10-03",
       "title": "Bring Refunds and Report in line with the other legal pages, pin that header and footer, and hold the moonrise. loader until those pages finish loading",
-      "tag": "v1.0.92",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.92",
+      "tag": "v1.9.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.2",
       "sections": [
         {
           "heading": "Site",
@@ -298,11 +319,11 @@
       ]
     },
     {
-      "version": "1.0.91",
+      "version": "1.9.1",
       "date": "2026-10-03",
       "title": "Keep channel switches on a moonrise. loader until the page is ready, and stop the login page and Admin Console from flashing for the wrong account",
-      "tag": "v1.0.91",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.91",
+      "tag": "v1.9.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.1",
       "sections": [
         {
           "heading": "Site",
@@ -313,11 +334,11 @@
       ]
     },
     {
-      "version": "1.0.90",
+      "version": "1.9.0",
       "date": "2026-10-03",
       "title": "Stop a dead sign-in from hiding the Employee ID and repeating an invalid-token error",
-      "tag": "v1.0.90",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.90",
+      "tag": "v1.9.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.9.0",
       "sections": [
         {
           "heading": "Studio",
@@ -328,11 +349,11 @@
       ]
     },
     {
-      "version": "1.0.89",
+      "version": "1.8.9",
       "date": "2026-10-03",
       "title": "Keep sign-in in an expiring cookie, and add the public pages, receipts, and local fonts the site was missing",
-      "tag": "v1.0.89",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.89",
+      "tag": "v1.8.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.9",
       "sections": [
         {
           "heading": "Worker",
@@ -343,11 +364,11 @@
       ]
     },
     {
-      "version": "1.0.88",
+      "version": "1.8.8",
       "date": "2026-10-02",
       "title": "Grant lifetime MVP+ after one donation, and keep the store, leaderboard, and owner tools aligned with production",
-      "tag": "v1.0.88",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.88",
+      "tag": "v1.8.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.8",
       "sections": [
         {
           "heading": "Worker",
@@ -358,11 +379,11 @@
       ]
     },
     {
-      "version": "1.0.87",
+      "version": "1.8.7",
       "date": "2026-10-02",
       "title": "Give the owner one Admin Console for employees, websites, subscribers, and payouts",
-      "tag": "v1.0.87",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.87",
+      "tag": "v1.8.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.7",
       "sections": [
         {
           "heading": "Worker",
@@ -373,11 +394,11 @@
       ]
     },
     {
-      "version": "1.0.86",
+      "version": "1.8.6",
       "date": "2026-10-02",
       "title": "Keep signup invite-only with a rotating Employee ID, and ship the dark UI, site shell, and hosting fixes",
-      "tag": "v1.0.86",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.86",
+      "tag": "v1.8.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.6",
       "sections": [
         {
           "heading": "Worker",
@@ -388,11 +409,11 @@
       ]
     },
     {
-      "version": "1.0.85",
+      "version": "1.8.5",
       "date": "2026-10-02",
       "title": "Add appearance controls and generate sites with DeepSeek V4.1 Flash",
-      "tag": "v1.0.85",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.85",
+      "tag": "v1.8.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.5",
       "sections": [
         {
           "heading": "Studio",
@@ -403,11 +424,11 @@
       ]
     },
     {
-      "version": "1.0.84",
+      "version": "1.8.4",
       "date": "2026-10-01",
       "title": "Replace broken punctuation with plain text so site copy stays readable",
-      "tag": "v1.0.84",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.84",
+      "tag": "v1.8.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.4",
       "sections": [
         {
           "heading": "Studio",
@@ -418,11 +439,11 @@
       ]
     },
     {
-      "version": "1.0.83",
+      "version": "1.8.3",
       "date": "2026-09-30",
       "title": "Publish site features from details already on the page, and keep generated layouts from clipping",
-      "tag": "v1.0.83",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.83",
+      "tag": "v1.8.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.3",
       "sections": [
         {
           "heading": "Studio",
@@ -433,11 +454,11 @@
       ]
     },
     {
-      "version": "1.0.82",
+      "version": "1.8.2",
       "date": "2026-09-30",
       "title": "Speed up channel switches and polish the dashboard, payouts, finder, and builder",
-      "tag": "v1.0.82",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.82",
+      "tag": "v1.8.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.2",
       "sections": [
         {
           "heading": "Finder",
@@ -448,11 +469,11 @@
       ]
     },
     {
-      "version": "1.0.81",
+      "version": "1.8.1",
       "date": "2026-09-24",
       "title": "Make channel switches and page enters static",
-      "tag": "v1.0.81",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.81",
+      "tag": "v1.8.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.1",
       "sections": [
         {
           "heading": "Studio",
@@ -463,11 +484,11 @@
       ]
     },
     {
-      "version": "1.0.80",
+      "version": "1.8.0",
       "date": "2026-09-24",
       "title": "Ship Support, Builder, and mobile UX polish",
-      "tag": "v1.0.80",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.80",
+      "tag": "v1.8.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.8.0",
       "sections": [
         {
           "heading": "Studio",
@@ -478,11 +499,11 @@
       ]
     },
     {
-      "version": "1.0.79",
+      "version": "1.7.9",
       "date": "2026-09-24",
       "title": "Fix mobile editor fullscreen preview",
-      "tag": "v1.0.79",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.79",
+      "tag": "v1.7.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.9",
       "sections": [
         {
           "heading": "Studio",
@@ -493,11 +514,11 @@
       ]
     },
     {
-      "version": "1.0.78",
+      "version": "1.7.8",
       "date": "2026-09-24",
       "title": "Gate signup behind an employee authorization code",
-      "tag": "v1.0.78",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.78",
+      "tag": "v1.7.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.8",
       "sections": [
         {
           "heading": "Studio",
@@ -508,11 +529,11 @@
       ]
     },
     {
-      "version": "1.0.77",
+      "version": "1.7.7",
       "date": "2026-09-24",
       "title": "Fix Business Finder empty results on No website, polish channel motion, and redesign leaderboard",
-      "tag": "v1.0.77",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.77",
+      "tag": "v1.7.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.7",
       "sections": [
         {
           "heading": "Finder",
@@ -523,11 +544,11 @@
       ]
     },
     {
-      "version": "1.0.76",
+      "version": "1.7.6",
       "date": "2026-09-24",
       "title": "Restore Finder asset paths, re-enable long cache for versioned static files, and ship perf1 build reload",
-      "tag": "v1.0.76",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.76",
+      "tag": "v1.7.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.6",
       "sections": [
         {
           "heading": "Finder",
@@ -538,11 +559,11 @@
       ]
     },
     {
-      "version": "1.0.75",
+      "version": "1.7.5",
       "date": "2026-09-24",
       "title": "Stop immutable JS caching, never defer install prompt, and force BUILD console5 reload so stale app.js cannot stick",
-      "tag": "v1.0.75",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.75",
+      "tag": "v1.7.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.5",
       "sections": [
         {
           "heading": "Studio",
@@ -553,11 +574,11 @@
       ]
     },
     {
-      "version": "1.0.74",
+      "version": "1.7.4",
       "date": "2026-09-24",
       "title": "Force asset BUILD reload, bump PWA cache, and stop stale SW from replaying old app.js on Donate/Clients",
-      "tag": "v1.0.74",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.74",
+      "tag": "v1.7.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.4",
       "sections": [
         {
           "heading": "Worker",
@@ -568,11 +589,11 @@
       ]
     },
     {
-      "version": "1.0.73",
+      "version": "1.7.3",
       "date": "2026-09-24",
       "title": "Stop loading install-hint off Settings and drop aria-hidden on the menu toggle; refresh app.js cache across pages",
-      "tag": "v1.0.73",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.73",
+      "tag": "v1.7.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.3",
       "sections": [
         {
           "heading": "Studio",
@@ -583,11 +604,11 @@
       ]
     },
     {
-      "version": "1.0.72",
+      "version": "1.7.2",
       "date": "2026-09-24",
       "title": "Strip scripts in builder edit-mode preview sandbox and only load install-hint on install pages",
-      "tag": "v1.0.72",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.72",
+      "tag": "v1.7.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.2",
       "sections": [
         {
           "heading": "Studio",
@@ -598,11 +619,11 @@
       ]
     },
     {
-      "version": "1.0.71",
+      "version": "1.7.1",
       "date": "2026-09-24",
       "title": "Quiet dashboard console: sanitize preview thumbs, defer PWA install only on settings, fix menu aria-hidden focus",
-      "tag": "v1.0.71",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.71",
+      "tag": "v1.7.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.1",
       "sections": [
         {
           "heading": "Studio",
@@ -613,11 +634,11 @@
       ]
     },
     {
-      "version": "1.0.70",
+      "version": "1.7.0",
       "date": "2026-09-24",
       "title": "Expand legal docs and guide, fix title encoding, add preview maximize",
-      "tag": "v1.0.70",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.70",
+      "tag": "v1.7.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.7.0",
       "sections": [
         {
           "heading": "Site",
@@ -628,11 +649,11 @@
       ]
     },
     {
-      "version": "1.0.69",
+      "version": "1.6.9",
       "date": "2026-09-24",
       "title": "Keep contact form and custom domain manual, enlarge mobile mode switch",
-      "tag": "v1.0.69",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.69",
+      "tag": "v1.6.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.9",
       "sections": [
         {
           "heading": "Studio",
@@ -643,11 +664,11 @@
       ]
     },
     {
-      "version": "1.0.68",
+      "version": "1.6.8",
       "date": "2026-09-24",
       "title": "Stop slide-to-generate from resetting mid-drag",
-      "tag": "v1.0.68",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.68",
+      "tag": "v1.6.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.8",
       "sections": [
         {
           "heading": "Finder",
@@ -658,11 +679,11 @@
       ]
     },
     {
-      "version": "1.0.67",
+      "version": "1.6.7",
       "date": "2026-09-24",
       "title": "Smooth Finder slide-to-generate and polish mobile studio chrome",
-      "tag": "v1.0.67",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.67",
+      "tag": "v1.6.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.7",
       "sections": [
         {
           "heading": "Finder",
@@ -673,11 +694,11 @@
       ]
     },
     {
-      "version": "1.0.66",
+      "version": "1.6.6",
       "date": "2026-09-24",
       "title": "Refresh studio phone chrome and ship the waiting finder, dashboard, and storage updates",
-      "tag": "v1.0.66",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.66",
+      "tag": "v1.6.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.6",
       "sections": [
         {
           "heading": "Finder",
@@ -688,11 +709,11 @@
       ]
     },
     {
-      "version": "1.0.65",
+      "version": "1.6.5",
       "date": "2026-09-10",
       "title": "Add passkey signup and Settings change-passkey flows",
-      "tag": "v1.0.65",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.65",
+      "tag": "v1.6.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.5",
       "sections": [
         {
           "heading": "Studio",
@@ -703,11 +724,11 @@
       ]
     },
     {
-      "version": "1.0.64",
+      "version": "1.6.4",
       "date": "2026-09-10",
       "title": "Use one Passkey button for both sign-in and first-time create",
-      "tag": "v1.0.64",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.64",
+      "tag": "v1.6.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.4",
       "sections": [
         {
           "heading": "Studio",
@@ -718,11 +739,11 @@
       ]
     },
     {
-      "version": "1.0.63",
+      "version": "1.6.3",
       "date": "2026-09-10",
       "title": "Clarify passkey setup when none are saved yet",
-      "tag": "v1.0.63",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.63",
+      "tag": "v1.6.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.3",
       "sections": [
         {
           "heading": "Studio",
@@ -733,11 +754,11 @@
       ]
     },
     {
-      "version": "1.0.62",
+      "version": "1.6.2",
       "date": "2026-09-10",
       "title": "Keep sidebar Last updated in sync with every GitHub commit",
-      "tag": "v1.0.62",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.62",
+      "tag": "v1.6.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.2",
       "sections": [
         {
           "heading": "Studio",
@@ -748,11 +769,11 @@
       ]
     },
     {
-      "version": "1.0.61",
+      "version": "1.6.1",
       "date": "2026-09-10",
       "title": "Wait for StudioAuth before login bootstrap",
-      "tag": "v1.0.61",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.61",
+      "tag": "v1.6.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.1",
       "sections": [
         {
           "heading": "Studio",
@@ -763,11 +784,11 @@
       ]
     },
     {
-      "version": "1.0.60",
+      "version": "1.6.0",
       "date": "2026-09-10",
       "title": "Fix login auth race and force browsers off stale PWA caches",
-      "tag": "v1.0.60",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.60",
+      "tag": "v1.6.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.6.0",
       "sections": [
         {
           "heading": "Studio",
@@ -778,11 +799,11 @@
       ]
     },
     {
-      "version": "1.0.59",
+      "version": "1.5.9",
       "date": "2026-09-10",
       "title": "Bust immutable asset caches so passkeys and deep reset ship live",
-      "tag": "v1.0.59",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.59",
+      "tag": "v1.5.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.9",
       "sections": [
         {
           "heading": "Studio",
@@ -793,11 +814,11 @@
       ]
     },
     {
-      "version": "1.0.58",
+      "version": "1.5.8",
       "date": "2026-09-10",
       "title": "Make the hard-refresh control a deep hard reset",
-      "tag": "v1.0.58",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.58",
+      "tag": "v1.5.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.8",
       "sections": [
         {
           "heading": "Studio",
@@ -808,11 +829,11 @@
       ]
     },
     {
-      "version": "1.0.57",
+      "version": "1.5.7",
       "date": "2026-09-10",
       "title": "Fix Auto save session persistence and add passkey sign-in",
-      "tag": "v1.0.57",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.57",
+      "tag": "v1.5.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.7",
       "sections": [
         {
           "heading": "Studio",
@@ -823,11 +844,11 @@
       ]
     },
     {
-      "version": "1.0.56",
+      "version": "1.5.6",
       "date": "2026-09-10",
       "title": "Hide floating menu button while the sidebar is open",
-      "tag": "v1.0.56",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.56",
+      "tag": "v1.5.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.6",
       "sections": [
         {
           "heading": "Studio",
@@ -838,11 +859,11 @@
       ]
     },
     {
-      "version": "1.0.55",
+      "version": "1.5.5",
       "date": "2026-09-10",
       "title": "Keep install banner to two lines and scale it across devices",
-      "tag": "v1.0.55",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.55",
+      "tag": "v1.5.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.5",
       "sections": [
         {
           "heading": "Studio",
@@ -853,11 +874,11 @@
       ]
     },
     {
-      "version": "1.0.54",
+      "version": "1.5.4",
       "date": "2026-09-10",
       "title": "Move last-updated under Account and match mobile sidebar scroll",
-      "tag": "v1.0.54",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.54",
+      "tag": "v1.5.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.4",
       "sections": [
         {
           "heading": "Studio",
@@ -868,11 +889,11 @@
       ]
     },
     {
-      "version": "1.0.53",
+      "version": "1.5.3",
       "date": "2026-09-10",
       "title": "Fix mobile chrome, encoding, and admin nav polish",
-      "tag": "v1.0.53",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.53",
+      "tag": "v1.5.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.3",
       "sections": [
         {
           "heading": "Studio",
@@ -883,11 +904,11 @@
       ]
     },
     {
-      "version": "1.0.52",
+      "version": "1.5.2",
       "date": "2026-09-10",
       "title": "Update site description to say websites with 1 click",
-      "tag": "v1.0.52",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.52",
+      "tag": "v1.5.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.2",
       "sections": [
         {
           "heading": "Site",
@@ -898,11 +919,11 @@
       ]
     },
     {
-      "version": "1.0.51",
+      "version": "1.5.1",
       "date": "2026-09-09",
       "title": "Polish QR card, watermark contacts, and preview reloads",
-      "tag": "v1.0.51",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.51",
+      "tag": "v1.5.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.1",
       "sections": [
         {
           "heading": "Site",
@@ -913,11 +934,11 @@
       ]
     },
     {
-      "version": "1.0.50",
+      "version": "1.5.0",
       "date": "2026-09-09",
       "title": "Queue Maps scrapes instead of returning 409 Conflict",
-      "tag": "v1.0.50",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.50",
+      "tag": "v1.5.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.5.0",
       "sections": [
         {
           "heading": "Finder",
@@ -928,11 +949,11 @@
       ]
     },
     {
-      "version": "1.0.49",
+      "version": "1.4.9",
       "date": "2026-09-09",
       "title": "Wait out busy Maps scans instead of empty Near Me results",
-      "tag": "v1.0.49",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.49",
+      "tag": "v1.4.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.9",
       "sections": [
         {
           "heading": "Finder",
@@ -943,11 +964,11 @@
       ]
     },
     {
-      "version": "1.0.48",
+      "version": "1.4.8",
       "date": "2026-09-09",
       "title": "Ship auth, map, clients, and Discord invite fixes",
-      "tag": "v1.0.48",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.48",
+      "tag": "v1.4.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.8",
       "sections": [
         {
           "heading": "Studio",
@@ -958,11 +979,11 @@
       ]
     },
     {
-      "version": "1.0.47",
+      "version": "1.4.7",
       "date": "2026-09-09",
       "title": "Fix sign-in session sticking past the auth gate",
-      "tag": "v1.0.47",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.47",
+      "tag": "v1.4.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.7",
       "sections": [
         {
           "heading": "Studio",
@@ -973,11 +994,11 @@
       ]
     },
     {
-      "version": "1.0.46",
+      "version": "1.4.6",
       "date": "2026-09-09",
       "title": "Expose /push routes and enforce leadfinder search auth in production",
-      "tag": "v1.0.46",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.46",
+      "tag": "v1.4.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.6",
       "sections": [
         {
           "heading": "Leadfinder",
@@ -988,11 +1009,11 @@
       ]
     },
     {
-      "version": "1.0.45",
+      "version": "1.4.5",
       "date": "2026-07-21",
       "title": "Improve platform boot speed, slide physics, security, and generation UX",
-      "tag": "v1.0.45",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.45",
+      "tag": "v1.4.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.5",
       "sections": [
         {
           "heading": "Security",
@@ -1003,11 +1024,11 @@
       ]
     },
     {
-      "version": "1.0.44",
+      "version": "1.4.4",
       "date": "2026-07-21",
       "title": "Fix contact form auto mode not applying on live sites",
-      "tag": "v1.0.44",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.44",
+      "tag": "v1.4.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.4",
       "sections": [
         {
           "heading": "Studio",
@@ -1018,11 +1039,11 @@
       ]
     },
     {
-      "version": "1.0.43",
+      "version": "1.4.3",
       "date": "2026-07-20",
       "title": "Lower Moonrise platform fee to 10% and raise creator share to 90%",
-      "tag": "v1.0.43",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.43",
+      "tag": "v1.4.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.3",
       "sections": [
         {
           "heading": "Worker",
@@ -1033,11 +1054,11 @@
       ]
     },
     {
-      "version": "1.0.42",
+      "version": "1.4.2",
       "date": "2026-07-20",
       "title": "Fix contact forms, card precheck, generation prompts, and mobile homepage",
-      "tag": "v1.0.42",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.42",
+      "tag": "v1.4.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.2",
       "sections": [
         {
           "heading": "Site",
@@ -1048,11 +1069,11 @@
       ]
     },
     {
-      "version": "1.0.41",
+      "version": "1.4.1",
       "date": "2026-07-19",
       "title": "Fix recent projects not rendering on builder.html",
-      "tag": "v1.0.41",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.41",
+      "tag": "v1.4.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.1",
       "sections": [
         {
           "heading": "Studio",
@@ -1063,11 +1084,11 @@
       ]
     },
     {
-      "version": "1.0.40",
+      "version": "1.4.0",
       "date": "2026-07-19",
       "title": "Fix Business Finder slide-to-generate drag and require full slide",
-      "tag": "v1.0.40",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.40",
+      "tag": "v1.4.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.4.0",
       "sections": [
         {
           "heading": "Finder",
@@ -1078,11 +1099,11 @@
       ]
     },
     {
-      "version": "1.0.39",
+      "version": "1.3.9",
       "date": "2026-07-19",
       "title": "Require full slide-to-generate drag before launching builder",
-      "tag": "v1.0.39",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.39",
+      "tag": "v1.3.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.9",
       "sections": [
         {
           "heading": "Finder",
@@ -1093,11 +1114,11 @@
       ]
     },
     {
-      "version": "1.0.38",
+      "version": "1.3.8",
       "date": "2026-07-19",
       "title": "Ship studio UX, performance, and publish improvements",
-      "tag": "v1.0.38",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.38",
+      "tag": "v1.3.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.8",
       "sections": [
         {
           "heading": "Studio",
@@ -1108,11 +1129,11 @@
       ]
     },
     {
-      "version": "1.0.37",
+      "version": "1.3.7",
       "date": "2026-07-19",
       "title": "Fix preset kit loading so AI generation reliably uses Website Presets",
-      "tag": "v1.0.37",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.37",
+      "tag": "v1.3.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.7",
       "sections": [
         {
           "heading": "Studio",
@@ -1123,11 +1144,11 @@
       ]
     },
     {
-      "version": "1.0.36",
+      "version": "1.3.6",
       "date": "2026-07-19",
       "title": "Load Website Presets from GitHub main for generation",
-      "tag": "v1.0.36",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.36",
+      "tag": "v1.3.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.6",
       "sections": [
         {
           "heading": "Studio",
@@ -1138,11 +1159,11 @@
       ]
     },
     {
-      "version": "1.0.35",
+      "version": "1.3.5",
       "date": "2026-07-19",
       "title": "Ship editor, Business Finder, watermark, and platform updates",
-      "tag": "v1.0.35",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.35",
+      "tag": "v1.3.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.5",
       "sections": [
         {
           "heading": "Finder",
@@ -1153,11 +1174,11 @@
       ]
     },
     {
-      "version": "1.0.34",
+      "version": "1.3.4",
       "date": "2026-07-18",
       "title": "Use Render standard plan for LeadFinder Playwright memory",
-      "tag": "v1.0.34",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.34",
+      "tag": "v1.3.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.4",
       "sections": [
         {
           "heading": "Leadfinder",
@@ -1168,11 +1189,11 @@
       ]
     },
     {
-      "version": "1.0.33",
+      "version": "1.3.3",
       "date": "2026-07-18",
       "title": "Fix LeadFinder live search Playwright image mismatch on Render",
-      "tag": "v1.0.33",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.33",
+      "tag": "v1.3.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.3",
       "sections": [
         {
           "heading": "Leadfinder",
@@ -1183,11 +1204,11 @@
       ]
     },
     {
-      "version": "1.0.32",
+      "version": "1.3.2",
       "date": "2026-07-18",
       "title": "Use tryymoonrise.com as the canonical production URL",
-      "tag": "v1.0.32",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.32",
+      "tag": "v1.3.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.2",
       "sections": [
         {
           "heading": "Site",
@@ -1198,11 +1219,11 @@
       ]
     },
     {
-      "version": "1.0.31",
+      "version": "1.3.1",
       "date": "2026-07-18",
       "title": "Clarify LeadFinder errors when Render search service is missing",
-      "tag": "v1.0.31",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.31",
+      "tag": "v1.3.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.1",
       "sections": [
         {
           "heading": "Leadfinder",
@@ -1213,11 +1234,11 @@
       ]
     },
     {
-      "version": "1.0.30",
+      "version": "1.3.0",
       "date": "2026-07-18",
       "title": "Use relative brand asset paths for custom domain hosting",
-      "tag": "v1.0.30",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.30",
+      "tag": "v1.3.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.3.0",
       "sections": [
         {
           "heading": "Site",
@@ -1228,11 +1249,11 @@
       ]
     },
     {
-      "version": "1.0.29",
+      "version": "1.2.9",
       "date": "2026-07-18",
       "title": "Improve onboarding, help, settings, and builder UX",
-      "tag": "v1.0.29",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.29",
+      "tag": "v1.2.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.9",
       "sections": [
         {
           "heading": "Studio",
@@ -1243,11 +1264,11 @@
       ]
     },
     {
-      "version": "1.0.28",
+      "version": "1.2.8",
       "date": "2026-07-18",
       "title": "Fix donation leaderboard fulfillment and public loading",
-      "tag": "v1.0.28",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.28",
+      "tag": "v1.2.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.8",
       "sections": [
         {
           "heading": "Worker",
@@ -1258,11 +1279,11 @@
       ]
     },
     {
-      "version": "1.0.27",
+      "version": "1.2.7",
       "date": "2026-07-18",
       "title": "Add LeadFinder live search server for Business Finder",
-      "tag": "v1.0.27",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.27",
+      "tag": "v1.2.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.7",
       "sections": [
         {
           "heading": "Leadfinder",
@@ -1273,11 +1294,11 @@
       ]
     },
     {
-      "version": "1.0.26",
+      "version": "1.2.6",
       "date": "2026-07-18",
       "title": "Improve cloud API routing, Business Finder scrape, and editor mobile UX",
-      "tag": "v1.0.26",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.26",
+      "tag": "v1.2.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.6",
       "sections": [
         {
           "heading": "Finder",
@@ -1288,11 +1309,11 @@
       ]
     },
     {
-      "version": "1.0.25",
+      "version": "1.2.5",
       "date": "2026-07-18",
       "title": "Harden watermark publish flow and improve site generation prompts",
-      "tag": "v1.0.25",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.25",
+      "tag": "v1.2.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.5",
       "sections": [
         {
           "heading": "Worker",
@@ -1303,11 +1324,11 @@
       ]
     },
     {
-      "version": "1.0.24",
+      "version": "1.2.4",
       "date": "2026-07-18",
       "title": "Fix QR business card by vendoring the qrcode library locally",
-      "tag": "v1.0.24",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.24",
+      "tag": "v1.2.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.4",
       "sections": [
         {
           "heading": "Site",
@@ -1318,11 +1339,11 @@
       ]
     },
     {
-      "version": "1.0.23",
+      "version": "1.2.3",
       "date": "2026-07-18",
       "title": "Ship Studio polish: donate redesign, download page, mobile home spacing, and project lifecycle fixes",
-      "tag": "v1.0.23",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.23",
+      "tag": "v1.2.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.3",
       "sections": [
         {
           "heading": "Site",
@@ -1333,11 +1354,11 @@
       ]
     },
     {
-      "version": "1.0.22",
+      "version": "1.2.2",
       "date": "2026-07-18",
       "title": "Fix onboarding layout and ship donate flow, payout card, and Studio updates",
-      "tag": "v1.0.22",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.22",
+      "tag": "v1.2.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.2",
       "sections": [
         {
           "heading": "Worker",
@@ -1348,11 +1369,11 @@
       ]
     },
     {
-      "version": "1.0.21",
+      "version": "1.2.1",
       "date": "2026-07-18",
       "title": "Ship creator onboarding, public legal pages, and Studio sales polish",
-      "tag": "v1.0.21",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.21",
+      "tag": "v1.2.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.1",
       "sections": [
         {
           "heading": "Site",
@@ -1363,11 +1384,11 @@
       ]
     },
     {
-      "version": "1.0.20",
+      "version": "1.2.0",
       "date": "2026-07-17",
       "title": "Fix builder mobile scroll and default Studio to the cloud worker",
-      "tag": "v1.0.20",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.20",
+      "tag": "v1.2.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.2.0",
       "sections": [
         {
           "heading": "Worker",
@@ -1378,11 +1399,11 @@
       ]
     },
     {
-      "version": "1.0.19",
+      "version": "1.1.9",
       "date": "2026-07-17",
       "title": "Ship go-live payment unlock, developer credit claims, and Studio polish",
-      "tag": "v1.0.19",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.19",
+      "tag": "v1.1.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.9",
       "sections": [
         {
           "heading": "Studio",
@@ -1393,11 +1414,11 @@
       ]
     },
     {
-      "version": "1.0.18",
+      "version": "1.1.8",
       "date": "2026-07-17",
       "title": "Improve mobile fit CSS and keep worker contact/watermark paths stable",
-      "tag": "v1.0.18",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.18",
+      "tag": "v1.1.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.8",
       "sections": [
         {
           "heading": "Worker",
@@ -1408,11 +1429,11 @@
       ]
     },
     {
-      "version": "1.0.17",
+      "version": "1.1.7",
       "date": "2026-07-17",
       "title": "Polish builder empty state with Moonrise logo branding",
-      "tag": "v1.0.17",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.17",
+      "tag": "v1.1.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.7",
       "sections": [
         {
           "heading": "Studio",
@@ -1423,11 +1444,11 @@
       ]
     },
     {
-      "version": "1.0.16",
+      "version": "1.1.6",
       "date": "2026-07-17",
       "title": "Ship contact forms, builder polish, and production-ready Studio updates",
-      "tag": "v1.0.16",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.16",
+      "tag": "v1.1.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.6",
       "sections": [
         {
           "heading": "Studio",
@@ -1438,11 +1459,11 @@
       ]
     },
     {
-      "version": "1.0.15",
+      "version": "1.1.5",
       "date": "2026-07-17",
       "title": "Restore watermark bio template with fixed logo URL",
-      "tag": "v1.0.15",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.15",
+      "tag": "v1.1.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.5",
       "sections": [
         {
           "heading": "Site",
@@ -1453,11 +1474,11 @@
       ]
     },
     {
-      "version": "1.0.14",
+      "version": "1.1.4",
       "date": "2026-07-17",
       "title": "Fix live brand images and Vercel preset packaging",
-      "tag": "v1.0.14",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.14",
+      "tag": "v1.1.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.4",
       "sections": [
         {
           "heading": "Site",
@@ -1468,11 +1489,11 @@
       ]
     },
     {
-      "version": "1.0.13",
+      "version": "1.1.3",
       "date": "2026-07-17",
       "title": "Harden Moonrise Studio with baseline web security controls",
-      "tag": "v1.0.13",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.13",
+      "tag": "v1.1.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.3",
       "sections": [
         {
           "heading": "Security",
@@ -1483,11 +1504,11 @@
       ]
     },
     {
-      "version": "1.0.12",
+      "version": "1.1.2",
       "date": "2026-07-17",
       "title": "Fix live-site watermark not mounting after publish",
-      "tag": "v1.0.12",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.12",
+      "tag": "v1.1.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.2",
       "sections": [
         {
           "heading": "Site",
@@ -1498,11 +1519,11 @@
       ]
     },
     {
-      "version": "1.0.11",
+      "version": "1.1.1",
       "date": "2026-07-17",
       "title": "Make generation actually adapt Website Presets kits",
-      "tag": "v1.0.11",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.11",
+      "tag": "v1.1.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.1",
       "sections": [
         {
           "heading": "Studio",
@@ -1513,11 +1534,11 @@
       ]
     },
     {
-      "version": "1.0.10",
+      "version": "1.1.0",
       "date": "2026-07-17",
       "title": "Fix broken brand images by serving assets from moonrise-studio",
-      "tag": "v1.0.10",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.0.10",
+      "tag": "v1.1.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v1.1.0",
       "sections": [
         {
           "heading": "Site",
