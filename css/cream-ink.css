@@ -426,6 +426,12 @@ html:not([data-ms-mode="dark"]) .ms-menu-toggle {
   box-shadow: none !important;
 }
 
+html:not([data-ms-mode="dark"]) .ms-tabbar .ms-menu-toggle.ms-tab-menu {
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--ms-ink) !important;
+}
+
 /* —— Tabs / segmented —— */
 html:not([data-ms-mode="dark"]) :where(
   .ms-tabs,

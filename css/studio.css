@@ -1247,16 +1247,11 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     }
   }
 
+  /* Tab bar stays up so the menu control (right of Settings) can close the drawer. */
   body.ms-nav-open .ms-tabbar {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-
-  body.ms-nav-open .ms-tabbar {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 
   body[data-page="dashboard"] #page-body,
@@ -13734,12 +13729,19 @@ body.ms-legal-site {
       background 0.2s ease,
       border-color 0.2s ease;
   }
-  /* Keep the floating menu control off the open sidebar */
-  body.ms-nav-open .ms-menu-toggle {
+  /* Floating menu (if any) stays hidden when open; tab-bar menu stays usable. */
+  body.ms-nav-open .ms-menu-toggle:not(.ms-tab-menu) {
     transform: scale(0.92);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+  }
+
+  body.ms-nav-open .ms-tabbar .ms-menu-toggle.ms-tab-menu {
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
   .ms-sidebar-resizer { display: none; }
 

@@ -843,7 +843,7 @@
     menuToggle.setAttribute("aria-label", "Open menu");
     menuToggle.innerHTML = ICONS.menu;
 
-    ensureQuickNav(page);
+    ensureQuickNav();
     ensureTabBar(page);
 
     document.getElementById("ms-signout")?.addEventListener("click", async () => {
@@ -1925,15 +1925,9 @@
     document.head.appendChild(s);
   }
 
-  function ensureQuickNav(page) {
-    let bar = document.getElementById("ms-quick-nav");
-    if (!bar) {
-      bar = document.createElement("header");
-      bar.id = "ms-quick-nav";
-      bar.className = "ms-quick-nav";
-      document.body.appendChild(bar);
-    }
-    // Match iOS/Safari status bar to the opaque chrome fill (no site bleed-through).
+  function ensureQuickNav() {
+    // Top app bar removed: menu lives in the bottom tab bar (right of Settings).
+    document.getElementById("ms-quick-nav")?.remove();
     try {
       let theme = document.querySelector('meta[name="theme-color"]');
       if (!theme) {
@@ -1943,19 +1937,18 @@
       }
       theme.content =
         (window.MoonriseAppearance && window.MoonriseAppearance.chromeColor()) ||
-        "#eef3f8";
+        "#fcfbef";
     } catch (_) {
       /* ignore */
     }
-    bar.innerHTML =
-      '<span class="ms-top-brand">' +
-      '<img class="ms-top-brand-logo" src="' +
-      brandLogo() +
-      '" alt="" width="36" height="36" decoding="async">' +
-      '<span class="ms-top-brand-name">moonrise.</span>' +
-      "</span>";
+  }
+
+  function placeMenuInTabBar(nav) {
+    if (!nav) return;
     const menuToggle = document.getElementById("ms-menu-toggle");
-    if (menuToggle) bar.appendChild(menuToggle);
+    if (!menuToggle) return;
+    menuToggle.classList.add("ms-tab-menu");
+    if (menuToggle.parentElement !== nav) nav.appendChild(menuToggle);
   }
 
   const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings"];
@@ -2073,6 +2066,11 @@
   function ensureTabBar(page) {
     if (!TAB_BAR_PAGES.includes(page)) {
       document.getElementById("ms-tabbar")?.remove();
+      const orphanMenu = document.getElementById("ms-menu-toggle");
+      if (orphanMenu) {
+        orphanMenu.classList.remove("ms-tab-menu");
+        if (orphanMenu.parentElement !== document.body) document.body.appendChild(orphanMenu);
+      }
       return;
     }
     const items = [
@@ -2126,6 +2124,7 @@
         .join("");
     nav.dataset.mounted = "1";
 
+    placeMenuInTabBar(nav);
     bindTabBarSwitch(nav, page);
 
     const activeTab = nav.querySelector(".ms-tab.is-active");

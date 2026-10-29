@@ -448,84 +448,14 @@ html:not([data-ms-mode="dark"]) .ms-prose a {
   color: #0066cc;
 }
 
-/* Mobile app bar: logo on the left, channel menu on the right. */
+/* Mobile: no top app bar — menu sits in the bottom tab bar after Settings. */
 @media (max-width: 900px) {
   .ms-quick-nav {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    height: calc(env(safe-area-inset-top, 0px) + 3.75rem) !important;
-    padding: env(safe-area-inset-top, 0px) 0.45rem 0 1.15rem !important;
-    justify-content: flex-start;
-    background: #fbfaf1 !important;
-    border-bottom: 1px solid rgb(0 0 0 / 8%);
-    box-shadow: none;
-    z-index: 220 !important;
-    overflow: visible;
+    display: none !important;
   }
 
   .ms-help-btn {
     display: none !important;
-  }
-
-  /* Cover the strip above the bar so the page cannot show through. */
-  .ms-quick-nav::before {
-    display: block !important;
-    content: "" !important;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 100%;
-    height: 10rem;
-    background: #fbfaf1;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .ms-top-brand {
-    justify-content: flex-start;
-    gap: 0.7rem;
-  }
-
-  .ms-top-brand-logo {
-    width: 36px;
-    height: 36px;
-    border-radius: 11px;
-    box-shadow: 0 0 0 1px rgb(0 0 0 / 6%);
-  }
-
-  .ms-top-brand-name {
-    color: #1d1d1f;
-    font-size: 1.05rem;
-    font-weight: 650;
-    letter-spacing: -0.03em;
-  }
-
-  .ms-menu-toggle {
-    position: relative !important;
-    top: auto !important;
-    right: auto !important;
-    left: auto !important;
-    bottom: auto !important;
-    margin-left: auto;
-    transform: none !important;
-    width: 2.75rem;
-    height: 2.75rem;
-    min-width: 2.75rem;
-    min-height: 2.75rem;
-    border: 0 !important;
-    border-radius: 0;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: #1d1d1f;
-    pointer-events: auto;
-    z-index: 2;
-  }
-
-  .ms-menu-toggle svg {
-    width: 24px;
-    height: 24px;
   }
 
   .ms-page-head,
@@ -549,7 +479,25 @@ html:not([data-ms-mode="dark"]) .ms-prose a {
   #page-body.ms-pricing-page,
   body[data-page="builder"].ms-lb-setup #page-body,
   body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 5rem) !important;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 0.85rem) !important;
+  }
+
+  /* Pages without the bottom tab bar still get a floating menu (top-right). */
+  body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="clients"]):not([data-page="settings"]):not([data-page="leads"]) .ms-menu-toggle:not(.ms-tab-menu) {
+    position: fixed !important;
+    top: var(--ms-chrome-top, calc(env(safe-area-inset-top, 0px) + 0.75rem)) !important;
+    right: var(--ms-chrome-right, 0.75rem) !important;
+    left: auto !important;
+    z-index: 220 !important;
+    width: 2.75rem !important;
+    height: 2.75rem !important;
+    display: grid !important;
+    place-items: center;
+    background: rgba(252, 251, 239, 0.94) !important;
+    border: 1px solid #e6e4d4 !important;
+    border-radius: 999px !important;
+    box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08) !important;
+    color: #232427 !important;
   }
 }
 
@@ -1388,7 +1336,7 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
     width: 100% !important;
     transform: none !important;
     margin: 0 !important;
-    padding: 0.35rem 0.25rem calc(0.35rem + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 0.35rem 0.15rem calc(0.35rem + env(safe-area-inset-bottom, 0px)) !important;
     border: 0 !important;
     border-top: 1px solid rgb(0 0 0 / 8%) !important;
     border-radius: 0 !important;
@@ -1396,6 +1344,14 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    z-index: 220 !important;
   }
 
   .ms-tab-pill {
@@ -1404,7 +1360,9 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
 
   .ms-tab,
   .ms-tab.is-active,
-  .ms-tabbar.is-pill-ready .ms-tab.is-active {
+  .ms-tabbar.is-pill-ready .ms-tab.is-active,
+  .ms-tabbar .ms-menu-toggle.ms-tab-menu {
+    flex: 1 1 0;
     height: 4.15rem;
     min-height: 4.15rem;
     gap: 0;
@@ -1412,7 +1370,37 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
     background: transparent !important;
     box-shadow: none !important;
     color: #6e6e73 !important;
-    transform: none;
+    transform: none !important;
+  }
+
+  .ms-tabbar .ms-menu-toggle.ms-tab-menu {
+    position: relative !important;
+    inset: auto !important;
+    display: grid !important;
+    place-items: center;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    border: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    color: #1d1d1f !important;
+    -webkit-text-fill-color: #1d1d1f !important;
+  }
+
+  .ms-tabbar .ms-menu-toggle.ms-tab-menu svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  body.ms-nav-open .ms-tabbar,
+  body.ms-nav-open .ms-tabbar .ms-menu-toggle.ms-tab-menu {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
   }
 
   .ms-tab.is-active,

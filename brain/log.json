@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.2.6",
+      "date": "2026-10-28",
+      "title": "Menu in bottom bar, no top nav",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Mobile Studio drops the top brand bar and puts the menu control to the right of Settings in the bottom tab bar."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.5",
       "date": "2026-10-28",
       "title": "Small text size by default",
