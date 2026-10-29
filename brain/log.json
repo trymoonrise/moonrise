@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.1.8",
+      "date": "2026-10-28",
+      "title": "Legal delete-account link wording",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "Privacy Policy delete-account link shows a clean arrow instead of a broken question mark."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.7",
       "date": "2026-10-28",
       "title": "Menu contrast, phone sizing, and legal polish",
