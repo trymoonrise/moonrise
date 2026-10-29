@@ -3,11 +3,11 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
-      "version": "2.1.5",
+      "version": "2.1.6",
       "date": "2026-10-28",
       "title": "Darker legal body text",
-      "tag": "v2.1.5",
-      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.5",
+      "tag": "v2.1.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.6",
       "sections": [
         {
           "heading": "Site",
