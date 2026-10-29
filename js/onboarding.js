@@ -85,8 +85,18 @@
   const pageParams = new URLSearchParams(location.search);
 
   function safeNext(raw) {
+    if (typeof window.StudioAuth?.safeNextPath === "function") {
+      return window.StudioAuth.safeNextPath(raw, "dashboard.html");
+    }
     const s = String(raw || "dashboard.html").trim();
-    if (!s || s.startsWith("http") || s.includes("://") || s.includes("..")) {
+    if (
+      !s ||
+      s.startsWith("http") ||
+      s.startsWith("//") ||
+      s.includes("://") ||
+      s.includes("..") ||
+      s.includes(":")
+    ) {
       return "dashboard.html";
     }
     if (s.startsWith("onboarding.html")) return "dashboard.html";

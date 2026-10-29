@@ -367,7 +367,7 @@ html:not([data-ms-mode="dark"]) .ms-nav-link {
   color: var(--ms-ink) !important;
   -webkit-text-fill-color: var(--ms-ink) !important;
   background: transparent !important;
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: none !important;
 }
 

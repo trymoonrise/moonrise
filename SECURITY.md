@@ -19,6 +19,31 @@ Please include:
 
 We aim to acknowledge reports as soon as practical, investigate in good faith, and follow up when a fix or next step is available.
 
+## Breach notification plan
+
+If personal account data is leaked or we confirm unauthorized access to production systems that hold personal data, we notify affected people.
+
+**How we notice**
+
+- Production errors and auth failures in Vercel function logs and the Studio API worker
+- Supabase Auth, database, and storage logs and alerts
+- Stripe webhook and payout anomalies
+- Reports sent to [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com)
+
+**Who we tell**
+
+- Affected account holders, by email to the address on the account, from [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com)
+- Processors or hosts when their contracts require notice
+
+**What we send**
+
+- What happened, what data categories were involved (as far as we know), what we are doing, and what the person can do (for example reset sessions or contact support)
+
+**Timing**
+
+- We aim to begin investigation within 24 hours of a credible signal
+- We aim to notify affected people without undue delay, and within 72 hours of confirming a breach that requires notice under applicable law, unless law enforcement asks us to delay
+
 ## Baseline protections (implemented)
 
 - HTTPS + HSTS on production

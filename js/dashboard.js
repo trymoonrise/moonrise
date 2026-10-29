@@ -169,7 +169,7 @@
 
   function canDeleteProject(p) {
     if (window.StudioProjects?.canDeleteProject) return window.StudioProjects.canDeleteProject(p);
-    return true;
+    return !isPaidProject(p);
   }
 
   function statusLabel(p) {

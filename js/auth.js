@@ -441,7 +441,7 @@
       params.delete("type");
       params.delete("confirmed");
       params.delete("check_email");
-      const next = params.get("next") || "dashboard.html";
+      const next = safeNextPath(params.get("next"), "dashboard.html");
       params.delete("next");
       const qs = new URLSearchParams();
       if (next !== "dashboard.html") qs.set("next", next);
@@ -953,8 +953,28 @@
     );
   }
 
+  /** Keep post-login redirects on same-origin relative paths only. */
+  function safeNextPath(raw, fallback) {
+    const fallbackPath = String(fallback || "dashboard.html");
+    const s = String(raw || fallbackPath).trim();
+    if (!s) return fallbackPath;
+    if (
+      s.startsWith("http") ||
+      s.startsWith("//") ||
+      s.startsWith("\\\\") ||
+      s.includes("://") ||
+      s.includes("..") ||
+      s.includes(":") ||
+      s.includes("\\")
+    ) {
+      return fallbackPath;
+    }
+    if (s.startsWith("onboarding.html")) return fallbackPath;
+    return s;
+  }
+
   async function studioOnboardingRedirect(nextUrl) {
-    const destination = String(nextUrl || "dashboard.html");
+    const destination = safeNextPath(nextUrl, "dashboard.html");
     const profile = await getProfile();
     if (studioOnboarded(profile)) {
       return destination;
@@ -1228,6 +1248,7 @@
     payoutProfileComplete,
     studioOnboarded,
     studioOnboardingRedirect,
+    safeNextPath,
     ensureStudioOnboarding,
     clearStudioOnboardingFlag,
     hasForceOnboardingReplay,

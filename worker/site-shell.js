@@ -335,17 +335,14 @@ function renderBusinessSite(ctx, copy, media) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>${esc(name)}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
+<style>
     :root {
       --bg: #ffffff;
       --ink: #1d1d1f;
       --muted: #6e6e73;
       --line: #d2d2d7;
       --soft: #f5f5f7;
-      --font: Manrope, "Segoe UI", sans-serif;
+      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }

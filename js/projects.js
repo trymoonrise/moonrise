@@ -33,7 +33,10 @@
 
   function canDeleteProject(p) {
     if (window.StudioProjects?.canDeleteProject) return window.StudioProjects.canDeleteProject(p);
-    return true;
+    if (window.StudioProjects?.isClientPaidProject) {
+      return !window.StudioProjects.isClientPaidProject(p);
+    }
+    return p?.watermark_enabled !== false;
   }
 
   function projectContext(p) {

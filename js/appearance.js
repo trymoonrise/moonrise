@@ -187,7 +187,7 @@
       font = document.createElement("link");
       font.id = "ms-studio-font";
       font.rel = "stylesheet";
-      font.href = "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap";
+      font.href = "css/fonts.css?v=20261028-selfhost";
     }
     if (!font.parentNode) document.head.appendChild(font);
     if (studio && studio.parentNode) {

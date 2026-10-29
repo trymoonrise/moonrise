@@ -3,6 +3,42 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.3",
+      "date": "2026-10-28",
+      "title": "Audit hardening: fonts, redirects, legal",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Contact, orders, download, and login pages publish canonical URLs.",
+            "Privacy Security section states how Moonrise notices breaches and emails affected accounts."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio pages and appearance load fonts from the self-hosted css/fonts.css set instead of Google Fonts.",
+            "Sidebar channels, section labels, legal links, and the account foot share even padding again."
+          ],
+          "fixes": [
+            "After sign-in, the next redirect stays on relative Moonrise paths only.",
+            "Onboarding payout logos and other oversized doc images are compressed for faster loads.",
+            "Paid go-live websites no longer show a Delete control on Dashboard or Projects."
+          ]
+        },
+        {
+          "heading": "Security",
+          "added": [
+            "SECURITY.md includes a breach-notification plan covering detection, email contact, and timing."
+          ],
+          "fixes": [
+            "Published site shells no longer pull Manrope from Google Fonts."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.2",
       "date": "2026-10-28",
       "title": "Finder scan reliability, slide colors",

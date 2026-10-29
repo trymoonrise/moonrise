@@ -14,8 +14,9 @@
     return !!String(project.vercel_url || "").trim();
   }
 
-  function canDeleteProject() {
-    return true;
+  function canDeleteProject(project) {
+    // Paid go-live (watermark off) must stay; creators can still remove unpaid drafts/previews.
+    return !isClientPaidProject(project);
   }
 
   function workerUrl() {

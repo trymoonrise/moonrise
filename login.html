@@ -45,6 +45,7 @@ setTimeout(function () {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Login - Moonrise Studio</title>
   <meta name="description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
+  <link rel="canonical" href="https://trymoonrise.com/login.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Moonrise Studio">
   <meta property="og:title" content="Login - Moonrise Studio">
@@ -58,11 +59,11 @@ setTimeout(function () {
   <link rel="icon" href="doc/MoonriseLogo.png" type="image/png">
   <link rel="shortcut icon" href="doc/MoonriseLogo.png" type="image/png">
   <link rel="apple-touch-icon" href="doc/MoonriseLogo.png">
-  <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-finder-fix">
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-sidebar-pad">
   <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261028-finder-fix">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-finder-fix">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-sidebar-pad">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261028-boot-smooth">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-legal-min">
   <meta name="color-scheme" content="light">
@@ -196,7 +197,7 @@ setTimeout(function () {
   <script defer src="js/handles.js"></script>
   <script defer src="js/auth-security.js?v=20261003-session"></script>
   <script defer src="js/supabase-client.js?v=20261006-verify-signin"></script>
-  <script defer src="js/auth.js?v=20261028-adult"></script>
+  <script defer src="js/auth.js?v=20261028-safe-next"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();
@@ -216,7 +217,10 @@ setTimeout(function () {
       const linkPendingId = params.get("pending") || "";
       const foreignEmailLink = !!(linkPendingId && readLocalPendingId() !== linkPendingId);
       if (foreignEmailLink) window.SiteSupabase?.setSessionCookieSyncHeld?.(true);
-      const nextUrl = params.get("next") || "dashboard.html";
+      const nextUrl =
+        (typeof window.StudioAuth?.safeNextPath === "function"
+          ? window.StudioAuth.safeNextPath(params.get("next"), "dashboard.html")
+          : "dashboard.html");
       const isLocate = params.get("intent") === "locate";
       if (isLocate) {
         location.replace("orders.html");
