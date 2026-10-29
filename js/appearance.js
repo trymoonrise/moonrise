@@ -21,7 +21,7 @@
     xlarge: "Extra large",
   };
   /* Default: light cream UI with black ink accents. Users can change this in Settings → Appearance. */
-  var DEFAULTS = { mode: "light", color: "#232427", text: "medium" };
+  var DEFAULTS = { mode: "light", color: "#232427", text: "small" };
   var INK_COLORS = { "#232427": 1, "#1d1d1f": 1, "#000000": 1 };
 
   function clamp(n) {

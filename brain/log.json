@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.2.5",
+      "date": "2026-10-28",
+      "title": "Small text size by default",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Appearance text size defaults to Small; Medium and larger stay available in Settings."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.4",
       "date": "2026-10-28",
       "title": "Black and white default, dashboard and Finder polish",
