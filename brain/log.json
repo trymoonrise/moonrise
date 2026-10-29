@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.2.8",
+      "date": "2026-10-28",
+      "title": "Sidebar drops moonrise brand header",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Studio sidebar no longer shows the moonrise. brand block above Workspace."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.7",
       "date": "2026-10-28",
       "title": "Dashboard overview cards",

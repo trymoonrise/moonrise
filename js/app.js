@@ -785,10 +785,6 @@
 
     shell.innerHTML =
       '<aside class="ms-sidebar" id="ms-sidebar">' +
-      '<div class="ms-brand">' +
-      '<div class="ms-brand-copy">' +
-      '<strong class="ms-brand-name">moonrise.</strong>' +
-      "</div></div>" +
       '<div class="ms-sidebar-scroll">' +
       navGroup("Workspace", "layers", menuHtml, "Main") +
       navGroup("Account", "user", accountHtml, "Account") +
