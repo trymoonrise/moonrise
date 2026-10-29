@@ -128,29 +128,34 @@ document.documentElement.classList.add("ms-boot");
   <title>Dashboard - Moonrise Studio</title>
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-posts-fit">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-dash-card">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
-  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-tab-menu">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-dash-center">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-dash-card">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-dash-card">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261028-menu-phone">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-legal-min">
 </head>
 <body data-page="dashboard">
   <div id="shell"></div>
-  <div id="page-body" class="ms-dash-page ms-settings-page ms-dash-page--min">
-    <header class="ms-page-head ms-dash-head-min">
+  <div id="page-body" class="ms-dash-page ms-settings-page">
+    <header class="ms-page-head">
       <div class="ms-page-head-copy">
-        <h1 class="ms-sr-only">Dashboard</h1>
+        <h1>Dashboard</h1>
       </div>
     </header>
 
     <div class="ms-settings-stack ms-dash-stack">
       <section class="ms-card ms-settings-card ms-dash-card ms-dash-progress-card" aria-label="Overview">
+        <h2 class="ms-settings-card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+          Overview
+        </h2>
         <div class="ms-dash-hero">
           <div class="ms-dash-hero-copy">
             <p class="ms-dash-hero-label">Income</p>
             <p class="ms-dash-hero-value" id="stat-commission">$0.00</p>
+            <p class="ms-dash-hero-hint">Your 90% share</p>
           </div>
           <div class="ms-dash-hero-pct">
             <p class="ms-dash-ring-progress">
@@ -169,24 +174,27 @@ document.documentElement.classList.add("ms-boot");
         <div class="ms-dash-overview">
           <div class="ms-dash-overview-grid" aria-label="Key metrics">
             <div class="ms-dash-metric ms-dash-metric--goal" id="stat-goal-wrap">
-              <span class="ms-dash-metric-label">Goal</span>
+              <span class="ms-dash-metric-label">Goal <span class="ms-dash-metric-edit">Edit</span></span>
               <button type="button" class="ms-dash-metric-value ms-dash-goal-display" id="stat-goal" title="Click to edit income goal" aria-label="Income goal $1,000, click to edit">$1,000</button>
               <input class="ms-dash-goal-input" id="stat-goal-input" type="number" inputmode="numeric" min="1" max="1000000" step="1" value="1000" aria-label="Edit income goal" hidden>
+              <span class="ms-dash-metric-hint">Lifetime target</span>
             </div>
             <div class="ms-dash-metric ms-dash-metric--sales">
               <span class="ms-dash-metric-label">Sales</span>
               <strong class="ms-dash-metric-value" id="dash-sales-progress">0</strong>
+              <span class="ms-dash-metric-hint">Paid sites</span>
             </div>
             <div class="ms-dash-metric ms-dash-metric--avg">
               <span class="ms-dash-metric-label">Average</span>
               <strong class="ms-dash-metric-value" id="stat-avg-sale">-</strong>
+              <span class="ms-dash-metric-hint">Per paid site</span>
             </div>
           </div>
           <a class="ms-btn ms-dash-tool" href="leads.html">Find a lead</a>
         </div>
       </section>
 
-      <section class="ms-dash-posts" id="recent-projects" aria-label="Recent posts">
+      <section class="ms-card ms-settings-card ms-dash-card ms-dash-posts" id="recent-projects" aria-label="Recent posts">
         <button
           type="button"
           class="ms-dash-projects-toggle"
@@ -195,11 +203,16 @@ document.documentElement.classList.add("ms-boot");
           aria-controls="dash-projects-reveal"
         >
           <span class="ms-dash-projects-toggle-main">
-            <span class="ms-dash-projects-title">Recent posts</span>
-            <span class="ms-dash-count-badge" id="dash-projects-count">0 projects</span>
-            <svg class="ms-dash-projects-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6 9l6 6 6-6"/>
-            </svg>
+            <span class="ms-dash-projects-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
+              Recent posts
+            </span>
+            <span class="ms-dash-projects-toggle-meta">
+              <span class="ms-dash-count-badge" id="dash-projects-count">0 projects</span>
+              <svg class="ms-dash-projects-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </span>
           </span>
         </button>
         <div class="ms-dash-posts-reveal" id="dash-projects-reveal" hidden>

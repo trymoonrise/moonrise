@@ -70,11 +70,12 @@ html:not([data-ms-mode="dark"]) :where(
   color: var(--ms-ink);
 }
 
-html:not([data-ms-mode="dark"]) .ms-dash-progress-card.ms-dash-card {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
+html:not([data-ms-mode="dark"]) .ms-dash-progress-card.ms-dash-card,
+html:not([data-ms-mode="dark"]) .ms-dash-card.ms-dash-posts {
+  background: var(--ms-surface) !important;
+  border: 1px solid var(--ms-line) !important;
+  border-radius: var(--ms-radius-card) !important;
+  box-shadow: var(--ms-shadow-card) !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(

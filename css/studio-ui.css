@@ -741,119 +741,62 @@ html[data-ms-mode="dark"] .ms-settings-card-title {
   letter-spacing: -0.03em;
 }
 
-/* Dashboard overview: one income figure, a thin goal line, then three quiet stats. */
+/* Dashboard overview: settings-style card with income, goal line, and stats. */
 .ms-dash-progress-card {
   display: flex;
   flex-direction: column;
-  border: 0 !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0.35rem 0.15rem 0.85rem !important;
+  padding: 1.25rem 1.35rem 1.35rem !important;
 }
 
-.ms-dash-page--min .ms-dash-head-min {
-  display: none;
-}
-
-.ms-dash-page--min .ms-dash-stack {
-  gap: 1rem;
-  width: min(100%, 28rem);
-  max-width: 28rem;
-  margin-left: auto;
-  margin-right: auto;
-  align-items: stretch;
-}
-
-.ms-dash-page--min .ms-dash-progress-card {
-  align-items: center;
-  text-align: center;
-}
-
-.ms-dash-page--min .ms-dash-hero {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  width: 100%;
-  text-align: center;
-}
-
-.ms-dash-page--min .ms-dash-hero-copy {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.ms-dash-page--min .ms-dash-hero-value {
-  margin: 0.05rem 0 0;
-  font-size: clamp(2rem, 6.5vw, 2.55rem);
-}
-
-.ms-dash-page--min .ms-dash-hero-pct {
-  text-align: center;
-  padding-bottom: 0;
-}
-
-.ms-dash-page--min .ms-dash-bar {
-  margin-top: 0.85rem;
-  height: 5px;
-  width: min(100%, 18rem);
-  margin-inline: auto;
-}
-
-.ms-dash-page--min .ms-dash-bar-caption {
-  margin-top: 0.4rem !important;
-  text-align: center;
-  width: 100%;
-}
-
-.ms-dash-page--min .ms-dash-progress-card .ms-dash-overview {
+.ms-dash-card.ms-dash-posts {
   gap: 0.85rem;
-  margin-top: 0.85rem;
+  padding: 0.35rem 1.35rem 1.2rem !important;
+}
+
+.ms-dash-card.ms-dash-posts .ms-dash-projects-toggle {
   width: 100%;
+  max-width: none;
+  margin: 0 -1.35rem;
+  padding: 0.75rem 1.35rem 0.85rem;
+  border-radius: 0;
+  justify-content: space-between;
+  text-align: left;
+  align-self: stretch;
+  border-bottom: 1px solid var(--ms-line, #e6e4d4);
+  background: transparent;
+}
+
+.ms-dash-card.ms-dash-posts .ms-dash-projects-toggle:hover {
+  background: rgba(35, 36, 39, 0.03);
+}
+
+.ms-dash-card.ms-dash-posts .ms-dash-projects-toggle-main {
+  width: 100%;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ms-dash-card.ms-dash-posts .ms-dash-projects-toggle-meta {
+  display: inline-flex;
   align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
-.ms-dash-page--min .ms-dash-progress-card .ms-dash-overview-grid {
-  padding-top: 0.75rem;
-  width: 100%;
-  justify-items: center;
+.ms-dash-card.ms-dash-posts .ms-dash-projects-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.ms-dash-page--min .ms-dash-progress-card .ms-dash-metric {
-  justify-items: center !important;
-  text-align: center !important;
-  padding: 0 0.65rem !important;
-}
-
-.ms-dash-page--min .ms-dash-progress-card .ms-dash-metric:first-child,
-.ms-dash-page--min .ms-dash-progress-card .ms-dash-metric:last-child {
-  padding-left: 0.65rem !important;
-  padding-right: 0.65rem !important;
-}
-
-.ms-dash-page--min .ms-dash-progress-card .ms-dash-goal-display,
-.ms-dash-page--min .ms-dash-progress-card .ms-dash-goal-input,
-.ms-dash-page--min .ms-dash-progress-card .ms-dash-metric-value {
-  text-align: center !important;
-  width: 100%;
-}
-
-.ms-dash-page--min .ms-dash-progress-card .ms-dash-overview .ms-dash-tool {
-  width: min(100%, 14rem);
-  margin-inline: auto;
-}
-
-.ms-dash-page--min .ms-dash-posts {
-  gap: 0.65rem;
-  width: 100%;
-}
-
-.ms-dash-page--min .ms-dash-projects-toggle,
-.ms-dash-page--min .ms-dash-projects-toggle-main {
-  justify-content: center;
-  text-align: center;
-  width: 100%;
+.ms-dash-card.ms-dash-posts .ms-dash-projects-title svg {
+  width: 18px;
+  height: 18px;
+  color: #55574f;
+  flex-shrink: 0;
 }
 
 .ms-dash-hero {

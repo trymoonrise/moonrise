@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.2.7",
+      "date": "2026-10-28",
+      "title": "Dashboard overview cards",
+      "tag": "v2.2.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.2.7",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Dashboard Overview and Recent posts sit in settings-style cards with titles, hints, and clear structure."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.2.6",
       "date": "2026-10-28",
       "title": "Menu in bottom bar, no top nav",
