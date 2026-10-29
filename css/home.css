@@ -1,41 +1,61 @@
-/* Black / white home. Do not load studio-ui.css here. */
+/* Minimal black / white Moonrise landing. Do not load studio-ui.css here. */
 
 html:has(body[data-page="home"]) {
+  scroll-behavior: smooth;
   overscroll-behavior-y: none;
   scrollbar-gutter: auto;
+  scrollbar-width: none;
+}
+
+html:has(body[data-page="home"])::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 body[data-page="home"] {
-  --ms-muted: #666666;
-  --ms-soft-line: #e8e8e8;
-  --ms-soft-surface: #fafafa;
-  --ms-soft-lift: #f4f4f5;
+  margin: 0;
+  min-height: 100dvh;
   background: #ffffff;
-  color: #232427;
+  color: #1d1d1f;
   overflow-x: clip;
   overscroll-behavior-y: none;
+  font-family: "DM Sans", Figtree, ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.01em;
   scrollbar-gutter: auto;
 }
 
 body[data-page="home"] .ms-skip {
   position: absolute;
   left: 1rem;
-  top: 0.75rem;
+  top: -4rem;
   z-index: 100;
-  padding: 0.55rem 0.9rem;
-  border-radius: 999px;
-  background: #232427;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  color: #1d1d1f;
+  font-weight: 600;
   text-decoration: none;
-  transform: translateY(-160%);
 }
 
 body[data-page="home"] .ms-skip:focus {
-  transform: translateY(0);
-  outline: 2px solid var(--ms-accent-bright);
-  outline-offset: 2px;
+  top: 1rem;
+}
+
+body[data-page="home"] .ms-scroll-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  width: 100%;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: #1d1d1f;
+  pointer-events: none;
 }
 
 body[data-page="home"] .ms-home-shell {
@@ -43,285 +63,381 @@ body[data-page="home"] .ms-home-shell {
   transform: none;
   animation: none;
   width: 100%;
-  max-width: none;
-  margin: 0;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding-bottom: 0;
+  margin: 0;
+  padding: 0;
   overflow-x: clip;
 }
 
+/* Fixed topbar */
 body[data-page="home"] .ms-home-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 80;
-  flex-shrink: 0;
-  padding: max(0.85rem, env(safe-area-inset-top, 0px)) 1.15rem 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  min-height: 4.75rem;
+  padding: 0 1.6rem;
+  border-bottom: 1px solid rgb(0 0 0 / 8%);
+  background: #ffffff;
+  color: #1d1d1f;
+  pointer-events: auto;
 }
+
+body[data-page="home"] .ms-home-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: #1d1d1f;
+  pointer-events: auto;
+}
+
+body[data-page="home"] .ms-home-brand img {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: none;
+}
+
+body[data-page="home"] .ms-home-brand strong {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #1d1d1f;
+  -webkit-text-fill-color: #1d1d1f;
+}
+
+body[data-page="home"] .ms-home-topnav {
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.45rem 1.25rem;
+  margin-left: auto;
+  align-items: center;
+}
+
+body[data-page="home"] .ms-home-topnav a {
+  color: #1d1d1f;
+  font-size: 1.02rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+body[data-page="home"] .ms-home-topnav a:hover {
+  color: #6e6e73;
+}
+
+body[data-page="home"] .ms-home-orb {
+  appearance: none;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+body[data-page="home"] .ms-home-orb i {
+  position: absolute;
+  left: 11px;
+  right: 11px;
+  height: 1.5px;
+  border-radius: 99px;
+  background: #1d1d1f;
+}
+
+body[data-page="home"] .ms-home-orb i:nth-child(1) { top: 15px; }
+body[data-page="home"] .ms-home-orb i:nth-child(2) { top: 21px; }
+body[data-page="home"] .ms-home-orb i:nth-child(3) { top: 27px; }
 
 body[data-page="home"] .ms-home-desk-nav {
   display: none !important;
 }
 
-body[data-page="home"] .ms-home-brand img {
-  border-radius: 14px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 6px 16px rgba(0, 0, 0, 0.06);
+/* Bloom menu */
+body[data-page="home"] .ms-home-bloom {
+  background: #111111;
+  z-index: 70;
 }
 
-body[data-page="home"] .ms-home-brand strong {
-  font-weight: 850;
-  letter-spacing: -0.05em;
-  color: #232427;
-  -webkit-text-fill-color: #232427;
+body[data-page="home"] .ms-home-bloom-nav a {
+  color: #ffffff;
 }
 
-body[data-page="home"] .ms-home-orb {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--ms-soft-lift) 88%, #fff);
-  box-shadow: inset 0 0 0 1px var(--ms-soft-line);
-}
-
-body[data-page="home"] .ms-home-orb i {
-  left: 12px;
-  right: 12px;
-  height: 1.75px;
-  border-radius: 99px;
-  background: #232427;
+body[data-page="home"] .ms-home-bloom-nav a:hover {
+  color: #a1a1a6;
 }
 
 body[data-page="home"].ms-home-menu-open .ms-home-brand,
-body[data-page="home"].ms-home-menu-open .ms-home-brand strong {
+body[data-page="home"].ms-home-menu-open .ms-home-brand strong,
+body.ms-home-menu-open .ms-home-brand,
+body.ms-home-menu-open .ms-home-brand strong {
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
 }
 
-/* First viewport: one soft stage — no double min-height (prevents tiny upward scroll). */
-body[data-page="home"] .ms-home-hero {
-  flex: 1 0 auto;
-  min-height: calc(100dvh - 4.25rem - env(safe-area-inset-top, 0px));
-  display: flex;
-  align-items: center;
-  max-width: none;
-  margin: 0;
-  padding: 0.75rem 1.15rem 1.75rem;
-  box-sizing: border-box;
+body.ms-home-menu-open .ms-home-orb.is-open i {
+  background: #ffffff;
 }
 
-body[data-page="home"] .ms-home-hero-stage {
-  min-height: 0;
-  width: 100%;
-  justify-content: center;
-  padding: 0;
+body.ms-home-menu-open .ms-home-nav {
+  background: transparent;
+  border-bottom-color: transparent;
 }
 
-body[data-page="home"] .ms-home-hero-copy {
-  width: 100%;
-  max-width: 26rem;
-  min-height: 0;
-  margin: 0 auto;
-  padding: 1.5rem 1.35rem 1.75rem;
-  text-align: center;
+/* Full-bleed dark stage */
+body[data-page="home"] .ms-home-stage {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #070708;
+  color: #ffffff;
+}
+
+body[data-page="home"] .ms-home-stage-media {
+  position: absolute;
+  inset: -12% 0;
+  background:
+    radial-gradient(70% 55% at 70% 35%, rgb(255 255 255 / 10%), transparent 58%),
+    radial-gradient(55% 45% at 20% 70%, rgb(255 255 255 / 6%), transparent 60%),
+    linear-gradient(160deg, #111111 0%, #070708 48%, #000000 100%);
+  will-change: transform;
+}
+
+body[data-page="home"] .ms-home-stage-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 42%, rgb(0 0 0 / 55%));
+}
+
+body[data-page="home"] .ms-home-stage-copy {
+  position: absolute;
+  top: 4.75rem;
+  right: 0;
+  bottom: 2.5rem;
+  left: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  opacity: 1;
-  transform: none;
-  animation: none;
-  border-radius: 28px;
-  background: color-mix(in srgb, var(--ms-soft-surface) 92%, #fff);
-  box-shadow:
-    inset 0 0 0 1px var(--ms-soft-line),
-    0 18px 40px rgba(0, 0, 0, 0.05);
-}
-
-body[data-page="home"] .ms-home-title {
-  margin: 0;
-  width: 100%;
-  white-space: normal;
-  font-size: clamp(2.35rem, 8.5vw, 3.05rem);
-  font-weight: 800;
-  letter-spacing: -0.045em;
-  line-height: 1.06;
-  color: #232427;
-  -webkit-text-fill-color: #232427;
+  padding: 0 4vw;
   text-align: center;
 }
 
-body[data-page="home"] .ms-home-title-accent {
-  color: #232427;
-  -webkit-text-fill-color: #232427;
-  background: none;
-}
-
-body[data-page="home"] .ms-home-sub {
-  margin: 0 auto;
-  max-width: 22rem;
-  color: var(--ms-muted);
-  font-size: 1.02rem;
-  line-height: 1.5;
+body[data-page="home"] .ms-home-win {
+  margin: 0 0 0.45rem;
+  color: #ffffff;
+  font-size: 0.78rem;
   font-weight: 500;
-  text-align: center;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-body[data-page="home"] .ms-home-ctas {
-  width: 100%;
-  max-width: 20rem;
-  margin: 0.45rem auto 0;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-  gap: 0.7rem;
+body[data-page="home"] .ms-home-stage h1 {
+  width: auto;
+  max-width: 14ch;
+  margin: 0 auto;
+  color: #ffffff;
+  font-size: clamp(2.85rem, 7.2vw, 6.4rem);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 0.92;
+  text-wrap: balance;
 }
 
-body[data-page="home"] .ms-home-cta-primary,
-body[data-page="home"] .ms-home-cta-secondary {
-  width: 100%;
-  min-height: 52px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 1.02rem;
-  justify-content: center;
-  text-align: center;
-  text-decoration: none;
+body[data-page="home"] .ms-home-stage-lead {
+  margin: 0.9rem 0 0;
+  max-width: 28rem;
+  color: rgb(255 255 255 / 78%);
+  font-size: 0.98rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+body[data-page="home"] .ms-home-discover {
   display: inline-flex;
   align-items: center;
-  transition:
-    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease;
-}
-
-body[data-page="home"] .ms-home-cta-primary {
-  background: #232427;
-  color: #ffffff;
-  -webkit-text-fill-color: #ffffff;
+  height: 2.4rem;
+  margin-top: 1.4rem;
+  padding: 0 1.3rem;
   border: 0;
-  box-shadow: 0 10px 24px rgba(35, 36, 39, 0.14);
+  border-radius: 980px;
+  background: #ffffff;
+  color: #1d1d1f;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 280ms ease, padding 280ms ease;
 }
 
-body[data-page="home"] .ms-home-cta-secondary {
-  background: var(--ms-soft-lift);
-  color: #232427;
-  -webkit-text-fill-color: #232427;
-  border: 1.5px solid var(--ms-soft-line);
-  box-shadow: none;
+body[data-page="home"] .ms-home-discover:hover {
+  padding: 0 1.6rem;
+  transform: scale(1.08);
 }
 
-body[data-page="home"] .ms-home-cta-primary:hover,
-body[data-page="home"] .ms-home-cta-secondary:hover,
-body[data-page="home"] .ms-home-method-cta:hover,
-body[data-page="home"] .ms-home-footer-signup:hover,
-body[data-page="home"] .ms-home-footer-signin:hover {
-  opacity: 0.92;
-  transform: translateY(-1px);
-}
-
-body[data-page="home"] .ms-home-how,
-body[data-page="home"] .ms-home-faq {
-  width: auto;
-  max-width: none;
-  margin: 0.85rem 1.15rem;
-  padding: 1.65rem 1.35rem 1.5rem;
-  text-align: left;
-  border-radius: 28px;
-  background: var(--ms-soft-surface);
-  box-shadow: inset 0 0 0 1px var(--ms-soft-line);
-}
-
-body[data-page="home"] .ms-home-how-title {
-  margin: 0 0 1.15rem;
-  font-size: 1.55rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  text-transform: lowercase;
-  color: #232427;
+body[data-page="home"] .ms-home-stage-note {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1.35rem;
+  z-index: 1;
+  margin: 0 auto;
+  width: min(92vw, 36rem);
+  color: rgb(255 255 255 / 55%);
+  font-size: 0.68rem;
+  font-weight: 400;
   text-align: center;
 }
 
-body[data-page="home"] .ms-home-steps {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* How it works — soft grey band */
+body[data-page="home"] .ms-home-works {
   display: grid;
-  gap: 0.55rem;
-}
-
-body[data-page="home"] .ms-home-steps li {
-  display: grid;
-  gap: 0.2rem;
-  padding: 1rem 1.05rem;
-  border: 0;
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--ms-soft-lift) 70%, transparent);
-}
-
-body[data-page="home"] .ms-home-steps li:first-child {
-  border-top: 0;
-}
-
-body[data-page="home"] .ms-home-steps strong {
-  font-size: 1.08rem;
-  font-weight: 700;
-  color: #232427;
-  letter-spacing: -0.02em;
-}
-
-body[data-page="home"] .ms-home-steps span {
-  font-size: 0.96rem;
-  line-height: 1.45;
-  color: var(--ms-muted);
-  font-weight: 500;
-}
-
-body[data-page="home"] .ms-home-method-cta {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: 52px;
-  margin: 1.35rem 0 0;
-  padding: 0 1.25rem;
-  border-radius: 999px;
-  background: #232427;
-  color: #ffffff;
+  padding: 4.5rem 4vw;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  scroll-margin-top: 5.5rem;
+}
+
+body[data-page="home"] .ms-home-works-copy {
+  width: min(100%, 40rem);
+}
+
+body[data-page="home"] .ms-home-works h2,
+body[data-page="home"] .ms-home-why h2,
+body[data-page="home"] .ms-home-faq h2 {
+  margin: 0;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+
+body[data-page="home"] .ms-home-works ol {
+  display: grid;
+  gap: 1rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+body[data-page="home"] .ms-home-works li {
+  color: #1d1d1f;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+body[data-page="home"] .ms-home-works li strong {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+body[data-page="home"] .ms-home-works li span {
+  color: #6e6e73;
+  font-weight: 400;
+}
+
+body[data-page="home"] .ms-home-section-link {
+  display: inline-block;
+  margin-top: 1.25rem;
+  color: #1d1d1f;
+  font-size: 0.95rem;
+  font-weight: 500;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1.02rem;
-  box-shadow: 0 10px 24px rgba(35, 36, 39, 0.12);
+}
+
+body[data-page="home"] .ms-home-section-link:hover {
+  text-decoration: underline;
+}
+
+/* Why / steps as soft tiles */
+body[data-page="home"] .ms-home-why {
+  padding: 4.5rem 4vw 5rem;
+  background: #ffffff;
+  color: #1d1d1f;
+  scroll-margin-top: 5.5rem;
+}
+
+body[data-page="home"] .ms-home-why ol {
+  display: grid;
+  gap: 0.9rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+body[data-page="home"] .ms-home-why li {
+  padding: 1.3rem 1.2rem 1.35rem;
+  border-radius: 1rem;
+  background: #f5f5f7;
+}
+
+body[data-page="home"] .ms-home-why strong {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+body[data-page="home"] .ms-home-why p {
+  margin: 0.5rem 0 0;
+  color: #3a3a3c;
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+/* FAQ */
+body[data-page="home"] .ms-home-faq {
+  padding: 4.5rem 8vw 5rem;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  scroll-margin-top: 5.5rem;
+}
+
+body[data-page="home"] .ms-home-faq-layout {
+  display: grid;
+  gap: 2rem;
+  align-items: start;
 }
 
 body[data-page="home"] .ms-home-faq-list {
-  margin: 0;
-  display: grid;
-  gap: 0.55rem;
+  max-width: 42rem;
+  margin: 1.5rem 0 0;
 }
 
 body[data-page="home"] .ms-home-faq-item {
   border: 0;
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--ms-soft-lift) 70%, transparent);
-  padding: 0.15rem 0.2rem;
-  border-bottom: 0;
-  overflow: hidden;
+  border-radius: 0;
+  border-top: 1px solid #d2d2d7;
+  background: transparent;
+  padding: 0;
 }
 
-body[data-page="home"] .ms-home-faq-item:first-child {
-  border-top: 0;
+body[data-page="home"] .ms-home-faq-item:last-child {
+  border-bottom: 1px solid #d2d2d7;
 }
 
 body[data-page="home"] .ms-home-faq-item summary {
-  padding: 0.95rem 0.95rem;
+  padding: 1.05rem 0;
   font-size: 1.02rem;
-  font-weight: 700;
-  color: #232427;
+  font-weight: 600;
   letter-spacing: -0.02em;
+  color: #1d1d1f;
   cursor: pointer;
   list-style: none;
 }
@@ -331,114 +447,179 @@ body[data-page="home"] .ms-home-faq-item summary::-webkit-details-marker {
 }
 
 body[data-page="home"] .ms-home-faq-item p {
-  margin: 0 0 1rem;
-  padding: 0 0.95rem;
-  color: var(--ms-muted);
-  font-size: 0.96rem;
-  line-height: 1.5;
-  font-weight: 500;
+  margin: 0 0 1.05rem;
+  padding: 0;
+  color: #6e6e73;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  font-weight: 400;
 }
 
-body[data-page="home"] .ms-home-footer {
-  width: auto;
-  max-width: none;
-  margin: 0.85rem 1.15rem max(1.25rem, env(safe-area-inset-bottom, 0px));
-  padding: 1.35rem 1.25rem 1.25rem;
-  border-top: 0;
-  border-radius: 28px;
-  background: var(--ms-soft-surface);
-  box-shadow: inset 0 0 0 1px var(--ms-soft-line);
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1.1rem;
-}
-
-body[data-page="home"] .ms-home-footer-copy p {
-  display: none;
-}
-
-body[data-page="home"] .ms-home-footer-legal {
-  margin-top: 0.65rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.85rem;
-}
-
-body[data-page="home"] .ms-home-footer-legal a,
-body[data-page="home"] .ms-home-footer-signin {
-  color: var(--ms-muted);
-  font-weight: 600;
-}
-
-body[data-page="home"] .ms-home-footer-legal a:hover,
-body[data-page="home"] .ms-home-footer-signin:hover {
-  color: #232427;
-}
-
-body[data-page="home"] .ms-home-footer-actions {
-  justify-content: stretch;
+body[data-page="home"] .ms-home-faq-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.7rem;
 }
 
-body[data-page="home"] .ms-home-footer-signup,
-body[data-page="home"] .ms-home-footer-signin {
-  min-height: 48px;
-  display: inline-flex;
+body[data-page="home"] .ms-home-faq-actions a {
+  display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
+  min-height: 4.6rem;
+  padding: 0.85rem;
+  border-radius: 1rem;
+  background: #1d1d1f;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-align: center;
   text-decoration: none;
 }
 
-body[data-page="home"] .ms-home-footer-signup {
-  background: #232427;
-  color: #ffffff;
+body[data-page="home"] .ms-home-faq-actions a:hover {
+  background: #000000;
+}
+
+/* Footer */
+body[data-page="home"] .ms-home-site-footer {
+  width: 100%;
+  margin-top: auto;
+  background: #000000;
+  color: #a1a1a6;
   border: 0;
+  padding: 0;
 }
 
-body[data-page="home"] .ms-home-footer-signin {
-  border: 1.5px solid var(--ms-soft-line);
-  color: #232427;
-  background: var(--ms-soft-lift);
-}
-
-body[data-page="home"] .ms-home-bloom {
-  background: #1d1d1f;
-  z-index: 70;
-}
-
-body[data-page="home"] .ms-home-bloom-nav a {
+body[data-page="home"] .ms-home-to-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 2.4rem 1rem 0.2rem;
   color: #ffffff;
+  font-size: 0.78rem;
+  text-decoration: none;
 }
 
-body[data-page="home"] .ms-home-bloom-nav a:hover {
-  color: #c8c8cc;
+body[data-page="home"] .ms-home-to-top span {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-top: 1.5px solid #ffffff;
+  border-left: 1.5px solid #ffffff;
+  transform: rotate(45deg);
 }
 
-body.ms-home-menu-open .ms-home-brand,
-body.ms-home-menu-open .ms-home-brand strong {
-  color: #ffffff;
-  -webkit-text-fill-color: #ffffff;
-  background: transparent;
+body[data-page="home"] .ms-home-footer-wrap {
+  width: min(1120px, calc(100% - 2.5rem));
+  margin-inline: auto;
 }
 
-body.ms-home-menu-open .ms-home-orb {
-  background: transparent;
-  box-shadow: none;
+body[data-page="home"] .ms-home-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.8rem 2.5rem;
+  padding: 2.2rem 0 0.2rem;
 }
 
-body.ms-home-menu-open .ms-home-orb.is-open i {
-  background: #ffffff;
+body[data-page="home"] .ms-home-footer-grid div {
+  display: grid;
+  align-content: start;
+  gap: 0.05rem;
+}
+
+body[data-page="home"] .ms-home-footer-label {
+  margin: 0 0 0.55rem;
+  color: #6e6e73;
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
+body[data-page="home"] .ms-home-footer-grid a {
+  color: #f5f5f7;
+  font-size: 0.84rem;
+  line-height: 1.85;
+  text-decoration: none;
+}
+
+body[data-page="home"] .ms-home-footer-grid a:hover {
+  text-decoration: underline;
+}
+
+body[data-page="home"] .ms-home-footer-note {
+  margin: 0;
+  padding: 1.15rem 0 1.75rem;
+  color: #8e8e93;
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+body[data-page="home"] .ms-home-footer-note strong {
+  color: #d2d2d7;
+  font-weight: 500;
+}
+
+body[data-page="home"] .ms-home-footer-note a {
+  color: #f5f5f7;
+}
+
+@media (min-width: 900px) {
+  body[data-page="home"] .ms-home-topnav {
+    display: flex;
+  }
+
+  body[data-page="home"] .ms-home-orb {
+    display: none;
+  }
+
+  body[data-page="home"] .ms-home-faq-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+    gap: 3.5rem;
+    align-items: center;
+  }
+
+  body[data-page="home"] .ms-home-why ol {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body[data-page="home"] .ms-home-works-copy {
+    width: min(100%, 44rem);
+  }
+}
+
+@media (max-width: 899px) {
+  body[data-page="home"] .ms-home-nav {
+    padding-block: 0.7rem;
+  }
+
+  body[data-page="home"] .ms-home-works,
+  body[data-page="home"] .ms-home-why,
+  body[data-page="home"] .ms-home-faq {
+    padding-left: 1.15rem;
+    padding-right: 1.15rem;
+  }
+
+  body[data-page="home"] .ms-home-stage h1 {
+    font-size: 2.7rem;
+  }
+
+  body[data-page="home"] .ms-home-footer-grid {
+    gap: 0.2rem 0.75rem;
+    padding-top: 0.85rem;
+  }
+
+  body[data-page="home"] .ms-home-footer-grid a {
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+
+  body[data-page="home"] .ms-home-to-top {
+    padding-top: 1.25rem;
+  }
 }
 
 @media (max-width: 720px) {
-  body[data-page="home"] .ms-home-shell {
-    max-width: none;
-    width: 100%;
-  }
-
   body[data-page="home"] .ms-home-bloom-nav {
     width: min(100%, 18rem);
     max-width: calc(100vw - 2.5rem);
@@ -454,27 +635,19 @@ body.ms-home-menu-open .ms-home-orb.is-open i {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  body[data-page="home"].is-home-ready .ms-home-hero-copy > * {
-    animation: ms-home-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  body[data-page="home"].is-home-ready .ms-home-stage-copy > * {
+    animation: ms-home-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
-  body[data-page="home"].is-home-ready .ms-home-hero-copy > *:nth-child(1) { animation-delay: 0.04s; }
-  body[data-page="home"].is-home-ready .ms-home-hero-copy > *:nth-child(2) { animation-delay: 0.1s; }
-  body[data-page="home"].is-home-ready .ms-home-hero-copy > *:nth-child(3) { animation-delay: 0.16s; }
-
-  body[data-page="home"] .ms-home-steps li,
-  body[data-page="home"] .ms-home-faq-item {
-    transition: background 0.2s ease, transform 0.2s ease;
-  }
-  body[data-page="home"] .ms-home-steps li:hover,
-  body[data-page="home"] .ms-home-faq-item:hover {
-    background: var(--ms-soft-lift);
-  }
+  body[data-page="home"].is-home-ready .ms-home-stage-copy > *:nth-child(1) { animation-delay: 0.05s; }
+  body[data-page="home"].is-home-ready .ms-home-stage-copy > *:nth-child(2) { animation-delay: 0.12s; }
+  body[data-page="home"].is-home-ready .ms-home-stage-copy > *:nth-child(3) { animation-delay: 0.18s; }
+  body[data-page="home"].is-home-ready .ms-home-stage-copy > *:nth-child(4) { animation-delay: 0.24s; }
 }
 
 @keyframes ms-home-rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -482,102 +655,9 @@ body.ms-home-menu-open .ms-home-orb.is-open i {
   }
 }
 
-@media (min-width: 720px) {
-  body[data-page="home"] .ms-home-shell {
-    max-width: none;
-    width: 100%;
-    margin: 0;
-  }
-
-  body[data-page="home"] .ms-home-nav {
-    padding: max(1.1rem, env(safe-area-inset-top, 0px)) clamp(1.75rem, 4vw, 3.5rem) 0.85rem;
-  }
-
-  body[data-page="home"] .ms-home-hero {
-    min-height: calc(100dvh - 4.75rem - env(safe-area-inset-top, 0px));
-    padding: 1.25rem clamp(1.75rem, 4vw, 3.5rem) 2.5rem;
-  }
-
-  body[data-page="home"] .ms-home-hero-copy {
-    max-width: 42rem;
-    gap: 1.25rem;
-    padding: 2.75rem 2.5rem 2.85rem;
-    border-radius: 36px;
-  }
-
-  body[data-page="home"] .ms-home-title {
-    font-size: clamp(3.25rem, 5.8vw, 4.75rem);
-    letter-spacing: -0.05em;
-    line-height: 1.03;
-  }
-
-  body[data-page="home"] .ms-home-sub {
-    max-width: 30rem;
-    font-size: 1.15rem;
-    line-height: 1.5;
-  }
-
-  body[data-page="home"] .ms-home-ctas {
-    max-width: 26rem;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.8rem;
-    margin-top: 0.55rem;
-  }
-
-  body[data-page="home"] .ms-home-cta-primary,
-  body[data-page="home"] .ms-home-cta-secondary {
-    width: auto;
-    min-width: 10.25rem;
-    flex: 1;
-    min-height: 54px;
-    font-size: 1.05rem;
-  }
-
-  body[data-page="home"] .ms-home-how,
-  body[data-page="home"] .ms-home-faq,
-  body[data-page="home"] .ms-home-footer {
-    width: min(100% - 3.5rem, 44rem);
-    margin-inline: auto;
-    margin-top: 1.15rem;
-    margin-bottom: 1.15rem;
-    padding: 2rem 1.85rem 1.85rem;
-    border-radius: 32px;
-  }
-
-  body[data-page="home"] .ms-home-footer {
-    margin-bottom: max(1.75rem, env(safe-area-inset-bottom, 0px));
-  }
-
-  body[data-page="home"] .ms-home-how-title {
-    font-size: 1.9rem;
-  }
-
-  body[data-page="home"] .ms-home-steps {
-    gap: 0.65rem;
-  }
-
-  body[data-page="home"] .ms-home-steps li {
-    padding: 1.15rem 1.2rem;
-    border-radius: 20px;
-  }
-
-  body[data-page="home"] .ms-home-steps strong {
-    font-size: 1.15rem;
-  }
-
-  body[data-page="home"] .ms-home-steps span,
-  body[data-page="home"] .ms-home-faq-item p {
-    font-size: 1.02rem;
-  }
-
-  body[data-page="home"] .ms-home-method-cta {
-    max-width: 17rem;
-    margin-inline: auto;
-    min-height: 54px;
-  }
-
-  body[data-page="home"] .ms-home-footer-actions {
-    max-width: 22rem;
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] .ms-home-discover:hover {
+    transform: none;
+    padding: 0 1.3rem;
   }
 }

@@ -218,9 +218,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261028-strict-bw">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
-  <link rel="stylesheet" href="css/home.css?v=20261028-strict-bw">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-strict-bw">
-  <link rel="stylesheet" href="css/cream-motion.css?v=20261028-boot-smooth">
+  <link rel="stylesheet" href="css/home.css?v=20261028-minimal-stage">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261006-blue"></script>
@@ -289,13 +287,21 @@ document.documentElement.classList.add("ms-boot");
 </head>
 <body data-page="home">
   <a class="ms-skip" href="#main">Skip to content</a>
+  <div class="ms-scroll-line" aria-hidden="true"></div>
 
   <div class="ms-home-shell">
     <header class="ms-home-nav">
       <a class="ms-home-brand" href="index.html">
-        <img src="doc/MoonriseLogo.png" alt="" width="40" height="40">
+        <img src="doc/MoonriseLogo.png" alt="" width="28" height="28">
         <strong>moonrise.</strong>
       </a>
+      <nav class="ms-home-topnav" aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#why">Why Moonrise</a>
+        <a href="#faq">FAQ</a>
+        <a href="download.html">Download</a>
+        <a href="login.html">Sign in</a>
+      </nav>
       <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
         <i></i><i></i><i></i>
       </button>
@@ -306,139 +312,142 @@ document.documentElement.classList.add("ms-boot");
         <a href="index.html" style="--nav-i:0">Home</a>
         <a href="login.html" style="--nav-i:1">Start earning</a>
         <a href="#how" style="--nav-i:2">How it works</a>
-        <a href="download.html" style="--nav-i:3">Download app</a>
-        <a href="orders.html" style="--nav-i:4">Locate my order</a>
-        <a href="login.html" style="--nav-i:5">Sign in</a>
+        <a href="#faq" style="--nav-i:3">FAQ</a>
+        <a href="download.html" style="--nav-i:4">Download app</a>
+        <a href="orders.html" style="--nav-i:5">Locate my order</a>
+        <a href="login.html" style="--nav-i:6">Sign in</a>
       </nav>
     </div>
 
-    <main id="main" class="ms-home-hero">
-      <div class="ms-home-hero-stage">
-        <div class="ms-home-hero-copy">
-          <h1 class="ms-home-title">Build websites.<br><span class="ms-home-title-accent">Get paid.</span></h1>
-          <p class="ms-home-sub">Build a site for a local business. Get paid when they go live.</p>
-          <div class="ms-home-ctas">
-            <a class="ms-home-cta-primary" href="login.html">Start earning</a>
-            <a class="ms-home-cta-secondary" href="#how">How it works</a>
+    <main id="main">
+      <section class="ms-home-stage" aria-label="Moonrise">
+        <div class="ms-home-stage-media" aria-hidden="true"></div>
+        <div class="ms-home-stage-shade" aria-hidden="true"></div>
+        <div class="ms-home-stage-copy">
+          <p class="ms-home-win">moonrise.</p>
+          <h1>Build websites.<br>Get paid.</h1>
+          <p class="ms-home-stage-lead">Build a site for a local business. Get paid when they go live.</p>
+          <a class="ms-home-discover" href="login.html">Start earning</a>
+        </div>
+        <p class="ms-home-stage-note">No design skills needed. You keep 90% when a business goes live.</p>
+      </section>
+
+      <section class="ms-home-works" id="how" aria-labelledby="how-title">
+        <div class="ms-home-works-copy">
+          <h2 id="how-title">How it works</h2>
+          <ol>
+            <li>
+              <strong>Find a local business.</strong>
+              <span>Pick a shop that still needs a real website.</span>
+            </li>
+            <li>
+              <strong>Build in one swipe.</strong>
+              <span>Generate their site, then refine the details.</span>
+            </li>
+            <li>
+              <strong>Send the link and earn.</strong>
+              <span>They unlock it at checkout. You get paid.</span>
+            </li>
+          </ol>
+          <a class="ms-home-section-link" href="login.html">Start earning</a>
+        </div>
+      </section>
+
+      <section class="ms-home-why" id="why" aria-labelledby="why-heading">
+        <h2 id="why-heading">Why Moonrise</h2>
+        <ol>
+          <li>
+            <strong>Fast to ship.</strong>
+            <p>Go from lead to live preview without a long build process.</p>
+          </li>
+          <li>
+            <strong>Paid when they unlock.</strong>
+            <p>Publish a watermarked site, send the link, and earn when they go live.</p>
+          </li>
+          <li>
+            <strong>Keep most of it.</strong>
+            <p>You keep 90%. Businesses pay on the live site through secure checkout.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="ms-home-faq" id="faq" aria-labelledby="faq-title">
+        <div class="ms-home-faq-layout">
+          <div>
+            <h2 id="faq-title">FAQ</h2>
+            <div class="ms-home-faq-list">
+              <details class="ms-home-faq-item">
+                <summary>What is Moonrise?</summary>
+                <p>A simple way to build websites for local businesses and get paid when they go live.</p>
+              </details>
+              <details class="ms-home-faq-item">
+                <summary>How do I get paid?</summary>
+                <p>Publish the watermarked site, send the link, and earn when the owner pays to unlock it. You keep 90%.</p>
+              </details>
+              <details class="ms-home-faq-item">
+                <summary>Do owners need an account?</summary>
+                <p>No. They pay on the live site through secure checkout.</p>
+              </details>
+            </div>
+            <a class="ms-home-section-link" href="help.html">Read more help</a>
+          </div>
+          <div class="ms-home-faq-actions" aria-label="Quick actions">
+            <a href="login.html">Start earning</a>
+            <a href="#how">How it works</a>
+            <a href="download.html">Download app</a>
+            <a href="orders.html">Find my order</a>
           </div>
         </div>
-      </div>
+      </section>
     </main>
 
-    <section class="ms-home-section ms-home-how" id="how">
-      <h2 class="ms-home-how-title">how it works</h2>
-      <ol class="ms-home-steps">
-        <li>
-          <strong>Find</strong>
-          <span>Pick a local business that needs a website.</span>
-        </li>
-        <li>
-          <strong>Build</strong>
-          <span>Generate their site in one swipe, then refine.</span>
-        </li>
-        <li>
-          <strong>Close</strong>
-          <span>Send the link. You earn when they unlock it.</span>
-        </li>
-      </ol>
-      <a class="ms-home-method-cta" href="login.html">Start earning</a>
-    </section>
-
-    <section class="ms-home-section ms-home-faq" id="faq" aria-labelledby="faq-title">
-      <h2 id="faq-title" class="ms-home-how-title">questions</h2>
-      <div class="ms-home-faq-list">
-        <details class="ms-home-faq-item">
-          <summary>What is Moonrise?</summary>
-          <p>A simple way to build websites for local businesses and get paid when they go live.</p>
-        </details>
-        <details class="ms-home-faq-item">
-          <summary>How do I get paid?</summary>
-          <p>Publish the watermarked site, send the link, and earn when the owner pays to unlock it. You keep 90%.</p>
-        </details>
-        <details class="ms-home-faq-item">
-          <summary>Do owners need an account?</summary>
-          <p>No. They pay on the live site through secure checkout.</p>
-        </details>
-      </div>
-    </section>
-
-    <footer class="ms-home-footer">
-      <div class="ms-home-footer-copy">
-        <a class="ms-home-brand" href="index.html">
-          <img src="doc/MoonriseLogo.png" alt="" width="32" height="32" loading="lazy" decoding="async">
-          <strong>moonrise.</strong>
-        </a>
-        <nav class="ms-home-footer-legal" aria-label="Legal and support">
+    <footer class="ms-home-site-footer">
+      <a class="ms-home-to-top" href="#main"><span aria-hidden="true"></span>Scroll up</a>
+      <div class="ms-home-footer-wrap ms-home-footer-grid">
+        <div>
+          <p class="ms-home-footer-label">Product</p>
+          <a href="login.html">Start earning</a>
+          <a href="#how">How it works</a>
+          <a href="download.html">Download app</a>
+        </div>
+        <div>
+          <p class="ms-home-footer-label">Account</p>
+          <a href="login.html">Sign in</a>
+          <a href="login.html?mode=signup">Sign up</a>
+          <a href="orders.html">Locate order</a>
+        </div>
+        <div>
+          <p class="ms-home-footer-label">Help</p>
+          <a href="help.html">Help</a>
           <a href="contact.html">Contact</a>
           <a href="legal.html">Legal</a>
           <a href="report.html">Report</a>
-        </nav>
+        </div>
       </div>
-      <div class="ms-home-footer-actions">
-        <a class="ms-home-footer-signup" href="login.html?mode=signup">Sign up</a>
-        <a class="ms-home-footer-signin" href="login.html">Sign in</a>
+      <div class="ms-home-footer-wrap">
+        <p class="ms-home-footer-note"><strong>moonrise.</strong> Build websites for local businesses and get paid when they go live. Questions: <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>.</p>
       </div>
     </footer>
   </div>
 
-  <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
+  <script defer src="js/home-bloom-nav.js?v=20261028-minimal-stage"></script>
   <script defer src="js/ui-motion.js?v=20261028-motion-finder"></script>
   <script defer src="js/toast.js"></script>
   <script defer>
     (function () {
       if (window.__msReleaseBoot) window.__msReleaseBoot();
-      const body = document.body;
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      body.classList.add("is-home-ready");
+      document.body.classList.add("is-home-ready");
 
-      function bindPointerTilt(selector, options) {
-        if (reduce || window.matchMedia("(pointer: coarse)").matches) return;
-        const nodes = document.querySelectorAll(selector);
-        const maxTilt = options.maxTilt || 10;
-        const mode = options.mode || "tilt";
-        if (mode === "none") return;
-
-        nodes.forEach((node) => {
-          let rect = null;
-          let raf = 0;
-          let pending = null;
-          node.classList.add("is-tiltable");
-
-          const applyTilt = () => {
-            raf = 0;
-            if (!pending || !rect) return;
-            const x = (pending.x - rect.left) / Math.max(rect.width, 1);
-            const y = (pending.y - rect.top) / Math.max(rect.height, 1);
-            const nx = Math.min(1, Math.max(0, x));
-            const ny = Math.min(1, Math.max(0, y));
-            node.style.setProperty("--ry", ((nx - 0.5) * maxTilt * 2).toFixed(2) + "deg");
-            node.style.setProperty("--rx", ((0.5 - ny) * maxTilt * 2).toFixed(2) + "deg");
-            pending = null;
-          };
-
-          node.addEventListener("pointerenter", () => {
-            node.classList.remove("is-settling");
-            rect = node.getBoundingClientRect();
-          });
-
-          node.addEventListener("pointermove", (e) => {
-            if (!rect) rect = node.getBoundingClientRect();
-            pending = { x: e.clientX, y: e.clientY };
-            if (!raf) raf = requestAnimationFrame(applyTilt);
-          });
-
-          node.addEventListener("pointerleave", () => {
-            if (raf) cancelAnimationFrame(raf);
-            raf = 0;
-            pending = null;
-            rect = null;
-            node.classList.add("is-settling");
-            node.style.setProperty("--rx", "0deg");
-            node.style.setProperty("--ry", "0deg");
-          });
-        });
+      var line = document.querySelector(".ms-scroll-line");
+      function syncScrollLine() {
+        if (!line) return;
+        var doc = document.documentElement;
+        var max = Math.max(1, doc.scrollHeight - window.innerHeight);
+        line.style.transform = "scaleX(" + Math.min(1, window.scrollY / max).toFixed(4) + ")";
       }
-
+      window.addEventListener("scroll", syncScrollLine, { passive: true });
+      window.addEventListener("resize", syncScrollLine, { passive: true });
+      syncScrollLine();
     })();
   </script>
 </body>
