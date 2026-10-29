@@ -53,6 +53,24 @@
     },
   ];
 
+  const LEGAL = [
+    { id: "guide", href: "guide.html", label: "Guide", icon: "book" },
+    {
+      id: "privacy",
+      href: "legal.html#privacy",
+      label: "Privacy",
+      icon: "shield",
+      legalHash: "privacy",
+    },
+    {
+      id: "terms",
+      href: "legal.html#terms",
+      label: "Terms",
+      icon: "scroll",
+      legalHash: "terms",
+    },
+  ];
+
   const ICONS = {
     grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>',
     hammer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.73-4.24-4.24"/><path d="m14.5 7.5 3.5-3.5a2.12 2.12 0 0 1 3 3L17.5 10.5"/></svg>',
@@ -75,8 +93,11 @@
     heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
     external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
     download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>',
-    menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="9" x2="18" y2="9"/><line x1="6" y1="15" x2="18" y2="15"/></svg>',
+    menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="7" x2="19" y2="7"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="17" x2="19" y2="17"/></svg>',
     info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.2V16"/><circle cx="12" cy="8" r="0.8" fill="currentColor" stroke="none"/></svg>',
+    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    scroll: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h6"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>',
   };
 
@@ -276,7 +297,20 @@
     }
 
     const activeIds = item.pages || [item.id];
-    const active = !item.external && activeIds.includes(page) ? " is-active" : "";
+    let active = "";
+    if (!item.external) {
+      if (item.legalHash) {
+        const hash = String(location.hash || "")
+          .replace(/^#/, "")
+          .toLowerCase();
+        const onLegal = page === "legal";
+        const hashMatch =
+          hash === item.legalHash || (!hash && item.legalHash === "privacy");
+        if (onLegal && hashMatch) active = " is-active";
+      } else if (activeIds.includes(page)) {
+        active = " is-active";
+      }
+    }
     const externalAttrs = item.external
       ? ' data-external-redirect="true" data-external-url="' +
         String(item.href || "").replace(/"/g, "&quot;") +
@@ -552,30 +586,9 @@
     );
   }
 
-  const SIDEBAR_LEGAL = [
-    { id: "guide", href: "guide.html", label: "Guide" },
-    { id: "privacy", href: "legal.html#privacy", label: "Privacy" },
-    { id: "terms", href: "legal.html#terms", label: "Terms" },
-  ];
-
   function sidebarLegal(page) {
-    const links = SIDEBAR_LEGAL.map((item) => {
-      const active = page === item.id ? " is-active" : "";
-      return (
-        '<a class="ms-sidebar-legal-link' +
-        active +
-        '" href="' +
-        item.href +
-        '">' +
-        item.label +
-        "</a>"
-      );
-    });
-    return (
-      '<nav class="ms-sidebar-legal" aria-label="Help and legal">' +
-      links.join('<span class="ms-sidebar-legal-sep" aria-hidden="true">·</span>') +
-      "</nav>"
-    );
+    const itemsHtml = LEGAL.map((item) => navLink(item, page)).join("");
+    return navGroup("Legal", "info", itemsHtml, "Legal");
   }
 
   function initialFrom(text) {
@@ -788,6 +801,7 @@
       '<div class="ms-sidebar-scroll">' +
       navGroup("Workspace", "layers", menuHtml, "Main") +
       navGroup("Account", "user", accountHtml, "Account") +
+      sidebarLegal(page) +
       '<p class="ms-sidebar-updated" id="ms-sidebar-updated" hidden>Last updated: ...</p>' +
       "</div>" +
       '<a class="ms-credits-tag ms-income-tag" id="ms-user-income" href="dashboard.html" title="View income on Dashboard">' +
@@ -796,7 +810,6 @@
       bootIncomeLabel +
       "</strong>" +
       "</a>" +
-      sidebarLegal(page) +
       '<div class="ms-sidebar-foot">' +
       '<div class="ms-user-row">' +
       '<a class="ms-user-profile" href="settings.html" aria-label="Open settings">' +

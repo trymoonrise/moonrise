@@ -236,9 +236,9 @@
 
     notifToggle.disabled = false;
     if (enabled) {
-      setNotifHint("On - you will get a notification when a client purchases their website.");
+      setNotifHint("On for paid client go-lives");
     } else {
-      setNotifHint("Turn on to get a device notification for each new paid client.");
+      setNotifHint("Alert when a business pays to go live");
     }
   }
 

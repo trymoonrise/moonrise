@@ -3,6 +3,25 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.0",
+      "date": "2026-10-28",
+      "title": "Tighter tabs, simpler Settings",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Mobile bottom tab bar padding and icons sit tighter, with a three-line menu control.",
+            "Settings Notifications is a single purchase toggle row.",
+            "Settings Session and Delete account share one Account card.",
+            "My Clients search sits in a simple full-width pill field."
+          ],
+          "fixes": [
+            "Settings no longer duplicates Download app; use the sidebar link instead."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.9",
       "date": "2026-10-28",
       "title": "Smoother load, tighter tabs",

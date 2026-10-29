@@ -1297,7 +1297,7 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
     width: 100% !important;
     transform: none !important;
     margin: 0 !important;
-    padding: 0.35rem 0.15rem calc(0.35rem + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 0.3rem 0.5rem calc(0.3rem + env(safe-area-inset-bottom, 0px)) !important;
     border: 0 !important;
     border-top: 1px solid rgb(0 0 0 / 8%) !important;
     border-radius: 0 !important;
@@ -1306,9 +1306,9 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     display: flex !important;
-    align-items: stretch !important;
+    align-items: center !important;
     justify-content: space-between !important;
-    gap: 0 !important;
+    gap: 0.15rem !important;
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
@@ -1325,11 +1325,11 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   .ms-tabbar .ms-menu-toggle.ms-tab-menu {
     flex: 1 1 0;
     min-width: 0;
-    height: 3.75rem;
-    min-height: 3.75rem;
+    height: 3.15rem;
+    min-height: 3.15rem;
     gap: 0;
     overflow: visible;
-    border-radius: 0 !important;
+    border-radius: 12px !important;
     background: transparent !important;
     box-shadow: none !important;
     color: #6e6e73 !important;
@@ -1337,16 +1337,16 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   }
 
   .ms-tab-ico {
-    width: 26px !important;
-    height: 26px !important;
+    width: 24px !important;
+    height: 24px !important;
     display: grid !important;
     place-items: center;
     flex-shrink: 0;
   }
 
   .ms-tab-ico svg {
-    width: 26px !important;
-    height: 26px !important;
+    width: 24px !important;
+    height: 24px !important;
     display: block !important;
   }
 
@@ -1368,8 +1368,8 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   }
 
   .ms-tabbar .ms-menu-toggle.ms-tab-menu svg {
-    width: 26px !important;
-    height: 26px !important;
+    width: 24px !important;
+    height: 24px !important;
     display: block !important;
   }
 
@@ -1415,7 +1415,7 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   body[data-page="settings"] #page-body,
   body[data-page="builder"].ms-lb-setup #page-body,
   body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
-    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 

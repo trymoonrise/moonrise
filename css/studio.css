@@ -1200,14 +1200,14 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
   }
 
   .ms-tab-ico {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
 
   .ms-tab-ico svg,
   .ms-tab-orb svg {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     display: block;
     flex-shrink: 0;
   }
@@ -1265,18 +1265,18 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
   body[data-page="settings"] #page-body,
   body[data-page="builder"].ms-lb-setup #page-body,
   body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
-    padding-bottom: calc(6.4rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .ios-install-banner {
-    bottom: calc(5.1rem + env(safe-area-inset-bottom, 0px));
+    bottom: calc(4.1rem + env(safe-area-inset-bottom, 0px));
   }
 
   @media (max-width: 380px) {
     .ms-tab-ico svg,
     .ms-tab-orb svg {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
     }
   }
 
@@ -3629,6 +3629,31 @@ input.ms-input:-webkit-autofill:focus {
   justify-content: space-between;
   gap: 1rem;
   margin: 0.15rem 0 0.65rem;
+}
+
+.ms-settings-pref-row--solo {
+  margin: 0.1rem 0 0;
+}
+
+.ms-settings-actions--start {
+  justify-content: flex-start;
+}
+
+.ms-settings-account-delete {
+  margin-top: 1.15rem;
+  padding-top: 1.05rem;
+  border-top: 1px solid var(--ms-line, #e6e4d4);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ms-settings-account-delete .ms-settings-hint {
+  margin: 0;
+}
+
+.ms-settings-account-delete .ms-settings-actions {
+  margin-top: 0.15rem;
 }
 
 .ms-settings-pref-copy {
@@ -17500,50 +17525,41 @@ body.ms-payouts-modal-open {
 }
 
 .ms-clients-table-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.75rem;
-  padding: 0.75rem 0.9rem;
+  display: block;
+  padding: 0.85rem 0.9rem;
   border-bottom: 1px solid var(--ms-line);
-  background: linear-gradient(180deg, #fbfdff 0%, #f5f4e8 100%);
+  background: transparent;
 }
 
 .ms-clients-search-label {
-  flex: 0 0 auto;
-  font-size: 0.68rem;
-  font-weight: 650;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ms-muted);
-  white-space: nowrap;
+  display: block;
 }
 
 .ms-clients-search-field {
   position: relative;
   display: flex;
   align-items: center;
-  flex: 1 1 220px;
+  width: 100%;
   min-width: 0;
-  min-height: 42px;
-  padding: 0 0.35rem 0 0.85rem;
-  border: 1px solid var(--ms-line);
-  border-radius: 12px;
-  background: #fbfaf1;
-  box-shadow: 0 1px 2px rgba(60, 55, 30, 0.04);
+  min-height: 44px;
+  padding: 0 0.4rem 0 1rem;
+  border: 1.5px solid var(--ms-ink, #232427);
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .ms-clients-search-field::before {
   content: "";
   display: block;
-  width: 17px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
-  margin-right: 0.45rem;
+  margin-right: 0.55rem;
   opacity: 0.55;
   background: currentColor;
-  color: var(--ms-muted);
+  color: var(--ms-muted, #6a6a62);
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
   mask-size: contain;
   mask-repeat: no-repeat;
@@ -17555,45 +17571,54 @@ body.ms-payouts-modal-open {
 }
 
 .ms-clients-search-field:focus-within {
-  border-color: color-mix(in srgb, var(--ms-accent) 48%, var(--ms-line));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ms-accent) 14%, transparent);
+  border-color: var(--ms-ink, #232427);
+  box-shadow: 0 0 0 3px rgba(35, 36, 39, 0.08);
 }
 
 .ms-clients-search {
   display: block;
   width: 100%;
-  min-height: 40px;
-  padding: 0.55rem 2rem 0.55rem 0;
+  min-height: 42px;
+  padding: 0.55rem 2.35rem 0.55rem 0;
   border: none;
   border-radius: 0;
   background: transparent;
   color: #232427;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 0.92rem;
   line-height: 1.35;
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.ms-clients-search::-webkit-search-decoration,
+.ms-clients-search::-webkit-search-cancel-button,
+.ms-clients-search::-webkit-search-results-button,
+.ms-clients-search::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .ms-clients-search::placeholder {
-  color: var(--ms-muted);
+  color: #6a6a62;
 }
 
 .ms-clients-search-clear {
   position: absolute;
   top: 50%;
-  right: 0.35rem;
+  right: 0.4rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   margin: 0;
   padding: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 999px;
   background: transparent;
-  color: var(--ms-muted);
-  font-size: 1.25rem;
+  color: #6a6a62;
   line-height: 1;
   cursor: pointer;
   transform: translateY(-50%);
@@ -17608,7 +17633,7 @@ body.ms-payouts-modal-open {
 }
 
 .ms-clients-search-clear:hover {
-  background: #f5f4e8;
+  background: rgba(35, 36, 39, 0.06);
   color: #232427;
 }
 

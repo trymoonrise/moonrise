@@ -46,9 +46,9 @@
   <meta name="twitter:description" content="Contact Moonrise Studio by email or phone. Get support for website orders, creator accounts, and go-live checkout.">
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-cream-full">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-settings-ui">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="document.documentElement.classList.remove('ms-hold')">
-  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-fix-ui">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-settings-ui">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261028-cream-full">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261028-boot-smooth">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-legal-min">
@@ -217,7 +217,7 @@
       shareBtn?.addEventListener("click", async () => {
         const shareData = {
           title: "Moonrise",
-          text: "Moonrise Â· trymoonrise.com\n" + CONTACT.phoneDisplay + "\n" + CONTACT.email + "\n" + CONTACT.instagram,
+          text: "Moonrise · trymoonrise.com\n" + CONTACT.phoneDisplay + "\n" + CONTACT.email + "\n" + CONTACT.instagram,
           url: location.href.split("#")[0],
         };
         try {
