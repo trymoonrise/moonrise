@@ -23,7 +23,7 @@ body[data-page="home"] .ms-skip {
 
 body[data-page="home"] .ms-skip:focus {
   transform: translateY(0);
-  outline: 2px solid #8fb0d6;
+  outline: 2px solid var(--ms-accent-bright);
   outline-offset: 2px;
 }
 
@@ -41,14 +41,13 @@ body[data-page="home"] .ms-home-shell {
   padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
 }
 
-/* Shared content rail — phone stays narrow; desktop uses a real page width. */
-body[data-page="home"] .ms-home-rail {
-  width: min(100% - 2.5rem, 40rem);
-  margin-inline: auto;
-}
-
 body[data-page="home"] .ms-home-nav {
   padding: max(1rem, env(safe-area-inset-top, 0px)) 1.25rem 0.75rem;
+}
+
+/* Bloom menu on every width — keep desk links out of the layout. */
+body[data-page="home"] .ms-home-desk-nav {
+  display: none !important;
 }
 
 body[data-page="home"] .ms-home-brand strong {
@@ -422,22 +421,27 @@ body.ms-home-menu-open .ms-home-orb.is-open i {
   }
 }
 
+/* Desktop keeps the same centered phone composition as mobile. */
 @media (min-width: 720px) {
   body[data-page="home"] .ms-home-shell {
     max-width: 28rem;
+    margin-inline: auto;
   }
-  body[data-page="home"] .ms-home-ctas {
-    grid-template-columns: 1fr 1fr;
-  }
+
   body[data-page="home"] .ms-home-nav {
     padding-left: 0;
     padding-right: 0;
   }
+
   body[data-page="home"] .ms-home-hero,
   body[data-page="home"] .ms-home-how,
   body[data-page="home"] .ms-home-faq,
   body[data-page="home"] .ms-home-footer {
     padding-left: 0;
     padding-right: 0;
+  }
+
+  body[data-page="home"] .ms-home-title {
+    font-size: clamp(2.6rem, 4.2vw, 3.25rem);
   }
 }

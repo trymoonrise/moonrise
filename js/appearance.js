@@ -142,6 +142,13 @@
         );
 
     var tone = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255 < 0.4 ? "dark" : "light";
+    var select = ink
+      ? mode === "dark"
+        ? "#3a3a3c"
+        : "#ddddd3"
+      : rgbToHex(mix(rgb, mode === "dark" ? { r: 18, g: 24, b: 38 } : { r: 252, g: 251, b: 239 }, mode === "dark" ? 0.55 : 0.42));
+    var selectSoft = ink ? soft : rgbToHex(mix(rgb, mode === "dark" ? { r: 18, g: 24, b: 38 } : { r: 252, g: 251, b: 239 }, mode === "dark" ? 0.72 : 0.78));
+    var link = ink ? "#232427" : strong;
     root.setAttribute("data-ms-mode", mode);
     root.setAttribute("data-ms-text", text);
     root.setAttribute("data-ms-accent-tone", tone);
@@ -150,6 +157,11 @@
     root.style.setProperty("--ms-accent-strong", strong);
     root.style.setProperty("--ms-accent-soft", soft);
     root.style.setProperty("--ms-accent-rgb", rgb.r + ", " + rgb.g + ", " + rgb.b);
+    root.style.setProperty("--ms-select", select);
+    root.style.setProperty("--ms-select-soft", selectSoft);
+    root.style.setProperty("--ms-link", link);
+    root.style.setProperty("--ms-banner", soft);
+    root.style.setProperty("--ms-banner-ink", ink ? "#232427" : strong);
     root.style.colorScheme = mode === "dark" ? "dark" : "light";
     var crit = document.getElementById("ms-appearance-critical");
     if (mode === "dark") {
@@ -173,14 +185,14 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261028-bw-default";
+      link.href = "css/appearance.css?v=20261028-bw-reset";
     }
     var ui = document.getElementById("ms-studio-ui-css");
     if (!ui) {
       ui = document.createElement("link");
       ui.id = "ms-studio-ui-css";
       ui.rel = "stylesheet";
-      ui.href = "css/studio-ui.css?v=20261027-slim";
+      ui.href = "css/studio-ui.css?v=20261028-bw-default";
     }
     var font = document.getElementById("ms-studio-font");
     if (!font) {
@@ -198,7 +210,7 @@
       document.head.appendChild(link);
     }
     if (document.head.lastElementChild !== ui) document.head.appendChild(ui);
-    /* Keep cream layers after appearance + studio-ui so selection chrome stays powder blue. */
+    /* Keep cream / public layers after appearance + studio-ui for surface tokens. */
     ["link[href*='cream-ink.css']", "link[href*='cream-motion.css']", "link[href*='public-pages.css']"].forEach(function (sel) {
       var sheet = document.querySelector(sel);
       if (sheet && sheet.parentNode && document.head.lastElementChild !== sheet) {
@@ -247,7 +259,14 @@
       customWrap.classList.toggle("is-light", !preset && isLight(current.rgb));
     }
     if (hex && document.activeElement !== hex) hex.value = current.color;
-    if (reset) reset.hidden = isDefault(current);
+    if (reset) {
+      /* Always available; dim when already at defaults. */
+      reset.hidden = false;
+      reset.removeAttribute("hidden");
+      reset.disabled = false;
+      reset.setAttribute("aria-disabled", isDefault(current) ? "true" : "false");
+      reset.classList.toggle("is-default", isDefault(current));
+    }
 
     document.querySelectorAll(".ms-appearance-swatch[data-color]").forEach(function (btn) {
       var on = btn.getAttribute("data-color") === current.color;
@@ -272,10 +291,28 @@
     document.dispatchEvent(new CustomEvent("ms:appearance-changed", { detail: current }));
   }
 
+  function resetToDefault() {
+    commit({ mode: DEFAULTS.mode, color: DEFAULTS.color, text: DEFAULTS.text });
+    try {
+      if (window.StudioToast && typeof window.StudioToast.success === "function") {
+        window.StudioToast.success("Appearance reset to black and white");
+      }
+    } catch (_) {
+      /* toast optional */
+    }
+    return current;
+  }
+
   var bound = false;
   function bindSettings() {
-    if (bound || !document.getElementById("settings-appearance")) return;
+    var root = document.getElementById("settings-appearance");
+    if (!root) return false;
+    if (bound || root.dataset.bound === "1") {
+      syncControls();
+      return true;
+    }
     bound = true;
+    root.dataset.bound = "1";
     syncControls();
 
     document.getElementById("set-dark-mode")?.addEventListener("change", function (e) {
@@ -316,10 +353,17 @@
       });
     });
 
-    document.getElementById("set-appearance-reset")?.addEventListener("click", function () {
-      commit({ mode: DEFAULTS.mode, color: DEFAULTS.color, text: DEFAULTS.text });
-      window.StudioToast?.success?.("Appearance reset");
-    });
+    var resetBtn = document.getElementById("set-appearance-reset");
+    if (resetBtn && resetBtn.dataset.bound !== "1") {
+      resetBtn.dataset.bound = "1";
+      resetBtn.hidden = false;
+      resetBtn.removeAttribute("hidden");
+      resetBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        resetToDefault();
+      });
+    }
+    return true;
   }
 
   window.MoonriseAppearance = {
@@ -327,14 +371,17 @@
     apply: apply,
     chromeColor: chromeColor,
     bindSettings: bindSettings,
+    resetToDefault: resetToDefault,
+    defaults: DEFAULTS,
     presets: PRESETS,
   };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bindSettings);
-  } else {
-    bindSettings();
+  function scheduleBind() {
+    if (bindSettings()) return;
+    document.addEventListener("DOMContentLoaded", bindSettings, { once: true });
+    window.addEventListener("load", bindSettings, { once: true });
   }
+  scheduleBind();
 
   window.addEventListener("load", paintChrome);
   setTimeout(paintChrome, 0);

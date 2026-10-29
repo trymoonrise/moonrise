@@ -1,5 +1,5 @@
 /* Moonrise studio surface styles. Loaded after studio.css and appearance.css.
-   Matches the pre-B&W blue/white chrome (043f8dc). Do not load on home. */
+   Default cream + black/white chrome; Appearance may override accent. Do not load on home. */
 
 :root {
   --ms-btn-h: 3.25rem;
@@ -16,15 +16,17 @@ html:not([data-ms-mode="dark"]) {
   --ms-ink: #232427;
   --ms-muted: #55574f;
   --ms-line: #e6e4d4;
-  --ms-link: #1d3a66;
-  --ms-accent: #bfd3e3;
-  --ms-accent-bright: #8fb0d6;
-  --ms-accent-strong: #232427;
-  --ms-accent-soft: #cfe0ee;
-  --ms-accent-rgb: 191, 211, 227;
+  --ms-link: #232427;
+  --ms-accent: #232427;
+  --ms-accent-bright: #232427;
+  --ms-accent-strong: #000000;
+  --ms-accent-soft: #f5f4e8;
+  --ms-accent-rgb: 35, 36, 39;
+  --ms-select: #ddddd3;
+  --ms-select-soft: #f5f4e8;
   --ms-brand: #232427;
-  --ms-banner: #cfe0ee;
-  --ms-banner-ink: #1d3a66;
+  --ms-banner: #f5f4e8;
+  --ms-banner-ink: #232427;
   --ms-radius: 16px;
   --ms-radius-pill: 999px;
   --ms-shadow-card: 0 4px 14px rgba(60, 55, 30, 0.08);
@@ -306,7 +308,7 @@ html:not([data-ms-mode="dark"]) .ms-sidebar {
 }
 
 html:not([data-ms-mode="dark"]) .ms-nav-pill {
-  background: #bfd3e3;
+  background: var(--ms-accent);
   border-radius: 0.85rem;
   box-shadow: 0 2px 8px rgba(60, 80, 110, 0.15);
 }

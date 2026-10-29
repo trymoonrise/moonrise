@@ -179,7 +179,7 @@
   height: 1.15rem;
   margin-top: 0.1rem;
   border-radius: 999px;
-  background: #cfe0ee;
+  background: var(--ms-accent-soft);
   color: #232427;
   flex-shrink: 0;
 }
@@ -313,14 +313,14 @@
 }
 
 .ms-donate-preset:hover {
-  border-color: #bfd3e3;
+  border-color: var(--ms-accent);
   color: #232427;
   background: #f8fbff;
 }
 
 .ms-donate-preset.is-active {
   border-color: #232427;
-  background: #cfe0ee;
+  background: var(--ms-accent-soft);
   color: #232427;
   box-shadow: 0 0 0 1px rgba(35, 36, 39, 0.12);
 }
@@ -508,7 +508,7 @@
 .ms-donate-facepile-avatar.is-fallback {
   display: inline-grid;
   place-items: center;
-  background: #cfe0ee;
+  background: var(--ms-accent-soft);
   color: #232427;
   font-size: 0.72rem;
   font-weight: 800;
@@ -979,7 +979,7 @@ body[data-page="leaderboard"]::before {
 }
 
 .ms-ldb-podium-slot.is-first .ms-ldb-podium-medal {
-  background: #cfe0ee;
+  background: var(--ms-accent-soft);
   color: #232427;
 }
 
@@ -1004,7 +1004,7 @@ body[data-page="leaderboard"]::before {
 .ms-ldb-row-avatar.is-fallback {
   display: inline-grid;
   place-items: center;
-  background: #cfe0ee;
+  background: var(--ms-accent-soft);
   color: #232427;
   font-size: 0.75rem;
   font-weight: 800;

@@ -3,6 +3,30 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.3.4",
+      "date": "2026-10-28",
+      "title": "Black and white defaults, Reset appearance",
+      "tag": "v2.3.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.3.4",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home on desktop keeps the same centered phone layout and bloom menu as mobile."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Default theme colors across Studio are black, white, and cream greys instead of powder blue.",
+            "Settings Reset to default restores black-and-white appearance and stays visible to click."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.3.3",
       "date": "2026-10-28",
       "title": "Audit hardening: fonts, redirects, legal",

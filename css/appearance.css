@@ -283,6 +283,10 @@ select.ms-select:focus {
   color: var(--ms-accent-strong);
 }
 
+.ms-appearance-reset.is-default {
+  opacity: 0.45;
+}
+
 @media (max-width: 560px) {
   .ms-appearance-swatch {
     width: 36px;

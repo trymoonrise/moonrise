@@ -12,18 +12,18 @@
   --ms-dashed: #d9d8cc;
   --ms-track-off: #ddddd3;
   --ms-segment: #f2f3f6;
-  /* Selection chrome stays powder blue even when theme accent is ink. */
-  --ms-select: #bfd3e3;
-  --ms-select-soft: #cfe0ee;
-  --ms-accent: #bfd3e3;
-  --ms-accent-bright: #8fb0d6;
-  --ms-accent-strong: #232427;
-  --ms-accent-soft: #cfe0ee;
-  --ms-accent-rgb: 191, 211, 227;
+  /* Default selection + accent: black / white / cream greys (Appearance may override accent). */
+  --ms-select: #ddddd3;
+  --ms-select-soft: #f5f4e8;
+  --ms-accent: #232427;
+  --ms-accent-bright: #232427;
+  --ms-accent-strong: #000000;
+  --ms-accent-soft: #f5f4e8;
+  --ms-accent-rgb: 35, 36, 39;
   --ms-brand: #232427;
-  --ms-link: #1d3a66;
-  --ms-banner: #cfe0ee;
-  --ms-banner-ink: #1d3a66;
+  --ms-link: #232427;
+  --ms-banner: #f5f4e8;
+  --ms-banner-ink: #232427;
   --ms-skeleton: #c4c4c4;
   --ms-danger: #e03a1a;
   --ms-radius: 16px;
@@ -383,7 +383,7 @@ html:not([data-ms-mode="dark"]) .ms-nav-link:hover {
   -webkit-text-fill-color: var(--ms-ink) !important;
 }
 
-/* Powder-blue selected state — never follow theme --ms-accent (often ink) */
+/* Selected state uses --ms-select (grey by default; follows Appearance when set) */
 html:not([data-ms-mode="dark"]) .ms-nav-link.is-active {
   background: transparent !important;
   color: var(--ms-ink) !important;
@@ -573,15 +573,14 @@ html:not([data-ms-mode="dark"]) :where(
 
 /* —— Links —— */
 html:not([data-ms-mode="dark"]) a:not(.ms-btn):not(.ms-home-cta-primary):not(.ms-home-cta-secondary):not(.ms-nav-link):not(.ms-home-bloom-nav a):not(.ms-legal-nav a):not(.ms-legal-toc a):not(.ms-orders-nav-link) {
-  color: #1d3a66;
+  color: var(--ms-link);
 }
 
-/* Never use powder-blue accent as body link color */
 html:not([data-ms-mode="dark"]) .ms-card a,
 html:not([data-ms-mode="dark"]) .ms-legal-doc a,
 html:not([data-ms-mode="dark"]) .ms-help-card a,
 html:not([data-ms-mode="dark"]) .ms-settings-card a {
-  color: #1d3a66 !important;
+  color: var(--ms-link) !important;
 }
 
 /* —— Home polish —— */
