@@ -166,9 +166,9 @@ body[data-page="help"] #page-body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.4rem;
-  margin: 1.25rem 0 1.35rem !important;
-  padding: 0.65rem 0.15rem 0.85rem !important;
+  gap: 0.85rem 1.25rem;
+  margin: 0.85rem 0 1.5rem !important;
+  padding: 0.55rem 0 0.75rem !important;
   background: #fcfbef !important;
   border: 0 !important;
   border-bottom: 1px solid #e6e4d4 !important;
@@ -178,30 +178,24 @@ body[data-page="help"] #page-body {
 }
 
 .ms-legal-toc-label {
-  width: 100%;
-  margin: 0 0 0.15rem !important;
-  font-size: 0.78rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.04em;
-  text-transform: lowercase !important;
-  color: #55574f !important;
+  display: none !important;
 }
 
 .ms-legal-toc a {
-  color: #232427 !important;
-  background: #f5f4e8 !important;
-  border: 1px solid #e6e4d4 !important;
+  color: #55574f !important;
+  background: transparent !important;
+  border: 0 !important;
   box-shadow: none !important;
-  font-size: 0.9rem !important;
+  font-size: 0.92rem !important;
   font-weight: 650 !important;
-  padding: 0.4rem 0.75rem !important;
-  border-radius: 999px !important;
+  padding: 0.15rem 0 !important;
+  border-radius: 0 !important;
   text-decoration: none !important;
 }
 
 .ms-legal-toc a:hover,
 .ms-legal-toc a:focus-visible {
-  background: #bfd3e3 !important;
+  background: transparent !important;
   border-color: transparent !important;
   color: #232427 !important;
 }
@@ -209,7 +203,7 @@ body[data-page="help"] #page-body {
 /* —— Content cards / articles —— */
 .ms-legal-doc {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .ms-legal-doc .ms-card,
@@ -220,15 +214,27 @@ body.ms-download-page .ms-download-card,
 body[data-page="orders"] .ms-orders-card {
   background: #fbfaf1 !important;
   border: 1px solid #e6e4d4 !important;
-  border-radius: 24px !important;
-  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08) !important;
+  border-radius: 20px !important;
+  box-shadow: none !important;
   color: #232427 !important;
-  padding: 1.35rem 1.25rem !important;
+  padding: 1.65rem 1.5rem !important;
 }
 
-.ms-legal-section-head,
-.ms-legal-doc .ms-card h2,
+.ms-legal-section-head {
+  margin: 0 0 0.35rem !important;
+  font-size: clamp(1.35rem, 3.2vw, 1.6rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+}
+
+.ms-legal-doc .ms-card h2:not(.ms-legal-section-head),
 .ms-legal-doc .ms-card h3 {
+  margin: 1.35rem 0 0.45rem !important;
+  font-size: 1.08rem !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.015em !important;
   color: #232427 !important;
   -webkit-text-fill-color: #232427 !important;
 }
@@ -238,7 +244,7 @@ body[data-page="orders"] .ms-orders-card {
   color: #3a3c36 !important;
   -webkit-text-fill-color: #3a3c36 !important;
   font-size: 1rem !important;
-  line-height: 1.65 !important;
+  line-height: 1.7 !important;
 }
 
 .ms-legal-updated {
@@ -264,6 +270,11 @@ body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-bt
 
 /* —— Footer —— */
 .ms-legal-foot {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem 1.1rem;
   background: rgba(252, 251, 239, 0.96) !important;
   border-top: 1px solid #e6e4d4 !important;
   backdrop-filter: blur(12px);
@@ -272,6 +283,20 @@ body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-bt
 
 .ms-legal-foot a {
   color: #55574f !important;
+  text-decoration: none !important;
+  font-weight: 650 !important;
+}
+
+.ms-legal-foot a:hover {
+  color: #232427 !important;
+}
+
+/* Drop decorative separators if any remain */
+.ms-legal-foot {
+  font-size: 0;
+}
+.ms-legal-foot a {
+  font-size: 0.92rem;
 }
 
 /* —— Contact / download / orders —— */
@@ -357,8 +382,8 @@ body[data-page="login"] ::placeholder {
 
   .ms-legal-doc .ms-card,
   .ms-legal-article {
-    padding: 1.15rem 1rem !important;
-    border-radius: 20px !important;
+    padding: 1.35rem 1.2rem !important;
+    border-radius: 18px !important;
   }
 }
 
@@ -368,8 +393,8 @@ body[data-page="login"] ::placeholder {
   }
 
   .ms-legal-toc a {
-    font-size: 0.84rem !important;
-    padding: 0.35rem 0.6rem !important;
+    font-size: 0.88rem !important;
+    padding: 0.15rem 0 !important;
   }
 }
 

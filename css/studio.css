@@ -14354,8 +14354,10 @@ body.ms-home-menu-open .ms-home-nav {
   z-index: 60;
 }
 
-body.ms-home-menu-open .ms-home-brand {
+body.ms-home-menu-open .ms-home-brand,
+body.ms-home-menu-open .ms-home-brand strong {
   color: #fcfbef;
+  -webkit-text-fill-color: #fcfbef;
 }
 
 body.ms-home-menu-open .ms-home-brand img {
@@ -15580,10 +15582,10 @@ body.is-home-ready .ms-home-hero-copy {
   }
 
   .ms-home-bloom-nav a {
-    font-size: clamp(1.4rem, min(7.2vw, 5.8svh), 2.15rem);
+    font-size: clamp(1.35rem, 6.5vw, 1.85rem);
     max-width: 100%;
-    line-height: 1.12;
-    white-space: nowrap;
+    line-height: 1.15;
+    white-space: normal;
   }
 }
 

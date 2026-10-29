@@ -83,18 +83,23 @@ html:not([data-ms-mode="dark"]) :where(
   .ms-settings-card-title,
   .ms-brand-name,
   .ms-auth-title,
-  .ms-home-title,
-  .ms-home-brand strong
+  .ms-home-title
 ) {
   color: var(--ms-ink) !important;
   -webkit-text-fill-color: var(--ms-ink);
 }
 
-html:not([data-ms-mode="dark"]) .ms-home-brand strong {
+html:not([data-ms-mode="dark"]) body:not(.ms-home-menu-open) .ms-home-brand strong {
   color: #000 !important;
   -webkit-text-fill-color: #000;
   font-weight: 900;
   letter-spacing: -0.06em;
+}
+
+html:not([data-ms-mode="dark"]) body.ms-home-menu-open .ms-home-brand,
+html:not([data-ms-mode="dark"]) body.ms-home-menu-open .ms-home-brand strong {
+  color: #fcfbef !important;
+  -webkit-text-fill-color: #fcfbef !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(
@@ -480,8 +485,10 @@ body[data-page="home"] .ms-home-bloom-nav a:hover {
   color: #c8c8cc !important;
 }
 
-body[data-page="home"].ms-home-menu-open .ms-home-brand {
+body[data-page="home"].ms-home-menu-open .ms-home-brand,
+body[data-page="home"].ms-home-menu-open .ms-home-brand strong {
   color: #fcfbef !important;
+  -webkit-text-fill-color: #fcfbef !important;
 }
 
 body[data-page="home"].ms-home-menu-open .ms-home-orb.is-open i {

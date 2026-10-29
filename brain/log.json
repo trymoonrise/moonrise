@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.1.7",
+      "date": "2026-10-28",
+      "title": "Legal page encoding and minimal layout",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Legal uses a quieter text TOC, roomier cream cards, and a spacer footer instead of broken separators."
+          ],
+          "fixes": [
+            "Legal, report, and related public pages no longer show diamond question marks between footer and related links."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.6",
       "date": "2026-10-28",
       "title": "Darker legal body text",

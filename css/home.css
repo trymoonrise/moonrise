@@ -51,6 +51,12 @@ body[data-page="home"] .ms-home-brand strong {
   -webkit-text-fill-color: #000;
 }
 
+body[data-page="home"].ms-home-menu-open .ms-home-brand,
+body[data-page="home"].ms-home-menu-open .ms-home-brand strong {
+  color: #fcfbef;
+  -webkit-text-fill-color: #fcfbef;
+}
+
 body[data-page="home"] .ms-home-hero {
   flex: 1;
   min-height: 0;
@@ -347,13 +353,36 @@ body[data-page="home"] .ms-home-bloom-nav a:hover {
   color: #c8c8cc;
 }
 
-body.ms-home-menu-open .ms-home-brand {
+body.ms-home-menu-open .ms-home-brand,
+body.ms-home-menu-open .ms-home-brand strong {
   color: #fcfbef;
+  -webkit-text-fill-color: #fcfbef;
   background: transparent;
 }
 
 body.ms-home-menu-open .ms-home-orb.is-open i {
   background: #fcfbef;
+}
+
+/* Phone menu: compact type that fits the viewport, not desktop wordmark sizes */
+@media (max-width: 720px) {
+  body[data-page="home"] .ms-home-shell {
+    max-width: none;
+    width: 100%;
+  }
+
+  body[data-page="home"] .ms-home-bloom-nav {
+    width: min(100%, 18rem);
+    max-width: calc(100vw - 2.5rem);
+    gap: clamp(0.55rem, 1.8svh, 0.95rem);
+  }
+
+  body[data-page="home"] .ms-home-bloom-nav a {
+    font-size: clamp(1.35rem, 6.5vw, 1.85rem);
+    white-space: normal;
+    max-width: 100%;
+    line-height: 1.15;
+  }
 }
 
 /* Subtle entrance */

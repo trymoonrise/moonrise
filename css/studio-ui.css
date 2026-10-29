@@ -1634,8 +1634,10 @@ body.ms-home-menu-open .ms-home-nav {
   -webkit-backdrop-filter: none !important;
 }
 
-body.ms-home-menu-open .ms-home-brand {
+body.ms-home-menu-open .ms-home-brand,
+body.ms-home-menu-open .ms-home-brand strong {
   color: #fcfbef !important;
+  -webkit-text-fill-color: #fcfbef !important;
 }
 
 body.ms-home-menu-open .ms-home-orb.is-open i {

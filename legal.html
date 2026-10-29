@@ -88,21 +88,20 @@ document.documentElement.classList.add("ms-boot");
   <meta name="twitter:image" content="https://trymoonrise.com/doc/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
   <link rel="icon" href="doc/MoonriseLogo.png" type="image/png">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-bloom-circle">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-menu-phone">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-bloom-circle">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-bloom-circle">
-  <link rel="stylesheet" href="css/cream-motion.css?v=20261028-bloom-circle">
-  <link rel="stylesheet" href="css/public-pages.css?v=20261028-public2">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-menu-phone">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-menu-phone">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261028-menu-phone">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261028-legal-min">
   <script defer src="js/config.js?v=20261006-blue"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
 <style>
 .ms-legal-intro{margin:0.35rem 0 0;color:#55574f;font-size:1.02rem;line-height:1.5;max-width:36rem;font-weight:500}
-.ms-legal-toc{position:sticky;top:calc(3.4rem + env(safe-area-inset-top,0px));z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:0.4rem;margin:1.25rem 0 1.35rem;padding:0.65rem 0.15rem 0.85rem;background:#fcfbef;border-bottom:1px solid #e6e4d4}
-.ms-legal-toc-label{width:100%;font-size:0.78rem;font-weight:700;letter-spacing:0.04em;text-transform:lowercase;color:#55574f;margin:0 0 0.15rem}
-.ms-legal-toc a{flex:0 0 auto;text-decoration:none;color:#232427;font-size:0.9rem;font-weight:650;padding:0.4rem 0.75rem;border-radius:999px;background:#f5f4e8;border:1px solid #e6e4d4}
-.ms-legal-toc a:hover,.ms-legal-toc a:focus-visible{color:#232427;background:#bfd3e3;border-color:transparent}
-.ms-legal-section-head{margin:0 0 0.15rem;font-size:clamp(1.25rem,3vw,1.45rem);font-weight:800;letter-spacing:-0.02em;color:#232427}
+.ms-legal-toc{position:sticky;top:calc(3.4rem + env(safe-area-inset-top,0px));z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:0.85rem 1.25rem;margin:0.85rem 0 1.5rem;padding:0.55rem 0 0.75rem;background:#fcfbef;border-bottom:1px solid #e6e4d4}
+.ms-legal-toc a{flex:0 0 auto;text-decoration:none;color:#55574f;font-size:0.92rem;font-weight:650;padding:0.15rem 0;background:transparent;border:0}
+.ms-legal-toc a:hover,.ms-legal-toc a:focus-visible{color:#232427;background:transparent}
+.ms-legal-section-head{margin:0 0 0.35rem;font-size:clamp(1.35rem,3.2vw,1.6rem);font-weight:800;letter-spacing:-0.03em;color:#232427}
 </style>
 
 </head>
@@ -127,7 +126,6 @@ document.documentElement.classList.add("ms-boot");
     </header>
 
     <nav class="ms-legal-toc" aria-label="On this page">
-      <span class="ms-legal-toc-label">On this page</span>
       <a href="#privacy">Privacy</a>
       <a href="#terms">Terms</a>
       <a href="#refunds">Refunds</a>
@@ -427,11 +425,6 @@ document.documentElement.classList.add("ms-boot");
           Privacy questions or requests:
           <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
           or <a href="tel:+14013000957">(401) 300-0957</a>.
-        </p>
-        <p>
-          Related pages: <a href="legal.html#terms">Terms of Service</a> �
-          <a href="guide.html">Creator Guide</a> �
-          <a href="help.html">Help</a>.
         </p>
       </section>
 
@@ -801,13 +794,6 @@ document.documentElement.classList.add("ms-boot");
           <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
           or <a href="tel:+14013000957">(401) 300-0957</a>.
         </p>
-        <p>
-          Related pages: <a href="legal.html#privacy">Privacy Policy</a> �
-          <a href="legal.html#refunds">Refunds</a> �
-          <a href="report.html">Report content</a> �
-          <a href="guide.html">Creator Guide</a> �
-          <a href="help.html">Help</a>.
-        </p>
       </section>
 
       <section id="refunds" class="ms-card ms-legal-article" aria-labelledby="refunds-heading">
@@ -839,22 +825,13 @@ document.documentElement.classList.add("ms-boot");
           <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
           or <a href="tel:+14013000957">(401) 300-0957</a>.
         </p>
-        <p>
-          Related pages: <a href="legal.html#privacy">Privacy Policy</a> �
-          <a href="legal.html#terms">Terms of Service</a> �
-          <a href="report.html">Report content</a> �
-          <a href="guide.html">Creator Guide</a> �
-          <a href="help.html">Help</a>.
-        </p>
       </section>
     </div>
   </main>
 
-  <footer class="ms-legal-foot">
+  <footer class="ms-legal-foot" aria-label="Legal footer">
     <a href="contact.html">Contact</a>
-    �
     <a href="report.html">Report</a>
-    �
     <a href="index.html">Home</a>
   </footer>
 </body>
