@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.0",
+      "date": "2026-10-28",
+      "title": "Stop cache-reload loops between pages",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "Every page now shares one asset build id so moving around the site no longer clears the cache and reloads blank."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.9",
       "date": "2026-10-28",
       "title": "Strict black and white default theme",
