@@ -884,9 +884,9 @@ body.ms-sidebar-resizing iframe {
   top: var(--ms-chrome-top);
   left: var(--ms-chrome-left);
   z-index: 140;
-  border: 1px solid #e6e4d4;
-  background: #fbfaf1;
-  border-radius: 12px;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
   width: var(--ms-chrome-btn);
   height: var(--ms-chrome-btn);
   min-width: var(--ms-chrome-btn);
@@ -898,7 +898,7 @@ body.ms-sidebar-resizing iframe {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08);
+  box-shadow: none;
   appearance: none;
   -webkit-appearance: none;
   touch-action: manipulation;
@@ -909,8 +909,8 @@ body.ms-sidebar-resizing iframe {
 }
 
 .ms-menu-toggle svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   display: block;
   pointer-events: none;
 }
@@ -999,8 +999,8 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
   }
 
   .ms-menu-toggle svg {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
   }
 
   .ms-quick-nav {
@@ -1143,7 +1143,7 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     top: 0.3rem;
     left: 0;
     z-index: 0;
-    height: 58px;
+    height: 64px;
     width: 0;
     border-radius: 16px;
     background: #f5f4e8;
@@ -1165,8 +1165,8 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     justify-content: center;
     gap: 0;
     min-width: 0;
-    height: 58px;
-    min-height: 58px;
+    height: 64px;
+    min-height: 64px;
     padding: 0 0.1rem;
     border-radius: 16px;
     color: #55574f;
@@ -1201,8 +1201,8 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
 
   .ms-tab-ico svg,
   .ms-tab-orb svg {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
     display: block;
   }
 
@@ -2040,11 +2040,12 @@ body[data-page="dashboard"] {
 .ms-dash-projects-toggle {
   width: 100%;
   margin: 0;
-  padding: 0.35rem 0.1rem;
+  padding: 0.45rem 0.1rem;
   border-radius: 12px;
   color: inherit;
   font: inherit;
-  text-align: left;
+  text-align: center;
+  justify-content: center;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -2059,9 +2060,10 @@ body[data-page="dashboard"] {
 }
 
 .ms-dash-projects-toggle-main {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  justify-content: center;
+  gap: 0.55rem;
   min-width: 0;
 }
 

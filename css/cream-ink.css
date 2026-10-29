@@ -70,6 +70,13 @@ html:not([data-ms-mode="dark"]) :where(
   color: var(--ms-ink);
 }
 
+html:not([data-ms-mode="dark"]) .ms-dash-progress-card.ms-dash-card {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
 html:not([data-ms-mode="dark"]) :where(
   .ms-dash-metric,
   .ms-stat,
@@ -408,10 +415,10 @@ html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating .ms-nav-progress::aft
 }
 
 html:not([data-ms-mode="dark"]) .ms-menu-toggle {
-  background: var(--ms-surface) !important;
-  border: 1.5px solid var(--ms-ink) !important;
+  background: transparent !important;
+  border: 0 !important;
   color: var(--ms-ink) !important;
-  border-radius: var(--ms-radius-pill) !important;
+  border-radius: 0 !important;
   box-shadow: none !important;
 }
 

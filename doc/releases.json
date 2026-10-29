@@ -3,6 +3,24 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.2.3",
+      "date": "2026-10-28",
+      "title": "Minimal dashboard and bigger mobile tabs",
+      "tag": "v2.2.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.2.3",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Mobile bottom nav uses larger icons only with a taller bar.",
+            "Dashboard trims to income, goal line, three stats, and a centered Recent posts dropdown.",
+            "Menu button is a plain two-line icon with no pill chrome."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.2.2",
       "date": "2026-10-28",
       "title": "Full cream controls across Studio",
