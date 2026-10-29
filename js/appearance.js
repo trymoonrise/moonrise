@@ -7,7 +7,7 @@
 
   var KEY = "ms_appearance";
   var PRESETS = [
-    { id: "ink", name: "Ink", color: "#1d1d1f" },
+    { id: "ink", name: "Black & white", color: "#232427" },
     { id: "violet", name: "Violet", color: "#8b5cf6" },
     { id: "ocean", name: "Ocean", color: "#3b82f6" },
     { id: "rose", name: "Rose", color: "#ec4899" },
@@ -20,7 +20,9 @@
     large: "Large",
     xlarge: "Extra large",
   };
-  var DEFAULTS = { mode: "light", color: "#1d1d1f", text: "medium" };
+  /* Default: light cream UI with black ink accents. Users can change this in Settings → Appearance. */
+  var DEFAULTS = { mode: "light", color: "#232427", text: "medium" };
+  var INK_COLORS = { "#232427": 1, "#1d1d1f": 1, "#000000": 1 };
 
   function clamp(n) {
     return Math.max(0, Math.min(255, Math.round(n)));
@@ -80,6 +82,7 @@
     var mode = stored && stored.mode === "dark" ? "dark" : "light";
     var text = stored && TEXT[stored.text] ? stored.text : DEFAULTS.text;
     var color = normalizeHex(stored && stored.color) || DEFAULTS.color;
+    if (color === "#1d1d1f" || color === "#000000") color = DEFAULTS.color;
     return { mode: mode, color: color, text: text };
   }
 
@@ -103,7 +106,11 @@
   }
 
   function chromeColor() {
-    return document.documentElement.getAttribute("data-ms-mode") === "dark" ? "#0e1320" : "#fbfbfd";
+    return document.documentElement.getAttribute("data-ms-mode") === "dark" ? "#0e1320" : "#fcfbef";
+  }
+
+  function isInkColor(color) {
+    return !!INK_COLORS[String(color || "").toLowerCase()];
   }
 
   function paintChrome() {
@@ -121,12 +128,18 @@
     var mode = prefs.mode === "dark" ? "dark" : "light";
     var text = TEXT[prefs.text] ? prefs.text : DEFAULTS.text;
     var color = normalizeHex(prefs.color) || DEFAULTS.color;
+    if (color === "#1d1d1f" || color === "#000000") color = DEFAULTS.color;
     var rgb = hexToRgb(color);
-    var ink = color === "#1d1d1f";
-    var bright = ink ? "#1d1d1f" : color === "#3b82f6" ? "#60a5fa" : rgbToHex(mix(rgb, { r: 255, g: 255, b: 255 }, 0.28));
+    var ink = isInkColor(color);
+    var bright = ink ? "#232427" : color === "#3b82f6" ? "#60a5fa" : rgbToHex(mix(rgb, { r: 255, g: 255, b: 255 }, 0.28));
     var strong = ink ? "#000000" : color === "#3b82f6" ? "#2563eb" : rgbToHex(mix(rgb, { r: 0, g: 0, b: 0 }, 0.2));
-    var softBase = mode === "dark" ? { r: 18, g: 24, b: 38 } : { r: 255, g: 255, b: 255 };
-    var soft = rgbToHex(mix(rgb, softBase, mode === "dark" ? 0.82 : 0.88));
+    var soft = ink
+      ? mode === "dark"
+        ? "#2c2c2e"
+        : "#f5f4e8"
+      : rgbToHex(
+          mix(rgb, mode === "dark" ? { r: 18, g: 24, b: 38 } : { r: 252, g: 251, b: 239 }, mode === "dark" ? 0.82 : 0.88)
+        );
 
     var tone = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255 < 0.4 ? "dark" : "light";
     root.setAttribute("data-ms-mode", mode);
@@ -160,7 +173,7 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261027-studio";
+      link.href = "css/appearance.css?v=20261028-bw-default";
     }
     var ui = document.getElementById("ms-studio-ui-css");
     if (!ui) {

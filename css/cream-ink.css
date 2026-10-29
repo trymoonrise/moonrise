@@ -86,6 +86,10 @@ html:not([data-ms-mode="dark"]) :where(
   background: var(--ms-surface-alt) !important;
 }
 
+html:not([data-ms-mode="dark"]) .ms-dash-progress-card .ms-dash-metric {
+  background: transparent !important;
+}
+
 /* —— Typography —— */
 html:not([data-ms-mode="dark"]) :where(
   h1, h2, h3,
@@ -759,20 +763,31 @@ html:not([data-ms-mode="dark"]) #page-body.ms-lf-page.ms-lf-page--map {
 
 html:not([data-ms-mode="dark"]) :where(
   .ms-lf-map-pill,
+  .ms-lf-map-search-field
+) {
+  background: rgba(252, 251, 239, 0.94) !important;
+  border: 1px solid var(--ms-line) !important;
+  box-shadow: var(--ms-shadow-card) !important;
+  color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
   .ms-lf-map-chip,
   .ms-lf-map-pill-body,
   .ms-lf-map-chip--count,
-  .ms-lf-map-pill-icon,
-  .ms-lf-map-search-field
+  .ms-lf-map-pill-icon
 ) {
-  background: var(--ms-surface) !important;
-  border: 1.5px solid var(--ms-ink) !important;
+  background: transparent !important;
+  border: 0 !important;
   box-shadow: none !important;
   color: var(--ms-ink) !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-lf-map-search-field {
   border-radius: var(--ms-radius-pill) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(

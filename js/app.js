@@ -786,9 +786,6 @@
     shell.innerHTML =
       '<aside class="ms-sidebar" id="ms-sidebar">' +
       '<div class="ms-brand">' +
-      '<img class="ms-brand-logo" src="' +
-      brandLogo() +
-      '" alt="" loading="eager" decoding="async">' +
       '<div class="ms-brand-copy">' +
       '<strong class="ms-brand-name">moonrise.</strong>' +
       "</div></div>" +

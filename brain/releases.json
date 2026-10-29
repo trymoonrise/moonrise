@@ -3,6 +3,26 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.2.4",
+      "date": "2026-10-28",
+      "title": "Black and white default, dashboard and Finder polish",
+      "tag": "v2.2.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.2.4",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "New accounts default to a black and white cream theme; other colors stay available in Settings → Appearance."
+          ],
+          "fixes": [
+            "Dashboard income block and Recent posts sit centered.",
+            "Mobile Business Finder chrome is flatter without nested bordered pills.",
+            "Sidebar brand shows the moonrise wordmark without the logo image."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.3",
       "date": "2026-10-28",
       "title": "Minimal dashboard and bigger mobile tabs",

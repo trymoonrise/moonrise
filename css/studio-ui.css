@@ -809,6 +809,31 @@ html[data-ms-mode="dark"] .ms-settings-card-title {
 
 .ms-dash-page--min .ms-dash-stack {
   gap: 1rem;
+  width: min(100%, 28rem);
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: stretch;
+}
+
+.ms-dash-page--min .ms-dash-progress-card {
+  align-items: center;
+  text-align: center;
+}
+
+.ms-dash-page--min .ms-dash-hero {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  text-align: center;
+}
+
+.ms-dash-page--min .ms-dash-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .ms-dash-page--min .ms-dash-hero-value {
@@ -816,26 +841,71 @@ html[data-ms-mode="dark"] .ms-settings-card-title {
   font-size: clamp(2rem, 6.5vw, 2.55rem);
 }
 
+.ms-dash-page--min .ms-dash-hero-pct {
+  text-align: center;
+  padding-bottom: 0;
+}
+
 .ms-dash-page--min .ms-dash-bar {
   margin-top: 0.85rem;
   height: 5px;
+  width: min(100%, 18rem);
+  margin-inline: auto;
 }
 
 .ms-dash-page--min .ms-dash-bar-caption {
   margin-top: 0.4rem !important;
+  text-align: center;
+  width: 100%;
 }
 
 .ms-dash-page--min .ms-dash-progress-card .ms-dash-overview {
   gap: 0.85rem;
   margin-top: 0.85rem;
+  width: 100%;
+  align-items: center;
 }
 
 .ms-dash-page--min .ms-dash-progress-card .ms-dash-overview-grid {
   padding-top: 0.75rem;
+  width: 100%;
+  justify-items: center;
+}
+
+.ms-dash-page--min .ms-dash-progress-card .ms-dash-metric {
+  justify-items: center !important;
+  text-align: center !important;
+  padding: 0 0.65rem !important;
+}
+
+.ms-dash-page--min .ms-dash-progress-card .ms-dash-metric:first-child,
+.ms-dash-page--min .ms-dash-progress-card .ms-dash-metric:last-child {
+  padding-left: 0.65rem !important;
+  padding-right: 0.65rem !important;
+}
+
+.ms-dash-page--min .ms-dash-progress-card .ms-dash-goal-display,
+.ms-dash-page--min .ms-dash-progress-card .ms-dash-goal-input,
+.ms-dash-page--min .ms-dash-progress-card .ms-dash-metric-value {
+  text-align: center !important;
+  width: 100%;
+}
+
+.ms-dash-page--min .ms-dash-progress-card .ms-dash-overview .ms-dash-tool {
+  width: min(100%, 14rem);
+  margin-inline: auto;
 }
 
 .ms-dash-page--min .ms-dash-posts {
   gap: 0.65rem;
+  width: 100%;
+}
+
+.ms-dash-page--min .ms-dash-projects-toggle,
+.ms-dash-page--min .ms-dash-projects-toggle-main {
+  justify-content: center;
+  text-align: center;
+  width: 100%;
 }
 
 .ms-dash-hero {

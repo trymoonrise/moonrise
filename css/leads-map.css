@@ -1190,15 +1190,44 @@
   pointer-events: none;
 }
 
-.ms-lf-map .maplibregl-ctrl-attrib {
+.ms-lf-map .maplibregl-ctrl-attrib,
+.ms-lf-map-attrib-host .maplibregl-ctrl-attrib {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   font-size: 10px;
-  line-height: 1.3;
-  background: rgba(60, 55, 30, 0.62);
-  color: #e6e4d4;
+  line-height: 1.35;
+  max-width: min(72vw, 22rem);
+  margin: 0;
+  padding: 0.22rem 0.45rem;
+  border-radius: 8px;
+  background: rgba(252, 251, 239, 0.94);
+  color: #232427;
+  box-shadow: 0 2px 10px rgba(60, 55, 30, 0.14);
 }
 
-.ms-lf-map .maplibregl-ctrl-attrib a {
-  color: #bfd3e3;
+.ms-lf-map .maplibregl-ctrl-attrib a,
+.ms-lf-map-attrib-host .maplibregl-ctrl-attrib a {
+  color: #1d3a66;
+  text-decoration: underline;
+  text-underline-offset: 1px;
+}
+
+.ms-lf-map .maplibregl-ctrl-attrib-inner,
+.ms-lf-map-attrib-host .maplibregl-ctrl-attrib-inner {
+  display: inline !important;
+  visibility: visible !important;
+}
+
+/* Sit above Finder chrome (overlays are z-index 500) and clear the Scan dock. */
+.ms-lf-map-attrib-host {
+  position: absolute;
+  right: 0.5rem;
+  left: auto;
+  bottom: calc(var(--lf-actions-clearance, 6.15rem) + 0.4rem);
+  z-index: 12;
+  pointer-events: auto;
+  max-width: min(72vw, 22rem);
 }
 
 .ms-lf-map .maplibregl-ctrl-bottom-left,
@@ -1605,6 +1634,11 @@ body[data-page="leads"] #ms-hard-refresh,
     bottom: 6.5rem;
   }
 
+  .ms-lf-map-attrib-host {
+    right: 0.55rem;
+    bottom: calc(var(--lf-sheet-dock, 7.75rem) + 0.35rem);
+  }
+
   .leaflet-bottom.leaflet-right {
     bottom: 7.5rem !important;
     right: 0.85rem !important;
@@ -1615,7 +1649,8 @@ body[data-page="leads"] #ms-hard-refresh,
   }
 
   .ms-lf-map-stage:has(#lf-results-panel:not([hidden])) .maplibregl-ctrl-bottom-left,
-  .ms-lf-map-stage:has(#lf-results-panel:not([hidden])) .maplibregl-ctrl-bottom-right {
+  .ms-lf-map-stage:has(#lf-results-panel:not([hidden])) .maplibregl-ctrl-bottom-right,
+  .ms-lf-map-stage:has(#lf-results-panel:not([hidden])) .ms-lf-map-attrib-host {
     bottom: calc(var(--lf-sheet-dock, 7.75rem) + var(--lf-sheet-h, 36dvh) + 0.4rem);
   }
 }
@@ -2560,4 +2595,169 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
   width: 3.15rem !important;
   min-width: 3.15rem !important;
   padding: 0 !important;
+}
+
+/* —— Mobile: modern floating chrome (less nested borders) —— */
+@media (max-width: 900px) {
+  #page-body.ms-lf-page.ms-lf-page--map {
+    --lf-pill-h: 3.35rem;
+    --lf-chip: 2.55rem;
+    --lf-tray-gap: 0.2rem;
+    --lf-action-h: 3.05rem;
+    --lf-chrome-grey: #f5f4e8;
+  }
+
+  .ms-lf-map-top {
+    top: max(0.55rem, env(safe-area-inset-top, 0px)) !important;
+    padding: 0 0.85rem !important;
+    gap: 0.45rem !important;
+  }
+
+  .ms-lf-map-pill {
+    min-height: var(--lf-pill-h) !important;
+    padding: 0.28rem 0.34rem !important;
+    border-radius: 999px !important;
+    background: rgba(252, 251, 239, 0.92) !important;
+    border: 1px solid #e6e4d4 !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow:
+      0 8px 24px rgba(60, 55, 30, 0.1),
+      0 1px 0 rgba(255, 255, 255, 0.55) inset !important;
+  }
+
+  .ms-lf-map-pill-tray {
+    min-height: calc(var(--lf-pill-h) - 0.56rem) !important;
+    gap: 0.15rem !important;
+    background: transparent !important;
+  }
+
+  .ms-lf-map-chip:not(.ms-lf-map-chip--count):not(.ms-lf-map-pill-body):not(.ms-lf-map-search-close),
+  .ms-lf-map-pill-icon {
+    width: var(--lf-chip) !important;
+    height: var(--lf-chip) !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: #232427 !important;
+  }
+
+  .ms-lf-map-chip:hover,
+  .ms-lf-map-chip:active {
+    background: rgba(35, 36, 39, 0.06) !important;
+    box-shadow: none !important;
+  }
+
+  .ms-lf-map-chip--count,
+  .ms-lf-map-pill-body {
+    height: var(--lf-chip) !important;
+    max-width: calc(100% - 9.2rem) !important;
+    padding: 0 0.55rem !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .ms-lf-map-count {
+    font-size: 0.92rem !important;
+    font-weight: 650 !important;
+    color: #232427 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .ms-lf-map-chip svg,
+  .ms-lf-map-pill-icon svg {
+    width: 1.15rem !important;
+    height: 1.15rem !important;
+    stroke-width: 2 !important;
+  }
+
+  .ms-lf-map-filter.is-open,
+  .ms-lf-map-locate.is-location-blocked {
+    background: #bfd3e3 !important;
+    box-shadow: none !important;
+  }
+
+  .ms-lf-map-filters {
+    background: rgba(252, 251, 239, 0.94) !important;
+    border: 1px solid #e6e4d4 !important;
+    box-shadow: 0 6px 18px rgba(60, 55, 30, 0.08) !important;
+    padding: 0.2rem !important;
+    gap: 0.15rem !important;
+  }
+
+  .ms-lf-map-filter-btn {
+    color: #55574f !important;
+    border-radius: 999px !important;
+  }
+
+  .ms-lf-map-filter-btn.is-active,
+  .ms-lf-map-filter-btn[aria-pressed="true"] {
+    background: #bfd3e3 !important;
+    color: #232427 !important;
+  }
+
+  .ms-lf-map-actions {
+    background: rgba(252, 251, 239, 0.96) !important;
+    border-radius: 24px 24px 0 0 !important;
+    padding: 0.7rem 0.85rem calc(0.7rem + env(safe-area-inset-bottom, 0px)) !important;
+    box-shadow: 0 -10px 28px rgba(60, 55, 30, 0.1) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .ms-lf-map-actions-tray {
+    padding: 0 !important;
+    gap: 0.55rem !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .ms-lf-map-actions .ms-lf-map-scan,
+  .ms-lf-map-actions .ms-lf-map-all {
+    height: var(--lf-action-h) !important;
+    min-height: var(--lf-action-h) !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+  }
+
+  .ms-lf-map-actions .ms-lf-map-scan {
+    flex: 1 1 auto !important;
+    background: #232427 !important;
+    color: #fcfbef !important;
+    -webkit-text-fill-color: #fcfbef !important;
+    border: 0 !important;
+    padding: 0 1.15rem !important;
+  }
+
+  .ms-lf-map-actions .ms-lf-map-all {
+    width: var(--lf-action-h) !important;
+    min-width: var(--lf-action-h) !important;
+    background: transparent !important;
+    color: #232427 !important;
+    -webkit-text-fill-color: #232427 !important;
+    border: 1.5px solid #232427 !important;
+    padding: 0 !important;
+  }
+
+  .ms-lf-map .maplibregl-ctrl-group,
+  .leaflet-control-zoom {
+    background: rgba(252, 251, 239, 0.94) !important;
+    border: 1px solid #e6e4d4 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 6px 18px rgba(60, 55, 30, 0.1) !important;
+    overflow: hidden;
+  }
+
+  .ms-lf-map .maplibregl-ctrl-group button,
+  .leaflet-control-zoom a {
+    background: transparent !important;
+    color: #232427 !important;
+    border-color: #e6e4d4 !important;
+    width: 2.35rem !important;
+    height: 2.35rem !important;
+  }
 }

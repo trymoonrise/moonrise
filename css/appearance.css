@@ -1,10 +1,11 @@
 /* Appearance preferences from Settings. Loaded after studio.css. */
 
 :root {
+  /* Default black & white / cream until Settings → Appearance overrides. */
   --ms-accent: #232427;
-  --ms-accent-bright: #8fb0d6;
-  --ms-accent-strong: #232427;
-  --ms-accent-soft: #cfe0ee;
+  --ms-accent-bright: #232427;
+  --ms-accent-strong: #000000;
+  --ms-accent-soft: #f5f4e8;
   --ms-accent-rgb: 35, 36, 39;
 }
 

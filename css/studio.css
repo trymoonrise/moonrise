@@ -2038,14 +2038,16 @@ body[data-page="dashboard"] {
 }
 
 .ms-dash-projects-toggle {
-  width: 100%;
-  margin: 0;
-  padding: 0.45rem 0.1rem;
-  border-radius: 12px;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0.3rem 0.45rem;
+  border-radius: 999px;
   color: inherit;
   font: inherit;
   text-align: center;
   justify-content: center;
+  align-self: center;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
