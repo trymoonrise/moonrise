@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.3",
+      "date": "2026-10-28",
+      "title": "Centered home hero copy",
+      "tag": "v2.1.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.3",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "Home hero headline, supporting line, and CTAs sit centered as one block in the viewport."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.2",
       "date": "2026-10-28",
       "title": "Menu open and close transition",

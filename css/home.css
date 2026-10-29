@@ -70,15 +70,24 @@ body[data-page="home"] .ms-home-hero-stage {
 
 body[data-page="home"] .ms-home-hero-copy {
   width: 100%;
-  max-width: 22rem;
+  max-width: 26rem;
+  min-height: calc(100svh - 5.75rem);
   margin: 0 auto;
+  padding: 1.25rem 1.25rem 2rem;
   text-align: center;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
-  justify-items: center;
+  opacity: 1;
+  transform: none;
+  animation: none;
 }
 
 body[data-page="home"] .ms-home-title {
+  margin: 0;
+  width: 100%;
   white-space: normal;
   font-size: clamp(2.4rem, 9vw, 3.15rem);
   font-weight: 800;
@@ -86,6 +95,7 @@ body[data-page="home"] .ms-home-title {
   line-height: 1.05;
   color: #232427;
   -webkit-text-fill-color: #232427;
+  text-align: center;
 }
 
 body[data-page="home"] .ms-home-title-accent {
@@ -95,19 +105,24 @@ body[data-page="home"] .ms-home-title-accent {
 }
 
 body[data-page="home"] .ms-home-sub {
-  margin: 0;
-  max-width: 18.5rem;
+  margin: 0 auto;
+  max-width: 22rem;
   color: #55574f;
   font-size: 1.05rem;
   line-height: 1.45;
   font-weight: 500;
+  text-align: center;
 }
 
 body[data-page="home"] .ms-home-ctas {
   width: 100%;
-  display: grid;
+  max-width: 22rem;
+  margin: 0.35rem auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
   gap: 0.65rem;
-  margin-top: 0.35rem;
 }
 
 body[data-page="home"] .ms-home-cta-primary,
@@ -117,6 +132,8 @@ body[data-page="home"] .ms-home-cta-secondary {
   border-radius: 999px;
   font-weight: 700;
   font-size: 1.05rem;
+  justify-content: center;
+  text-align: center;
 }
 
 body[data-page="home"] .ms-home-cta-primary {
