@@ -14262,8 +14262,8 @@ body.is-home-ready .ms-home-shell {
   z-index: 55;
   box-sizing: border-box;
   background: #fcfbef;
-  clip-path: circle(0% at calc(100% - 2.6rem) 2.4rem);
   visibility: hidden;
+  opacity: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14273,17 +14273,19 @@ body.is-home-ready .ms-home-shell {
     max(1rem, env(safe-area-inset-bottom, 0px))
     max(1.5rem, env(safe-area-inset-left, 0px));
   pointer-events: none;
+  clip-path: none;
+  transform: none;
   transition:
-    clip-path 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 0.75s;
+    opacity 0.28s ease-out,
+    visibility 0s linear 0.28s;
 }
 
 .ms-home-bloom.is-open {
   visibility: visible;
-  clip-path: circle(150% at calc(100% - 2.6rem) 2.4rem);
+  opacity: 1;
   pointer-events: auto;
   transition:
-    clip-path 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.28s ease-out,
     visibility 0s linear 0s;
 }
 
@@ -14294,7 +14296,7 @@ body.is-home-ready .ms-home-shell {
   text-align: center;
   display: grid;
   justify-items: center;
-  gap: clamp(0.4rem, 1.2svh, 0.85rem);
+  gap: clamp(0.55rem, 1.6svh, 1rem);
 }
 
 .ms-home-bloom-nav a {
@@ -14309,12 +14311,12 @@ body.is-home-ready .ms-home-shell {
   line-height: 1.12;
   white-space: nowrap;
   opacity: 0;
-  transform: scale(0.94);
+  transform: translateY(12px);
   position: relative;
   transition:
-    opacity 0.5s ease,
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.25s ease;
+    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.2s ease;
 }
 
 .ms-home-bloom-nav a::after {
@@ -14328,13 +14330,17 @@ body.is-home-ready .ms-home-shell {
   background: currentColor;
   transform: scaleX(0);
   transform-origin: center;
-  transition: transform 0.35s ease;
+  transition: transform 0.28s ease;
 }
 
 .ms-home-bloom.is-open .ms-home-bloom-nav a {
   opacity: 1;
   transform: none;
-  transition-delay: calc(0.18s + var(--nav-i, 0) * 0.08s);
+  transition-delay: calc(0.08s + var(--nav-i, 0) * 0.05s);
+}
+
+.ms-home-bloom:not(.is-open) .ms-home-bloom-nav a {
+  transition-delay: 0s;
 }
 
 .ms-home-bloom-nav a:hover {
@@ -15556,7 +15562,6 @@ body.is-home-ready .ms-home-hero-copy {
   }
 
   .ms-home-bloom {
-    clip-path: circle(0% at calc(100% - 2.1rem) 2.35rem);
     padding:
       max(1rem, env(safe-area-inset-top, 0px))
       max(1.5rem, env(safe-area-inset-right, 0px))
@@ -15564,14 +15569,10 @@ body.is-home-ready .ms-home-hero-copy {
       max(1.5rem, env(safe-area-inset-left, 0px));
   }
 
-  .ms-home-bloom.is-open {
-    clip-path: circle(160% at calc(100% - 2.1rem) 2.35rem);
-  }
-
   .ms-home-bloom-nav {
     width: max-content;
     max-width: min(22rem, calc(100vw - 2.5rem));
-    gap: clamp(0.45rem, 1.4svh, 0.85rem);
+    gap: clamp(0.5rem, 1.5svh, 0.95rem);
   }
 
   .ms-home-bloom-nav a {
@@ -15797,6 +15798,11 @@ body.is-home-ready .ms-home-hero-copy {
 
   .ms-home-method-select span {
     animation: none;
+  }
+
+  .ms-home-bloom.is-open {
+    opacity: 1;
+    visibility: visible;
   }
 
   .ms-home-bloom.is-open .ms-home-bloom-nav a {
@@ -18258,7 +18264,8 @@ body.ms-payouts-modal-open {
 }
 
 .ms-orders-page .ms-home-bloom {
-  z-index: 60;
+  z-index: 70;
+  background: #fcfbef;
 }
 
 .ms-orders-nav-link {

@@ -56,12 +56,6 @@
     animation: ms-cream-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  html:not([data-ms-mode="dark"]) .ms-home-bloom-nav a {
-    transition:
-      opacity 0.45s ease,
-      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      color 0.2s ease;
-  }
 }
 
 @keyframes ms-cream-rise {
@@ -76,8 +70,21 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-ms-mode="dark"]) * {
+  html:not([data-ms-mode="dark"]) *:not(.ms-home-bloom):not(.ms-home-bloom-nav a):not(.ms-home-orb i) {
     animation: none !important;
     transition: none !important;
+  }
+
+  .ms-home-bloom,
+  .ms-home-bloom.is-open {
+    transition: none !important;
+    opacity: 1;
+  }
+
+  .ms-home-bloom-nav a,
+  .ms-home-bloom.is-open .ms-home-bloom-nav a {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

@@ -312,23 +312,43 @@ body[data-page="home"] .ms-home-footer-signin {
   background: transparent;
 }
 
-/* Menu on cream */
+/* Menu overlay — fade + staggered link rise */
 body[data-page="home"] .ms-home-bloom {
   background: #fcfbef;
+  z-index: 70;
+}
+
+body[data-page="home"] .ms-home-nav {
+  z-index: 80;
 }
 
 body[data-page="home"] .ms-home-bloom-nav a {
   color: #232427;
 }
 
-body.ms-home-menu-open .ms-home-brand,
-body.ms-home-menu-open .ms-home-orb i {
+body.ms-home-menu-open .ms-home-brand {
   color: #232427;
+  background: transparent;
+}
+
+body.ms-home-menu-open .ms-home-orb i {
   background: #232427;
 }
 
-body.ms-home-menu-open .ms-home-brand {
-  background: transparent;
+/* Soften page under the open menu without fighting the fade */
+body[data-page="home"].ms-home-menu-open .ms-home-hero,
+body[data-page="home"].ms-home-menu-open .ms-home-how,
+body[data-page="home"].ms-home-menu-open .ms-home-faq,
+body[data-page="home"].ms-home-menu-open .ms-home-footer {
+  opacity: 0;
+  transition: opacity 0.22s ease-out;
+}
+
+body[data-page="home"] .ms-home-hero,
+body[data-page="home"] .ms-home-how,
+body[data-page="home"] .ms-home-faq,
+body[data-page="home"] .ms-home-footer {
+  transition: opacity 0.22s ease-out;
 }
 
 /* Subtle entrance */

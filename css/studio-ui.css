@@ -1615,15 +1615,19 @@ body[data-page="home"] .ms-home-cta-secondary:active {
 }
 
 .ms-home-bloom {
-  background: #1d1d1f !important;
+  background: #fcfbef !important;
+}
+
+.ms-home-bloom-nav a {
+  color: #232427 !important;
 }
 
 .ms-home-bloom-nav a:hover {
-  color: #a1a1a6 !important;
+  color: #1d3a66 !important;
 }
 
 body.ms-home-menu-open .ms-home-nav {
-  background: #1d1d1f !important;
+  background: transparent !important;
   border-bottom-color: transparent !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
@@ -1631,11 +1635,11 @@ body.ms-home-menu-open .ms-home-nav {
 }
 
 body.ms-home-menu-open .ms-home-brand {
-  color: #f5f4e8 !important;
+  color: #232427 !important;
 }
 
 body.ms-home-menu-open .ms-home-orb.is-open i {
-  background: #f5f4e8 !important;
+  background: #232427 !important;
 }
 
 /* Slim type + padding across public surfaces */

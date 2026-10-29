@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.2",
+      "date": "2026-10-28",
+      "title": "Menu open and close transition",
+      "tag": "v2.1.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.2",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "Pages menu fades in over cream with staggered link rise instead of an invisible circle expand, and stays cream on login, download, and orders too."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.1",
       "date": "2026-10-28",
       "title": "Minimal home, clearer contrast, subtle motion",
