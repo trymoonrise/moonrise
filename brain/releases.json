@@ -3,6 +3,35 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.0",
+      "date": "2026-10-28",
+      "title": "Full cream and ink component pass",
+      "tag": "v2.1.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.0",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home method cards, FAQ, download, and legal pages use the same cream surfaces, ink pills, and hairline dividers as the rest of the site.",
+            "Helper text is a darker warm gray so it stays readable on cream."
+          ],
+          "fixes": [
+            "Primary and secondary CTAs keep clear ink-on-cream contrast instead of washed-out fills."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Inputs, selects, textareas, cards, tabs, switches, search fields, banners, chips, and sidebar nav all follow the cream and ink system.",
+            "Active nav and segmented controls use the soft powder-blue pill instead of bright blue fills."
+          ],
+          "fixes": [
+            "Leftover blue gradients and cool-gray chrome across Finder, donate, onboarding, and studio UI are remapped to cream and ink."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.0.9",
       "date": "2026-10-28",
       "title": "Warm cream and ink UI",

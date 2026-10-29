@@ -120,7 +120,7 @@
   place-items: center !important;
   flex: none !important;
   background: #fff;
-  color: #2563eb;
+  color: #232427;
   cursor: grab;
   pointer-events: auto;
   touch-action: none;
@@ -130,7 +130,7 @@
   will-change: transform;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.9) inset,
-    0 4px 12px rgba(15, 23, 42, 0.16);
+    0 4px 12px rgba(60, 55, 30, 0.16);
   -webkit-tap-highlight-color: transparent;
   backface-visibility: hidden;
 }
@@ -144,7 +144,7 @@
   transition: none !important;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.95) inset,
-    0 8px 16px rgba(15, 23, 42, 0.2);
+    0 8px 16px rgba(60, 55, 30, 0.2);
 }
 
 .ms-lf-slide.is-returning .ms-lf-slide-thumb,

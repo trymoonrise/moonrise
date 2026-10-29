@@ -20,7 +20,7 @@ body.ms-onboard-page {
   position: relative;
   overflow: hidden;
   height: 100dvh;
-  background: #eef2f7;
+  background: #e6e4d4;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -31,9 +31,9 @@ body.ms-onboard-page {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 120% 70% at 50% -20%, rgba(37, 99, 235, 0.14), transparent 58%),
+    radial-gradient(ellipse 120% 70% at 50% -20%, rgba(35, 36, 39, 0.14), transparent 58%),
     radial-gradient(ellipse 50% 40% at 0% 100%, rgba(99, 102, 241, 0.08), transparent 55%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+    linear-gradient(180deg, #f5f4e8 0%, #e6e4d4 100%);
   animation: ms-onb-bg-drift 18s ease-in-out infinite alternate;
 }
 
@@ -83,8 +83,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   border: 1px solid rgba(226, 232, 240, 0.95);
   border-radius: 20px;
   box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 16px 40px rgba(15, 23, 42, 0.08);
+    0 1px 2px rgba(60, 55, 30, 0.04),
+    0 16px 40px rgba(60, 55, 30, 0.08);
   backdrop-filter: blur(12px);
   overflow: hidden;
 }
@@ -118,8 +118,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   padding: 0.28rem 0.55rem;
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.28);
-  background: #fff;
-  color: #64748b;
+  background: #fbfaf1;
+  color: #77776e;
   text-decoration: none;
   font-size: 0.74rem;
   font-weight: 650;
@@ -132,9 +132,9 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 }
 
 .ms-onboard-home:hover {
-  color: #334155;
+  color: #232427;
   border-color: rgba(100, 116, 139, 0.35);
-  background: #f8fafc;
+  background: #f5f4e8;
   transform: translateY(-1px);
 }
 
@@ -152,11 +152,11 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 .ms-onboard-brand img {
   width: 1.55rem;
   height: 1.55rem;
-  filter: drop-shadow(0 3px 8px rgba(37, 99, 235, 0.16));
+  filter: drop-shadow(0 3px 8px rgba(35, 36, 39, 0.16));
 }
 
 .ms-onboard-step-pill {
-  background: #f1f5f9;
+  background: #f5f4e8;
   border: 1px solid rgba(148, 163, 184, 0.28);
   font-size: 0.74rem;
   font-weight: 700;
@@ -167,8 +167,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 
 .ms-onboard-step-pill.is-bump {
   animation: ms-onb-pill-bump 0.52s var(--onb-spring);
-  background: #eff6ff;
-  border-color: rgba(37, 99, 235, 0.22);
+  background: #cfe0ee;
+  border-color: rgba(35, 36, 39, 0.22);
 }
 
 @keyframes ms-onb-pill-bump {
@@ -188,11 +188,11 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   height: 100%;
   width: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%);
+  background: linear-gradient(90deg, #232427 0%, #4f46e5 100%);
   transform: scaleX(var(--onb-progress, 0));
   transform-origin: left center;
   transition: transform 0.64s var(--onb-ease-soft);
-  box-shadow: 0 0 12px rgba(37, 99, 235, 0.32);
+  box-shadow: 0 0 12px rgba(35, 36, 39, 0.32);
 }
 
 .ms-onboard-main {
@@ -357,14 +357,14 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.03em;
-  color: #0f172a;
+  color: #232427;
 }
 
 .ms-onboard-lead {
   margin: 0 0 0.75rem;
   font-size: 0.9rem;
   line-height: 1.45;
-  color: #64748b;
+  color: #77776e;
 }
 
 /* Content reveal - soft blur + rise (panel crossfade handles step shell) */
@@ -492,7 +492,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 }
 
 .ms-onboard-flip-card:focus-visible .ms-onboard-flip-card-inner {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ms-accent, #2563eb) 28%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ms-accent, #232427) 28%, transparent);
 }
 
 .ms-onboard-flip-card-inner {
@@ -515,9 +515,9 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   justify-content: center;
   gap: 0.2rem;
   padding: 0.45rem 0.6rem;
-  border: 1px solid #e8edf3;
+  border: 1px solid #e6e4d4;
   border-radius: 10px;
-  background: #f8fafc;
+  background: #f5f4e8;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -531,8 +531,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 
 .ms-onboard-flip-card-back {
   transform: rotateY(180deg);
-  background: linear-gradient(145deg, #eff6ff 0%, #f8fafc 100%);
-  border-color: #bfdbfe;
+  background: linear-gradient(145deg, #cfe0ee 0%, #f5f4e8 100%);
+  border-color: #bfd3e3;
 }
 
 .ms-onboard-panel--path .ms-onboard-path--flip .ms-onboard-path-num {
@@ -547,7 +547,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 .ms-onboard-flip-card-title {
   display: block;
   margin: 0;
-  color: #0f172a;
+  color: #232427;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -556,7 +556,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 
 .ms-onboard-flip-card-back p {
   margin: 0;
-  color: #475569;
+  color: #6a6a62;
   font-size: 0.72rem;
   line-height: 1.35;
 }
@@ -589,9 +589,9 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   column-gap: 0.45rem;
   align-items: start;
   padding: 0.45rem 0.5rem;
-  border: 1px solid #e8edf3;
+  border: 1px solid #e6e4d4;
   border-radius: 12px;
-  background: #f8fafc;
+  background: #f5f4e8;
 }
 
 .ms-onboard-panel--path .ms-onboard-path:not(.ms-onboard-path--flip) li:not(:last-child)::after {
@@ -702,8 +702,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   margin-bottom: 0.35rem;
   padding: 0.75rem;
   border-radius: 12px;
-  border: 1px solid #e8edf3;
-  background: #f8fafc;
+  border: 1px solid #e6e4d4;
+  background: #f5f4e8;
 }
 
 .ms-onboard-panel .ms-creator-policy-notice.ms-onboard-policy {
@@ -733,14 +733,14 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   min-height: 3.4rem;
   padding: 0.95rem 1.05rem;
   border-radius: 12px;
-  background: #fff;
-  border: 1px solid #e8edf3;
+  background: #fbfaf1;
+  border: 1px solid #e6e4d4;
   text-decoration: none;
   color: inherit;
 }
 
 .ms-onboard-legal-card:hover {
-  border-color: #93c5fd;
+  border-color: #bfd3e3;
   background: #f8fbff;
 }
 
@@ -777,14 +777,14 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   display: block;
   font-size: 0.9rem;
   line-height: 1.3;
-  color: #0f172a;
+  color: #232427;
 }
 
 .ms-onboard-legal-copy span {
   display: block;
   font-size: 0.72rem;
   line-height: 1.35;
-  color: #64748b;
+  color: #77776e;
   white-space: normal;
   overflow-wrap: break-word;
 }
@@ -795,9 +795,9 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   gap: 0.95rem;
   margin-top: 0.15rem;
   padding: 1.05rem 1.1rem;
-  border: 1px solid #e8edf3;
+  border: 1px solid #e6e4d4;
   border-radius: 14px;
-  background: #fff;
+  background: #fbfaf1;
 }
 
 .ms-onboard-payout-preview-avatar {
@@ -809,8 +809,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   border-radius: 999px;
   overflow: hidden;
   flex-shrink: 0;
-  background: #f1f5f9;
-  color: #0f172a;
+  background: #f5f4e8;
+  color: #232427;
   font-weight: 750;
   font-size: 1.15rem;
 }
@@ -826,7 +826,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   object-fit: contain;
   padding: 0.55rem;
   box-sizing: border-box;
-  background: #fff;
+  background: #fbfaf1;
 }
 
 .ms-onboard-payout-preview-copy {
@@ -840,13 +840,13 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 .ms-onboard-payout-preview-copy strong {
   font-size: 1.05rem;
   line-height: 1.3;
-  color: #0f172a;
+  color: #232427;
   overflow-wrap: anywhere;
 }
 
 .ms-onboard-payout-preview-copy span,
 .ms-onboard-payout-preview-note {
-  color: #64748b;
+  color: #77776e;
   font-size: 0.88rem;
   line-height: 1.4;
   overflow-wrap: anywhere;
@@ -865,8 +865,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   font-size: 0.82rem;
   line-height: 1.35;
   border-radius: 12px;
-  border: 1px solid #e8edf3;
-  background: #fff;
+  border: 1px solid #e6e4d4;
+  background: #fbfaf1;
 }
 
 .ms-onboard-chip-label {
@@ -892,7 +892,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   margin-top: 0;
   padding: 0.65rem 1rem 0.85rem;
   border-top: 1px solid rgba(226, 232, 240, 0.9);
-  background: #fff;
+  background: #fbfaf1;
   display: flex;
   gap: 0.45rem;
 }
@@ -916,7 +916,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 
 .ms-onboard-actions .ms-btn.ms-onboard-next,
 .ms-onboard-actions a.ms-btn.ms-onboard-next {
-  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.16);
+  box-shadow: 0 8px 18px rgba(35, 36, 39, 0.16);
 }
 
 .ms-onboard-page .ms-field .ms-label,
@@ -963,10 +963,10 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   gap: 0.65rem;
   min-height: 3rem;
   padding: 0.55rem 0.85rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e6e4d4;
   border-radius: 12px;
-  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
-  color: #0f172a;
+  background: linear-gradient(180deg, #fff 0%, #f5f4e8 100%);
+  color: #232427;
   font: inherit;
   font-size: 0.92rem;
   font-weight: 600;
@@ -976,21 +976,21 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 }
 
 .ms-payout-picker-trigger:hover {
-  border-color: #cbd5e1;
-  background: #fff;
+  border-color: #d9d8cc;
+  background: #fbfaf1;
 }
 
 .ms-payout-picker.is-open .ms-payout-picker-trigger,
 .ms-payout-picker-trigger:focus-visible {
   outline: none;
-  border-color: color-mix(in srgb, var(--ms-accent, #2563eb) 55%, #e2e8f0);
-  background: #fff;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ms-accent, #2563eb) 14%, transparent);
+  border-color: color-mix(in srgb, var(--ms-accent, #232427) 55%, #e6e4d4);
+  background: #fbfaf1;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ms-accent, #232427) 14%, transparent);
 }
 
 .ms-payout-picker-empty {
   flex: 1 1 auto;
-  color: #94a3b8;
+  color: #77776e;
   font-weight: 500;
 }
 
@@ -1035,7 +1035,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   width: 16px;
   height: 16px;
   margin-left: auto;
-  color: #94a3b8;
+  color: #77776e;
   transition: transform 0.18s ease;
 }
 
@@ -1052,12 +1052,12 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   max-height: min(17rem, 42vh);
   overflow: auto;
   padding: 0.4rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e6e4d4;
   border-radius: 14px;
-  background: #fff;
+  background: #fbfaf1;
   box-shadow:
-    0 18px 40px rgba(15, 23, 42, 0.12),
-    0 0 0 1px rgba(15, 23, 42, 0.03);
+    0 18px 40px rgba(60, 55, 30, 0.12),
+    0 0 0 1px rgba(60, 55, 30, 0.03);
   animation: ms-payout-picker-in 0.16s ease;
 }
 
@@ -1082,7 +1082,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   border: 1px solid transparent;
   border-radius: 11px;
   background: transparent;
-  color: #0f172a;
+  color: #232427;
   font: inherit;
   font-size: 0.9rem;
   text-align: left;
@@ -1092,14 +1092,14 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 
 .ms-payout-picker-option:hover,
 .ms-payout-picker-option:focus-visible {
-  background: #f8fafc;
-  border-color: #e2e8f0;
+  background: #f5f4e8;
+  border-color: #e6e4d4;
   outline: none;
 }
 
 .ms-payout-picker-option.is-selected {
-  background: linear-gradient(145deg, #eff6ff 0%, #f8fafc 100%);
-  border-color: #bfdbfe;
+  background: linear-gradient(145deg, #cfe0ee 0%, #f5f4e8 100%);
+  border-color: #bfd3e3;
 }
 
 .ms-payout-picker-option-logo {
@@ -1108,8 +1108,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   height: 1.75rem;
   object-fit: contain;
   border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06);
+  background: #fbfaf1;
+  box-shadow: 0 0 0 1px rgba(60, 55, 30, 0.06);
 }
 
 .ms-payout-picker-option-copy {
@@ -1128,7 +1128,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   flex: none;
   width: 1rem;
   height: 1rem;
-  color: #2563eb;
+  color: #232427;
   opacity: 0;
 }
 
@@ -1138,19 +1138,19 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 
 .ms-field.is-locked .ms-label,
 .ms-field.is-locked .ms-settings-hint {
-  color: #cbd5e1;
+  color: #d9d8cc;
 }
 
 .ms-field.is-locked .ms-input {
-  background: #f8fafc;
-  border-color: #e8edf3;
-  color: #94a3b8;
+  background: #f5f4e8;
+  border-color: #e6e4d4;
+  color: #77776e;
   cursor: not-allowed;
   box-shadow: none;
 }
 
 .ms-field.is-locked .ms-input::placeholder {
-  color: #cbd5e1;
+  color: #d9d8cc;
 }
 
 .ms-onboard-error {
@@ -1183,11 +1183,11 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   margin: 0;
   padding: 0.45rem 0.65rem;
   border-radius: 999px;
-  border: 1px solid #e8edf3;
-  background: #f8fafc;
+  border: 1px solid #e6e4d4;
+  background: #f5f4e8;
   font-size: 0.76rem;
   font-weight: 600;
-  color: #64748b;
+  color: #77776e;
   text-decoration: none;
   transition:
     border-color 0.15s ease,
@@ -1196,9 +1196,9 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 }
 
 .ms-onboard-stripe-partner:hover {
-  border-color: #cbd5e1;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  border-color: #d9d8cc;
+  background: #fbfaf1;
+  box-shadow: 0 1px 3px rgba(60, 55, 30, 0.06);
 }
 
 .ms-onboard-stripe-partner:focus-visible {
@@ -1224,14 +1224,14 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   display: none;
   align-items: center;
   gap: 0.45rem;
-  color: #2563eb;
+  color: #232427;
 }
 
 .ms-onboard-stripe-partner.is-verifying {
   pointer-events: none;
-  border-color: #bfdbfe;
-  background: #eff6ff;
-  color: #2563eb;
+  border-color: #bfd3e3;
+  background: #cfe0ee;
+  color: #232427;
 }
 
 .ms-onboard-stripe-partner.is-verifying .ms-onboard-stripe-partner-label {
@@ -1245,8 +1245,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 .ms-onboard-stripe-spinner {
   width: 0.9rem;
   height: 0.9rem;
-  border: 2px solid #93c5fd;
-  border-top-color: #2563eb;
+  border: 2px solid #bfd3e3;
+  border-top-color: #232427;
   border-radius: 50%;
   animation: ms-onboard-stripe-spin 0.7s linear infinite;
 }
@@ -1260,7 +1260,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 @media (prefers-reduced-motion: reduce) {
   .ms-onboard-stripe-spinner {
     animation: none;
-    border-top-color: #2563eb;
+    border-top-color: #232427;
     opacity: 0.85;
   }
 }
@@ -1433,7 +1433,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   padding: 0.75rem 0.8rem;
   border: 1px solid rgb(0 0 0 / 8%);
   border-radius: 0.9rem;
-  background: #fff;
+  background: #fbfaf1;
 }
 
 .ms-onboard-preview li {
@@ -1464,14 +1464,14 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   width: 1.6rem;
   height: 1.6rem;
   border-radius: 999px;
-  background: #f5f5f7;
+  background: #f5f4e8;
   color: #1d1d1f;
   font-size: 0.75rem;
   font-weight: 650;
 }
 
 html[data-ms-mode="dark"] .ms-onboard-card {
-  background: #fff !important;
+  background: #fbfaf1 !important;
   color: #1d1d1f !important;
 }
 
@@ -1484,7 +1484,7 @@ html[data-ms-mode="dark"] .ms-onboard-card :is(.ms-onboard-lead, .ms-onboard-pre
 }
 
 html[data-ms-mode="dark"] .ms-onboard-card .ms-btn-secondary {
-  background: #fff !important;
+  background: #fbfaf1 !important;
   color: #1d1d1f !important;
-  border-color: #d2d2d7 !important;
+  border-color: #e6e4d4 !important;
 }

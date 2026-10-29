@@ -1,0 +1,475 @@
+/* Warm cream + ink component layer. Load after studio.css / studio-ui.css.
+   Visual only — no layout/JS behavior changes. */
+
+:root {
+  --ms-bg: #fcfbef;
+  --ms-surface: #fbfaf1;
+  --ms-surface-alt: #f5f4e8;
+  --ms-surface-prompt: #f2f0e1;
+  --ms-ink: #232427;
+  --ms-muted: #6a6a62;
+  --ms-line: #e6e4d4;
+  --ms-dashed: #d9d8cc;
+  --ms-track-off: #ddddd3;
+  --ms-segment: #f2f3f6;
+  --ms-accent: #bfd3e3;
+  --ms-accent-bright: #8fb0d6;
+  --ms-accent-strong: #232427;
+  --ms-accent-soft: #cfe0ee;
+  --ms-accent-rgb: 191, 211, 227;
+  --ms-brand: #232427;
+  --ms-link: #1d3a66;
+  --ms-banner: #cfe0ee;
+  --ms-banner-ink: #1d3a66;
+  --ms-skeleton: #c4c4c4;
+  --ms-danger: #e03a1a;
+  --ms-radius: 16px;
+  --ms-radius-card: 24px;
+  --ms-radius-list: 16px;
+  --ms-radius-pill: 999px;
+  --ms-shadow-card: 0 4px 14px rgba(60, 55, 30, 0.08);
+  --ms-shadow-segment: 0 2px 8px rgba(60, 80, 110, 0.15);
+}
+
+html:not([data-ms-mode="dark"]) body,
+html:not([data-ms-mode="dark"]) body[data-page] {
+  background: var(--ms-bg);
+  color: var(--ms-ink);
+}
+
+/* —— Surfaces / cards —— */
+html:not([data-ms-mode="dark"]) :where(
+  .card,
+  .ms-card,
+  .ms-dash-card,
+  .ms-dash-island,
+  .ms-dash-metric,
+  .ms-settings-card,
+  .ms-project-card,
+  .ms-auth-card,
+  .ms-stat,
+  .ms-panel,
+  .ms-lb-panel,
+  .ms-lb-dock,
+  .ms-lb-prompt,
+  .ms-fin-card,
+  .ms-store-card,
+  .ms-help-card,
+  .ms-course-card,
+  .ms-orders-card,
+  .ms-download-card,
+  .ms-legal-doc .ms-card
+) {
+  background: var(--ms-surface) !important;
+  border: 1px solid var(--ms-line) !important;
+  border-radius: var(--ms-radius-card) !important;
+  box-shadow: var(--ms-shadow-card) !important;
+  color: var(--ms-ink);
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-metric,
+  .ms-stat,
+  .ms-surface-alt,
+  .ms-home-method-viz
+) {
+  background: var(--ms-surface-alt) !important;
+}
+
+/* —— Typography —— */
+html:not([data-ms-mode="dark"]) :where(
+  h1, h2, h3,
+  .ms-page-head h1,
+  .ms-settings-card-title,
+  .ms-brand-name,
+  .ms-auth-title,
+  .ms-home-title,
+  .ms-home-brand strong
+) {
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink);
+}
+
+html:not([data-ms-mode="dark"]) .ms-home-brand strong {
+  color: #000 !important;
+  -webkit-text-fill-color: #000;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-muted,
+  .ms-page-eyebrow,
+  .ms-home-sub,
+  .ms-home-section-lead,
+  .ms-auth-sub,
+  .ms-helper,
+  .ms-field-hint,
+  .ms-settings-hint
+) {
+  color: var(--ms-muted) !important;
+}
+
+/* —— Primary / secondary buttons —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost):not(.ms-btn-ghost-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  .ms-home-cta-primary,
+  .ms-home-footer-signup,
+  .ms-home-method-cta,
+  .ms-lf-find,
+  .ms-lb-publish-btn,
+  .ms-paywall-pay,
+  .ms-fin-save,
+  .ms-fin-next,
+  .ms-store-buy:not(.is-ghost),
+  .lf-action-builder,
+  .ms-lf-map-scan,
+  #btn-checkout,
+  .ms-download-install-btn,
+  body[data-page="download"] .ms-download-actions .ms-btn:not(.ms-btn-secondary)
+) {
+  background: var(--ms-ink) !important;
+  color: #fcfbef !important;
+  -webkit-text-fill-color: #fcfbef !important;
+  border: 0 !important;
+  border-radius: var(--ms-radius-pill) !important;
+  box-shadow: none !important;
+  font-weight: 700 !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-btn-secondary,
+  .ms-home-cta-secondary,
+  .ms-dash-tool,
+  .ms-store-buy.is-ghost,
+  body[data-page="download"] .ms-download-actions .ms-btn-secondary
+) {
+  background: transparent !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  border: 1.5px solid var(--ms-ink) !important;
+  border-radius: var(--ms-radius-pill) !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-btn-danger {
+  background: var(--ms-danger) !important;
+  color: #fcfbef !important;
+  -webkit-text-fill-color: #fcfbef !important;
+  border: 0 !important;
+  border-radius: var(--ms-radius-pill) !important;
+  box-shadow: none !important;
+}
+
+/* —— Forms —— */
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input,
+  .ms-auth-card input.ms-input,
+  select.ms-select,
+  textarea.ms-textarea
+) {
+  background: transparent !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  caret-color: var(--ms-ink);
+  border: 1.5px solid var(--ms-ink) !important;
+  border-radius: 16px !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) textarea.ms-textarea {
+  border-radius: 28px !important;
+  min-height: 8rem;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input:focus,
+  .ms-auth-card input.ms-input:focus,
+  select.ms-select:focus,
+  textarea.ms-textarea:focus
+) {
+  border-color: var(--ms-ink) !important;
+  border-width: 2px !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input::placeholder,
+  textarea.ms-textarea::placeholder
+) {
+  color: var(--ms-muted) !important;
+  opacity: 1;
+}
+
+/* Underline-style single fields (auth email feel) */
+html:not([data-ms-mode="dark"]) .ms-auth-card input.ms-input {
+  border: 0 !important;
+  border-bottom: 2px solid var(--ms-ink) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  font-size: 1.25rem !important;
+  font-weight: 500;
+  height: auto !important;
+  min-height: 2.75rem;
+  padding-bottom: 0.65rem !important;
+}
+
+/* —— Switches —— */
+html:not([data-ms-mode="dark"]) .ms-switch-track {
+  width: 51px;
+  height: 29px;
+  background: var(--ms-track-off) !important;
+  border: 2px solid #e8e8dc !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-switch-track::after {
+  top: 2px;
+  left: 2px;
+  width: 21px;
+  height: 21px;
+  background: #fcfbef !important;
+  box-shadow: 0 0 0 1px rgba(35, 36, 39, 0.12) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-switch input:checked + .ms-switch-track {
+  background: var(--ms-ink) !important;
+  border-color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-switch input:checked + .ms-switch-track::after {
+  transform: translateX(22px);
+  box-shadow: 0 0 0 2px var(--ms-ink) !important;
+}
+
+/* —— Nav / sidebar —— */
+html:not([data-ms-mode="dark"]) .ms-sidebar {
+  background: var(--ms-bg) !important;
+  border-right: 1px solid var(--ms-line) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link {
+  color: var(--ms-ink) !important;
+  border-radius: 14px;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link:hover {
+  background: var(--ms-surface-alt) !important;
+  color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-active {
+  background: var(--ms-accent) !important;
+  color: var(--ms-ink) !important;
+  font-weight: 600;
+  box-shadow: var(--ms-shadow-segment) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-active .ms-nav-ico {
+  color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating {
+  color: var(--ms-ink) !important;
+  background: color-mix(in srgb, var(--ms-accent) 55%, var(--ms-bg)) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ms-accent) 70%, transparent) !important;
+  animation: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating .ms-nav-ico {
+  color: var(--ms-ink) !important;
+  animation: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating .ms-nav-progress {
+  background: var(--ms-line) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating .ms-nav-progress::after {
+  background: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-menu-toggle {
+  background: var(--ms-surface) !important;
+  border: 1.5px solid var(--ms-ink) !important;
+  color: var(--ms-ink) !important;
+  border-radius: var(--ms-radius-pill) !important;
+  box-shadow: none !important;
+}
+
+/* —— Tabs / segmented —— */
+html:not([data-ms-mode="dark"]) :where(.ms-tabs, .ms-segmented, .ms-auth-tabs) {
+  background: var(--ms-segment) !important;
+  border-radius: 16px !important;
+  padding: 4px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-tab.is-active,
+  .ms-segmented .is-active,
+  .ms-auth-tab.is-active,
+  .ms-tabs .is-active
+) {
+  background: var(--ms-accent) !important;
+  color: var(--ms-ink) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--ms-shadow-segment) !important;
+  border: 0 !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-tab:not(.is-active),
+  .ms-auth-tab:not(.is-active)
+) {
+  color: #9a9dae !important;
+  background: transparent !important;
+}
+
+/* Profile-style top tabs underline */
+html:not([data-ms-mode="dark"]) .ms-top-tabs .is-active,
+html:not([data-ms-mode="dark"]) .ms-profile-tabs .is-active {
+  color: var(--ms-ink) !important;
+  box-shadow: inset 0 -3px 0 var(--ms-ink) !important;
+  background: transparent !important;
+}
+
+/* —— List rows / hairlines —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-settings-row,
+  .ms-list-row,
+  .ms-detail-row,
+  .ms-fin-row
+) {
+  border-bottom: 1px solid var(--ms-line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* —— Search pills —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-search,
+  input.ms-search,
+  .ms-lf-search,
+  .ms-lf-query
+) {
+  border: 1.5px solid var(--ms-ink) !important;
+  border-radius: var(--ms-radius-pill) !important;
+  background: transparent !important;
+  color: var(--ms-ink) !important;
+  box-shadow: none !important;
+}
+
+/* —— Banners / tips —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-banner,
+  .ms-tip,
+  .ms-info-banner,
+  .ms-profile-complete,
+  .ms-lb-tip
+) {
+  background: var(--ms-banner) !important;
+  color: var(--ms-banner-ink) !important;
+  border: 0 !important;
+  border-radius: 24px !important;
+  box-shadow: none !important;
+}
+
+/* —— Links —— */
+html:not([data-ms-mode="dark"]) a:not(.ms-btn):not(.ms-home-cta-primary):not(.ms-home-cta-secondary):not(.ms-nav-link):not(.ms-home-bloom-nav a) {
+  color: var(--ms-link);
+}
+
+/* —— Home polish —— */
+body[data-page="home"] .ms-home-title,
+body[data-page="home"] .ms-home-title-accent {
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+  background: none !important;
+}
+
+body[data-page="home"] .ms-home-sub {
+  color: #6a6a62 !important;
+}
+
+body[data-page="home"] .ms-home-cta-primary {
+  background: #232427 !important;
+  color: #fcfbef !important;
+  -webkit-text-fill-color: #fcfbef !important;
+}
+
+body[data-page="home"] .ms-home-cta-secondary {
+  background: transparent !important;
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+  border: 1.5px solid #232427 !important;
+}
+
+body[data-page="home"] .ms-home-bloom {
+  background: #fcfbef !important;
+}
+
+body[data-page="home"] .ms-home-bloom-nav a {
+  color: #232427 !important;
+}
+
+body[data-page="home"] .ms-home-method-card {
+  background: #fbfaf1 !important;
+  border-color: #e6e4d4 !important;
+  box-shadow: var(--ms-shadow-card) !important;
+}
+
+/* —— Auth —— */
+html:not([data-ms-mode="dark"]) body[data-page="login"] {
+  background: #fcfbef !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-auth-card {
+  background: #fbfaf1 !important;
+  border: 1px solid #e6e4d4 !important;
+  border-radius: 28px !important;
+  box-shadow: var(--ms-shadow-card) !important;
+}
+
+/* —— Chrome odds and ends —— */
+html:not([data-ms-mode="dark"]) .ms-lb-send {
+  background: var(--ms-ink) !important;
+  color: #fcfbef !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(.ms-chip, .ms-tag, .ms-pill) {
+  background: var(--ms-surface-alt) !important;
+  color: var(--ms-ink) !important;
+  border: 1px solid var(--ms-line) !important;
+  border-radius: var(--ms-radius-pill) !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(.ms-skeleton, .ms-placeholder-block) {
+  background: var(--ms-skeleton) !important;
+  border-radius: 22px;
+}
+
+/* Pressed feel */
+@media (hover: hover) {
+  html:not([data-ms-mode="dark"]) :where(
+    .ms-btn:not(:disabled),
+    .ms-home-cta-primary,
+    .ms-home-cta-secondary,
+    .ms-home-footer-signup,
+    .ms-home-method-cta
+  ):hover {
+    opacity: 0.85;
+    transform: scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-ms-mode="dark"]) :where(.ms-btn, .ms-home-cta-primary, .ms-home-cta-secondary):hover {
+    transform: none;
+  }
+}
