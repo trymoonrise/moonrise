@@ -3,6 +3,39 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.2.9",
+      "date": "2026-10-28",
+      "title": "Smoother load, tighter tabs",
+      "tag": "v2.2.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.2.9",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home and public pages ease the loading word and bar in, then fade the splash out more smoothly."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Mobile bottom tab icons are a bit smaller so the bar feels tighter.",
+            "Dashboard Recent posts sits flush in its card with clearer header and body padding."
+          ],
+          "fixes": [
+            "Bottom tab icons remount if they were missing after the menu moved into the tab bar."
+          ]
+        },
+        {
+          "heading": "Finder",
+          "added": [
+            "Business Finder map fade-in and loader spin ease more smoothly."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.2.8",
       "date": "2026-10-28",
       "title": "Sidebar drops moonrise brand header",

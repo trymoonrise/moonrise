@@ -53,7 +53,7 @@
   html:not([data-ms-mode="dark"]) body[data-page="orders"] .ms-orders-card,
   html:not([data-ms-mode="dark"]) body[data-page="contact"] .ms-card,
   html:not([data-ms-mode="dark"]) body[data-page="legal"] .ms-card {
-    animation: ms-cream-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: ms-cream-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
 }
@@ -61,7 +61,7 @@
 @keyframes ms-cream-rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;

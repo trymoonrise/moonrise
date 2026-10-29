@@ -3,11 +3,13 @@
 <head>
 <style>
 html.ms-boot body{visibility:hidden!important}
-#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.15rem;background:#fcfbef;color:#232427;visibility:visible!important}
-#ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em}
-#ms-boot .ms-boot-bar{width:7.5rem;height:2px;border-radius:99px;background:rgba(15,23,42,.12);overflow:hidden}
-#ms-boot .ms-boot-bar span{display:block;height:100%;width:0%;border-radius:inherit;background:currentColor;transform-origin:left center}
-@media (prefers-reduced-motion:reduce){#ms-boot .ms-boot-bar span{transition:none}}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.2rem;background:#fcfbef;color:#232427;visibility:visible!important;opacity:1;transition:opacity .48s cubic-bezier(.22,1,.36,1),visibility .48s linear}
+#ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .7s cubic-bezier(.22,1,.36,1) .08s forwards}
+#ms-boot .ms-boot-bar{width:8.25rem;height:2.5px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .7s cubic-bezier(.22,1,.36,1) .18s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
 </style>
 <script>
 document.documentElement.classList.add("ms-boot");
@@ -27,14 +29,14 @@ document.documentElement.classList.add("ms-boot");
   var done=false;
   var started=performance.now();
   var readyAt=0;
-  var minMs=750;
+  var minMs=980;
   var maxMs=20000;
   var reduce=false;
   try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
 
   function setProgress(p){
     progress=Math.max(0,Math.min(100,p));
-    if(bar) bar.style.width=progress.toFixed(2)+"%";
+    if(bar) bar.style.transform="scaleX("+(progress/100).toFixed(4)+")";
     boot.setAttribute("aria-valuenow",String(Math.round(progress)));
     boot.setAttribute("aria-label","Loading "+Math.round(progress)+"%");
   }
@@ -50,7 +52,12 @@ document.documentElement.classList.add("ms-boot");
       var el=document.getElementById("ms-boot");
       if(el)el.remove();
     };
-    requestAnimationFrame(function(){requestAnimationFrame(hide);});
+    if(reduce){
+      hide();
+      return;
+    }
+    boot.classList.add("is-leaving");
+    setTimeout(hide, 480);
   }
 
   function tick(now){
@@ -64,19 +71,20 @@ document.documentElement.classList.add("ms-boot");
       }
       var sinceReady=Math.max(0,now-readyAt);
       var minLeft=Math.max(0,minMs-elapsed);
-      var fillMs=Math.max(220,minLeft);
+      var fillMs=Math.max(420,minLeft);
       var t=Math.min(1,sinceReady/fillMs);
-      var eased=1-Math.pow(1-t,3);
-      setProgress(Math.max(progress, 88+(12*eased)));
-      if(t>=1 && progress>=99.5){
+      var eased=1-Math.pow(1-t,3.2);
+      var from=Math.max(progress, 86);
+      setProgress(from+((100-from)*eased));
+      if(t>=1 && progress>=99.6){
         setProgress(100);
         finish();
         return;
       }
     }else{
-      var tWait=Math.min(1,elapsed/2600);
-      var target=82*(1-Math.pow(1-tWait,2.4));
-      setProgress(progress+(target-progress)*0.16);
+      var tWait=Math.min(1,elapsed/3200);
+      var target=84*(1-Math.pow(1-tWait,2.6));
+      setProgress(progress+(target-progress)*0.085);
       if(elapsed>=maxMs){
         ready=true;
         readyAt=now;
@@ -128,12 +136,12 @@ document.documentElement.classList.add("ms-boot");
   <title>Dashboard - Moonrise Studio</title>
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=20261003-fonts">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-dash-card">
+  <link rel="stylesheet" href="css/studio.css?v=20261028-fix-ui">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap">
-  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-dash-card">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261028-fix-ui">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261028-dash-card">
-  <link rel="stylesheet" href="css/cream-motion.css?v=20261028-menu-phone">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261028-boot-smooth">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-legal-min">
 </head>
 <body data-page="dashboard">
@@ -268,7 +276,7 @@ document.documentElement.classList.add("ms-boot");
   </dialog>
 
   <script defer src="js/config.js?v=20261006-blue"></script>
-  <script defer src="js/app.js?v=20261028-no-brand"></script>
+  <script defer src="js/app.js?v=20261028-fix-tabs"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261005-auth"></script>

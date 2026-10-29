@@ -1199,11 +1199,17 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
     box-shadow: none;
   }
 
+  .ms-tab-ico {
+    width: 26px;
+    height: 26px;
+  }
+
   .ms-tab-ico svg,
   .ms-tab-orb svg {
-    width: 32px;
-    height: 32px;
+    width: 26px;
+    height: 26px;
     display: block;
+    flex-shrink: 0;
   }
 
   .ms-tab-label {
@@ -1267,14 +1273,10 @@ body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="cli
   }
 
   @media (max-width: 380px) {
-    .ms-tab-label {
-      font-size: 0.56rem;
-    }
-
     .ms-tab-ico svg,
     .ms-tab-orb svg {
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
     }
   }
 
@@ -1674,8 +1676,10 @@ body[data-page="dashboard"] {
 }
 
 .ms-dash-card.ms-settings-card {
+  height: auto;
   box-shadow: 0 8px 24px rgba(35, 36, 39, 0.05);
   border-color: #e6e4d4;
+  overflow: hidden;
 }
 
 .ms-dash-section-head {
@@ -2400,9 +2404,9 @@ body[data-page="dashboard"] {
 }
 
 @media (max-width: 560px) {
-  .ms-dash-projects-head,
-  .ms-dash-projects-toggle,
-  .ms-dash-projects-body {
+  .ms-dash-projects-head:not(.ms-dash-projects-toggle),
+  .ms-dash-posts:not(.ms-dash-card) .ms-dash-projects-toggle,
+  .ms-dash-posts:not(.ms-dash-card) .ms-dash-projects-body {
     padding: 0.2rem 0;
   }
 

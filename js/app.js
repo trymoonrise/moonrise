@@ -2091,33 +2091,41 @@
       document.body.appendChild(nav);
     }
     const switchAnim = readTabSwitch();
-    const alreadyMounted = nav.dataset.mounted === "1" && nav.querySelectorAll("a.ms-tab").length === items.length;
-    if (!alreadyMounted) nav.innerHTML =
-      '<span class="ms-tab-pill" aria-hidden="true"></span>' +
-      items
-        .map((item) => {
-          const active = page === item.id;
-          const icon = ICONS[item.icon] || "";
-          const mark = '<span class="ms-tab-ico" aria-hidden="true">' + icon + "</span>";
-          return (
-            '<a class="ms-tab' +
-            (active ? " is-active" : "") +
-            '" href="' +
-            item.href +
-            '" data-tab="' +
-            item.id +
-            '" aria-label="' +
-            (item.aria || item.label) +
-            '"' +
-            (active ? ' aria-current="page"' : "") +
-            ">" +
-            mark +
-            '<span class="ms-tab-label">' +
-            item.label +
-            "</span></a>"
-          );
-        })
-        .join("");
+    const tabCount = nav.querySelectorAll("a.ms-tab").length;
+    const alreadyMounted =
+      nav.dataset.mounted === "1" &&
+      tabCount === items.length &&
+      !!nav.querySelector(".ms-tab-ico svg");
+    if (!alreadyMounted) {
+      const menuToggle = document.getElementById("ms-menu-toggle");
+      if (menuToggle && menuToggle.parentElement === nav) document.body.appendChild(menuToggle);
+      nav.innerHTML =
+        '<span class="ms-tab-pill" aria-hidden="true"></span>' +
+        items
+          .map((item) => {
+            const active = page === item.id;
+            const icon = ICONS[item.icon] || "";
+            const mark = '<span class="ms-tab-ico" aria-hidden="true">' + icon + "</span>";
+            return (
+              '<a class="ms-tab' +
+              (active ? " is-active" : "") +
+              '" href="' +
+              item.href +
+              '" data-tab="' +
+              item.id +
+              '" aria-label="' +
+              (item.aria || item.label) +
+              '"' +
+              (active ? ' aria-current="page"' : "") +
+              ">" +
+              mark +
+              '<span class="ms-tab-label">' +
+              item.label +
+              "</span></a>"
+            );
+          })
+          .join("");
+    }
     nav.dataset.mounted = "1";
 
     placeMenuInTabBar(nav);
