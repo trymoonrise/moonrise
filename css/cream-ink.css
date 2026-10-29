@@ -1,28 +1,28 @@
-/* Warm cream + ink component layer. Load after studio.css / studio-ui.css.
+/* Black / white / grey component layer. Load after studio.css / studio-ui.css.
    Visual only — no layout/JS behavior changes. */
 
 :root {
-  --ms-bg: #fcfbef;
-  --ms-surface: #fbfaf1;
-  --ms-surface-alt: #f5f4e8;
-  --ms-surface-prompt: #f2f0e1;
+  --ms-bg: #ffffff;
+  --ms-surface: #fafafa;
+  --ms-surface-alt: #f4f4f5;
+  --ms-surface-prompt: #efefef;
   --ms-ink: #232427;
-  --ms-muted: #55574f;
-  --ms-line: #e6e4d4;
-  --ms-dashed: #d9d8cc;
-  --ms-track-off: #ddddd3;
-  --ms-segment: #f2f3f6;
-  /* Default selection + accent: black / white / cream greys (Appearance may override accent). */
-  --ms-select: #ddddd3;
-  --ms-select-soft: #f5f4e8;
+  --ms-muted: #666666;
+  --ms-line: #e5e5e5;
+  --ms-dashed: #d4d4d4;
+  --ms-track-off: #e0e0e0;
+  --ms-segment: #f2f2f2;
+  /* Default selection + accent: black / white / neutral greys (Appearance may override accent). */
+  --ms-select: #e0e0e0;
+  --ms-select-soft: #f4f4f5;
   --ms-accent: #232427;
   --ms-accent-bright: #232427;
   --ms-accent-strong: #000000;
-  --ms-accent-soft: #f5f4e8;
+  --ms-accent-soft: #f4f4f5;
   --ms-accent-rgb: 35, 36, 39;
   --ms-brand: #232427;
   --ms-link: #232427;
-  --ms-banner: #f5f4e8;
+  --ms-banner: #f4f4f5;
   --ms-banner-ink: #232427;
   --ms-skeleton: #c4c4c4;
   --ms-danger: #e03a1a;
@@ -30,8 +30,8 @@
   --ms-radius-card: 24px;
   --ms-radius-list: 16px;
   --ms-radius-pill: 999px;
-  --ms-shadow-card: 0 4px 14px rgba(60, 55, 30, 0.08);
-  --ms-shadow-segment: 0 2px 8px rgba(60, 80, 110, 0.15);
+  --ms-shadow-card: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --ms-shadow-segment: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 html:not([data-ms-mode="dark"]) body,
@@ -113,8 +113,8 @@ html:not([data-ms-mode="dark"]) body:not(.ms-home-menu-open) .ms-home-brand stro
 
 html:not([data-ms-mode="dark"]) body.ms-home-menu-open .ms-home-brand,
 html:not([data-ms-mode="dark"]) body.ms-home-menu-open .ms-home-brand strong {
-  color: #fcfbef !important;
-  -webkit-text-fill-color: #fcfbef !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(
@@ -157,8 +157,8 @@ html:not([data-ms-mode="dark"]) :where(
   body[data-page="download"] .ms-download-actions .ms-btn:not(.ms-btn-secondary)
 ) {
   background: var(--ms-ink) !important;
-  color: #fcfbef !important;
-  -webkit-text-fill-color: #fcfbef !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
   border: 0 !important;
   border-radius: var(--ms-radius-pill) !important;
   box-shadow: none !important;
@@ -204,8 +204,8 @@ html:not([data-ms-mode="dark"]) :where(
 
 html:not([data-ms-mode="dark"]) .ms-btn-danger {
   background: var(--ms-danger) !important;
-  color: #fcfbef !important;
-  -webkit-text-fill-color: #fcfbef !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
   border: 0 !important;
   border-radius: var(--ms-radius-pill) !important;
   box-shadow: none !important;
@@ -311,7 +311,7 @@ html:not([data-ms-mode="dark"]) .ms-switch-track::after {
   left: 2px;
   width: 21px;
   height: 21px;
-  background: #fcfbef !important;
+  background: #ffffff !important;
   box-shadow: 0 0 0 1px rgba(35, 36, 39, 0.12) !important;
 }
 
@@ -486,7 +486,7 @@ html:not([data-ms-mode="dark"]) :where(
   .ms-bs-mode-tab:not(.is-active),
   .ms-bs-gh-provider-btn:not(.is-active)
 ) {
-  color: #55574f !important;
+  color: #666666 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
@@ -592,7 +592,7 @@ body[data-page="home"] .ms-home-title-accent {
 }
 
 body[data-page="home"] .ms-home-sub {
-  color: #55574f !important;
+  color: #666666 !important;
 }
 
 /* Readable secondary text across studio */
@@ -612,7 +612,7 @@ html:not([data-ms-mode="dark"]) :where(
   .ms-toast,
   .ms-footer-note
 ) {
-  color: #55574f !important;
+  color: #666666 !important;
   opacity: 1 !important;
 }
 
@@ -647,8 +647,8 @@ html:not([data-ms-mode="dark"]) body[data-page="orders"] .ms-orders-card {
 
 body[data-page="home"] .ms-home-cta-primary {
   background: #232427 !important;
-  color: #fcfbef !important;
-  -webkit-text-fill-color: #fcfbef !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 body[data-page="home"] .ms-home-cta-secondary {
@@ -663,7 +663,7 @@ body[data-page="home"] .ms-home-bloom {
 }
 
 body[data-page="home"] .ms-home-bloom-nav a {
-  color: #fcfbef !important;
+  color: #ffffff !important;
 }
 
 body[data-page="home"] .ms-home-bloom-nav a:hover {
@@ -672,28 +672,28 @@ body[data-page="home"] .ms-home-bloom-nav a:hover {
 
 body[data-page="home"].ms-home-menu-open .ms-home-brand,
 body[data-page="home"].ms-home-menu-open .ms-home-brand strong {
-  color: #fcfbef !important;
-  -webkit-text-fill-color: #fcfbef !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 body[data-page="home"].ms-home-menu-open .ms-home-orb.is-open i {
-  background: #fcfbef !important;
+  background: #ffffff !important;
 }
 
 body[data-page="home"] .ms-home-method-card {
-  background: #fbfaf1 !important;
-  border-color: #e6e4d4 !important;
+  background: #fafafa !important;
+  border-color: #e5e5e5 !important;
   box-shadow: var(--ms-shadow-card) !important;
 }
 
 /* —— Auth —— */
 html:not([data-ms-mode="dark"]) body[data-page="login"] {
-  background: #fcfbef !important;
+  background: #ffffff !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-auth-card {
-  background: #fbfaf1 !important;
-  border: 1px solid #e6e4d4 !important;
+  background: #fafafa !important;
+  border: 1px solid #e5e5e5 !important;
   border-radius: 28px !important;
   box-shadow: var(--ms-shadow-card) !important;
 }
@@ -701,7 +701,7 @@ html:not([data-ms-mode="dark"]) .ms-auth-card {
 /* —— Chrome odds and ends —— */
 html:not([data-ms-mode="dark"]) .ms-lb-send {
   background: var(--ms-ink) !important;
-  color: #fcfbef !important;
+  color: #ffffff !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(.ms-chip, .ms-tag, .ms-pill) {
@@ -767,8 +767,8 @@ html:not([data-ms-mode="dark"]) #page-body.ms-lf-page.ms-lf-page--map {
   --lf-btn-bg: #232427 !important;
   --lf-btn-shadow: none !important;
   --lf-btn-shadow-hover: none !important;
-  --lf-chrome-grey: #e6e4d4 !important;
-  --lf-muted: #55574f !important;
+  --lf-chrome-grey: #e5e5e5 !important;
+  --lf-muted: #666666 !important;
   --lf-btn-radius: 999px !important;
 }
 
@@ -822,7 +822,7 @@ html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-thumb:focus {
   color: var(--ms-ink) !important;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.95) inset,
-    0 3px 10px rgba(60, 55, 30, 0.18) !important;
+    0 3px 10px rgba(0, 0, 0, 0.18) !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:focus-visible,
@@ -847,8 +847,8 @@ html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-fill {
 
 html:not([data-ms-mode="dark"]) .ms-lf-slide-label,
 html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-label {
-  color: #f5f4e8 !important;
-  -webkit-text-fill-color: #f5f4e8 !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
 }
 
 /* —— Flat cream surfaces (no cool washes) —— */

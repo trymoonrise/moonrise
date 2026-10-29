@@ -3,6 +3,27 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.9",
+      "date": "2026-10-28",
+      "title": "Strict black and white default theme",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Default site colors are strict black, white, and grey instead of cream."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio surfaces default to black and white greys; Settings Appearance still changes theme color."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.3.8",
       "date": "2026-10-28",
       "title": "Faster page boot across the site",

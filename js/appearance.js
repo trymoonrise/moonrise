@@ -20,7 +20,7 @@
     large: "Large",
     xlarge: "Extra large",
   };
-  /* Default: light cream UI with black ink accents. Users can change this in Settings → Appearance. */
+  /* Default: strict black / white / grey UI. Users can change accent color in Settings → Appearance. */
   var DEFAULTS = { mode: "light", color: "#232427", text: "small" };
   var INK_COLORS = { "#232427": 1, "#1d1d1f": 1, "#000000": 1 };
 
@@ -106,7 +106,7 @@
   }
 
   function chromeColor() {
-    return document.documentElement.getAttribute("data-ms-mode") === "dark" ? "#0e1320" : "#fcfbef";
+    return document.documentElement.getAttribute("data-ms-mode") === "dark" ? "#111111" : "#ffffff";
   }
 
   function isInkColor(color) {
@@ -136,22 +136,47 @@
     var soft = ink
       ? mode === "dark"
         ? "#2c2c2e"
-        : "#f5f4e8"
+        : "#f4f4f5"
       : rgbToHex(
-          mix(rgb, mode === "dark" ? { r: 18, g: 24, b: 38 } : { r: 252, g: 251, b: 239 }, mode === "dark" ? 0.82 : 0.88)
+          mix(rgb, mode === "dark" ? { r: 17, g: 17, b: 17 } : { r: 255, g: 255, b: 255 }, mode === "dark" ? 0.82 : 0.88)
         );
 
     var tone = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255 < 0.4 ? "dark" : "light";
     var select = ink
       ? mode === "dark"
         ? "#3a3a3c"
-        : "#ddddd3"
-      : rgbToHex(mix(rgb, mode === "dark" ? { r: 18, g: 24, b: 38 } : { r: 252, g: 251, b: 239 }, mode === "dark" ? 0.55 : 0.42));
-    var selectSoft = ink ? soft : rgbToHex(mix(rgb, mode === "dark" ? { r: 18, g: 24, b: 38 } : { r: 252, g: 251, b: 239 }, mode === "dark" ? 0.72 : 0.78));
+        : "#e0e0e0"
+      : rgbToHex(
+          mix(rgb, mode === "dark" ? { r: 17, g: 17, b: 17 } : { r: 255, g: 255, b: 255 }, mode === "dark" ? 0.55 : 0.42));
+    var selectSoft = ink ? soft : rgbToHex(
+          mix(rgb, mode === "dark" ? { r: 17, g: 17, b: 17 } : { r: 255, g: 255, b: 255 }, mode === "dark" ? 0.72 : 0.78));
     var link = ink ? "#232427" : strong;
     root.setAttribute("data-ms-mode", mode);
     root.setAttribute("data-ms-text", text);
     root.setAttribute("data-ms-accent-tone", tone);
+    if (mode === "light") {
+      root.style.setProperty("--ms-bg", "#ffffff");
+      root.style.setProperty("--ms-surface", "#fafafa");
+      root.style.setProperty("--ms-surface-alt", "#f4f4f5");
+      root.style.setProperty("--ms-surface-prompt", "#efefef");
+      root.style.setProperty("--ms-line", "#e5e5e5");
+      root.style.setProperty("--ms-dashed", "#d4d4d4");
+      root.style.setProperty("--ms-track-off", "#e0e0e0");
+      root.style.setProperty("--ms-segment", "#f2f2f2");
+      root.style.setProperty("--ms-muted", "#666666");
+      root.style.setProperty("--ms-ink", "#232427");
+    } else {
+      root.style.setProperty("--ms-bg", "#111111");
+      root.style.setProperty("--ms-surface", "#1a1a1a");
+      root.style.setProperty("--ms-surface-alt", "#222222");
+      root.style.setProperty("--ms-surface-prompt", "#2a2a2a");
+      root.style.setProperty("--ms-line", "#333333");
+      root.style.setProperty("--ms-dashed", "#3a3a3a");
+      root.style.setProperty("--ms-track-off", "#3a3a3c");
+      root.style.setProperty("--ms-segment", "#2a2a2a");
+      root.style.setProperty("--ms-muted", "#a3a3a3");
+      root.style.setProperty("--ms-ink", "#f5f5f5");
+    }
     root.style.setProperty("--ms-accent", color);
     root.style.setProperty("--ms-accent-bright", bright);
     root.style.setProperty("--ms-accent-strong", strong);
@@ -170,7 +195,7 @@
         crit.id = "ms-appearance-critical";
         document.head.appendChild(crit);
       }
-      crit.textContent = "html[data-ms-mode=dark],html[data-ms-mode=dark] body{background:#0e1320;color:#e8eef8}";
+      crit.textContent = "html[data-ms-mode=dark],html[data-ms-mode=dark] body{background:#111111;color:#f5f5f5}";
     } else if (crit) {
       crit.remove();
     }
@@ -185,14 +210,14 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261028-bw-reset";
+      link.href = "css/appearance.css?v=20261028-strict-bw";
     }
     var ui = document.getElementById("ms-studio-ui-css");
     if (!ui) {
       ui = document.createElement("link");
       ui.id = "ms-studio-ui-css";
       ui.rel = "stylesheet";
-      ui.href = "css/studio-ui.css?v=20261028-bw-default";
+      ui.href = "css/studio-ui.css?v=20261028-strict-bw";
     }
     var font = document.getElementById("ms-studio-font");
     if (!font) {

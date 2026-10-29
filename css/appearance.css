@@ -1,11 +1,11 @@
 /* Appearance preferences from Settings. Loaded after studio.css. */
 
 :root {
-  /* Default black & white / cream until Settings → Appearance overrides. */
+  /* Default black & white until Settings → Appearance overrides accent. */
   --ms-accent: #232427;
   --ms-accent-bright: #232427;
   --ms-accent-strong: #000000;
-  --ms-accent-soft: #f5f4e8;
+  --ms-accent-soft: #f4f4f5;
   --ms-accent-rgb: 35, 36, 39;
 }
 
@@ -119,7 +119,7 @@ select.ms-select:focus {
   padding: 0.55rem;
   border: 1px solid var(--ms-line);
   border-radius: 18px;
-  background: #f5f4e8;
+  background: #f4f4f5;
   background: color-mix(in srgb, var(--ms-ink) 3%, var(--ms-surface));
 }
 
@@ -139,7 +139,7 @@ select.ms-select:focus {
   position: relative;
   flex-shrink: 0;
   background: var(--swatch, var(--ms-accent));
-  box-shadow: inset 0 0 0 1px rgba(60, 55, 30, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 .ms-appearance-swatch.is-selected {
@@ -193,7 +193,7 @@ select.ms-select:focus {
   height: 16px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 3px rgba(60, 55, 30, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   pointer-events: none;
 }
 
@@ -306,10 +306,10 @@ select.ms-select:focus {
 /* Dark mode — shell, shared cards, and form controls */
 html[data-ms-mode="dark"] {
   color-scheme: dark;
-  --ms-bg: #0e1320;
-  --ms-surface: #171e2e;
+  --ms-bg: #ffffff;
+  --ms-surface: #fafafa;
   --ms-ink: #e8eef8;
-  --ms-muted: #9aa8c2;
+  --ms-muted: #666666;
   --ms-line: rgba(148, 163, 184, 0.2);
 }
 
@@ -442,8 +442,8 @@ html[data-ms-mode="dark"] .ms-menu-toggle {
 html[data-ms-mode="dark"] .ms-quick-nav::before {
   background: linear-gradient(
     to bottom,
-    #0e1320 0,
-    #0e1320 calc(8rem + var(--ms-chrome-top) + var(--ms-chrome-btn)),
+    #111111 0,
+    #111111 calc(8rem + var(--ms-chrome-top) + var(--ms-chrome-btn)),
     rgba(14, 19, 32, 0) 100%
   );
 }
@@ -559,7 +559,7 @@ html[data-ms-mode="dark"] .ms-project-card:hover {
 html[data-ms-mode="dark"] .ms-dash-preview-shot,
 html[data-ms-mode="dark"] .ms-dash-post .ms-dash-preview-shot,
 html[data-ms-mode="dark"] .ms-dash-preview-iframe {
-  background: #0e1320;
+  background: #111111;
 }
 
 html[data-ms-mode="dark"] .ms-dash-preview-delete {

@@ -1962,7 +1962,7 @@
       }
       theme.content =
         (window.MoonriseAppearance && window.MoonriseAppearance.chromeColor()) ||
-        "#fcfbef";
+        "#ffffff";
     } catch (_) {
       /* ignore */
     }

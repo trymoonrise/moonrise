@@ -17,8 +17,8 @@
   --lf-blue-deep: #232427;
   --lf-blue-soft: var(--ms-accent);
   --lf-ink: #232427;
-  --lf-muted: #55574f;
-  --lf-chrome-grey: #e6e4d4;
+  --lf-muted: #666666;
+  --lf-chrome-grey: #e5e5e5;
   /* Warm cream + ink primary actions */
   --lf-btn-radius: 999px;
   --lf-btn-bg: #232427;
@@ -91,9 +91,9 @@
   min-height: 0;
   border-radius: 18px;
   overflow: hidden;
-  border: 1px solid #e6e4d4;
+  border: 1px solid #e5e5e5;
   background: #0b1220;
-  box-shadow: 0 8px 24px rgba(60, 55, 30, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   contain: layout style;
 }
 
@@ -242,8 +242,8 @@
   background: var(--lf-chrome-grey, #d5dde8);
   border: 0;
   box-shadow:
-    0 8px 22px rgba(60, 55, 30, 0.14),
-    0 1px 4px rgba(60, 55, 30, 0.06);
+    0 8px 22px rgba(0, 0, 0, 0.14),
+    0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .ms-lf-map-pill-tray {
@@ -268,10 +268,10 @@
   width: 2.7rem;
   height: 2.7rem;
   border-radius: 999px;
-  background: #fbfaf1;
+  background: #fafafa;
   color: #232427;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(60, 55, 30, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 
@@ -282,7 +282,7 @@
 
 .ms-lf-map-chip:hover {
   color: var(--lf-blue-deep);
-  background: #fbfaf1;
+  background: #fafafa;
   box-shadow: 0 2px 8px rgba(35, 36, 39, 0.14);
 }
 
@@ -323,8 +323,8 @@
   align-items: center;
   justify-items: center;
   cursor: pointer;
-  background: #fbfaf1;
-  box-shadow: 0 1px 3px rgba(60, 55, 30, 0.08);
+  background: #fafafa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition:
     flex-grow 0.42s cubic-bezier(0.22, 1, 0.36, 1),
     max-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
@@ -337,7 +337,7 @@
 .ms-lf-map-chip--count:hover,
 .ms-lf-map-pill-body:hover {
   color: inherit;
-  box-shadow: 0 1px 3px rgba(60, 55, 30, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .ms-lf-map-chip--count:active,
@@ -363,7 +363,7 @@
 
 .ms-lf-map-locate.is-location-blocked {
   color: #232427;
-  background: #fbfaf1;
+  background: #fafafa;
   box-shadow: inset 0 0 0 1.5px var(--ms-accent);
 }
 
@@ -375,7 +375,7 @@
   place-items: center;
   border: 0;
   border-radius: 999px;
-  background: #fbfaf1;
+  background: #fafafa;
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -444,8 +444,8 @@
   background: var(--lf-chrome-grey, #d5dde8);
   border: 0;
   box-shadow:
-    0 8px 20px rgba(60, 55, 30, 0.1),
-    0 1px 4px rgba(60, 55, 30, 0.05);
+    0 8px 20px rgba(0, 0, 0, 0.1),
+    0 1px 4px rgba(0, 0, 0, 0.05);
   width: max-content;
   max-width: 100%;
   box-sizing: border-box;
@@ -482,16 +482,16 @@
 
 .ms-lf-map-filter-btn.is-active,
 .ms-lf-map-filter-btn[aria-pressed="true"] {
-  background: #fbfaf1;
+  background: #fafafa;
   color: #232427;
-  box-shadow: 0 1px 3px rgba(60, 55, 30, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Sliding filter highlight (segment-switch.js) */
 .ms-lf-map-filters.seg-switch > .seg-switch-indicator {
-  background: #fbfaf1;
+  background: #fafafa;
   border: 0;
-  box-shadow: 0 1px 3px rgba(60, 55, 30, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .ms-lf-map-filters.seg-switch > .ms-lf-map-filter-btn {
@@ -520,9 +520,9 @@
   gap: 0.45rem;
   padding: 0.7rem 0.75rem 0.8rem;
   border-radius: 16px;
-  background: #fbfaf1;
+  background: #fafafa;
   border: 0;
-  box-shadow: 0 12px 32px rgba(60, 55, 30, 0.16);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
   z-index: 2;
   color: #232427;
   overflow: hidden;
@@ -556,7 +556,7 @@
   height: 0.28rem;
   margin: 0.15rem auto 0.35rem;
   border-radius: 999px;
-  background: #e6e4d4;
+  background: #e5e5e5;
 }
 
 .ms-lf-map-panel[hidden] {
@@ -606,11 +606,11 @@
   flex-direction: column;
   flex: 0 0 auto;
   flex-shrink: 0;
-  border: 1px solid #e6e4d4;
+  border: 1px solid #e5e5e5;
   border-radius: 12px;
-  background: #fbfaf1;
+  background: #fafafa;
   overflow: visible;
-  box-shadow: 0 1px 2px rgba(60, 55, 30, 0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   min-width: 0;
   min-height: min-content;
@@ -638,8 +638,8 @@
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 700;
-  color: #fcfbef;
-  -webkit-text-fill-color: #fcfbef;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
   flex-shrink: 0;
 }
 
@@ -876,11 +876,11 @@
 
 .ms-lf-map-card .ms-lf-slide-thumb {
   border-radius: var(--ms-lf-slide-thumb-radius, 10px) !important;
-  background: #fbfaf1 !important;
+  background: #fafafa !important;
   color: #232427 !important;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.95) inset,
-    0 3px 10px rgba(60, 55, 30, 0.2) !important;
+    0 3px 10px rgba(0, 0, 0, 0.2) !important;
   touch-action: pan-y !important;
 }
 
@@ -900,7 +900,7 @@
   align-items: center;
   padding-left: calc(var(--ms-lf-slide-pad) + var(--ms-lf-slide-thumb) + 0.55rem);
   padding-right: 0.9rem;
-  text-shadow: 0 1px 2px rgba(60, 55, 30, 0.16);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
 }
 
 .ms-lf-map-card .ms-lf-slide.is-dragging .ms-lf-slide-label,
@@ -921,7 +921,7 @@
   padding: 1rem;
   border: 1px solid #eef2f7;
   border-radius: 18px;
-  background: #fbfaf1;
+  background: #fafafa;
 }
 
 .ms-lf-map-skel-row {
@@ -933,7 +933,7 @@
 .ms-lf-map-skel-avatar,
 .ms-lf-map-skel-line,
 .ms-lf-map-skel-slide {
-  background: linear-gradient(90deg, #e6e4d4 0%, #f5f4e8 50%, #e6e4d4 100%);
+  background: linear-gradient(90deg, #e5e5e5 0%, #f4f4f5 50%, #e5e5e5 100%);
   background-size: 200% 100%;
   animation: ms-lf-map-shimmer 1.25s ease-in-out infinite;
   border-radius: 10px;
@@ -985,7 +985,7 @@
   height: 2.3rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 1px 4px rgba(60, 55, 30, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 @keyframes ms-lf-map-shimmer {
@@ -1042,10 +1042,10 @@
   width: 100%;
   padding: 0.45rem;
   border-radius: 16px;
-  background: #fbfaf1;
+  background: #fafafa;
   box-shadow:
-    0 12px 28px rgba(60, 55, 30, 0.16),
-    0 2px 6px rgba(60, 55, 30, 0.06);
+    0 12px 28px rgba(0, 0, 0, 0.16),
+    0 2px 6px rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
   pointer-events: auto;
 }
@@ -1060,7 +1060,7 @@
   isolation: isolate;
   overflow: hidden;
   background: var(--lf-btn-bg);
-  color: #fcfbef;
+  color: #ffffff;
   font: inherit;
   font-size: 1.02rem;
   font-weight: 700;
@@ -1132,7 +1132,7 @@
   isolation: isolate;
   overflow: hidden;
   background: var(--lf-btn-bg);
-  color: #fcfbef;
+  color: #ffffff;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 700;
@@ -1162,7 +1162,7 @@
   height: 36px;
   display: grid;
   place-items: center;
-  filter: drop-shadow(0 3px 6px rgba(60, 55, 30, 0.45));
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45));
   transform-origin: 50% 100%;
   transition: transform 0.18s ease;
 }
@@ -1217,7 +1217,7 @@
   border-radius: 8px;
   background: rgba(252, 251, 239, 0.94);
   color: #232427;
-  box-shadow: 0 2px 10px rgba(60, 55, 30, 0.14);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
 }
 
 .ms-lf-map .maplibregl-ctrl-attrib a,
@@ -1253,13 +1253,13 @@
   border: 0;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(60, 55, 30, 0.18);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 
 .leaflet-control-attribution {
   font-size: 9px !important;
-  background: rgba(60, 55, 30, 0.55) !important;
-  color: #d9d8cc !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  color: #d4d4d4 !important;
 }
 
 .leaflet-control-attribution a {
@@ -1268,7 +1268,7 @@
 
 .leaflet-control-zoom {
   border: 0 !important;
-  box-shadow: 0 8px 20px rgba(60, 55, 30, 0.18) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18) !important;
   border-radius: 14px !important;
   overflow: hidden;
 }
@@ -1380,8 +1380,8 @@ body[data-page="leads"] #ms-hard-refresh,
     border-radius: 999px;
     box-sizing: border-box !important;
     box-shadow:
-      0 12px 32px rgba(60, 55, 30, 0.16),
-      0 2px 8px rgba(60, 55, 30, 0.06);
+      0 12px 32px rgba(0, 0, 0, 0.16),
+      0 2px 8px rgba(0, 0, 0, 0.06);
   }
 
   .ms-lf-map-pill-tray {
@@ -1464,8 +1464,8 @@ body[data-page="leads"] #ms-hard-refresh,
     border-radius: 999px;
     background: var(--lf-chrome-grey, #d5dde8);
     box-shadow:
-      0 10px 26px rgba(60, 55, 30, 0.12),
-      0 2px 6px rgba(60, 55, 30, 0.05);
+      0 10px 26px rgba(0, 0, 0, 0.12),
+      0 2px 6px rgba(0, 0, 0, 0.05);
   }
 
   .ms-lf-map-filter-btn {
@@ -1500,7 +1500,7 @@ body[data-page="leads"] #ms-hard-refresh,
     border-radius: var(--lf-radius-sheet) var(--lf-radius-sheet) 0 0;
     border: 0;
     padding: 0 var(--lf-chrome-x) var(--lf-sheet-dock, 7.75rem);
-    box-shadow: 0 -16px 48px rgba(60, 55, 30, 0.22);
+    box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.22);
     overflow: hidden;
     transition:
       transform 0.48s cubic-bezier(0.22, 1, 0.36, 1),
@@ -1536,7 +1536,7 @@ body[data-page="leads"] #ms-hard-refresh,
     height: 0.3rem;
     margin: 0 auto;
     border-radius: 999px;
-    background: #d9d8cc;
+    background: #d4d4d4;
   }
 
   .ms-lf-map-panel.is-sheet-dragging .ms-lf-map-panel-handle {
@@ -1596,8 +1596,8 @@ body[data-page="leads"] #ms-hard-refresh,
     /* Rounded top; results sheet white continues underneath so map never peeks. */
     border-radius: 28px 28px 0 0;
     padding: 0.75rem var(--lf-chrome-x) calc(0.75rem + env(safe-area-inset-bottom, 0px));
-    background: #fbfaf1;
-    box-shadow: 0 -8px 28px rgba(60, 55, 30, 0.12);
+    background: #fafafa;
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.12);
     z-index: 5;
   }
 
@@ -1816,8 +1816,8 @@ body[data-page="leads"] #ms-hard-refresh,
     align-items: stretch;
     border-radius: 32px 32px 0 0;
     padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
-    background: #fbfaf1;
-    box-shadow: 0 -10px 32px rgba(60, 55, 30, 0.12);
+    background: #fafafa;
+    box-shadow: 0 -10px 32px rgba(0, 0, 0, 0.12);
     z-index: 5;
   }
 
@@ -1871,7 +1871,7 @@ body[data-page="leads"] #ms-hard-refresh,
     border-radius: 32px 32px 0 0;
     padding: 0 1rem var(--lf-sheet-dock, var(--lf-actions-clearance));
     gap: 0.35rem;
-    box-shadow: 0 -16px 48px rgba(60, 55, 30, 0.18);
+    box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.18);
     transition:
       transform 0.48s cubic-bezier(0.22, 1, 0.36, 1),
       height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
@@ -1907,7 +1907,7 @@ body[data-page="leads"] #ms-hard-refresh,
     height: 0.3rem;
     margin: 0 auto;
     border-radius: 999px;
-    background: #d9d8cc;
+    background: #d4d4d4;
   }
 
   .ms-lf-map-panel.is-sheet-dragging .ms-lf-map-panel-handle::after {
@@ -1927,8 +1927,8 @@ body[data-page="leads"] #ms-hard-refresh,
 
   .ms-lf-map-card {
     border-radius: 14px;
-    border-color: #e6e4d4;
-    box-shadow: 0 1px 2px rgba(60, 55, 30, 0.04);
+    border-color: #e5e5e5;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
   .ms-lf-map-card-head {
@@ -2088,7 +2088,7 @@ body[data-page="leads"] #ms-hard-refresh,
   inset: 0;
   border: 0;
   padding: 0;
-  background: rgba(60, 55, 30, 0.32);
+  background: rgba(0, 0, 0, 0.32);
   cursor: pointer;
 }
 
@@ -2097,8 +2097,8 @@ body[data-page="leads"] #ms-hard-refresh,
   width: min(22rem, 100%);
   padding: 0.85rem;
   border-radius: 20px;
-  background: #fbfaf1;
-  box-shadow: 0 18px 44px rgba(60, 55, 30, 0.22);
+  background: #fafafa;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
   animation: ms-lf-filter-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -2205,10 +2205,10 @@ body[data-page="leads"] #ms-hard-refresh,
 }
 
 #lf-search-pill[data-mode="search"] {
-  background: #fbfaf1;
+  background: #fafafa;
   box-shadow:
-    0 12px 30px rgba(60, 55, 30, 0.14),
-    0 2px 8px rgba(60, 55, 30, 0.06);
+    0 12px 30px rgba(0, 0, 0, 0.14),
+    0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 #lf-search-pill .ms-lf-map-pill-tray {
@@ -2408,7 +2408,7 @@ body[data-page="leads"] #ms-hard-refresh,
 .ms-lf-map-card {
   border: 1px solid rgb(0 0 0 / 8%) !important;
   border-radius: 1.15rem !important;
-  background: #fbfaf1 !important;
+  background: #fafafa !important;
   box-shadow: none !important;
   color: #1d1d1f;
 }
@@ -2419,7 +2419,7 @@ body[data-page="leads"] #ms-hard-refresh,
 }
 
 .ms-lf-map-card .ms-lf-pro-avatar {
-  background: #f5f4e8 !important;
+  background: #f4f4f5 !important;
   color: #1d1d1f !important;
   -webkit-text-fill-color: #1d1d1f !important;
   box-shadow: none !important;
@@ -2498,14 +2498,14 @@ body[data-page="leads"] #ms-hard-refresh,
 
 .ms-lf-map-card .ms-lf-slide-thumb {
   border-radius: 980px !important;
-  background: #fbfaf1 !important;
+  background: #fafafa !important;
   color: #1d1d1f !important;
   box-shadow: 0 0 0 1px rgb(0 0 0 / 8%) !important;
 }
 
 .ms-lf-map-card .ms-lf-slide-label {
-  color: #f5f4e8 !important;
-  -webkit-text-fill-color: #f5f4e8 !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
   font-weight: 500 !important;
   text-shadow: none !important;
 }
@@ -2513,17 +2513,17 @@ body[data-page="leads"] #ms-hard-refresh,
 html[data-ms-mode="dark"] .ms-lf-map-card {
   background: #1c1c1e !important;
   border-color: rgb(255 255 255 / 10%) !important;
-  color: #f5f4e8;
+  color: #f4f4f5;
 }
 
 html[data-ms-mode="dark"] .ms-lf-map-card.is-selected {
-  border-color: #f5f4e8 !important;
+  border-color: #f4f4f5 !important;
 }
 
 html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-pro-avatar {
   background: #2c2c2e !important;
-  color: #f5f4e8 !important;
-  -webkit-text-fill-color: #f5f4e8 !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
 }
 
 html[data-ms-mode="dark"] .ms-lf-map-card-titles h3,
@@ -2532,8 +2532,8 @@ html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-main,
 html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-main.is-link,
 html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row.is-link .ms-lf-pro-row-text,
 html[data-ms-mode="dark"] .ms-lf-map-card-details .ms-lf-pro-row-aside.is-open {
-  color: #f5f4e8 !important;
-  -webkit-text-fill-color: #f5f4e8 !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
 }
 
 html[data-ms-mode="dark"] .ms-lf-map-card-titles p,
@@ -2555,12 +2555,12 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-fill {
 }
 
 html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-label {
-  color: #f5f4e8 !important;
-  -webkit-text-fill-color: #f5f4e8 !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
 }
 
 html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
-  background: #f5f4e8 !important;
+  background: #f4f4f5 !important;
   color: #1d1d1f !important;
   box-shadow: none !important;
 }
@@ -2618,7 +2618,7 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
     --lf-chip: 2.55rem;
     --lf-tray-gap: 0.2rem;
     --lf-action-h: 3.05rem;
-    --lf-chrome-grey: #f5f4e8;
+    --lf-chrome-grey: #f4f4f5;
   }
 
   .ms-lf-map-top {
@@ -2632,11 +2632,11 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
     padding: 0.28rem 0.34rem !important;
     border-radius: 999px !important;
     background: rgba(252, 251, 239, 0.92) !important;
-    border: 1px solid #e6e4d4 !important;
+    border: 1px solid #e5e5e5 !important;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     box-shadow:
-      0 8px 24px rgba(60, 55, 30, 0.1),
+      0 8px 24px rgba(0, 0, 0, 0.1),
       0 1px 0 rgba(255, 255, 255, 0.55) inset !important;
   }
 
@@ -2694,14 +2694,14 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
 
   .ms-lf-map-filters {
     background: rgba(252, 251, 239, 0.94) !important;
-    border: 1px solid #e6e4d4 !important;
-    box-shadow: 0 6px 18px rgba(60, 55, 30, 0.08) !important;
+    border: 1px solid #e5e5e5 !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08) !important;
     padding: 0.2rem !important;
     gap: 0.15rem !important;
   }
 
   .ms-lf-map-filter-btn {
-    color: #55574f !important;
+    color: #666666 !important;
     border-radius: 999px !important;
   }
 
@@ -2715,7 +2715,7 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
     background: rgba(252, 251, 239, 0.96) !important;
     border-radius: 24px 24px 0 0 !important;
     padding: 0.7rem 0.85rem calc(0.7rem + env(safe-area-inset-bottom, 0px)) !important;
-    box-shadow: 0 -10px 28px rgba(60, 55, 30, 0.1) !important;
+    box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.1) !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
@@ -2741,8 +2741,8 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
   .ms-lf-map-actions .ms-lf-map-scan {
     flex: 1 1 auto !important;
     background: #232427 !important;
-    color: #fcfbef !important;
-    -webkit-text-fill-color: #fcfbef !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
     border: 0 !important;
     padding: 0 1.15rem !important;
   }
@@ -2760,9 +2760,9 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
   .ms-lf-map .maplibregl-ctrl-group,
   .leaflet-control-zoom {
     background: rgba(252, 251, 239, 0.94) !important;
-    border: 1px solid #e6e4d4 !important;
+    border: 1px solid #e5e5e5 !important;
     border-radius: 16px !important;
-    box-shadow: 0 6px 18px rgba(60, 55, 30, 0.1) !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1) !important;
     overflow: hidden;
   }
 
@@ -2770,7 +2770,7 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
   .leaflet-control-zoom a {
     background: transparent !important;
     color: #232427 !important;
-    border-color: #e6e4d4 !important;
+    border-color: #e5e5e5 !important;
     width: 2.35rem !important;
     height: 2.35rem !important;
   }

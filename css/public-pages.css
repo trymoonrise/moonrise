@@ -27,21 +27,21 @@ html:has(body[data-page="pricing"]) {
   body[data-page="legal"],
   body[data-page="download"]
 ) {
-  --ms-bg: #fcfbef;
-  --ms-surface: #fbfaf1;
-  --ms-surface-alt: #f5f4e8;
+  --ms-bg: #ffffff;
+  --ms-surface: #fafafa;
+  --ms-surface-alt: #f4f4f5;
   --ms-ink: #232427;
-  --ms-muted: #55574f;
-  --ms-line: #e6e4d4;
+  --ms-muted: #666666;
+  --ms-line: #e5e5e5;
   --ms-link: #232427;
   --ms-accent: #232427;
   --ms-accent-bright: #232427;
   --ms-accent-strong: #000000;
-  --ms-accent-soft: #f5f4e8;
+  --ms-accent-soft: #f4f4f5;
   --ms-accent-rgb: 35, 36, 39;
-  --ms-select: #ddddd3;
-  --ms-select-soft: #f5f4e8;
-  background: #fcfbef !important;
+  --ms-select: #e0e0e0;
+  --ms-select-soft: #f4f4f5;
+  background: #ffffff !important;
   color: #232427 !important;
   min-height: 100dvh;
   -webkit-text-size-adjust: 100%;
@@ -50,7 +50,7 @@ html:has(body[data-page="pricing"]) {
 
 /* Kill leftover gradient washes / dark chrome */
 body.ms-legal-site {
-  background: #fcfbef !important;
+  background: #ffffff !important;
   padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
 }
 
@@ -64,7 +64,7 @@ body[data-page="orders"] .ms-orders-field {
 .ms-legal-top,
 .ms-orders-nav {
   background: rgba(252, 251, 239, 0.94) !important;
-  border-bottom: 1px solid #e6e4d4 !important;
+  border-bottom: 1px solid #e5e5e5 !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: none !important;
@@ -97,7 +97,7 @@ body[data-page="orders"] .ms-orders-field {
 
 .ms-legal-nav a,
 .ms-orders-nav-link {
-  color: #55574f !important;
+  color: #666666 !important;
   background: transparent !important;
   box-shadow: none !important;
   font-size: 0.92rem !important;
@@ -109,13 +109,13 @@ body[data-page="orders"] .ms-orders-field {
 .ms-legal-nav a:hover,
 .ms-orders-nav-link:hover {
   color: #232427 !important;
-  background: #f5f4e8 !important;
+  background: #f4f4f5 !important;
 }
 
 .ms-legal-nav a.is-active {
   color: #232427 !important;
   background: var(--ms-accent) !important;
-  box-shadow: 0 2px 8px rgba(60, 80, 110, 0.12) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
 }
 
 /* —— Page width / padding —— */
@@ -156,9 +156,9 @@ body[data-page="help"] #page-body {
 .ms-download-lead,
 .ms-page-head p,
 .ms-muted {
-  color: #55574f !important;
+  color: #666666 !important;
   opacity: 1 !important;
-  -webkit-text-fill-color: #55574f !important;
+  -webkit-text-fill-color: #666666 !important;
   font-weight: 500;
   line-height: 1.5;
 }
@@ -174,9 +174,9 @@ body[data-page="help"] #page-body {
   gap: 0.85rem 1.25rem;
   margin: 0.85rem 0 1.5rem !important;
   padding: 0.55rem 0 0.75rem !important;
-  background: #fcfbef !important;
+  background: #ffffff !important;
   border: 0 !important;
-  border-bottom: 1px solid #e6e4d4 !important;
+  border-bottom: 1px solid #e5e5e5 !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
@@ -187,7 +187,7 @@ body[data-page="help"] #page-body {
 }
 
 .ms-legal-toc a {
-  color: #55574f !important;
+  color: #666666 !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -217,8 +217,8 @@ body.ms-legal-site .ms-card,
 body.ms-contact-public .ms-card,
 body.ms-download-page .ms-download-card,
 body[data-page="orders"] .ms-orders-card {
-  background: #fbfaf1 !important;
-  border: 1px solid #e6e4d4 !important;
+  background: #fafafa !important;
+  border: 1px solid #e5e5e5 !important;
   border-radius: 20px !important;
   box-shadow: none !important;
   color: #232427 !important;
@@ -253,8 +253,8 @@ body[data-page="orders"] .ms-orders-card {
 }
 
 .ms-legal-updated {
-  color: #55574f !important;
-  -webkit-text-fill-color: #55574f !important;
+  color: #666666 !important;
+  -webkit-text-fill-color: #666666 !important;
   font-size: 0.92rem !important;
 }
 
@@ -281,13 +281,13 @@ body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-bt
   align-items: center;
   gap: 0.35rem 1.1rem;
   background: rgba(252, 251, 239, 0.96) !important;
-  border-top: 1px solid #e6e4d4 !important;
+  border-top: 1px solid #e5e5e5 !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
 .ms-legal-foot a {
-  color: #55574f !important;
+  color: #666666 !important;
   text-decoration: none !important;
   font-weight: 650 !important;
 }
@@ -309,10 +309,10 @@ body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-bt
 .ms-download-card,
 .ms-orders-card,
 .ms-auth-card {
-  background: #fbfaf1 !important;
-  border: 1px solid #e6e4d4 !important;
+  background: #fafafa !important;
+  border: 1px solid #e5e5e5 !important;
   border-radius: 28px !important;
-  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
   color: #232427 !important;
 }
 
@@ -417,7 +417,7 @@ body[data-page="login"] ::placeholder {
     body[data-page="download"],
     body[data-page="home"]
   ) {
-    background: #fcfbef !important;
+    background: #ffffff !important;
     color: #232427 !important;
   }
 
@@ -425,8 +425,8 @@ body[data-page="login"] ::placeholder {
   .ms-legal-top,
   .ms-legal-foot,
   .ms-orders-nav {
-    background: #fcfbef !important;
-    border-color: #e6e4d4 !important;
+    background: #ffffff !important;
+    border-color: #e5e5e5 !important;
   }
 
   .ms-legal-toc a,
@@ -439,6 +439,6 @@ body[data-page="login"] ::placeholder {
   .ms-legal-intro,
   .ms-legal-doc .ms-card p,
   .ms-legal-doc .ms-card li {
-    color: #55574f !important;
+    color: #666666 !important;
   }
 }

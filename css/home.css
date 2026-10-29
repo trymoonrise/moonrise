@@ -1,4 +1,4 @@
-/* Soft cream + ink home. Do not load studio-ui.css here. */
+/* Black / white home. Do not load studio-ui.css here. */
 
 html:has(body[data-page="home"]) {
   overscroll-behavior-y: none;
@@ -6,11 +6,11 @@ html:has(body[data-page="home"]) {
 }
 
 body[data-page="home"] {
-  --ms-muted: #6a6b63;
-  --ms-soft-line: #ebe9dc;
-  --ms-soft-surface: #fbfaf1;
-  --ms-soft-lift: #f5f4e8;
-  background: #fcfbef;
+  --ms-muted: #666666;
+  --ms-soft-line: #e8e8e8;
+  --ms-soft-surface: #fafafa;
+  --ms-soft-lift: #f4f4f5;
+  background: #ffffff;
   color: #232427;
   overflow-x: clip;
   overscroll-behavior-y: none;
@@ -25,7 +25,7 @@ body[data-page="home"] .ms-skip {
   padding: 0.55rem 0.9rem;
   border-radius: 999px;
   background: #232427;
-  color: #fcfbef;
+  color: #ffffff;
   font-weight: 700;
   font-size: 0.9rem;
   text-decoration: none;
@@ -66,7 +66,7 @@ body[data-page="home"] .ms-home-desk-nav {
 
 body[data-page="home"] .ms-home-brand img {
   border-radius: 14px;
-  box-shadow: 0 0 0 1px rgba(60, 55, 30, 0.05), 0 6px 16px rgba(60, 55, 30, 0.06);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 body[data-page="home"] .ms-home-brand strong {
@@ -94,8 +94,8 @@ body[data-page="home"] .ms-home-orb i {
 
 body[data-page="home"].ms-home-menu-open .ms-home-brand,
 body[data-page="home"].ms-home-menu-open .ms-home-brand strong {
-  color: #fcfbef;
-  -webkit-text-fill-color: #fcfbef;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
 }
 
 /* First viewport: one soft stage — no double min-height (prevents tiny upward scroll). */
@@ -136,7 +136,7 @@ body[data-page="home"] .ms-home-hero-copy {
   background: color-mix(in srgb, var(--ms-soft-surface) 92%, #fff);
   box-shadow:
     inset 0 0 0 1px var(--ms-soft-line),
-    0 18px 40px rgba(60, 55, 30, 0.05);
+    0 18px 40px rgba(0, 0, 0, 0.05);
 }
 
 body[data-page="home"] .ms-home-title {
@@ -200,8 +200,8 @@ body[data-page="home"] .ms-home-cta-secondary {
 
 body[data-page="home"] .ms-home-cta-primary {
   background: #232427;
-  color: #fcfbef;
-  -webkit-text-fill-color: #fcfbef;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
   border: 0;
   box-shadow: 0 10px 24px rgba(35, 36, 39, 0.14);
 }
@@ -290,7 +290,7 @@ body[data-page="home"] .ms-home-method-cta {
   padding: 0 1.25rem;
   border-radius: 999px;
   background: #232427;
-  color: #fcfbef;
+  color: #ffffff;
   text-decoration: none;
   font-weight: 700;
   font-size: 1.02rem;
@@ -394,7 +394,7 @@ body[data-page="home"] .ms-home-footer-signin {
 
 body[data-page="home"] .ms-home-footer-signup {
   background: #232427;
-  color: #fcfbef;
+  color: #ffffff;
   border: 0;
 }
 
@@ -410,7 +410,7 @@ body[data-page="home"] .ms-home-bloom {
 }
 
 body[data-page="home"] .ms-home-bloom-nav a {
-  color: #fcfbef;
+  color: #ffffff;
 }
 
 body[data-page="home"] .ms-home-bloom-nav a:hover {
@@ -419,8 +419,8 @@ body[data-page="home"] .ms-home-bloom-nav a:hover {
 
 body.ms-home-menu-open .ms-home-brand,
 body.ms-home-menu-open .ms-home-brand strong {
-  color: #fcfbef;
-  -webkit-text-fill-color: #fcfbef;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
   background: transparent;
 }
 
@@ -430,7 +430,7 @@ body.ms-home-menu-open .ms-home-orb {
 }
 
 body.ms-home-menu-open .ms-home-orb.is-open i {
-  background: #fcfbef;
+  background: #ffffff;
 }
 
 @media (max-width: 720px) {

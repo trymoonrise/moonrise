@@ -3,6 +3,29 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.3.9",
+      "date": "2026-10-28",
+      "title": "Strict black and white default theme",
+      "tag": "v2.3.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.3.9",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Default site colors are strict black, white, and grey instead of cream."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio surfaces default to black and white greys; Settings Appearance still changes theme color."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.3.8",
       "date": "2026-10-28",
       "title": "Faster page boot across the site",

@@ -3,7 +3,7 @@
 body.ms-download-page {
   min-height: 100vh;
   margin: 0;
-  background: #fbfaf1;
+  background: #fafafa;
   color: #1d1d1f;
 }
 
@@ -36,7 +36,7 @@ body.ms-download-page {
   width: min(100%, 28rem);
   padding: 1.35rem 1.25rem 1.4rem;
   border-radius: 20px;
-  background: #fbfaf1;
+  background: #fafafa;
   border: 1px solid #e8e8ed;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
 }
@@ -53,8 +53,8 @@ body.ms-download-page {
   height: 56px;
   border-radius: 14px;
   object-fit: cover;
-  border: 1px solid rgba(60, 55, 30, 0.08);
-  box-shadow: 0 4px 12px rgba(60, 55, 30, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .ms-download-brand strong {
@@ -105,15 +105,15 @@ body.ms-download-page {
 }
 
 body.ms-download-page .ms-settings-install-preview {
-  background: #f5f4e8;
+  background: #f4f4f5;
   border-color: #e8e8ed;
 }
 
 body.ms-download-page .ms-download-install-btn,
 body.ms-download-page .ms-download-actions .ms-btn:not(.ms-btn-secondary) {
   background: #232427 !important;
-  color: #fcfbef !important;
-  -webkit-text-fill-color: #fcfbef !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
   border-color: transparent !important;
   box-shadow: none !important;
 }
