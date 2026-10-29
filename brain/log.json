@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.2.2",
+      "date": "2026-10-28",
+      "title": "Full cream controls across Studio",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Buttons, inputs, search shells, and segmented controls share one warm cream and ink look across Studio pages."
+          ],
+          "fixes": [
+            "Finder map chrome, download CTAs, and onboarding headers no longer paint blue gradients or pure white fills over cream."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.1",
       "date": "2026-10-28",
       "title": "Dashboard recent posts toggle",

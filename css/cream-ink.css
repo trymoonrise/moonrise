@@ -121,18 +121,25 @@ html:not([data-ms-mode="dark"]) :where(
 /* —— Primary / secondary buttons —— */
 html:not([data-ms-mode="dark"]) :where(
   .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost):not(.ms-btn-ghost-danger),
-  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost),
   .ms-home-cta-primary,
   .ms-home-footer-signup,
   .ms-home-method-cta,
   .ms-lf-find,
+  .ms-lf-map-scan,
+  .ms-lf-map-all,
   .ms-lb-publish-btn,
+  .ms-lb-publish-btn.is-live,
+  .ms-lb-publish-btn.needs-update,
+  .ms-lb-publish-btn.is-loading,
+  .ms-lb-edit-btn.is-primary,
   .ms-paywall-pay,
   .ms-fin-save,
   .ms-fin-next,
   .ms-store-buy:not(.is-ghost),
   .lf-action-builder,
-  .ms-lf-map-scan,
+  .ms-help-vcard-save,
+  .ms-onboard-next,
   #btn-checkout,
   .ms-download-install-btn,
   body[data-page="download"] .ms-download-actions .ms-btn:not(.ms-btn-secondary)
@@ -144,13 +151,21 @@ html:not([data-ms-mode="dark"]) :where(
   border-radius: var(--ms-radius-pill) !important;
   box-shadow: none !important;
   font-weight: 700 !important;
+  filter: none !important;
+  background-image: none !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(
   .ms-btn-secondary,
+  .ms-btn-ghost,
   .ms-home-cta-secondary,
   .ms-dash-tool,
+  .ms-dash-filter-btn,
   .ms-store-buy.is-ghost,
+  .ms-lb-redesign-btn,
+  .ms-lb-unpublish-btn,
+  .ms-lb-dev-unlock-btn,
+  .ms-lb-icon-btn,
   body[data-page="download"] .ms-download-actions .ms-btn-secondary
 ) {
   background: transparent !important;
@@ -159,6 +174,20 @@ html:not([data-ms-mode="dark"]) :where(
   border: 1.5px solid var(--ms-ink) !important;
   border-radius: var(--ms-radius-pill) !important;
   box-shadow: none !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-lb-delete-btn,
+  .ms-btn-ghost-danger
+) {
+  background: transparent !important;
+  color: var(--ms-danger) !important;
+  -webkit-text-fill-color: var(--ms-danger) !important;
+  border: 1.5px solid var(--ms-danger) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  background-image: none !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-btn-danger {
@@ -175,7 +204,12 @@ html:not([data-ms-mode="dark"]) :where(
   input.ms-input,
   .ms-auth-card input.ms-input,
   select.ms-select,
-  textarea.ms-textarea
+  textarea.ms-textarea,
+  .ms-lf-input,
+  .ms-phone-input,
+  .ms-onboard-page .ms-input,
+  .ms-onboard-page .ms-phone-input,
+  .ms-bs-gh-select-trigger
 ) {
   background: transparent !important;
   color: var(--ms-ink) !important;
@@ -184,6 +218,7 @@ html:not([data-ms-mode="dark"]) :where(
   border: 1.5px solid var(--ms-ink) !important;
   border-radius: 16px !important;
   box-shadow: none !important;
+  background-image: none !important;
 }
 
 html:not([data-ms-mode="dark"]) textarea.ms-textarea {
@@ -195,7 +230,9 @@ html:not([data-ms-mode="dark"]) :where(
   input.ms-input:focus,
   .ms-auth-card input.ms-input:focus,
   select.ms-select:focus,
-  textarea.ms-textarea:focus
+  textarea.ms-textarea:focus,
+  .ms-lf-input:focus,
+  .ms-bs-gh-select-trigger:focus
 ) {
   border-color: var(--ms-ink) !important;
   border-width: 2px !important;
@@ -205,10 +242,32 @@ html:not([data-ms-mode="dark"]) :where(
 
 html:not([data-ms-mode="dark"]) :where(
   input.ms-input::placeholder,
-  textarea.ms-textarea::placeholder
+  textarea.ms-textarea::placeholder,
+  .ms-lf-input::placeholder
 ) {
-  color: var(--ms-muted) !important;
+  color: #6a6a62 !important;
   opacity: 1;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input,
+  .ms-lf-input,
+  #lf-query
+):-webkit-autofill,
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input,
+  .ms-lf-input,
+  #lf-query
+):-webkit-autofill:hover,
+html:not([data-ms-mode="dark"]) :where(
+  input.ms-input,
+  .ms-lf-input,
+  #lf-query
+):-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ms-ink) !important;
+  caret-color: var(--ms-ink);
+  box-shadow: 0 0 0 1000px var(--ms-bg) inset !important;
+  transition: background-color 99999s ease-out;
 }
 
 /* Underline-style single fields (auth email feel) */
@@ -357,22 +416,39 @@ html:not([data-ms-mode="dark"]) .ms-menu-toggle {
 }
 
 /* —— Tabs / segmented —— */
-html:not([data-ms-mode="dark"]) :where(.ms-tabs, .ms-segmented, .ms-auth-tabs) {
+html:not([data-ms-mode="dark"]) :where(
+  .ms-tabs,
+  .ms-segmented,
+  .ms-auth-tabs,
+  .ms-lb-mode,
+  .ms-lb-viewports,
+  .ms-lb-widget-mode,
+  .ms-bs-mode-tabs
+) {
   background: var(--ms-segment) !important;
   border-radius: 16px !important;
   padding: 4px !important;
   border: 0 !important;
   box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(
   .ms-tab.is-active,
   .ms-segmented .is-active,
   .ms-auth-tab.is-active,
-  .ms-tabs .is-active
+  .ms-tabs .is-active,
+  .ms-lb-mode-btn.is-active,
+  .ms-lb-viewport-btn.is-active,
+  .ms-lb-widget-mode-btn.is-active,
+  .ms-bs-mode-tab.is-active,
+  .ms-bs-gh-provider-btn.is-active,
+  .seg-switch[data-seg-tone="primary"] > .seg-switch-indicator
 ) {
   background: var(--ms-select) !important;
   color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
   border-radius: 12px !important;
   box-shadow: var(--ms-shadow-segment) !important;
   border: 0 !important;
@@ -380,10 +456,16 @@ html:not([data-ms-mode="dark"]) :where(
 
 html:not([data-ms-mode="dark"]) :where(
   .ms-tab:not(.is-active),
-  .ms-auth-tab:not(.is-active)
+  .ms-auth-tab:not(.is-active),
+  .ms-lb-mode-btn:not(.is-active),
+  .ms-lb-viewport-btn:not(.is-active),
+  .ms-lb-widget-mode-btn:not(.is-active),
+  .ms-bs-mode-tab:not(.is-active),
+  .ms-bs-gh-provider-btn:not(.is-active)
 ) {
   color: #55574f !important;
   background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Profile-style top tabs underline */
@@ -411,13 +493,44 @@ html:not([data-ms-mode="dark"]) :where(
   .ms-search,
   input.ms-search,
   .ms-lf-search,
-  .ms-lf-query
+  #lf-query,
+  .ms-dash-projects-search-field,
+  .ms-clients-search-field,
+  .ms-orders-search,
+  .ms-orders-search input,
+  .ms-lf-map-search-field,
+  .ms-lf-map-search-field input
 ) {
   border: 1.5px solid var(--ms-ink) !important;
   border-radius: var(--ms-radius-pill) !important;
   background: transparent !important;
   color: var(--ms-ink) !important;
   box-shadow: none !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-projects-search-field input,
+  .ms-clients-search-field input,
+  .ms-lf-map-search-field input,
+  #lf-query
+) {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-projects-search-field input::placeholder,
+  .ms-clients-search-field input::placeholder,
+  .ms-orders-search input::placeholder,
+  .ms-lf-map-search-field input::placeholder,
+  #lf-query::placeholder
+) {
+  color: #6a6a62 !important;
+  opacity: 1 !important;
 }
 
 /* —— Banners / tips —— */
@@ -625,4 +738,85 @@ html:not([data-ms-mode="dark"]) :where(.ms-skeleton, .ms-placeholder-block) {
   html:not([data-ms-mode="dark"]) :where(.ms-btn, .ms-home-cta-primary, .ms-home-cta-secondary):hover {
     transform: none;
   }
+}
+
+/* —— Finder / map chrome (overrides late leads-map.css) —— */
+html:not([data-ms-mode="dark"]) #page-body.ms-lf-page.ms-lf-page--map {
+  --lf-btn-bg: #232427 !important;
+  --lf-btn-shadow: none !important;
+  --lf-btn-shadow-hover: none !important;
+  --lf-chrome-grey: #e6e4d4 !important;
+  --lf-muted: #55574f !important;
+  --lf-btn-radius: 999px !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-lf-map-pill,
+  .ms-lf-map-chip,
+  .ms-lf-map-pill-body,
+  .ms-lf-map-chip--count,
+  .ms-lf-map-pill-icon,
+  .ms-lf-map-search-field
+) {
+  background: var(--ms-surface) !important;
+  border: 1.5px solid var(--ms-ink) !important;
+  box-shadow: none !important;
+  color: var(--ms-ink) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-map-search-field {
+  border-radius: var(--ms-radius-pill) !important;
+}
+
+html:not([data-ms-mode="dark"]) :where(
+  .ms-lf-map-scan,
+  .ms-lf-map-all,
+  .ms-lf-find
+):is(:hover, :focus, :focus-visible, :active) {
+  box-shadow: none !important;
+  filter: none !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb,
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:hover,
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:focus {
+  background: var(--ms-surface) !important;
+  color: var(--ms-ink) !important;
+  box-shadow: var(--ms-shadow-card) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-slide-thumb:focus-visible {
+  outline: 2px solid var(--ms-ink) !important;
+  outline-offset: 2px !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lf-slide-track,
+html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-track {
+  background: var(--ms-track-off) !important;
+  background-image: none !important;
+}
+
+/* —— Flat cream surfaces (no cool washes) —— */
+html:not([data-ms-mode="dark"]) :where(
+  .ms-dash-island-panel,
+  .ms-clients-toolbar,
+  .ms-orders-wash,
+  .ms-orders-field,
+  .ms-onboard-card-head
+) {
+  background: var(--ms-surface) !important;
+  background-image: none !important;
+  border-color: var(--ms-line) !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-onboard-progress-fill {
+  background: var(--ms-ink) !important;
+  background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-appearance-sizes button.is-selected,
+html:not([data-ms-mode="dark"]) .ms-appearance-swatch.is-selected {
+  border-color: var(--ms-ink) !important;
+  box-shadow: 0 0 0 2px var(--ms-select) !important;
 }

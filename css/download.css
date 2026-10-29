@@ -111,9 +111,9 @@ body.ms-download-page .ms-settings-install-preview {
 
 body.ms-download-page .ms-download-install-btn,
 body.ms-download-page .ms-download-actions .ms-btn:not(.ms-btn-secondary) {
-  background: #1d1d1f !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
+  background: #232427 !important;
+  color: #fcfbef !important;
+  -webkit-text-fill-color: #fcfbef !important;
   border-color: transparent !important;
   box-shadow: none !important;
 }

@@ -92,8 +92,8 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 .ms-onboard-card-head {
   flex: 0 0 auto;
   padding: 0.85rem 1rem 0.75rem;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
-  background: linear-gradient(180deg, #fff 0%, #fafbfc 100%);
+  border-bottom: 1px solid #e6e4d4;
+  background: #fbfaf1;
 }
 
 .ms-onboard-card-head-row {
@@ -188,7 +188,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   height: 100%;
   width: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #232427 0%, #4f46e5 100%);
+  background: #232427;
   transform: scaleX(var(--onb-progress, 0));
   transform-origin: left center;
   transition: transform 0.64s var(--onb-ease-soft);
@@ -965,7 +965,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   padding: 0.55rem 0.85rem;
   border: 1px solid #e6e4d4;
   border-radius: 12px;
-  background: linear-gradient(180deg, #fff 0%, #f5f4e8 100%);
+  background: #fbfaf1;
   color: #232427;
   font: inherit;
   font-size: 0.92rem;
