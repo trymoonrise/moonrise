@@ -153,7 +153,7 @@ setTimeout(function () {
           <span class="ms-check-box" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </span>
-          <span>I confirm I am 13 or older</span>
+          <span>I confirm I am an adult</span>
         </label>
       </div>
       <div class="ms-auth-autosave" id="autosave-wrap">
@@ -193,7 +193,7 @@ setTimeout(function () {
   <script defer src="js/handles.js"></script>
   <script defer src="js/auth-security.js?v=20261003-session"></script>
   <script defer src="js/supabase-client.js?v=20261006-verify-signin"></script>
-  <script defer src="js/auth.js?v=20261006-one-device"></script>
+  <script defer src="js/auth.js?v=20261028-adult"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();
@@ -600,7 +600,7 @@ setTimeout(function () {
           }
           const ageOk = document.getElementById("age-confirm")?.checked;
           if (!ageOk) {
-            showAuthError("Confirm you are 13 or older to create an account.");
+            showAuthError("Confirm you are an adult to create an account.");
             document.getElementById("age-confirm")?.focus();
             return;
           }

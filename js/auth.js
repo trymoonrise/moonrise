@@ -468,7 +468,7 @@
     const ageConfirmed = !!(opts && (opts.ageConfirmed === true || opts.age_confirmed === true));
     if (!ageConfirmed) {
       throw authError({
-        error: "Confirm you are 13 or older to create an account.",
+        error: "Confirm you are an adult to create an account.",
         code: "age_required",
       });
     }

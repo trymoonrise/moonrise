@@ -260,9 +260,11 @@ function mountAuthRoutes(app, { db, security }) {
 
   const limit = (opts) => createDistributedRateLimiter(db, opts);
 
+  // Shared IP budget for real auth actions only. Do not put /auth/pending or
+  // /auth/status here — email handoff polls every ~2s and would burn this out.
   const authIpLimiter = limit({
     windowMs: 15 * 60 * 1000,
-    max: 30,
+    max: 60,
     name: "auth",
     keyFn: (req) => "auth-ip:" + clientIp(req),
   });
@@ -354,7 +356,7 @@ function mountAuthRoutes(app, { db, security }) {
     }
   }
 
-  app.get("/auth/status", authIpLimiter, async (req, res) => {
+  app.get("/auth/status", async (req, res) => {
     if (!authConfigured(res)) return;
     try {
       const ip = clientIp(req);
@@ -624,7 +626,7 @@ function mountAuthRoutes(app, { db, security }) {
       }
       if (!ageConfirmed) {
         return res.status(400).json({
-          error: "Confirm you are 13 or older to create an account.",
+          error: "Confirm you are an adult to create an account.",
           code: "age_required",
         });
       }
@@ -921,7 +923,7 @@ function mountAuthRoutes(app, { db, security }) {
     }
   });
 
-  app.post("/auth/pending", authIpLimiter, pendingLimiter, async (req, res) => {
+  app.post("/auth/pending", pendingLimiter, async (req, res) => {
     if (!authConfigured(res)) return;
     try {
       const pendingId = String(req.body?.pendingId || "").trim();

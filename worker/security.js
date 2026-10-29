@@ -118,11 +118,12 @@ function createRateLimiter({ windowMs, max, keyFn, name, shouldCount }) {
       const retryAfterSec = Math.ceil((windowMs - (now - bucket.start)) / 1000);
       res.setHeader("X-RateLimit-Reset", String(retryAfterSec));
       if (counts && bucket.count > max) {
-        res.setHeader("Retry-After", String(Math.max(1, retryAfterSec)));
+        const waitSec = Math.max(1, retryAfterSec);
+        res.setHeader("Retry-After", String(waitSec));
         return res.status(429).json({
-          error: `Too many requests (${label}). Try again in ${Math.max(1, retryAfterSec)}s.`,
+          error: `Too many requests. Try again in ${formatCooldown(waitSec * 1000)}.`,
           code: "rate_limited",
-          retryAfterSec: Math.max(1, retryAfterSec),
+          retryAfterSec: waitSec,
         });
       }
       next();
@@ -140,7 +141,7 @@ function sendRateLimited(res, { label, max, remaining, retryAfterMs }) {
   res.setHeader("X-RateLimit-Reset", String(retryAfterSec));
   res.setHeader("Retry-After", String(retryAfterSec));
   return res.status(429).json({
-    error: `Too many requests (${label}). Try again in ${retryAfterSec}s.`,
+    error: `Too many requests. Try again in ${formatCooldown(retryAfterMs)}.`,
     code: "rate_limited",
     retryAfterSec,
   });

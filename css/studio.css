@@ -14287,24 +14287,25 @@ body.is-home-ready .ms-home-shell {
 
 .ms-home-bloom-nav {
   width: max-content;
-  max-width: min(22rem, 100%);
+  max-width: min(40rem, calc(100vw - 3rem));
   margin: 0;
   text-align: center;
   display: grid;
   justify-items: center;
-  gap: clamp(1rem, 2.5vh, 1.75rem);
+  gap: clamp(0.4rem, 1.2svh, 0.85rem);
 }
 
 .ms-home-bloom-nav a {
   display: inline-block;
   justify-self: center;
   font-family: var(--ms-font);
-  font-size: clamp(2rem, 7vw, 4.25rem);
+  font-size: clamp(1.45rem, min(5vw, 6svh), 2.65rem);
   font-weight: 700;
   letter-spacing: -0.045em;
   color: #fff;
   text-decoration: none;
-  line-height: 1.15;
+  line-height: 1.12;
+  white-space: nowrap;
   opacity: 0;
   transform: scale(0.94);
   position: relative;
@@ -15574,14 +15575,15 @@ body.is-home-ready .ms-home-hero-copy {
 
   .ms-home-bloom-nav {
     width: max-content;
-    max-width: min(22rem, 100%);
-    gap: 1.25rem;
+    max-width: min(22rem, calc(100vw - 2.5rem));
+    gap: clamp(0.45rem, 1.4svh, 0.85rem);
   }
 
   .ms-home-bloom-nav a {
-    font-size: clamp(1.55rem, 8.5vw, 2.65rem);
+    font-size: clamp(1.4rem, min(7.2vw, 5.8svh), 2.15rem);
     max-width: 100%;
-    line-height: 1.2;
+    line-height: 1.12;
+    white-space: nowrap;
   }
 }
 

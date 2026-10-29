@@ -3,6 +3,30 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.0.8",
+      "date": "2026-10-28",
+      "title": "Adult signup gate and auth rate-limit fix",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Signup asks you to confirm you are an adult instead of 13 or older.",
+            "Privacy and Terms say Moonrise is for adults (18+ / age of majority)."
+          ],
+          "fixes": [
+            "Pages menu keeps a tighter type size and spacing on larger screens so every link fits on one view."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [],
+          "fixes": [
+            "Email sign-in polling no longer burns the shared auth IP rate limit, which was locking people out with long Too many requests waits."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.0.7",
       "date": "2026-10-28",
       "title": "Base-10 versions, simpler home load",
