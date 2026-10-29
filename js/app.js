@@ -1951,7 +1951,7 @@
   }
 
   function ensureQuickNav() {
-    // Top app bar removed: menu lives in the bottom tab bar (right of Settings).
+    // Top app bar removed: menu lives in the bottom tab bar.
     document.getElementById("ms-quick-nav")?.remove();
     try {
       let theme = document.querySelector('meta[name="theme-color"]');
@@ -2109,7 +2109,6 @@
         icon: "search",
       },
       { id: "clients", href: "clients.html", label: "Clients", aria: "My Clients", icon: "users" },
-      { id: "settings", href: "settings.html", label: "Settings", icon: "gear" },
     ];
     let nav = document.getElementById("ms-tabbar");
     if (!nav) {

@@ -3,6 +3,27 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.5",
+      "date": "2026-10-28",
+      "title": "Wider home desktop, drop Settings tab",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home on desktop uses a wide full-page layout with larger type and side-by-side CTAs."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Mobile bottom tab bar no longer includes Settings; open it from the side menu."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.3.4",
       "date": "2026-10-28",
       "title": "Black and white defaults, Reset appearance",
