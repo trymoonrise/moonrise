@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.2",
+      "date": "2026-10-28",
+      "title": "Fix home FAQ two-column layout",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "Home FAQ spans the full page width again so the question list and action tiles sit side by side instead of overlapping."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.1",
       "date": "2026-10-28",
       "title": "Minimal full-stage landing",
