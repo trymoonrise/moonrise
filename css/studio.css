@@ -8,25 +8,38 @@ html.ms-auth-gating body {
 /* Moonrise Studio ΓÇö SiteDrop-style app shell */
 
 :root {
-  --ms-bg: #f3f5f8;
-  --ms-surface: #ffffff;
-  --ms-ink: #1e293b;
-  --ms-muted: #64748b;
-  --ms-line: #e8edf3;
-  --ms-accent: #3b82f6;
-  --ms-accent-bright: #60a5fa;
-  --ms-accent-strong: #2563eb;
-  --ms-accent-soft: #e8f1ff;
-  --ms-accent-rgb: 59, 130, 246;
-  --ms-brand: #6d5efc;
-  --ms-link: #2563eb;
-  --ms-danger: #b91c1c;
+  /* Warm cream + ink (no pure white surfaces; no pure black UI except logos) */
+  --ms-bg: #fcfbef;
+  --ms-surface: #fbfaf1;
+  --ms-surface-alt: #f5f4e8;
+  --ms-surface-prompt: #f2f0e1;
+  --ms-ink: #232427;
+  --ms-muted: #77776e;
+  --ms-line: #e6e4d4;
+  --ms-dashed: #d9d8cc;
+  --ms-track-off: #ddddd3;
+  --ms-segment: #f2f3f6;
+  --ms-accent: #bfd3e3;
+  --ms-accent-bright: #8fb0d6;
+  --ms-accent-strong: #232427;
+  --ms-accent-soft: #cfe0ee;
+  --ms-accent-rgb: 191, 211, 227;
+  --ms-brand: #232427;
+  --ms-link: #1d3a66;
+  --ms-banner: #cfe0ee;
+  --ms-banner-ink: #1d3a66;
+  --ms-skeleton: #c4c4c4;
+  --ms-danger: #e03a1a;
   --ms-sidebar-w: 268px;
   --ms-sidebar-min: 220px;
   --ms-sidebar-max: 420px;
-  --ms-radius: 14px;
-  --ms-font: "DM Sans", system-ui, sans-serif;
+  --ms-radius: 16px;
+  --ms-radius-card: 24px;
+  --ms-radius-pill: 999px;
+  --ms-font: "DM Sans", Figtree, Inter, system-ui, sans-serif;
   --ms-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --ms-shadow-card: 0 4px 14px rgba(60, 55, 30, 0.08);
+  --ms-shadow-segment: 0 2px 8px rgba(60, 80, 110, 0.15);
   --ms-channel-w: 1420px;
   --ms-content-scale: 1.2;
   --ms-chrome-btn: 48px;
@@ -85,7 +98,7 @@ body[data-page="home"] {
   font-size: 112.5%;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: rgba(37, 99, 235, 0.42) transparent;
+  scrollbar-color: rgba(35, 36, 39, 0.28) transparent;
 }
 
 body[data-page="home"] .ms-home-hero,
@@ -102,7 +115,7 @@ body[data-page="home"] .ms-home-cascade {
 html:has(body[data-page="home"]) {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: rgba(37, 99, 235, 0.42) transparent;
+  scrollbar-color: rgba(35, 36, 39, 0.28) transparent;
 }
 
 html:has(body[data-page="home"])::-webkit-scrollbar,
@@ -2908,42 +2921,33 @@ body[data-page="dashboard"] {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 12px;
+  border: 0;
+  border-radius: 999px;
+  min-height: 52px;
   padding: 0.85rem 1.35rem;
   font: inherit;
   font-size: 1.05rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.01em;
   cursor: pointer;
-  color: #fff;
+  color: #fcfbef;
   text-decoration: none;
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 42%),
-    linear-gradient(135deg, #60a5fa 0%, #3b82f6 48%, #2563eb 100%);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.28) inset,
-    0 -1px 0 rgba(15, 23, 42, 0.12) inset,
-    0 8px 18px rgba(37, 99, 235, 0.28),
-    0 2px 4px rgba(37, 99, 235, 0.18);
+  background: #232427;
+  box-shadow: none;
   transition:
-    transform 0.32s cubic-bezier(0.33, 1, 0.32, 1),
-    box-shadow 0.32s cubic-bezier(0.33, 1, 0.32, 1),
-    filter 0.28s ease,
-    background 0.28s ease;
+    transform 0.15s ease-out,
+    opacity 0.15s ease-out,
+    background 0.15s ease-out;
 }
 
 .ms-btn:hover:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger) {
   filter: none;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.28) inset,
-    0 -1px 0 rgba(15, 23, 42, 0.12) inset,
-    0 8px 18px rgba(37, 99, 235, 0.28),
-    0 2px 4px rgba(37, 99, 235, 0.18);
-  transform: scale(1.055);
+  box-shadow: none;
+  opacity: 0.85;
+  transform: scale(0.98);
 }
 
 .ms-btn:active:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger),
@@ -2955,24 +2959,21 @@ body[data-page="dashboard"] {
 .ms-btn-secondary {
   background: transparent;
   color: var(--ms-ink);
-  border: 1px solid var(--ms-line);
+  border: 1.5px solid var(--ms-ink);
   box-shadow: none;
   filter: none;
 }
 .ms-btn-secondary:hover:not(:disabled) {
   filter: none;
-  transform: none;
-  background: #f8fafc;
+  transform: scale(0.98);
+  opacity: 0.85;
+  background: transparent;
   box-shadow: none;
 }
 .ms-btn-danger {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 40%),
-    linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.2) inset,
-    0 8px 16px rgba(185, 28, 28, 0.25);
+  background: #e03a1a;
+  border: 0;
+  box-shadow: none;
 }
 
 /* Beat site.css `input:not(...)` (dark --input-bg) with higher specificity */
@@ -13009,34 +13010,37 @@ body.ms-lb-generating .ms-lb-chat-activity .ms-lb-dots-loader span {
 }
 
 .ms-switch-track {
-  width: 44px;
-  height: 26px;
+  width: 51px;
+  height: 29px;
   border-radius: 999px;
-  background: #e2e8f0;
+  background: #ddddd3;
+  border: 2px solid #e8e8dc;
   position: relative;
-  transition: background 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04) inset;
+  transition: background 0.18s ease-out, border-color 0.18s ease-out;
+  box-sizing: border-box;
 }
 
 .ms-switch-track::after {
   content: "";
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 20px;
-  height: 20px;
+  top: 2px;
+  left: 2px;
+  width: 21px;
+  height: 21px;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  background: #fcfbef;
+  box-shadow: 0 0 0 1px rgba(35, 36, 39, 0.12);
+  transition: transform 0.18s ease-out;
 }
 
 .ms-switch input:checked + .ms-switch-track {
-  background: #3b82f6;
+  background: #232427;
+  border-color: #232427;
 }
 
 .ms-switch input:checked + .ms-switch-track::after {
-  transform: translateX(18px);
+  transform: translateX(22px);
+  box-shadow: 0 0 0 2px #232427;
 }
 
 .ms-switch input:focus-visible + .ms-switch-track {
@@ -14117,7 +14121,7 @@ body.is-home-ready .ms-home-shell {
   height: min(70vw, 820px);
   right: -18%;
   top: -22%;
-  background: radial-gradient(circle at 40% 40%, rgba(191, 219, 254, 0.7), transparent 68%);
+  background: radial-gradient(circle at 40% 40%, rgba(191, 211, 227, 0.45), transparent 68%);
   animation: ms-home-drift 18s ease-in-out infinite alternate;
 }
 
@@ -14126,7 +14130,7 @@ body.is-home-ready .ms-home-shell {
   height: min(48vw, 560px);
   left: -14%;
   bottom: 4%;
-  background: radial-gradient(circle at 55% 45%, rgba(226, 232, 240, 0.9), transparent 70%);
+  background: radial-gradient(circle at 55% 45%, rgba(242, 240, 225, 0.95), transparent 70%);
   animation: ms-home-drift 22s ease-in-out infinite alternate-reverse;
 }
 
@@ -14214,7 +14218,7 @@ body.is-home-ready .ms-home-shell {
   left: 11px;
   right: 11px;
   height: 2px;
-  background: #0f172a;
+  background: #232427;
   top: 50%;
   border-radius: 2px;
   transition:
@@ -14236,7 +14240,7 @@ body.is-home-ready .ms-home-shell {
 }
 
 .ms-home-orb.is-open i {
-  background: #fff;
+  background: #232427;
 }
 
 .ms-home-orb.is-open i:nth-child(1) {
@@ -14257,9 +14261,7 @@ body.is-home-ready .ms-home-shell {
   inset: 0;
   z-index: 55;
   box-sizing: border-box;
-  background:
-    radial-gradient(ellipse 60% 50% at 80% 10%, rgba(59, 130, 246, 0.28), transparent 55%),
-    #0f172a;
+  background: #fcfbef;
   clip-path: circle(0% at calc(100% - 2.6rem) 2.4rem);
   visibility: hidden;
   display: flex;
@@ -14300,9 +14302,9 @@ body.is-home-ready .ms-home-shell {
   justify-self: center;
   font-family: var(--ms-font);
   font-size: clamp(1.45rem, min(5vw, 6svh), 2.65rem);
-  font-weight: 700;
-  letter-spacing: -0.045em;
-  color: #fff;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #232427;
   text-decoration: none;
   line-height: 1.12;
   white-space: nowrap;
@@ -14336,7 +14338,7 @@ body.is-home-ready .ms-home-shell {
 }
 
 .ms-home-bloom-nav a:hover {
-  color: #93c5fd;
+  color: #1d3a66;
 }
 
 .ms-home-bloom-nav a:hover::after {
@@ -14348,13 +14350,13 @@ body.ms-home-menu-open {
 }
 
 body.ms-home-menu-open .ms-home-brand {
-  color: #fff;
+  color: #232427;
 }
 
 body.ms-home-menu-open .ms-home-brand img {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.18),
-    0 4px 10px rgba(15, 23, 42, 0.2);
+    0 0 0 1px rgba(35, 36, 39, 0.08),
+    0 4px 14px rgba(60, 55, 30, 0.08);
 }
 
 body[data-page="login"] .ms-home-nav,
@@ -14754,19 +14756,16 @@ body.is-home-ready .ms-home-hero-copy {
 .ms-home-title {
   margin: 0;
   font-size: clamp(2.65rem, 5.5vw, 3.65rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   line-height: 1.1;
-  color: #0f172a;
+  color: #232427;
   white-space: nowrap;
 }
 
 .ms-home-title-accent {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 45%, #2563eb 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: #232427;
+  -webkit-text-fill-color: #232427;
 }
 
 .ms-home-sub {
@@ -14792,49 +14791,51 @@ body.is-home-ready .ms-home-hero-copy {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  min-height: 52px;
+  color: #fcfbef;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 1.02rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   letter-spacing: -0.01em;
-  padding: 0.85rem 1.35rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 45%),
-    linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.3) inset,
-    0 10px 22px rgba(59, 130, 246, 0.28);
-  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), filter 0.18s ease;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  border: 0;
+  background: #232427;
+  box-shadow: none;
+  transition: transform 0.15s ease-out, opacity 0.15s ease-out;
 }
 
 .ms-home-cta-primary:hover {
   filter: none;
-  transform: scale(1.055);
+  opacity: 0.85;
+  transform: scale(0.98);
 }
 .ms-home-cta-primary:active {
   filter: none;
-  transform: scale(1.08);
+  opacity: 0.85;
+  transform: scale(0.98);
 }
 
 .ms-home-cta-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  color: var(--ms-ink);
+  min-height: 52px;
+  background: transparent;
+  color: #232427;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 1.02rem;
-  padding: 0.85rem 1.25rem;
-  border-radius: 12px;
-  border: 1px solid var(--ms-line);
-  transition: background 0.15s ease;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 0.85rem 1.45rem;
+  border-radius: 999px;
+  border: 1.5px solid #232427;
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
 }
 
 .ms-home-cta-secondary:hover {
-  background: #f8fafc;
+  background: transparent;
+  opacity: 0.85;
+  transform: scale(0.98);
 }
 
 .ms-home-stats {
@@ -14973,8 +14974,8 @@ body.is-home-ready .ms-home-hero-copy {
   margin: 0 0 1rem;
   padding: 0.4rem 0.85rem;
   border-radius: 999px;
-  background: #eff6ff;
-  color: #2563eb;
+  background: #cfe0ee;
+  color: #1d3a66;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -14993,10 +14994,7 @@ body.is-home-ready .ms-home-hero-copy {
 }
 
 .ms-home-method-section h2 span {
-  background: linear-gradient(105deg, #2563eb 0%, #38bdf8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #232427;
 }
 
 .ms-home-method {
@@ -15022,12 +15020,10 @@ body.is-home-ready .ms-home-hero-copy {
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  border-radius: 22px;
-  background: #fff;
-  border: 1px solid rgba(226, 232, 240, 0.95);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.8) inset,
-    0 18px 40px rgba(15, 23, 42, 0.06);
+  border-radius: 24px;
+  background: #fbfaf1;
+  border: 1px solid #e6e4d4;
+  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08);
   overflow: hidden;
 }
 
@@ -15041,9 +15037,7 @@ body.is-home-ready .ms-home-hero-copy {
 }
 
 .ms-home-method-card.is-tiltable:hover {
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.9) inset,
-    0 28px 56px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.12);
 }
 
 .ms-home-method-card::after {
@@ -15064,7 +15058,7 @@ body.is-home-ready .ms-home-hero-copy {
 
 .ms-home-method-viz {
   padding: 1.1rem 1.1rem 0.85rem;
-  background: #f8fafc;
+  background: #f5f4e8;
 }
 
 .ms-home-method-mock {
@@ -15243,7 +15237,7 @@ body.is-home-ready .ms-home-hero-copy {
   padding: 0;
   border-radius: 0;
   background: none;
-  color: #2563eb;
+  color: #1d3a66;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -15255,7 +15249,7 @@ body.is-home-ready .ms-home-hero-copy {
   font-size: 1.12rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #0f172a;
+  color: #232427;
   margin: 0;
 }
 
@@ -15271,20 +15265,22 @@ body.is-home-ready .ms-home-hero-copy {
   align-items: center;
   justify-content: center;
   margin: 2rem auto 0;
+  min-height: 52px;
   padding: 0.95rem 1.85rem;
   border-radius: 999px;
-  background: linear-gradient(105deg, #1d4ed8, #3b82f6 55%, #38bdf8);
-  color: #fff;
-  font-size: 0.98rem;
+  background: #232427;
+  color: #fcfbef;
+  font-size: 1rem;
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.28);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: none;
+  transition: transform 0.15s ease-out, opacity 0.15s ease-out;
 }
 
 .ms-home-method-cta:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.34);
+  opacity: 0.85;
+  transform: scale(0.98);
+  box-shadow: none;
 }
 
 .ms-home-footer {
@@ -15325,27 +15321,25 @@ body.is-home-ready .ms-home-hero-copy {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 52px;
   padding: 0.85rem 1.45rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 45%),
-    linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-  color: #fff;
+  border-radius: 999px;
+  border: 0;
+  background: #232427;
+  color: #fcfbef;
   text-decoration: none;
   font-weight: 700;
-  font-size: 0.98rem;
+  font-size: 1rem;
   letter-spacing: -0.01em;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.3) inset,
-    0 10px 22px rgba(59, 130, 246, 0.28);
-  transition: transform 0.18s ease, filter 0.18s ease;
+  box-shadow: none;
+  transition: transform 0.15s ease-out, opacity 0.15s ease-out;
 }
 
 .ms-home-footer-signup:hover {
   filter: none;
-  transform: scale(1.055);
-  color: #fff;
+  opacity: 0.85;
+  transform: scale(0.98);
+  color: #fcfbef;
 }
 
 .ms-home-footer-signin {

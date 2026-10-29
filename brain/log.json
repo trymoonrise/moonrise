@@ -3,6 +3,28 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.0.9",
+      "date": "2026-10-28",
+      "title": "Warm cream and ink UI",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Public pages use a warm cream canvas, ink text, and pill buttons instead of blue gradients.",
+            "Pages menu opens on cream with ink links so it matches the rest of the home screen."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio chrome, cards, switches, and primary actions follow the same cream and ink look with powder-blue accents."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.0.8",
       "date": "2026-10-28",
       "title": "Adult signup gate and auth rate-limit fix",

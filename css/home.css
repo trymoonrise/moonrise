@@ -1,5 +1,5 @@
-/* Home-only helpers on top of pre-B&W studio.css (commit 043f8dc).
-   Do not load studio-ui.css on the home page — that file is the B&W overlay. */
+/* Home-only cream + ink refinements on top of studio.css.
+   Do not load studio-ui.css on the home page. */
 
 body[data-page="home"] .ms-skip {
   position: absolute;
@@ -8,9 +8,9 @@ body[data-page="home"] .ms-skip {
   z-index: 100;
   padding: 0.55rem 0.9rem;
   border-radius: 999px;
-  background: #2563eb;
-  color: #fff;
-  font-weight: 600;
+  background: #232427;
+  color: #fcfbef;
+  font-weight: 700;
   font-size: 0.9rem;
   text-decoration: none;
   transform: translateY(-160%);
@@ -18,19 +18,18 @@ body[data-page="home"] .ms-skip {
 
 body[data-page="home"] .ms-skip:focus {
   transform: translateY(0);
-  outline: 2px solid #93c5fd;
+  outline: 2px solid #bfd3e3;
   outline-offset: 2px;
 }
 
-/* Keep footer legal row on the blue navy footer readable. */
 body[data-page="home"] .ms-home-footer-legal a,
 body[data-page="home"] .ms-home-footer-signin {
-  color: #94a3b8;
+  color: #77776e;
 }
 
 body[data-page="home"] .ms-home-footer-legal a:hover,
 body[data-page="home"] .ms-home-footer-signin:hover {
-  color: #fff;
+  color: #232427;
 }
 
 /* Simple centered hero — no cascade gallery. */
@@ -41,4 +40,43 @@ body[data-page="home"] .ms-home-hero {
 body[data-page="home"] .ms-home-hero-stage {
   min-height: inherit;
   justify-content: center;
+}
+
+body[data-page="home"] .ms-home-brand strong {
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  color: #000;
+}
+
+body[data-page="home"] .ms-home-method-badge {
+  background: #cfe0ee;
+  color: #1d3a66;
+  border: 0;
+  border-radius: 999px;
+}
+
+body[data-page="home"] .ms-home-method-cta {
+  border-radius: 999px;
+  background: #232427;
+  color: #fcfbef;
+  box-shadow: none;
+}
+
+body[data-page="home"] .ms-home-method-cta:hover {
+  box-shadow: none;
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+body[data-page="home"] .ms-home-stats {
+  background: #fbfaf1;
+  border-color: #e6e4d4;
+  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08);
+}
+
+body[data-page="home"] .card,
+body[data-page="home"] .ms-card {
+  background: #fbfaf1;
+  border-color: #e6e4d4;
+  box-shadow: 0 4px 14px rgba(60, 55, 30, 0.08);
 }

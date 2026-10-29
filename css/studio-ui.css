@@ -2,37 +2,43 @@
    Matches the pre-B&W blue/white chrome (043f8dc). Do not load on home. */
 
 :root {
-  --ms-btn-h: 2.5rem;
+  --ms-btn-h: 3.25rem;
   --ms-content-scale: 1;
   --ms-chrome-btn: 2.5rem;
   --lf-action-h: 2.5rem;
-  --lf-btn-radius: 12px;
+  --lf-btn-radius: 999px;
 }
 
 html:not([data-ms-mode="dark"]) {
-  --ms-bg: #f3f5f8;
-  --ms-surface: #ffffff;
-  --ms-ink: #1e293b;
-  --ms-muted: #64748b;
-  --ms-line: #e8edf3;
-  --ms-link: #2563eb;
-  --ms-accent: #3b82f6;
-  --ms-accent-bright: #60a5fa;
-  --ms-accent-strong: #2563eb;
-  --ms-accent-soft: #e8f1ff;
-  --ms-accent-rgb: 59, 130, 246;
-  --ms-brand: #6d5efc;
+  --ms-bg: #fcfbef;
+  --ms-surface: #fbfaf1;
+  --ms-surface-alt: #f5f4e8;
+  --ms-ink: #232427;
+  --ms-muted: #77776e;
+  --ms-line: #e6e4d4;
+  --ms-link: #1d3a66;
+  --ms-accent: #bfd3e3;
+  --ms-accent-bright: #8fb0d6;
+  --ms-accent-strong: #232427;
+  --ms-accent-soft: #cfe0ee;
+  --ms-accent-rgb: 191, 211, 227;
+  --ms-brand: #232427;
+  --ms-banner: #cfe0ee;
+  --ms-banner-ink: #1d3a66;
+  --ms-radius: 16px;
+  --ms-radius-pill: 999px;
+  --ms-shadow-card: 0 4px 14px rgba(60, 55, 30, 0.08);
 }
 
 body {
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: "DM Sans", Figtree, Inter, system-ui, sans-serif;
   letter-spacing: -0.011em;
 }
 
 html:not([data-ms-mode="dark"]) body,
 html:not([data-ms-mode="dark"]) body[data-page="login"] {
-  background: #f3f5f8;
-  color: #1e293b;
+  background: #fcfbef;
+  color: #232427;
 }
 
 body[data-page]::before {
@@ -71,10 +77,10 @@ a.ms-btn,
   height: var(--ms-btn-h) !important;
   min-height: var(--ms-btn-h) !important;
   padding: 0 1.15rem !important;
-  border-radius: 12px !important;
+  border-radius: 999px !important;
   font-family: inherit;
-  font-size: 0.92rem !important;
-  font-weight: 600 !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
   line-height: 1 !important;
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -94,23 +100,18 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
 .lf-action-builder,
 .ms-lf-map-scan,
 #btn-checkout {
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 42%),
-    linear-gradient(135deg, #60a5fa 0%, #3b82f6 48%, #2563eb 100%) !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.28) inset,
-    0 -1px 0 rgba(15, 23, 42, 0.12) inset,
-    0 8px 18px rgba(37, 99, 235, 0.28),
-    0 2px 4px rgba(37, 99, 235, 0.18) !important;
+  border: 0 !important;
+  border-radius: var(--ms-radius-pill, 999px) !important;
+  background: #232427 !important;
+  color: #fcfbef !important;
+  -webkit-text-fill-color: #fcfbef !important;
+  box-shadow: none !important;
   filter: none !important;
   transform: scale(1);
   transform-origin: center;
   transition:
-    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    transform 0.15s ease-out,
+    opacity 0.15s ease-out !important;
   will-change: transform;
 }
 
@@ -127,19 +128,13 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
 .lf-action-builder:hover,
 .ms-lf-map-scan:hover,
 #btn-checkout:hover {
-  /* Keep the same blue fill — expand only, no lighten */
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 42%),
-    linear-gradient(135deg, #60a5fa 0%, #3b82f6 48%, #2563eb 100%) !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.28) inset,
-    0 -1px 0 rgba(15, 23, 42, 0.12) inset,
-    0 8px 18px rgba(37, 99, 235, 0.28),
-    0 2px 4px rgba(37, 99, 235, 0.18) !important;
+  background: #232427 !important;
+  color: #fcfbef !important;
+  -webkit-text-fill-color: #fcfbef !important;
+  box-shadow: none !important;
   filter: none !important;
-  transform: scale(1.055) !important;
+  opacity: 0.85;
+  transform: scale(0.98) !important;
 }
 
 .ms-btn:active:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger),
@@ -156,24 +151,26 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
 .ms-lf-map-scan:active,
 #btn-checkout:active {
   filter: none !important;
-  transform: scale(1.08) !important;
+  opacity: 0.85;
+  transform: scale(0.98) !important;
 }
 
 .ms-store-buy.is-ghost,
 .ms-store-buy.is-ghost:hover {
-  background: #fff !important;
-  color: #1d1d1f !important;
-  -webkit-text-fill-color: #1d1d1f !important;
-  border: 1px solid #1d1d1f !important;
+  background: transparent !important;
+  color: #232427 !important;
+  -webkit-text-fill-color: #232427 !important;
+  border: 1.5px solid #232427 !important;
   box-shadow: none !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-btn-secondary,
 html:not([data-ms-mode="dark"]) .ms-home-cta-secondary,
 html:not([data-ms-mode="dark"]) .ms-dash-tool {
-  border: 1px solid #d2d2d7 !important;
-  background: #fff !important;
-  color: #1d1d1f !important;
+  border: 1.5px solid #232427 !important;
+  background: transparent !important;
+  color: #232427 !important;
+  border-radius: var(--ms-radius-pill, 999px) !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-dash-tool svg,
