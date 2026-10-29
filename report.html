@@ -4,43 +4,94 @@
 <style>
 html.ms-boot body{visibility:hidden!important}
 #ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.15rem;background:#fcfbef;color:#232427;visibility:visible!important}
-
-
 #ms-boot p{margin:0;font:600 1.35rem/1 system-ui,sans-serif;letter-spacing:-.04em}
 #ms-boot .ms-boot-bar{width:7.5rem;height:2px;border-radius:99px;background:rgba(15,23,42,.12);overflow:hidden}
-
-#ms-boot .ms-boot-bar span{display:block;height:100%;width:40%;border-radius:inherit;background:currentColor;animation:ms-boot 1.05s ease-in-out infinite}
-@keyframes ms-boot{0%{transform:translateX(-120%)}100%{transform:translateX(280%)}}
-@media (prefers-reduced-motion:reduce){#ms-boot .ms-boot-bar span{animation:none;width:100%;opacity:.45}}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:0%;border-radius:inherit;background:currentColor;transform-origin:left center}
+@media (prefers-reduced-motion:reduce){#ms-boot .ms-boot-bar span{transition:none}}
 </style>
 <script>
 document.documentElement.classList.add("ms-boot");
 (function(){
   var boot=document.createElement("div");
   boot.id="ms-boot";
-  boot.setAttribute("role","status");
+  boot.setAttribute("role","progressbar");
   boot.setAttribute("aria-label","Loading");
+  boot.setAttribute("aria-valuemin","0");
+  boot.setAttribute("aria-valuemax","100");
+  boot.setAttribute("aria-valuenow","0");
   boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
   document.documentElement.appendChild(boot);
-  function reveal(){
-    if(window.__msBootReleased)return;
+  var bar=boot.querySelector(".ms-boot-bar span");
+  var progress=0;
+  var ready=false;
+  var done=false;
+  var started=performance.now();
+  var readyAt=0;
+  var minMs=750;
+  var maxMs=20000;
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+
+  function setProgress(p){
+    progress=Math.max(0,Math.min(100,p));
+    if(bar) bar.style.width=progress.toFixed(2)+"%";
+    boot.setAttribute("aria-valuenow",String(Math.round(progress)));
+    boot.setAttribute("aria-label","Loading "+Math.round(progress)+"%");
+  }
+
+  function finish(){
+    if(done)return;
+    done=true;
     window.__msBootReleased=1;
-    var finish=function(){
+    setProgress(100);
+    var hide=function(){
       document.documentElement.classList.remove("ms-boot","ms-hold");
       document.documentElement.classList.add("ms-boot-done");
       var el=document.getElementById("ms-boot");
       if(el)el.remove();
     };
-    requestAnimationFrame(function(){requestAnimationFrame(finish);});
+    requestAnimationFrame(function(){requestAnimationFrame(hide);});
   }
+
+  function tick(now){
+    if(done)return;
+    var elapsed=now-started;
+    if(ready){
+      if(reduce){
+        setProgress(100);
+        finish();
+        return;
+      }
+      var sinceReady=Math.max(0,now-readyAt);
+      var minLeft=Math.max(0,minMs-elapsed);
+      var fillMs=Math.max(220,minLeft);
+      var t=Math.min(1,sinceReady/fillMs);
+      var eased=1-Math.pow(1-t,3);
+      setProgress(Math.max(progress, 88+(12*eased)));
+      if(t>=1 && progress>=99.5){
+        setProgress(100);
+        finish();
+        return;
+      }
+    }else{
+      var tWait=Math.min(1,elapsed/2600);
+      var target=82*(1-Math.pow(1-tWait,2.4));
+      setProgress(progress+(target-progress)*0.16);
+      if(elapsed>=maxMs){
+        ready=true;
+        readyAt=now;
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
   window.__msReleaseBoot=function(){
-    if(window.__msBootReleased)return;
-    var fonts=document.fonts&&document.fonts.ready?document.fonts.ready.catch(function(){}):Promise.resolve();
-    var loaded=document.readyState==="complete"?Promise.resolve():new Promise(function(r){window.addEventListener("load",r,{once:true});});
-    Promise.all([fonts,loaded]).then(reveal);
+    if(ready||done)return;
+    ready=true;
+    readyAt=performance.now();
   };
-  window.__msReleaseBoot();
-  setTimeout(reveal,20000);
+  setTimeout(function(){ if(window.__msReleaseBoot) window.__msReleaseBoot(); },maxMs);
 })();
 </script>
   <script>
