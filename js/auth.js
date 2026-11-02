@@ -15,7 +15,7 @@
   ]);
   const SUPPORT_EMAIL = "trymoonrise@gmail.com";
   /** Session / API probes during page boot — keep short so the loader cannot stall. */
-  const AUTH_TIMEOUT_MS = 8000;
+  const AUTH_TIMEOUT_MS = 4500;
   const AUTH_RETRY_DELAY_MS = 800;
 
   function getClient() {

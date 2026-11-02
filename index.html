@@ -4,6 +4,8 @@
 <style>
 html.ms-boot body{visibility:hidden!important}
 #ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#ffffff;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
+html[data-ms-mode=dark] #ms-boot{background:#111111;color:#f5f5f5}
+html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
 #ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
 #ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
 #ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
@@ -35,7 +37,7 @@ document.documentElement.classList.add("ms-boot");
   var readyAt=0;
   var minMs=180;
   var maxMs=2500;
-  var failMs=6000;
+  var failMs=5000;
   var reduce=false;
   try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
 
@@ -47,9 +49,21 @@ document.documentElement.classList.add("ms-boot");
     return !!window.__msStudioBoot && !(document.body && document.body.dataset.msShellPainted==="1");
   }
 
+  function forceReveal(){
+    document.documentElement.classList.remove("ms-boot");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msStudioBoot=0;
+    window.__msBootReleased=1;
+    var el=document.getElementById("ms-boot");
+    if(el)el.remove();
+  }
+
   function failTo404(){
     if(window.__msAuthRedirecting)return;
     window.__msAuthRedirecting=true;
+    forceReveal();
     location.replace("404.html");
   }
 
@@ -62,8 +76,7 @@ document.documentElement.classList.add("ms-boot");
 
   function finish(){
     if(done)return true;
-    // Keep the moonrise bar up until the studio shell paints. Clearing earlier
-    // left a blank white hold screen on dashboard.
+    // Keep the moonrise bar up until the studio shell paints.
     if(gating() || studioPending()){
       setProgress(Math.max(progress, 92));
       return false;
@@ -97,7 +110,8 @@ document.documentElement.classList.add("ms-boot");
   function tick(now){
     if(done)return;
     var elapsed=now-started;
-    if(elapsed>=failMs && studioPending()){
+    // Absolute escape: never sit on a blank/hold screen past failMs.
+    if(elapsed>=failMs && (gating() || studioPending() || document.getElementById("ms-boot"))){
       failTo404();
       return;
     }
@@ -167,6 +181,11 @@ document.documentElement.classList.add("ms-boot");
     if(gating() || studioPending()) return;
     if(window.__msReleaseBoot) window.__msReleaseBoot();
   }, maxMs);
+  // Wall-clock backup if rAF is throttled/frozen.
+  setTimeout(function(){
+    if(done || window.__msAuthRedirecting) return;
+    if(gating() || studioPending() || document.getElementById("ms-boot")) failTo404();
+  }, failMs + 250);
 })();
 </script>
   <meta charset="UTF-8">
@@ -253,7 +272,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/home.css?v=20261101-hero-white">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
   <meta name="color-scheme" content="light">
-  <script defer src="js/config.js?v=20261102-dash-paint"></script>
+  <script defer src="js/config.js?v=20261102-dash-unstick"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
   <script type="application/ld+json">
   {

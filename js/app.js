@@ -1837,47 +1837,57 @@
     });
   }
 
+  function releaseStudioHold() {
+    document.documentElement.classList.remove("ms-auth-gating");
+    document.documentElement.classList.remove("ms-hold");
+    document.documentElement.classList.remove("ms-boot");
+    window.__msStudioBoot = 0;
+    document.getElementById("ms-boot")?.remove();
+    if (window.__msReleaseBoot) window.__msReleaseBoot();
+  }
+
   function paintApp() {
     if (document.body.dataset.msShellPainted === "1") return;
     document.body.dataset.msShellPainted = "1";
-    buildShell();
-    syncLegalNavActive();
-    window.addEventListener("hashchange", syncLegalNavActive);
-    ensureHardRefreshButton();
-    bindNavCancel();
-    bindShellListeners();
     try {
-      sessionStorage.removeItem("ms_channel_generating");
-    } catch {
-      /* ignore */
-    }
-    setChannelGenerating(null, false);
-    document.body.classList.add("ms-ready");
-    document.documentElement.classList.remove("ms-auth-gating");
-    document.documentElement.classList.remove("ms-hold");
-    window.__msStudioBoot = 0;
-    if (window.__msReleaseBoot) window.__msReleaseBoot();
-    document.documentElement.classList.remove("ms-boot");
-    document.getElementById("ms-boot")?.remove();
-    document.dispatchEvent(new Event("ms:shell-ready"));
-    // Let scripts that load after app.js subscribe before the page starts fetching.
-    setTimeout(function () {
-      document.body.dataset.msAuthFired = "1";
-      document.dispatchEvent(new Event("ms:auth-ready"));
-    }, 0);
+      buildShell();
+      syncLegalNavActive();
+      window.addEventListener("hashchange", syncLegalNavActive);
+      ensureHardRefreshButton();
+      bindNavCancel();
+      bindShellListeners();
+      try {
+        sessionStorage.removeItem("ms_channel_generating");
+      } catch {
+        /* ignore */
+      }
+      setChannelGenerating(null, false);
+      document.body.classList.add("ms-ready");
+      releaseStudioHold();
+      document.dispatchEvent(new Event("ms:shell-ready"));
+      // Let scripts that load after app.js subscribe before the page starts fetching.
+      setTimeout(function () {
+        document.body.dataset.msAuthFired = "1";
+        document.dispatchEvent(new Event("ms:auth-ready"));
+      }, 0);
 
-    window.requestAnimationFrame(function () {
       window.requestAnimationFrame(function () {
-        window.StudioMotion?.playPageMotion?.();
+        window.requestAnimationFrame(function () {
+          window.StudioMotion?.playPageMotion?.();
+        });
       });
-    });
-    clearLegacyProfileCosmetics();
+      clearLegacyProfileCosmetics();
 
-    void hydrateUser().catch(() => ({ handle: "", avatarUrl: "" }));
-    void hydrateIncome();
+      void hydrateUser().catch(() => ({ handle: "", avatarUrl: "" }));
+      void hydrateIncome();
 
-    ensureInstallHintScript();
-    ensureGenerationAnnounceScript();
+      ensureInstallHintScript();
+      ensureGenerationAnnounceScript();
+    } catch (err) {
+      console.warn(err);
+      releaseStudioHold();
+      throw err;
+    }
   }
 
   async function finishSession(session) {
@@ -1912,7 +1922,7 @@
     // This file runs before auth.js. Wait briefly, then fail to 404 instead of
     // sitting on the moonrise loader for tens of seconds.
     if (!window.StudioAuth?.requireAuth) {
-      if (authWait < 40) {
+      if (authWait < 20) {
         authWait += 1;
         setTimeout(() => {
           void boot();
@@ -1935,12 +1945,12 @@
       // retry briefly while the worker recovers, then show 404.
       if (
         document.documentElement.classList.contains("ms-auth-gating") &&
-        authWait < 24
+        authWait < 12
       ) {
         authWait += 1;
         setTimeout(() => {
           void boot();
-        }, 250);
+        }, 200);
         return;
       }
       if (document.documentElement.classList.contains("ms-auth-gating")) {

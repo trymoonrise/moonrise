@@ -61,7 +61,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261102-dash-paint", "js/auth.js?v=20261102-dash-paint", "js/app.js?v=20261102-dash-paint"].forEach(function (href) {
+  ["js/config.js?v=20261102-dash-unstick", "js/auth.js?v=20261102-dash-unstick", "js/app.js?v=20261102-dash-unstick"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -107,13 +107,19 @@
     // Do not release the moonrise bar here — wait until paintApp marks the shell.
   };
 
-  // If the studio shell never paints, leave the loader and open 404.
+  // Absolute escape: shell must paint or we leave this hold screen.
   setTimeout(function () {
-    if (document.body && document.body.dataset.msShellPainted === "1") return;
     if (window.__msAuthRedirecting) return;
+    if (document.body && document.body.dataset.msShellPainted === "1" && !document.getElementById("ms-boot")) return;
     window.__msAuthRedirecting = true;
+    try {
+      document.documentElement.classList.remove("ms-boot");
+      document.documentElement.classList.remove("ms-hold");
+      document.documentElement.classList.remove("ms-auth-gating");
+      document.getElementById("ms-boot")?.remove();
+    } catch (e) {}
     location.replace("404.html");
-  }, 6000);
+  }, 5000);
 
   mountTabBarEarly();
 })();

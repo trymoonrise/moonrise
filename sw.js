@@ -3,7 +3,7 @@
  * Pages and app scripts stay network-first so a bad cached file cannot stick.
  * Other assets refresh in the background.
  */
-const CACHE_NAME = "ms-pwa-v79-studio";
+const CACHE_NAME = "ms-pwa-v80-studio";
 const CORE_ASSETS = ["./css/studio.css", "./css/studio-motion.css", "./index.html"];
 
 function isAssetPath(pathname) {
@@ -49,8 +49,16 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function fetchWithTimeout(req, ms) {
+  const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), ms) : null;
+  return fetch(req, ctrl ? { signal: ctrl.signal } : undefined).finally(() => {
+    if (timer) clearTimeout(timer);
+  });
+}
+
 function networkFirst(req, fallbackUrl) {
-  return fetch(req)
+  return fetchWithTimeout(req, 8000)
     .then((res) => {
       if (res && res.status === 200 && res.type === "basic") {
         const copy = res.clone();

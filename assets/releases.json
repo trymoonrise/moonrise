@@ -3,6 +3,23 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.0",
+      "date": "2026-11-02",
+      "title": "Unstick dashboard boot hold screen",
+      "tag": "v2.1.0",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.0",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Dashboard and studio pages escape a stuck moonrise loader within five seconds instead of sitting on a blank hold screen.",
+            "Shell paint always clears the auth hold even if sidebar setup throws, and navigate fetches time out so a hung service worker cannot blank the tab."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.0.9",
       "date": "2026-11-02",
       "title": "Drop unused apply and store stub pages",
