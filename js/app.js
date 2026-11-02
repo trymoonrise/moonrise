@@ -1855,7 +1855,10 @@
     document.body.classList.add("ms-ready");
     document.documentElement.classList.remove("ms-auth-gating");
     document.documentElement.classList.remove("ms-hold");
+    window.__msStudioBoot = 0;
     if (window.__msReleaseBoot) window.__msReleaseBoot();
+    document.documentElement.classList.remove("ms-boot");
+    document.getElementById("ms-boot")?.remove();
     document.dispatchEvent(new Event("ms:shell-ready"));
     // Let scripts that load after app.js subscribe before the page starts fetching.
     setTimeout(function () {

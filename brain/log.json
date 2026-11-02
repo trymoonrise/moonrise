@@ -3,6 +3,21 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.7",
+      "date": "2026-11-02",
+      "title": "Fix blank white dashboard boot",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Dashboard keeps the moonrise loader visible until the app shell paints, instead of clearing into a blank white screen.",
+            "Studio pages that never finish loading within 6 seconds open the 404 page."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.6",
       "date": "2026-11-02",
       "title": "Stop long dashboard boots with a 404 fallback",

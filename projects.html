@@ -35,12 +35,16 @@ document.documentElement.classList.add("ms-boot");
   var readyAt=0;
   var minMs=180;
   var maxMs=2500;
-  var failMs=8000;
+  var failMs=6000;
   var reduce=false;
   try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
 
   function gating(){
     return document.documentElement.classList.contains("ms-auth-gating");
+  }
+
+  function studioPending(){
+    return !!window.__msStudioBoot && !(document.body && document.body.dataset.msShellPainted==="1");
   }
 
   function failTo404(){
@@ -58,9 +62,9 @@ document.documentElement.classList.add("ms-boot");
 
   function finish(){
     if(done)return true;
-    // Auth pages stay under the moonrise bar until app.js clears the gate.
-    // Dismissing earlier left a blank html.ms-hold body that felt stuck.
-    if(gating()){
+    // Keep the moonrise bar up until the studio shell paints. Clearing earlier
+    // left a blank white hold screen on dashboard.
+    if(gating() || studioPending()){
       setProgress(Math.max(progress, 92));
       return false;
     }
@@ -93,7 +97,7 @@ document.documentElement.classList.add("ms-boot");
   function tick(now){
     if(done)return;
     var elapsed=now-started;
-    if(elapsed>=failMs && gating()){
+    if(elapsed>=failMs && studioPending()){
       failTo404();
       return;
     }
@@ -119,8 +123,7 @@ document.documentElement.classList.add("ms-boot");
       var target=84*(1-Math.pow(1-tWait,2.4));
       setProgress(progress+(target-progress)*0.18);
       if(elapsed>=maxMs){
-        if(gating()){
-          // Keep waiting on the bar until failMs, then 404.
+        if(gating() || studioPending()){
           setProgress(Math.max(progress, 92));
         }else{
           appReady=true;
@@ -135,8 +138,9 @@ document.documentElement.classList.add("ms-boot");
 
   window.__msReleaseBoot=function(){
     appReady=true;
+    assetsReady=true;
     markReady();
-    if(ready && !done && !gating()) finish();
+    if(ready && !done && !gating() && !studioPending()) finish();
   };
 
   function markAssets(){
@@ -145,8 +149,7 @@ document.documentElement.classList.add("ms-boot");
   }
 
   function releasePublicApp(){
-    // Auth-gated studio pages wait for app.js; public pages lift as soon as the DOM is ready.
-    if(gating()) return;
+    if(gating() || window.__msStudioBoot) return;
     appReady=true;
     markReady();
   }
@@ -161,14 +164,14 @@ document.documentElement.classList.add("ms-boot");
   setTimeout(markAssets, maxMs);
   setTimeout(function(){
     if(done) return;
-    if(gating()) return;
+    if(gating() || studioPending()) return;
     if(window.__msReleaseBoot) window.__msReleaseBoot();
   }, maxMs);
 })();
 </script>
   <script>
     (function () {
-      var BUILD = "20261102-dash-load";
+      var BUILD = "20261102-dash-paint";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -196,7 +199,7 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261102-dash-load"></script>
+  <script src="js/auth-gate-head.js?v=20261102-dash-paint"></script>
   <title>All projects - Moonrise Studio</title>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261028-strict-bw">
@@ -271,12 +274,13 @@ document.documentElement.classList.add("ms-boot");
     </div>
   </dialog>
 
-  <script defer src="js/config.js?v=20261006-blue"></script>
-  <script defer src="js/app.js?v=20261102-dash-load"></script>
+  <script defer src="js/config.js?v=20261102-dash-paint"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
-  <script defer src="js/supabase-client.js?v=20261005-auth"></script>
-  <script defer src="js/auth.js?v=20261102-dash-load"></script>
+  <script defer src="js/supabase-client.js?v=20261102-dash-paint"></script>
+  <script defer src="js/auth.js?v=20261102-dash-paint"></script>
+  <script defer src="js/app.js?v=20261102-dash-paint"></script>
+  
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20261028-motion-finder"></script>
   <script defer src="js/toast.js"></script>

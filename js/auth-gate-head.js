@@ -48,6 +48,8 @@
 
   document.documentElement.classList.add("ms-auth-gating");
   document.documentElement.classList.add("ms-hold");
+  // Boot overlay must stay until app.js paints the shell (avoids blank white).
+  window.__msStudioBoot = 1;
 
   var preconnect = document.createElement("link");
   preconnect.rel = "preconnect";
@@ -60,7 +62,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261102-dash-load", "js/app.js?v=20261102-dash-load"].forEach(function (href) {
+  ["js/config.js?v=20261102-dash-paint", "js/auth.js?v=20261102-dash-paint", "js/app.js?v=20261102-dash-paint"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -103,17 +105,16 @@
   window.__msReleaseAuthGate = function () {
     document.documentElement.classList.remove("ms-auth-gating");
     document.documentElement.classList.add("ms-auth-ready");
-    if (window.__msReleaseBoot) window.__msReleaseBoot();
+    // Do not release the moonrise bar here — wait until paintApp marks the shell.
   };
 
-  // Signed-in studio pages that never finish boot show the 404 page instead of
-  // sitting on the moonrise loader indefinitely.
+  // If the studio shell never paints, leave the loader and open 404.
   setTimeout(function () {
-    if (!document.documentElement.classList.contains("ms-auth-gating")) return;
+    if (document.body && document.body.dataset.msShellPainted === "1") return;
     if (window.__msAuthRedirecting) return;
     window.__msAuthRedirecting = true;
     location.replace("404.html");
-  }, 8000);
+  }, 6000);
 
   mountTabBarEarly();
 })();
