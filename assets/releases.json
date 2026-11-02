@@ -3,6 +3,30 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.4.6",
+      "date": "2026-11-02",
+      "title": "Stop long dashboard boots with a 404 fallback",
+      "tag": "v2.4.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.4.6",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Dashboard and other studio pages stop hanging on the moonrise loader and open the 404 page if boot takes longer than 8 seconds.",
+            "One shared asset build id across pages so moving from login to dashboard no longer clears cache and reloads blank."
+          ]
+        },
+        {
+          "heading": "Security",
+          "added": [],
+          "fixes": [
+            "Session checks time out in 8 seconds instead of waiting almost a minute."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.5",
       "date": "2026-11-01",
       "title": "White home hero with black type",
