@@ -24,7 +24,7 @@
   function defaultAvatar() {
     return (
       (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) ||
-      "doc/profilepicture.jpg?v=20261006-blue"
+      "assets/profilepicture.jpg?v=20261006-blue"
     );
   }
 

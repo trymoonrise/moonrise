@@ -71,7 +71,7 @@
       li.innerHTML =
         '<a class="ms-help-vcard-link" href="tel:' +
         encodeURIComponent(String(data.phone).replace(/\s/g, "")) +
-        '"><span class="ms-help-vcard-icon ms-help-vcard-icon--phone" aria-hidden="true"><img src="doc/iMessages.jpg" alt="" width="46" height="46"></span><span class="ms-help-vcard-link-text"><strong>Number</strong><em>' +
+        '"><span class="ms-help-vcard-icon ms-help-vcard-icon--phone" aria-hidden="true"><img src="assets/iMessages.jpg" alt="" width="46" height="46"></span><span class="ms-help-vcard-link-text"><strong>Number</strong><em>' +
         phoneDisplay +
         "</em></span></a>";
       linksEl.appendChild(li);
@@ -82,7 +82,7 @@
       li.innerHTML =
         '<a class="ms-help-vcard-link" href="mailto:' +
         encodeURIComponent(data.email) +
-        '"><span class="ms-help-vcard-icon ms-help-vcard-icon--email" aria-hidden="true"><img src="doc/Gmail.jpg" alt="" width="46" height="46"></span><span class="ms-help-vcard-link-text"><strong>Email</strong><em>' +
+        '"><span class="ms-help-vcard-icon ms-help-vcard-icon--email" aria-hidden="true"><img src="assets/Gmail.jpg" alt="" width="46" height="46"></span><span class="ms-help-vcard-link-text"><strong>Email</strong><em>' +
         emailDisplay +
         "</em></span></a>";
       linksEl.appendChild(li);

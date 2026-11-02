@@ -1,9 +1,9 @@
-﻿const fs = require("fs");
+const fs = require("fs");
 const path = require("path");
 const { execFileSync } = require("child_process");
 
 const root = path.join(__dirname, "..", "..");
-const src = path.join(root, "Website Presets");
+const src = path.join(root, "presets");
 const dest = path.join(root, "website-presets");
 const onVercel = Boolean(process.env.VERCEL);
 
@@ -30,12 +30,12 @@ function mirrorCopy() {
   } else {
     execFileSync("cp", ["-a", src + "/.", dest + "/"], { stdio: "inherit" });
   }
-  console.log("Mirrored Website Presets -> website-presets");
+  console.log("Mirrored presets -> website-presets");
 }
 
 function main() {
   if (!existsManifest(src)) {
-    console.warn("Website Presets source missing:", src);
+    console.warn("presets source missing:", src);
     process.exitCode = 1;
     return;
   }
@@ -69,7 +69,7 @@ function main() {
     try {
       fs.symlinkSync(src, dest, "dir");
       if (existsManifest(dest)) {
-        console.log("Created symlink website-presets -> Website Presets");
+        console.log("Created symlink website-presets -> presets");
         return;
       }
     } catch (e) {

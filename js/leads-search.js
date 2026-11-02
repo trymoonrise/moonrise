@@ -1588,7 +1588,7 @@
       // Interactive Finder: skip place-page enrichment so first results return faster.
       enrich: false,
       fast: true,
-      // Do not write leadfinder-cloud/data/*.csv - watchers treat that as a hard refresh.
+      // Do not write leadfinder/data/*.csv - watchers treat that as a hard refresh.
       upload: false,
     };
     if (q) body.query = q;
@@ -1711,7 +1711,7 @@
       error: lastAborted
         ? "LeadFinder scrape timed out"
         : lastOffline && !candidates.some(isWorkerLeadFinderBase)
-          ? "Live Maps search server is not running. On this machine only: localStorage.setItem('ms_use_local_leadfinder','1') then cd leadfinder-cloud && npm run search:server - otherwise use tryMoonrise.com (cloud)."
+          ? "Live Maps search server is not running. On this machine only: localStorage.setItem('ms_use_local_leadfinder','1') then cd leadfinder && npm run search:server - otherwise use tryMoonrise.com (cloud)."
           : lastOffline
             ? "Live Maps search is temporarily unavailable. Try again in a moment."
           : lastError || "LeadFinder scrape failed",

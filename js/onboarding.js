@@ -9,7 +9,7 @@
     {
       id: "venmo",
       name: "Venmo",
-      logo: "doc/Venmo.png",
+      logo: "assets/Venmo.png",
       label: "Venmo username",
       placeholder: "@username",
       hint: "Your Venmo @username or phone number.",
@@ -17,7 +17,7 @@
     {
       id: "paypal",
       name: "PayPal",
-      logo: "doc/PayPal.png",
+      logo: "assets/PayPal.png",
       label: "PayPal email",
       placeholder: "you@email.com",
       hint: "PayPal email where you receive payouts.",
@@ -25,7 +25,7 @@
     {
       id: "zelle",
       name: "Zelle",
-      logo: "doc/Zelle.png",
+      logo: "assets/Zelle.png",
       label: "Zelle email or phone",
       placeholder: "you@email.com",
       hint: "Email or mobile number linked to Zelle.",
@@ -33,7 +33,7 @@
     {
       id: "cashapp",
       name: "Cash App",
-      logo: "doc/Cashapp.png",
+      logo: "assets/Cashapp.png",
       label: "Cash App $cashtag",
       placeholder: "$cashtag",
       hint: "Your Cash App $cashtag or url to your cashapp.",
@@ -41,7 +41,7 @@
     {
       id: "apple_pay",
       name: "Apple Pay",
-      logo: "doc/ApplePay.png",
+      logo: "assets/ApplePay.png",
       label: "Apple Pay contact",
       placeholder: "you@email.com",
       hint: "Email or phone linked to Apple Pay.",
@@ -49,7 +49,7 @@
     {
       id: "google_pay",
       name: "Google Pay",
-      logo: "doc/GooglePay.png",
+      logo: "assets/GooglePay.png",
       label: "Google Pay email",
       placeholder: "you@gmail.com",
       hint: "Gmail or phone linked to Google Pay.",
@@ -57,7 +57,7 @@
     {
       id: "bitcoin",
       name: "Bitcoin",
-      logo: "doc/Bitcoin.png",
+      logo: "assets/Bitcoin.png",
       label: "Bitcoin wallet address",
       placeholder: "bc1... or 1...",
       hint: "Your Bitcoin wallet address for payouts.",

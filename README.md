@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="doc/MoonriseLogo.png" alt="Moonrise Studio" width="88" height="88">
+  <img src="assets/MoonriseLogo.png" alt="Moonrise Studio" width="88" height="88">
 </p>
 
 <h1 align="center">Moonrise Studio</h1>
@@ -37,7 +37,7 @@ The goal is simple: turn website selling into a clear, repeatable flow - find ->
 ## About me
 
 <p align="center">
-  <img src="doc/MoonriseLogo.png" alt="TryMoonrise" width="72" height="72">
+  <img src="assets/MoonriseLogo.png" alt="TryMoonrise" width="72" height="72">
 </p>
 
 Hi - I'm the builder behind **Moonrise** / **TryMoonrise**.
@@ -204,6 +204,6 @@ See also:
 ---
 
 <p align="center">
-  <img src="doc/MoonriseLogo.png" alt="" width="36" height="36"><br>
+  <img src="assets/MoonriseLogo.png" alt="" width="36" height="36"><br>
   <sub>Built with care for freelancers, creators, and local businesses.</sub>
 </p>

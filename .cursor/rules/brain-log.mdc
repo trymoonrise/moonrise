@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Brain log
 
-`moonrise-studio/brain/log.json` is the source for commit messages and release notes for **Moonrise** (trymoonrise.com). The current version is `moonrise-studio/package.json` `version`. A commit, update, or deploy raises that version everywhere listed in the commit-and-deploy rule before it ships. This commit's notes belong to the new version, not the one that already shipped.
+`brain/log.json` is the source for commit messages and release notes for **Moonrise** (trymoonrise.com). The current version is `package.json` `version`. A commit, update, or deploy raises that version everywhere listed in the commit-and-deploy rule before it ships. This commit's notes belong to the new version, not the one that already shipped.
 
 Before you finish, audit the current version. Every change a person would notice, and every fix that belongs in a commit, gets one sentence. Put that sentence in exactly one list:
 
@@ -31,6 +31,6 @@ Add a heading only when none of those fit.
 - If it exists, append the sentence. Leave older notes as they are.
 - Do not log formatting-only churn, reverted work, or a change that is already written there.
 - One note is one change. Do not use a `notes` list.
-- Run `npm run notes` from `moonrise-studio/` so `brain/releases.json` and `doc/releases.json` match the log.
+- Run `npm run notes` from `D:\MasterVault\Moonrise` so `brain/releases.json` and `assets/releases.json` match the log.
 - Do not commit or publish only because the log changed.
 - Never mention other product brands in Moonrise UI, CSS comments, cache names, or release notes.

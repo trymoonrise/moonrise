@@ -39,7 +39,7 @@
       '<img src="' +
       (opts.avatarUrl ||
         (window.SITE_CONFIG && window.SITE_CONFIG.brandLogoUrl) ||
-        "doc/MoonriseLogo.png") +
+        "assets/MoonriseLogo.png") +
       '" alt="">' +
       '<span class="ms-watermark-text"><strong>Complete your order</strong>' +
       "<span>Click here to remove watermark</span></span>";

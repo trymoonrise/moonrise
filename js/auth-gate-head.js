@@ -103,6 +103,7 @@
   window.__msReleaseAuthGate = function () {
     document.documentElement.classList.remove("ms-auth-gating");
     document.documentElement.classList.add("ms-auth-ready");
+    if (window.__msReleaseBoot) window.__msReleaseBoot();
   };
 
   setTimeout(function () {

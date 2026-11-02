@@ -17,7 +17,7 @@
       ]
     },
     {
-      "source": "/doc/last-commit.json",
+      "source": "/assets/last-commit.json",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" }
       ]
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "source": "/(css|js|doc|watermark|manifest\\.json|robots\\.txt|sitemap\\.xml|llms\\.txt)/(.*)",
+      "source": "/(css|js|assets|watermark|manifest\\.json|robots\\.txt|sitemap\\.xml|llms\\.txt)/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
@@ -54,6 +54,9 @@
     }
   ],
   "rewrites": [
+    { "source": "/doc/:path*", "destination": "/assets/:path*" },
+    { "source": "/fonts/:path*", "destination": "/assets/fonts/:path*" },
+    { "source": "/hats/:path*", "destination": "/assets/hats/:path*" },
     { "source": "/health", "destination": "/api" },
     { "source": "/studio-last-commit", "destination": "/api" },
     { "source": "/generate", "destination": "/api" },
@@ -118,7 +121,7 @@
     "api/index.js": {
       "maxDuration": 300,
       "memory": 1024,
-      "includeFiles": "{worker,watermark,website-presets,Website*}/**"
+      "includeFiles": "{worker,watermark,website-presets,presets}/**"
     }
   }
 }

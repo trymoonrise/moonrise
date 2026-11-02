@@ -8,7 +8,7 @@ Allow: /contact.html
 Allow: /legal.html
 Allow: /report.html
 Allow: /download.html
-Allow: /doc/
+Allow: /assets/
 
 Disallow: /dashboard.html
 Disallow: /builder.html

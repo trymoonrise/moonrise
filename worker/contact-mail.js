@@ -5,13 +5,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const MOONRISE_LOGO_URL = "https://trymoonrise.com/doc/MoonriseLogo.png";
+const MOONRISE_LOGO_URL = "https://trymoonrise.com/assets/MoonriseLogo.png";
 let moonriseLogoAttachmentCache;
 
 function moonriseLogoAttachment() {
   if (moonriseLogoAttachmentCache !== undefined) return moonriseLogoAttachmentCache;
   try {
-    const file = path.join(__dirname, "..", "doc", "MoonriseLogo.png");
+    const file = path.join(__dirname, "..", "assets", "MoonriseLogo.png");
     const content = fs.readFileSync(file).toString("base64");
     moonriseLogoAttachmentCache = {
       filename: "MoonriseLogo.png",

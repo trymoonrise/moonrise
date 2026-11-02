@@ -12,7 +12,7 @@
 (function (global) {
   const bootScriptEl = typeof document !== "undefined" ? document.currentScript : null;
   const AVATAR =
-    "https://moonrise-studio.vercel.app/doc/MoonriseLogo.png";
+    "https://moonrise-studio.vercel.app/assets/MoonriseLogo.png";
   const SITE_URL = "https://trymoonrise.com";
   const STYLE_ID = "mr-wm-embed-style";
   const DEFAULT_URGENCY_MS = 96 * 3600000;
@@ -202,7 +202,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     const phone = String(c.phone || "").trim();
     const phoneDisplay = escapeHtml(c.phoneDisplay || phone);
     const avatarHtml = isHq
-      ? '<img src="' + escapeHtml(assetsBase + "/doc/MoonriseLogo.png") + '" alt="" width="72" height="72">'
+      ? '<img src="' + escapeHtml(assetsBase + "/assets/MoonriseLogo.png") + '" alt="" width="72" height="72">'
       : escapeHtml(contactInitials(c.name));
     const brand = isHq ? "moonrise" : "creator";
     const links = [];
@@ -211,7 +211,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
         '<li><a class="mr-wm-vcard-link" href="tel:' +
           escapeHtml(phone.replace(/\s/g, "")) +
           '"><span class="mr-wm-vcard-icon"><img src="' +
-          escapeHtml(assetsBase + "/doc/iMessages.jpg") +
+          escapeHtml(assetsBase + "/assets/iMessages.jpg") +
           '" alt="" width="46" height="46"></span><span class="mr-wm-vcard-link-text"><strong>Number</strong><em>' +
           phoneDisplay +
           "</em></span></a></li>"
@@ -222,7 +222,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
         '<li><a class="mr-wm-vcard-link" href="mailto:' +
           escapeHtml(email) +
           '"><span class="mr-wm-vcard-icon"><img src="' +
-          escapeHtml(assetsBase + "/doc/Gmail.jpg") +
+          escapeHtml(assetsBase + "/assets/Gmail.jpg") +
           '" alt="" width="46" height="46"></span><span class="mr-wm-vcard-link-text"><strong>Email</strong><em>' +
           escapeHtml(email) +
           "</em></span></a></li>"
@@ -233,7 +233,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
         '<li><a class="mr-wm-vcard-link" href="' +
           escapeHtml(c.discordUrl) +
           '" target="_blank" rel="noopener noreferrer"><span class="mr-wm-vcard-icon"><img src="' +
-          escapeHtml(assetsBase + "/doc/Discord.jpg") +
+          escapeHtml(assetsBase + "/assets/Discord.jpg") +
           '" alt="" width="46" height="46"></span><span class="mr-wm-vcard-link-text"><strong>Discord</strong><em>Join the community</em></span></a></li>'
       );
     }

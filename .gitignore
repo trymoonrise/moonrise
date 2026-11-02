@@ -10,10 +10,10 @@ accesstokens.env
 **/secrets/
 **/*credentials*
 
-# Heavy media - keep stock images for Website Presets; skip videos (many >50MB)
-Website Presets/stock/**/*.mp4
-Website Presets/stock/**/*.webm
-Website Presets/stock/**/*.mov
+# Heavy media - keep stock images for presets; skip videos (many >50MB)
+presets/stock/**/*.mp4
+presets/stock/**/*.webm
+presets/stock/**/*.mov
 **/*.mp4
 **/*.webm
 **/*.mov
@@ -26,9 +26,9 @@ Thumbs.db
 
 # deps / build
 worker/node_modules/
-leadfinder-cloud/node_modules/
-leadfinder-cloud/data/
-leadfinder-cloud/desktop/
+leadfinder/node_modules/
+leadfinder/data/
+leadfinder/desktop/
 **/node_modules/
 dist/
 .cache/
@@ -46,4 +46,9 @@ test-results/
 ../accesstokens.env
 accesstokens.env
 *.pem
+
+
+# Local non-site archive (unused / sibling projects)
+extra/
+Extra/
 

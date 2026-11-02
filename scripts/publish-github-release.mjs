@@ -6,8 +6,8 @@
  *   node scripts/publish-github-release.mjs --all
  *   node scripts/publish-github-release.mjs --version 1.0.1
  *
- * Auth: GITHUB_TOKEN or GH_TOKEN from E:/MasterVault/Moonrise/accesstokens.env
- * (or moonrise-studio/.env). Never prints the token.
+ * Auth: GITHUB_TOKEN or GH_TOKEN from D:/MasterVault/Moonrise/accesstokens.env
+ * (or .env / worker/.env). Never prints the token.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const vaultEnv = path.resolve(root, "..", "accesstokens.env");
+const vaultEnv = path.join(root, "accesstokens.env");
 loadEnv(vaultEnv);
 loadEnv(path.join(root, ".env"));
 loadEnv(path.join(root, "worker", ".env"));

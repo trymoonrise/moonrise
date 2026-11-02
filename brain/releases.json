@@ -3,6 +3,39 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.4.3",
+      "date": "2026-11-01",
+      "title": "Unstick boot and ship assets revamp",
+      "tag": "v2.4.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.4.3",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Brand media, fonts, and hats now live under assets/ with /doc and /fonts redirects for old links.",
+            "Website presets ship from presets/ instead of the old Website Presets folder."
+          ],
+          "fixes": [
+            "The moonrise loading bar no longer clears into a blank hold screen while sign-in is still checking."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Studio pages keep the moonrise loader up until auth finishes, then open the app instead of buffering on white."
+          ]
+        },
+        {
+          "heading": "Leadfinder",
+          "added": [
+            "Leadfinder cloud sources live under leadfinder/ in the product repo."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.4.2",
       "date": "2026-10-28",
       "title": "Fix home FAQ two-column layout",

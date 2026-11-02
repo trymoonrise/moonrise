@@ -36,13 +36,13 @@ window.SITE_CONFIG = {
     },
   ],
   /** Brand assets - relative paths work on Vercel and after custom-domain DNS is pointed here. */
-  assetCdnUrl: "doc/",
-  brandLogoUrl: "doc/MoonriseLogo.png",
+  assetCdnUrl: "assets/",
+  brandLogoUrl: "assets/MoonriseLogo.png",
   /** Social / link preview image (Discord, iMessage, Twitter, etc.). */
-  embedImageUrl: "https://trymoonrise.com/doc/embed.png",
+  embedImageUrl: "https://trymoonrise.com/assets/embed.png",
   /** Default profile picture when a user has not uploaded one. */
-  defaultAvatarUrl: "doc/profilepicture.jpg?v=20261006-blue",
-  docBaseUrl: "doc/",
+  defaultAvatarUrl: "assets/profilepicture.jpg?v=20261006-blue",
+  docBaseUrl: "assets/",
 
   /** Moonrise Studio Supabase project (public anon / publishable key only). */
   supabaseUrl: "https://erfaxgmnzdropviormpj.supabase.co",

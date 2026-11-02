@@ -1,12 +1,12 @@
 /**
- * Write doc/last-commit.json from the current git HEAD (used at deploy / CI).
+ * Write assets/last-commit.json from the current git HEAD (used at deploy / CI).
  */
 const fs = require("fs");
 const path = require("path");
 const { execFileSync } = require("child_process");
 
 const root = path.join(__dirname, "..", "..");
-const outFile = path.join(root, "doc", "last-commit.json");
+const outFile = path.join(root, "assets", "last-commit.json");
 
 function git(args) {
   return execFileSync("git", args, {

@@ -3,7 +3,7 @@ const path = require("path");
 const { getBusinessStructure, getStructurePresetRoles } = require("../business-structures");
 const { formatPresetCatalog, formatPresetPack } = require("../generate-prompt");
 
-const manifestPath = path.join(__dirname, "..", "..", "Website Presets", "presets", "manifest.json");
+const manifestPath = path.join(__dirname, "..", "..", "presets", "presets", "manifest.json");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 
 const required = [

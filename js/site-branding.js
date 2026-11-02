@@ -6,8 +6,8 @@
   const cfg = window.SITE_CONFIG || {};
   const siteUrl = String(cfg.siteUrl || "https://trymoonrise.com").replace(/\/$/, "");
   const siteName = String(cfg.siteName || cfg.companyName || "Moonrise Studio").trim();
-  const logoPath = String(cfg.brandLogoUrl || "doc/MoonriseLogo.png").trim();
-  const embedPath = String(cfg.embedImageUrl || "doc/embed.png").trim();
+  const logoPath = String(cfg.brandLogoUrl || "assets/MoonriseLogo.png").trim();
+  const embedPath = String(cfg.embedImageUrl || "assets/embed.png").trim();
   const locale = String(cfg.locale || "en_US").trim();
   const supportEmail = String(cfg.supportEmail || "trymoonrise@gmail.com").trim();
 

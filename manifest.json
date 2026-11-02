@@ -13,13 +13,13 @@
   "theme_color": "#0f172a",
   "icons": [
     {
-      "src": "doc/MoonriseLogo.png",
+      "src": "assets/MoonriseLogo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "doc/MoonriseLogo.png",
+      "src": "assets/MoonriseLogo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

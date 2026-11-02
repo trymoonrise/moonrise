@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const logPath = path.join(root, "brain", "log.json");
 const brainOut = path.join(root, "brain", "releases.json");
-const docOut = path.join(root, "doc", "releases.json");
+const docOut = path.join(root, "assets", "releases.json");
 
 const log = JSON.parse(fs.readFileSync(logPath, "utf8"));
 const repo = String(log.repo || "trymoonrise/moonrise");

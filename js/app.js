@@ -232,7 +232,7 @@
     const c = window.SITE_CONFIG || {};
     return (
       c.brandLogoUrl ||
-      "doc/MoonriseLogo.png"
+      "assets/MoonriseLogo.png"
     );
   }
 
@@ -240,7 +240,7 @@
     const c = window.SITE_CONFIG || {};
     return (
       c.defaultAvatarUrl ||
-      "doc/profilepicture.jpg?v=20261006-blue"
+      "assets/profilepicture.jpg?v=20261006-blue"
     );
   }
 
@@ -508,7 +508,7 @@
 
     // 3) Static fallback shipped with the deploy.
     try {
-      const local = await fetch("doc/last-commit.json?v=" + Date.now(), { cache: "no-store" });
+      const local = await fetch("assets/last-commit.json?v=" + Date.now(), { cache: "no-store" });
       if (local.ok) {
         const data = await local.json();
         if (data?.committedAt) return String(data.committedAt);
@@ -1123,7 +1123,7 @@
   }
 
   function downloadLogoHtml() {
-    const src = String(brandLogo() || "doc/MoonriseLogo.png").replace(/"/g, "");
+    const src = String(brandLogo() || "assets/MoonriseLogo.png").replace(/"/g, "");
     return (
       '<img class="ms-download-logo" src="' +
       src +
@@ -1156,7 +1156,7 @@
   }
 
   function calLogoHtml() {
-    return '<img class="ms-cal-logo" src="doc/Cal.png" alt="" width="68" height="68">';
+    return '<img class="ms-cal-logo" src="assets/Cal.png" alt="" width="68" height="68">';
   }
 
   function redirectBrand(url, label) {
@@ -1181,7 +1181,7 @@
     const logos = {
       discord: DISCORD_LOGO,
       cal: calLogoHtml(),
-      instagram: '<img class="ms-instagram-logo" src="doc/Instagram.svg" alt="" width="68" height="68">',
+      instagram: '<img class="ms-instagram-logo" src="assets/Instagram.svg" alt="" width="68" height="68">',
       telegram: TELEGRAM_LOGO,
     };
     if (icon) {
@@ -1853,6 +1853,7 @@
     }
     setChannelGenerating(null, false);
     document.body.classList.add("ms-ready");
+    document.documentElement.classList.remove("ms-auth-gating");
     document.documentElement.classList.remove("ms-hold");
     if (window.__msReleaseBoot) window.__msReleaseBoot();
     document.dispatchEvent(new Event("ms:shell-ready"));

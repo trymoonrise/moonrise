@@ -3,7 +3,7 @@
  * Pages and app scripts stay network-first so a bad cached file cannot stick.
  * Other assets refresh in the background.
  */
-const CACHE_NAME = "ms-pwa-v75-studio";
+const CACHE_NAME = "ms-pwa-v76-studio";
 const CORE_ASSETS = ["./css/studio.css", "./css/studio-motion.css", "./index.html"];
 
 function isAssetPath(pathname) {
@@ -166,8 +166,8 @@ self.addEventListener("push", (event) => {
   const title = String(data.title || "Moonrise").trim() || "Moonrise";
   const options = {
     body: String(data.body || "You have a new update.").trim(),
-    icon: "./doc/MoonriseLogo.png",
-    badge: "./doc/MoonriseLogo.png",
+    icon: "./assets/MoonriseLogo.png",
+    badge: "./assets/MoonriseLogo.png",
     tag: String(data.tag || "moonrise").trim() || "moonrise",
     renotify: true,
     data: {
