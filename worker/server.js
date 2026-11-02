@@ -105,6 +105,7 @@ function resolveWebsitePresetsDir() {
   const fromEnv = String(process.env.WEBSITE_PRESETS_DIR || "").trim();
   const candidates = [
     fromEnv,
+    path.join(__dirname, "..", "presets"),
     path.join(__dirname, "..", "website-presets"),
     path.join(__dirname, "website-presets"),
     path.join(__dirname, "..", "Website Presets"),
@@ -112,7 +113,7 @@ function resolveWebsitePresetsDir() {
   for (const dir of candidates) {
     if (fs.existsSync(path.join(dir, "presets", "manifest.json"))) return dir;
   }
-  return candidates[candidates.length - 1] || path.join(__dirname, "..", "Website Presets");
+  return candidates[candidates.length - 1] || path.join(__dirname, "..", "presets");
 }
 const WEBSITE_PRESETS_DIR = resolveWebsitePresetsDir();
 /** Prefer one component from each of these real manifest categories. */

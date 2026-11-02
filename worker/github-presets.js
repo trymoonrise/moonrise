@@ -1,10 +1,10 @@
 /**
  * Load Website Presets from GitHub (main branch) for AI generation.
- * Default: trymoonrise/moonrise -> Website Presets/presets
+ * Default: trymoonrise/moonrise -> presets/presets
  */
 const DEFAULT_REPO = "trymoonrise/moonrise";
 const DEFAULT_REF = "main";
-const DEFAULT_PRESETS_PATH = "Website Presets/presets";
+const DEFAULT_PRESETS_PATH = "presets/presets";
 const DEFAULT_TTL_MS = 10 * 60 * 1000;
 
 let manifestCache = {
