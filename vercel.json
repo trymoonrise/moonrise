@@ -53,6 +53,14 @@
       ]
     }
   ],
+  "redirects": [
+    { "source": "/apply", "destination": "/login.html", "permanent": true },
+    { "source": "/apply.html", "destination": "/login.html", "permanent": true },
+    { "source": "/store", "destination": "/donate.html", "permanent": true },
+    { "source": "/store.html", "destination": "/donate.html", "permanent": true },
+    { "source": "/pending-payouts", "destination": "/admin-console.html", "permanent": true },
+    { "source": "/pending-payouts.html", "destination": "/admin-console.html", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/doc/:path*", "destination": "/assets/:path*" },
     { "source": "/fonts/:path*", "destination": "/assets/fonts/:path*" },

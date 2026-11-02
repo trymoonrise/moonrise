@@ -6,7 +6,6 @@
   const PUBLIC_PAGES = new Set([
     "index",
     "login",
-    "apply",
     "orders",
     "home",
     "contact",

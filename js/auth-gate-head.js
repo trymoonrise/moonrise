@@ -14,7 +14,6 @@
     "": 1,
     "index.html": 1,
     "login.html": 1,
-    "apply.html": 1,
     "orders.html": 1,
     "contact.html": 1,
     "privacy.html": 1,

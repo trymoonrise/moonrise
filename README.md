@@ -106,10 +106,10 @@ You still own the relationship, the pitch, and the pricing. Moonrise provides th
 | `builder.html` | Create and manage sites |
 | `clients.html` | Paid clients |
 | `pricing.html` | Plans and billing |
-| `store.html` | Studio products |
+| `donate.html` | Support / store |
 | `settings.html` | Account |
 | `orders.html` | Locate My Order |
-| `privacy.html` / `terms.html` | Policies |
+| `legal.html` | Privacy, terms, refunds |
 
 ---
 
