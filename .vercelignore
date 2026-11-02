@@ -1,15 +1,35 @@
-/scripts
-/testtemplates
-/template-previews
-worker/node_modules
-node_modules
-leadfinder-cloud
+# Local archive and agent leftovers — never upload
+extra
+Extra
 .agents
-supabase
+.cursor
+.git
+
+# Deps / build caches
+node_modules
+**/node_modules
+worker/node_modules
+leadfinder/node_modules
+leadfinder/data
+leadfinder/desktop
+.cache
+dist
+.vercel
+supabase/.temp
+test-results
+
+# Preset mirror built on Vercel from presets/
+website-presets
+
+# Heavy media
 **/*.mp4
 **/*.webm
 **/*.mov
-Website Presets/stock
+presets/stock/**/*.mp4
+presets/stock/**/*.webm
+presets/stock/**/*.mov
+
+# Secrets
 .env
 .env.*
 **/.env
@@ -19,4 +39,11 @@ accesstokens.env
 .env.vercel.production
 **/secrets/**
 **/*credentials*
+
+# Legacy / unused paths
+leadfinder-cloud
+Website Presets
+scripts/_*
+testtemplates
+template-previews
 _allero-preview

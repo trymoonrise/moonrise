@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.4",
+      "date": "2026-11-01",
+      "title": "Fix production deploy package size",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "Production deploys ignore the local extra archive and node_modules so Vercel can upload the revamp."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.3",
       "date": "2026-11-01",
       "title": "Unstick boot and ship assets revamp",
