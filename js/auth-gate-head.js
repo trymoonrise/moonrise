@@ -60,7 +60,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261006-blue", "js/app.js?v=20261028-no-settings-tab"].forEach(function (href) {
+  ["js/config.js?v=20261102-dash-load", "js/app.js?v=20261102-dash-load"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -106,9 +106,14 @@
     if (window.__msReleaseBoot) window.__msReleaseBoot();
   };
 
+  // Signed-in studio pages that never finish boot show the 404 page instead of
+  // sitting on the moonrise loader indefinitely.
   setTimeout(function () {
-    if (document.documentElement.classList.contains("ms-auth-gating")) redirectToLogin();
-  }, 20000);
+    if (!document.documentElement.classList.contains("ms-auth-gating")) return;
+    if (window.__msAuthRedirecting) return;
+    window.__msAuthRedirecting = true;
+    location.replace("404.html");
+  }, 8000);
 
   mountTabBarEarly();
 })();

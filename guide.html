@@ -35,11 +35,18 @@ document.documentElement.classList.add("ms-boot");
   var readyAt=0;
   var minMs=180;
   var maxMs=2500;
+  var failMs=8000;
   var reduce=false;
   try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
 
   function gating(){
     return document.documentElement.classList.contains("ms-auth-gating");
+  }
+
+  function failTo404(){
+    if(window.__msAuthRedirecting)return;
+    window.__msAuthRedirecting=true;
+    location.replace("404.html");
   }
 
   function setProgress(p){
@@ -86,6 +93,10 @@ document.documentElement.classList.add("ms-boot");
   function tick(now){
     if(done)return;
     var elapsed=now-started;
+    if(elapsed>=failMs && gating()){
+      failTo404();
+      return;
+    }
     if(ready){
       if(reduce){
         setProgress(100);
@@ -109,7 +120,7 @@ document.documentElement.classList.add("ms-boot");
       setProgress(progress+(target-progress)*0.18);
       if(elapsed>=maxMs){
         if(gating()){
-          // Keep waiting on the bar; do not blank the page.
+          // Keep waiting on the bar until failMs, then 404.
           setProgress(Math.max(progress, 92));
         }else{
           appReady=true;
@@ -157,7 +168,7 @@ document.documentElement.classList.add("ms-boot");
 </script>
   <script>
     (function () {
-      var BUILD = "20261028-site";
+      var BUILD = "20261102-dash-load";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -185,7 +196,7 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261028-strict-bw"></script>
+  <script src="js/auth-gate-head.js?v=20261102-dash-load"></script>
   <title>Creator Guide - Moonrise Studio</title>
   <meta name="description" content="Complete Moonrise creator guide: Business Finder, Builder, publishing, watermark checkout, payouts, MVP+, contact forms, domains, and getting paid.">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
@@ -553,11 +564,11 @@ document.documentElement.classList.add("ms-boot");
   </div>
 
   <script defer src="js/config.js?v=20261006-blue"></script>
-  <script defer src="js/app.js?v=20261028-no-settings-tab"></script>
+  <script defer src="js/app.js?v=20261102-dash-load"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261005-auth"></script>
-  <script defer src="js/auth.js?v=20261028-safe-next"></script>
+  <script defer src="js/auth.js?v=20261102-dash-load"></script>
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20261028-motion-finder"></script>
   <script defer src="js/toast.js"></script>

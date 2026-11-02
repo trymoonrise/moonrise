@@ -1897,17 +1897,25 @@
     return false;
   }
 
+  function failStudioBoot() {
+    if (window.__msAuthRedirecting || document.prerendering) return;
+    window.__msAuthRedirecting = true;
+    location.replace("404.html");
+  }
+
   async function boot() {
     ensureTabBar(document.body?.dataset?.page || "");
     if (window.__msAuthRedirecting) return;
-    // This file runs before auth.js. Keep waiting so a half-loaded page
-    // does not give up and send the user to the login screen.
+    // This file runs before auth.js. Wait briefly, then fail to 404 instead of
+    // sitting on the moonrise loader for tens of seconds.
     if (!window.StudioAuth?.requireAuth) {
-      if (authWait < 200) {
+      if (authWait < 40) {
         authWait += 1;
         setTimeout(() => {
           void boot();
         }, 50);
+      } else if (document.documentElement.classList.contains("ms-auth-gating")) {
+        failStudioBoot();
       }
       return;
     }
@@ -1921,15 +1929,19 @@
     if (!session) {
       if (window.__msAuthRedirecting || document.prerendering) return;
       // Public pages release the gate and return no session. Protected pages
-      // stay gated while the worker is briefly unreachable.
+      // retry briefly while the worker recovers, then show 404.
       if (
         document.documentElement.classList.contains("ms-auth-gating") &&
-        authWait < 200
+        authWait < 24
       ) {
         authWait += 1;
         setTimeout(() => {
           void boot();
         }, 250);
+        return;
+      }
+      if (document.documentElement.classList.contains("ms-auth-gating")) {
+        failStudioBoot();
       }
       return;
     }

@@ -15,7 +15,8 @@
     "download",
   ]);
   const SUPPORT_EMAIL = "trymoonrise@gmail.com";
-  const AUTH_TIMEOUT_MS = 45000;
+  /** Session / API probes during page boot — keep short so the loader cannot stall. */
+  const AUTH_TIMEOUT_MS = 8000;
   const AUTH_RETRY_DELAY_MS = 800;
 
   function getClient() {
