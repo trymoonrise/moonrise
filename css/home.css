@@ -197,29 +197,29 @@ body.ms-home-menu-open .ms-home-nav {
   border-bottom-color: transparent;
 }
 
-/* Full-bleed dark stage */
+/* Full-bleed white stage — black type and controls */
 body[data-page="home"] .ms-home-stage {
   position: relative;
   min-height: 100dvh;
   overflow: hidden;
-  background: #070708;
-  color: #ffffff;
+  background: #ffffff;
+  color: #1d1d1f;
 }
 
 body[data-page="home"] .ms-home-stage-media {
   position: absolute;
   inset: -12% 0;
   background:
-    radial-gradient(70% 55% at 70% 35%, rgb(255 255 255 / 10%), transparent 58%),
-    radial-gradient(55% 45% at 20% 70%, rgb(255 255 255 / 6%), transparent 60%),
-    linear-gradient(160deg, #111111 0%, #070708 48%, #000000 100%);
+    radial-gradient(70% 55% at 70% 35%, rgb(0 0 0 / 4%), transparent 58%),
+    radial-gradient(55% 45% at 20% 70%, rgb(0 0 0 / 3%), transparent 60%),
+    linear-gradient(160deg, #ffffff 0%, #f7f7f8 48%, #f2f2f4 100%);
   will-change: transform;
 }
 
 body[data-page="home"] .ms-home-stage-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(transparent 42%, rgb(0 0 0 / 55%));
+  background: linear-gradient(transparent 55%, rgb(255 255 255 / 70%));
 }
 
 body[data-page="home"] .ms-home-stage-copy {
@@ -239,7 +239,7 @@ body[data-page="home"] .ms-home-stage-copy {
 
 body[data-page="home"] .ms-home-win {
   margin: 0 0 0.45rem;
-  color: #ffffff;
+  color: #1d1d1f;
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.14em;
@@ -250,7 +250,7 @@ body[data-page="home"] .ms-home-stage h1 {
   width: auto;
   max-width: 14ch;
   margin: 0 auto;
-  color: #ffffff;
+  color: #1d1d1f;
   font-size: clamp(2.85rem, 7.2vw, 6.4rem);
   font-weight: 600;
   letter-spacing: -0.05em;
@@ -261,7 +261,7 @@ body[data-page="home"] .ms-home-stage h1 {
 body[data-page="home"] .ms-home-stage-lead {
   margin: 0.9rem 0 0;
   max-width: 28rem;
-  color: rgb(255 255 255 / 78%);
+  color: #6e6e73;
   font-size: 0.98rem;
   font-weight: 400;
   line-height: 1.45;
@@ -275,8 +275,8 @@ body[data-page="home"] .ms-home-discover {
   padding: 0 1.3rem;
   border: 0;
   border-radius: 980px;
-  background: #ffffff;
-  color: #1d1d1f;
+  background: #1d1d1f;
+  color: #ffffff;
   font-size: 0.95rem;
   font-weight: 500;
   text-decoration: none;
@@ -296,7 +296,7 @@ body[data-page="home"] .ms-home-stage-note {
   z-index: 1;
   margin: 0 auto;
   width: min(92vw, 36rem);
-  color: rgb(255 255 255 / 55%);
+  color: #6e6e73;
   font-size: 0.68rem;
   font-weight: 400;
   text-align: center;

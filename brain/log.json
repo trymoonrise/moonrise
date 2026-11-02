@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.5",
+      "date": "2026-11-01",
+      "title": "White home hero with black type",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Home hero uses a white stage with black type and a black Start earning button."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.4.4",
       "date": "2026-11-01",
       "title": "Fix production deploy package size",
