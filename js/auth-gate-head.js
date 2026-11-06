@@ -7,7 +7,7 @@
 (function () {
   if (!window.__msAppearanceBoot) {
     window.__msAppearanceBoot = 1;
-    document.write('<script src="js/appearance.js?v=20261028-strict-bw"><\/script>');
+    document.write('<script src="js/appearance.js?v=20261106-boot-css"><\/script>');
   }
 
   var PUBLIC = {
@@ -61,7 +61,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261102-dash-unstick", "js/auth.js?v=20261102-dash-unstick", "js/app.js?v=20261102-dash-unstick"].forEach(function (href) {
+  ["js/config.js?v=20261106-boot-css", "js/auth.js?v=20261106-boot-css", "js/app.js?v=20261106-boot-css"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";

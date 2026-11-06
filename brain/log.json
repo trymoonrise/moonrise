@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.1.1",
+      "date": "2026-11-06",
+      "title": "Stop the black dashboard freeze",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Signing in no longer freezes the dashboard on a black screen. Theme stylesheets settle once instead of reordering forever."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.0",
       "date": "2026-11-02",
       "title": "Unstick dashboard boot hold screen",

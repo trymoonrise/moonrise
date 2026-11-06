@@ -234,14 +234,23 @@
     } else if (!link.parentNode) {
       document.head.appendChild(link);
     }
-    if (document.head.lastElementChild !== ui) document.head.appendChild(ui);
-    /* Keep cream / public layers after appearance + studio-ui for surface tokens. */
+    /* Keep studio-ui, then cream / public layers, as a stable suffix.
+       Moving "whatever is not last" on every head change loops forever and
+       freezes the tab before the shell can paint. */
+    var tail = [ui];
     ["link[href*='cream-ink.css']", "link[href*='cream-motion.css']", "link[href*='public-pages.css']"].forEach(function (sel) {
       var sheet = document.querySelector(sel);
-      if (sheet && sheet.parentNode && document.head.lastElementChild !== sheet) {
-        document.head.appendChild(sheet);
-      }
+      if (sheet) tail.push(sheet);
     });
+    var kids = document.head.children;
+    var start = kids.length - tail.length;
+    var placed = start >= 0;
+    for (var i = 0; placed && i < tail.length; i++) {
+      if (kids[start + i] !== tail[i]) placed = false;
+    }
+    if (!placed) {
+      for (var j = 0; j < tail.length; j++) document.head.appendChild(tail[j]);
+    }
   }
 
   function watchCss() {
@@ -249,7 +258,7 @@
     var obs = new MutationObserver(function () {
       ensureCss();
     });
-    obs.observe(document.documentElement, { childList: true, subtree: true });
+    if (document.head) obs.observe(document.head, { childList: true });
     document.addEventListener("DOMContentLoaded", function () {
       ensureCss();
       obs.disconnect();

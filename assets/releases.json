@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.1",
+      "date": "2026-11-06",
+      "title": "Stop the black dashboard freeze",
+      "tag": "v2.1.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.1",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Signing in no longer freezes the dashboard on a black screen. Theme stylesheets settle once instead of reordering forever."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.0",
       "date": "2026-11-02",
       "title": "Unstick dashboard boot hold screen",
