@@ -328,11 +328,11 @@ body.ms-sidebar-resizing iframe {
   padding: 0 0.45rem;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 0.35rem;
   width: 100%;
   box-sizing: border-box;
-  text-align: left;
+  text-align: center;
   font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.08em;

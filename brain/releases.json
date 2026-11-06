@@ -3,6 +3,24 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.2",
+      "date": "2026-11-06",
+      "title": "Centered nav labels and a real home screen app",
+      "tag": "v2.1.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.2",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Sidebar categories sit centered, with the icon and label together."
+          ],
+          "fixes": [
+            "The home screen app stays a web app on every page instead of showing the browser bar."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.1",
       "date": "2026-11-06",
       "title": "Stop the black dashboard freeze",

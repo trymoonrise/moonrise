@@ -190,7 +190,7 @@ document.documentElement.classList.add("ms-boot");
 </script>
   <script>
     (function () {
-      var BUILD = "20261106-boot-css";
+      var BUILD = "20261106-app-shell";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -218,11 +218,17 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <script src="js/auth-gate-head.js?v=20261106-boot-css"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <script src="js/auth-gate-head.js?v=20261106-app-shell"></script>
   <title>Help - Moonrise Studio</title>
   <meta name="description" content="Help for Moonrise Studio creators: accounts, websites, payouts, and how to reach support.">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-strict-bw">
+  <link rel="stylesheet" href="css/studio.css?v=20261106-nav-center">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 <link rel="stylesheet" href="css/studio-ui.css?v=20261028-strict-bw">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261028-strict-bw">
@@ -365,12 +371,12 @@ document.documentElement.classList.add("ms-boot");
     </section>
   </div>
 
-  <script defer src="js/config.js?v=20261106-boot-css"></script>
+  <script defer src="js/config.js?v=20261106-app-shell"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
-  <script defer src="js/supabase-client.js?v=20261106-boot-css"></script>
-  <script defer src="js/auth.js?v=20261106-boot-css"></script>
-  <script defer src="js/app.js?v=20261106-boot-css"></script>
+  <script defer src="js/supabase-client.js?v=20261106-app-shell"></script>
+  <script defer src="js/auth.js?v=20261106-app-shell"></script>
+  <script defer src="js/app.js?v=20261106-app-shell"></script>
   
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20261028-motion-finder"></script>

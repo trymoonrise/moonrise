@@ -15,7 +15,7 @@ setTimeout(function () {
 </script>
   <script>
     (function () {
-      var BUILD = "20261106-boot-css";
+      var BUILD = "20261106-app-shell";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -43,6 +43,12 @@ setTimeout(function () {
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
   <title>Login - Moonrise Studio</title>
   <meta name="description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
   <link rel="canonical" href="https://trymoonrise.com/login.html">
@@ -58,9 +64,8 @@ setTimeout(function () {
   <meta name="twitter:image" content="https://trymoonrise.com/assets/embed.png">
   <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
-  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-strict-bw">
+  <link rel="stylesheet" href="css/studio.css?v=20261106-nav-center">
   <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261028-strict-bw">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261028-strict-bw">
@@ -68,7 +73,7 @@ setTimeout(function () {
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
   <meta name="color-scheme" content="light">
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
-  <script defer src="js/config.js?v=20261106-boot-css"></script>
+  <script defer src="js/config.js?v=20261106-app-shell"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
@@ -196,8 +201,8 @@ setTimeout(function () {
   <script defer src="js/toast.js"></script>
   <script defer src="js/handles.js"></script>
   <script defer src="js/auth-security.js?v=20261003-session"></script>
-  <script defer src="js/supabase-client.js?v=20261106-boot-css"></script>
-  <script defer src="js/auth.js?v=20261106-boot-css"></script>
+  <script defer src="js/supabase-client.js?v=20261106-app-shell"></script>
+  <script defer src="js/auth.js?v=20261106-app-shell"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();

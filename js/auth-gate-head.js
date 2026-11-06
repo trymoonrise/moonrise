@@ -5,9 +5,42 @@
  * This is a UX gate only - tokens are not cryptographically verified here.
  */
 (function () {
+  // Installed home-screen apps drop into Safari/Chrome chrome on a normal link
+  // navigation. Stay in this web app for same-origin pages.
+  try {
+    var standalone =
+      window.navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+    if (standalone && !window.__msStandaloneNav) {
+      window.__msStandaloneNav = 1;
+      document.addEventListener(
+        "click",
+        function (event) {
+          var link = event.target && event.target.closest && event.target.closest("a[href]");
+          if (!link) return;
+          if (event.defaultPrevented || event.button !== 0) return;
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          if (link.target && link.target !== "_self") return;
+          if (link.hasAttribute("download")) return;
+          var url;
+          try {
+            url = new URL(link.getAttribute("href"), location.href);
+          } catch (err) {
+            return;
+          }
+          if (url.origin !== location.origin) return;
+          if (url.pathname === location.pathname && url.hash === location.hash) return;
+          event.preventDefault();
+          location.assign(url.pathname + url.search + url.hash);
+        },
+        false
+      );
+    }
+  } catch (err) {}
+
   if (!window.__msAppearanceBoot) {
     window.__msAppearanceBoot = 1;
-    document.write('<script src="js/appearance.js?v=20261106-boot-css"><\/script>');
+    document.write('<script src="js/appearance.js?v=20261106-app-shell"><\/script>');
   }
 
   var PUBLIC = {
@@ -61,7 +94,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261106-boot-css", "js/auth.js?v=20261106-boot-css", "js/app.js?v=20261106-boot-css"].forEach(function (href) {
+  ["js/config.js?v=20261106-app-shell", "js/auth.js?v=20261106-app-shell", "js/app.js?v=20261106-app-shell"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";

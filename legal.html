@@ -190,7 +190,7 @@ document.documentElement.classList.add("ms-boot");
 </script>
   <script>
     (function () {
-      var BUILD = "20261106-boot-css";
+      var BUILD = "20261106-app-shell";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -218,6 +218,12 @@ document.documentElement.classList.add("ms-boot");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
   <title>Legal - Moonrise Studio</title>
   <meta name="description" content="Moonrise Studio legal policies: Privacy Policy, Terms of Service, and Refund and cancellation.">
   <meta property="og:type" content="website">
@@ -233,13 +239,13 @@ document.documentElement.classList.add("ms-boot");
   <meta name="twitter:image" content="https://trymoonrise.com/assets/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-strict-bw">
+  <link rel="stylesheet" href="css/studio.css?v=20261106-nav-center">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261028-strict-bw">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261028-strict-bw">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261028-boot-smooth">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
-  <script defer src="js/config.js?v=20261106-boot-css"></script>
+  <script defer src="js/config.js?v=20261106-app-shell"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
 <style>
 .ms-legal-intro{margin:0.35rem 0 0;color:#666666;font-size:1.02rem;line-height:1.5;max-width:36rem;font-weight:500}

@@ -5,7 +5,7 @@
 <script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
   <script>
     (function () {
-      var BUILD = "20261106-boot-css";
+      var BUILD = "20261106-app-shell";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -33,6 +33,12 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
   <title>Download app - Moonrise Studio</title>
   <meta name="description" content="Install Moonrise Studio on your phone or desktop for quick access from your home screen.">
   <link rel="canonical" href="https://trymoonrise.com/download.html">
@@ -47,7 +53,7 @@
   <meta name="twitter:description" content="Install Moonrise Studio on your phone or desktop for quick access from your home screen.">
   <meta name="twitter:image" content="https://trymoonrise.com/assets/embed.png">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261028-strict-bw">
+  <link rel="stylesheet" href="css/studio.css?v=20261106-nav-center">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261028-strict-bw">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261028-strict-bw">
@@ -55,7 +61,7 @@
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
   <link rel="stylesheet" href="css/download.css?v=20261028-cream-full&_=20261006-ink" onload="document.documentElement.classList.remove('ms-hold')">
   <meta name="color-scheme" content="light">
-  <script defer src="js/config.js?v=20261106-boot-css"></script>
+  <script defer src="js/config.js?v=20261106-app-shell"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
 </head>
 <body data-page="download" class="ms-download-page">
