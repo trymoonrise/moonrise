@@ -10,8 +10,12 @@
   --ms-min-quiet: color-mix(in srgb, var(--ms-ink) 38%, transparent);
   --ms-min-fill: color-mix(in srgb, var(--ms-ink) 4%, transparent);
   --ms-min-fill-hover: color-mix(in srgb, var(--ms-ink) 6%, transparent);
-  --ms-min-radius: 16px;
-  --ms-min-radius-lg: 20px;
+  --ms-min-radius: 20px;
+  --ms-min-radius-lg: 28px;
+  --ms-min-radius-md: 18px;
+  --ms-min-radius-sm: 14px;
+  --ms-radius: 20px;
+  --ms-radius-card: 28px;
   --ms-min-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.04);
 }
 
@@ -79,7 +83,7 @@ body[data-page]:not([data-page="home"]):not([data-page="index"]) {
 .ms-brand-logo {
   width: 28px !important;
   height: 28px !important;
-  border-radius: 8px !important;
+  border-radius: 12px !important;
   box-shadow: 0 0 0 1px var(--ms-min-border) !important;
 }
 
@@ -134,7 +138,7 @@ body[data-page]:not([data-page="home"]):not([data-page="index"]) {
   gap: 0.7rem !important;
   min-height: 2.55rem !important;
   padding: 0.55rem 0.75rem !important;
-  border-radius: 12px !important;
+  border-radius: var(--ms-min-radius-md) !important;
   font-size: 0.8125rem !important;
   font-weight: 500 !important;
   letter-spacing: -0.01em !important;
@@ -184,7 +188,7 @@ body[data-page]:not([data-page="home"]):not([data-page="index"]) {
 .ms-sidebar-legal-link {
   font-size: 0.78rem !important;
   color: var(--ms-min-quiet) !important;
-  border-radius: 10px !important;
+  border-radius: var(--ms-min-radius-sm) !important;
   padding: 0.4rem 0.75rem !important;
 }
 
@@ -209,7 +213,7 @@ body[data-page]:not([data-page="home"]):not([data-page="index"]) {
 .ms-user-row {
   gap: 0.55rem !important;
   padding: 0.35rem 0.35rem 0.15rem !important;
-  border-radius: 14px !important;
+  border-radius: var(--ms-min-radius-md) !important;
   background: transparent !important;
 }
 
@@ -220,7 +224,7 @@ body[data-page]:not([data-page="home"]):not([data-page="index"]) {
 
 .ms-credits-tag,
 .ms-income-tag {
-  border-radius: 12px !important;
+  border-radius: 999px !important;
   background: color-mix(in srgb, var(--ms-accent) 7%, transparent) !important;
   border: 1px solid color-mix(in srgb, var(--ms-accent) 14%, transparent) !important;
   box-shadow: none !important;
@@ -296,7 +300,7 @@ body[data-page]:not([data-page="home"]):not([data-page="index"]) {
 .ms-dash-metric {
   background: var(--ms-min-fill) !important;
   border: 1px solid var(--ms-min-border) !important;
-  border-radius: 14px !important;
+  border-radius: var(--ms-min-radius) !important;
   box-shadow: none !important;
   padding: 0.85rem 0.9rem !important;
 }
@@ -331,12 +335,13 @@ a.ms-dash-tool {
   border: 1px solid var(--ms-min-border) !important;
   box-shadow: none !important;
   font-weight: 550 !important;
+  border-radius: 999px !important;
 }
 
 .ms-dash-projects-search-input,
 .ms-dash-projects-filter,
 .ms-dash-filter-btn {
-  border-radius: 12px !important;
+  border-radius: var(--ms-min-radius-md) !important;
   border-color: var(--ms-min-border-strong) !important;
   box-shadow: none !important;
 }
@@ -354,6 +359,7 @@ a.ms-dash-tool {
   box-shadow: var(--ms-min-shadow) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--ms-min-radius-lg) !important;
 }
 
 .ms-tab {
@@ -371,6 +377,7 @@ a.ms-dash-tool {
 .ms-tab-pill {
   background: var(--ms-min-fill) !important;
   box-shadow: none !important;
+  border-radius: 999px !important;
 }
 
 .ms-menu-toggle,
@@ -378,7 +385,7 @@ a.ms-dash-tool {
   border: 1px solid var(--ms-min-border) !important;
   background: color-mix(in srgb, var(--ms-surface) 90%, transparent) !important;
   box-shadow: var(--ms-min-shadow) !important;
-  border-radius: 12px !important;
+  border-radius: var(--ms-min-radius-md) !important;
 }
 
 /* —— Forms / rows —— */
@@ -386,6 +393,7 @@ a.ms-dash-tool {
 .ms-appearance-mode,
 .ms-appearance-block {
   border-color: var(--ms-min-border) !important;
+  border-radius: var(--ms-min-radius) !important;
 }
 
 .ms-appearance-swatches,
@@ -393,22 +401,45 @@ a.ms-dash-tool {
   background: var(--ms-min-fill) !important;
   border: 1px solid var(--ms-min-border) !important;
   box-shadow: none !important;
+  border-radius: var(--ms-min-radius) !important;
 }
 
 input.ms-input,
 textarea.ms-textarea,
-.ms-auth-card input.ms-input {
+.ms-auth-card input.ms-input,
+select.ms-input {
   border-color: var(--ms-min-border-strong) !important;
   background: var(--ms-surface) !important;
   box-shadow: none !important;
+  border-radius: var(--ms-min-radius-md) !important;
 }
 
-/* —— Buttons stay accent, but quieter secondary —— */
+/* —— Buttons: softer pills —— */
+.ms-btn,
+a.ms-btn,
+button.ms-btn,
+.ms-dash-tool,
+a.ms-dash-tool {
+  border-radius: 999px !important;
+}
+
 .ms-btn-secondary,
 .ms-dash-tool.ms-btn-secondary,
 a.ms-btn-secondary {
   border-width: 1px !important;
   font-weight: 600 !important;
+}
+
+.ms-project-card,
+.ms-lead-card,
+.ms-client-card,
+.ms-list-row,
+.ms-settings-row,
+.ms-modal,
+.ms-dialog,
+.ms-sheet,
+.ms-popover {
+  border-radius: var(--ms-min-radius-lg) !important;
 }
 
 /* Reduce decorative noise */

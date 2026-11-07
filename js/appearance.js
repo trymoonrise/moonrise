@@ -251,28 +251,28 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261107-minimal";
+      link.href = "css/appearance.css?v=20261107-soft-radius";
     }
     var ui = document.getElementById("ms-studio-ui-css");
     if (!ui) {
       ui = document.createElement("link");
       ui.id = "ms-studio-ui-css";
       ui.rel = "stylesheet";
-      ui.href = "css/studio-ui.css?v=20261107-minimal";
+      ui.href = "css/studio-ui.css?v=20261107-soft-radius";
     }
     var mono = document.getElementById("ms-studio-mono-css");
     if (!mono) {
       mono = document.createElement("link");
       mono.id = "ms-studio-mono-css";
       mono.rel = "stylesheet";
-      mono.href = "css/studio-mono.css?v=20261107-minimal";
+      mono.href = "css/studio-mono.css?v=20261107-soft-radius";
     }
     var minimal = document.getElementById("ms-studio-minimal-css");
     if (!minimal) {
       minimal = document.createElement("link");
       minimal.id = "ms-studio-minimal-css";
       minimal.rel = "stylesheet";
-      minimal.href = "css/studio-minimal.css?v=20261107-minimal";
+      minimal.href = "css/studio-minimal.css?v=20261107-soft-radius";
     }
     var font = document.getElementById("ms-studio-font");
     if (!font) {
