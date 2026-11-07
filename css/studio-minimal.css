@@ -1,0 +1,434 @@
+/**
+ * Super-minimal studio chrome — quiet type, thin borders, generous air.
+ * Inspired by clean SaaS dashboards; Moonrise stays black / white / accent.
+ */
+
+:root {
+  --ms-min-border: color-mix(in srgb, var(--ms-ink) 8%, transparent);
+  --ms-min-border-strong: color-mix(in srgb, var(--ms-ink) 14%, transparent);
+  --ms-min-muted: color-mix(in srgb, var(--ms-ink) 48%, transparent);
+  --ms-min-quiet: color-mix(in srgb, var(--ms-ink) 38%, transparent);
+  --ms-min-fill: color-mix(in srgb, var(--ms-ink) 4%, transparent);
+  --ms-min-fill-hover: color-mix(in srgb, var(--ms-ink) 6%, transparent);
+  --ms-min-radius: 16px;
+  --ms-min-radius-lg: 20px;
+  --ms-min-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+html[data-ms-mode="dark"] {
+  --ms-min-border: rgb(255 255 255 / 10%);
+  --ms-min-border-strong: rgb(255 255 255 / 14%);
+  --ms-min-muted: rgb(255 255 255 / 48%);
+  --ms-min-quiet: rgb(255 255 255 / 38%);
+  --ms-min-fill: rgb(255 255 255 / 6%);
+  --ms-min-fill-hover: rgb(255 255 255 / 9%);
+  --ms-min-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+/* —— Shell / page —— */
+body[data-page]:not([data-page="home"]):not([data-page="index"]) {
+  background: var(--ms-bg) !important;
+}
+
+#page-body.ms-dash-page,
+#page-body.ms-settings-page,
+#page-body.ms-clients-page,
+#page-body.ms-projects-page,
+#page-body.ms-content-page,
+#page-body.ms-pricing-page {
+  padding-top: 2rem !important;
+  padding-bottom: 4.5rem !important;
+}
+
+.ms-page-head {
+  margin-bottom: 1.35rem !important;
+  padding-bottom: 0 !important;
+  border: 0 !important;
+}
+
+.ms-page-head h1 {
+  font-size: clamp(1.55rem, 2.4vw, 1.9rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1.15 !important;
+  color: var(--ms-ink) !important;
+}
+
+.ms-page-head .lead,
+.ms-settings-hint,
+.ms-muted {
+  color: var(--ms-min-muted) !important;
+  font-size: 0.92rem !important;
+  line-height: 1.45 !important;
+}
+
+/* —— Sidebar —— */
+.ms-sidebar {
+  background: color-mix(in srgb, var(--ms-surface) 72%, transparent) !important;
+  border-right: 1px solid var(--ms-min-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.ms-brand {
+  padding: 0.85rem 0.85rem 1.1rem !important;
+  gap: 0.65rem !important;
+}
+
+.ms-brand-logo {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 0 1px var(--ms-min-border) !important;
+}
+
+.ms-brand-name {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.ms-nav-section {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  padding: 0 0.75rem !important;
+  margin: 0 0 0.35rem !important;
+  gap: 0.4rem !important;
+  font-size: 0.62rem !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--ms-min-quiet) !important;
+}
+
+.ms-nav-section-ico {
+  width: 11px !important;
+  height: 11px !important;
+  color: var(--ms-min-quiet) !important;
+  opacity: 0.85;
+}
+
+.ms-nav-section-ico svg {
+  width: 11px !important;
+  height: 11px !important;
+}
+
+.ms-nav-group {
+  gap: 0.2rem !important;
+}
+
+.ms-nav {
+  gap: 0.15rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ms-nav-pill {
+  display: none !important;
+}
+
+.ms-nav-link {
+  gap: 0.7rem !important;
+  min-height: 2.55rem !important;
+  padding: 0.55rem 0.75rem !important;
+  border-radius: 12px !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--ms-min-muted) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.ms-nav-link .ms-nav-ico {
+  width: 18px !important;
+  height: 18px !important;
+  color: inherit !important;
+  opacity: 0.9;
+}
+
+.ms-nav-link .ms-nav-ico svg {
+  width: 18px !important;
+  height: 18px !important;
+  stroke-width: 1.85 !important;
+}
+
+.ms-nav-link:hover {
+  background: var(--ms-min-fill-hover) !important;
+  color: var(--ms-ink) !important;
+}
+
+.ms-nav-link.is-active,
+.ms-nav:not(:has(.ms-nav-pill)) .ms-nav-link.is-active,
+.ms-nav-link.is-active.is-generating {
+  background: color-mix(in srgb, var(--ms-accent) 10%, transparent) !important;
+  color: var(--ms-accent) !important;
+  font-weight: 650 !important;
+  box-shadow: none !important;
+}
+
+.ms-nav-link.is-active .ms-nav-ico {
+  color: var(--ms-accent) !important;
+}
+
+.ms-sidebar-legal {
+  margin-top: 0.35rem !important;
+  padding-top: 0.85rem !important;
+  border-top: 1px solid var(--ms-min-border) !important;
+}
+
+.ms-sidebar-legal-link {
+  font-size: 0.78rem !important;
+  color: var(--ms-min-quiet) !important;
+  border-radius: 10px !important;
+  padding: 0.4rem 0.75rem !important;
+}
+
+.ms-sidebar-legal-link:hover,
+.ms-sidebar-legal-link.is-active {
+  color: var(--ms-ink) !important;
+  background: var(--ms-min-fill) !important;
+}
+
+.ms-sidebar-updated {
+  color: var(--ms-min-quiet) !important;
+  font-size: 0.68rem !important;
+  font-weight: 500 !important;
+}
+
+.ms-sidebar-foot {
+  border-top: 1px solid var(--ms-min-border) !important;
+  padding-top: 0.75rem !important;
+  margin-top: auto !important;
+}
+
+.ms-user-row {
+  gap: 0.55rem !important;
+  padding: 0.35rem 0.35rem 0.15rem !important;
+  border-radius: 14px !important;
+  background: transparent !important;
+}
+
+.ms-user-name {
+  font-size: 0.8125rem !important;
+  font-weight: 650 !important;
+}
+
+.ms-credits-tag,
+.ms-income-tag {
+  border-radius: 12px !important;
+  background: color-mix(in srgb, var(--ms-accent) 7%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--ms-accent) 14%, transparent) !important;
+  box-shadow: none !important;
+}
+
+/* —— Cards / stacks —— */
+.ms-card,
+.ms-settings-card,
+.ms-dash-card,
+.ms-project-card,
+.ms-auth-card,
+.ms-help-card,
+.ms-course-card,
+.ms-orders-card,
+.ms-download-card,
+.ms-fin-card,
+.ms-store-card {
+  background: color-mix(in srgb, var(--ms-surface) 88%, transparent) !important;
+  border: 1px solid var(--ms-min-border) !important;
+  border-radius: var(--ms-min-radius-lg) !important;
+  box-shadow: var(--ms-min-shadow) !important;
+}
+
+.ms-settings-stack,
+.ms-dash-stack {
+  gap: 0.9rem !important;
+}
+
+.ms-settings-card-title,
+.ms-dash-projects-title {
+  font-size: 0.92rem !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--ms-ink) !important;
+}
+
+.ms-settings-card-title svg,
+.ms-dash-projects-title svg {
+  width: 16px !important;
+  height: 16px !important;
+  opacity: 0.7;
+}
+
+/* —— Dashboard —— */
+.ms-dash-hero {
+  gap: 1rem !important;
+  margin-bottom: 0.85rem !important;
+}
+
+.ms-dash-hero-label,
+.ms-dash-metric-label,
+.ms-dash-ring-kicker,
+.ms-dash-hero-hint,
+.ms-dash-metric-hint,
+.ms-dash-bar-caption,
+.ms-dash-ring-sub {
+  color: var(--ms-min-muted) !important;
+  font-weight: 500 !important;
+}
+
+.ms-dash-hero-value,
+.ms-dash-metric-value,
+.ms-dash-ring-value {
+  letter-spacing: -0.04em !important;
+  font-weight: 700 !important;
+  color: var(--ms-ink) !important;
+}
+
+.ms-dash-overview-grid {
+  gap: 0.55rem !important;
+}
+
+.ms-dash-metric {
+  background: var(--ms-min-fill) !important;
+  border: 1px solid var(--ms-min-border) !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+  padding: 0.85rem 0.9rem !important;
+}
+
+.ms-dash-bar,
+.ms-dash-ring {
+  background: var(--ms-min-fill) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+.ms-dash-bar-fill {
+  background: var(--ms-accent) !important;
+}
+
+.ms-dash-tool,
+a.ms-dash-tool {
+  margin-top: 0.85rem !important;
+  min-height: 2.75rem !important;
+  font-size: 0.9rem !important;
+}
+
+.ms-dash-projects-toggle {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.ms-dash-count-badge {
+  background: var(--ms-min-fill) !important;
+  color: var(--ms-min-muted) !important;
+  border: 1px solid var(--ms-min-border) !important;
+  box-shadow: none !important;
+  font-weight: 550 !important;
+}
+
+.ms-dash-projects-search-input,
+.ms-dash-projects-filter,
+.ms-dash-filter-btn {
+  border-radius: 12px !important;
+  border-color: var(--ms-min-border-strong) !important;
+  box-shadow: none !important;
+}
+
+.ms-dash-projects-filter.is-active {
+  background: color-mix(in srgb, var(--ms-accent) 12%, transparent) !important;
+  color: var(--ms-accent) !important;
+  border-color: color-mix(in srgb, var(--ms-accent) 22%, transparent) !important;
+}
+
+/* —— Tabs / mobile chrome —— */
+.ms-tabbar {
+  background: color-mix(in srgb, var(--ms-surface) 86%, transparent) !important;
+  border: 1px solid var(--ms-min-border) !important;
+  box-shadow: var(--ms-min-shadow) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.ms-tab {
+  color: var(--ms-min-muted) !important;
+  font-size: 0.72rem !important;
+  font-weight: 550 !important;
+}
+
+.ms-tab.is-active {
+  color: var(--ms-ink) !important;
+  font-weight: 650 !important;
+  background: transparent !important;
+}
+
+.ms-tab-pill {
+  background: var(--ms-min-fill) !important;
+  box-shadow: none !important;
+}
+
+.ms-menu-toggle,
+.ms-help-btn {
+  border: 1px solid var(--ms-min-border) !important;
+  background: color-mix(in srgb, var(--ms-surface) 90%, transparent) !important;
+  box-shadow: var(--ms-min-shadow) !important;
+  border-radius: 12px !important;
+}
+
+/* —— Forms / rows —— */
+.ms-settings-pref-row,
+.ms-appearance-mode,
+.ms-appearance-block {
+  border-color: var(--ms-min-border) !important;
+}
+
+.ms-appearance-swatches,
+.ms-appearance-sizes {
+  background: var(--ms-min-fill) !important;
+  border: 1px solid var(--ms-min-border) !important;
+  box-shadow: none !important;
+}
+
+input.ms-input,
+textarea.ms-textarea,
+.ms-auth-card input.ms-input {
+  border-color: var(--ms-min-border-strong) !important;
+  background: var(--ms-surface) !important;
+  box-shadow: none !important;
+}
+
+/* —— Buttons stay accent, but quieter secondary —— */
+.ms-btn-secondary,
+.ms-dash-tool.ms-btn-secondary,
+a.ms-btn-secondary {
+  border-width: 1px !important;
+  font-weight: 600 !important;
+}
+
+/* Reduce decorative noise */
+.ms-card::before,
+.ms-dash-card::before,
+.ms-settings-card::before {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  #page-body.ms-dash-page,
+  #page-body.ms-settings-page,
+  #page-body.ms-clients-page,
+  #page-body.ms-projects-page {
+    padding-left: 1.1rem !important;
+    padding-right: 1.1rem !important;
+    padding-top: 1.35rem !important;
+  }
+
+  .ms-page-head h1 {
+    font-size: 1.45rem !important;
+  }
+}

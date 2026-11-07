@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.1.7",
+      "date": "2026-11-07",
+      "title": "Studio goes super minimal",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio chrome is quieter and more minimal: thin borders, soft cards, airy spacing, and a calmer sidebar without the heavy nav pill."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.1.6",
       "date": "2026-11-06",
       "title": "Business Finder drops cream chrome",

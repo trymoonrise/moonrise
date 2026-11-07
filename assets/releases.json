@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.7",
+      "date": "2026-11-07",
+      "title": "Studio goes super minimal",
+      "tag": "v2.1.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.7",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio chrome is quieter and more minimal: thin borders, soft cards, airy spacing, and a calmer sidebar without the heavy nav pill."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.1.6",
       "date": "2026-11-06",
       "title": "Business Finder drops cream chrome",

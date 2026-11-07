@@ -251,21 +251,28 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261107-accent-btn";
+      link.href = "css/appearance.css?v=20261107-minimal";
     }
     var ui = document.getElementById("ms-studio-ui-css");
     if (!ui) {
       ui = document.createElement("link");
       ui.id = "ms-studio-ui-css";
       ui.rel = "stylesheet";
-      ui.href = "css/studio-ui.css?v=20261107-accent-btn";
+      ui.href = "css/studio-ui.css?v=20261107-minimal";
     }
     var mono = document.getElementById("ms-studio-mono-css");
     if (!mono) {
       mono = document.createElement("link");
       mono.id = "ms-studio-mono-css";
       mono.rel = "stylesheet";
-      mono.href = "css/studio-mono.css?v=20261107-accent-btn";
+      mono.href = "css/studio-mono.css?v=20261107-minimal";
+    }
+    var minimal = document.getElementById("ms-studio-minimal-css");
+    if (!minimal) {
+      minimal = document.createElement("link");
+      minimal.id = "ms-studio-minimal-css";
+      minimal.rel = "stylesheet";
+      minimal.href = "css/studio-minimal.css?v=20261107-minimal";
     }
     var font = document.getElementById("ms-studio-font");
     if (!font) {
@@ -291,6 +298,7 @@
       var sheet = document.querySelector(sel);
       if (sheet) tail.push(sheet);
     });
+    tail.push(minimal);
     var kids = document.head.children;
     var start = kids.length - tail.length;
     var placed = start >= 0;
