@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.1.5",
+      "date": "2026-11-06",
+      "title": "Theme color tints primary buttons",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [],
+          "fixes": [
+            "Choosing a theme color now recolors emphasized primary buttons across the studio."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.4",
       "date": "2026-11-06",
       "title": "More appearance theme colors",

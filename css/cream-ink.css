@@ -156,7 +156,7 @@ html:not([data-ms-mode="dark"]) :where(
   .ms-download-install-btn,
   body[data-page="download"] .ms-download-actions .ms-btn:not(.ms-btn-secondary)
 ) {
-  background: var(--ms-ink) !important;
+  background: var(--ms-accent) !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   border: 0 !important;
@@ -165,6 +165,28 @@ html:not([data-ms-mode="dark"]) :where(
   font-weight: 700 !important;
   filter: none !important;
   background-image: none !important;
+}
+
+html:not([data-ms-mode="dark"])[data-ms-accent-tone="light"] :where(
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost):not(.ms-btn-ghost-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost),
+  .ms-home-cta-primary,
+  .ms-lf-find,
+  .ms-lf-map-scan,
+  .ms-lf-map-all,
+  .ms-lb-publish-btn,
+  .ms-lb-edit-btn.is-primary,
+  .ms-paywall-pay,
+  .ms-fin-save,
+  .ms-fin-next,
+  .ms-store-buy:not(.is-ghost),
+  .lf-action-builder,
+  .ms-onboard-next,
+  #btn-checkout,
+  .ms-download-install-btn
+) {
+  color: #1a1a1a !important;
+  -webkit-text-fill-color: #1a1a1a !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(
@@ -646,7 +668,7 @@ html:not([data-ms-mode="dark"]) body[data-page="orders"] .ms-orders-card {
 }
 
 body[data-page="home"] .ms-home-cta-primary {
-  background: #232427 !important;
+  background: var(--ms-accent) !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }

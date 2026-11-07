@@ -3022,7 +3022,7 @@ body[data-page="dashboard"] {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #232427;
+  background: var(--ms-accent);
   box-shadow: none;
   transition:
     transform 0.15s ease-out,

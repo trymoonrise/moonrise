@@ -251,21 +251,21 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261107-colors";
+      link.href = "css/appearance.css?v=20261107-accent-btn";
     }
     var ui = document.getElementById("ms-studio-ui-css");
     if (!ui) {
       ui = document.createElement("link");
       ui.id = "ms-studio-ui-css";
       ui.rel = "stylesheet";
-      ui.href = "css/studio-ui.css?v=20261106-mono";
+      ui.href = "css/studio-ui.css?v=20261107-accent-btn";
     }
     var mono = document.getElementById("ms-studio-mono-css");
     if (!mono) {
       mono = document.createElement("link");
       mono.id = "ms-studio-mono-css";
       mono.rel = "stylesheet";
-      mono.href = "css/studio-mono.css?v=20261107-colors";
+      mono.href = "css/studio-mono.css?v=20261107-accent-btn";
     }
     var font = document.getElementById("ms-studio-font");
     if (!font) {

@@ -104,7 +104,7 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
 #btn-checkout {
   border: 0 !important;
   border-radius: var(--ms-radius-pill, 999px) !important;
-  background: #232427 !important;
+  background: var(--ms-accent) !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   box-shadow: none !important;
@@ -113,7 +113,8 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
   transform-origin: center;
   transition:
     transform 0.15s ease-out,
-    opacity 0.15s ease-out !important;
+    opacity 0.15s ease-out,
+    background-color 0.18s ease-out !important;
   will-change: transform;
 }
 
@@ -130,13 +131,31 @@ a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
 .lf-action-builder:hover,
 .ms-lf-map-scan:hover,
 #btn-checkout:hover {
-  background: #232427 !important;
+  background: var(--ms-accent) !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   box-shadow: none !important;
   filter: none !important;
   opacity: 0.85;
   transform: scale(0.98) !important;
+}
+
+html[data-ms-accent-tone="light"] :is(
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  .ms-home-cta-primary,
+  .ms-lf-find,
+  .ms-lb-publish-btn,
+  .ms-paywall-pay,
+  .ms-fin-save,
+  .ms-fin-next,
+  .ms-store-buy:not(.is-ghost),
+  .lf-action-builder,
+  .ms-lf-map-scan,
+  #btn-checkout
+) {
+  color: #1a1a1a !important;
+  -webkit-text-fill-color: #1a1a1a !important;
 }
 
 .ms-btn:active:not(:disabled):not(.ms-btn-secondary):not(.ms-btn-danger),
@@ -332,7 +351,7 @@ html:not([data-ms-mode="dark"]) .ms-set-photo-preview {
 }
 
 .ms-lf-slide-track {
-  background: #232427;
+  background: var(--ms-accent);
 }
 
 .ms-switch input:checked + .ms-switch-track {
@@ -665,7 +684,8 @@ html[data-ms-mode="dark"] .ms-tabbar {
   box-shadow: none !important;
 }
 
-html[data-ms-mode="dark"][data-ms-accent-tone="dark"] :is(
+/* Ink on dark mode must invert — colored accents keep their hue. */
+html[data-ms-mode="dark"][data-ms-ink="1"] :is(
   .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
   a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
   .ms-home-cta-primary,
@@ -685,7 +705,7 @@ html[data-ms-mode="dark"][data-ms-accent-tone="dark"] :is(
   border-color: transparent !important;
 }
 
-html[data-ms-mode="dark"][data-ms-accent-tone="dark"] :is(
+html[data-ms-mode="dark"][data-ms-ink="1"] :is(
   .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
   a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
   .ms-home-cta-primary,
@@ -696,6 +716,43 @@ html[data-ms-mode="dark"][data-ms-accent-tone="dark"] :is(
   background: #fafafa !important;
   color: #1d1d1f !important;
   -webkit-text-fill-color: #1d1d1f !important;
+}
+
+html[data-ms-mode="dark"]:not([data-ms-ink="1"]) :is(
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  .ms-home-cta-primary,
+  .ms-lf-find,
+  .ms-paywall-pay,
+  .ms-fin-save,
+  .ms-fin-next,
+  .ms-store-buy:not(.is-ghost),
+  .lf-action-builder,
+  .ms-lf-map-scan,
+  #btn-checkout,
+  .ms-lb-publish-btn
+) {
+  background: var(--ms-accent) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+html[data-ms-mode="dark"][data-ms-accent-tone="light"]:not([data-ms-ink="1"]) :is(
+  .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
+  .ms-home-cta-primary,
+  .ms-lf-find,
+  .ms-paywall-pay,
+  .ms-fin-save,
+  .ms-fin-next,
+  .ms-store-buy:not(.is-ghost),
+  .lf-action-builder,
+  .ms-lf-map-scan,
+  #btn-checkout,
+  .ms-lb-publish-btn
+) {
+  color: #1a1a1a !important;
+  -webkit-text-fill-color: #1a1a1a !important;
 }
 
 html[data-ms-mode="dark"] .ms-store-buy.is-ghost,
@@ -1601,7 +1658,7 @@ html[data-ms-mode="dark"] .ms-lf-slide-thumb {
 
 body[data-page="download"] :is(.ms-download-install-btn, .ms-download-actions .ms-btn:not(.ms-btn-secondary)) {
   border: 0 !important;
-  background: #232427 !important;
+  background: var(--ms-accent) !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   border-radius: 999px !important;
