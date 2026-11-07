@@ -161,17 +161,12 @@ select.ms-select:focus {
   pointer-events: none;
 }
 
-.ms-appearance-swatches,
-.ms-appearance-hex,
-#set-theme-name {
-  display: none !important;
-}
-
 .ms-appearance-swatch--custom {
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: conic-gradient(from 210deg, #111, #888, #fff, #444, #111);
+  background:
+    conic-gradient(from 210deg, #8b5cf6, #232427, #ec4899, #10b981, #f97316, #3b82f6, #8b5cf6);
 }
 
 .ms-appearance-swatch--custom.is-selected {

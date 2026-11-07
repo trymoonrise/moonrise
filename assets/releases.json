@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.4",
+      "date": "2026-11-06",
+      "title": "More appearance theme colors",
+      "tag": "v2.1.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.4",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Settings → Appearance offers fourteen theme colors plus a custom picker again."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.1.3",
       "date": "2026-11-06",
       "title": "Strict black and white studio with button motion",

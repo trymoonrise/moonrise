@@ -3,7 +3,7 @@
  * Loaded after studio-ui. Appearance may only toggle light/dark + text size.
  */
 
-html[data-ms-mono="1"] {
+html[data-ms-ink="1"] {
   --ms-accent: #232427 !important;
   --ms-accent-bright: #232427 !important;
   --ms-accent-strong: #000000 !important;
@@ -17,7 +17,7 @@ html[data-ms-mono="1"] {
   --ms-banner-ink: #1a1a1a !important;
 }
 
-html[data-ms-mono="1"][data-ms-mode="dark"] {
+html[data-ms-ink="1"][data-ms-mode="dark"] {
   --ms-accent: #f5f5f5 !important;
   --ms-accent-bright: #f5f5f5 !important;
   --ms-accent-strong: #ffffff !important;
@@ -32,7 +32,7 @@ html[data-ms-mono="1"][data-ms-mode="dark"] {
 }
 
 /* Kill leftover hue fills / gradients inside the studio shell. */
-html[data-ms-mono="1"] :is(
+html[data-ms-ink="1"] :is(
   .ms-lf-grad,
   .ms-pw-meter[data-level] .ms-pw-fill,
   .ms-dash-ring-value,
@@ -46,49 +46,49 @@ html[data-ms-mono="1"] :is(
   color: inherit;
 }
 
-html[data-ms-mono="1"] .ms-lf-grad {
+html[data-ms-ink="1"] .ms-lf-grad {
   background: none !important;
   color: var(--ms-ink) !important;
   -webkit-background-clip: unset !important;
   background-clip: unset !important;
 }
 
-html[data-ms-mono="1"] .ms-pw-meter[data-level="weak"] .ms-pw-fill,
-html[data-ms-mono="1"] .ms-pw-meter[data-level="fair"] .ms-pw-fill {
+html[data-ms-ink="1"] .ms-pw-meter[data-level="weak"] .ms-pw-fill,
+html[data-ms-ink="1"] .ms-pw-meter[data-level="fair"] .ms-pw-fill {
   background: #9a9a9a !important;
   box-shadow: none !important;
 }
 
-html[data-ms-mono="1"] .ms-pw-meter[data-level="good"] .ms-pw-fill {
+html[data-ms-ink="1"] .ms-pw-meter[data-level="good"] .ms-pw-fill {
   background: #6b6b6b !important;
   box-shadow: none !important;
 }
 
-html[data-ms-mono="1"] .ms-pw-meter[data-level="strong"] .ms-pw-fill,
-html[data-ms-mono="1"] .ms-pw-meter[data-level="impenetrable"] .ms-pw-fill {
+html[data-ms-ink="1"] .ms-pw-meter[data-level="strong"] .ms-pw-fill,
+html[data-ms-ink="1"] .ms-pw-meter[data-level="impenetrable"] .ms-pw-fill {
   background: #1a1a1a !important;
   box-shadow: none !important;
   animation: none !important;
 }
 
-html[data-ms-mono="1"] .ms-lb-onboard-maps-shell.is-ok,
-html[data-ms-mono="1"] .ms-lb-onboard-maps-shell.is-ok:focus-within {
+html[data-ms-ink="1"] .ms-lb-onboard-maps-shell.is-ok,
+html[data-ms-ink="1"] .ms-lb-onboard-maps-shell.is-ok:focus-within {
   background: #f3f3f3 !important;
   border-color: #1a1a1a !important;
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08) !important;
 }
 
-html[data-ms-mono="1"] .ms-lb-onboard-maps-shell.is-ok .ms-lb-onboard-maps-icon {
+html[data-ms-ink="1"] .ms-lb-onboard-maps-shell.is-ok .ms-lb-onboard-maps-icon {
   color: #1a1a1a !important;
 }
 
-html[data-ms-mono="1"] .ms-lb-onboard-maps-shell.is-err {
+html[data-ms-ink="1"] .ms-lb-onboard-maps-shell.is-err {
   background: #f5f5f5 !important;
   border-color: #e03a1a !important;
   box-shadow: 0 0 0 3px rgba(224, 58, 26, 0.12) !important;
 }
 
-html[data-ms-mono="1"] :is(
+html[data-ms-ink="1"] :is(
   .ms-success,
   .ms-ok,
   .is-success,
@@ -98,7 +98,7 @@ html[data-ms-mono="1"] :is(
   color: #1a1a1a !important;
 }
 
-html[data-ms-mono="1"][data-ms-mode="dark"] :is(
+html[data-ms-ink="1"][data-ms-mode="dark"] :is(
   .ms-success,
   .ms-ok,
   .is-success,
@@ -109,7 +109,7 @@ html[data-ms-mono="1"][data-ms-mode="dark"] :is(
 }
 
 /* —— Interaction motion (buttons, tabs, rows, toggles, chips) —— */
-html[data-ms-mono="1"] :is(
+html[data-ms-motion="1"] :is(
   .ms-btn,
   a.ms-btn,
   .ms-home-cta-primary,
@@ -153,7 +153,7 @@ html[data-ms-mono="1"] :is(
   -webkit-tap-highlight-color: transparent;
 }
 
-html[data-ms-mono="1"] :is(
+html[data-ms-motion="1"] :is(
   .ms-btn,
   a.ms-btn,
   .ms-home-cta-primary,
@@ -170,7 +170,7 @@ html[data-ms-mono="1"] :is(
   transform: translateY(-1px) scale(0.99);
 }
 
-html[data-ms-mono="1"] :is(
+html[data-ms-motion="1"] :is(
   .ms-btn,
   a.ms-btn,
   .ms-home-cta-primary,
@@ -183,7 +183,7 @@ html[data-ms-mono="1"] :is(
   .ms-fin-save,
   .ms-lb-send
 ):active:not(:disabled):not([aria-disabled="true"]):not(.is-disabled),
-html[data-ms-mono="1"] :is(
+html[data-ms-motion="1"] :is(
   .ms-btn,
   a.ms-btn,
   .ms-home-cta-primary,
@@ -200,7 +200,7 @@ html[data-ms-mono="1"] :is(
   transform: scale(0.97);
 }
 
-html[data-ms-mono="1"] :is(
+html[data-ms-motion="1"] :is(
   .ms-nav-link,
   .ms-tab,
   .ms-sidebar-legal-link,
@@ -214,7 +214,7 @@ html[data-ms-mono="1"] :is(
   transform: scale(0.985);
 }
 
-html[data-ms-mono="1"] :is(
+html[data-ms-motion="1"] :is(
   .ms-nav-link,
   .ms-tab,
   .ms-sidebar-legal-link,
@@ -225,7 +225,7 @@ html[data-ms-mono="1"] :is(
   .ms-help-btn,
   .ms-user-logout
 ):active:not(:disabled):not([aria-disabled="true"]),
-html[data-ms-mono="1"] :is(
+html[data-ms-motion="1"] :is(
   .ms-nav-link,
   .ms-tab,
   .ms-sidebar-legal-link,
@@ -240,58 +240,58 @@ html[data-ms-mono="1"] :is(
   opacity: 0.85;
 }
 
-html[data-ms-mono="1"] .ms-switch .ms-switch-track,
-html[data-ms-mono="1"] .ms-switch input + .ms-switch-track {
+html[data-ms-motion="1"] .ms-switch .ms-switch-track,
+html[data-ms-motion="1"] .ms-switch input + .ms-switch-track {
   transition:
     background-color 0.18s ease-out,
     border-color 0.18s ease-out;
 }
 
-html[data-ms-mono="1"] .ms-switch .ms-switch-track::before,
-html[data-ms-mono="1"] .ms-switch .ms-switch-track::after,
-html[data-ms-mono="1"] .ms-switch-knob {
+html[data-ms-motion="1"] .ms-switch .ms-switch-track::before,
+html[data-ms-motion="1"] .ms-switch .ms-switch-track::after,
+html[data-ms-motion="1"] .ms-switch-knob {
   transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-html[data-ms-mono="1"] .ms-nav-pill,
-html[data-ms-mono="1"] .ms-tab-pill {
+html[data-ms-motion="1"] .ms-nav-pill,
+html[data-ms-motion="1"] .ms-tab-pill {
   transition:
     transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
     width 0.22s cubic-bezier(0.22, 1, 0.36, 1),
     left 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-html[data-ms-mono="1"] .ms-input,
-html[data-ms-mono="1"] .ms-textarea,
-html[data-ms-mono="1"] input.ms-input,
-html[data-ms-mono="1"] textarea.ms-textarea {
+html[data-ms-motion="1"] .ms-input,
+html[data-ms-motion="1"] .ms-textarea,
+html[data-ms-motion="1"] input.ms-input,
+html[data-ms-motion="1"] textarea.ms-textarea {
   transition:
     border-color 0.16s ease-out,
     box-shadow 0.16s ease-out,
     background-color 0.16s ease-out;
 }
 
-html[data-ms-mono="1"] .ms-input:focus,
-html[data-ms-mono="1"] .ms-textarea:focus,
-html[data-ms-mono="1"] input.ms-input:focus,
-html[data-ms-mono="1"] textarea.ms-textarea:focus {
+html[data-ms-motion="1"] .ms-input:focus,
+html[data-ms-motion="1"] .ms-textarea:focus,
+html[data-ms-motion="1"] input.ms-input:focus,
+html[data-ms-motion="1"] textarea.ms-textarea:focus {
   outline: none;
   border-color: #1a1a1a !important;
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
 }
 
-html[data-ms-mono="1"][data-ms-mode="dark"] .ms-input:focus,
-html[data-ms-mono="1"][data-ms-mode="dark"] .ms-textarea:focus,
-html[data-ms-mono="1"][data-ms-mode="dark"] input.ms-input:focus,
-html[data-ms-mono="1"][data-ms-mode="dark"] textarea.ms-textarea:focus {
+html[data-ms-motion="1"][data-ms-mode="dark"] .ms-input:focus,
+html[data-ms-motion="1"][data-ms-mode="dark"] .ms-textarea:focus,
+html[data-ms-motion="1"][data-ms-mode="dark"] input.ms-input:focus,
+html[data-ms-motion="1"][data-ms-mode="dark"] textarea.ms-textarea:focus {
   border-color: #f5f5f5 !important;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
 
-html[data-ms-mono="1"] .ms-card,
-html[data-ms-mono="1"] .ms-settings-card,
-html[data-ms-mono="1"] .ms-dash-card,
-html[data-ms-mono="1"] .ms-project-card {
+html[data-ms-motion="1"] .ms-card,
+html[data-ms-motion="1"] .ms-settings-card,
+html[data-ms-motion="1"] .ms-dash-card,
+html[data-ms-motion="1"] .ms-project-card {
   transition:
     transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.2s ease-out,
@@ -299,15 +299,15 @@ html[data-ms-mono="1"] .ms-project-card {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  html[data-ms-mono="1"] a.ms-project-card:hover,
-  html[data-ms-mono="1"] .ms-project-card:hover {
+  html[data-ms-motion="1"] a.ms-project-card:hover,
+  html[data-ms-motion="1"] .ms-project-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-ms-mono="1"] :is(
+  html[data-ms-motion="1"] :is(
     .ms-btn,
     a.ms-btn,
     .ms-nav-link,
