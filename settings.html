@@ -190,7 +190,7 @@ document.documentElement.classList.add("ms-boot");
 </script>
   <script>
     (function () {
-      var BUILD = "20261106-app-shell";
+      var BUILD = "20261106-mono";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -224,16 +224,17 @@ document.documentElement.classList.add("ms-boot");
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261106-app-shell"></script>
+  <script src="js/auth-gate-head.js?v=20261106-mono"></script>
   <title>Settings - Moonrise Studio</title>
   <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261106-nav-center">
+  <link rel="stylesheet" href="css/studio.css?v=20261106-mono">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-<link rel="stylesheet" href="css/studio-ui.css?v=20261028-strict-bw">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261028-strict-bw">
-  <link rel="stylesheet" href="css/cream-motion.css?v=20261028-boot-smooth">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261106-mono">
+<link rel="stylesheet" href="css/studio-mono.css?v=20261106-mono">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261106-mono">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261106-mono">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
 </head>
 <body data-page="settings">
@@ -295,7 +296,7 @@ document.documentElement.classList.add("ms-boot");
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 22a10 10 0 0 0 8.5-15.2c-.3.1-.6.2-.9.2a3 3 0 0 1-3-3c0-.3.1-.6.2-.9A10 10 0 1 0 12 22z"/></svg>
                 Appearance
               </h2>
-              <p class="ms-settings-hint ms-muted">Dark mode, theme color, and text size apply across Moonrise on this device.</p>
+              <p class="ms-settings-hint ms-muted">Studio stays black and white. Dark mode and text size apply across Moonrise on this device.</p>
 
               <div class="ms-appearance-mode">
                 <span class="ms-appearance-mode-ico" aria-hidden="true">
@@ -308,29 +309,6 @@ document.documentElement.classList.add("ms-boot");
                 <label class="ms-switch ms-switch--night" title="Dark mode">
                   <input type="checkbox" id="set-dark-mode" autocomplete="off" aria-label="Dark mode">
                   <span class="ms-switch-track" aria-hidden="true"></span>
-                </label>
-              </div>
-
-              <div class="ms-appearance-block">
-                <div class="ms-appearance-block-head">
-                  <span>Theme color</span>
-                  <strong id="set-theme-name">Black &amp; white</strong>
-                </div>
-                <div class="ms-appearance-swatches" role="radiogroup" aria-label="Theme color">
-                  <button type="button" class="ms-appearance-swatch" role="radio" data-theme="ink" data-color="#232427" style="--swatch:#232427" aria-label="Black and white" aria-checked="true"></button>
-                  <button type="button" class="ms-appearance-swatch" role="radio" data-theme="violet" data-color="#8b5cf6" style="--swatch:#8b5cf6" aria-label="Violet"></button>
-                  <button type="button" class="ms-appearance-swatch" role="radio" data-theme="ocean" data-color="#3b82f6" style="--swatch:#3b82f6" aria-label="Ocean"></button>
-                  <button type="button" class="ms-appearance-swatch" role="radio" data-theme="rose" data-color="#ec4899" style="--swatch:#ec4899" aria-label="Rose"></button>
-                  <button type="button" class="ms-appearance-swatch" role="radio" data-theme="forest" data-color="#10b981" style="--swatch:#10b981" aria-label="Forest"></button>
-                  <button type="button" class="ms-appearance-swatch" role="radio" data-theme="sunset" data-color="#f97316" style="--swatch:#f97316" aria-label="Sunset"></button>
-                  <label class="ms-appearance-swatch ms-appearance-swatch--custom" id="set-theme-custom-wrap" title="Custom color">
-                    <input type="color" id="set-theme-custom" value="#232427" aria-label="Custom theme color">
-                    <span class="ms-appearance-custom-face" aria-hidden="true"></span>
-                  </label>
-                </div>
-                <label class="ms-appearance-hex">
-                  <span>Custom hex</span>
-                  <input class="ms-input" id="set-theme-hex" maxlength="7" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="#232427" aria-label="Custom theme color hex">
                 </label>
               </div>
 
@@ -435,15 +413,15 @@ document.documentElement.classList.add("ms-boot");
     </div>
   </div>
 
-  <script defer src="js/config.js?v=20261106-app-shell"></script>
-  <script defer src="js/app.js?v=20261106-app-shell"></script>
+  <script defer src="js/config.js?v=20261106-mono"></script>
+  <script defer src="js/app.js?v=20261106-mono"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/handles.js"></script>
-  <script defer src="js/supabase-client.js?v=20261106-app-shell"></script>
-  <script defer src="js/auth.js?v=20261106-app-shell"></script>
+  <script defer src="js/supabase-client.js?v=20261106-mono"></script>
+  <script defer src="js/auth.js?v=20261106-mono"></script>
   <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20261028-motion-finder"></script>
+  <script defer src="js/ui-motion.js?v=20261106-mono"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>

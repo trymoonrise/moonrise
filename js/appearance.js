@@ -1,28 +1,21 @@
 /**
- * Studio appearance: dark mode, theme color, text size.
+ * Studio appearance: dark mode + text size.
+ * Studio is locked to black / white / grey — no color accents.
  * Loaded from auth-gate-head.js before the rest of the page paints.
  */
 (function () {
   if (window.MoonriseAppearance) return;
 
   var KEY = "ms_appearance";
-  var PRESETS = [
-    { id: "ink", name: "Black & white", color: "#232427" },
-    { id: "violet", name: "Violet", color: "#8b5cf6" },
-    { id: "ocean", name: "Ocean", color: "#3b82f6" },
-    { id: "rose", name: "Rose", color: "#ec4899" },
-    { id: "forest", name: "Forest", color: "#10b981" },
-    { id: "sunset", name: "Sunset", color: "#f97316" },
-  ];
   var TEXT = {
     small: "Small",
     medium: "Medium",
     large: "Large",
     xlarge: "Extra large",
   };
-  /* Default: strict black / white / grey UI. Users can change accent color in Settings → Appearance. */
-  var DEFAULTS = { mode: "light", color: "#232427", text: "small" };
-  var INK_COLORS = { "#232427": 1, "#1d1d1f": 1, "#000000": 1 };
+  var INK = "#232427";
+  var DEFAULTS = { mode: "light", color: INK, text: "small" };
+  var PRESETS = [{ id: "ink", name: "Black & white", color: INK }];
 
   function clamp(n) {
     return Math.max(0, Math.min(255, Math.round(n)));
@@ -46,32 +39,6 @@
     };
   }
 
-  function rgbToHex(c) {
-    function part(n) {
-      return clamp(n).toString(16).padStart(2, "0");
-    }
-    return "#" + part(c.r) + part(c.g) + part(c.b);
-  }
-
-  function mix(a, b, t) {
-    return {
-      r: a.r + (b.r - a.r) * t,
-      g: a.g + (b.g - a.g) * t,
-      b: a.b + (b.b - a.b) * t,
-    };
-  }
-
-  function isLight(rgb) {
-    return (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255 > 0.72;
-  }
-
-  function presetFor(color) {
-    for (var i = 0; i < PRESETS.length; i++) {
-      if (PRESETS[i].color === color) return PRESETS[i];
-    }
-    return null;
-  }
-
   function read() {
     var stored = null;
     try {
@@ -81,9 +48,8 @@
     }
     var mode = stored && stored.mode === "dark" ? "dark" : "light";
     var text = stored && TEXT[stored.text] ? stored.text : DEFAULTS.text;
-    var color = normalizeHex(stored && stored.color) || DEFAULTS.color;
-    if (color === "#1d1d1f" || color === "#000000") color = DEFAULTS.color;
-    return { mode: mode, color: color, text: text };
+    /* Always ink — migrate any saved violet/ocean/custom accent away. */
+    return { mode: mode, color: INK, text: text };
   }
 
   function write(prefs) {
@@ -92,7 +58,7 @@
         KEY,
         JSON.stringify({
           mode: prefs.mode === "dark" ? "dark" : "light",
-          color: normalizeHex(prefs.color) || DEFAULTS.color,
+          color: INK,
           text: TEXT[prefs.text] ? prefs.text : DEFAULTS.text,
         })
       );
@@ -102,15 +68,11 @@
   }
 
   function isDefault(prefs) {
-    return prefs.mode === DEFAULTS.mode && prefs.color === DEFAULTS.color && prefs.text === DEFAULTS.text;
+    return prefs.mode === DEFAULTS.mode && prefs.text === DEFAULTS.text;
   }
 
   function chromeColor() {
-    return document.documentElement.getAttribute("data-ms-mode") === "dark" ? "#111111" : "#ffffff";
-  }
-
-  function isInkColor(color) {
-    return !!INK_COLORS[String(color || "").toLowerCase()];
+    return document.documentElement.getAttribute("data-ms-mode") === "dark" ? "#111111" : "#fafafa";
   }
 
   function paintChrome() {
@@ -127,44 +89,30 @@
     var root = document.documentElement;
     var mode = prefs.mode === "dark" ? "dark" : "light";
     var text = TEXT[prefs.text] ? prefs.text : DEFAULTS.text;
-    var color = normalizeHex(prefs.color) || DEFAULTS.color;
-    if (color === "#1d1d1f" || color === "#000000") color = DEFAULTS.color;
+    var color = INK;
     var rgb = hexToRgb(color);
-    var ink = isInkColor(color);
-    var bright = ink ? "#232427" : color === "#3b82f6" ? "#60a5fa" : rgbToHex(mix(rgb, { r: 255, g: 255, b: 255 }, 0.28));
-    var strong = ink ? "#000000" : color === "#3b82f6" ? "#2563eb" : rgbToHex(mix(rgb, { r: 0, g: 0, b: 0 }, 0.2));
-    var soft = ink
-      ? mode === "dark"
-        ? "#2c2c2e"
-        : "#f4f4f5"
-      : rgbToHex(
-          mix(rgb, mode === "dark" ? { r: 17, g: 17, b: 17 } : { r: 255, g: 255, b: 255 }, mode === "dark" ? 0.82 : 0.88)
-        );
 
-    var tone = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255 < 0.4 ? "dark" : "light";
-    var select = ink
-      ? mode === "dark"
-        ? "#3a3a3c"
-        : "#e0e0e0"
-      : rgbToHex(
-          mix(rgb, mode === "dark" ? { r: 17, g: 17, b: 17 } : { r: 255, g: 255, b: 255 }, mode === "dark" ? 0.55 : 0.42));
-    var selectSoft = ink ? soft : rgbToHex(
-          mix(rgb, mode === "dark" ? { r: 17, g: 17, b: 17 } : { r: 255, g: 255, b: 255 }, mode === "dark" ? 0.72 : 0.78));
-    var link = ink ? "#232427" : strong;
     root.setAttribute("data-ms-mode", mode);
     root.setAttribute("data-ms-text", text);
-    root.setAttribute("data-ms-accent-tone", tone);
+    root.setAttribute("data-ms-accent-tone", "dark");
+    root.setAttribute("data-ms-mono", "1");
+
     if (mode === "light") {
-      root.style.setProperty("--ms-bg", "#ffffff");
-      root.style.setProperty("--ms-surface", "#fafafa");
-      root.style.setProperty("--ms-surface-alt", "#f4f4f5");
-      root.style.setProperty("--ms-surface-prompt", "#efefef");
+      root.style.setProperty("--ms-bg", "#fafafa");
+      root.style.setProperty("--ms-surface", "#ffffff");
+      root.style.setProperty("--ms-surface-alt", "#f3f3f3");
+      root.style.setProperty("--ms-surface-prompt", "#eeeeee");
       root.style.setProperty("--ms-line", "#e5e5e5");
-      root.style.setProperty("--ms-dashed", "#d4d4d4");
-      root.style.setProperty("--ms-track-off", "#e0e0e0");
-      root.style.setProperty("--ms-segment", "#f2f2f2");
-      root.style.setProperty("--ms-muted", "#666666");
-      root.style.setProperty("--ms-ink", "#232427");
+      root.style.setProperty("--ms-dashed", "#c8c8c8");
+      root.style.setProperty("--ms-track-off", "#d4d4d4");
+      root.style.setProperty("--ms-segment", "#efefef");
+      root.style.setProperty("--ms-muted", "#6b6b6b");
+      root.style.setProperty("--ms-ink", "#1a1a1a");
+      root.style.setProperty("--ms-accent-soft", "#f3f3f3");
+      root.style.setProperty("--ms-select", "#d8d8d8");
+      root.style.setProperty("--ms-select-soft", "#eeeeee");
+      root.style.setProperty("--ms-banner", "#e8e8e8");
+      root.style.setProperty("--ms-banner-ink", "#1a1a1a");
     } else {
       root.style.setProperty("--ms-bg", "#111111");
       root.style.setProperty("--ms-surface", "#1a1a1a");
@@ -176,18 +124,23 @@
       root.style.setProperty("--ms-segment", "#2a2a2a");
       root.style.setProperty("--ms-muted", "#a3a3a3");
       root.style.setProperty("--ms-ink", "#f5f5f5");
+      root.style.setProperty("--ms-accent-soft", "#2c2c2e");
+      root.style.setProperty("--ms-select", "#3a3a3c");
+      root.style.setProperty("--ms-select-soft", "#2c2c2e");
+      root.style.setProperty("--ms-banner", "#2c2c2e");
+      root.style.setProperty("--ms-banner-ink", "#f5f5f5");
     }
+
     root.style.setProperty("--ms-accent", color);
-    root.style.setProperty("--ms-accent-bright", bright);
-    root.style.setProperty("--ms-accent-strong", strong);
-    root.style.setProperty("--ms-accent-soft", soft);
+    root.style.setProperty("--ms-accent-bright", color);
+    root.style.setProperty("--ms-accent-strong", mode === "dark" ? "#ffffff" : "#000000");
     root.style.setProperty("--ms-accent-rgb", rgb.r + ", " + rgb.g + ", " + rgb.b);
-    root.style.setProperty("--ms-select", select);
-    root.style.setProperty("--ms-select-soft", selectSoft);
-    root.style.setProperty("--ms-link", link);
-    root.style.setProperty("--ms-banner", soft);
-    root.style.setProperty("--ms-banner-ink", ink ? "#232427" : strong);
+    root.style.setProperty("--ms-link", color);
+    root.style.setProperty("--ms-brand", color);
+    root.style.setProperty("--ms-skeleton", mode === "dark" ? "#3a3a3c" : "#c4c4c4");
+    root.style.setProperty("--ms-danger", "#e03a1a");
     root.style.colorScheme = mode === "dark" ? "dark" : "light";
+
     var crit = document.getElementById("ms-appearance-critical");
     if (mode === "dark") {
       if (!crit) {
@@ -195,7 +148,8 @@
         crit.id = "ms-appearance-critical";
         document.head.appendChild(crit);
       }
-      crit.textContent = "html[data-ms-mode=dark],html[data-ms-mode=dark] body{background:#111111;color:#f5f5f5}";
+      crit.textContent =
+        "html[data-ms-mode=dark],html[data-ms-mode=dark] body{background:#111111;color:#f5f5f5}";
     } else if (crit) {
       crit.remove();
     }
@@ -210,14 +164,21 @@
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261028-strict-bw";
+      link.href = "css/appearance.css?v=20261106-mono";
     }
     var ui = document.getElementById("ms-studio-ui-css");
     if (!ui) {
       ui = document.createElement("link");
       ui.id = "ms-studio-ui-css";
       ui.rel = "stylesheet";
-      ui.href = "css/studio-ui.css?v=20261028-strict-bw";
+      ui.href = "css/studio-ui.css?v=20261106-mono";
+    }
+    var mono = document.getElementById("ms-studio-mono-css");
+    if (!mono) {
+      mono = document.createElement("link");
+      mono.id = "ms-studio-mono-css";
+      mono.rel = "stylesheet";
+      mono.href = "css/studio-mono.css?v=20261106-mono";
     }
     var font = document.getElementById("ms-studio-font");
     if (!font) {
@@ -234,11 +195,13 @@
     } else if (!link.parentNode) {
       document.head.appendChild(link);
     }
-    /* Keep studio-ui, then cream / public layers, as a stable suffix.
-       Moving "whatever is not last" on every head change loops forever and
-       freezes the tab before the shell can paint. */
-    var tail = [ui];
-    ["link[href*='cream-ink.css']", "link[href*='cream-motion.css']", "link[href*='public-pages.css']"].forEach(function (sel) {
+    /* Stable suffix: appearance → studio-ui → mono → cream / public */
+    var tail = [ui, mono];
+    [
+      "link[href*='cream-ink.css']",
+      "link[href*='cream-motion.css']",
+      "link[href*='public-pages.css']",
+    ].forEach(function (sel) {
       var sheet = document.querySelector(sel);
       if (sheet) tail.push(sheet);
     });
@@ -266,35 +229,17 @@
   }
 
   var current = apply(read());
+  write(current);
   watchCss();
-
-  function themeName(color) {
-    var preset = presetFor(color);
-    return preset ? preset.name : "Custom";
-  }
 
   function syncControls() {
     var dark = document.getElementById("set-dark-mode");
-    var name = document.getElementById("set-theme-name");
     var textName = document.getElementById("set-text-name");
-    var custom = document.getElementById("set-theme-custom");
-    var customWrap = document.getElementById("set-theme-custom-wrap");
-    var hex = document.getElementById("set-theme-hex");
     var reset = document.getElementById("set-appearance-reset");
-    var preset = presetFor(current.color);
 
     if (dark) dark.checked = current.mode === "dark";
-    if (name) name.textContent = themeName(current.color);
     if (textName) textName.textContent = TEXT[current.text] || TEXT.medium;
-    if (custom) custom.value = current.color;
-    if (customWrap) {
-      customWrap.style.setProperty("--swatch", current.color);
-      customWrap.classList.toggle("is-selected", !preset);
-      customWrap.classList.toggle("is-light", !preset && isLight(current.rgb));
-    }
-    if (hex && document.activeElement !== hex) hex.value = current.color;
     if (reset) {
-      /* Always available; dim when already at defaults. */
       reset.hidden = false;
       reset.removeAttribute("hidden");
       reset.disabled = false;
@@ -302,11 +247,6 @@
       reset.classList.toggle("is-default", isDefault(current));
     }
 
-    document.querySelectorAll(".ms-appearance-swatch[data-color]").forEach(function (btn) {
-      var on = btn.getAttribute("data-color") === current.color;
-      btn.classList.toggle("is-selected", on);
-      btn.setAttribute("aria-checked", on ? "true" : "false");
-    });
     document.querySelectorAll(".ms-appearance-sizes [data-text]").forEach(function (btn) {
       var on = btn.getAttribute("data-text") === current.text;
       btn.classList.toggle("is-selected", on);
@@ -317,7 +257,7 @@
   function commit(next) {
     current = apply({
       mode: next.mode != null ? next.mode : current.mode,
-      color: next.color != null ? next.color : current.color,
+      color: INK,
       text: next.text != null ? next.text : current.text,
     });
     write(current);
@@ -326,7 +266,7 @@
   }
 
   function resetToDefault() {
-    commit({ mode: DEFAULTS.mode, color: DEFAULTS.color, text: DEFAULTS.text });
+    commit({ mode: DEFAULTS.mode, color: INK, text: DEFAULTS.text });
     try {
       if (window.StudioToast && typeof window.StudioToast.success === "function") {
         window.StudioToast.success("Appearance reset to black and white");
@@ -351,34 +291,6 @@
 
     document.getElementById("set-dark-mode")?.addEventListener("change", function (e) {
       commit({ mode: e.target.checked ? "dark" : "light" });
-    });
-
-    document.querySelectorAll(".ms-appearance-swatch[data-color]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        commit({ color: btn.getAttribute("data-color") });
-      });
-    });
-
-    document.getElementById("set-theme-custom")?.addEventListener("input", function (e) {
-      var color = normalizeHex(e.target.value);
-      if (color) commit({ color: color });
-    });
-
-    var hex = document.getElementById("set-theme-hex");
-    function applyHex() {
-      var color = normalizeHex(hex.value);
-      if (!color) {
-        hex.value = current.color;
-        return;
-      }
-      commit({ color: color });
-    }
-    hex?.addEventListener("change", applyHex);
-    hex?.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        applyHex();
-      }
     });
 
     document.querySelectorAll(".ms-appearance-sizes [data-text]").forEach(function (btn) {

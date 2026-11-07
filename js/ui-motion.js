@@ -3,16 +3,27 @@
  */
 (function (global) {
   const PRESS_CLASS = "is-pressed";
-  const PRESS_MS = 420;
+  const PRESS_MS = 220;
   const EXPAND_MS = 440;
   const PANEL_MS = 440;
   const PANEL_EXIT_MS = 280;
   const SELECTOR = [
-    ".ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not([disabled])",
-    "a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger)",
+    ".ms-btn:not([disabled])",
+    "a.ms-btn",
     ".ms-home-cta-primary",
+    ".ms-nav-link",
+    ".ms-tab",
+    ".ms-menu-toggle",
+    ".ms-help-btn",
+    ".ms-user-logout",
+    ".ms-appearance-sizes button",
+    ".ms-sidebar-legal-link",
+    ".ms-chip",
+    ".ms-tag",
+    ".ms-credits-tag",
+    ".ms-income-tag",
     ".lf-action-builder:not(.is-disabled):not([disabled])",
-    ".lf-advanced-dialog-actions .ms-btn:not(.ms-btn-secondary)",
+    ".lf-advanced-dialog-actions .ms-btn",
     ".ms-lb-send:not([disabled])",
     "#btn-checkout:not([disabled])",
     ".ms-fin-next:not([disabled])",
@@ -22,6 +33,7 @@
     ".ms-lf-map-all:not([disabled])",
     ".ms-onboard-next:not([disabled])",
     ".ms-onboard-actions .ms-btn:not([disabled])",
+    "button.ms-appearance-reset:not([disabled])",
   ].join(",");
 
   function prefersReducedMotion() {

@@ -40,7 +40,7 @@
 
   if (!window.__msAppearanceBoot) {
     window.__msAppearanceBoot = 1;
-    document.write('<script src="js/appearance.js?v=20261106-app-shell"><\/script>');
+    document.write('<script src="js/appearance.js?v=20261106-mono"><\/script>');
   }
 
   var PUBLIC = {

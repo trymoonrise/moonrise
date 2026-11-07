@@ -2,28 +2,28 @@
    Visual only — no layout/JS behavior changes. */
 
 :root {
-  --ms-bg: #ffffff;
-  --ms-surface: #fafafa;
-  --ms-surface-alt: #f4f4f5;
-  --ms-surface-prompt: #efefef;
-  --ms-ink: #232427;
-  --ms-muted: #666666;
+  --ms-bg: #fafafa;
+  --ms-surface: #ffffff;
+  --ms-surface-alt: #f3f3f3;
+  --ms-surface-prompt: #eeeeee;
+  --ms-ink: #1a1a1a;
+  --ms-muted: #6b6b6b;
   --ms-line: #e5e5e5;
   --ms-dashed: #d4d4d4;
   --ms-track-off: #e0e0e0;
   --ms-segment: #f2f2f2;
   /* Default selection + accent: black / white / neutral greys (Appearance may override accent). */
-  --ms-select: #e0e0e0;
-  --ms-select-soft: #f4f4f5;
+  --ms-select: #d8d8d8;
+  --ms-select-soft: #eeeeee;
   --ms-accent: #232427;
   --ms-accent-bright: #232427;
   --ms-accent-strong: #000000;
-  --ms-accent-soft: #f4f4f5;
+  --ms-accent-soft: #f3f3f3;
   --ms-accent-rgb: 35, 36, 39;
-  --ms-brand: #232427;
-  --ms-link: #232427;
-  --ms-banner: #f4f4f5;
-  --ms-banner-ink: #232427;
+  --ms-brand: #1a1a1a;
+  --ms-link: #1a1a1a;
+  --ms-banner: #e8e8e8;
+  --ms-banner-ink: #1a1a1a;
   --ms-skeleton: #c4c4c4;
   --ms-danger: #e03a1a;
   --ms-radius: 16px;

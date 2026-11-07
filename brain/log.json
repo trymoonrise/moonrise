@@ -3,6 +3,21 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.1.3",
+      "date": "2026-11-06",
+      "title": "Strict black and white studio with button motion",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio is locked to black, white, and grey only — theme color accents are removed.",
+            "Buttons, tabs, nav rows, and controls use a snappy press and hover motion."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.1.2",
       "date": "2026-11-06",
       "title": "Centered nav labels and a real home screen app",
