@@ -786,11 +786,11 @@ html:not([data-ms-mode="dark"]) :where(.ms-skeleton, .ms-placeholder-block) {
 
 /* —— Finder / map chrome (overrides late leads-map.css) —— */
 html:not([data-ms-mode="dark"]) #page-body.ms-lf-page.ms-lf-page--map {
-  --lf-btn-bg: #232427 !important;
+  --lf-btn-bg: var(--ms-accent, #232427) !important;
   --lf-btn-shadow: none !important;
   --lf-btn-shadow-hover: none !important;
   --lf-chrome-grey: #e5e5e5 !important;
-  --lf-muted: #666666 !important;
+  --lf-muted: #6b6b6b !important;
   --lf-btn-radius: 999px !important;
 }
 
@@ -798,7 +798,7 @@ html:not([data-ms-mode="dark"]) :where(
   .ms-lf-map-pill,
   .ms-lf-map-search-field
 ) {
-  background: rgba(252, 251, 239, 0.94) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
   border: 1px solid var(--ms-line) !important;
   box-shadow: var(--ms-shadow-card) !important;
   color: var(--ms-ink) !important;

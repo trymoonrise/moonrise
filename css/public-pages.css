@@ -63,7 +63,7 @@ body[data-page="orders"] .ms-orders-field {
 /* —— Sticky top bar —— */
 .ms-legal-top,
 .ms-orders-nav {
-  background: rgba(252, 251, 239, 0.94) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
   border-bottom: 1px solid #e5e5e5 !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -280,7 +280,7 @@ body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-bt
   justify-content: center;
   align-items: center;
   gap: 0.35rem 1.1rem;
-  background: rgba(252, 251, 239, 0.96) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
   border-top: 1px solid #e5e5e5 !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);

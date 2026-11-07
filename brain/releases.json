@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.6",
+      "date": "2026-11-06",
+      "title": "Business Finder drops cream chrome",
+      "tag": "v2.1.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.6",
+      "sections": [
+        {
+          "heading": "Finder",
+          "added": [],
+          "fixes": [
+            "Business Finder map chrome uses paper white and grey instead of the old cream tint."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.5",
       "date": "2026-11-06",
       "title": "Theme color tints primary buttons",

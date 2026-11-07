@@ -522,7 +522,7 @@ html:not([data-ms-mode="dark"]) a.ms-sidebar-legal-link.is-active {
     height: 2.75rem !important;
     display: grid !important;
     place-items: center;
-    background: rgba(252, 251, 239, 0.94) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
     border: 1px solid #e5e5e5 !important;
     border-radius: 999px !important;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
