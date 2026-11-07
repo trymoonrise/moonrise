@@ -14,8 +14,16 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
 @media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
 </style>
 <script>
-document.documentElement.classList.add("ms-boot");
 (function(){
+  var tabHop=false;
+  try{tabHop=!!sessionStorage.getItem("ms_tab_switch")}catch(e){}
+  if(tabHop){
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msBootReleased=1;
+    window.__msTabHop=1;
+    return;
+  }
+  document.documentElement.classList.add("ms-boot");
   try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
   try{window.scrollTo(0,0)}catch(e){}
   var boot=document.createElement("div");
@@ -35,7 +43,7 @@ document.documentElement.classList.add("ms-boot");
   var done=false;
   var started=performance.now();
   var readyAt=0;
-  var minMs=180;
+  var minMs=0;
   var maxMs=2500;
   var failMs=5000;
   var reduce=false;
@@ -224,7 +232,7 @@ document.documentElement.classList.add("ms-boot");
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261107-soft-radius"></script>
+  <script src="js/auth-gate-head.js?v=20261107-compact-ui"></script>
   <title>All projects - Moonrise Studio</title>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
@@ -233,7 +241,7 @@ document.documentElement.classList.add("ms-boot");
 <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-compact-ui">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
 </head>
 <body data-page="projects">
@@ -283,7 +291,14 @@ document.documentElement.classList.add("ms-boot");
         <button type="button" class="ms-dash-projects-filter" data-live-filter="not-live" aria-pressed="false">Not live</button>
       </div>
 
-      <div class="ms-dash-previews" id="projects-list"></div>
+      <div class="ms-dash-previews" id="projects-list">
+        <div class="ms-skel-block" data-ms-skel="1" aria-hidden="true">
+          <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--md"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+          <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--lg"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+          <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--md"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+          <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--lg"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+        </div>
+      </div>
     </section>
   </div>
 
@@ -313,6 +328,6 @@ document.documentElement.classList.add("ms-boot");
   <script defer src="js/toast.js"></script>
   <script defer src="js/project-lifecycle.js?v=20261028-paid-delete"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
-  <script defer src="js/projects.js?v=20261028-paid-delete"></script>
+  <script defer src="js/projects.js?v=20261107-compact-ui"></script>
 </body>
 </html>

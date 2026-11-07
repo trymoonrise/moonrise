@@ -14,8 +14,16 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
 @media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
 </style>
 <script>
-document.documentElement.classList.add("ms-boot");
 (function(){
+  var tabHop=false;
+  try{tabHop=!!sessionStorage.getItem("ms_tab_switch")}catch(e){}
+  if(tabHop){
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msBootReleased=1;
+    window.__msTabHop=1;
+    return;
+  }
+  document.documentElement.classList.add("ms-boot");
   try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
   try{window.scrollTo(0,0)}catch(e){}
   var boot=document.createElement("div");
@@ -35,7 +43,7 @@ document.documentElement.classList.add("ms-boot");
   var done=false;
   var started=performance.now();
   var readyAt=0;
-  var minMs=180;
+  var minMs=0;
   var maxMs=2500;
   var failMs=5000;
   var reduce=false;
@@ -224,7 +232,7 @@ document.documentElement.classList.add("ms-boot");
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261107-soft-radius"></script>
+  <script src="js/auth-gate-head.js?v=20261107-compact-ui"></script>
   <title>Dashboard - Moonrise Studio</title>
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
@@ -234,7 +242,7 @@ document.documentElement.classList.add("ms-boot");
 <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-compact-ui">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
 </head>
 <body data-page="dashboard">
@@ -248,48 +256,60 @@ document.documentElement.classList.add("ms-boot");
     </header>
 
     <div class="ms-settings-stack ms-dash-stack">
-      <section class="ms-card ms-settings-card ms-dash-card ms-dash-progress-card" aria-label="Overview">
+      <section class="ms-card ms-settings-card ms-dash-card ms-dash-progress-card is-skel-loading" id="dash-overview-card" aria-label="Overview">
         <h2 class="ms-settings-card-title">Overview</h2>
-        <div class="ms-dash-hero">
-          <div class="ms-dash-hero-copy">
-            <p class="ms-dash-hero-label">Income</p>
-            <p class="ms-dash-hero-value" id="stat-commission">$0.00</p>
-            <p class="ms-dash-hero-hint">Your 90% share</p>
-          </div>
-          <div class="ms-dash-hero-pct">
-            <p class="ms-dash-ring-progress">
-              <span class="ms-dash-ring-value" id="stat-goal-pct">0%</span>
-            </p>
-            <p class="ms-dash-ring-kicker">of goal</p>
+        <div class="ms-skel-block" id="dash-overview-skel" aria-hidden="true">
+          <div class="ms-skel ms-skel-line ms-skel-line--md"></div>
+          <div class="ms-skel ms-skel-metric"></div>
+          <div class="ms-skel ms-skel-line ms-skel-line--lg"></div>
+          <div class="ms-dash-overview-grid">
+            <div class="ms-skel ms-skel-metric"></div>
+            <div class="ms-skel ms-skel-metric"></div>
+            <div class="ms-skel ms-skel-metric"></div>
           </div>
         </div>
-        <div class="ms-dash-bar ms-dash-ring" role="img" aria-label="0 percent of income goal">
-          <span class="ms-dash-bar-fill" id="stat-goal-ring"></span>
-        </div>
-        <p class="ms-dash-ring-sub ms-dash-bar-caption">
-          <span id="stat-goal-left">$1,000.00</span>
-          <span id="stat-goal-left-label">left</span>
-        </p>
-        <div class="ms-dash-overview">
-          <div class="ms-dash-overview-grid" aria-label="Key metrics">
-            <div class="ms-dash-metric ms-dash-metric--goal" id="stat-goal-wrap">
-              <span class="ms-dash-metric-label">Goal <span class="ms-dash-metric-edit">Edit</span></span>
-              <button type="button" class="ms-dash-metric-value ms-dash-goal-display" id="stat-goal" title="Click to edit income goal" aria-label="Income goal $1,000, click to edit">$1,000</button>
-              <input class="ms-dash-goal-input" id="stat-goal-input" type="number" inputmode="numeric" min="1" max="1000000" step="1" value="1000" aria-label="Edit income goal" hidden>
-              <span class="ms-dash-metric-hint">Lifetime target</span>
+        <div class="ms-dash-overview-live" id="dash-overview-live" hidden>
+          <div class="ms-dash-hero">
+            <div class="ms-dash-hero-copy">
+              <p class="ms-dash-hero-label">Income</p>
+              <p class="ms-dash-hero-value" id="stat-commission">$0.00</p>
+              <p class="ms-dash-hero-hint">Your 90% share</p>
             </div>
-            <div class="ms-dash-metric ms-dash-metric--sales">
-              <span class="ms-dash-metric-label">Sales</span>
-              <strong class="ms-dash-metric-value" id="dash-sales-progress">0</strong>
-              <span class="ms-dash-metric-hint">Paid sites</span>
-            </div>
-            <div class="ms-dash-metric ms-dash-metric--avg">
-              <span class="ms-dash-metric-label">Average</span>
-              <strong class="ms-dash-metric-value" id="stat-avg-sale">-</strong>
-              <span class="ms-dash-metric-hint">Per paid site</span>
+            <div class="ms-dash-hero-pct">
+              <p class="ms-dash-ring-progress">
+                <span class="ms-dash-ring-value" id="stat-goal-pct">0%</span>
+              </p>
+              <p class="ms-dash-ring-kicker">of goal</p>
             </div>
           </div>
-          <a class="ms-btn ms-dash-tool" href="leads.html">Find a lead</a>
+          <div class="ms-dash-bar ms-dash-ring" role="img" aria-label="0 percent of income goal">
+            <span class="ms-dash-bar-fill" id="stat-goal-ring"></span>
+          </div>
+          <p class="ms-dash-ring-sub ms-dash-bar-caption">
+            <span id="stat-goal-left">$1,000.00</span>
+            <span id="stat-goal-left-label">left</span>
+          </p>
+          <div class="ms-dash-overview">
+            <div class="ms-dash-overview-grid" aria-label="Key metrics">
+              <div class="ms-dash-metric ms-dash-metric--goal" id="stat-goal-wrap">
+                <span class="ms-dash-metric-label">Goal <span class="ms-dash-metric-edit">Edit</span></span>
+                <button type="button" class="ms-dash-metric-value ms-dash-goal-display" id="stat-goal" title="Click to edit income goal" aria-label="Income goal $1,000, click to edit">$1,000</button>
+                <input class="ms-dash-goal-input" id="stat-goal-input" type="number" inputmode="numeric" min="1" max="1000000" step="1" value="1000" aria-label="Edit income goal" hidden>
+                <span class="ms-dash-metric-hint">Lifetime target</span>
+              </div>
+              <div class="ms-dash-metric ms-dash-metric--sales">
+                <span class="ms-dash-metric-label">Sales</span>
+                <strong class="ms-dash-metric-value" id="dash-sales-progress">0</strong>
+                <span class="ms-dash-metric-hint">Paid sites</span>
+              </div>
+              <div class="ms-dash-metric ms-dash-metric--avg">
+                <span class="ms-dash-metric-label">Average</span>
+                <strong class="ms-dash-metric-value" id="stat-avg-sale">-</strong>
+                <span class="ms-dash-metric-hint">Per paid site</span>
+              </div>
+            </div>
+            <a class="ms-btn ms-dash-tool" href="leads.html">Find a lead</a>
+          </div>
         </div>
       </section>
 
@@ -343,7 +363,13 @@ document.documentElement.classList.add("ms-boot");
               <p class="ms-dash-projects-search-hint" id="dash-projects-search-hint" hidden></p>
             </div>
           </div>
-          <div class="ms-dash-previews" id="dash-projects-list"></div>
+          <div class="ms-dash-previews" id="dash-projects-list">
+            <div class="ms-skel-block" data-ms-skel="1" aria-hidden="true">
+              <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--md"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+              <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--lg"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+              <div class="ms-skel-row"><span class="ms-skel ms-skel-circle" style="width:40px;height:40px"></span><span class="ms-skel-row-copy"><span class="ms-skel ms-skel-line ms-skel-line--md"></span><span class="ms-skel ms-skel-line ms-skel-line--sm"></span></span></div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -376,6 +402,6 @@ document.documentElement.classList.add("ms-boot");
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/project-lifecycle.js?v=20261028-paid-delete"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
-  <script defer src="js/dashboard.js?v=20261028-paid-delete"></script>
+  <script defer src="js/dashboard.js?v=20261107-compact-ui"></script>
 </body>
 </html>

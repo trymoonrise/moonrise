@@ -3,6 +3,26 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.1.9",
+      "date": "2026-11-07",
+      "title": "Compact studio Settings and faster tabs",
+      "tag": "v2.1.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.1.9",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio uses a compact light-app look: off-white canvas, white grouped rows, and a shorter floating tab bar.",
+            "Settings is a short list of rows with expandable panels instead of long essay cards.",
+            "Dashboard, Clients, and Projects show skeleton rows while data loads."
+          ],
+          "fixes": [
+            "Switching between studio pages no longer flashes the full-screen moonrise loading bar."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.1.8",
       "date": "2026-11-07",
       "title": "Softer rounded studio corners",

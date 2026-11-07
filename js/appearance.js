@@ -343,6 +343,8 @@
     if (dark) dark.checked = current.mode === "dark";
     if (name) name.textContent = themeName(current.color);
     if (textName) textName.textContent = TEXT[current.text] || TEXT.medium;
+    var swatchPreview = document.getElementById("set-theme-swatch-preview");
+    if (swatchPreview) swatchPreview.style.background = current.color;
     if (custom) custom.value = current.color;
     if (customWrap) {
       customWrap.style.setProperty("--swatch", current.color);

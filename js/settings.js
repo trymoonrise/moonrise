@@ -21,6 +21,67 @@
   let started = false;
   let notifBusy = false;
 
+  function chevronFor(toggle) {
+    return toggle?.closest(".ms-set-row") || toggle;
+  }
+
+  function setPanelOpen(toggle, panel, open) {
+    if (!toggle || !panel) return;
+    const next = !!open;
+    panel.hidden = !next;
+    toggle.setAttribute("aria-expanded", next ? "true" : "false");
+    chevronFor(toggle)?.classList.toggle("is-open", next);
+  }
+
+  function bindPanelToggle(toggleId, panelId) {
+    const toggle = document.getElementById(toggleId);
+    const panel = document.getElementById(panelId);
+    if (!toggle || !panel) return;
+    toggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      setPanelOpen(toggle, panel, panel.hidden);
+    });
+  }
+
+  function syncProfileSummary() {
+    const handle = String(document.getElementById("set-handle")?.value || "")
+      .replace(/^@/, "")
+      .trim();
+    const display = String(document.getElementById("set-display")?.value || "").trim();
+    const nameEl = document.getElementById("set-profile-name");
+    const handleEl = document.getElementById("set-profile-handle");
+    if (nameEl) nameEl.textContent = display || handle || "Profile";
+    if (handleEl) handleEl.textContent = handle ? "@" + handle : "@moonrise";
+  }
+
+  function clearProfileSkeleton() {
+    document.getElementById("set-profile-summary")?.classList.remove("is-skel");
+  }
+
+  function syncThemeSwatchPreview() {
+    const preview = document.getElementById("set-theme-swatch-preview");
+    if (!preview) return;
+    const custom = document.getElementById("set-theme-custom");
+    const active = document.querySelector('.ms-appearance-swatch[aria-checked="true"][data-color]');
+    const color =
+      active?.getAttribute("data-color") ||
+      custom?.value ||
+      getComputedStyle(document.documentElement).getPropertyValue("--ms-accent").trim() ||
+      "#232427";
+    preview.style.background = color;
+  }
+
+  bindPanelToggle("set-profile-toggle", "set-profile-panel");
+  bindPanelToggle("set-theme-toggle", "set-theme-panel");
+  bindPanelToggle("set-text-toggle", "set-text-panel");
+  bindPanelToggle("set-passkeys-toggle", "settings-passkeys");
+  bindPanelToggle("set-delete-toggle", "set-delete-panel");
+
+  document.getElementById("set-profile-summary")?.addEventListener("click", (event) => {
+    if (event.target.closest("label, input, button#set-avatar-remove, #set-profile-toggle")) return;
+    document.getElementById("set-profile-toggle")?.click();
+  });
+
   function defaultAvatar() {
     return (
       (window.SITE_CONFIG && window.SITE_CONFIG.defaultAvatarUrl) ||
@@ -208,6 +269,9 @@
       avatarUrl = "";
     }
     refreshPreview();
+    syncProfileSummary();
+    clearProfileSkeleton();
+    syncThemeSwatchPreview();
     syncNotificationToggle(profile);
   }
 
@@ -290,8 +354,20 @@
     }
   });
 
-  document.getElementById("set-handle")?.addEventListener("input", refreshPreview);
-  document.getElementById("set-display")?.addEventListener("input", refreshPreview);
+  document.getElementById("set-handle")?.addEventListener("input", () => {
+    refreshPreview();
+    syncProfileSummary();
+  });
+  document.getElementById("set-display")?.addEventListener("input", () => {
+    refreshPreview();
+    syncProfileSummary();
+  });
+  document.addEventListener("ms:appearance-changed", syncThemeSwatchPreview);
+  document.querySelectorAll(".ms-appearance-swatch, #set-theme-custom, #set-theme-hex").forEach((el) => {
+    el.addEventListener("input", syncThemeSwatchPreview);
+    el.addEventListener("change", syncThemeSwatchPreview);
+    el.addEventListener("click", () => setTimeout(syncThemeSwatchPreview, 0));
+  });
 
   document.getElementById("set-save")?.addEventListener("click", async () => {
     const btn = document.getElementById("set-save");
@@ -318,6 +394,7 @@
       if (error) throw error;
       document.getElementById("set-handle").value = payload.handle;
       refreshPreview();
+      syncProfileSummary();
       setOk("Profile saved.");
       notifyShell(payload.handle, avatarUrl);
     } catch (e) {
@@ -450,7 +527,6 @@
 
   async function refreshPasskeys() {
     if (!passkeySection) return;
-    passkeySection.hidden = false;
     const usable = !!window.StudioAuth?.canUsePasskeys?.();
     if (passkeyUnavailable) passkeyUnavailable.hidden = usable;
     if (!usable) {
@@ -677,6 +753,7 @@
       await refreshPasskeys();
     } catch (e) {
       console.warn(e);
+      clearProfileSkeleton();
       setError(friendlyMessage(e, "Could not load settings"));
     }
   }

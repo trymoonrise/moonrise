@@ -40,7 +40,7 @@
 
   if (!window.__msAppearanceBoot) {
     window.__msAppearanceBoot = 1;
-    document.write('<script src="js/appearance.js?v=20261107-accent-btn"><\/script>');
+    document.write('<script src="js/appearance.js?v=20261107-compact-ui"><\/script>');
   }
 
   var PUBLIC = {
@@ -78,10 +78,22 @@
     return;
   }
 
+  var tabHop = false;
+  try {
+    tabHop = !!sessionStorage.getItem("ms_tab_switch") || !!window.__msTabHop;
+  } catch (e) {}
+
   document.documentElement.classList.add("ms-auth-gating");
-  document.documentElement.classList.add("ms-hold");
-  // Boot overlay must stay until app.js paints the shell (avoids blank white).
-  window.__msStudioBoot = 1;
+  // Tab hops keep chrome visible; cold loads still hold until the shell paints.
+  if (!tabHop) {
+    document.documentElement.classList.add("ms-hold");
+    window.__msStudioBoot = 1;
+  } else {
+    window.__msTabHop = 1;
+    window.__msStudioBoot = 0;
+    document.documentElement.classList.add("ms-boot-done");
+    window.__msBootReleased = 1;
+  }
 
   var preconnect = document.createElement("link");
   preconnect.rel = "preconnect";
@@ -102,9 +114,11 @@
     document.head.appendChild(preload);
   });
 
-  var style = document.createElement("style");
-  style.textContent = "html.ms-hold body{visibility:hidden!important}";
-  document.head.appendChild(style);
+  if (!tabHop) {
+    var style = document.createElement("style");
+    style.textContent = "html.ms-hold body{visibility:hidden!important}";
+    document.head.appendChild(style);
+  }
 
   function redirectToLogin() {
     // A prerender that sends itself to login is what the next channel shows.

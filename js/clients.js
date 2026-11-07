@@ -210,11 +210,18 @@
     );
   }
 
+  function clearClientsSkeleton() {
+    const skel = $("ms-clients-skel");
+    if (skel) skel.hidden = true;
+    document.querySelector(".ms-clients-table")?.classList.remove("is-skel-loading");
+  }
+
   function renderClients() {
     const body = $("ms-clients-body");
     const empty = $("ms-clients-empty");
     const countEl = $("ms-clients-count");
     if (!body || !empty) return;
+    clearClientsSkeleton();
 
     const rows = filteredRows();
     if (countEl) {

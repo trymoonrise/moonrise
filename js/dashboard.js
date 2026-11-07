@@ -240,6 +240,7 @@
       statsIntroPlayed = true;
       renderGoal();
       renderSalesProgress();
+      clearOverviewSkeleton();
       const countEl = document.getElementById("dash-projects-count");
       const projectCount = Number(cached.projectCount);
       if (countEl && Number.isFinite(projectCount)) {
@@ -402,12 +403,22 @@
     );
   }
 
+  function clearOverviewSkeleton() {
+    const card = document.getElementById("dash-overview-card");
+    const skel = document.getElementById("dash-overview-skel");
+    const live = document.getElementById("dash-overview-live");
+    card?.classList.remove("is-skel-loading");
+    if (skel) skel.hidden = true;
+    if (live) live.hidden = false;
+  }
+
   function setStats(salesProjects, opts) {
     const sales = (salesProjects || []).filter(isSale);
     salesCount = sales.length;
     commissionEarned = calcCommission(sales);
     syncSidebarIncome();
     writeDashboardCache();
+    clearOverviewSkeleton();
     if (opts?.animate === true && !statsIntroPlayed) {
       statsIntroPlayed = true;
       animateStatsToCurrent();
@@ -1308,6 +1319,8 @@
         commissionEarned = 0;
         salesCount = 0;
         setStats([]);
+      } else {
+        clearOverviewSkeleton();
       }
       await renderProjects([]);
       return;
