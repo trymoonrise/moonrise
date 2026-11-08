@@ -69,11 +69,13 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     if(el)el.remove();
   }
 
-  function failTo404(){
-    if(window.__msAuthRedirecting)return;
-    window.__msAuthRedirecting=true;
+  function softRelease(){
+    try{
+      if(document.body) document.body.dataset.msShellPainted="1";
+    }catch(e){}
+    window.__msStudioBoot=0;
     forceReveal();
-    location.replace("404.html");
+    if(window.__msReleaseBoot) window.__msReleaseBoot();
   }
 
   function setProgress(p){
@@ -121,7 +123,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     var elapsed=now-started;
     // Absolute escape: never sit on a blank/hold screen past failMs.
     if(elapsed>=failMs && (gating() || studioPending() || document.getElementById("ms-boot"))){
-      failTo404();
+      softRelease();
       return;
     }
     if(ready){
@@ -193,13 +195,13 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   // Wall-clock backup if rAF is throttled/frozen.
   setTimeout(function(){
     if(done || window.__msAuthRedirecting) return;
-    if(gating() || studioPending() || document.getElementById("ms-boot")) failTo404();
+    if(gating() || studioPending() || document.getElementById("ms-boot")) softRelease();
   }, failMs + 250);
 })();
 </script>
   <script>
     (function () {
-      var BUILD = "20261107-accent-btn";
+      var BUILD = "20261108-onboard-fix";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -233,7 +235,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261108-skel-nav"></script>
+  <script src="js/auth-gate-head.js?v=20261108-onboard-fix"></script>
   <title>Welcome - Moonrise Studio</title>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
 <style>
@@ -260,7 +262,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-skel-nav">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
-  <link rel="stylesheet" href="css/onboarding-premium.css?v=20261028-cream-full&_=20261006-plain">
+  <link rel="stylesheet" href="css/onboarding-premium.css?v=20261108-onboard-fix">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="onboarding" class="ms-onboard-page">
@@ -274,69 +276,42 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
             <span>moonrise.</span>
           </a>
           <div class="ms-onboard-card-head-actions">
-            <span class="ms-onboard-step-pill" id="onb-progress-label">1 of 7</span>
+            <span class="ms-onboard-step-pill" id="onb-progress-label">1 of 9</span>
           </div>
         </div>
         <p class="ms-onboard-step-name" id="onb-step-name">Welcome</p>
-        <div class="ms-onboard-progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1" id="onb-progress-bar">
+        <div class="ms-onboard-progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="9" aria-valuenow="1" id="onb-progress-bar">
           <div class="ms-onboard-progress-fill" id="onb-progress-fill"></div>
         </div>
       </header>
 
       <main class="ms-onboard-main" id="onb-main">
-        <!-- 1 Introduction -->
+        <!-- 1 Welcome -->
         <section class="ms-onboard-panel is-active is-visible" data-onb-step="1">
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head">
               <h1>Welcome</h1>
             </header>
-            <p class="ms-onboard-lead">
-              You make a free website for a local business. They pay on that site if they want to keep it. You keep 90%.
-            </p>
-            <ol class="ms-onboard-preview">
-              <li><strong>Learn the steps</strong><span>How a sale works, from the first search to your payout.</span></li>
-              <li><strong>Agree to the rule</strong><span>Owners pay on Moonrise. You never charge them yourself.</span></li>
-              <li><strong>Set up payouts</strong><span>A card on file, where we send your money, and how clients reach you.</span></li>
-            </ol>
+            <div class="ms-onboard-focus">
+              <p class="ms-onboard-focus-kicker">One idea</p>
+              <p class="ms-onboard-focus-copy">Moonrise helps you earn by making websites for local businesses.</p>
+            </div>
           </div>
           <footer class="ms-onboard-actions">
             <button type="button" class="ms-btn ms-onboard-next" data-onb-next>Continue</button>
           </footer>
         </section>
 
-        <!-- 2 How it works -->
-        <section class="ms-onboard-panel ms-onboard-panel--path" data-onb-step="2" hidden>
+        <!-- 2 Find -->
+        <section class="ms-onboard-panel" data-onb-step="2" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head">
-              <h1>How you get paid</h1>
+              <h1>Find a business</h1>
             </header>
-            <p class="ms-onboard-lead">Six steps. Nothing here is hidden.</p>
-            <ol class="ms-onboard-plain">
-              <li>
-                <span class="ms-onboard-plain-num">1</span>
-                <span><strong>Find a business</strong><span>Search for a local business that needs a website.</span></span>
-              </li>
-              <li>
-                <span class="ms-onboard-plain-num">2</span>
-                <span><strong>Build the site</strong><span>Swipe to generate it, then set the price the owner will pay.</span></span>
-              </li>
-              <li>
-                <span class="ms-onboard-plain-num">3</span>
-                <span><strong>Publish it</strong><span>The site goes live with a small watermark until they pay.</span></span>
-              </li>
-              <li>
-                <span class="ms-onboard-plain-num">4</span>
-                <span><strong>Send the link</strong><span>Share the live site. They pay only on Moonrise, never to you directly.</span></span>
-              </li>
-              <li>
-                <span class="ms-onboard-plain-num">5</span>
-                <span><strong>They pay</strong><span>They tap the watermark and pay once. The watermark comes off.</span></span>
-              </li>
-              <li>
-                <span class="ms-onboard-plain-num">6</span>
-                <span><strong>You get paid</strong><span>You keep 90%. Then find the next business.</span></span>
-              </li>
-            </ol>
+            <div class="ms-onboard-focus">
+              <span class="ms-onboard-focus-num" aria-hidden="true">1</span>
+              <p class="ms-onboard-focus-copy">Search for a local business that still needs a website.</p>
+            </div>
           </div>
           <footer class="ms-onboard-actions">
             <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
@@ -344,17 +319,52 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           </footer>
         </section>
 
-        <!-- 3 Policies -->
+        <!-- 3 Build -->
         <section class="ms-onboard-panel" data-onb-step="3" hidden>
+          <div class="ms-onboard-panel-scroll">
+            <header class="ms-onboard-panel-head">
+              <h1>Build their site</h1>
+            </header>
+            <div class="ms-onboard-focus">
+              <span class="ms-onboard-focus-num" aria-hidden="true">2</span>
+              <p class="ms-onboard-focus-copy">Create the site for free, set a price, and publish it with a small watermark.</p>
+            </div>
+          </div>
+          <footer class="ms-onboard-actions">
+            <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
+            <button type="button" class="ms-btn ms-onboard-next" data-onb-next>Continue</button>
+          </footer>
+        </section>
+
+        <!-- 4 Get paid -->
+        <section class="ms-onboard-panel" data-onb-step="4" hidden>
+          <div class="ms-onboard-panel-scroll">
+            <header class="ms-onboard-panel-head">
+              <h1>They pay. You earn.</h1>
+            </header>
+            <div class="ms-onboard-focus">
+              <span class="ms-onboard-focus-num" aria-hidden="true">3</span>
+              <p class="ms-onboard-focus-copy">The owner pays on Moonrise to remove the watermark. You keep 90%.</p>
+            </div>
+          </div>
+          <footer class="ms-onboard-actions">
+            <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
+            <button type="button" class="ms-btn ms-onboard-next" data-onb-next>Continue</button>
+          </footer>
+        </section>
+
+        <!-- 5 The one rule -->
+        <section class="ms-onboard-panel" data-onb-step="5" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head">
               <h1>The one rule</h1>
             </header>
-            <p class="ms-onboard-lead">Owners pay on their website. You do not collect the money yourself.</p>
+            <div class="ms-onboard-focus ms-onboard-focus--compact">
+              <p class="ms-onboard-focus-copy">Owners pay on their website. You never charge them yourself.</p>
+            </div>
             <div class="ms-creator-policy-notice ms-onboard-policy" role="note">
-              <strong>Never charge a business owner directly.</strong>
-              <p>They pay through the watermark. After they pay, the watermark comes off and you receive 90%.</p>
-              <p>Cash, Venmo, PayPal, invoices, or any other off-site payment is not allowed. It can close your account and cancel payouts.</p>
+              <strong>Never take payment off Moonrise.</strong>
+              <p>Cash, Venmo, PayPal, invoices, or any other off-site payment can close your account and cancel payouts.</p>
             </div>
             <div class="ms-onboard-legal-links">
               <a class="ms-onboard-legal-card" href="legal.html#privacy" target="_blank" rel="noopener">
@@ -364,7 +374,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                 <span class="ms-onboard-legal-copy">
                   <strong>Privacy Policy</strong>
                 </span>
-                <span class="ms-onboard-legal-arrow" aria-hidden="true">?</span>
+                <span class="ms-onboard-legal-arrow" aria-hidden="true">→</span>
               </a>
               <a class="ms-onboard-legal-card" href="legal.html#terms" target="_blank" rel="noopener">
                 <span class="ms-onboard-legal-icon" aria-hidden="true">
@@ -373,7 +383,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                 <span class="ms-onboard-legal-copy">
                   <strong>Terms of Service</strong>
                 </span>
-                <span class="ms-onboard-legal-arrow" aria-hidden="true">?</span>
+                <span class="ms-onboard-legal-arrow" aria-hidden="true">→</span>
               </a>
             </div>
             <label class="ms-onboard-check">
@@ -387,8 +397,8 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           </footer>
         </section>
 
-        <!-- 4 Security card -->
-        <section class="ms-onboard-panel" data-onb-step="4" hidden>
+        <!-- 6 Security card -->
+        <section class="ms-onboard-panel" data-onb-step="6" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head ms-onboard-panel-head--stripe">
               <h1>Card on file</h1>
@@ -409,7 +419,9 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                 </span>
               </a>
             </header>
-            <p class="ms-onboard-lead">Add a card so the account stays in good standing. Stripe checks it with a $1 charge, then refunds that $1 right away. You are not paying to join.</p>
+            <div class="ms-onboard-focus ms-onboard-focus--compact">
+              <p class="ms-onboard-focus-copy">Add a card so your account stays in good standing. Stripe checks it with $1, then refunds that $1. You are not paying to join.</p>
+            </div>
             <div class="ms-onboard-form-block">
               <div class="ms-sec-card-panel" id="onb-security-card-panel">
                 <div id="onb-security-card-mount"></div>
@@ -446,13 +458,15 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           </footer>
         </section>
 
-        <!-- 5 Payout method -->
-        <section class="ms-onboard-panel" data-onb-step="5" hidden>
+        <!-- 7 Payout method -->
+        <section class="ms-onboard-panel" data-onb-step="7" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head">
               <h1>Where we pay you</h1>
             </header>
-            <p class="ms-onboard-lead" id="onb-payout-lead">When an owner buys their site, we send your 90% here.</p>
+            <div class="ms-onboard-focus ms-onboard-focus--compact">
+              <p class="ms-onboard-focus-copy" id="onb-payout-lead">When an owner buys their site, we send your 90% here.</p>
+            </div>
             <div class="ms-onboard-form-block" id="onb-payout-form">
               <div class="ms-field">
                 <label class="ms-label" id="onb-payout-method-label">How you get paid</label>
@@ -502,15 +516,15 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           </footer>
         </section>
 
-        <!-- 6 Contact information -->
-        <section class="ms-onboard-panel" data-onb-step="6" hidden>
+        <!-- 8 Contact information -->
+        <section class="ms-onboard-panel" data-onb-step="8" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head">
               <h1>How clients reach you</h1>
             </header>
-            <p class="ms-onboard-lead">
-              Add an email and phone clients can use for small edits. A free virtual number is fine if you want to keep your personal number private.
-            </p>
+            <div class="ms-onboard-focus ms-onboard-focus--compact">
+              <p class="ms-onboard-focus-copy">Add an email and phone clients can use for small edits. A free virtual number is fine.</p>
+            </div>
             <div class="ms-onboard-form-block">
               <div class="ms-field">
                 <label class="ms-label" for="onb-contact-email">Email</label>
@@ -544,8 +558,8 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           </footer>
         </section>
 
-        <!-- 7 Ready -->
-        <section class="ms-onboard-panel ms-onboard-panel--celebrate" data-onb-step="7" hidden>
+        <!-- 9 Ready -->
+        <section class="ms-onboard-panel ms-onboard-panel--celebrate" data-onb-step="9" hidden>
           <div class="ms-onboard-panel-scroll">
             <header class="ms-onboard-panel-head ms-onboard-panel-head--celebrate">
               <h1>You're ready</h1>
@@ -556,9 +570,9 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                 </svg>
               </div>
             </header>
-            <p class="ms-onboard-lead">
-              Next, find a local business and build their site. The short video shows the whole flow.
-            </p>
+            <div class="ms-onboard-focus ms-onboard-focus--compact">
+              <p class="ms-onboard-focus-copy">Next, find a local business and build their site.</p>
+            </div>
             <div class="ms-course-video ms-onb-celebrate-video">
               <iframe
                 src="https://www.youtube.com/embed/9XvXF1LrWgA?rel=0&modestbranding=1"
@@ -581,12 +595,13 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/config.js?v=20261108-skel-nav"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
-  <script defer src="js/auth.js?v=20261108-skel-nav"></script>
+  <script defer src="js/auth.js?v=20261108-onboard-fix"></script>
+  <script defer src="js/app.js?v=20261108-onboard-fix"></script>
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20261107-accent-btn"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/payout-profile.js?v=20260719-payout-other"></script>
   <script defer src="js/security-card.js?v=20260720-precheck-card"></script>
-  <script defer src="js/onboarding.js?v=20261006-plain"></script>
+  <script defer src="js/onboarding.js?v=20261108-onboard-fix"></script>
 </body>
 </html>

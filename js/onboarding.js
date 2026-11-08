@@ -2,7 +2,7 @@
  * Creator Studio onboarding wizard (required once; replayable from Settings).
  */
 (async function () {
-  const TOTAL_STEPS = 7;
+  const TOTAL_STEPS = 9;
   const DRAFT_KEY = "ms_studio_onboarding_draft_v1";
   const FORCE_REPLAY_KEY = "ms_force_studio_onboarding_replay";
   const PAYOUT_METHOD_OPTIONS = [
@@ -652,7 +652,7 @@
       const reduced = prefersReducedMotion();
 
       setTransitioning(true);
-      if (target === 5) closePayoutConfirm();
+      if (target === 7) closePayoutConfirm();
 
       if (main) {
         main.classList.remove("is-forward", "is-back", "is-entering");
@@ -680,7 +680,7 @@
         syncPanelVisibility(step);
 
         if (nextPanel) {
-          if (step === 7) {
+          if (step === 9) {
             document.querySelector(".ms-onboard")?.classList.add("is-celebrating");
           } else {
             document.querySelector(".ms-onboard")?.classList.remove("is-celebrating");
@@ -688,10 +688,10 @@
         }
 
         setError("");
-        if (step === 4) {
+        if (step === 6) {
           prepareSecurityCardStep();
         }
-        if (step === 5) {
+        if (step === 7) {
           syncPayoutHandleUi();
         } else {
           closePayoutConfirm();
@@ -783,22 +783,22 @@
   }
 
   function collectStepDraft() {
-    if (step === 5) {
+    if (step === 7) {
       writeDraft(readPayoutForm());
     }
-    if (step === 6 && phoneField) {
+    if (step === 8 && phoneField) {
       writeDraft({ ...readPayoutForm(), ...readContactForm() });
     }
   }
 
   function validateCurrentStep() {
-    if (step === 3) {
+    if (step === 5) {
       if (!document.getElementById("onb-legal-agree")?.checked) {
         return "Please agree to the Privacy Policy and Terms of Service to continue.";
       }
       return null;
     }
-    if (step === 4) {
+    if (step === 6) {
       if (!document.getElementById("onb-card-agree")?.checked) {
         return "Please authorize Moonrise to store and charge this card to continue.";
       }
@@ -807,7 +807,7 @@
       }
       return null;
     }
-    if (step === 5 && !payoutConfirmOpen) {
+    if (step === 7 && !payoutConfirmOpen) {
       const payoutErr = validatePayoutStep();
       if (payoutErr) return payoutErr;
       if (!cardVerified) {
@@ -815,7 +815,7 @@
       }
       return null;
     }
-    if (step === 6) {
+    if (step === 8) {
       const contactErr = validateContactStep();
       if (contactErr) return contactErr;
       const payoutErr = validatePayoutStep();
@@ -927,19 +927,19 @@
     }
     collectStepDraft();
 
-    if (step === 5 && !payoutConfirmOpen) {
+    if (step === 7 && !payoutConfirmOpen) {
       await openPayoutConfirm();
       return;
     }
 
-    if (step === 6) {
+    if (step === 8) {
       if (saving) return;
       saving = true;
-      const btn = document.querySelector('[data-onb-step="6"] [data-onb-next]');
+      const btn = document.querySelector('[data-onb-step="8"] [data-onb-next]');
       if (btn) btn.disabled = true;
       try {
         await persistComplete();
-        await showStep(7, { direction: "forward" });
+        await showStep(9, { direction: "forward" });
         const finder = document.getElementById("onb-go-finder");
         const dash = document.getElementById("onb-go-dash");
         if (finder) finder.href = "leads.html";
@@ -961,7 +961,7 @@
   }
 
   function payoutStepButton(kind) {
-    return document.querySelector('[data-onb-step="5"] [data-onb-' + kind + "]");
+    return document.querySelector('[data-onb-step="7"] [data-onb-' + kind + "]");
   }
 
   function displayPayoutHandle(method, handle) {
@@ -981,7 +981,7 @@
       return;
     }
     payoutConfirmOpen = false;
-    const heading = document.querySelector('[data-onb-step="5"] h1');
+    const heading = document.querySelector('[data-onb-step="7"] h1');
     const lead = document.getElementById("onb-payout-lead");
     const form = document.getElementById("onb-payout-form");
     const confirm = document.getElementById("onb-payout-confirm");
@@ -1048,7 +1048,7 @@
   function renderPayoutConfirm(form, preview) {
     const meta = PAYOUT_METHODS[form.payoutMethod];
     const handle = preview.handle || displayPayoutHandle(form.payoutMethod, form.payoutHandle);
-    const heading = document.querySelector('[data-onb-step="5"] h1');
+    const heading = document.querySelector('[data-onb-step="7"] h1');
     const lead = document.getElementById("onb-payout-lead");
     const formEl = document.getElementById("onb-payout-form");
     const confirm = document.getElementById("onb-payout-confirm");
@@ -1126,7 +1126,7 @@
   async function goBack() {
     if (stepTransition) return;
     setError("");
-    if (step === 5 && payoutConfirmOpen) {
+    if (step === 7 && payoutConfirmOpen) {
       closePayoutConfirm();
       return;
     }
@@ -1214,9 +1214,16 @@
     const session = await window.StudioAuth.requireAuth();
     if (!session) return;
 
+    try {
+      if (document.body) document.body.dataset.msShellPainted = "1";
+      window.__msStudioBoot = 0;
+    } catch (_) {
+      /* ignore */
+    }
     document.querySelector(".ms-onboard")?.classList.add("is-ready");
     syncPanelVisibility(1);
     document.querySelector('[data-onb-step="1"]')?.classList.add("is-visible");
+    window.__msReleaseBoot?.();
 
     await window.StudioAuth.ensureProfile?.();
 

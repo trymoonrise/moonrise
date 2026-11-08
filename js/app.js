@@ -783,7 +783,16 @@
 
   function buildShell(opts) {
     const page = document.body?.dataset?.page || "";
-    if (page === "index" || page === "home" || page === "login" || page === "apply" || page === "orders") return;
+    if (
+      page === "index" ||
+      page === "home" ||
+      page === "login" ||
+      page === "apply" ||
+      page === "orders" ||
+      page === "onboarding"
+    ) {
+      return;
+    }
 
     const shell = document.getElementById("shell");
     if (!shell) return;
@@ -1919,6 +1928,21 @@
 
   function failStudioBoot() {
     if (window.__msAuthRedirecting || document.prerendering) return;
+    const page = document.body?.dataset?.page || "";
+    if (page === "onboarding") {
+      try {
+        if (document.body) document.body.dataset.msShellPainted = "1";
+        document.documentElement.classList.remove("ms-boot", "ms-hold", "ms-auth-gating");
+        document.documentElement.classList.add("ms-boot-done");
+        window.__msStudioBoot = 0;
+        window.__msBootReleased = 1;
+        document.getElementById("ms-boot")?.remove();
+        if (typeof window.__msReleaseBoot === "function") window.__msReleaseBoot();
+      } catch (_) {
+        /* ignore */
+      }
+      return;
+    }
     window.__msAuthRedirecting = true;
     location.replace("404.html");
   }

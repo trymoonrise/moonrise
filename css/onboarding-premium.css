@@ -165,6 +165,67 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   border-radius: 999px;
 }
 
+.ms-onboard-focus {
+  display: grid;
+  gap: 0.85rem;
+  justify-items: start;
+  padding: 1.15rem 0 0.35rem;
+}
+
+.ms-onboard-focus--compact {
+  padding-top: 0.35rem;
+  padding-bottom: 0.55rem;
+}
+
+.ms-onboard-focus-kicker {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ms-min-quiet, #77776e);
+}
+
+.ms-onboard-focus-num {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 999px;
+  background: #232427;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.ms-onboard-focus-copy {
+  margin: 0;
+  max-width: 18rem;
+  font-size: clamp(1.2rem, 4.2vw, 1.55rem);
+  font-weight: 650;
+  line-height: 1.28;
+  letter-spacing: -0.03em;
+  color: #232427;
+}
+
+.ms-onboard-focus--compact .ms-onboard-focus-copy {
+  max-width: none;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+
+html[data-ms-mode="dark"] .ms-onboard-focus-num {
+  background: #f5f5f5;
+  color: #111;
+}
+
+html[data-ms-mode="dark"] .ms-onboard-focus-copy {
+  color: #f5f5f5;
+}
+
 .ms-onboard-step-pill.is-bump {
   animation: ms-onb-pill-bump 0.52s var(--onb-spring);
   background: var(--ms-accent-soft);

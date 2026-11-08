@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.2.7",
+      "date": "2026-11-07",
+      "title": "Clearer onboarding, no 404 loop",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Onboarding teaches Moonrise one idea at a time: find, build, earn, then set up the rule, card, payout, and contact."
+          ],
+          "fixes": [
+            "Onboarding no longer dumps users on Page not found while the welcome screen is still loading."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.6",
       "date": "2026-11-07",
       "title": "Simpler Status button",

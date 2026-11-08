@@ -163,9 +163,24 @@
   };
 
   // Absolute escape: shell must paint or we leave this hold screen.
+  // Onboarding has no sidebar shell — soft-release instead of bouncing to 404.
   setTimeout(function () {
     if (window.__msAuthRedirecting) return;
     if (document.body && document.body.dataset.msShellPainted === "1" && !document.getElementById("ms-boot")) return;
+    if (file === "onboarding.html") {
+      try {
+        if (document.body) document.body.dataset.msShellPainted = "1";
+        document.documentElement.classList.remove("ms-boot");
+        document.documentElement.classList.remove("ms-hold");
+        document.documentElement.classList.remove("ms-auth-gating");
+        document.documentElement.classList.add("ms-boot-done");
+        window.__msStudioBoot = 0;
+        window.__msBootReleased = 1;
+        document.getElementById("ms-boot")?.remove();
+        if (typeof window.__msReleaseBoot === "function") window.__msReleaseBoot();
+      } catch (e) {}
+      return;
+    }
     window.__msAuthRedirecting = true;
     try {
       document.documentElement.classList.remove("ms-boot");
