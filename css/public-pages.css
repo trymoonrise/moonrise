@@ -786,7 +786,6 @@ body[data-page="ui-library"] .dt-toc a {
     body[data-page="contact"],
     body[data-page="legal"],
     body[data-page="download"],
-    body[data-page="home"],
     body[data-page="ui-library"]
   ) {
     background: #ffffff !important;
