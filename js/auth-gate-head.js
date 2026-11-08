@@ -57,7 +57,7 @@
     report: 1,
     download: 1,
     "404": 1,
-    "designer-tips": 1,
+    "ui-library": 1,
     guide: 1,
     pricing: 1,
     donate: 1,

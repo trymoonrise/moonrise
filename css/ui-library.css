@@ -1,7 +1,7 @@
-/* Designer Tips dictionary — scoped .dt-* demos */
+/* UI Library dictionary — scoped .dt-* demos */
 
 /* Kill studio/cream tint bleed on this public page. */
-body[data-page="designer-tips"],
+body[data-page="ui-library"],
 body.dt-page {
   --dt-ink: #111111;
   --dt-muted: #5c5c5c;
@@ -32,19 +32,19 @@ body.dt-page {
   -webkit-text-fill-color: unset;
 }
 
-body[data-page="designer-tips"] .ms-orders-field,
+body[data-page="ui-library"] .ms-orders-field,
 body.dt-page .ms-orders-field {
   display: none !important;
 }
 
-body[data-page="designer-tips"] .ms-orders-nav {
+body[data-page="ui-library"] .ms-orders-nav {
   background: #f7f7f8 !important;
   border-bottom: 1px solid rgb(0 0 0 / 5%) !important;
 }
 
-body[data-page="designer-tips"] .ms-orders-nav .ms-home-brand,
-body[data-page="designer-tips"] .ms-orders-nav .ms-home-brand strong,
-body[data-page="designer-tips"] .ms-orders-nav-link {
+body[data-page="ui-library"] .ms-orders-nav .ms-home-brand,
+body[data-page="ui-library"] .ms-orders-nav .ms-home-brand strong,
+body[data-page="ui-library"] .ms-orders-nav-link {
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
   background: transparent !important;
@@ -178,26 +178,26 @@ body[data-page="designer-tips"] .ms-orders-nav-link {
   box-shadow: none !important;
 }
 
-body[data-page="designer-tips"] a.dt-hero-cta,
+body[data-page="ui-library"] a.dt-hero-cta,
 body.dt-page a.dt-hero-cta,
 body.ms-contact-public a.dt-hero-cta,
-body[data-page="designer-tips"] .dt-btn-primary,
-body[data-page="designer-tips"] .dt-play:not(.dt-play-ghost),
-body[data-page="designer-tips"] .dt-toast,
-body[data-page="designer-tips"] .dt-badge:not(.is-soft):not(.is-alert),
-body[data-page="designer-tips"] .dt-chip.is-selected,
-body[data-page="designer-tips"] .dt-page-btn.is-active,
-body[data-page="designer-tips"] .dt-stepper li.is-current,
-body[data-page="designer-tips"] .dt-btn.is-loading,
-body[data-page="designer-tips"] .dt-btn-danger {
+body[data-page="ui-library"] .dt-btn-primary,
+body[data-page="ui-library"] .dt-play:not(.dt-play-ghost),
+body[data-page="ui-library"] .dt-toast,
+body[data-page="ui-library"] .dt-badge:not(.is-soft):not(.is-alert),
+body[data-page="ui-library"] .dt-chip.is-selected,
+body[data-page="ui-library"] .dt-page-btn.is-active,
+body[data-page="ui-library"] .dt-stepper li.is-current,
+body[data-page="ui-library"] .dt-btn.is-loading,
+body[data-page="ui-library"] .dt-btn-danger {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
 
-body[data-page="designer-tips"] .dt-dock button.is-active,
-body[data-page="designer-tips"] .dt-segment button.is-active,
-body[data-page="designer-tips"] .dt-btn-group button.is-active,
-body[data-page="designer-tips"] .dt-tabs button.is-active {
+body[data-page="ui-library"] .dt-dock button.is-active,
+body[data-page="ui-library"] .dt-segment button.is-active,
+body[data-page="ui-library"] .dt-btn-group button.is-active,
+body[data-page="ui-library"] .dt-tabs button.is-active {
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
 }
@@ -210,9 +210,9 @@ body[data-page="designer-tips"] .dt-tabs button.is-active {
 .dt-page .dt-hero-cta,
 .dt-page .dt-play:not(.dt-play-ghost),
 .dt-page .dt-btn-primary,
-body[data-page="designer-tips"] .dt-hero-cta,
-body[data-page="designer-tips"] .dt-play:not(.dt-play-ghost),
-body[data-page="designer-tips"] .dt-btn-primary {
+body[data-page="ui-library"] .dt-hero-cta,
+body[data-page="ui-library"] .dt-play:not(.dt-play-ghost),
+body[data-page="ui-library"] .dt-btn-primary {
   background: #111111 !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
@@ -223,8 +223,8 @@ body[data-page="designer-tips"] .dt-btn-primary {
 
 .dt-page .dt-btn-secondary,
 .dt-page .dt-play-ghost,
-body[data-page="designer-tips"] .dt-btn-secondary,
-body[data-page="designer-tips"] .dt-play-ghost {
+body[data-page="ui-library"] .dt-btn-secondary,
+body[data-page="ui-library"] .dt-play-ghost {
   background: #ffffff !important;
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
@@ -233,7 +233,7 @@ body[data-page="designer-tips"] .dt-play-ghost {
 }
 
 .dt-page .dt-btn-ghost,
-body[data-page="designer-tips"] .dt-btn-ghost {
+body[data-page="ui-library"] .dt-btn-ghost {
   background: transparent !important;
   color: #52525b !important;
   -webkit-text-fill-color: #52525b !important;
@@ -242,7 +242,7 @@ body[data-page="designer-tips"] .dt-btn-ghost {
 }
 
 .dt-page .dt-btn-ghost:hover,
-body[data-page="designer-tips"] .dt-btn-ghost:hover {
+body[data-page="ui-library"] .dt-btn-ghost:hover {
   background: #f5f5f5 !important;
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
@@ -250,12 +250,12 @@ body[data-page="designer-tips"] .dt-btn-ghost:hover {
 }
 
 .dt-page .dt-btn-secondary:hover,
-body[data-page="designer-tips"] .dt-btn-secondary:hover {
+body[data-page="ui-library"] .dt-btn-secondary:hover {
   background: #f5f5f5 !important;
 }
 
 .dt-page .dt-btn-danger,
-body[data-page="designer-tips"] .dt-btn-danger {
+body[data-page="ui-library"] .dt-btn-danger {
   background: #d92d20 !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
@@ -264,7 +264,7 @@ body[data-page="designer-tips"] .dt-btn-danger {
 }
 
 .dt-page .dt-btn-primary,
-body[data-page="designer-tips"] .dt-btn-primary {
+body[data-page="ui-library"] .dt-btn-primary {
   transition:
     transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.22s ease,
@@ -273,14 +273,14 @@ body[data-page="designer-tips"] .dt-btn-primary {
 }
 
 .dt-page .dt-btn-primary:hover:not(:disabled),
-body[data-page="designer-tips"] .dt-btn-primary:hover:not(:disabled) {
+body[data-page="ui-library"] .dt-btn-primary:hover:not(:disabled) {
   transform: scale(1.03) !important;
   box-shadow: 0 4px 14px rgb(0 0 0 / 12%) !important;
   opacity: 1 !important;
 }
 
 .dt-page .dt-btn-primary:active:not(:disabled),
-body[data-page="designer-tips"] .dt-btn-primary:active:not(:disabled) {
+body[data-page="ui-library"] .dt-btn-primary:active:not(:disabled) {
   transform: scale(1.05) !important;
   box-shadow: 0 6px 16px rgb(0 0 0 / 14%) !important;
 }
@@ -468,15 +468,15 @@ body[data-page="designer-tips"] .dt-btn-primary:active:not(:disabled) {
 
 .dt-btn.is-demo-hover,
 .dt-page .dt-btn-primary.is-demo-hover,
-body[data-page="designer-tips"] .dt-btn-primary.is-demo-hover {
+body[data-page="ui-library"] .dt-btn-primary.is-demo-hover {
   transform: scale(1.08) !important;
   box-shadow: 0 10px 28px rgb(0 0 0 / 22%) !important;
 }
 
 .dt-btn-ghost.is-demo-hover,
 .dt-btn-secondary.is-demo-hover,
-body[data-page="designer-tips"] .dt-btn-ghost.is-demo-hover,
-body[data-page="designer-tips"] .dt-btn-secondary.is-demo-hover {
+body[data-page="ui-library"] .dt-btn-ghost.is-demo-hover,
+body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
   background: #f5f5f5 !important;
   transform: scale(1.04);
 }
@@ -885,7 +885,7 @@ body[data-page="designer-tips"] .dt-btn-secondary.is-demo-hover {
 
 .dt-btn-morph.is-done,
 .dt-page .dt-btn-morph.is-done,
-body[data-page="designer-tips"] .dt-btn-morph.is-done {
+body[data-page="ui-library"] .dt-btn-morph.is-done {
   background: #067647 !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
@@ -2302,149 +2302,149 @@ body[data-page="designer-tips"] .dt-btn-morph.is-done {
 }
 
 /* —— Contrast: never let inherited fill wash out light/dark text —— */
-body[data-page="designer-tips"] .dt-motion-tile,
-body[data-page="designer-tips"] .dt-btn-primary,
-body[data-page="designer-tips"] .dt-btn-danger,
-body[data-page="designer-tips"] .dt-btn-morph.is-done,
-body[data-page="designer-tips"] .dt-chip.is-selected,
-body[data-page="designer-tips"] .dt-badge:not(.is-soft):not(.is-alert),
-body[data-page="designer-tips"] .dt-toast,
-body[data-page="designer-tips"] .dt-tooltip,
-body[data-page="designer-tips"] .dt-page-btn.is-active,
-body[data-page="designer-tips"] .dt-stepper li.is-current,
-body[data-page="designer-tips"] .dt-avatars span,
-body[data-page="designer-tips"] .dt-toc a.is-active,
-body[data-page="designer-tips"] .dt-toc a:hover,
-body[data-page="designer-tips"] .dt-play:not(.dt-play-ghost),
-body[data-page="designer-tips"] .dt-icon-btn:hover,
-body[data-page="designer-tips"] .dt-play-ico,
-body[data-page="designer-tips"] .dt-play-ico:hover,
-body[data-page="designer-tips"] .dt-play-ico.is-playing {
+body[data-page="ui-library"] .dt-motion-tile,
+body[data-page="ui-library"] .dt-btn-primary,
+body[data-page="ui-library"] .dt-btn-danger,
+body[data-page="ui-library"] .dt-btn-morph.is-done,
+body[data-page="ui-library"] .dt-chip.is-selected,
+body[data-page="ui-library"] .dt-badge:not(.is-soft):not(.is-alert),
+body[data-page="ui-library"] .dt-toast,
+body[data-page="ui-library"] .dt-tooltip,
+body[data-page="ui-library"] .dt-page-btn.is-active,
+body[data-page="ui-library"] .dt-stepper li.is-current,
+body[data-page="ui-library"] .dt-avatars span,
+body[data-page="ui-library"] .dt-toc a.is-active,
+body[data-page="ui-library"] .dt-toc a:hover,
+body[data-page="ui-library"] .dt-play:not(.dt-play-ghost),
+body[data-page="ui-library"] .dt-icon-btn:hover,
+body[data-page="ui-library"] .dt-play-ico,
+body[data-page="ui-library"] .dt-play-ico:hover,
+body[data-page="ui-library"] .dt-play-ico.is-playing {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
 
-body[data-page="designer-tips"] .dt-play-ico {
+body[data-page="ui-library"] .dt-play-ico {
   background: #111111 !important;
   border: 0 !important;
   box-shadow: none !important;
 }
 
-body[data-page="designer-tips"] .dt-play-ico:hover,
-body[data-page="designer-tips"] .dt-play-ico.is-playing {
+body[data-page="ui-library"] .dt-play-ico:hover,
+body[data-page="ui-library"] .dt-play-ico.is-playing {
   background: #000000 !important;
 }
 
-body[data-page="designer-tips"] .dt-list-row,
-body[data-page="designer-tips"] .dt-stagger-item,
-body[data-page="designer-tips"] .dt-motion-panel,
-body[data-page="designer-tips"] .dt-choice-card,
-body[data-page="designer-tips"] .dt-quiz-opt,
-body[data-page="designer-tips"] .dt-quiz-q,
-body[data-page="designer-tips"] .dt-empty strong,
-body[data-page="designer-tips"] .dt-drop strong,
-body[data-page="designer-tips"] .dt-acc-trigger,
-body[data-page="designer-tips"] .dt-metrics strong,
-body[data-page="designer-tips"] .dt-bar-label,
-body[data-page="designer-tips"] .dt-timeline strong,
-body[data-page="designer-tips"] .dt-table,
-body[data-page="designer-tips"] .dt-confirm p,
-body[data-page="designer-tips"] .dt-danger-confirm p,
-body[data-page="designer-tips"] .dt-sheet-row,
-body[data-page="designer-tips"] .dt-modal h3,
-body[data-page="designer-tips"] .dt-sheet h3,
-body[data-page="designer-tips"] .dt-field,
-body[data-page="designer-tips"] .dt-select,
-body[data-page="designer-tips"] .dt-dropdown-trigger,
-body[data-page="designer-tips"] .dt-dropdown-menu,
-body[data-page="designer-tips"] .dt-tag,
-body[data-page="designer-tips"] .dt-check,
-body[data-page="designer-tips"] .dt-switch-label,
-body[data-page="designer-tips"] .dt-type-display,
-body[data-page="designer-tips"] .dt-type-mono,
-body[data-page="designer-tips"] .dt-carousel-slide,
-body[data-page="designer-tips"] .dt-card-top h3,
-body[data-page="designer-tips"] .dt-section-head h2,
-body[data-page="designer-tips"] .dt-boot strong,
-body[data-page="designer-tips"] .dt-dock button.is-active,
-body[data-page="designer-tips"] .dt-btn-group button.is-active,
-body[data-page="designer-tips"] .dt-segment button.is-active,
-body[data-page="designer-tips"] .dt-tabs button.is-active {
+body[data-page="ui-library"] .dt-list-row,
+body[data-page="ui-library"] .dt-stagger-item,
+body[data-page="ui-library"] .dt-motion-panel,
+body[data-page="ui-library"] .dt-choice-card,
+body[data-page="ui-library"] .dt-quiz-opt,
+body[data-page="ui-library"] .dt-quiz-q,
+body[data-page="ui-library"] .dt-empty strong,
+body[data-page="ui-library"] .dt-drop strong,
+body[data-page="ui-library"] .dt-acc-trigger,
+body[data-page="ui-library"] .dt-metrics strong,
+body[data-page="ui-library"] .dt-bar-label,
+body[data-page="ui-library"] .dt-timeline strong,
+body[data-page="ui-library"] .dt-table,
+body[data-page="ui-library"] .dt-confirm p,
+body[data-page="ui-library"] .dt-danger-confirm p,
+body[data-page="ui-library"] .dt-sheet-row,
+body[data-page="ui-library"] .dt-modal h3,
+body[data-page="ui-library"] .dt-sheet h3,
+body[data-page="ui-library"] .dt-field,
+body[data-page="ui-library"] .dt-select,
+body[data-page="ui-library"] .dt-dropdown-trigger,
+body[data-page="ui-library"] .dt-dropdown-menu,
+body[data-page="ui-library"] .dt-tag,
+body[data-page="ui-library"] .dt-check,
+body[data-page="ui-library"] .dt-switch-label,
+body[data-page="ui-library"] .dt-type-display,
+body[data-page="ui-library"] .dt-type-mono,
+body[data-page="ui-library"] .dt-carousel-slide,
+body[data-page="ui-library"] .dt-card-top h3,
+body[data-page="ui-library"] .dt-section-head h2,
+body[data-page="ui-library"] .dt-boot strong,
+body[data-page="ui-library"] .dt-dock button.is-active,
+body[data-page="ui-library"] .dt-btn-group button.is-active,
+body[data-page="ui-library"] .dt-segment button.is-active,
+body[data-page="ui-library"] .dt-tabs button.is-active {
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
 }
 
-body[data-page="designer-tips"] .dt-list-row span,
-body[data-page="designer-tips"] .dt-empty p,
-body[data-page="designer-tips"] .dt-metrics span,
-body[data-page="designer-tips"] .dt-timeline p,
-body[data-page="designer-tips"] .dt-modal p,
-body[data-page="designer-tips"] .dt-label,
-body[data-page="designer-tips"] .dt-field-msg:not(.is-error):not(.is-ok),
-body[data-page="designer-tips"] .dt-type-body,
-body[data-page="designer-tips"] .dt-type-meta,
-body[data-page="designer-tips"] .dt-banner,
-body[data-page="designer-tips"] .dt-drop p,
-body[data-page="designer-tips"] .dt-acc-panel,
-body[data-page="designer-tips"] .dt-tabs-panel,
-body[data-page="designer-tips"] .dt-img-ph,
-body[data-page="designer-tips"] .dt-section-label,
-body[data-page="designer-tips"] .dt-chip:not(.is-selected),
-body[data-page="designer-tips"] .dt-btn-group button:not(.is-active),
-body[data-page="designer-tips"] .dt-segment button:not(.is-active),
-body[data-page="designer-tips"] .dt-tabs button:not(.is-active),
-body[data-page="designer-tips"] .dt-page-btn:not(.is-active),
-body[data-page="designer-tips"] .dt-dock button:not(.is-active) {
+body[data-page="ui-library"] .dt-list-row span,
+body[data-page="ui-library"] .dt-empty p,
+body[data-page="ui-library"] .dt-metrics span,
+body[data-page="ui-library"] .dt-timeline p,
+body[data-page="ui-library"] .dt-modal p,
+body[data-page="ui-library"] .dt-label,
+body[data-page="ui-library"] .dt-field-msg:not(.is-error):not(.is-ok),
+body[data-page="ui-library"] .dt-type-body,
+body[data-page="ui-library"] .dt-type-meta,
+body[data-page="ui-library"] .dt-banner,
+body[data-page="ui-library"] .dt-drop p,
+body[data-page="ui-library"] .dt-acc-panel,
+body[data-page="ui-library"] .dt-tabs-panel,
+body[data-page="ui-library"] .dt-img-ph,
+body[data-page="ui-library"] .dt-section-label,
+body[data-page="ui-library"] .dt-chip:not(.is-selected),
+body[data-page="ui-library"] .dt-btn-group button:not(.is-active),
+body[data-page="ui-library"] .dt-segment button:not(.is-active),
+body[data-page="ui-library"] .dt-tabs button:not(.is-active),
+body[data-page="ui-library"] .dt-page-btn:not(.is-active),
+body[data-page="ui-library"] .dt-dock button:not(.is-active) {
   color: #52525b !important;
   -webkit-text-fill-color: #52525b !important;
 }
 
-body[data-page="designer-tips"] .dt-callout.is-ok {
+body[data-page="ui-library"] .dt-callout.is-ok {
   color: #067647 !important;
   -webkit-text-fill-color: #067647 !important;
 }
 
-body[data-page="designer-tips"] .dt-callout.is-error,
-body[data-page="designer-tips"] .dt-field-msg.is-error,
-body[data-page="designer-tips"] .dt-badge.is-alert,
-body[data-page="designer-tips"] .dt-dropdown-menu .is-danger {
+body[data-page="ui-library"] .dt-callout.is-error,
+body[data-page="ui-library"] .dt-field-msg.is-error,
+body[data-page="ui-library"] .dt-badge.is-alert,
+body[data-page="ui-library"] .dt-dropdown-menu .is-danger {
   color: #d92d20 !important;
   -webkit-text-fill-color: #d92d20 !important;
 }
 
-body[data-page="designer-tips"] .dt-btn-ghost,
-body[data-page="designer-tips"] .dt-btn-secondary {
+body[data-page="ui-library"] .dt-btn-ghost,
+body[data-page="ui-library"] .dt-btn-secondary {
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
 }
 
-body[data-page="designer-tips"] .dt-badge.is-soft {
+body[data-page="ui-library"] .dt-badge.is-soft {
   color: #52525b !important;
   -webkit-text-fill-color: #52525b !important;
 }
 
-body[data-page="designer-tips"] .dt-success {
+body[data-page="ui-library"] .dt-success {
   color: #067647 !important;
   -webkit-text-fill-color: #067647 !important;
   opacity: 1;
 }
 
-body[data-page="designer-tips"] .dt-like {
+body[data-page="ui-library"] .dt-like {
   color: #52525b !important;
   -webkit-text-fill-color: #52525b !important;
 }
 
-body[data-page="designer-tips"] .dt-like[aria-pressed="true"] {
+body[data-page="ui-library"] .dt-like[aria-pressed="true"] {
   color: #d92d20 !important;
   -webkit-text-fill-color: #d92d20 !important;
 }
 
-body[data-page="designer-tips"] .dt-star {
+body[data-page="ui-library"] .dt-star {
   color: #d1d1d6 !important;
   -webkit-text-fill-color: #d1d1d6 !important;
 }
 
-body[data-page="designer-tips"] .dt-star.is-on {
+body[data-page="ui-library"] .dt-star.is-on {
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
 }

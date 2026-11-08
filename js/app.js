@@ -55,7 +55,7 @@
 
   const SIDEBAR_LEGAL = [
     { id: "guide", href: "guide", label: "Guide" },
-    { id: "designer-tips", href: "designer-tips", label: "Designer Tips" },
+    { id: "ui-library", href: "ui-library", label: "UI Library" },
     { id: "privacy", href: "legal#privacy", label: "Privacy", legalHash: "privacy" },
     { id: "terms", href: "legal#terms", label: "Terms", legalHash: "terms" },
   ];
@@ -599,7 +599,7 @@
       const href = String(link.getAttribute("href") || "");
       let on = false;
       if (href.indexOf("guide") !== -1) on = page === "guide";
-      else if (href.indexOf("designer-tips") !== -1) on = page === "designer-tips";
+      else if (href.indexOf("ui-library") !== -1) on = page === "ui-library";
       else if (href.indexOf("#privacy") !== -1)
         on = page === "legal" && (hash === "privacy" || !hash);
       else if (href.indexOf("#terms") !== -1) on = page === "legal" && hash === "terms";

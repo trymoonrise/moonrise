@@ -1,6 +1,6 @@
 /**
  * Built-in Moonrise Special Prompt for the Builder agent.
- * Source: worker/craft/PROMPT.md (same text as Designer Tips / trymoonrise/moonrise-special-prompt).
+ * Source: worker/craft/PROMPT.md (same text as UI Library / trymoonrise/moonrise-special-prompt).
  */
 "use strict";
 

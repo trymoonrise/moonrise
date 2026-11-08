@@ -23,7 +23,7 @@
     "legal": 1,
     "refund": 1,
     "report": 1,
-    "designer-tips": 1,
+    "ui-library": 1,
     "404": 1,
   };
 

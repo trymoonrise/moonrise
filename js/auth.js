@@ -15,7 +15,7 @@
     "legal",
     "report",
     "download",
-    "designer-tips",
+    "ui-library",
     "guide",
     "pricing",
     "donate",

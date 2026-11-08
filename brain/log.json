@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.8",
+      "date": "2026-11-08",
+      "title": "Designer Tips renamed to UI Library",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The public pattern dictionary is renamed to UI Library at /ui-library, with the old /designer-tips URL redirected."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.7",
       "date": "2026-11-08",
       "title": "Designer Tips play buttons use black primary",

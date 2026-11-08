@@ -37,7 +37,7 @@
       ]
     },
     {
-      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|course|help|guide|donate|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|leaderboard|designer-tips|hosting-billing|creator-contact|privacy|terms|refund|404)",
+      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|course|help|guide|donate|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|leaderboard|ui-library|hosting-billing|creator-contact|privacy|terms|refund|404)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
@@ -67,7 +67,9 @@
     { "source": "/store", "destination": "/donate", "permanent": true },
     { "source": "/store.html", "destination": "/donate", "permanent": true },
     { "source": "/pending-payouts", "destination": "/admin-console", "permanent": true },
-    { "source": "/pending-payouts.html", "destination": "/admin-console", "permanent": true }
+    { "source": "/pending-payouts.html", "destination": "/admin-console", "permanent": true },
+    { "source": "/designer-tips", "destination": "/ui-library", "permanent": true },
+    { "source": "/designer-tips.html", "destination": "/ui-library", "permanent": true }
   ],
   "rewrites": [
     { "source": "/doc/:path*", "destination": "/assets/:path*" },

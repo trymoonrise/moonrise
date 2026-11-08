@@ -11,7 +11,7 @@ html:has(body[data-page="home"]),
 html:has(body[data-page="guide"]),
 html:has(body[data-page="help"]),
 html:has(body[data-page="pricing"]),
-html:has(body[data-page="designer-tips"]) {
+html:has(body[data-page="ui-library"]) {
   color-scheme: light;
 }
 
@@ -28,7 +28,7 @@ html:has(body[data-page="designer-tips"]) {
   body[data-page="contact"],
   body[data-page="legal"],
   body[data-page="download"],
-  body[data-page="designer-tips"]
+  body[data-page="ui-library"]
 ) {
   --ms-bg: #ffffff;
   --ms-surface: #fafafa;
@@ -61,7 +61,7 @@ body.ms-legal-site {
 body.ms-legal-site .ms-orders-field,
 body.ms-contact-public .ms-orders-field,
 body[data-page="orders"] .ms-orders-field,
-body[data-page="designer-tips"] .ms-orders-field {
+body[data-page="ui-library"] .ms-orders-field {
   display: none !important;
 }
 
@@ -698,47 +698,47 @@ body[data-page="guide"] .ms-help-legal {
   gap: 0.25rem 0.45rem !important;
 }
 
-/* Designer Tips — quieter hero, keep demos intact */
-body[data-page="designer-tips"] .dt-shell {
+/* UI Library — quieter hero, keep demos intact */
+body[data-page="ui-library"] .dt-shell {
   width: min(64rem, calc(100% - 1.5rem)) !important;
   padding-top: 0.85rem !important;
 }
 
-body[data-page="designer-tips"] .dt-hero {
+body[data-page="ui-library"] .dt-hero {
   padding: 0.65rem 0 0.85rem !important;
   max-width: 32rem !important;
 }
 
-body[data-page="designer-tips"] .dt-kicker {
+body[data-page="ui-library"] .dt-kicker {
   display: none !important;
 }
 
-body[data-page="designer-tips"] .dt-hero h1 {
+body[data-page="ui-library"] .dt-hero h1 {
   font-size: 1.75rem !important;
   font-weight: 700 !important;
   letter-spacing: -0.04em !important;
 }
 
-body[data-page="designer-tips"] .dt-lead {
+body[data-page="ui-library"] .dt-lead {
   font-size: 0.86rem !important;
   color: #77776e !important;
   -webkit-text-fill-color: #77776e !important;
   margin-bottom: 0.75rem !important;
 }
 
-body[data-page="designer-tips"] .dt-hero-cta {
+body[data-page="ui-library"] .dt-hero-cta {
   min-height: 2.15rem !important;
   padding: 0.35rem 0.85rem !important;
   font-size: 0.8rem !important;
   border-radius: 999px !important;
 }
 
-body[data-page="designer-tips"] .dt-toc {
+body[data-page="ui-library"] .dt-toc {
   gap: 0.3rem !important;
   margin-bottom: 1rem !important;
 }
 
-body[data-page="designer-tips"] .dt-toc a {
+body[data-page="ui-library"] .dt-toc a {
   font-size: 0.74rem !important;
   padding: 0.28rem 0.55rem !important;
   border-radius: 999px !important;
@@ -787,7 +787,7 @@ body[data-page="designer-tips"] .dt-toc a {
     body[data-page="legal"],
     body[data-page="download"],
     body[data-page="home"],
-    body[data-page="designer-tips"]
+    body[data-page="ui-library"]
   ) {
     background: #ffffff !important;
     color: #232427 !important;
