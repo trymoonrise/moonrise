@@ -299,6 +299,37 @@
     });
   }
 
+  function syncPill(track) {
+    if (!track) return;
+    const thumb = track.querySelector(".dt-pill-thumb");
+    const active = track.querySelector("button.is-active, .is-selected.is-active, button[aria-current='page']") ||
+      track.querySelector("button.is-active");
+    if (!thumb || !active) return;
+    const tr = track.getBoundingClientRect();
+    const ar = active.getBoundingClientRect();
+    const x = ar.left - tr.left;
+    const y = ar.top - tr.top;
+    thumb.style.width = ar.width + "px";
+    thumb.style.height = ar.height + "px";
+    thumb.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+  }
+
+  function syncUnderline(track) {
+    if (!track) return;
+    const line = track.querySelector(".dt-tabs-underline");
+    const active = track.querySelector("button.is-active");
+    if (!line || !active) return;
+    const tr = track.getBoundingClientRect();
+    const ar = active.getBoundingClientRect();
+    line.style.width = ar.width + "px";
+    line.style.transform = "translate3d(" + (ar.left - tr.left) + "px,0,0)";
+  }
+
+  function syncAllPills() {
+    $all("[data-pill-track]").forEach(syncPill);
+    $all("[data-underline-track]").forEach(syncUnderline);
+  }
+
   /* —— Generic interactive controls —— */
   function bindControls() {
     $("[data-pass-toggle]")?.addEventListener("click", () => {
@@ -321,17 +352,20 @@
 
     $all("[data-seg]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        $all("[data-seg]", btn.parentElement).forEach((b) => b.classList.remove("is-active"));
+        const track = btn.closest("[data-pill-track]") || btn.parentElement;
+        $all("[data-seg]", track).forEach((b) => b.classList.remove("is-active"));
         btn.classList.add("is-active");
+        syncPill(track);
       });
     });
 
     $all(".dt-btn-group").forEach((group) => {
       group.addEventListener("click", (e) => {
         const btn = e.target.closest("button");
-        if (!btn) return;
+        if (!btn || btn.classList.contains("dt-pill-thumb")) return;
         $all("button", group).forEach((b) => b.classList.remove("is-active"));
         btn.classList.add("is-active");
+        syncPill(group);
       });
     });
 
@@ -396,7 +430,13 @@
         if (!btn) return;
         $all("button", tabs).forEach((b) => b.classList.remove("is-active"));
         btn.classList.add("is-active");
-        if (panel) panel.textContent = btn.textContent + " content";
+        syncUnderline(tabs);
+        if (panel) {
+          panel.textContent = btn.textContent.trim() + " content";
+          panel.style.animation = "none";
+          void panel.offsetWidth;
+          panel.style.animation = "";
+        }
       });
     });
 
@@ -426,6 +466,76 @@
         });
         btn.classList.add("is-active");
         btn.setAttribute("aria-current", "page");
+        syncPill(dock);
+      });
+    });
+
+    $all("[data-accordion]").forEach((acc) => {
+      acc.addEventListener("click", (e) => {
+        const trigger = e.target.closest(".dt-acc-trigger");
+        if (!trigger) return;
+        const item = trigger.closest(".dt-acc-item");
+        const open = !item.classList.contains("is-open");
+        $all(".dt-acc-item", acc).forEach((it) => {
+          it.classList.remove("is-open");
+          it.querySelector(".dt-acc-trigger")?.setAttribute("aria-expanded", "false");
+        });
+        if (open) {
+          item.classList.add("is-open");
+          trigger.setAttribute("aria-expanded", "true");
+        }
+      });
+    });
+
+    $all("[data-carousel]").forEach((carousel) => {
+      const track = $(".dt-carousel-track", carousel);
+      const dotsWrap = carousel.parentElement?.querySelector("[data-carousel-dots]");
+      const slides = $all(".dt-carousel-slide", carousel);
+      const dots = dotsWrap ? $all("button", dotsWrap) : [];
+      let i = 0;
+      const go = (n) => {
+        i = ((n % slides.length) + slides.length) % slides.length;
+        if (track) track.style.transform = "translate3d(" + -i * 100 + "%,0,0)";
+        dots.forEach((d, di) => d.classList.toggle("is-active", di === i));
+      };
+      dots.forEach((d, di) => d.addEventListener("click", () => go(di)));
+      window.setInterval(() => go(i + 1), reduceMotion ? 4000 : 3200);
+      go(0);
+    });
+
+    const countdown = $("[data-countdown]");
+    if (countdown) {
+      let sec = 45;
+      window.setInterval(() => {
+        sec = sec <= 0 ? 45 : sec - 1;
+        const m = String(Math.floor(sec / 60)).padStart(2, "0");
+        const s = String(sec % 60).padStart(2, "0");
+        countdown.textContent = m + ":" + s;
+      }, 1000);
+    }
+
+    $all("[data-bars] .dt-bar-row").forEach((row) => {
+      row.classList.add("is-on");
+    });
+
+    $("[data-copy]")?.addEventListener("click", async () => {
+      const input = $("#dt-copy-input");
+      try {
+        await navigator.clipboard?.writeText(input?.value || "");
+        showToast("Copied link");
+      } catch (_) {
+        showToast("Copy ready");
+      }
+    });
+
+    $all("[data-confirm]").forEach((box) => {
+      const q = $("[data-confirm-q]", box);
+      $("[data-confirm-yes]", box)?.addEventListener("click", () => {
+        if (q) q.textContent = "Deleted. Undo available for 5s.";
+        showToast("Project deleted");
+      });
+      $("[data-confirm-no]", box)?.addEventListener("click", () => {
+        if (q) q.textContent = "Delete this project?";
       });
     });
 
@@ -566,6 +676,113 @@
     });
   }
 
+  function loopProgress() {
+    const fill = $(".dt-stage[data-demo='progress'] .dt-progress-fill");
+    const pct = $(".dt-stage[data-demo='progress'] .dt-progress-pct");
+    if (!fill || !pct) return;
+    let n = 8;
+    const tick = () => {
+      n += reduceMotion ? 20 : 6;
+      if (n > 100) n = 8;
+      fill.style.width = n + "%";
+      pct.textContent = n + "%";
+    };
+    tick();
+    window.setInterval(tick, reduceMotion ? 500 : 160);
+  }
+
+  function loopButtonLoader() {
+    const btn = $("[data-btn-loader]");
+    if (!btn) return;
+    const label = "Save changes";
+    const run = () => {
+      btn.classList.add("is-loading");
+      btn.disabled = true;
+      btn.setAttribute("aria-busy", "true");
+      btn.innerHTML = '<span class="dt-spinner dt-spinner-sm dt-spinner-on-dark is-on"></span>';
+      window.setTimeout(() => {
+        btn.classList.remove("is-loading");
+        btn.disabled = false;
+        btn.removeAttribute("aria-busy");
+        btn.textContent = "Saved";
+        window.setTimeout(() => {
+          btn.textContent = label;
+        }, 900);
+      }, reduceMotion ? 500 : 1400);
+    };
+    run();
+    window.setInterval(run, reduceMotion ? 2200 : 3200);
+  }
+
+  function loopPtr() {
+    const indicator = $(".dt-ptr-indicator");
+    if (!indicator) return;
+    const cycle = () => {
+      indicator.classList.add("is-on");
+      window.setTimeout(() => indicator.classList.remove("is-on"), reduceMotion ? 400 : 900);
+    };
+    cycle();
+    window.setInterval(cycle, reduceMotion ? 2400 : 3200);
+  }
+
+  function loopShake() {
+    const field = $("#dt-shake-field");
+    if (!field || reduceMotion) return;
+    window.setInterval(() => {
+      field.classList.remove("is-shaking");
+      void field.offsetWidth;
+      field.classList.add("is-shaking");
+    }, 2800);
+  }
+
+  function loopCookSearch() {
+    const out = $("#dt-cook-search-out");
+    if (!out) return;
+    const cycle = () => {
+      out.classList.add("is-loading");
+      out.innerHTML =
+        '<div class="dt-skel-row"><span class="dt-skel dt-skel-circle"></span><span class="dt-skel dt-skel-line"></span></div><span class="dt-skel dt-skel-line"></span><span class="dt-skel dt-skel-line dt-skel-short"></span>';
+      window.setTimeout(() => {
+        out.classList.remove("is-loading");
+        out.innerHTML =
+          '<div class="dt-list-row"><strong>River Dental</strong><span>Austin · Match</span></div><div class="dt-list-row"><strong>Cedar Dental</strong><span>Denver · Match</span></div>';
+      }, reduceMotion ? 400 : 1100);
+    };
+    cycle();
+    window.setInterval(cycle, reduceMotion ? 2800 : 3600);
+  }
+
+  function loopCookSubmit() {
+    const btn = $("[data-cook-submit]");
+    if (!btn) return;
+    const label = "Submit order";
+    const cycle = () => {
+      btn.classList.add("is-loading");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="dt-spinner dt-spinner-sm dt-spinner-on-dark is-on"></span>';
+      window.setTimeout(() => {
+        btn.classList.remove("is-loading");
+        btn.disabled = false;
+        btn.textContent = "Submitted";
+        showToast("Order submitted");
+        window.setTimeout(() => {
+          btn.textContent = label;
+        }, 1000);
+      }, reduceMotion ? 450 : 1300);
+    };
+    cycle();
+    window.setInterval(cycle, reduceMotion ? 3200 : 4200);
+  }
+
+  function startAutoDemos() {
+    loopProgress();
+    loopButtonLoader();
+    loopPtr();
+    loopShake();
+    loopCookSearch();
+    loopCookSubmit();
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     bindToc();
     bindPlay();
@@ -573,7 +790,10 @@
     bindDropdowns();
     bindOverlays();
     bindPtrDrag();
-    replayRise();
-    replayStagger();
+    startAutoDemos();
+    requestAnimationFrame(() => {
+      syncAllPills();
+      window.addEventListener("resize", syncAllPills);
+    });
   });
 })();

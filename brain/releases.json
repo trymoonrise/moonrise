@@ -3,6 +3,25 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.2.2",
+      "date": "2026-11-07",
+      "title": "Richer Designer Tips demos",
+      "tag": "v2.2.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.2.2",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Designer Tips demos run live automatically, with smooth sliding selection on docks, tabs, and segmented controls.",
+            "Designer Tips adds Accordion, Status, Media, Data, and System pattern categories."
+          ],
+          "fixes": [
+            "Designer Tips drops cream tint bleed so controls stay clean black and white."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.1",
       "date": "2026-11-07",
       "title": "Designer Tips dictionary",

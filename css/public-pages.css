@@ -58,7 +58,8 @@ body.ms-legal-site {
 
 body.ms-legal-site .ms-orders-field,
 body.ms-contact-public .ms-orders-field,
-body[data-page="orders"] .ms-orders-field {
+body[data-page="orders"] .ms-orders-field,
+body[data-page="designer-tips"] .ms-orders-field {
   display: none !important;
 }
 
