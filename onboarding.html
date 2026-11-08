@@ -262,7 +262,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
-  <link rel="stylesheet" href="css/onboarding-premium.css?v=20261108-onboard-fit">
+  <link rel="stylesheet" href="css/onboarding-premium.css?v=20261108-onb-demo">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 </head>
 <body data-page="onboarding" class="ms-onboard-page">
@@ -311,6 +311,32 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
             <p class="ms-onboard-lead">
               Search for a local business that still needs a website.
             </p>
+            <figure class="ms-onb-demo ms-onb-demo--find" aria-hidden="true">
+              <div class="ms-onb-demo-stage">
+                <div class="ms-onb-demo-phone">
+                  <div class="ms-onb-demo-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 3.5 3.5"/></svg>
+                    <span class="ms-onb-demo-type"><span>Barbers near me</span></span>
+                  </div>
+                  <div class="ms-onb-demo-map">
+                    <span class="ms-onb-demo-pin"></span>
+                    <span class="ms-onb-demo-pin ms-onb-demo-pin--2"></span>
+                    <span class="ms-onb-demo-pin ms-onb-demo-pin--3"></span>
+                    <span class="ms-onb-demo-radar"></span>
+                  </div>
+                  <div class="ms-onb-demo-cards">
+                    <article class="ms-onb-demo-biz">
+                      <span class="ms-onb-demo-biz-dot"></span>
+                      <span class="ms-onb-demo-biz-copy"><strong>Coastal Cuts</strong><em>No website</em></span>
+                    </article>
+                    <article class="ms-onb-demo-biz">
+                      <span class="ms-onb-demo-biz-dot"></span>
+                      <span class="ms-onb-demo-biz-copy"><strong>Harbor Salon</strong><em>No website</em></span>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </figure>
           </div>
           <footer class="ms-onboard-actions">
             <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
@@ -328,6 +354,28 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
             <p class="ms-onboard-lead">
               Create it for free, set a price, and publish it with a small watermark.
             </p>
+            <figure class="ms-onb-demo ms-onb-demo--build" aria-hidden="true">
+              <div class="ms-onb-demo-stage">
+                <div class="ms-onb-demo-browser">
+                  <div class="ms-onb-demo-chrome">
+                    <span></span><span></span><span></span>
+                    <em>coastalcuts.site</em>
+                  </div>
+                  <div class="ms-onb-demo-canvas">
+                    <div class="ms-onb-demo-block ms-onb-demo-hero"></div>
+                    <div class="ms-onb-demo-block ms-onb-demo-line"></div>
+                    <div class="ms-onb-demo-block ms-onb-demo-line ms-onb-demo-line--short"></div>
+                    <div class="ms-onb-demo-grid">
+                      <span></span><span></span><span></span>
+                    </div>
+                    <div class="ms-onb-demo-ai">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.25"/></svg>
+                      <span>AI building…</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </figure>
           </div>
           <footer class="ms-onboard-actions">
             <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
@@ -345,6 +393,25 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
             <p class="ms-onboard-lead">
               The owner pays on Moonrise to remove the watermark. You keep 90%.
             </p>
+            <figure class="ms-onb-demo ms-onb-demo--pay" aria-hidden="true">
+              <div class="ms-onb-demo-stage">
+                <div class="ms-onb-demo-pay-row">
+                  <div class="ms-onb-demo-site-card">
+                    <div class="ms-onb-demo-site-preview"></div>
+                    <span class="ms-onb-demo-watermark">Watermark</span>
+                    <span class="ms-onb-demo-pay-btn">Pay $500</span>
+                  </div>
+                  <div class="ms-onb-demo-transfer" aria-hidden="true">
+                    <span class="ms-onb-demo-coin">$</span>
+                  </div>
+                  <div class="ms-onb-demo-earn-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M12 3v18M7 8h8.5a3.5 3.5 0 0 1 0 7H7"/><path d="M7 15h9.5a3.5 3.5 0 0 0 0-7H7"/></svg>
+                    <strong>You keep 90%</strong>
+                    <em>+$450</em>
+                  </div>
+                </div>
+              </div>
+            </figure>
           </div>
           <footer class="ms-onboard-actions">
             <button type="button" class="ms-btn ms-btn-secondary" data-onb-back>Back</button>
@@ -368,7 +435,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
             <div class="ms-onboard-legal-links">
               <a class="ms-onboard-legal-card" href="legal#privacy" target="_blank" rel="noopener">
                 <span class="ms-onboard-legal-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
                 </span>
                 <span class="ms-onboard-legal-copy">
                   <strong>Privacy</strong>
@@ -376,7 +443,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
               </a>
               <a class="ms-onboard-legal-card" href="legal#terms" target="_blank" rel="noopener">
                 <span class="ms-onboard-legal-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v4H8z"/><path d="M6 7h12v14H6z"/><path d="M9 12h6M9 16h6"/></svg>
                 </span>
                 <span class="ms-onboard-legal-copy">
                   <strong>Terms</strong>
@@ -494,6 +561,10 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
               </div>
             </div>
             <div class="ms-onboard-payout-confirm" id="onb-payout-confirm" hidden>
+              <p class="ms-onboard-payout-confirm-kicker" aria-hidden="true">
+                <span class="ms-onboard-payout-confirm-pulse"></span>
+                Is this you?
+              </p>
               <article class="ms-onboard-payout-preview">
                 <span class="ms-onboard-payout-preview-avatar" id="onb-payout-preview-avatar">
                   <img id="onb-payout-preview-photo" alt="" hidden>
@@ -502,6 +573,9 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                 <span class="ms-onboard-payout-preview-copy">
                   <strong id="onb-payout-preview-name"></strong>
                   <span id="onb-payout-preview-meta"></span>
+                </span>
+                <span class="ms-onboard-payout-preview-check" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                 </span>
               </article>
               <p class="ms-onboard-payout-preview-note" id="onb-payout-preview-note" hidden></p>
@@ -589,7 +663,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     </div>
   </div>
 
-  <script defer src="js/config.js?v=20261108-skel-nav"></script>
+  <script defer src="js/config.js?v=20261108-no-lf"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
   <script defer src="js/auth.js?v=20261108-clean-urls"></script>
@@ -599,6 +673,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/toast.js"></script>
   <script defer src="js/payout-profile.js?v=20260719-payout-other"></script>
   <script defer src="js/security-card.js?v=20260720-precheck-card"></script>
-  <script defer src="js/onboarding.js?v=20261108-onboard-fit"></script>
+  <script defer src="js/onboarding.js?v=20261108-onb-demo"></script>
 </body>
 </html>

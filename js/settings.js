@@ -59,6 +59,7 @@
 
     if (next) {
       panel.hidden = false;
+      panel.classList.remove("is-closing");
       panel.classList.add("is-open");
       if (prefersReduceMotion()) {
         panel.classList.add("is-expanded");
@@ -73,16 +74,27 @@
     }
 
     panel.classList.remove("is-expanded");
+    panel.classList.add("is-closing");
+    // Collapse nested service rows immediately so they don't fight the parent height.
+    if (panel.id === "set-status-panel") {
+      panel.querySelectorAll(".ms-status-detail-panel.is-open, .ms-status-fleet-panel.is-open").forEach((nested) => {
+        nested.classList.remove("is-expanded", "is-open", "is-closing");
+        nested.hidden = true;
+        const nestedBtn = panel.querySelector('[aria-controls="' + nested.id + '"]');
+        nestedBtn?.setAttribute("aria-expanded", "false");
+        nestedBtn?.closest(".ms-status-item, .ms-status-fleet-item")?.classList.remove("is-open");
+      });
+    }
     if (prefersReduceMotion()) {
-      panel.classList.remove("is-open");
+      panel.classList.remove("is-open", "is-closing");
       panel.hidden = true;
       return;
     }
     panel._msCloseTimer = window.setTimeout(() => {
-      panel.classList.remove("is-open");
+      panel.classList.remove("is-open", "is-closing");
       panel.hidden = true;
       panel._msCloseTimer = 0;
-    }, 280);
+    }, 320);
   }
 
   function bindPanelToggle(toggleId, panelId) {

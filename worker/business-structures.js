@@ -1,6 +1,6 @@
 /**
  * Business page bone structures - derived from scanning 261 real lead websites
- * (LeadFinderCloud/data/all-leads.csv, Jul 2026).
+ * (historical lead CSV sample, Jul 2026).
  *
  * Generation uses these as the fixed page arc; Website Presets supply the visuals.
  */

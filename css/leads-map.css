@@ -2151,10 +2151,54 @@ body[data-page="leads"] #ms-hard-refresh,
   height: 1rem;
 }
 
+.ms-lf-filter-section + .ms-lf-filter-section {
+  margin-top: 0.75rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid color-mix(in srgb, var(--lf-ink, #232427) 8%, transparent);
+}
+
+.ms-lf-filter-label {
+  margin: 0 0 0.35rem;
+  padding: 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lf-muted, #64748b);
+}
+
 #lf-website-filter {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+}
+
+.ms-lf-filter-chips {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.ms-lf-filter-chip {
+  appearance: none;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--lf-ink, #232427);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 650;
+  padding: 0.65rem 0.4rem;
+  cursor: pointer;
+}
+
+.ms-lf-filter-chip:hover {
+  background: #f3f3f3;
+}
+
+.ms-lf-filter-chip.is-active {
+  background: var(--ms-accent-soft);
+  color: var(--lf-ink, #232427);
 }
 
 .ms-lf-filter-option {
@@ -2875,9 +2919,18 @@ html[data-ms-mode="dark"] .ms-lf-map-search-field input {
   color-scheme: dark;
 }
 
-html[data-ms-mode="dark"] .ms-lf-filter-option.is-active {
+html[data-ms-mode="dark"] .ms-lf-filter-option.is-active,
+html[data-ms-mode="dark"] .ms-lf-filter-chip.is-active {
   background: rgb(255 255 255 / 10%) !important;
   color: #f4f4f5 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-filter-label {
+  color: #a1a1a6 !important;
+}
+
+html[data-ms-mode="dark"] .ms-lf-filter-chip:hover {
+  background: rgb(255 255 255 / 8%) !important;
 }
 
 html[data-ms-mode="dark"] .ms-lf-map-skel-avatar,
@@ -2920,6 +2973,7 @@ html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-search-field input,
 html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-filter-btn,
 html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-actions .ms-lf-map-all,
 html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-option,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-chip,
 html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-head h2,
 html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map .maplibregl-ctrl-group button,
 html[data-ms-mode="dark"] body[data-page="leads"] .leaflet-control-zoom a {
@@ -2945,13 +2999,15 @@ html[data-ms-mode="dark"] body[data-page="leads"] #lf-scan-all {
 
 html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-filter-btn.is-active,
 html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-filter-btn[aria-pressed="true"],
-html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-option.is-active {
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-option.is-active,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-chip.is-active {
   background: #f4f4f5 !important;
   color: #1c1c1e !important;
   -webkit-text-fill-color: #1c1c1e !important;
 }
 
-html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-option:hover {
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-option:hover,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-chip:hover {
   background: rgb(255 255 255 / 8%) !important;
 }
 

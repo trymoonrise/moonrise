@@ -9,7 +9,9 @@
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
   ];
-  const RESULT_CAP = 60;
+  const RESULT_CAP_DEFAULT = 30;
+  const RESULT_CAP_MAX = 60;
+  const RESULT_CAP_MIN = 10;
   const MILES_TO_METERS = 1609.34;
 
   const SKIP_AMENITY = new Set([
@@ -145,9 +147,16 @@
     return nameFilters(raw) || GENERIC_FILTERS;
   }
 
-  function buildQuery(filters, areaClause) {
+  function clampResultLimit(value) {
+    const n = Math.round(Number(value));
+    if (!Number.isFinite(n)) return RESULT_CAP_DEFAULT;
+    return Math.min(RESULT_CAP_MAX, Math.max(RESULT_CAP_MIN, n));
+  }
+
+  function buildQuery(filters, areaClause, limit) {
+    const cap = clampResultLimit(limit);
     const lines = filters.map((filter) => "  nwr" + filter + '["name"](' + areaClause + ");");
-    return "[out:json][timeout:25];\n(\n" + lines.join("\n") + "\n);\nout center " + RESULT_CAP + ";";
+    return "[out:json][timeout:28];\n(\n" + lines.join("\n") + "\n);\nout center " + cap + ";";
   }
 
   async function throttleNominatim() {
@@ -222,13 +231,17 @@
   }
 
   function defaultRadiusMiles(place, type) {
-    if (!place) return isGenericType(type) ? 4 : 8;
-    if (isBroadPlace(place)) return isGenericType(type) ? 8 : 12;
+    if (!place) return isGenericType(type) ? 6 : 10;
+    if (isBroadPlace(place)) return isGenericType(type) ? 10 : 14;
     const diagonal = bboxDiagonalMiles(place);
     if (Number.isFinite(diagonal) && diagonal > 0 && diagonal <= 30) {
-      return Math.max(2, Math.min(12, diagonal / 2));
+      return Math.max(3, Math.min(14, diagonal / 1.6));
     }
-    return isGenericType(type) ? 4 : 8;
+    return isGenericType(type) ? 6 : 10;
+  }
+
+  function maxRadiusMiles(type) {
+    return isGenericType(type) ? 14 : 18;
   }
 
   async function runOverpass(query) {
@@ -370,37 +383,62 @@
       center = { lat: Number(place.lat), lng: Number(place.lon) };
     }
 
+    const limit = clampResultLimit(opts.limit);
     let radiusMiles = Number(opts.radiusMiles);
     if (!Number.isFinite(radiusMiles) || radiusMiles <= 0) {
       radiusMiles = defaultRadiusMiles(place, type);
     }
-    radiusMiles = Math.min(Math.max(radiusMiles, 1), isGenericType(type) ? 8 : 12);
+    const radiusMax = maxRadiusMiles(type);
+    radiusMiles = Math.min(Math.max(radiusMiles, 1), radiusMax);
 
     const filters = filtersForType(type);
-    let elements = [];
-    try {
-      elements = await runOverpass(buildQuery(filters, areaClauseFor(center, radiusMiles)));
-    } catch (err) {
-      const timedOut = /timed out/i.test(String(err?.message || ""));
-      if (!timedOut || radiusMiles <= 2) throw err;
-      elements = await runOverpass(buildQuery(filters, areaClauseFor(center, Math.max(2, radiusMiles / 2))));
+
+    async function collectLeads(radius) {
+      let elements = [];
+      try {
+        elements = await runOverpass(buildQuery(filters, areaClauseFor(center, radius), limit));
+      } catch (err) {
+        const timedOut = /timed out/i.test(String(err?.message || ""));
+        if (!timedOut || radius <= 2) throw err;
+        elements = await runOverpass(
+          buildQuery(filters, areaClauseFor(center, Math.max(2, radius / 2)), limit)
+        );
+      }
+      const seen = new Set();
+      const out = [];
+      elements.forEach((el) => {
+        const lead = elementToLead(el);
+        if (!lead || seen.has(lead.id)) return;
+        seen.add(lead.id);
+        lead.searchQuery = [type, location].filter(Boolean).join(" in ");
+        out.push(lead);
+      });
+      return out;
     }
 
-    const seen = new Set();
-    const leads = [];
-    elements.forEach((el) => {
-      const lead = elementToLead(el);
-      if (!lead || seen.has(lead.id)) return;
-      seen.add(lead.id);
-      lead.searchQuery = [type, location].filter(Boolean).join(" in ");
-      leads.push(lead);
-    });
+    let leads = await collectLeads(radiusMiles);
+    // Widen once when the first pass comes up short of the requested count.
+    if (leads.length < limit && radiusMiles < radiusMax) {
+      const wider = Math.min(radiusMax, Math.max(radiusMiles + 3, radiusMiles * 1.45));
+      if (wider > radiusMiles + 0.4) {
+        try {
+          const more = await collectLeads(wider);
+          if (more.length > leads.length) {
+            leads = more;
+            radiusMiles = wider;
+          }
+        } catch (_) {
+          /* keep first pass */
+        }
+      }
+    }
 
     return {
       ok: true,
-      leads: leads.slice(0, RESULT_CAP),
+      leads: leads.slice(0, limit),
       center,
       radiusMiles,
+      limit,
       placeLabel: place?.display_name || location || "",
     };
   }

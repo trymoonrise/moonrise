@@ -1395,42 +1395,6 @@ async function buildStudioStatusReport() {
       { name: "GitHub", logo: "github" }
     ),
     timedProbe(
-      "leadfinder",
-      async (signal) => {
-        const upstream = leadFinderUpstreamBase();
-        if (!upstream) {
-          return {
-            id: "leadfinder",
-            name: "Leadfinder",
-            logo: "leadfinder",
-            status: "down",
-            summary: "Lead search is not configured",
-            details: [statusDetail("State", "Not configured")],
-          };
-        }
-        const res = await fetch(upstream + "/health", {
-          method: "GET",
-          cache: "no-store",
-          signal,
-          headers: leadFinderUpstreamHeaders({ Accept: "application/json" }),
-        });
-        const ok = res.ok;
-        return {
-          id: "leadfinder",
-          name: "Leadfinder",
-          logo: "leadfinder",
-          status: ok ? "ok" : "degraded",
-          summary: ok ? "Search ready" : "Search check failed",
-          details: [
-            statusDetail("Service", "Business search"),
-            statusDetail("State", ok ? "Operational" : "Degraded"),
-          ],
-        };
-      },
-      4500,
-      { name: "Leadfinder", logo: "leadfinder" }
-    ),
-    timedProbe(
       "push",
       async () => {
         const ready = !!(
@@ -1461,32 +1425,80 @@ async function buildStudioStatusReport() {
             status: "down",
             summary: "Published sites could not be counted",
             details: [statusDetail("State", "Not configured")],
+            sites: [],
           };
         }
-        const { count, error } = await db()
+        const { data, error, count } = await db()
           .from("projects")
-          .select("id", { count: "exact", head: true })
+          .select(
+            "id,business_name,status,watermark_enabled,vercel_url,updated_at,created_at,business_context",
+            { count: "exact" }
+          )
           .in("status", ["published", "paid"])
           .not("vercel_url", "is", null)
-          .neq("vercel_url", "");
+          .neq("vercel_url", "")
+          .order("updated_at", { ascending: false })
+          .limit(48);
         if (error) {
           return {
             id: "fleet",
             name: "Client websites",
             logo: "fleet",
             status: "degraded",
-            summary: "Could not count published sites",
+            summary: "Could not load published sites",
             details: [statusDetail("State", "Check failed")],
+            sites: [],
           };
         }
-        const total = Number(count) || 0;
+        const total = Number(count) || (data || []).length;
+        const sites = (data || [])
+          .map((row) => {
+            const url = String(row.vercel_url || "").trim();
+            if (!url) return null;
+            const unpaid = !!row.watermark_enabled;
+            const ctx =
+              row.business_context && typeof row.business_context === "object"
+                ? row.business_context
+                : {};
+            const publishedAt =
+              String(
+                ctx.publishedAt ||
+                  ctx.lastPublishedAt ||
+                  row.updated_at ||
+                  row.created_at ||
+                  ""
+              ).trim() || null;
+            return {
+              id: String(row.id || ""),
+              businessName: String(row.business_name || "").trim() || "Untitled business",
+              url,
+              kind: unpaid ? "preview" : "live",
+              status: unpaid ? "degraded" : "ok",
+              updatedAt: row.updated_at || null,
+              publishedAt,
+            };
+          })
+          .filter(Boolean);
+        const previewCount = sites.filter((s) => s.kind === "preview").length;
         return {
           id: "fleet",
           name: "Client websites",
           logo: "fleet",
           status: "ok",
-          summary: total === 1 ? "1 published site" : total + " published sites",
-          details: [statusDetail("Published", String(total))],
+          summary:
+            total === 0
+              ? "No published sites yet"
+              : total === 1
+                ? "1 published site"
+                : total + " published sites",
+          details: [
+            statusDetail("Published", String(total)),
+            statusDetail("Listed", String(sites.length)),
+            ...(previewCount
+              ? [statusDetail("Preview", String(previewCount))]
+              : []),
+          ],
+          sites,
         };
       },
       4500,
@@ -1494,7 +1506,7 @@ async function buildStudioStatusReport() {
     ),
   ]);
 
-  const order = ["app", "worker", "dns", "supabase", "stripe", "ai", "email", "deploy", "github", "leadfinder", "push", "fleet"];
+  const order = ["app", "worker", "dns", "supabase", "stripe", "ai", "email", "deploy", "github", "push", "fleet"];
   const byId = Object.fromEntries(probes.map((p) => [p.id, p]));
   const services = order.map((id) => byId[id]).filter(Boolean).map(withStatusCode);
   const worst = services.some((s) => s.status === "down")
@@ -2390,12 +2402,6 @@ const mapsLimiter = rateLimit({
   max: 40,
   name: "resolve-maps",
   keyFn: (req) => "maps:" + (req.user?.id || clientIp(req)),
-});
-const leadFinderLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  max: 24,
-  name: "lead-finder",
-  keyFn: (req) => "lf:" + (req.user?.id || clientIp(req)),
 });
 const contactSubmitLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
@@ -7084,144 +7090,6 @@ app.post("/resolve-maps", requireUser, mapsLimiter, async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(e.status || 500).json({ error: clientError(e, "Could not read that Maps link", e.status || 500) });
-  }
-});
-
-function leadFinderUpstreamBase() {
-  return String(process.env.LEADFINDER_SEARCH_URL || "").trim().replace(/\/$/, "");
-}
-
-function leadFinderUpstreamHeaders(extra) {
-  const headers = { ...(extra || {}) };
-  const lfSecret = String(process.env.LEADFINDER_SEARCH_SECRET || "").trim();
-  if (lfSecret) headers["X-LeadFinder-Secret"] = lfSecret;
-  return headers;
-}
-
-/** Busy-lock / readiness probe for the Playwright search service. */
-app.get("/lead-finder/health", requireUser, async (req, res) => {
-  const upstream = leadFinderUpstreamBase();
-  if (!upstream) {
-    return res.status(503).json({
-      ok: false,
-      busy: true,
-      error: "Live Maps search is not available right now.",
-    });
-  }
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 12000);
-  try {
-    const upstreamRes = await fetch(`${upstream}/health`, {
-      method: "GET",
-      headers: leadFinderUpstreamHeaders(),
-      signal: controller.signal,
-    });
-    const data = await upstreamRes.json().catch(() => ({}));
-    return res.status(upstreamRes.ok ? 200 : upstreamRes.status).json({
-      ok: upstreamRes.ok && data?.ok !== false,
-      busy: Boolean(data?.busy),
-      enrichBusy: Boolean(data?.enrichBusy),
-      busyForMs: Number(data?.busyForMs) || 0,
-      enrichBusyForMs: Number(data?.enrichBusyForMs) || 0,
-      busyMaxMs: Number(data?.busyMaxMs) || 180000,
-      queueDepth: Number(data?.queueDepth) || 0,
-      queueMode: data?.queueMode === true,
-      busyKind: data?.busyKind || "",
-      service: data?.service || "leadfinder-cloud-search",
-    });
-  } catch (e) {
-    const aborted = e?.name === "AbortError";
-    console.error("LeadFinder health proxy failed:", e?.message || e);
-    return res.status(502).json({
-      ok: false,
-      busy: true,
-      error: aborted ? "LeadFinder health timed out" : "LeadFinder health proxy failed",
-    });
-  } finally {
-    clearTimeout(timer);
-  }
-});
-
-/** Proxy on-demand Maps scrapes to LeadFinderCloud search:server (Playwright on Render). */
-app.post("/lead-finder/search", requireUser, leadFinderLimiter, async (req, res) => {
-  const upstream = leadFinderUpstreamBase();
-  if (!upstream) {
-    return res.status(503).json({
-      ok: false,
-      error: "Live Maps search is not available right now. Browse saved leads or import a CSV instead.",
-    });
-  }
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 180000);
-  try {
-    const upstreamRes = await fetch(`${upstream}/search`, {
-      method: "POST",
-      headers: leadFinderUpstreamHeaders({ "Content-Type": "application/json" }),
-      body: JSON.stringify(req.body || {}),
-      signal: controller.signal,
-    });
-    const data = await upstreamRes.json().catch(() => ({}));
-    if (!upstreamRes.ok) {
-      return res.status(upstreamRes.status).json({
-        ok: false,
-        error: data?.error || `LeadFinder upstream failed (${upstreamRes.status})`,
-        busyForMs: data?.busyForMs,
-        retryAfterMs: data?.retryAfterMs,
-      });
-    }
-    res.json(data);
-  } catch (e) {
-    const aborted = e?.name === "AbortError";
-    console.error("LeadFinder proxy failed:", e?.message || e);
-    res.status(502).json({
-      ok: false,
-      error: aborted ? "Live search timed out" : "LeadFinder proxy failed",
-    });
-  } finally {
-    clearTimeout(timer);
-  }
-});
-
-/** Proxy single-place website verification to LeadFinderCloud (Playwright). */
-app.post("/lead-finder/enrich-place", requireUser, leadFinderLimiter, async (req, res) => {
-  const upstream = String(process.env.LEADFINDER_SEARCH_URL || "").trim().replace(/\/$/, "");
-  if (!upstream) {
-    return res.status(503).json({
-      ok: false,
-      error: "Website verification is not available right now. Try again later or enter the website manually.",
-    });
-  }
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 120000);
-  try {
-    const headers = { "Content-Type": "application/json" };
-    const lfSecret = String(process.env.LEADFINDER_SEARCH_SECRET || "").trim();
-    if (lfSecret) headers["X-LeadFinder-Secret"] = lfSecret;
-    const upstreamRes = await fetch(`${upstream}/enrich-place`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(req.body || {}),
-      signal: controller.signal,
-    });
-    const data = await upstreamRes.json().catch(() => ({}));
-    if (!upstreamRes.ok) {
-      return res.status(upstreamRes.status).json({
-        ok: false,
-        error: data?.error || `LeadFinder enrich failed (${upstreamRes.status})`,
-      });
-    }
-    res.json(data);
-  } catch (e) {
-    const aborted = e?.name === "AbortError";
-    console.error("LeadFinder enrich proxy failed:", e?.message || e);
-    res.status(502).json({
-      ok: false,
-      error: aborted ? "Website verification timed out" : "LeadFinder enrich proxy failed",
-    });
-  } finally {
-    clearTimeout(timer);
   }
 });
 

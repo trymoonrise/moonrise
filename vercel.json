@@ -94,8 +94,6 @@
     { "source": "/github/repos", "destination": "/api" },
     { "source": "/github/site-folders", "destination": "/api" },
     { "source": "/github/import-site", "destination": "/api" },
-    { "source": "/lead-finder", "destination": "/api" },
-    { "source": "/lead-finder/:path*", "destination": "/api" },
     { "source": "/embed.js", "destination": "/api" },
     { "source": "/contact-form.js", "destination": "/api" },
     { "source": "/contact-submit", "destination": "/api" },

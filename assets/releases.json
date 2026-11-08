@@ -3,6 +3,37 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.3.7",
+      "date": "2026-11-07",
+      "title": "OpenStreetMap Finder and animated onboarding",
+      "tag": "v2.3.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.3.7",
+      "sections": [
+        {
+          "heading": "Finder",
+          "added": [
+            "Business Finder live search is OpenStreetMap only, with a Results filter for 15, 30, 45, or 60 businesses (default 30)."
+          ],
+          "fixes": [
+            "Removed the old Leadfinder Google Maps scrape path from Studio, worker, and Services."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Settings Client websites lists published sites under each business name with waves and expandable details.",
+            "Onboarding how-it-works steps show animated demos for finding, building, and getting paid.",
+            "Verified security cards auto-advance, and payout details show an Is this you confirm animation."
+          ],
+          "fixes": [
+            "Onboarding Back and Continue buttons stay on one row on small screens.",
+            "Collapsing Settings Services no longer glitches mid-close.",
+            "Onboarding legal icons use flat modern strokes instead of gradient fills."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.6",
       "date": "2026-11-07",
       "title": "Compact Services list until you expand",

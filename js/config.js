@@ -56,13 +56,6 @@ window.SITE_CONFIG = {
   workerUrl: "https://trymoonrise.com",
   localWorkerUrl: "http://127.0.0.1:8787",
 
-  /**
-   * Optional local LeadFinderCloud scrape API (npm run search:server).
-   * Business Finder live search uses OpenStreetMap (Overpass + Nominatim) in the browser.
-   * Opt into local :8790 with: localStorage.setItem("ms_use_local_leadfinder", "1")
-   */
-  leadFinderUrl: "http://127.0.0.1:8790",
-
   /** Optional Stripe publishable key for client-side elements (Checkout uses worker). */
   stripePublishableKey: "",
 
@@ -74,7 +67,7 @@ window.SITE_CONFIG = {
 
   /**
    * Business Finder leads source.
-   * Overridden below: local/LAN -> Maps/LeadFinder only; production -> Supabase.
+   * Overridden below: local/LAN -> OpenStreetMap live search; production -> Supabase.
    */
   useSupabaseLeads: true,
 
@@ -352,80 +345,6 @@ window.pingMoonriseWorker = async function pingMoonriseWorker(signal) {
   }
 
   throw lastErr || new Error("Worker unreachable");
-};
-
-/**
- * LeadFinder scrape API - cloud by default (worker /lead-finder -> Render).
- * Local :8790 only when opted in: localStorage.ms_use_local_leadfinder = "1"
- */
-window.resolveLeadFinderUrl = function resolveLeadFinderUrl() {
-  try {
-    const useLocal =
-      typeof localStorage !== "undefined" &&
-      localStorage.getItem("ms_use_local_leadfinder") === "1";
-    if (useLocal && window.isLocalDevHost?.()) {
-      const configured = String(window.SITE_CONFIG?.leadFinderUrl || "")
-        .trim()
-        .replace(/\/$/, "");
-      try {
-        const pageHost = String(location.hostname || "").toLowerCase();
-        const port =
-          (configured && (() => {
-            try {
-              return new URL(configured).port || "8790";
-            } catch (_) {
-              return "8790";
-            }
-          })()) ||
-          "8790";
-        if (pageHost && pageHost !== "127.0.0.1" && pageHost !== "localhost") {
-          return "http://" + pageHost + ":" + port;
-        }
-        if (pageHost === "localhost") return "http://localhost:" + port;
-        if (pageHost === "127.0.0.1" || pageHost === "[::1]" || pageHost === "::1") {
-          return "http://127.0.0.1:" + port;
-        }
-      } catch (_) {
-        /* fall through */
-      }
-      if (configured) return configured;
-      return "http://127.0.0.1:8790";
-    }
-    if (typeof window.resolveWorkerUrl === "function") {
-      const worker = String(window.resolveWorkerUrl() || "").trim().replace(/\/$/, "");
-      if (worker) return worker + "/lead-finder";
-    }
-  } catch (_) {
-    /* keep empty */
-  }
-  return "";
-};
-
-/** LeadFinder URL candidates (cloud worker first; local :8790 only when opted in). */
-window.leadFinderUrlCandidates = function leadFinderUrlCandidates() {
-  const primary = String(window.resolveLeadFinderUrl?.() || "")
-    .trim()
-    .replace(/\/$/, "");
-  const out = [];
-  const push = (url) => {
-    const u = String(url || "").trim().replace(/\/$/, "");
-    if (u && !out.includes(u)) out.push(u);
-  };
-  push(primary);
-  const useLocal =
-    typeof localStorage !== "undefined" &&
-    localStorage.getItem("ms_use_local_leadfinder") === "1";
-  if (useLocal && window.isLocalDevHost?.()) {
-    push("http://127.0.0.1:8790");
-    push("http://localhost:8790");
-    try {
-      const host = String(location.hostname || "").trim();
-      if (host) push("http://" + host + ":8790");
-    } catch (_) {
-      /* ignore */
-    }
-  }
-  return out;
 };
 
 /** Shared auth-ready helper - pages should use this instead of custom long timeouts. */

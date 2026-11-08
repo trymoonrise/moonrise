@@ -685,6 +685,7 @@
           } else {
             document.querySelector(".ms-onboard")?.classList.remove("is-celebrating");
           }
+          restartStepDemos(nextPanel);
         }
 
         setError("");
@@ -729,7 +730,8 @@
     }
   }
 
-  function applyVerifiedCard(card) {
+  function applyVerifiedCard(card, opts) {
+    const options = opts && typeof opts === "object" ? opts : {};
     if (!P.isVerifiedSecurityCard?.(card) || !String(card?.last4 || "").trim()) {
       clearVerifiedCardUi();
       return;
@@ -740,6 +742,29 @@
     cachedPayout = P.normalizeProfile({ ...cachedPayout, securityCard: card });
     showVerifiedCard(card);
     syncFinishButton();
+    if (options.autoAdvance && step === 6) {
+      window.setTimeout(() => {
+        if (step === 6 && cardVerified && !stepTransition) {
+          void goNext();
+        }
+      }, prefersReducedMotion() ? 120 : 900);
+    }
+  }
+
+  function restartStepDemos(panel) {
+    const root = panel || document.querySelector(`[data-onb-step="${step}"]`);
+    if (!root) return;
+    root.querySelectorAll(".ms-onb-demo").forEach((demo) => {
+      demo.classList.remove("is-playing");
+      if (prefersReducedMotion()) {
+        demo.classList.add("is-playing");
+        return;
+      }
+      void demo.offsetWidth;
+      requestAnimationFrame(() => {
+        demo.classList.add("is-playing");
+      });
+    });
   }
 
   function prepareSecurityCardStep() {
@@ -857,7 +882,7 @@
     setCardRetryVisible(false);
     try {
       const card = await SC.verifyCard({ email });
-      applyVerifiedCard(card);
+      applyVerifiedCard(card, { autoAdvance: true });
       if (!opts.auto) {
         window.StudioToast?.success?.("Security card on file.");
       }
@@ -993,7 +1018,10 @@
       lead.textContent = "When an owner buys their site, we send your 90% here.";
     }
     if (form) form.hidden = false;
-    if (confirm) confirm.hidden = true;
+    if (confirm) {
+      confirm.hidden = true;
+      confirm.classList.remove("is-animating");
+    }
     const next = payoutStepButton("next");
     const back = payoutStepButton("back");
     if (next) next.textContent = "Continue";
@@ -1074,6 +1102,11 @@
         : "";
     }
     paintPayoutAvatar(form.payoutMethod, preview);
+    if (confirm) {
+      confirm.classList.remove("is-animating");
+      void confirm.offsetWidth;
+      confirm.classList.add("is-animating");
+    }
     const next = payoutStepButton("next");
     const back = payoutStepButton("back");
     if (next) next.textContent = "Yes, that's me";

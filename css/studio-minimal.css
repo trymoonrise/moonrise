@@ -578,10 +578,11 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
   padding: 0;
   border-top: 0 solid transparent;
   opacity: 0;
+  overflow: hidden;
   transition:
-    grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.22s ease,
-    border-color 0.22s ease;
+    grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.24s ease,
+    border-color 0.24s ease;
 }
 
 .ms-set-panel.is-open {
@@ -604,11 +605,9 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
 .ms-set-panel-inner {
   overflow: hidden;
   min-height: 0;
-  padding: 0 1rem;
-}
-
-.ms-set-panel.is-expanded .ms-set-panel-inner {
+  /* Keep padding while .is-open so close doesn't snap content height mid-collapse. */
   padding: 0.2rem 1rem 0.95rem;
+  box-sizing: border-box;
 }
 
 .ms-set-panel .ms-field {
@@ -985,12 +984,7 @@ html[data-ms-mode="dark"] .ms-status-logo.is-mono {
   margin: 0;
 }
 
-.ms-status-detail-panel .ms-set-panel-inner {
-  padding-left: 0.35rem;
-  padding-right: 0.35rem;
-}
-
-.ms-status-detail-panel.is-expanded .ms-set-panel-inner {
+.ms-status-detail-panel.is-open .ms-set-panel-inner {
   padding: 0.15rem 0.35rem 0.75rem;
 }
 
@@ -998,6 +992,141 @@ html[data-ms-mode="dark"] .ms-status-logo.is-mono {
   display: grid;
   gap: 0.45rem;
   padding: 0.15rem 0.5rem 0.2rem 2.85rem;
+}
+
+.ms-status-fleet {
+  display: grid;
+  gap: 0;
+  margin: 0.35rem 0 0.15rem;
+  border-radius: 12px;
+  background: var(--ms-min-fill);
+  overflow: hidden;
+}
+
+.ms-status-fleet-empty {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ms-min-quiet);
+}
+
+.ms-status-fleet-item + .ms-status-fleet-item {
+  box-shadow: inset 0 1px 0 0 var(--ms-min-border);
+}
+
+.ms-status-fleet-row {
+  appearance: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 0.55rem 0.65rem;
+  cursor: pointer;
+}
+
+.ms-status-fleet-row:hover {
+  background: color-mix(in srgb, var(--ms-ink) 5%, transparent);
+}
+
+.ms-status-fleet-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.18rem;
+}
+
+.ms-status-fleet-name {
+  font-size: 0.84rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--ms-ink);
+  line-height: 1.25;
+}
+
+.ms-status-fleet-branch {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+  padding-left: 0.1rem;
+}
+
+.ms-status-fleet-branch-mark {
+  width: 0.55rem;
+  height: 0.7rem;
+  flex-shrink: 0;
+  border-left: 1.5px solid color-mix(in srgb, var(--ms-ink) 22%, transparent);
+  border-bottom: 1.5px solid color-mix(in srgb, var(--ms-ink) 22%, transparent);
+  border-bottom-left-radius: 0.25rem;
+  margin-top: -0.15rem;
+}
+
+.ms-status-fleet-host {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.72rem;
+  color: var(--ms-min-muted);
+  line-height: 1.3;
+}
+
+.ms-status-fleet-row .ms-status-wave {
+  margin-left: auto;
+  width: 2.75rem;
+}
+
+.ms-status-fleet-row .ms-set-chevron {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.55;
+  transition: transform 0.2s ease;
+}
+
+.ms-status-fleet-item.is-open > .ms-status-fleet-row .ms-set-chevron {
+  transform: rotate(90deg);
+}
+
+.ms-status-fleet-panel {
+  margin: 0;
+}
+
+.ms-status-fleet-panel.is-open .ms-set-panel-inner {
+  padding: 0 0.65rem 0.65rem;
+}
+
+.ms-status-fleet-detail {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.15rem 0 0.1rem 0.85rem;
+  border-left: 1.5px solid color-mix(in srgb, var(--ms-ink) 14%, transparent);
+  margin-left: 0.35rem;
+}
+
+.ms-status-fleet-url {
+  word-break: break-all;
+}
+
+.ms-status-fleet-url a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.ms-status-fleet-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  margin-top: 0.15rem;
 }
 
 .ms-status-feedback {

@@ -25,8 +25,6 @@
   const ICONS = {
     auth: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
     dns: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>',
-    leadfinder:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
     push: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>',
     fleet:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>',
@@ -85,17 +83,13 @@
       about: "The Moonrise source repository on GitHub.",
       usedFor: "Product source of truth, website presets, and ship/release history.",
     },
-    leadfinder: {
-      about: "Cloud search service behind Business Finder.",
-      usedFor: "Scanning maps and finding local businesses you can claim as leads.",
-    },
     push: {
       about: "Browser push notifications (Web Push / VAPID).",
       usedFor: "Optional alerts in the installed Moonrise app or browser — not required for core Studio.",
     },
     fleet: {
-      about: "Moonrise’s count of creator sites that are published with a live URL.",
-      usedFor: "Seeing how many client websites are live across the product — not a third-party vendor.",
+      about: "Published client websites across Moonrise — each business with its live site URL.",
+      usedFor: "Browsing the fleet of published sites, checking preview vs live, and opening a site for more detail.",
     },
   };
 
@@ -241,6 +235,107 @@
     return (n / 1000).toFixed(1) + " s";
   }
 
+  function siteHost(url) {
+    try {
+      return new URL(String(url || "").trim()).host || String(url || "").trim();
+    } catch (_) {
+      return String(url || "").trim();
+    }
+  }
+
+  function formatWhen(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return "—";
+    const d = new Date(raw);
+    if (Number.isNaN(d.getTime())) return raw;
+    try {
+      return d.toLocaleString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch (_) {
+      return raw;
+    }
+  }
+
+  function fleetSitesHtml(service) {
+    const sites = Array.isArray(service?.sites) ? service.sites : [];
+    if (!sites.length) {
+      return '<p class="ms-status-fleet-empty">No published client websites to list yet.</p>';
+    }
+    return (
+      '<div class="ms-status-fleet" role="list">' +
+      sites
+        .map((site, index) => {
+          const sid = String(site.id || "site-" + index).replace(/[^a-z0-9_-]/gi, "") || "site-" + index;
+          const panelId = "set-fleet-panel-" + sid;
+          const name = String(site.businessName || "Untitled business");
+          const url = String(site.url || "").trim();
+          const host = siteHost(url) || url || "—";
+          const kind = site.kind === "preview" ? "Preview" : "Live";
+          const aria = name + ", " + host + ", " + kind;
+          return (
+            '<div class="ms-status-fleet-item" role="listitem" data-site-id="' +
+            escapeHtml(sid) +
+            '" data-status="' +
+            escapeHtml(site.status || "ok") +
+            '">' +
+            '<button type="button" class="ms-status-fleet-row" id="set-fleet-toggle-' +
+            sid +
+            '" aria-expanded="false" aria-controls="' +
+            panelId +
+            '" aria-label="' +
+            escapeHtml(aria) +
+            '">' +
+            '<span class="ms-status-fleet-copy">' +
+            '<span class="ms-status-fleet-name">' +
+            escapeHtml(name) +
+            "</span>" +
+            '<span class="ms-status-fleet-branch">' +
+            '<span class="ms-status-fleet-branch-mark" aria-hidden="true"></span>' +
+            '<span class="ms-status-fleet-host">' +
+            escapeHtml(host) +
+            "</span></span></span>" +
+            waveSvg(site.status || "ok") +
+            '<span class="ms-set-chevron" aria-hidden="true">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+            "</span></button>" +
+            '<div class="ms-set-panel ms-status-fleet-panel" id="' +
+            panelId +
+            '" hidden>' +
+            '<div class="ms-status-fleet-detail">' +
+            '<div class="ms-status-detail-row"><span>Business</span><strong>' +
+            escapeHtml(name) +
+            "</strong></div>" +
+            '<div class="ms-status-detail-row"><span>Website</span><strong class="ms-status-fleet-url">' +
+            (url
+              ? '<a href="' +
+                escapeHtml(url) +
+                '" target="_blank" rel="noopener noreferrer">' +
+                escapeHtml(url) +
+                "</a>"
+              : "—") +
+            "</strong></div>" +
+            '<div class="ms-status-detail-row"><span>State</span><strong>' +
+            escapeHtml(kind) +
+            "</strong></div>" +
+            '<div class="ms-status-detail-row"><span>Published</span><strong>' +
+            escapeHtml(formatWhen(site.publishedAt || site.updatedAt)) +
+            "</strong></div>" +
+            (url
+              ? '<a class="ms-status-copy-btn ms-status-fleet-open" href="' +
+                escapeHtml(url) +
+                '" target="_blank" rel="noopener noreferrer">Open site</a>'
+              : "") +
+            "</div></div></div>"
+          );
+        })
+        .join("") +
+      "</div>"
+    );
+  }
+
   function ensurePanelInner(panel) {
     if (!panel || panel.querySelector(":scope > .ms-set-panel-inner")) return;
     const inner = document.createElement("div");
@@ -249,11 +344,14 @@
     panel.appendChild(inner);
   }
 
-  function setPanelOpen(toggle, panel, open) {
+  function setPanelOpen(toggle, panel, open, itemSelector) {
     if (!toggle || !panel) return;
     ensurePanelInner(panel);
     const next = !!open;
-    const item = toggle.closest(".ms-status-item") || toggle;
+    const item =
+      (itemSelector && toggle.closest(itemSelector)) ||
+      toggle.closest(".ms-status-item") ||
+      toggle;
     toggle.setAttribute("aria-expanded", next ? "true" : "false");
     item.classList.toggle("is-open", next);
     panel.setAttribute("aria-hidden", next ? "false" : "true");
@@ -265,6 +363,7 @@
 
     if (next) {
       panel.hidden = false;
+      panel.classList.remove("is-closing");
       panel.classList.add("is-open");
       if (prefersReduceMotion()) {
         panel.classList.add("is-expanded");
@@ -279,16 +378,17 @@
     }
 
     panel.classList.remove("is-expanded");
+    panel.classList.add("is-closing");
     if (prefersReduceMotion()) {
-      panel.classList.remove("is-open");
+      panel.classList.remove("is-open", "is-closing");
       panel.hidden = true;
       return;
     }
     panel._msCloseTimer = window.setTimeout(() => {
-      panel.classList.remove("is-open");
+      panel.classList.remove("is-open", "is-closing");
       panel.hidden = true;
       panel._msCloseTimer = 0;
-    }, 280);
+    }, 320);
   }
 
   function serviceCode(service) {
@@ -334,6 +434,20 @@
     if (detailLines.length) {
       lines.push("Details:");
       lines.push(...detailLines);
+    }
+    const sites = Array.isArray(service?.sites) ? service.sites : [];
+    if (sites.length) {
+      lines.push("Sites:");
+      sites.slice(0, 24).forEach((site) => {
+        lines.push(
+          "- " +
+            String(site.businessName || "Untitled") +
+            " · " +
+            String(site.url || "") +
+            " · " +
+            (site.kind === "preview" ? "Preview" : "Live")
+        );
+      });
     }
     lines.push("Note: no secrets — status labels only.");
     return lines.join("\n");
@@ -441,6 +555,7 @@
       '<div class="ms-status-detail-row"><span>Ping</span><strong>' +
       escapeHtml(formatPing(service.pingMs)) +
       "</strong></div>" +
+      (String(service.id || "").toLowerCase() === "fleet" ? fleetSitesHtml(service) : "") +
       '<button type="button" class="ms-status-copy-btn" data-status-copy="service">' +
       '<span class="ms-status-copy-label">Copy</span>' +
       "</button>"
@@ -539,6 +654,26 @@
       });
     });
 
+    list.querySelectorAll(".ms-status-fleet-row").forEach((btn) => {
+      const panel = document.getElementById(btn.getAttribute("aria-controls"));
+      if (!panel) return;
+      ensurePanelInner(panel);
+      panel.hidden = true;
+      panel.classList.remove("is-open", "is-expanded");
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const open = panel.classList.contains("is-open") && !panel.hidden;
+        const fleetRoot = btn.closest(".ms-status-fleet");
+        fleetRoot?.querySelectorAll(".ms-status-fleet-panel.is-open").forEach((other) => {
+          if (other === panel) return;
+          const otherBtn = fleetRoot.querySelector('[aria-controls="' + other.id + '"]');
+          setPanelOpen(otherBtn, other, false, ".ms-status-fleet-item");
+        });
+        setPanelOpen(btn, panel, !open, ".ms-status-fleet-item");
+      });
+    });
+
     const panelRoot = document.getElementById("set-status-panel");
     panelRoot?.querySelectorAll("[data-status-copy]").forEach((btn) => {
       btn.addEventListener("click", (event) => {
@@ -590,6 +725,9 @@
       if (!res.ok) throw new Error(data.error || "Could not load status");
       lastReport = data;
       loadedOnce = true;
+      const statusPanel = document.getElementById("set-status-panel");
+      // Skip DOM rewrites while Services is collapsing — that caused a close glitch.
+      if (statusPanel?.classList.contains("is-closing")) return;
       renderList(data);
     } catch (err) {
       const errMsg = String(err?.message || err || "Could not load status");

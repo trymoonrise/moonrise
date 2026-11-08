@@ -839,7 +839,7 @@
       const cat = getBasicCategory(lead);
       counts.set(cat, (counts.get(cat) || 0) + 1);
     });
-    // Always list every LeadFinder niche chip (including zeros); Other last if present.
+    // Always list every Business Finder niche chip (including zeros); Other last if present.
     const ordered = [];
     BASIC_CATEGORY_GROUPS.forEach((item) => {
       ordered.push([item.label, counts.get(item.label) || 0]);

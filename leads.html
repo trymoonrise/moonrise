@@ -251,7 +251,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
   <link rel="stylesheet" href="css/ms-lf-slide.css?v=20261028-finder-fix&_=20261006-drag">
-  <link rel="stylesheet" href="css/leads-map.css?v=20261108-finder-dark">
+  <link rel="stylesheet" href="css/leads-map.css?v=20261108-result-limit">
   <style id="lf-map-bar-width-fix">
     /* Inline so PWA cache cannot leave search/filter bars narrow */
     @media (max-width: 900px) {
@@ -407,16 +407,28 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
               </button>
             </div>
-            <div id="lf-website-filter" role="group" aria-label="Website filter">
-              <button type="button" class="ms-lf-filter-option" data-website="all" aria-pressed="false">
-                <span>All businesses</span>
-              </button>
-              <button type="button" class="ms-lf-filter-option is-active" data-website="without" aria-pressed="true">
-                <span>No website</span>
-              </button>
-              <button type="button" class="ms-lf-filter-option" data-website="with" aria-pressed="false">
-                <span>Has a website</span>
-              </button>
+            <div class="ms-lf-filter-section">
+              <p class="ms-lf-filter-label" id="lf-website-filter-label">Website</p>
+              <div id="lf-website-filter" role="group" aria-labelledby="lf-website-filter-label">
+                <button type="button" class="ms-lf-filter-option" data-website="all" aria-pressed="false">
+                  <span>All businesses</span>
+                </button>
+                <button type="button" class="ms-lf-filter-option is-active" data-website="without" aria-pressed="true">
+                  <span>No website</span>
+                </button>
+                <button type="button" class="ms-lf-filter-option" data-website="with" aria-pressed="false">
+                  <span>Has a website</span>
+                </button>
+              </div>
+            </div>
+            <div class="ms-lf-filter-section">
+              <p class="ms-lf-filter-label" id="lf-result-limit-label">Results</p>
+              <div id="lf-result-limit" class="ms-lf-filter-chips" role="group" aria-labelledby="lf-result-limit-label">
+                <button type="button" class="ms-lf-filter-chip" data-result-limit="15" aria-pressed="false">15</button>
+                <button type="button" class="ms-lf-filter-chip is-active" data-result-limit="30" aria-pressed="true">30</button>
+                <button type="button" class="ms-lf-filter-chip" data-result-limit="45" aria-pressed="false">45</button>
+                <button type="button" class="ms-lf-filter-chip" data-result-limit="60" aria-pressed="false">60</button>
+              </div>
             </div>
           </div>
         </div>
@@ -431,7 +443,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     </div>
   </div>
 
-  <script defer src="js/config.js?v=20261108-skel-nav"></script>
+  <script defer src="js/config.js?v=20261108-no-lf"></script>
   <script defer src="js/app.js?v=20261108-clean-urls"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.2/dist/maplibre-gl.js" crossorigin=""></script>
@@ -440,7 +452,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/auth.js?v=20261108-clean-urls"></script>
   <script defer src="js/lead-csv-format.js?v=20260811-website-recheck"></script>
   <script defer src="js/lead-display.js?v=20260718-swipe-site"></script>
-  <script defer src="js/lead-website-enrich.js?v=20260811-website-recheck"></script>
   <script defer src="js/leads-loader.js?v=20260924-finder-fix"></script>
   <script defer src="js/leads-prospect-rank.js"></script>
   <script defer src="js/segment-switch.js?v=20260811-finder-ui"></script>
@@ -449,7 +460,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/ms-lf-slide.js?v=20261006-drag"></script>
   <script defer src="js/thinking-orb.js?v=20260923-orb-solid"></script>
-  <script defer src="js/osm-finder.js?v=20261028-finder-fix"></script>
-  <script defer src="js/leads-search.js?v=20261028-finder-fix"></script>
+  <script defer src="js/osm-finder.js?v=20261108-result-limit"></script>
+  <script defer src="js/leads-search.js?v=20261108-result-limit"></script>
 </body>
 </html>

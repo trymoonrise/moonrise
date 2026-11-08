@@ -25,22 +25,63 @@
   const SAVED_KEY = "ms_lf_quick_save_v1";
   const CLAIMED_KEY = "ms_lf_claimed_v1";
   const AREA_PREF_KEY = "ms_lf_in_my_area_v1";
-  const NEARBY_RADIUS_MILES = 10;
+  const NEARBY_RADIUS_MILES = 12;
   const AREA_LOCATION_LABEL = "Using your location";
+  const RESULT_LIMIT_KEY = "ms_lf_result_limit";
+  const RESULT_LIMIT_DEFAULT = 30;
+  const RESULT_LIMIT_OPTIONS = [15, 30, 45, 60];
   const DISPLAY_PAGE = MAP_UI ? 40 : 100;
   const MAP_MARKER_LIMIT = 120;
   let resultsEmptyHint = "";
-  let scrapeViaLeadFinderGate = Promise.resolve();
   let pendingLeadRender = null;
   let pendingVisibleRefresh = false;
   const LOADING_CARD_COUNT = MAP_UI ? 2 : 6;
-  const MIN_SEARCH_RESULTS = MAP_UI ? 18 : 50;
+
+  function getResultLimit() {
+    try {
+      const raw = Number(localStorage.getItem(RESULT_LIMIT_KEY));
+      if (RESULT_LIMIT_OPTIONS.includes(raw)) return raw;
+    } catch (_) {
+      /* ignore */
+    }
+    return RESULT_LIMIT_DEFAULT;
+  }
+
+  function setResultLimit(value) {
+    const next = RESULT_LIMIT_OPTIONS.includes(Number(value))
+      ? Number(value)
+      : RESULT_LIMIT_DEFAULT;
+    try {
+      localStorage.setItem(RESULT_LIMIT_KEY, String(next));
+    } catch (_) {
+      /* ignore */
+    }
+    syncResultLimitFilterUi(next);
+    return next;
+  }
+
+  function syncResultLimitFilterUi(limit) {
+    const active = Number(limit) || getResultLimit();
+    document.querySelectorAll("#lf-result-limit [data-result-limit]").forEach((btn) => {
+      const on = Number(btn.getAttribute("data-result-limit")) === active;
+      btn.classList.toggle("is-active", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+
+  function minSearchResultsTarget() {
+    return MAP_UI ? getResultLimit() : Math.max(50, getResultLimit());
+  }
+
+  function resetDisplayLimit() {
+    displayLimit = Math.max(DISPLAY_PAGE, getResultLimit());
+  }
   const MAP_DEFAULT = { lat: 34.05, lng: -118.25, zoom: 8 };
   let listView = "default";
   let allLeads = [];
   let leadsReady = false;
   let leadsLoading = false;
-  let displayLimit = DISPLAY_PAGE;
+  let displayLimit = Math.max(DISPLAY_PAGE, RESULT_LIMIT_DEFAULT);
   let lastLeads = [];
   let lastQuery = "";
   let savedMap = loadSavedMap();
@@ -202,10 +243,6 @@
     return msg || "Live search unavailable";
   }
 
-  function isWorkerLeadFinderBase(base) {
-    return /\/lead-finder$/i.test(String(base || "").trim());
-  }
-
   async function reverseGeocodeSearchContext(coords) {
     if (!coords) return null;
     if (coords.searchCity || coords.searchRegion || coords.searchState) {
@@ -352,23 +389,6 @@
       out.push(lead);
     });
     return out;
-  }
-
-  async function scrapeAuthHeaders() {
-    const headers = { "Content-Type": "application/json" };
-    // Local LeadFinderCloud does not need auth; sending Authorization
-    // triggers a CORS preflight that used to fail and look "offline".
-    const base = leadFinderBaseUrl();
-    if (!isWorkerLeadFinderBase(base)) return headers;
-    try {
-      const session = await window.StudioAuth?.getSession?.();
-      if (session?.access_token) {
-        headers.Authorization = "Bearer " + session.access_token;
-      }
-    } catch (_) {
-      /* ignore */
-    }
-    return headers;
   }
 
   const LOCATION_DENIED_MSG =
@@ -681,8 +701,7 @@
   }
 
   function shouldTryLiveScrape() {
-    // Live search is OpenStreetMap (Overpass). LeadFinder remains an optional extra.
-    return typeof window.OsmFinder?.search === "function" || Boolean(leadFinderBaseUrl());
+    return typeof window.OsmFinder?.search === "function";
   }
 
   async function searchViaOpenStreetMap(type, location, query, geo) {
@@ -706,6 +725,7 @@
         latitude: hasGeo ? Number(geo.latitude) : undefined,
         longitude: hasGeo ? Number(geo.longitude) : undefined,
         radiusMiles: hasGeo ? Number(geo.radiusMiles) || NEARBY_RADIUS_MILES : undefined,
+        limit: getResultLimit(),
       });
       const leads = (data?.leads || []).map((lead) => hydrateLeadCoords(lead));
       return {
@@ -720,42 +740,15 @@
     }
   }
 
-  /** OSM first, then authenticated LeadFinder cloud when OSM is empty or down. */
+  /** Live Business Finder search via OpenStreetMap (Overpass + Nominatim). */
   async function liveScrapeLeads(type, location, query, geo) {
-    const osm = await searchViaOpenStreetMap(type, location, query, geo);
-    if (osm.ok && osm.leads?.length) return osm;
-    if (!leadFinderBaseUrl()) {
-      return osm.skipped && !osm.error
-        ? { ok: false, skipped: true, reason: osm.reason || "not_configured" }
-        : osm;
-    }
-    if (MAP_UI) setStatus("Refreshing live business results...");
-    const lf = await scrapeViaLeadFinder(type, location, query, geo);
-    if (lf.ok && lf.leads?.length) {
-      return {
-        ok: true,
-        query: lf.query || query || "",
-        leads: (lf.leads || []).map((lead) => hydrateLeadCoords(lead)),
-        rowCount: lf.leads?.length || 0,
-        source: "leadfinder",
-      };
-    }
-    if (osm.ok) return osm;
-    if (lf.ok) return { ok: true, leads: [], rowCount: 0, source: "leadfinder" };
-    if (lf.skipped && osm.skipped) {
-      return { ok: false, skipped: true, reason: "not_configured" };
-    }
-    return {
-      ok: false,
-      error: lf.error || osm.error || "Live scrape returned no leads",
-      skipped: !!(lf.skipped && osm.skipped),
-    };
+    return searchViaOpenStreetMap(type, location, query, geo);
   }
 
   function restoreNormalList() {
     setError("");
     setStatus("");
-    displayLimit = DISPLAY_PAGE;
+    resetDisplayLimit();
     resetLeadReveals();
     clearLoadingCards();
     setFindBusy(false);
@@ -1461,13 +1454,6 @@
     }
   }
 
-  function leadFinderBaseUrl() {
-    if (typeof window.resolveLeadFinderUrl === "function") {
-      return window.resolveLeadFinderUrl();
-    }
-    return "";
-  }
-
   function hydrateLeadCoords(lead) {
     if (!lead || typeof lead !== "object") return lead;
     const point = leadCoords(lead);
@@ -1475,262 +1461,6 @@
     if (parseCoordNumber(lead.latitude) !== point.lat) lead.latitude = point.lat;
     if (parseCoordNumber(lead.longitude) !== point.lng) lead.longitude = point.lng;
     return lead;
-  }
-
-  function rowsToFinderLeads(rows) {
-    const parse = window.LeadCsvFormat?.parseRow;
-    const out = [];
-    (rows || []).forEach((row) => {
-      if (!row || typeof row !== "object") return;
-      const lead = parse ? parse(row) : null;
-      if (lead?.mapsUrl || lead?.name) {
-        out.push(hydrateLeadCoords(lead));
-        return;
-      }
-      const mapsUrl = String(row.maps_url || row.mapsUrl || "").trim();
-      const name = String(row.business_name || row.name || "").trim();
-      if (!mapsUrl && !name) return;
-      const fromUrl = coordsFromMapsUrl(mapsUrl);
-      out.push(
-        hydrateLeadCoords({
-          id: row.id || mapsUrl || name,
-          name: name || "Business",
-          category: String(row.category_group || row.category || "").trim(),
-          categoryGroup: String(row.category_group || row.category || "").trim(),
-          phone: String(row.phone || "").trim(),
-          address: String(row.address || "").trim(),
-          mapsUrl,
-          website: window.LeadCsvFormat?.resolveLeadWebsite
-            ? window.LeadCsvFormat.resolveLeadWebsite(row)
-            : String(row.website_url || "").trim(),
-          hours: String(row.hours || "").trim(),
-          hasWebsite: window.LeadCsvFormat?.resolveLeadHasWebsite
-            ? window.LeadCsvFormat.resolveLeadHasWebsite(row)
-            : Boolean(String(row.website_url || "").trim()),
-          searchQuery: String(row.search_query || "").trim(),
-          latitude: parseCoordNumber(row.latitude) || fromUrl?.lat || null,
-          longitude: parseCoordNumber(row.longitude) || fromUrl?.lng || null,
-          formatValid: true,
-        })
-      );
-    });
-    return out;
-  }
-
-  /**
-   * Live Maps scrape via LeadFinder (local :8790 or worker /lead-finder -> Render).
-   * Serializes requests and waits out upstream busy locks instead of failing empty.
-   */
-  async function scrapeViaLeadFinder(type, location, query, geo) {
-    const run = () => scrapeViaLeadFinderUnlocked(type, location, query, geo);
-    const next = scrapeViaLeadFinderGate.then(run, run);
-    scrapeViaLeadFinderGate = next.then(
-      () => undefined,
-      () => undefined
-    );
-    return next;
-  }
-
-  async function waitForLeadFinderIdle(base, headers, maxWaitMs) {
-    const deadline = Date.now() + Math.max(8_000, Number(maxWaitMs) || 170_000);
-    let attempt = 0;
-    while (Date.now() < deadline) {
-      attempt += 1;
-      try {
-        const healthHeaders = {};
-        if (headers?.Authorization) healthHeaders.Authorization = headers.Authorization;
-        if (headers?.["X-LeadFinder-Secret"]) {
-          healthHeaders["X-LeadFinder-Secret"] = headers["X-LeadFinder-Secret"];
-        }
-        const res = await fetch(base + "/health", {
-          method: "GET",
-          headers: healthHeaders,
-          cache: "no-store",
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && data && data.busy === false) return true;
-        const waited = Number(data?.busyForMs) || 0;
-        setStatus(
-          waited > 0
-            ? "Maps scanner busy - waiting for the current scan to finish..."
-            : "Maps scanner busy - waiting..."
-        );
-      } catch (_) {
-        setStatus("Maps scanner busy - retrying...");
-      }
-      const delay = Math.min(12_000, 3_500 + attempt * 500);
-      await new Promise((r) => setTimeout(r, delay));
-    }
-    return false;
-  }
-
-  async function scrapeViaLeadFinderUnlocked(type, location, query, geo) {
-    const candidates =
-      typeof window.leadFinderUrlCandidates === "function"
-        ? window.leadFinderUrlCandidates()
-        : [leadFinderBaseUrl()].filter(Boolean);
-    if (!candidates.length) return { ok: false, skipped: true, reason: "not_configured" };
-    const t = String(type || "").trim();
-    const loc = String(location || "").trim();
-    const q = String(query || "").trim();
-    const hasGeo =
-      geo &&
-      Number.isFinite(Number(geo.latitude)) &&
-      Number.isFinite(Number(geo.longitude));
-    if (!t && !loc && !q && !hasGeo) {
-      return { ok: false, skipped: true, reason: "empty_query" };
-    }
-
-    const body = {
-      type: t,
-      location: loc,
-      minResults: MIN_SEARCH_RESULTS,
-      // Interactive Finder: skip place-page enrichment so first results return faster.
-      enrich: false,
-      fast: true,
-      // Do not write leadfinder/data/*.csv - watchers treat that as a hard refresh.
-      upload: false,
-    };
-    if (q) body.query = q;
-    if (hasGeo) {
-      body.latitude = Number(geo.latitude);
-      body.longitude = Number(geo.longitude);
-      body.radiusMiles = Number(geo.radiusMiles) || NEARBY_RADIUS_MILES;
-    }
-
-    let lastOffline = false;
-    let lastError = "";
-    let lastAborted = false;
-
-    for (let i = 0; i < candidates.length; i += 1) {
-      const base = candidates[i];
-      const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
-      const timer = controller
-        ? setTimeout(() => controller.abort(), 180000)
-        : null;
-      try {
-        const headers = await scrapeAuthHeadersForBase(base);
-        if (isWorkerLeadFinderBase(base) && !headers.Authorization) {
-          return { ok: false, skipped: true, reason: "sign_in_required" };
-        }
-        // Prefer waiting before the first POST so a busy scanner doesn't spam 409s.
-        // When the upstream uses queue mode, POST immediately and let it wait server-side.
-        try {
-          const pre = await fetch(base + "/health", {
-            method: "GET",
-            headers: headers.Authorization
-              ? { Authorization: headers.Authorization }
-              : {},
-            cache: "no-store",
-          });
-          const preData = await pre.json().catch(() => ({}));
-          if (pre.ok && preData?.busy === true && preData?.queueMode !== true) {
-            setStatus("Maps scanner busy - waiting for the current scan to finish...");
-            const idle = await waitForLeadFinderIdle(base, headers, 170000);
-            if (!idle) {
-              return {
-                ok: false,
-                error:
-                  "Maps scanner is still busy. Wait about a minute, then try Near me again.",
-              };
-            }
-            setStatus(MAP_UI ? "Scanning live maps near you..." : "Scanning live maps...");
-          } else if (pre.ok && preData?.busy === true && preData?.queueMode === true) {
-            setStatus("Maps scanner busy - your scan is queued...");
-          }
-        } catch (_) {
-          /* health optional - search still attempted */
-        }
-        let res = await fetch(base + "/search", {
-          method: "POST",
-          headers,
-          body: JSON.stringify(body),
-          signal: controller?.signal,
-        });
-        let data = await res.json().catch(() => ({}));
-        if (res.status === 409) {
-          lastError =
-            data?.error ||
-            "A Maps scan is already running. Wait a moment, then try again.";
-          setStatus("Maps scanner busy - waiting for the current scan to finish...");
-          const idle = await waitForLeadFinderIdle(base, headers, 170000);
-          if (!idle) {
-            return {
-              ok: false,
-              error:
-                "Maps scanner is still busy. Wait about a minute, then try Near me again.",
-            };
-          }
-          setStatus(MAP_UI ? "Scanning live maps near you..." : "Scanning live maps...");
-          res = await fetch(base + "/search", {
-            method: "POST",
-            headers,
-            body: JSON.stringify(body),
-            signal: controller?.signal,
-          });
-          data = await res.json().catch(() => ({}));
-          if (res.status === 409) {
-            return {
-              ok: false,
-              error:
-                data?.error ||
-                "A Maps scan is already running. Try again in a moment.",
-            };
-          }
-        }
-        if (!res.ok || !data?.ok) {
-          lastError = data?.error || "LeadFinder scrape failed (" + res.status + ")";
-          return { ok: false, error: lastError };
-        }
-        const leads = rowsToFinderLeads(data.leads || []);
-        return {
-          ok: true,
-          query: data.query || q,
-          leads,
-          rowCount: Number(data.rowCount) || leads.length,
-          imported: Number(data.imported) || 0,
-          durationMs: Number(data.durationMs) || 0,
-        };
-      } catch (e) {
-        const aborted = e?.name === "AbortError";
-        const msg = scrapeErrorMessage(e);
-        const offline =
-          !aborted &&
-          /failed to fetch|networkerror|network error|load failed|unreachable/i.test(msg);
-        lastAborted = aborted;
-        lastOffline = offline;
-        lastError = aborted ? "LeadFinder scrape timed out" : msg;
-        if (!offline) break;
-      } finally {
-        if (timer) clearTimeout(timer);
-      }
-    }
-
-    return {
-      ok: false,
-      error: lastAborted
-        ? "LeadFinder scrape timed out"
-        : lastOffline && !candidates.some(isWorkerLeadFinderBase)
-          ? "Live Maps search server is not running. On this machine only: localStorage.setItem('ms_use_local_leadfinder','1') then cd leadfinder && npm run search:server - otherwise use tryMoonrise.com (cloud)."
-          : lastOffline
-            ? "Live Maps search is temporarily unavailable. Try again in a moment."
-          : lastError || "LeadFinder scrape failed",
-    };
-  }
-
-
-  async function scrapeAuthHeadersForBase(base) {
-    const headers = { "Content-Type": "application/json" };
-    if (!isWorkerLeadFinderBase(base)) return headers;
-    try {
-      const session = await window.StudioAuth?.getSession?.();
-      if (session?.access_token) {
-        headers.Authorization = "Bearer " + session.access_token;
-      }
-    } catch (_) {
-      /* ignore */
-    }
-    return headers;
   }
 
   function setError(msg) {
@@ -3401,7 +3131,7 @@
     leadsReady = allLeads.length > 0;
     if (MAP_UI) return false;
     if (shouldSkipBulkPaint()) return false;
-    displayLimit = DISPLAY_PAGE;
+    resetDisplayLimit();
     if (!allLeads.length) return false;
     setStatus("");
     renderLeads(allLeads, "All leads");
@@ -3527,7 +3257,7 @@
     setError("");
     setStatus(MAP_UI ? "Scanning nearby..." : "");
     hideAllSuggests();
-    displayLimit = DISPLAY_PAGE;
+    resetDisplayLimit();
     resetLeadReveals();
     flyToUserLocation(userCoords);
 
@@ -3725,7 +3455,7 @@
       setError("");
       setStatus("");
       hideAllSuggests();
-      displayLimit = DISPLAY_PAGE;
+      resetDisplayLimit();
       resetLeadReveals();
 
       if (!allLeads.length && isDbConnected()) {
@@ -3750,7 +3480,7 @@
     setError("");
     setStatus("");
     hideAllSuggests();
-    displayLimit = DISPLAY_PAGE;
+    resetDisplayLimit();
     resetLeadReveals();
 
     setFindBusy(true, MAP_UI ? "all" : "find");
@@ -3782,7 +3512,7 @@
         renderLeads(rankLeadList(leads), query);
       }
 
-      if ((!leads.length || (MAP_UI && leads.length < MIN_SEARCH_RESULTS)) && shouldTryLiveScrape() && (searchType || location.trim())) {
+      if ((!leads.length || (MAP_UI && leads.length < minSearchResultsTarget())) && shouldTryLiveScrape() && (searchType || location.trim())) {
         if (MAP_UI && !leads.length) setStatus("Scanning nearby businesses...");
         const statewide =
           US_STATE_NAMES.has(String(location || "").trim().toLowerCase()) && userCoords;
@@ -3814,7 +3544,7 @@
           leads = Array.from(byId.values());
         } else if (!scraped.skipped) {
           remoteError = scraped.error || "Live scrape returned no leads";
-          console.warn("LeadFinder scrape:", remoteError);
+          console.warn("OpenStreetMap scrape:", remoteError);
         }
       }
 
@@ -4013,7 +3743,7 @@
       !locationInput?.value?.trim() &&
       allLeads.length
     ) {
-      displayLimit = DISPLAY_PAGE;
+      resetDisplayLimit();
       resetLeadReveals();
       renderLeads(allLeads, "All leads");
       setStatus("");
@@ -4131,23 +3861,16 @@
     if (e.key === "Escape" && sheet && !sheet.hidden) setFilterSheet(false);
   });
 
-  document.getElementById("lf-website-filter")?.addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-website]");
-    if (!btn) return;
-    document.querySelectorAll("#lf-website-filter [data-website]").forEach((b) => {
-      const on = b === btn;
-      b.classList.toggle("is-active", on);
-      b.setAttribute("aria-pressed", on ? "true" : "false");
-    });
+  function rerunAfterFilterChange() {
     setFilterSheet(false);
     if (listView === "saved") {
       resetLeadReveals();
       refreshVisibleLeads();
       return;
     }
-    // Always re-run the active search so All / No Website / Website is applied at source.
+    // Always re-run the active search so filters are applied at source.
     if (inMyArea || typeInput?.value?.trim() || locationInput?.value?.trim() || MAP_UI) {
-      displayLimit = DISPLAY_PAGE;
+      displayLimit = Math.max(DISPLAY_PAGE, getResultLimit());
       if (MAP_UI && !inMyArea && !typeInput?.value?.trim() && !locationInput?.value?.trim()) {
         if (lastLeads.length) {
           resetLeadReveals();
@@ -4159,7 +3882,7 @@
       return;
     }
     if (allLeads.length || lastLeads.length) {
-      displayLimit = DISPLAY_PAGE;
+      displayLimit = Math.max(DISPLAY_PAGE, getResultLimit());
       resetLeadReveals();
       if (lastLeads.length) refreshVisibleLeads();
       else if (allLeads.length && !MAP_UI) {
@@ -4167,7 +3890,27 @@
         setStatus("");
       }
     }
+  }
+
+  document.getElementById("lf-website-filter")?.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-website]");
+    if (!btn) return;
+    document.querySelectorAll("#lf-website-filter [data-website]").forEach((b) => {
+      const on = b === btn;
+      b.classList.toggle("is-active", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    rerunAfterFilterChange();
   });
+
+  document.getElementById("lf-result-limit")?.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-result-limit]");
+    if (!btn) return;
+    setResultLimit(btn.getAttribute("data-result-limit"));
+    rerunAfterFilterChange();
+  });
+
+  syncResultLimitFilterUi(getResultLimit());
 
   document.getElementById("lf-list-view")?.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-list-view]");

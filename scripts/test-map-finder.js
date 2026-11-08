@@ -71,7 +71,8 @@ async function main() {
   ok("JS searches via OsmFinder", searchJs.includes("searchViaOpenStreetMap") && osmJs.includes("overpass-api.de"));
   ok("JS has map init + markers", searchJs.includes("initLeadMap") && searchJs.includes("syncMapMarkers"));
   ok("CSP allows OpenFreeMap and Overpass", /tiles\.openfreemap\.org/.test(fs.readFileSync(path.join(ROOT, "vercel.json"), "utf8")) && /overpass-api\.de/.test(fs.readFileSync(path.join(ROOT, "vercel.json"), "utf8")));
-  ok("config still exposes leadFinderUrl", /leadFinderUrl/.test(configJs));
+  ok("config no longer wires LeadFinder", !/leadFinderUrl|resolveLeadFinderUrl/.test(configJs));
+  ok("live search is OpenStreetMap only", /Live Business Finder search via OpenStreetMap/.test(searchJs) && !/scrapeViaLeadFinder/.test(searchJs));
 
   try {
     const style = await fetchText("https://tiles.openfreemap.org/styles/positron", { timeout: 15000 });
