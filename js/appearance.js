@@ -245,7 +245,7 @@
   }
 
   function ensureCss() {
-    var CACHE = "20261108-skel-nav";
+    var CACHE = "20261108-status";
     var studio = document.querySelector('link[href*="studio.css"]');
     var link = document.getElementById("ms-appearance-css");
     if (!link) {

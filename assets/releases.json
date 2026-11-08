@@ -3,6 +3,30 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.2.5",
+      "date": "2026-11-07",
+      "title": "Settings Status board",
+      "tag": "v2.2.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.2.5",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Settings adds a Status category with service logos, live wavelength, ping times, and tap-to-expand details."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Security",
+          "added": [
+            "Studio status checks run on an authenticated server route so secret keys and private API URLs never reach the browser.",
+            "Public /health only reports that the service is up, without internal paths or provider inventory."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.2.4",
       "date": "2026-11-07",
       "title": "Studio dark mode and faster hops",

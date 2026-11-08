@@ -66,6 +66,7 @@
     { "source": "/fonts/:path*", "destination": "/assets/fonts/:path*" },
     { "source": "/hats/:path*", "destination": "/assets/hats/:path*" },
     { "source": "/health", "destination": "/api" },
+    { "source": "/studio/status", "destination": "/api" },
     { "source": "/studio-last-commit", "destination": "/api" },
     { "source": "/generate", "destination": "/api" },
     { "source": "/generate/status", "destination": "/api" },

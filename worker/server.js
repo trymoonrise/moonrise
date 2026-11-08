@@ -995,49 +995,238 @@ app.use(
 );
 
 app.get("/health", async (_req, res) => {
-  try {
-    await githubPresets.ensureManifest();
-  } catch (e) {
-    console.warn("Health: GitHub preset manifest prefetch failed:", e.message);
-  }
-  const manifest = loadPresetManifest();
-  let sampleKit = 0;
-  try {
-    sampleKit = selectKitIdsLocally({
-      businessName: "Health Check Plumbing",
-      category: "plumber",
-    }).ids.length;
-  } catch (_) {
-    sampleKit = 0;
-  }
+  // Public probe only — no paths, keys, models, or provider inventory.
+  res.setHeader("Cache-Control", "no-store");
   res.json({
     ok: true,
-    service: "moonrise-studio-worker",
-    websiteGenerationModel: WEBSITE_GENERATION_MODEL,
-    websiteMaxOutputTokens: WEBSITE_MAX_OUTPUT_TOKENS,
-    workerPublicUrl: WORKER_PUBLIC_URL,
-    watermarkEmbedPath: WATERMARK_EMBED_PATH,
-    watermarkEmbedExists: fs.existsSync(WATERMARK_EMBED_PATH),
-    websitePresetBudget: {
-      maxFiles: PRESET_MAX_FILES,
-      maxCharsEach: PRESET_MAX_CHARS_EACH,
-      maxTotalChars: PRESET_MAX_TOTAL_CHARS,
-    },
-    websitePresets: {
-      dir: WEBSITE_PRESETS_DIR,
-      ...githubPresets.getPresetSourceMeta(),
-      manifestCount: manifest.length,
-      sampleKitCount: sampleKit,
-      ready: manifest.length > 0 && sampleKit > 0,
-    },
-    hasSupabase: !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
-    hasAuthAnon: !!(process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY),
-    hasOpenRouter: !!process.env.OPENROUTER_API_KEY,
-    hasStripe: !!process.env.STRIPE_SECRET_KEY,
-    hasVercel: !!process.env.VERCEL_TOKEN,
-    stockMedia: typeof catalogStats === "function" ? catalogStats() : undefined,
+    service: "moonrise-studio",
   });
 });
+
+async function timedProbe(label, run, timeoutMs = 4500) {
+  const started = Date.now();
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const result = await run(ctrl.signal);
+    clearTimeout(timer);
+    return {
+      ...result,
+      id: result.id || label,
+      pingMs: Math.max(1, Date.now() - started),
+    };
+  } catch (e) {
+    clearTimeout(timer);
+    const aborted = e?.name === "AbortError";
+    return {
+      id: label,
+      status: "down",
+      pingMs: Math.max(1, Date.now() - started),
+      summary: aborted ? "Timed out" : "Unreachable",
+      details: [{ label: "State", value: aborted ? "Timed out" : "Unreachable" }],
+    };
+  }
+}
+
+function statusDetail(label, value) {
+  return { label: String(label || ""), value: String(value || "") };
+}
+
+async function buildStudioStatusReport() {
+  const siteUrl = String(process.env.PUBLIC_APP_URL || "https://trymoonrise.com")
+    .trim()
+    .replace(/\/$/, "");
+  const supabaseUrl = String(process.env.SUPABASE_URL || "").trim().replace(/\/$/, "");
+  const hasStripe = !!String(process.env.STRIPE_SECRET_KEY || "").trim();
+  const hasOpenRouter = !!String(process.env.OPENROUTER_API_KEY || "").trim();
+  const hasSupabase = !!(supabaseUrl && process.env.SUPABASE_SERVICE_ROLE_KEY);
+  const hasAuth = !!(supabaseUrl && process.env.SUPABASE_ANON_KEY);
+
+  const probes = await Promise.all([
+    timedProbe("studio", async () => {
+      let presetsReady = false;
+      try {
+        await githubPresets.ensureManifest();
+        const manifest = loadPresetManifest();
+        presetsReady = Array.isArray(manifest) && manifest.length > 0;
+      } catch (_) {
+        presetsReady = false;
+      }
+      const status = presetsReady ? "ok" : "degraded";
+      return {
+        id: "studio",
+        name: "Moonrise Studio",
+        logo: "moonrise",
+        status,
+        summary: presetsReady ? "API responding" : "API up · presets warming",
+        details: [
+          statusDetail("Service", "Studio API"),
+          statusDetail("Presets", presetsReady ? "Ready" : "Warming"),
+          statusDetail("State", status === "ok" ? "Operational" : "Degraded"),
+        ],
+      };
+    }),
+    timedProbe("site", async (signal) => {
+      const target = siteUrl || "https://trymoonrise.com";
+      const res = await fetch(target + "/", {
+        method: "HEAD",
+        redirect: "follow",
+        cache: "no-store",
+        signal,
+      });
+      const ok = res.ok || (res.status >= 300 && res.status < 400);
+      return {
+        id: "site",
+        name: "Website",
+        logo: "moonrise",
+        status: ok ? "ok" : "degraded",
+        summary: ok ? "Site reachable" : "Site returned an unexpected response",
+        details: [
+          statusDetail("Service", "Public website"),
+          statusDetail("State", ok ? "Operational" : "Degraded"),
+        ],
+      };
+    }),
+    timedProbe("auth", async (signal) => {
+      if (!hasAuth || !supabaseUrl) {
+        return {
+          id: "auth",
+          name: "Sign-in",
+          logo: "auth",
+          status: "down",
+          summary: "Sign-in is not configured",
+          details: [statusDetail("State", "Not configured")],
+        };
+      }
+      const res = await fetch(supabaseUrl + "/auth/v1/health", {
+        method: "GET",
+        cache: "no-store",
+        signal,
+        headers: { Accept: "application/json" },
+      });
+      const ok = res.ok;
+      return {
+        id: "auth",
+        name: "Sign-in",
+        logo: "auth",
+        status: ok ? "ok" : "degraded",
+        summary: ok ? "Auth reachable" : "Auth check failed",
+        details: [
+          statusDetail("Service", "Account authentication"),
+          statusDetail("State", ok ? "Operational" : "Degraded"),
+        ],
+      };
+    }),
+    timedProbe("payments", async (signal) => {
+      if (!hasStripe) {
+        return {
+          id: "payments",
+          name: "Payments",
+          logo: "stripe",
+          status: "down",
+          summary: "Payments are not configured",
+          details: [statusDetail("State", "Not configured")],
+        };
+      }
+      // Reachability only — never call authenticated Stripe APIs or return balances.
+      const res = await fetch("https://stripe.com/", {
+        method: "HEAD",
+        redirect: "follow",
+        cache: "no-store",
+        signal,
+      });
+      const ok = res.ok || (res.status >= 300 && res.status < 500);
+      return {
+        id: "payments",
+        name: "Payments",
+        logo: "stripe",
+        status: ok ? "ok" : "degraded",
+        summary: ok ? "Checkout ready" : "Payments check failed",
+        details: [
+          statusDetail("Service", "Checkout"),
+          statusDetail("Configured", "Yes"),
+          statusDetail("State", ok ? "Operational" : "Degraded"),
+        ],
+      };
+    }),
+    timedProbe("builder", async () => {
+      if (!hasOpenRouter) {
+        return {
+          id: "builder",
+          name: "Builder AI",
+          logo: "builder",
+          status: "down",
+          summary: "Builder AI is not configured",
+          details: [statusDetail("State", "Not configured")],
+        };
+      }
+      return {
+        id: "builder",
+        name: "Builder AI",
+        logo: "builder",
+        status: "ok",
+        summary: "Generation configured",
+        details: [
+          statusDetail("Service", "Site generation"),
+          statusDetail("Configured", "Yes"),
+          statusDetail("State", "Operational"),
+        ],
+      };
+    }),
+    timedProbe("data", async () => {
+      if (!hasSupabase) {
+        return {
+          id: "data",
+          name: "Data",
+          logo: "data",
+          status: "down",
+          summary: "Data store is not configured",
+          details: [statusDetail("State", "Not configured")],
+        };
+      }
+      try {
+        const { error } = await db().from("profiles").select("id").limit(1);
+        const ok = !error;
+        return {
+          id: "data",
+          name: "Data",
+          logo: "data",
+          status: ok ? "ok" : "degraded",
+          summary: ok ? "Database reachable" : "Database check failed",
+          details: [
+            statusDetail("Service", "Studio database"),
+            statusDetail("State", ok ? "Operational" : "Degraded"),
+          ],
+        };
+      } catch (_) {
+        return {
+          id: "data",
+          name: "Data",
+          logo: "data",
+          status: "down",
+          summary: "Database unreachable",
+          details: [statusDetail("State", "Unreachable")],
+        };
+      }
+    }),
+  ]);
+
+  const order = ["studio", "site", "auth", "payments", "builder", "data"];
+  const byId = Object.fromEntries(probes.map((p) => [p.id, p]));
+  const services = order.map((id) => byId[id]).filter(Boolean);
+  const worst = services.some((s) => s.status === "down")
+    ? "down"
+    : services.some((s) => s.status === "degraded")
+      ? "degraded"
+      : "ok";
+
+  return {
+    ok: worst !== "down",
+    checkedAt: new Date().toISOString(),
+    overall: worst,
+    services,
+  };
+}
 
 /** Public: latest moonrise-studio commit time for the sidebar "Last updated" label. */
 app.get("/studio-last-commit", async (_req, res) => {
@@ -1416,6 +1605,23 @@ async function requireUser(req, res, next) {
     res.status(401).json({ error: clientError(e, "Unauthorized", 401) });
   }
 }
+
+/** Authenticated studio status board — no secrets, keys, or internal paths. */
+app.get("/studio/status", requireUser, async (_req, res) => {
+  try {
+    res.setHeader("Cache-Control", "no-store");
+    const report = await buildStudioStatusReport();
+    res.json(report);
+  } catch (e) {
+    res.status(500).json({
+      ok: false,
+      overall: "down",
+      checkedAt: new Date().toISOString(),
+      services: [],
+      error: "Status check failed",
+    });
+  }
+});
 
 function cleanEmployeeHandle(raw) {
   return String(raw || "")
