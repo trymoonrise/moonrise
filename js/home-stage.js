@@ -1,100 +1,53 @@
-/**
- * Clickable product walkthrough on the public home page.
- */
 (function () {
-  var tabs = Array.prototype.slice.call(document.querySelectorAll(".ms-seg [role='tab']"));
-  var panels = {
-    find: document.getElementById("stage-find"),
-    build: document.getElementById("stage-build"),
-    earn: document.getElementById("stage-earn")
-  };
-  if (!tabs.length || !panels.find) return;
+  var root = document.body;
+  if (!root || root.getAttribute("data-page") !== "home") return;
 
-  var shops = {
-    "Northside Cafe": { host: "northsidecafe.com", link: "northside.moonrise.site" },
-    "Harbor Dental": { host: "harbordental.com", link: "harbor.moonrise.site" },
-    "Elm Street Gym": { host: "elmstreetgym.com", link: "elm.moonrise.site" }
-  };
-  var shop = "Northside Cafe";
-  var sent = false;
-
-  function show(name) {
-    tabs.forEach(function (tab) {
-      var on = tab.getAttribute("aria-controls") === "stage-" + name;
-      tab.setAttribute("aria-selected", String(on));
-      tab.tabIndex = on ? 0 : -1;
-    });
-    Object.keys(panels).forEach(function (key) {
-      if (panels[key]) panels[key].hidden = key !== name;
-    });
-  }
-
-  function paintShop() {
-    var info = shops[shop];
-    var name = document.getElementById("preview-name");
-    var host = document.getElementById("preview-host");
-    var link = document.getElementById("earn-link");
-    var note = document.getElementById("pick-note");
-    if (name) name.textContent = shop;
-    if (host && info) host.textContent = info.host;
-    if (link && info) link.textContent = info.link;
-    if (note) note.textContent = shop + " is ready to build.";
-  }
-
-  tabs.forEach(function (tab) {
-    tab.addEventListener("click", function () {
-      var id = tab.getAttribute("aria-controls") || "";
-      show(id.replace("stage-", ""));
+  root.querySelectorAll("[data-toggle]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var on = btn.getAttribute("aria-checked") !== "true";
+      btn.setAttribute("aria-checked", on ? "true" : "false");
+      var piece = root.querySelector('[data-piece="' + btn.getAttribute("data-toggle") + '"]');
+      if (piece) piece.classList.toggle("is-off", !on);
     });
   });
 
-  document.querySelectorAll(".ms-next").forEach(function (button) {
-    button.addEventListener("click", function () {
-      show(button.getAttribute("data-next"));
-    });
-  });
-
-  document.querySelectorAll(".ms-picks button").forEach(function (button) {
-    button.addEventListener("click", function () {
-      document.querySelectorAll(".ms-picks button").forEach(function (other) {
-        other.setAttribute("aria-pressed", "false");
-      });
-      button.setAttribute("aria-pressed", "true");
-      shop = button.childNodes[0].textContent.trim();
-      sent = false;
-      var send = document.getElementById("ms-send");
-      var payout = document.getElementById("ms-payout");
-      var earnNote = document.getElementById("earn-note");
-      if (send) {
-        send.textContent = "Send";
-        send.setAttribute("aria-pressed", "false");
-      }
-      if (payout) payout.hidden = true;
-      if (earnNote) earnNote.textContent = "Nothing is sent yet.";
-      paintShop();
-    });
-  });
-
-  document.querySelectorAll(".ms-toggles button").forEach(function (button) {
-    button.addEventListener("click", function () {
-      var on = button.getAttribute("aria-pressed") !== "true";
-      button.setAttribute("aria-pressed", String(on));
-      var block = document.querySelector('.ms-blocks [data-block="' + button.getAttribute("data-toggle") + '"]');
-      if (block) block.classList.toggle("is-off", !on);
-    });
-  });
-
-  var send = document.getElementById("ms-send");
+  var send = root.querySelector("[data-send]");
   if (send) {
     send.addEventListener("click", function () {
-      if (sent) return;
-      sent = true;
       send.textContent = "Sent";
-      send.setAttribute("aria-pressed", "true");
-      var payout = document.getElementById("ms-payout");
-      var earnNote = document.getElementById("earn-note");
-      if (payout) payout.hidden = false;
-      if (earnNote) earnNote.textContent = shop + " can unlock from that link. You keep 90%.";
+      send.disabled = true;
+      var status = root.querySelector("[data-pay-status]");
+      if (status) status.textContent = "Link sent";
     });
   }
+
+  var acc = root.querySelector("[data-accordion]");
+  if (acc) {
+    acc.addEventListener("click", function (event) {
+      var trigger = event.target.closest(".dt-acc-trigger");
+      if (!trigger || !acc.contains(trigger)) return;
+      var item = trigger.closest(".dt-acc-item");
+      var wasOpen = item.classList.contains("is-open");
+      acc.querySelectorAll(".dt-acc-item").forEach(function (el) {
+        el.classList.remove("is-open");
+        var button = el.querySelector(".dt-acc-trigger");
+        if (button) button.setAttribute("aria-expanded", "false");
+      });
+      if (!wasOpen) {
+        item.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+      }
+    });
+  }
+
+  var rises = root.querySelectorAll(".ms-rise");
+  function reveal() {
+    var edge = window.innerHeight + 24;
+    rises.forEach(function (el) {
+      if (el.classList.contains("is-in")) return;
+      if (el.getBoundingClientRect().top < edge) el.classList.add("is-in");
+    });
+  }
+  reveal();
+  window.addEventListener("scroll", reveal, { passive: true });
 })();

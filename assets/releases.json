@@ -3,6 +3,23 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.5.2",
+      "date": "2026-11-08",
+      "title": "Clearer home",
+      "tag": "v2.5.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.5.2",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The home page opens with a short badge, a serif headline, and three lines for speed, pay, and the 90% cut.",
+            "Switches, a live status light, and the question list from the UI Library sit in the build, payout, and answers sections.",
+            "Sections ease into place as you scroll."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.5.1",
       "date": "2026-11-08",
       "title": "Clickable home flow",
