@@ -3398,9 +3398,20 @@ function craftAgentSystemPrompt() {
   ].join("\n");
 }
 
+function sanitizeGenerateCategory(value, businessName) {
+  const raw = String(value || "").trim();
+  if (raw && !/^(uncategorized|category not listed|n\/a|none|null|unknown|other|general)$/i.test(raw)) {
+    return sanitizeUserText(raw, 80);
+  }
+  const inferred = inferCategoryFromName(businessName);
+  return sanitizeUserText(inferred || "", 80);
+}
+
 function sanitizeCtxHours(ctx) {
   const next = ctx && typeof ctx === "object" ? { ...ctx } : {};
   next.hours = sanitizeBusinessHours(next.hours);
+  next.category = sanitizeGenerateCategory(next.category, next.businessName);
+  if (!next.variationSeed) next.variationSeed = newVariationSeed();
   return next;
 }
 
@@ -3476,7 +3487,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan) {
         "Return precise JSON only. Every string must fit a modern local-business layout.",
       ].join("\n"),
       user: buildCopyUserPrompt(ctx, shellPlan),
-      temperature: 0.28,
+      temperature: 0.55,
       maxTokens: 2200,
       prefer: "quality",
       title: "Moonrise Agent Copy",
@@ -7300,6 +7311,12 @@ function inferCategoryFromName(name) {
   if (/restaurant|cafe|pizza|grill|kitchen/.test(n)) return "Restaurant";
   if (/auto|mechanic|tire/.test(n)) return "Auto";
   if (/gym|fitness|yoga/.test(n)) return "Fitness";
+  if (/\bpet(?:s)?\b|\bdogs?\b|\bcats?\b|\bgroom|\bveterinar|\banimal\b/.test(n)) return "Pet care";
+  if (/board\s*(?:&|and)\s*care|assisted living|home health|senior care/.test(n)) return "Home care";
+  if (/business\s*services|consult|bookkeep|virtual\s*assist|admin\s*support/.test(n)) return "Business services";
+  if (/law|attorney|legal/.test(n)) return "Legal";
+  if (/photo|studio/.test(n)) return "Photography";
+  if (/real\s*estate|realtor/.test(n)) return "Real estate";
   return "";
 }
 

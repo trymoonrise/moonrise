@@ -2627,9 +2627,12 @@
       guessNameFromPrompt(notes) ||
       nameFromMapsUrl(mapsUrl) ||
       "Untitled business";
+    let category = sanitizeClientText(businessValue("category"), 80);
+    if (/^(uncategorized|category not listed)$/i.test(category)) category = "";
+    if (!category) category = inferCategoryFromName(businessName);
     return {
       businessName,
-      category: sanitizeClientText(businessValue("category"), 80),
+      category,
       phone: sanitizeClientText(businessValue("phone"), 40),
       address: sanitizeClientText(businessValue("address"), 200),
       description: sanitizeClientText(businessValue("description"), 500),
@@ -2674,6 +2677,12 @@
     if (/restaurant|cafe|pizza|grill|kitchen/.test(n)) return "Restaurant";
     if (/auto|mechanic|tire/.test(n)) return "Auto";
     if (/gym|fitness|yoga/.test(n)) return "Fitness";
+    if (/\bpet(?:s)?\b|\bdogs?\b|\bcats?\b|\bgroom|\bveterinar|\banimal\b/.test(n)) return "Pet care";
+    if (/board\s*(?:&|and)\s*care|assisted living|home health|senior care/.test(n)) return "Home care";
+    if (/business\s*services|consult|bookkeep|virtual\s*assist|admin\s*support/.test(n)) return "Business services";
+    if (/law|attorney|legal/.test(n)) return "Legal";
+    if (/photo|studio/.test(n)) return "Photography";
+    if (/real\s*estate|realtor/.test(n)) return "Real estate";
     return "";
   }
 

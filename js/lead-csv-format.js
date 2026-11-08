@@ -448,8 +448,10 @@
       return titleLine;
     }
     const grp = raw(cell(row, "categoryGroup"));
-    if (grp && !isMapsUiLabel(grp) && !/\d+(?:\.\d+)?\(\d+\)/.test(grp)) return grp;
-    return "Uncategorized";
+    if (grp && !isMapsUiLabel(grp) && !/\d+(?:\.\d+)?\(\d+\)/.test(grp) && !/^uncategorized$/i.test(grp)) {
+      return grp;
+    }
+    return "";
   }
 
   function validateRow(row) {

@@ -41,6 +41,8 @@ Rules:
 - Use only the business facts you are given. Do not invent phone numbers, addresses, awards, years in business, licenses, prices, or review counts.
 - If a fact is missing, speak generally ("Call to confirm") instead of making one up.
 - The headline is 2 or 3 words. No business name, no city, no period. A barber shop can say "Fresh cuts". A plumber can say "Same-day repairs".
+- Never write Uncategorized, Category not listed, or any placeholder category label.
+- If the trade is missing, invent three concrete, friendly service names from the business name without inventing phone, address, awards, or prices.
 - No "Welcome to", "Your trusted", or "Quality you can count on".
 - Palette must stay readable: one neutral ramp (bg, surface, ink, muted) and one accent used sparingly. Prefer calm local-business colors. No neon, purple gradients, or glow.
 - Keep every string short enough to fit a designed layout.`;
@@ -75,6 +77,63 @@ function cleanText(value, max) {
     .trim();
   if (!max || text.length <= max) return text;
   return text.slice(0, max - 1).replace(/\s+\S*$/, "").trim();
+}
+
+const BAD_CATEGORIES = /^(uncategorized|category not listed|n\/a|none|null|unknown|other|general)$/i;
+
+function inferCategoryFromName(name) {
+  const n = String(name || "").toLowerCase();
+  if (/plumb|drain|septic|pipe/.test(n)) return "Plumbing";
+  if (/electr/.test(n)) return "Electrical";
+  if (/hvac|heating|cooling|air\s*cond/.test(n)) return "HVAC";
+  if (/roof/.test(n)) return "Roofing";
+  if (/landscap|lawn|garden/.test(n)) return "Landscaping";
+  if (/clean/.test(n)) return "Cleaning";
+  if (/dentist|dental/.test(n)) return "Dental";
+  if (/barber|salon|hair/.test(n)) return "Beauty";
+  if (/restaurant|cafe|pizza|grill|kitchen/.test(n)) return "Restaurant";
+  if (/auto|mechanic|tire/.test(n)) return "Auto";
+  if (/gym|fitness|yoga/.test(n)) return "Fitness";
+  if (/\bpet(?:s)?\b|\bdogs?\b|\bcats?\b|\bgroom|\bveterinar|\banimal\b/.test(n)) return "Pet care";
+  if (/board\s*(?:&|and)\s*care|assisted living|home health|senior care/.test(n)) return "Home care";
+  if (/business\s*services|consult|bookkeep|virtual\s*assist|admin\s*support/.test(n)) return "Business services";
+  if (/law|attorney|legal/.test(n)) return "Legal";
+  if (/photo|studio/.test(n)) return "Photography";
+  if (/real\s*estate|realtor/.test(n)) return "Real estate";
+  return "";
+}
+
+/** Never surface placeholder categories like Uncategorized on a customer site. */
+function usableCategory(ctx) {
+  const raw = cleanText(ctx?.category, 60);
+  if (raw && !BAD_CATEGORIES.test(raw)) return raw;
+  const inferred = inferCategoryFromName(ctx?.businessName);
+  if (inferred) return inferred;
+  return "Local services";
+}
+
+const GENERIC_HEADLINES = [
+  "Here to help",
+  "Built for you",
+  "Close to home",
+  "Ready when you are",
+  "Simple and clear",
+  "Local and reliable",
+  "Work done right",
+  "Start here",
+];
+
+function pickSeeded(seed, salt, options) {
+  const text = `${seed || "moonrise"}:${salt}`;
+  let hash = 0;
+  for (let i = 0; i < text.length; i += 1) hash = (Math.imul(hash, 31) + text.charCodeAt(i)) >>> 0;
+  return options[hash % options.length];
+}
+
+function generationSeed(ctx) {
+  const explicit = String(ctx?.variationSeed || ctx?.requestId || "").trim();
+  if (explicit) return `${ctx?.businessName || "site"}:${explicit}`;
+  return `${ctx?.businessName || "site"}:${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 /** Strip Google Maps UI junk and holiday noise from hours strings. */
@@ -131,10 +190,19 @@ function listOf(value, mapItem, min, max) {
 
 function fallbackSiteCopy(ctx, plan) {
   const name = cleanText(ctx?.businessName, 80) || "Local business";
-  const category = cleanText(ctx?.category, 60) || "Local service";
+  const category = usableCategory(ctx);
   const place = guessPlace(ctx);
   const description = cleanText(ctx?.description, 280);
   const palette = plan?.palette || {};
+  const seed = generationSeed(ctx);
+  const generic = BAD_CATEGORIES.test(String(ctx?.category || "").trim()) || !cleanText(ctx?.category, 60);
+  const serviceTitles = generic
+    ? [
+        pickSeeded(seed, "svc-title-1", ["Getting started", "Day-to-day help", "Planning support"]),
+        pickSeeded(seed, "svc-title-2", ["A clear next step", "Hands-on help", "Practical guidance"]),
+        pickSeeded(seed, "svc-title-3", ["Local support", "Follow-through", "Ongoing help"]),
+      ]
+    : [category, "A visit", "Local support"];
   return {
     palette: {
       bg: hexOr(palette.bg, "#f6f5f2"),
@@ -144,22 +212,37 @@ function fallbackSiteCopy(ctx, plan) {
       accent: hexOr(palette.accent, "#1f4b3a"),
     },
     eyebrow: place ? `${category} in ${place}` : category,
-    headline: shortHeadline("", name, category),
-    lede: description || `${name} helps local customers with ${category.toLowerCase()}.`,
-    primaryCta: "Get in touch",
+    headline: shortHeadline("", name, category, seed),
+    lede: description || (generic
+      ? `${name} helps local customers with clear, practical support.`
+      : `${name} helps local customers with ${category.toLowerCase()}.`),
+    primaryCta: pickSeeded(seed, "cta", ["Get in touch", "Book a call", "Reach out", "Talk with us"]),
     secondaryCta: "See services",
     servicesTitle: "Services",
     servicesLead: `What ${name} can help with.`,
     services: [
-      { title: category, text: description || `Ask ${name} about ${category.toLowerCase()}.` },
-      { title: "A visit", text: "Call or send a note and we will help you plan the next step." },
-      { title: "Local support", text: place ? `Serving ${place} and the surrounding area.` : "Serving the local area." },
+      {
+        title: serviceTitles[0],
+        text: description || (generic
+          ? `Tell ${name} what you need and we will point you in the right direction.`
+          : `Ask ${name} about ${category.toLowerCase()}.`),
+      },
+      {
+        title: serviceTitles[1],
+        text: "Call or send a note and we will help you plan the next step.",
+      },
+      {
+        title: serviceTitles[2],
+        text: place ? `Serving ${place} and the surrounding area.` : "Serving the local area.",
+      },
     ],
     aboutTitle: `About ${name}`,
-    aboutBody: description || `${name} is a local ${category.toLowerCase()} business.`,
+    aboutBody: description || (generic
+      ? `${name} is a local business focused on clear communication and dependable help.`
+      : `${name} is a local ${category.toLowerCase()} business.`),
     highlights: [
-      category,
-      place ? `Based in ${place}` : "Locally owned",
+      generic ? (place ? `Based in ${place}` : "Locally owned") : category,
+      place ? `Serving ${place}` : "Locally owned",
       ctx?.phone ? "Call to talk" : "Message us anytime",
     ],
     faqs: [
@@ -173,7 +256,7 @@ function fallbackSiteCopy(ctx, plan) {
       },
       {
         q: "What should I expect?",
-        a: description || `We focus on ${category.toLowerCase()} and keep the process straightforward.`,
+        a: description || "We keep the process straightforward and respond as soon as we can.",
       },
     ],
     contactTitle: "Contact",
@@ -222,18 +305,30 @@ function normalizeSiteCopy(raw, ctx, plan) {
     4
   );
 
+  const scrubBadCategoryText = (value) => {
+    let text = cleanText(value, 420);
+    if (!text) return "";
+    text = text
+      .replace(/\buncategorized\b/gi, "")
+      .replace(/\bcategory not listed\b/gi, "")
+      .replace(/\s{2,}/g, " ")
+      .replace(/\s([.,])/g, "$1")
+      .trim();
+    return text;
+  };
+
   return {
     palette,
-    eyebrow: cleanText(data.eyebrow, 56) || base.eyebrow,
-    headline: shortHeadline(data.headline, ctx?.businessName, ctx?.category) || base.headline,
-    lede: cleanText(data.lede, 180) || base.lede,
+    eyebrow: scrubBadCategoryText(data.eyebrow) || base.eyebrow,
+    headline: shortHeadline(data.headline, ctx?.businessName, usableCategory(ctx), generationSeed(ctx)) || base.headline,
+    lede: scrubBadCategoryText(data.lede) || base.lede,
     primaryCta: cleanText(data.primaryCta, 24) || base.primaryCta,
     secondaryCta: cleanText(data.secondaryCta, 24) || base.secondaryCta,
     servicesTitle: cleanText(data.servicesTitle, 40) || base.servicesTitle,
     servicesLead: cleanText(data.servicesLead, 140) || base.servicesLead,
     services: services.length >= 3 ? services : base.services,
     aboutTitle: cleanText(data.aboutTitle, 56) || base.aboutTitle,
-    aboutBody: cleanText(data.aboutBody, 420) || base.aboutBody,
+    aboutBody: scrubBadCategoryText(data.aboutBody) || base.aboutBody,
     highlights: highlights.length >= 3 ? highlights.slice(0, 3) : base.highlights,
     faqs: faqs.length >= 3 ? faqs : base.faqs,
     contactTitle: cleanText(data.contactTitle, 40) || base.contactTitle,
@@ -241,18 +336,25 @@ function normalizeSiteCopy(raw, ctx, plan) {
   };
 }
 
-function shortHeadline(value, name, category) {
+function shortHeadline(value, name, category, seed) {
   let text = cleanText(value, 80);
   const business = cleanText(name, 80);
   if (business) {
     const escaped = business.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     text = text.replace(new RegExp(escaped, "ig"), " ");
   }
-  text = text.replace(/\b(at|in|for|the|a|an)\b/gi, " ").replace(/[.,:;]+/g, " ").replace(/\s+/g, " ").trim();
+  text = text
+    .replace(/\buncategorized\b/gi, " ")
+    .replace(/\bcategory not listed\b/gi, " ")
+    .replace(/\b(at|in|for|the|a|an)\b/gi, " ")
+    .replace(/[.,:;]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   const words = text.split(" ").filter(Boolean).slice(0, 3);
   if (words.length) return words.join(" ");
   const trade = cleanText(category, 28);
-  return trade || "Local service";
+  if (trade && !BAD_CATEGORIES.test(trade) && !/^local services?$/i.test(trade)) return trade;
+  return pickSeeded(seed || name || "site", "headline", GENERIC_HEADLINES);
 }
 
 function guessPlace(ctx) {
@@ -277,29 +379,19 @@ function parseCopyJson(raw) {
   return data;
 }
 
-function pickVariant(name, salt, options) {
-  const text = `${name || ""}:${salt}`;
-  let hash = 0;
-  for (let i = 0; i < text.length; i += 1) hash = (Math.imul(hash, 31) + text.charCodeAt(i)) >>> 0;
-  return options[hash % options.length];
-}
-
-function styleFamily(name) {
-  return pickVariant(name, "hero", ["paper", "split", "quiet", "stone"]);
-}
-
-function componentKit(name) {
-  // Prefer media-forward service layouts. "list" hid photos and looked unfinished.
+function componentKit(ctx) {
+  const seed = generationSeed(ctx);
+  // Equal weights so regenerating the same business still feels different.
   return {
-    hero: styleFamily(name),
-    nav: pickVariant(name, "nav", ["bar", "bar", "center", "quiet"]),
-    services: pickVariant(name, "svc", ["tiles", "tiles", "feature"]),
-    gallery: pickVariant(name, "gal", ["mosaic", "row", "stack"]),
-    notes: pickVariant(name, "notes", ["line", "cards"]),
-    about: pickVariant(name, "about", ["side", "flip", "band"]),
-    faq: pickVariant(name, "faq", ["split", "wide"]),
-    contact: pickVariant(name, "contact", ["split", "stack", "flip"]),
-    footer: pickVariant(name, "foot", ["bar", "stack", "center"]),
+    hero: pickSeeded(seed, "hero", ["paper", "split", "quiet", "stone"]),
+    nav: pickSeeded(seed, "nav", ["bar", "center", "quiet"]),
+    services: pickSeeded(seed, "svc", ["tiles", "feature"]),
+    gallery: pickSeeded(seed, "gal", ["mosaic", "row", "stack"]),
+    notes: pickSeeded(seed, "notes", ["line", "cards"]),
+    about: pickSeeded(seed, "about", ["side", "flip", "band"]),
+    faq: pickSeeded(seed, "faq", ["split", "wide"]),
+    contact: pickSeeded(seed, "contact", ["split", "stack", "flip"]),
+    footer: pickSeeded(seed, "foot", ["bar", "stack", "center"]),
   };
 }
 
@@ -316,7 +408,7 @@ function renderBusinessSite(ctx, copy, media) {
   const about = img.about || hero;
   const servicePhotos = [img.service1 || hero, img.service2 || about, img.service3 || hero];
   const gallery = [img.gallery1, img.gallery2, img.gallery3, img.gallery4].filter(Boolean);
-  const kit = componentKit(name);
+  const kit = componentKit(ctx);
   const family = kit.hero;
 
   const services = copy.services
@@ -758,4 +850,6 @@ module.exports = {
   parseCopyJson,
   renderBusinessSite,
   sanitizeBusinessHours,
+  usableCategory,
+  generationSeed,
 };

@@ -124,7 +124,7 @@ function compileMatchers() {
     { key: "yoga", re: /yoga|pilates|meditation|mindful/i },
     { key: "dental", re: /dental|dentist|orthodont|teeth|oral/i },
     { key: "medical", re: /clinic|medical|doctor|health|chiro|therapy/i },
-    { key: "pets", re: /pet|dog|cat|groom|boarding|veterinar|animal/i },
+    { key: "pets", re: /\bpet(?:s)?\b|\bdogs?\b|\bcats?\b|\bgroom|\bboarding\b|\bveterinar|\banimal|\bkennel\b/i },
     { key: "legal", re: /law|attorney|legal|lawyer|notary/i },
     { key: "finance", re: /account|finance|insurance|tax|cpa|advisor/i },
     { key: "realestate", re: /real estate|realtor|property|listing|broker/i },
@@ -144,8 +144,37 @@ const PRIORITY_MATCHERS = [
   },
 ];
 
+function scrubCategoryHay(value) {
+  return String(value || "")
+    .replace(/\buncategorized\b/gi, " ")
+    .replace(/\bcategory not listed\b/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function hashSeed(seed) {
+  const text = String(seed || "moonrise");
+  let hash = 0;
+  for (let i = 0; i < text.length; i += 1) hash = (Math.imul(hash, 31) + text.charCodeAt(i)) >>> 0;
+  return hash;
+}
+
+function rotatePackImages(images, seed) {
+  const source = Array.isArray(images?._all) && images._all.length
+    ? images._all.slice()
+    : SLOT_KEYS.map((slot) => images?.[slot]).filter(Boolean);
+  if (source.length < 2) return { ...images };
+  const offset = hashSeed(seed) % source.length;
+  const rotated = source.map((_, i) => source[(i + offset) % source.length]);
+  const next = { ...images, _all: rotated };
+  SLOT_KEYS.forEach((slot, i) => {
+    next[slot] = rotated[i % rotated.length] || rotated[0] || "";
+  });
+  return next;
+}
+
 function pickPackKey(ctx) {
-  const hay = `${ctx?.category || ""} ${ctx?.businessName || ""} ${ctx?.notes || ""}`;
+  const hay = `${scrubCategoryHay(ctx?.category)} ${ctx?.businessName || ""} ${ctx?.notes || ""}`;
   for (const m of PRIORITY_MATCHERS) {
     if (m.re.test(hay) && PACKS[m.key]) return m.key;
   }
@@ -158,10 +187,11 @@ function pickPackKey(ctx) {
 function selectStockMedia(ctx) {
   const key = pickPackKey(ctx);
   const pack = PACKS[key] || PACKS.default;
+  const seed = `${ctx?.businessName || ""}:${ctx?.variationSeed || ctx?.requestId || "stock"}`;
   return {
     key,
     label: pack.label,
-    images: { ...pack.images },
+    images: rotatePackImages(pack.images, seed),
     videos: { ...pack.videos },
   };
 }

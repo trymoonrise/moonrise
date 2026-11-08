@@ -494,7 +494,7 @@
       lead?.description
     );
     if (inferred) return inferred;
-    return "Uncategorized";
+    return "";
   }
 
   function isBadAddress(value, lead) {
@@ -726,12 +726,17 @@
       const businessName =
         formatted === "Business name not listed" ? raw(lead?.name) : formatted;
       const categoryRaw = global.LeadDisplay.formatCategory(lead);
+      const fallbackCategory = raw(lead?.categoryGroup || lead?.category);
       const category =
         categoryRaw &&
         categoryRaw !== "Category not listed" &&
         categoryRaw !== "Uncategorized"
           ? categoryRaw
-          : raw(lead?.categoryGroup || lead?.category);
+          : fallbackCategory &&
+              fallbackCategory !== "Uncategorized" &&
+              fallbackCategory !== "Category not listed"
+            ? fallbackCategory
+            : "";
       const addressRaw = global.LeadDisplay.formatAddress(lead);
       const address =
         addressRaw && addressRaw !== "Address not listed" && addressRaw !== NULL

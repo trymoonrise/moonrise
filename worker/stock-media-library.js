@@ -1269,7 +1269,7 @@ module.exports = {
     },
     {
       "key": "pets",
-      "re": "/pet|dog|cat|groom|boarding|veterinar|animal|kennel/i"
+      "re": "/\\bpet(?:s)?\\b|\\bdogs?\\b|\\bcats?\\b|\\bgroom|\\bboarding\\b|\\bveterinar|\\banimal|\\bkennel\\b/i"
     },
     {
       "key": "legal",
