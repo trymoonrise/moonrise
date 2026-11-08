@@ -130,6 +130,7 @@
     { "source": "/admin/employee-code", "destination": "/api" },
     { "source": "/admin/employees/:path*", "destination": "/api" },
     { "source": "/admin/site-checks", "destination": "/api" },
+    { "source": "/clients/revoke-hosting", "destination": "/api" },
     { "source": "/onboarding/payout-preview", "destination": "/api" },
     { "source": "/security-card/:path*", "destination": "/api" }
   ],

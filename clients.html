@@ -360,6 +360,20 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     </div>
   </dialog>
 
+  <dialog class="ms-clients-dialog" id="ms-clients-revoke-dialog" aria-labelledby="ms-clients-revoke-title">
+    <div class="ms-clients-dialog-panel ms-clients-dialog-panel--compact">
+      <header class="ms-clients-dialog-head">
+        <h2 class="ms-clients-dialog-title" id="ms-clients-revoke-title">Revoke hosting?</h2>
+      </header>
+      <p class="ms-clients-dialog-warning" id="ms-clients-revoke-message" aria-live="polite"></p>
+      <p class="ms-clients-dialog-error" id="ms-clients-revoke-error" hidden role="alert"></p>
+      <div class="ms-clients-dialog-actions">
+        <button type="button" class="ms-clients-dialog-back" id="ms-clients-revoke-cancel">Keep hosting</button>
+        <button type="button" class="ms-btn ms-btn-danger ms-clients-dialog-next" id="ms-clients-revoke-submit">Revoke hosting</button>
+      </div>
+    </div>
+  </dialog>
+
   <script defer src="js/config.js?v=20261108-no-lf"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
@@ -371,6 +385,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
-  <script defer src="js/clients.js?v=20261108-view-more"></script>
+  <script defer src="js/clients.js?v=20261108-revoke-hosting"></script>
 </body>
 </html>

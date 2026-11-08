@@ -5527,6 +5527,102 @@ app.post("/public-hosting-portal", publicCheckoutLimiter, async (req, res) => {
 });
 
 /**
+ * Creator/owner: immediately cancel a client's hosting subscription in Stripe
+ * and mark the project hosting as canceled in business_context.
+ */
+app.post("/clients/revoke-hosting", requireUser, publicCheckoutLimiter, async (req, res) => {
+  try {
+    const stripe = stripeClient();
+    if (!stripe) return sendStripeMissing(res);
+
+    const projectId = String(req.body.projectId || req.body.project_id || "").trim();
+    if (!projectId) return res.status(400).json({ error: "projectId required" });
+
+    const supabase = db();
+    let query = supabase
+      .from("projects")
+      .select("id,user_id,business_name,business_context,watermark_enabled,status,vercel_url")
+      .eq("id", projectId);
+    if (!isStudioAdmin(req.user)) {
+      query = query.eq("user_id", req.user.id);
+    }
+    const { data: project, error } = await query.maybeSingle();
+    if (error) throw error;
+    if (!project) return res.status(404).json({ error: "Client project not found" });
+
+    const ctx =
+      project.business_context && typeof project.business_context === "object" && !Array.isArray(project.business_context)
+        ? project.business_context
+        : {};
+    const priorStatus = String(ctx.hostingStatus || "").toLowerCase();
+    let sub = null;
+    try {
+      sub = await loadHostingSubscription(stripe, ctx);
+    } catch (lookupErr) {
+      console.warn("clients/revoke-hosting lookup", lookupErr.message || lookupErr);
+    }
+
+    const subId = stripeId(sub) || String(ctx.hostingSubscriptionId || "").trim();
+    if (!subId.startsWith("sub_") && priorStatus === "canceled") {
+      return res.json({
+        ok: true,
+        alreadyCanceled: true,
+        projectId,
+        hostingStatus: "canceled",
+      });
+    }
+    if (!subId.startsWith("sub_")) {
+      return res.status(404).json({
+        error: "No hosting subscription is on file for this client.",
+      });
+    }
+
+    let canceled = sub;
+    const subStatus = String(sub?.status || "").toLowerCase();
+    if (subStatus === "canceled" || sub?.ended_at) {
+      canceled = sub;
+    } else {
+      canceled = await stripe.subscriptions.cancel(subId, {
+        invoice_now: false,
+        prorate: false,
+      });
+    }
+
+    const endedAt = canceled?.ended_at
+      ? new Date(canceled.ended_at * 1000).toISOString()
+      : new Date().toISOString();
+    const nextCtx = {
+      ...ctx,
+      hostingSubscriptionId: stripeId(canceled) || subId,
+      hostingStripeCustomerId:
+        stripeId(canceled?.customer) || ctx.hostingStripeCustomerId || null,
+      hostingStatus: "canceled",
+      hostingEndedAt: endedAt,
+      hostingRenewsAt: null,
+      hostingRevokedAt: new Date().toISOString(),
+      hostingRevokedBy: req.user.id,
+    };
+
+    const { error: updateErr } = await supabase
+      .from("projects")
+      .update({ business_context: nextCtx })
+      .eq("id", projectId);
+    if (updateErr) throw updateErr;
+
+    res.json({
+      ok: true,
+      projectId,
+      hostingStatus: "canceled",
+      endedAt,
+      subscriptionId: stripeId(canceled) || subId,
+    });
+  } catch (e) {
+    console.error("clients/revoke-hosting", e);
+    respondApiError(res, e, "Could not revoke hosting");
+  }
+});
+
+/**
  * Developer-only unlock (no Stripe charge).
  * Allowed when:
  *   - Stripe is in test mode (sk_test_ / rk_test_), OR

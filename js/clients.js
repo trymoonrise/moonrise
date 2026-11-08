@@ -5,7 +5,7 @@
  */
 (function () {
   const QUERY_MS = 10000;
-  const CLIENTS_CACHE_KEY = "ms_clients_cache_v3";
+  const CLIENTS_CACHE_KEY = "ms_clients_cache_v4";
   const PROJECT_SELECT =
     "id, user_id, business_name, status, watermark_enabled, price_cents, vercel_url, business_context, updated_at, created_at";
 
@@ -14,6 +14,7 @@
   let started = false;
   let isOwnerView = false;
   let removeTarget = null;
+  let revokeTarget = null;
   const openKeys = new Set();
 
   const $ = (id) => document.getElementById(id);
@@ -133,6 +134,32 @@
     return String(ctx.hostingBuyerEmail || ctx.purchaseInvoiceEmailTo || "").trim();
   }
 
+  function hostingFromProject(project) {
+    const ctx = project?.business_context;
+    if (!ctx || typeof ctx !== "object") {
+      return { hostingStatus: "", hostingSubscriptionId: "" };
+    }
+    return {
+      hostingStatus: String(ctx.hostingStatus || "").toLowerCase(),
+      hostingSubscriptionId: String(ctx.hostingSubscriptionId || "").trim(),
+    };
+  }
+
+  function hostingLabel(status) {
+    if (status === "paying") return "Paying";
+    if (status === "canceling") return "Cancels soon";
+    if (status === "past_due") return "Past due";
+    if (status === "canceled") return "Canceled";
+    return status ? "On file" : "Not subscribed";
+  }
+
+  function canRevokeHosting(row) {
+    if (!row || row.source !== "project" || !row.project_id) return false;
+    if (row.hostingStatus === "canceled") return false;
+    if (String(row.hostingSubscriptionId || "").startsWith("sub_")) return true;
+    return ["paying", "canceling", "past_due"].includes(String(row.hostingStatus || ""));
+  }
+
   function mapProject(project, payment, creatorHandle) {
     if (!project) return null;
     const amountFromPay = Number(payment?.amount_cents);
@@ -143,6 +170,7 @@
         : Number.isFinite(amountFromProject) && amountFromProject >= 0
           ? amountFromProject
           : null;
+    const hosting = hostingFromProject(project);
     return {
       id: project.id,
       list_key: "project:" + project.id,
@@ -161,6 +189,8 @@
       watermark_enabled: project.watermark_enabled,
       vercel_url: project.vercel_url || "",
       has_paid: true,
+      hostingStatus: hosting.hostingStatus,
+      hostingSubscriptionId: hosting.hostingSubscriptionId,
     };
   }
 
@@ -184,6 +214,8 @@
       watermark_enabled: null,
       vercel_url: String(row.website || "").trim(),
       has_paid: true,
+      hostingStatus: "",
+      hostingSubscriptionId: "",
     };
   }
 
@@ -339,10 +371,29 @@
           detailRow("Email", emailHtml || emptyCell()) +
           detailRow("Site", webHtml || emptyCell()) +
           detailRow("Status", statusBadge(row)) +
+          detailRow(
+            "Hosting",
+            '<span class="ms-clients-badge ms-clients-badge--' +
+              (row.hostingStatus === "paying"
+                ? "ok"
+                : row.hostingStatus === "canceled"
+                  ? "neutral"
+                  : row.hostingStatus
+                    ? "warn"
+                    : "muted") +
+              '">' +
+              esc(hostingLabel(row.hostingStatus)) +
+              "</span>"
+          ) +
           (isOwnerView ? detailRow("Creator", creatorHtml || emptyCell()) : "") +
           "</dl>" +
           '<div class="ms-clients-row-actions">' +
           openBtn +
+          (canRevokeHosting(row)
+            ? '<button type="button" class="ms-clients-row-btn ms-clients-row-btn--danger ms-clients-revoke" data-client-key="' +
+              key +
+              '">Revoke hosting</button>'
+            : "") +
           '<button type="button" class="ms-clients-row-btn ms-clients-row-btn--danger ms-clients-remove" data-client-key="' +
           key +
           '">Remove</button>' +
@@ -759,6 +810,99 @@
     $("ms-clients-remove-dialog")?.close();
   }
 
+  function openRevokeDialog(row) {
+    const dialog = $("ms-clients-revoke-dialog");
+    const message = $("ms-clients-revoke-message");
+    const error = $("ms-clients-revoke-error");
+    if (!dialog || !row || !canRevokeHosting(row)) return;
+    revokeTarget = row;
+    if (error) {
+      error.hidden = true;
+      error.textContent = "";
+    }
+    if (message) {
+      const name = row.business_name || "this client";
+      message.textContent =
+        'Cancel hosting for "' +
+        name +
+        '" right away? Billing stops immediately. The site stays live, and you can still remove them from this list separately.';
+    }
+    dialog.showModal();
+    $("ms-clients-revoke-submit")?.focus();
+  }
+
+  function closeRevokeDialog() {
+    revokeTarget = null;
+    $("ms-clients-revoke-dialog")?.close();
+  }
+
+  async function confirmRevokeHosting() {
+    const error = $("ms-clients-revoke-error");
+    const submit = $("ms-clients-revoke-submit");
+    const row = revokeTarget;
+    if (!row?.project_id) return;
+
+    const session = await window.StudioAuth?.getSession?.();
+    const token = session?.access_token;
+    const base = window.StudioAuth?.workerUrl?.();
+    if (!token || !base) {
+      if (error) {
+        error.hidden = false;
+        error.textContent = "Sign in again to revoke hosting.";
+      }
+      return;
+    }
+
+    if (submit) submit.disabled = true;
+    if (error) {
+      error.hidden = true;
+      error.textContent = "";
+    }
+
+    try {
+      const res = await withTimeout(
+        fetch(base + "/clients/revoke-hosting", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({ projectId: row.project_id }),
+        }),
+        QUERY_MS,
+        "Revoking hosting"
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not revoke hosting.");
+
+      clients = clients.map((c) =>
+        c.list_key === row.list_key
+          ? {
+              ...c,
+              hostingStatus: "canceled",
+              hostingSubscriptionId: data.subscriptionId || c.hostingSubscriptionId,
+            }
+          : c
+      );
+      const user = await window.StudioAuth?.getUser?.().catch(() => null);
+      if (user?.id) writeClientsCache(user.id);
+      renderClients();
+      closeRevokeDialog();
+      window.StudioToast?.success?.(
+        data.alreadyCanceled ? "Hosting was already canceled." : "Hosting revoked."
+      );
+    } catch (ex) {
+      if (error) {
+        error.hidden = false;
+        error.textContent = ex?.message || "Could not revoke hosting.";
+      } else {
+        window.StudioToast?.error?.(ex?.message || "Could not revoke hosting.");
+      }
+    } finally {
+      if (submit) submit.disabled = false;
+    }
+  }
+
   async function confirmRemoveClient() {
     const sb = getSb();
     const error = $("ms-clients-remove-error");
@@ -861,6 +1005,14 @@
         renderClients();
         return;
       }
+      const revokeBtn = e.target.closest(".ms-clients-revoke");
+      if (revokeBtn) {
+        e.preventDefault();
+        const key = revokeBtn.getAttribute("data-client-key");
+        const row = clients.find((c) => c.list_key === key);
+        if (row) openRevokeDialog(row);
+        return;
+      }
       const btn = e.target.closest(".ms-clients-remove");
       if (!btn) return;
       e.preventDefault();
@@ -876,6 +1028,15 @@
     });
     $("ms-clients-remove-dialog")?.addEventListener("click", (e) => {
       if (e.target === $("ms-clients-remove-dialog")) closeRemoveDialog();
+    });
+    $("ms-clients-revoke-cancel")?.addEventListener("click", closeRevokeDialog);
+    $("ms-clients-revoke-submit")?.addEventListener("click", () => void confirmRevokeHosting());
+    $("ms-clients-revoke-dialog")?.addEventListener("cancel", (e) => {
+      e.preventDefault();
+      closeRevokeDialog();
+    });
+    $("ms-clients-revoke-dialog")?.addEventListener("click", (e) => {
+      if (e.target === $("ms-clients-revoke-dialog")) closeRevokeDialog();
     });
   }
 
