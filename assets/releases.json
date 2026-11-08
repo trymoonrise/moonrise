@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.4.3",
+      "date": "2026-11-07",
+      "title": "Quiet Business Finder MapLibre console noise",
+      "tag": "v2.4.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.4.3",
+      "sections": [
+        {
+          "heading": "Finder",
+          "fixes": [
+            "Business Finder CSP allows MapLibre source maps from jsDelivr so DevTools no longer blocks them.",
+            "OpenFreeMap style filters coalesce null numeric props so Scan Near Me no longer spams type errors while tiles load."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.2",
       "date": "2026-11-07",
       "title": "My Clients tracks paid cut hosting and status at a glance",

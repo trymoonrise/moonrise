@@ -4030,6 +4030,64 @@
     "</svg>";
   const MAP_STYLE_DARK = "https://tiles.openfreemap.org/styles/dark";
   const MAP_STYLE_LIGHT = "https://tiles.openfreemap.org/styles/positron";
+  const MAP_NUMERIC_OPS = new Set([
+    "+", "-", "*", "/", "%", "^", ">", "<", ">=", "<=",
+    "step", "interpolate", "interpolate-hcl", "interpolate-lab",
+  ]);
+
+  /** OpenFreeMap styles compare props like rank/admin_level that are often null; MapLibre 5 logs type errors. */
+  function hardenMapExpr(expr) {
+    if (!Array.isArray(expr) || !expr.length) return expr;
+    const op = expr[0];
+    if (typeof op !== "string") return expr.map(hardenMapExpr);
+    const hardened = expr.map((part, i) => (i === 0 ? part : hardenMapExpr(part)));
+    function asNumberInput(part) {
+      if (Array.isArray(part) && part[0] === "get") return ["coalesce", part, 0];
+      if (Array.isArray(part) && part[0] === "to-number" && !(Array.isArray(part[1]) && part[1][0] === "coalesce")) {
+        return ["coalesce", part, 0];
+      }
+      return part;
+    }
+    if (MAP_NUMERIC_OPS.has(op)) {
+      return hardened.map((part, i) => (i === 0 ? part : asNumberInput(part)));
+    }
+    if ((op === "==" || op === "!=") && hardened.length === 3) {
+      const a = hardened[1];
+      const b = hardened[2];
+      const aNum = typeof a === "number";
+      const bNum = typeof b === "number";
+      if (!aNum && !bNum) return hardened;
+      return [op, bNum ? asNumberInput(a) : a, aNum ? asNumberInput(b) : b];
+    }
+    return hardened;
+  }
+
+  function hardenOpenFreeMapStyle(style) {
+    if (!style || typeof style !== "object" || !Array.isArray(style.layers)) return style;
+    return {
+      ...style,
+      layers: style.layers.map((layer) => {
+        if (!layer || typeof layer !== "object") return layer;
+        const next = { ...layer };
+        if (next.filter) next.filter = hardenMapExpr(next.filter);
+        if (next.paint && typeof next.paint === "object") {
+          const paint = { ...next.paint };
+          Object.keys(paint).forEach((key) => {
+            if (Array.isArray(paint[key])) paint[key] = hardenMapExpr(paint[key]);
+          });
+          next.paint = paint;
+        }
+        if (next.layout && typeof next.layout === "object") {
+          const layout = { ...next.layout };
+          Object.keys(layout).forEach((key) => {
+            if (Array.isArray(layout[key])) layout[key] = hardenMapExpr(layout[key]);
+          });
+          next.layout = layout;
+        }
+        return next;
+      }),
+    };
+  }
 
   function openFreeMapStyle() {
     const mode = document.documentElement.getAttribute("data-ms-mode");
@@ -4097,6 +4155,7 @@
       lfMap = new maplibregl.Map({
         container: el,
         style: styleUrl,
+        transformStyle: (_prev, next) => hardenOpenFreeMapStyle(next),
         center: [MAP_DEFAULT.lng, MAP_DEFAULT.lat],
         zoom: MAP_DEFAULT.zoom,
         attributionControl: false,
@@ -4314,22 +4373,25 @@
   function flyToUserLocation(coords) {
     if (!lfMap || !coords || typeof maplibregl === "undefined") return;
     if (mapUserNavigated) return;
+    const lng = Number(coords.lng);
+    const lat = Number(coords.lat);
+    if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
     const reduce = motionReduced();
     lfMap.easeTo({
-      center: [coords.lng, coords.lat],
+      center: [lng, lat],
       zoom: 13,
       duration: reduce ? 0 : 700,
     });
     if (mapScanFrameId) mapScanFramedId = mapScanFrameId;
     if (userLocationMarker) {
-      userLocationMarker.setLngLat([coords.lng, coords.lat]);
+      userLocationMarker.setLngLat([lng, lat]);
       return;
     }
     const dot = document.createElement("div");
     dot.className = "ms-lf-map-user-dot";
     dot.setAttribute("aria-hidden", "true");
     userLocationMarker = new maplibregl.Marker({ element: dot, anchor: "center" })
-      .setLngLat([coords.lng, coords.lat])
+      .setLngLat([lng, lat])
       .addTo(lfMap);
   }
 

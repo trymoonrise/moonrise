@@ -70,7 +70,10 @@ async function main() {
   ok("JS uses OpenFreeMap styles", searchJs.includes("tiles.openfreemap.org/styles/"));
   ok("JS searches via OsmFinder", searchJs.includes("searchViaOpenStreetMap") && osmJs.includes("overpass-api.de"));
   ok("JS has map init + markers", searchJs.includes("initLeadMap") && searchJs.includes("syncMapMarkers"));
-  ok("CSP allows OpenFreeMap and Overpass", /tiles\.openfreemap\.org/.test(fs.readFileSync(path.join(ROOT, "vercel.json"), "utf8")) && /overpass-api\.de/.test(fs.readFileSync(path.join(ROOT, "vercel.json"), "utf8")));
+  const vercelCsp = fs.readFileSync(path.join(ROOT, "vercel.json"), "utf8");
+  ok("CSP allows OpenFreeMap and Overpass", /tiles\.openfreemap\.org/.test(vercelCsp) && /overpass-api\.de/.test(vercelCsp));
+  ok("CSP connect-src allows jsDelivr source maps", /connect-src[^;]*cdn\.jsdelivr\.net/.test(vercelCsp));
+  ok("JS hardens OpenFreeMap null numeric props", searchJs.includes("hardenOpenFreeMapStyle") && searchJs.includes("transformStyle"));
   ok("config no longer wires LeadFinder", !/leadFinderUrl|resolveLeadFinderUrl/.test(configJs));
   ok("live search is OpenStreetMap only", /Live Business Finder search via OpenStreetMap/.test(searchJs) && !/scrapeViaLeadFinder/.test(searchJs));
 
