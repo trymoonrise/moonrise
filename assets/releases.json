@@ -3,6 +3,21 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.3.9",
+      "date": "2026-11-07",
+      "title": "Stop unused config.js preload warning",
+      "tag": "v2.3.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.3.9",
+      "sections": [
+        {
+          "heading": "Studio",
+          "fixes": [
+            "Studio pages preload the same config.js version the page actually loads, so Clients no longer warns about an unused preload."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.8",
       "date": "2026-11-07",
       "title": "Admin Console tracks promo website sales",

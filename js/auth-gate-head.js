@@ -121,7 +121,7 @@
 
   // Keep these query strings in sync with the <script defer> tags on studio pages,
   // or the browser warns that a preload was unused.
-  ["js/config.js?v=20261108-skel-nav", "js/auth.js?v=20261108-clean-urls", "js/app.js?v=20261108-clean-urls"].forEach(function (href) {
+  ["js/config.js?v=20261108-no-lf", "js/auth.js?v=20261108-clean-urls", "js/app.js?v=20261108-clean-urls"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
