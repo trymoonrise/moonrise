@@ -14,6 +14,10 @@
   --onb-blur-panel: 10px;
   --onb-blur-content: 5px;
   --onb-card-width: min(26rem, 100%);
+  --onb-pad-x: 1.15rem;
+  --onb-pad-y: 1rem;
+  --onb-safe-top: env(safe-area-inset-top, 0px);
+  --onb-safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 body.ms-onboard-page {
@@ -51,7 +55,10 @@ body.ms-onboard-page {
   width: 100%;
   height: 100dvh;
   max-height: 100dvh;
-  padding: 0.85rem;
+  padding:
+    max(0.75rem, var(--onb-safe-top))
+    0.85rem
+    max(0.75rem, var(--onb-safe-bottom));
   box-sizing: border-box;
   opacity: 0;
   filter: blur(10px);
@@ -77,8 +84,9 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   display: flex;
   flex-direction: column;
   width: var(--onb-card-width);
-  min-height: min(34rem, calc(100dvh - 1.7rem));
-  max-height: calc(100dvh - 1.7rem);
+  height: min(42rem, calc(100dvh - 1.5rem - var(--onb-safe-top) - var(--onb-safe-bottom)));
+  max-height: calc(100dvh - 1.5rem - var(--onb-safe-top) - var(--onb-safe-bottom));
+  min-height: 0;
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(226, 232, 240, 0.95);
   border-radius: 20px;
@@ -91,7 +99,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
 
 .ms-onboard-card-head {
   flex: 0 0 auto;
-  padding: 0.85rem 1rem 0.75rem;
+  padding: 0.9rem var(--onb-pad-x) 0.8rem;
   border-bottom: 1px solid #e5e5e5;
   background: #fafafa;
 }
@@ -101,7 +109,7 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.7rem;
 }
 
 .ms-onboard-card-head-actions {
@@ -165,65 +173,24 @@ body.ms-onboard-page.is-transitioning .ms-onboard-bg {
   border-radius: 999px;
 }
 
-.ms-onboard-focus {
-  display: grid;
-  gap: 0.85rem;
-  justify-items: start;
-  padding: 1.15rem 0 0.35rem;
-}
-
-.ms-onboard-focus--compact {
-  padding-top: 0.35rem;
-  padding-bottom: 0.55rem;
-}
-
-.ms-onboard-focus-kicker {
-  margin: 0;
+.ms-onboard-eyebrow {
+  margin: 0 0 0.45rem;
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--ms-min-quiet, #77776e);
+  color: #77776e;
 }
 
-.ms-onboard-focus-num {
-  display: grid;
-  place-items: center;
-  width: 2.35rem;
-  height: 2.35rem;
-  border-radius: 999px;
-  background: #232427;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 750;
-  font-variant-numeric: tabular-nums;
-}
-
-.ms-onboard-focus-copy {
-  margin: 0;
-  max-width: 18rem;
-  font-size: clamp(1.2rem, 4.2vw, 1.55rem);
-  font-weight: 650;
-  line-height: 1.28;
-  letter-spacing: -0.03em;
-  color: #232427;
-}
-
-.ms-onboard-focus--compact .ms-onboard-focus-copy {
-  max-width: none;
-  font-size: 1.02rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.4;
-}
-
-html[data-ms-mode="dark"] .ms-onboard-focus-num {
-  background: #f5f5f5;
-  color: #111;
-}
-
-html[data-ms-mode="dark"] .ms-onboard-focus-copy {
-  color: #f5f5f5;
+.ms-onboard-panel[data-onb-step="1"] .ms-onboard-panel-scroll,
+.ms-onboard-panel[data-onb-step="2"] .ms-onboard-panel-scroll,
+.ms-onboard-panel[data-onb-step="3"] .ms-onboard-panel-scroll,
+.ms-onboard-panel[data-onb-step="4"] .ms-onboard-panel-scroll {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 1.35rem;
+  padding-bottom: 1.35rem;
 }
 
 .ms-onboard-step-pill.is-bump {
@@ -321,7 +288,7 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 1rem 1rem 0.5rem;
+  padding: var(--onb-pad-y) var(--onb-pad-x) 0.85rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
 }
@@ -385,7 +352,7 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
 }
 
 .ms-onboard-panel-head {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.55rem;
 }
 
 .ms-onboard-panel-head--celebrate {
@@ -414,18 +381,22 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
 
 .ms-onboard-panel h1 {
   margin: 0;
-  font-size: clamp(1.35rem, 4vw, 1.55rem);
+  font-size: clamp(1.4rem, 4.4vw, 1.7rem);
   font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
+  line-height: 1.18;
+  letter-spacing: -0.035em;
   color: #232427;
+  overflow-wrap: anywhere;
 }
 
 .ms-onboard-lead {
-  margin: 0 0 0.75rem;
-  font-size: 0.9rem;
+  margin: 0 0 1rem;
+  max-width: 22rem;
+  font-size: 1.02rem;
+  font-weight: 500;
   line-height: 1.45;
-  color: #77776e;
+  letter-spacing: -0.015em;
+  color: #5c5c5c;
 }
 
 /* Content reveal - soft blur + rise (panel crossfade handles step shell) */
@@ -759,18 +730,19 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
 
 .ms-onboard-form-block {
   display: grid;
-  gap: 0.65rem;
-  margin-bottom: 0.35rem;
-  padding: 0.75rem;
-  border-radius: 12px;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.9rem;
+  border-radius: 14px;
   border: 1px solid #e5e5e5;
   background: #f4f4f5;
 }
 
 .ms-onboard-panel .ms-creator-policy-notice.ms-onboard-policy {
-  padding: 0.75rem 0.85rem;
-  border-radius: 12px;
-  font-size: 0.84rem;
+  margin: 0 0 0.85rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 14px;
+  font-size: 0.86rem;
   line-height: 1.4;
 }
 
@@ -781,18 +753,18 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
 .ms-onboard-legal-links {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin: 0.2rem 0 0.65rem;
+  gap: 0.6rem;
+  margin: 0 0 0.85rem;
 }
 
 .ms-onboard-legal-card {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.65rem;
   box-sizing: border-box;
   min-width: 0;
-  min-height: 3.4rem;
-  padding: 0.95rem 1.05rem;
+  min-height: 3rem;
+  padding: 0.75rem 0.85rem;
   border-radius: 12px;
   background: #fafafa;
   border: 1px solid #e5e5e5;
@@ -920,26 +892,29 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
 .ms-onboard-check {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.55rem;
-  margin-bottom: 0.25rem;
-  padding: 0.65rem 0.75rem;
-  font-size: 0.82rem;
-  line-height: 1.35;
+  gap: 0.6rem;
+  align-items: start;
+  margin: 0 0 0.15rem;
+  padding: 0.8rem 0.9rem;
+  font-size: 0.84rem;
+  line-height: 1.4;
   border-radius: 12px;
   border: 1px solid #e5e5e5;
   background: #fafafa;
 }
 
 .ms-onboard-chip-label {
-  margin: 0 0 0.35rem;
-  font-size: 0.72rem;
+  margin: 0.15rem 0 0.45rem;
+  font-size: 0.74rem;
+  font-weight: 650;
+  color: #77776e;
 }
 
 .ms-onboard-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-bottom: 0.25rem;
+  gap: 0.4rem;
+  margin-bottom: 0.15rem;
 }
 
 .ms-onboard-chip {
@@ -951,11 +926,11 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
 .ms-onboard-actions {
   flex: 0 0 auto;
   margin-top: 0;
-  padding: 0.65rem 1rem 0.85rem;
+  padding: 0.8rem var(--onb-pad-x) calc(0.9rem + env(safe-area-inset-bottom, 0px) * 0.15);
   border-top: 1px solid rgba(226, 232, 240, 0.9);
   background: #fafafa;
   display: flex;
-  gap: 0.45rem;
+  gap: 0.55rem;
 }
 
 .ms-onboard-actions .ms-btn {
@@ -1008,7 +983,19 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
 .ms-onboard-panel--celebrate .ms-onb-celebrate-video {
   width: 100%;
   max-width: none;
-  margin: 0.85rem 0 0.15rem;
+  margin: 0.35rem 0 0.15rem;
+  aspect-ratio: 16 / 9;
+  max-height: min(12.5rem, 32vh);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #111;
+}
+
+.ms-onboard-panel--celebrate .ms-onb-celebrate-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
 }
 
 /* Payout method picker */
@@ -1338,12 +1325,21 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
 }
 
 @media (max-width: 520px) {
+  :root {
+    --onb-pad-x: 1rem;
+    --onb-pad-y: 0.9rem;
+  }
+
   .ms-onboard {
-    padding: 0.55rem;
+    padding:
+      max(0.45rem, var(--onb-safe-top))
+      0.55rem
+      max(0.45rem, var(--onb-safe-bottom));
   }
 
   .ms-onboard-card {
-    max-height: calc(100dvh - 1.1rem);
+    height: calc(100dvh - 0.9rem - var(--onb-safe-top) - var(--onb-safe-bottom));
+    max-height: calc(100dvh - 0.9rem - var(--onb-safe-top) - var(--onb-safe-bottom));
     border-radius: 16px;
   }
 
@@ -1352,21 +1348,14 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
     grid-template-columns: 1fr;
   }
 
-  .ms-onboard-legal-links {
-    grid-template-columns: 1fr;
-  }
-
   .ms-onboard-actions--split {
     grid-template-columns: 1fr;
   }
 
-  .ms-onboard-panel-scroll {
-    padding: 0.85rem 0.85rem 0.45rem;
-  }
-
   .ms-onboard-panel-head--stripe {
+    flex-wrap: wrap;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.55rem;
   }
 
   .ms-onboard-stripe-partner {
@@ -1379,14 +1368,24 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
   }
 }
 
-@media (max-height: 700px) {
+@media (max-height: 740px) {
   .ms-onboard-panel h1 {
-    font-size: 1.25rem;
+    font-size: 1.28rem;
   }
 
   .ms-onboard-lead {
-    font-size: 0.84rem;
-    margin-bottom: 0.55rem;
+    font-size: 0.94rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .ms-onboard-form-block {
+    gap: 0.6rem;
+    padding: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .ms-onboard-panel--celebrate .ms-onb-celebrate-video {
+    max-height: min(10rem, 26vh);
   }
 
   .ms-onboard-panel--path .ms-onboard-path,
@@ -1403,11 +1402,25 @@ html[data-ms-mode="dark"] .ms-onboard-focus-copy {
   }
 
   .ms-onboard-actions {
-    padding: 0.55rem 0.85rem 0.7rem;
+    padding: 0.65rem var(--onb-pad-x) 0.75rem;
   }
 
   .ms-onboard-actions .ms-btn {
     min-height: 2.45rem;
+  }
+}
+
+@media (max-height: 620px) {
+  .ms-onboard-card-head {
+    padding: 0.7rem var(--onb-pad-x) 0.65rem;
+  }
+
+  .ms-onboard-card-head-row {
+    margin-bottom: 0.5rem;
+  }
+
+  .ms-onboard-panel--celebrate .ms-onb-celebrate-video {
+    display: none;
   }
 }
 

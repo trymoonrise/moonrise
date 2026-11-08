@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.2.8",
+      "date": "2026-11-07",
+      "title": "Onboarding fit and spacing",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Onboarding steps use cleaner spacing, shorter copy, and a card that fits the screen without crowding."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.2.7",
       "date": "2026-11-07",
       "title": "Clearer onboarding, no 404 loop",
