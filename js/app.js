@@ -872,6 +872,7 @@
     ensureTabBar(page);
 
     document.getElementById("ms-signout")?.addEventListener("click", async () => {
+      clearStudioBooted();
       await window.StudioAuth?.signOut?.();
       location.href = "index.html";
     });
@@ -1865,6 +1866,8 @@
       }
       setChannelGenerating(null, false);
       document.body.classList.add("ms-ready");
+      markStudioBooted();
+      bindStudioHopNav(document.body?.dataset?.page || "");
       releaseStudioHold();
       document.dispatchEvent(new Event("ms:shell-ready"));
       // Let scripts that load after app.js subscribe before the page starts fetching.
@@ -1873,11 +1876,13 @@
         document.dispatchEvent(new Event("ms:auth-ready"));
       }, 0);
 
-      window.requestAnimationFrame(function () {
+      if (!window.__msTabHop) {
         window.requestAnimationFrame(function () {
-          window.StudioMotion?.playPageMotion?.();
+          window.requestAnimationFrame(function () {
+            window.StudioMotion?.playPageMotion?.();
+          });
         });
-      });
+      }
       clearLegacyProfileCosmetics();
 
       void hydrateUser().catch(() => ({ handle: "", avatarUrl: "" }));
@@ -2006,6 +2011,24 @@
 
   const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings"];
   const TAB_SWITCH_KEY = "ms_tab_switch";
+  const STUDIO_BOOTED_KEY = "ms_studio_booted";
+
+  function markStudioBooted() {
+    try {
+      sessionStorage.setItem(STUDIO_BOOTED_KEY, "1");
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  function clearStudioBooted() {
+    try {
+      sessionStorage.removeItem(STUDIO_BOOTED_KEY);
+      sessionStorage.removeItem(TAB_SWITCH_KEY);
+    } catch (_) {
+      /* ignore */
+    }
+  }
 
   function prefersTabMotionReduce() {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2056,9 +2079,60 @@
   function writeTabSwitch(from, to) {
     try {
       sessionStorage.setItem(TAB_SWITCH_KEY, JSON.stringify({ from, to }));
+      sessionStorage.setItem(STUDIO_BOOTED_KEY, "1");
     } catch (_) {
       /* ignore */
     }
+  }
+
+  function studioNavTarget(href) {
+    if (!href || href === "#") return "";
+    let url;
+    try {
+      url = new URL(href, location.href);
+    } catch (_) {
+      return "";
+    }
+    if (url.origin !== location.origin) return "";
+    const file = (url.pathname.split("/").pop() || "").replace(/\.html$/i, "") || "index";
+    const studio = {
+      dashboard: 1,
+      builder: 1,
+      clients: 1,
+      settings: 1,
+      leads: 1,
+      projects: 1,
+      editor: 1,
+      onboarding: 1,
+      "admin-console": 1,
+      course: 1,
+      donate: 1,
+      leaderboard: 1,
+      "hosting-billing": 1,
+      "creator-contact": 1,
+    };
+    return studio[file] ? file : "";
+  }
+
+  function bindStudioHopNav(page) {
+    if (document.documentElement.dataset.msHopNav === "1") return;
+    document.documentElement.dataset.msHopNav = "1";
+    document.addEventListener(
+      "click",
+      (event) => {
+        const link = event.target.closest?.("a[href]");
+        if (!link) return;
+        if (event.defaultPrevented || event.button !== 0) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (link.target === "_blank" || link.hasAttribute("download")) return;
+        if (link.dataset.externalRedirect === "true" || link.hasAttribute("data-download-app")) return;
+        const to = studioNavTarget(link.getAttribute("href") || link.href);
+        if (!to) return;
+        const from = page || document.body?.dataset?.page || "";
+        writeTabSwitch(from, to);
+      },
+      true
+    );
   }
 
   function bindTabBarSwitch(nav, page) {

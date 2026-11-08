@@ -16,7 +16,9 @@
 </p>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=trymoonrise&label=Profile%20views&color=3b82f6&style=flat-square" alt="Profile views">
+  <a href="https://trymoonrise.com"><img src="https://img.shields.io/badge/website-trymoonrise.com-0ea5e9?style=flat-square" alt="Website"></a>
+  <img src="https://img.shields.io/badge/license-Proprietary-64748b?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/security-policy-22c55e?style=flat-square" alt="Security">
   <img src="https://img.shields.io/badge/status-active-22c55e?style=flat-square" alt="Status">
   <img src="https://img.shields.io/badge/product-Moonrise%20Studio-0ea5e9?style=flat-square" alt="Product">
   <img src="https://img.shields.io/badge/built%20for-freelancers%20%26%20creators-8b5cf6?style=flat-square" alt="Audience">
@@ -192,14 +194,15 @@ A restore replaces current rows with the dump. Plan for the site to be wrong unt
 
 ## License
 
-(c) Moonrise Studio / TryMoonrise. All rights reserved.
+Moonrise Studio is **proprietary**. See [LICENSE](LICENSE).
 
-This repository and product are provided for Moonrise Studio. Unauthorized copying, redistribution, or commercial reuse of proprietary materials is not permitted without written permission.
+Third-party fonts, MapLibre, map data, and npm packages keep their own licenses — see [NOTICE](NOTICE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-See also:
+Product terms:
 
-- [Terms of Service](terms.html)  
-- [Privacy Policy](privacy.html)  
+- [Terms of Service](https://trymoonrise.com/terms.html)  
+- [Privacy Policy](https://trymoonrise.com/privacy.html)  
+- [Security Policy](SECURITY.md) 
 
 ---
 

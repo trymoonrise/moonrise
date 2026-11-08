@@ -1,7 +1,45 @@
-# License
+# Moonrise Studio Proprietary License
 
-Copyright © Moonrise Studio / TryMoonrise. All rights reserved.
+Copyright © 2024–2026 Moonrise Studio / TryMoonrise. All rights reserved.
 
-Permission is not granted to copy, modify, distribute, sublicense, or commercially exploit this repository or its proprietary materials except as expressly allowed in writing by the copyright holder, or as needed to use Moonrise Studio through official product access.
+## Summary
 
-Website and product materials remain subject to the Moonrise Studio Terms of Service and Privacy Policy.
+This repository and the Moonrise Studio product are proprietary software.
+You may use Moonrise Studio through the official product at
+[https://trymoonrise.com](https://trymoonrise.com) under the Moonrise Terms of Service.
+
+No other license to copy, modify, redistribute, sublicense, host, or commercially
+exploit this repository or its proprietary materials is granted unless Moonrise
+gives you written permission.
+
+## Allowed
+
+- Using Moonrise Studio as an end user through official product access
+- Viewing this repository for personal evaluation or security research in good faith
+- Quoting short excerpts for criticism, review, or support with attribution
+
+## Not allowed without written permission
+
+- Copying, forking for redistribution, or republishing proprietary source, design,
+  presets, branding, or documentation as your own product
+- Removing or altering copyright, trademark, or attribution notices
+- Selling, renting, or offering hosted clones of Moonrise Studio
+- Using Moonrise trademarks, logos, or trade dress in a way that suggests
+  endorsement or affiliation
+
+## Third-party components
+
+Open-source and third-party components bundled or linked by Moonrise remain under
+their own licenses. See [NOTICE](NOTICE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Product terms
+
+Website and product use remain subject to:
+
+- [Terms of Service](https://trymoonrise.com/terms.html)
+- [Privacy Policy](https://trymoonrise.com/privacy.html)
+- [SECURITY.md](SECURITY.md)
+
+## Contact
+
+Questions about licensing: [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com)

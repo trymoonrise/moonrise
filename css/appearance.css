@@ -303,50 +303,54 @@ select.ms-select:focus {
   }
 }
 
-/* Dark mode — shell, shared cards, and form controls */
+/* Dark mode — shell, shared cards, and form controls (monochrome, matches appearance.js) */
 html[data-ms-mode="dark"] {
   color-scheme: dark;
-  --ms-bg: #ffffff;
-  --ms-surface: #fafafa;
-  --ms-ink: #e8eef8;
-  --ms-muted: #666666;
-  --ms-line: rgba(148, 163, 184, 0.2);
+  --ms-bg: #111111;
+  --ms-surface: #1a1a1a;
+  --ms-surface-alt: #222222;
+  --ms-surface-prompt: #2a2a2a;
+  --ms-ink: #f5f5f5;
+  --ms-muted: #a3a3a3;
+  --ms-line: #333333;
+  --ms-dashed: #3a3a3a;
+  --ms-track-off: #3a3a3c;
+  --ms-segment: #2a2a2a;
+  --ms-skeleton: #3a3a3c;
 }
 
 html[data-ms-mode="dark"] body {
-  background:
-    radial-gradient(980px 420px at 8% -12%, rgba(var(--ms-accent-rgb), 0.18), transparent 58%),
-    var(--ms-bg);
+  background: var(--ms-bg);
   color: var(--ms-ink);
 }
 
 html[data-ms-mode="dark"] .ms-sidebar {
-  background: #121826;
+  background: #1c1c1e;
   border-right-color: var(--ms-line);
 }
 
 html[data-ms-mode="dark"] .ms-nav {
-  background: #1b2436;
+  background: transparent;
 }
 
 html[data-ms-mode="dark"] .ms-nav-pill,
 html[data-ms-mode="dark"] .ms-nav:not(:has(.ms-nav-pill)) .ms-nav-link.is-active,
 html[data-ms-mode="dark"] .ms-nav-link.is-active.is-generating {
-  background: #273349;
+  background: #2c2c2e;
   box-shadow: none;
 }
 
 html[data-ms-mode="dark"] .ms-nav-link {
-  color: #d5deee;
+  color: #f4f4f5;
 }
 
 html[data-ms-mode="dark"] .ms-nav-link:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--ms-ink);
 }
 
 html[data-ms-mode="dark"] .ms-nav-section {
-  color: #8ea0bf;
+  color: #a1a1a6;
 }
 
 html[data-ms-mode="dark"] :where(
@@ -391,23 +395,23 @@ html[data-ms-mode="dark"] input.ms-input,
 html[data-ms-mode="dark"] textarea.ms-textarea,
 html[data-ms-mode="dark"] .ms-auth-card input.ms-input,
 html[data-ms-mode="dark"] select.ms-select {
-  background-color: #101722 !important;
+  background-color: #1c1c1e !important;
   color: var(--ms-ink) !important;
   -webkit-text-fill-color: var(--ms-ink);
   caret-color: var(--ms-ink);
-  border-color: rgba(148, 163, 184, 0.28);
+  border-color: rgb(255 255 255 / 16%);
   color-scheme: dark;
 }
 
 html[data-ms-mode="dark"] select.ms-select,
 html[data-ms-mode="dark"] select.ms-select:hover,
 html[data-ms-mode="dark"] select.ms-select:focus {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa8c2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
 }
 
 html[data-ms-mode="dark"] select.ms-select option {
   color: var(--ms-ink);
-  background: #171e2e;
+  background: #1c1c1e;
 }
 
 html[data-ms-mode="dark"] .ms-btn-secondary {
@@ -430,13 +434,13 @@ html[data-ms-mode="dark"] .ms-settings-card--danger .ms-btn-danger:hover:not(:di
 }
 
 html[data-ms-mode="dark"] .ms-switch-track {
-  background: #2a354c;
+  background: #3a3a3c;
 }
 
 html[data-ms-mode="dark"] .ms-menu-toggle {
-  background: #171e2e;
+  background: transparent;
   color: var(--ms-ink);
-  border-color: var(--ms-line);
+  border-color: transparent;
 }
 
 html[data-ms-mode="dark"] .ms-quick-nav::before {
@@ -444,28 +448,28 @@ html[data-ms-mode="dark"] .ms-quick-nav::before {
     to bottom,
     #111111 0,
     #111111 calc(8rem + var(--ms-chrome-top) + var(--ms-chrome-btn)),
-    rgba(14, 19, 32, 0) 100%
+    rgba(17, 17, 17, 0) 100%
   );
 }
 
 html[data-ms-mode="dark"] .ms-tabbar {
-  background: rgba(23, 30, 46, 0.92);
+  background: rgba(28, 28, 30, 0.92);
   border-color: var(--ms-line);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 
 html[data-ms-mode="dark"] .ms-tab {
-  color: #c5d0e4;
+  color: #a1a1a6;
 }
 
 html[data-ms-mode="dark"] .ms-tab.is-active {
-  background: #273349;
+  background: #2c2c2e;
   color: var(--ms-ink);
 }
 
 html[data-ms-mode="dark"] .ms-appearance-swatches,
 html[data-ms-mode="dark"] .ms-appearance-sizes {
-  background: #121826;
+  background: #1c1c1e;
 }
 
 html[data-ms-mode="dark"] .ms-user-logout:hover {
@@ -479,7 +483,7 @@ html[data-ms-mode="dark"] .ms-dash-projects-search-field,
 html[data-ms-mode="dark"] .ms-dash-filter-btn,
 html[data-ms-mode="dark"] .ms-dash-projects-filter,
 html[data-ms-mode="dark"] .ms-dash-count-badge {
-  background: #121826 !important;
+  background: #1c1c1e !important;
   background-image: none !important;
   border-color: var(--ms-line);
   color: var(--ms-ink);
@@ -502,7 +506,7 @@ html[data-ms-mode="dark"] input.ms-dash-projects-search-input {
 
 html[data-ms-mode="dark"] .ms-dash-overview .ms-dash-tool:hover,
 html[data-ms-mode="dark"] .ms-dash-projects-filter:hover {
-  background: #1b2436 !important;
+  background: #2c2c2e !important;
   border-color: rgba(var(--ms-accent-rgb), 0.45);
 }
 
@@ -521,7 +525,7 @@ html[data-ms-mode="dark"] .ms-dash-ring-prog {
 }
 
 html[data-ms-mode="dark"] .ms-dash-ring-track {
-  stroke: #2a3548;
+  stroke: #3a3a3c;
 }
 
 html[data-ms-mode="dark"] .ms-dash-projects-filter.is-active {
@@ -531,7 +535,7 @@ html[data-ms-mode="dark"] .ms-dash-projects-filter.is-active {
 }
 
 html[data-ms-mode="dark"] .seg-switch[data-seg-tone="surface"] > .seg-switch-indicator {
-  background: #273349;
+  background: #2c2c2e;
   box-shadow: none;
 }
 
@@ -540,9 +544,9 @@ html[data-ms-mode="dark"] .ms-dash-post,
 html[data-ms-mode="dark"] .ms-dash-preview,
 html[data-ms-mode="dark"] .ms-dash-row,
 html[data-ms-mode="dark"] .ms-project-card {
-  background: #161d2c !important;
+  background: #1c1c1e !important;
   background-image: none !important;
-  border-color: rgba(148, 163, 184, 0.16);
+  border-color: rgb(255 255 255 / 10%);
   box-shadow: none;
   color: var(--ms-ink);
 }
@@ -551,8 +555,8 @@ html[data-ms-mode="dark"] .ms-dash-post:hover,
 html[data-ms-mode="dark"] .ms-dash-preview:hover,
 html[data-ms-mode="dark"] .ms-dash-row:hover,
 html[data-ms-mode="dark"] .ms-project-card:hover {
-  background: #1c2538 !important;
-  border-color: rgba(148, 163, 184, 0.28);
+  background: #2c2c2e !important;
+  border-color: rgb(255 255 255 / 16%);
   box-shadow: none;
 }
 
@@ -566,8 +570,8 @@ html[data-ms-mode="dark"] .ms-dash-preview-delete {
   appearance: none;
   -webkit-appearance: none;
   transition: none;
-  background: #243044 !important;
-  background-color: #243044 !important;
+  background: #2c2c2e !important;
+  background-color: #2c2c2e !important;
   color: #fca5a5 !important;
   box-shadow: none;
 }
@@ -605,8 +609,8 @@ html[data-ms-mode="dark"] .ms-dash-preview-live {
 }
 
 html[data-ms-mode="dark"] .ms-dash-pill {
-  background: #243044;
-  color: #c5d0e4;
+  background: #2c2c2e;
+  color: #d4d4d8;
 }
 
 html[data-ms-mode="dark"] .ms-dash-pill--live {
@@ -620,12 +624,12 @@ html[data-ms-mode="dark"] .ms-dash-pill--paid {
 }
 
 html[data-ms-mode="dark"] .ms-dash-pill--draft {
-  background: #1c2538;
-  color: #9aa8c2;
+  background: #222222;
+  color: #a1a1a6;
 }
 
 html[data-ms-mode="dark"] .ms-dash-island-panel {
-  background: #121826;
+  background: #1c1c1e;
   border-top-color: var(--ms-line);
 }
 
@@ -634,14 +638,14 @@ html[data-ms-mode="dark"] .ms-dash-island-toggle:hover:not(:disabled) {
 }
 
 html[data-ms-mode="dark"] .ms-dash-empty--dotted {
-  border-color: rgba(148, 163, 184, 0.28);
+  border-color: rgb(255 255 255 / 16%);
   background: transparent;
 }
 
 html[data-ms-mode="dark"] .ms-sidebar-foot,
 html[data-ms-mode="dark"] .ms-credits-tag {
-  background: #1a2233;
-  border-color: rgba(148, 163, 184, 0.2);
+  background: #1c1c1e;
+  border-color: rgb(255 255 255 / 12%);
   color: var(--ms-ink);
 }
 
@@ -660,12 +664,12 @@ html[data-ms-mode="dark"] .ms-credits-tag:hover .ms-credits-tag-value {
 
 html[data-ms-mode="dark"] .ms-user-avatar {
   box-shadow:
-    0 0 0 2px #1a2233,
-    0 0 0 3px rgba(148, 163, 184, 0.28);
+    0 0 0 2px #1c1c1e,
+    0 0 0 3px rgb(255 255 255 / 16%);
 }
 
 html[data-ms-mode="dark"] .ms-user-status {
-  border-color: #1a2233;
+  border-color: #1c1c1e;
 }
 
 html[data-ms-mode="dark"] .ms-user-profile:hover {

@@ -71,24 +71,41 @@ html[data-ms-ink="1"] .ms-pw-meter[data-level="impenetrable"] .ms-pw-fill {
   animation: none !important;
 }
 
-html[data-ms-ink="1"] .ms-lb-onboard-maps-shell.is-ok,
-html[data-ms-ink="1"] .ms-lb-onboard-maps-shell.is-ok:focus-within {
+html[data-ms-ink="1"]:not([data-ms-mode="dark"]) .ms-lb-onboard-maps-shell.is-ok,
+html[data-ms-ink="1"]:not([data-ms-mode="dark"]) .ms-lb-onboard-maps-shell.is-ok:focus-within {
   background: #f3f3f3 !important;
   border-color: #1a1a1a !important;
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08) !important;
 }
 
-html[data-ms-ink="1"] .ms-lb-onboard-maps-shell.is-ok .ms-lb-onboard-maps-icon {
+html[data-ms-ink="1"]:not([data-ms-mode="dark"]) .ms-lb-onboard-maps-shell.is-ok .ms-lb-onboard-maps-icon {
   color: #1a1a1a !important;
 }
 
-html[data-ms-ink="1"] .ms-lb-onboard-maps-shell.is-err {
+html[data-ms-ink="1"]:not([data-ms-mode="dark"]) .ms-lb-onboard-maps-shell.is-err {
   background: #f5f5f5 !important;
   border-color: #e03a1a !important;
   box-shadow: 0 0 0 3px rgba(224, 58, 26, 0.12) !important;
 }
 
-html[data-ms-ink="1"] :is(
+html[data-ms-ink="1"][data-ms-mode="dark"] .ms-lb-onboard-maps-shell.is-ok,
+html[data-ms-ink="1"][data-ms-mode="dark"] .ms-lb-onboard-maps-shell.is-ok:focus-within {
+  background: #2c2c2e !important;
+  border-color: #f5f5f5 !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-ms-ink="1"][data-ms-mode="dark"] .ms-lb-onboard-maps-shell.is-ok .ms-lb-onboard-maps-icon {
+  color: #f5f5f5 !important;
+}
+
+html[data-ms-ink="1"][data-ms-mode="dark"] .ms-lb-onboard-maps-shell.is-err {
+  background: #2c2c2e !important;
+  border-color: #e03a1a !important;
+  box-shadow: 0 0 0 3px rgba(224, 58, 26, 0.2) !important;
+}
+
+html[data-ms-ink="1"]:not([data-ms-mode="dark"]) :is(
   .ms-success,
   .ms-ok,
   .is-success,
@@ -96,6 +113,16 @@ html[data-ms-ink="1"] :is(
   .ms-settings-status.is-ok
 ) {
   color: #1a1a1a !important;
+}
+
+html[data-ms-ink="1"][data-ms-mode="dark"] :is(
+  .ms-success,
+  .ms-ok,
+  .is-success,
+  .is-ok,
+  .ms-settings-status.is-ok
+) {
+  color: #f5f5f5 !important;
 }
 
 html[data-ms-ink="1"][data-ms-mode="dark"] :is(

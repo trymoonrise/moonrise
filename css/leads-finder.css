@@ -3,8 +3,8 @@
 .lf-advanced-dialog {
   --bg: var(--ms-bg, #ffffff);
   --surface: var(--ms-surface, #fff);
-  --surface-2: #f4f4f5;
-  --surface-elevated: #fff;
+  --surface-2: var(--ms-surface-alt, #f4f4f5);
+  --surface-elevated: var(--ms-surface, #fff);
   --text: var(--ms-ink, #232427);
   --text-muted: var(--ms-muted, #666666);
   --muted: var(--ms-muted, #666666);
@@ -15,7 +15,7 @@
   --accent-blue-soft: var(--ms-accent-soft);
   --btn-primary-bg: var(--ms-accent, #232427);
   --btn-primary-fg: #fff;
-  --input-bg: #fff;
+  --input-bg: var(--ms-surface, #fff);
   --danger: var(--ms-danger, #b91c1c);
   --green: #059669;
   --green-bg: #ecfdf5;
@@ -31,6 +31,26 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --lf-avatar-a: var(--ms-accent-bright);
   --lf-avatar-b: #232427;
+}
+
+html[data-ms-mode="dark"] .leads-page,
+html[data-ms-mode="dark"] .lf-advanced-dialog {
+  --bg: #111111;
+  --surface: #1c1c1e;
+  --surface-2: #2c2c2e;
+  --surface-elevated: #222222;
+  --text: #f4f4f5;
+  --text-muted: #a1a1a6;
+  --muted: #a1a1a6;
+  --border: rgb(255 255 255 / 14%);
+  --input-bg: #2c2c2e;
+  --green-bg: rgba(5, 150, 105, 0.16);
+  --green-soft: rgba(5, 150, 105, 0.28);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.4);
+  --lf-avatar-b: #f4f4f5;
+  color: var(--text);
 }
 
 .leads-page .card,
@@ -1339,10 +1359,10 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 .lf-advanced-shell {
   align-items: stretch;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border);
   border-radius: 999px;
   padding: 3px;
-  background: #f4f4f5;
+  background: var(--surface-2);
   transition:
     border-color var(--dur-fast) ease,
     background var(--dur-fast) ease;
@@ -1351,8 +1371,8 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 
 .lf-advanced-shell:has(.lf-advanced-btn--active) {
-  border-color: color-mix(in srgb, var(--accent-blue) 28%, #e5e5e5);
-  background: color-mix(in srgb, var(--accent-blue-soft) 40%, #f4f4f5);
+  border-color: color-mix(in srgb, var(--accent-blue) 28%, var(--border));
+  background: color-mix(in srgb, var(--accent-blue-soft) 40%, var(--surface-2));
 }
 
 
@@ -1543,9 +1563,9 @@ html[data-theme="dark"] .lf-search-clear:hover {
   gap: 4px;
   width: 100%;
   padding: 6px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border);
   border-radius: 10px;
-  background: #f4f4f5;
+  background: var(--surface-2);
   overflow: visible;
 }
 
@@ -1560,15 +1580,15 @@ html[data-theme="dark"] .lf-search-clear:hover {
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: #fafafa;
+  background: var(--surface);
 }
 
 
 
 .lf-advanced-pills .lf-toggle-btn:hover:not(.active) {
-  background: #fafafa;
+  background: var(--surface);
   border-color: #d4d4d4;
 }
 
@@ -1604,10 +1624,10 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 .lf-pill-toggle {
   align-items: stretch;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border);
   border-radius: 999px;
   padding: 3px;
-  background: #f4f4f5;
+  background: var(--surface-2);
   gap: 2px;
 }
 
@@ -1696,9 +1716,9 @@ html[data-theme="dark"] .lf-search-clear:hover {
   font-size: 13px;
   font-weight: 600;
   line-height: 1.2;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: #fafafa;
+  background: var(--surface);
   color: var(--text);
   cursor: pointer;
   transition:
@@ -1711,7 +1731,7 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 .lf-refresh-btn:hover:not(:disabled) {
   border-color: #d4d4d4;
-  background: #f4f4f5;
+  background: var(--surface-2);
   color: var(--accent-blue);
 }
 
@@ -1757,10 +1777,10 @@ html[data-theme="dark"] .lf-search-clear:hover {
 .lf-website-toggle {
   display: inline-flex;
   align-items: stretch;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border);
   border-radius: 999px;
   padding: 3px;
-  background: #f4f4f5;
+  background: var(--surface-2);
   gap: 2px;
 }
 
@@ -1822,9 +1842,9 @@ html[data-theme="dark"] .lf-search-clear:hover {
   line-height: 1.2;
   min-height: 36px;
   padding: 8px 32px 8px 12px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: #fafafa
+  background: var(--surface);
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
     no-repeat right 10px center;
   color: var(--text);
@@ -2571,7 +2591,7 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 .lf-team-anon-status--pending {
   color: #6a6a62;
-  background: #f4f4f5;
+  background: var(--surface-2);
 }
 
 
@@ -2842,8 +2862,8 @@ html[data-theme="dark"] .lf-search-clear:hover {
 
 
 .lf-mark-btn:hover {
-  background: #f4f4f5;
-  border-color: #e5e5e5;
+  background: var(--surface-2);
+  border-color: var(--border);
   color: var(--text);
 }
 
@@ -2928,8 +2948,8 @@ html[data-theme="dark"] .lf-search-clear:hover {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #666666;
-  background: #f4f4f5;
-  border: 1px solid #e5e5e5;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
   vertical-align: middle;
 }
 
@@ -3505,7 +3525,7 @@ html[data-theme="dark"] .lf-call-btn:focus-visible {
 .lf-action-btn.is-disabled {
   color: #d4d4d4;
   background: transparent;
-  border-color: #f4f4f5;
+  border-color: var(--surface-2);
   cursor: default;
   font-weight: 500;
   font-size: 11px;
@@ -6655,7 +6675,7 @@ html[data-ui-color] .lf-card-sub {
   display: grid;
   place-items: center;
   flex: none;
-  background: #fafafa;
+  background: var(--surface);
   color: #232427;
   cursor: grab;
   transform: translate3d(var(--lf-slide-x), -50%, 0);
@@ -7524,4 +7544,61 @@ html[data-ui-color] .lf-card-sub {
   .leads-page .lf-pro-foot {
     padding: 8px 10px 10px;
   }
+}
+
+
+/* Dark mode — Finder surfaces */
+html[data-ms-mode="dark"] .leads-page,
+html[data-ms-mode="dark"] .lf-advanced-dialog-panel,
+html[data-ms-mode="dark"] .site-leave-dialog-panel {
+  color: var(--text);
+}
+
+html[data-ms-mode="dark"] .leads-page .card,
+html[data-ms-mode="dark"] .leads-page .ms-card.leads-toolbar,
+html[data-ms-mode="dark"] .lf-advanced-dialog-panel,
+html[data-ms-mode="dark"] .site-leave-dialog-panel {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text);
+}
+
+html[data-ms-mode="dark"] .leads-page input,
+html[data-ms-mode="dark"] .leads-page select,
+html[data-ms-mode="dark"] .leads-page textarea,
+html[data-ms-mode="dark"] .leads-page .field input,
+html[data-ms-mode="dark"] .leads-page .field select,
+html[data-ms-mode="dark"] .leads-page .field textarea,
+html[data-ms-mode="dark"] .leads-page .lf-workflow-select,
+html[data-ms-mode="dark"] .lf-advanced-dialog input,
+html[data-ms-mode="dark"] .lf-advanced-dialog select,
+html[data-ms-mode="dark"] .lf-advanced-dialog textarea {
+  background: var(--input-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  color-scheme: dark;
+}
+
+html[data-ms-mode="dark"] .leads-page .btn.secondary,
+html[data-ms-mode="dark"] .lf-refresh-btn,
+html[data-ms-mode="dark"] .lf-toggle-btn,
+html[data-ms-mode="dark"] .lf-advanced-pills .lf-toggle-btn {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-ms-mode="dark"] .leads-page .lf-toggle-btn.active,
+html[data-ms-mode="dark"] .lf-advanced-pills .lf-toggle-btn.active {
+  background: var(--btn-primary-bg) !important;
+  color: var(--btn-primary-fg) !important;
+}
+
+html[data-ms-mode="dark"] .lf-advanced-shell:has(.lf-advanced-btn--active) {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: color-mix(in srgb, var(--accent-soft) 35%, var(--surface-2));
+}
+
+html[data-ms-mode="dark"] .site-leave-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.65);
 }

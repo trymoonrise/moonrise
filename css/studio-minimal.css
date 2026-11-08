@@ -934,7 +934,14 @@ a.ms-dash-tool {
   }
 
   html[data-ms-mode="dark"] .ms-tab.is-active .ms-tab-ico,
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico {
+  html[data-ms-mode="dark"] .ms-tab.is-active .ms-tab-label,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-label {
+    color: #f4f4f5 !important;
+    -webkit-text-fill-color: #f4f4f5 !important;
+  }
+
+  html[data-ms-mode="dark"] .ms-tabbar .ms-menu-toggle.ms-tab-menu {
     color: #f4f4f5 !important;
     -webkit-text-fill-color: #f4f4f5 !important;
   }
@@ -1078,6 +1085,27 @@ a.ms-btn-secondary {
 }
 
 /* —— Skeleton loading —— */
+/* In-studio hops skip the moonrise boot; keep page skeletons snappy. */
+html.ms-boot-done #page-body .ms-skel::after,
+html.ms-boot-done .is-skel-loading .ms-skel::after {
+  animation-duration: 0.9s;
+}
+
+html.ms-boot-done #page-body {
+  animation: ms-hop-in 0.18s ease-out;
+}
+
+@keyframes ms-hop-in {
+  from { opacity: 0.72; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.ms-boot-done #page-body {
+    animation: none !important;
+  }
+}
+
 .ms-skel {
   position: relative;
   overflow: hidden;

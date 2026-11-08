@@ -3,6 +3,32 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.2.4",
+      "date": "2026-11-07",
+      "title": "Studio dark mode and faster hops",
+      "tag": "v2.2.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.2.4",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio dark mode uses consistent monochrome surfaces across Settings, Finder map chrome, inputs, and page titles.",
+            "After the first studio load, page switches skip the moonrise boot screen and stay on skeleton content for a faster hop."
+          ],
+          "fixes": [
+            "Dark mode no longer leaves Finder pills, filters, and form fields stuck on light greys."
+          ]
+        },
+        {
+          "heading": "Security",
+          "added": [
+            "Repo license, third-party notices, security reporting, and GitHub About now point clearly at trymoonrise.com."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.2.3",
       "date": "2026-11-07",
       "title": "Lifted public landing",

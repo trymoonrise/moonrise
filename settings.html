@@ -16,7 +16,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
 <script>
 (function(){
   var tabHop=false;
-  try{tabHop=!!sessionStorage.getItem("ms_tab_switch")}catch(e){}
+  try{tabHop=!!sessionStorage.getItem("ms_tab_switch")||sessionStorage.getItem("ms_studio_booted")==="1"}catch(e){}
   if(tabHop){
     document.documentElement.classList.add("ms-boot-done");
     window.__msBootReleased=1;
@@ -232,18 +232,18 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261107-compact-ui"></script>
+  <script src="js/auth-gate-head.js?v=20261108-skel-nav"></script>
   <title>Settings - Moonrise Studio</title>
   <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-<link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
-<link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark">
+<link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-compact-ui6">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-skel-nav">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
 </head>
 <body data-page="settings">
@@ -461,13 +461,13 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     </div>
   </div>
 
-  <script defer src="js/config.js?v=20261107-accent-btn"></script>
-  <script defer src="js/app.js?v=20261107-accent-btn"></script>
+  <script defer src="js/config.js?v=20261108-skel-nav"></script>
+  <script defer src="js/app.js?v=20261108-skel-nav"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/handles.js"></script>
   <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
-  <script defer src="js/auth.js?v=20261107-accent-btn"></script>
+  <script defer src="js/auth.js?v=20261108-skel-nav"></script>
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20261107-accent-btn"></script>
   <script defer src="js/toast.js"></script>

@@ -40,7 +40,7 @@
 
   if (!window.__msAppearanceBoot) {
     window.__msAppearanceBoot = 1;
-    document.write('<script src="js/appearance.js?v=20261107-compact-ui"><\/script>');
+    document.write('<script src="js/appearance.js?v=20261108-skel-nav"><\/script>');
   }
 
   var PUBLIC = {
@@ -80,11 +80,15 @@
 
   var tabHop = false;
   try {
-    tabHop = !!sessionStorage.getItem("ms_tab_switch") || !!window.__msTabHop;
+    tabHop =
+      !!sessionStorage.getItem("ms_tab_switch") ||
+      sessionStorage.getItem("ms_studio_booted") === "1" ||
+      !!window.__msTabHop;
   } catch (e) {}
 
   document.documentElement.classList.add("ms-auth-gating");
-  // Tab hops keep chrome visible; cold loads still hold until the shell paints.
+  // After the first studio paint, keep chrome visible and skip the moonrise boot.
+  // Cold first load still holds until the shell paints.
   if (!tabHop) {
     document.documentElement.classList.add("ms-hold");
     window.__msStudioBoot = 1;
@@ -106,7 +110,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261106-app-shell", "js/auth.js?v=20261106-app-shell", "js/app.js?v=20261106-app-shell"].forEach(function (href) {
+  ["js/config.js?v=20261108-skel-nav", "js/auth.js?v=20261108-skel-nav", "js/app.js?v=20261108-skel-nav"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -125,6 +129,10 @@
     if (document.prerendering) return;
     if (window.__msAuthRedirecting) return;
     window.__msAuthRedirecting = true;
+    try {
+      sessionStorage.removeItem("ms_studio_booted");
+      sessionStorage.removeItem("ms_tab_switch");
+    } catch (e) {}
     var next = encodeURIComponent(file + location.search + location.hash);
     location.replace("login.html?next=" + next);
   }

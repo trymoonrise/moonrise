@@ -245,35 +245,46 @@
   }
 
   function ensureCss() {
+    var CACHE = "20261108-skel-nav";
     var studio = document.querySelector('link[href*="studio.css"]');
     var link = document.getElementById("ms-appearance-css");
     if (!link) {
       link = document.createElement("link");
       link.id = "ms-appearance-css";
       link.rel = "stylesheet";
-      link.href = "css/appearance.css?v=20261107-soft-radius";
     }
-    var ui = document.getElementById("ms-studio-ui-css");
+    var appearanceHref = "css/appearance.css?v=" + CACHE;
+    if (link.href.indexOf(appearanceHref) === -1) link.href = appearanceHref;
+    var ui = document.getElementById("ms-studio-ui-css") || document.querySelector('link[href*="studio-ui.css"]');
     if (!ui) {
       ui = document.createElement("link");
       ui.id = "ms-studio-ui-css";
       ui.rel = "stylesheet";
-      ui.href = "css/studio-ui.css?v=20261107-soft-radius";
+    } else {
+      ui.id = "ms-studio-ui-css";
     }
-    var mono = document.getElementById("ms-studio-mono-css");
+    var uiHref = "css/studio-ui.css?v=" + CACHE;
+    if (ui.href.indexOf(uiHref) === -1) ui.href = uiHref;
+    var mono = document.getElementById("ms-studio-mono-css") || document.querySelector('link[href*="studio-mono.css"]');
     if (!mono) {
       mono = document.createElement("link");
       mono.id = "ms-studio-mono-css";
       mono.rel = "stylesheet";
-      mono.href = "css/studio-mono.css?v=20261107-soft-radius";
+    } else {
+      mono.id = "ms-studio-mono-css";
     }
-    var minimal = document.getElementById("ms-studio-minimal-css");
+    var monoHref = "css/studio-mono.css?v=" + CACHE;
+    if (mono.href.indexOf(monoHref) === -1) mono.href = monoHref;
+    var minimal = document.getElementById("ms-studio-minimal-css") || document.querySelector('link[href*="studio-minimal.css"]');
     if (!minimal) {
       minimal = document.createElement("link");
       minimal.id = "ms-studio-minimal-css";
       minimal.rel = "stylesheet";
-      minimal.href = "css/studio-minimal.css?v=20261107-soft-radius";
+    } else {
+      minimal.id = "ms-studio-minimal-css";
     }
+    var minimalHref = "css/studio-minimal.css?v=" + CACHE;
+    if (minimal.href.indexOf(minimalHref) === -1) minimal.href = minimalHref;
     var font = document.getElementById("ms-studio-font");
     if (!font) {
       font = document.createElement("link");

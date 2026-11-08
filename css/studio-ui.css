@@ -794,6 +794,47 @@ html[data-ms-mode="dark"] :is(
   caret-color: #f4f4f5;
   border-color: rgb(255 255 255 / 16%) !important;
   box-shadow: none !important;
+  color-scheme: dark;
+}
+
+html[data-ms-mode="dark"] :is(
+  input.ms-input,
+  textarea.ms-textarea,
+  .ms-auth-card input.ms-input
+):is(:hover, :focus) {
+  background: #1c1c1e !important;
+  background-color: #1c1c1e !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+  border-color: rgb(255 255 255 / 28%) !important;
+  box-shadow: none !important;
+}
+
+html[data-ms-mode="dark"] :is(
+  input.ms-input,
+  .ms-auth-card input.ms-input
+):-webkit-autofill,
+html[data-ms-mode="dark"] :is(
+  input.ms-input,
+  .ms-auth-card input.ms-input
+):-webkit-autofill:hover,
+html[data-ms-mode="dark"] :is(
+  input.ms-input,
+  .ms-auth-card input.ms-input
+):-webkit-autofill:focus {
+  -webkit-text-fill-color: #f4f4f5 !important;
+  caret-color: #f4f4f5;
+  box-shadow: 0 0 0 1000px #1c1c1e inset !important;
+  transition: background-color 9999s ease-out;
+}
+
+html[data-ms-mode="dark"] :is(
+  input.ms-input,
+  textarea.ms-textarea,
+  .ms-auth-card input.ms-input
+)::placeholder {
+  color: #a1a1a6 !important;
+  -webkit-text-fill-color: #a1a1a6 !important;
 }
 
 html[data-ms-mode="dark"][data-ms-accent-tone="dark"] .ms-switch input:checked + .ms-switch-track {
@@ -1778,7 +1819,23 @@ body[data-page="pricing"] .ms-page-head h1,
   font-weight: 700 !important;
   letter-spacing: -0.045em !important;
   line-height: 1.05 !important;
+}
+
+html:not([data-ms-mode="dark"]) body[data-page="home"] .ms-home-title,
+html:not([data-ms-mode="dark"]) body[data-page="orders"] .ms-orders-head h1,
+html:not([data-ms-mode="dark"]) body[data-page="contact"] .ms-page-head h1,
+html:not([data-ms-mode="dark"]) body[data-page="download"] .ms-download-card h1,
+html:not([data-ms-mode="dark"]) body[data-page="login"] .ms-auth-card h1,
+html:not([data-ms-mode="dark"]) body[data-page="help"] .ms-page-head h1,
+html:not([data-ms-mode="dark"]) body[data-page="pricing"] .ms-page-head h1,
+html:not([data-ms-mode="dark"]) .ms-page-head h1 {
   color: #1d1d1f !important;
+}
+
+html[data-ms-mode="dark"] .ms-page-head h1,
+html[data-ms-mode="dark"] .ms-settings-card-title,
+html[data-ms-mode="dark"] .ms-dash-head h1 {
+  color: #f4f4f5 !important;
 }
 
 body[data-page="home"] .ms-home-title {
@@ -1804,11 +1861,27 @@ body[data-page="login"] .ms-auth-brand .ms-muted,
 body[data-page="help"] .ms-page-head-copy .lead,
 .ms-page-head-copy .lead,
 .ms-page-head-copy p {
-  color: #6e6e73 !important;
   font-size: 0.98rem !important;
   font-weight: 400 !important;
   line-height: 1.5 !important;
   letter-spacing: -0.01em !important;
+}
+
+html:not([data-ms-mode="dark"]) body[data-page="home"] .ms-home-sub,
+html:not([data-ms-mode="dark"]) body[data-page="home"] .ms-home-section-lead,
+html:not([data-ms-mode="dark"]) body[data-page="orders"] .ms-orders-head p,
+html:not([data-ms-mode="dark"]) body[data-page="contact"] .ms-contact-lead,
+html:not([data-ms-mode="dark"]) body[data-page="download"] .ms-download-lead,
+html:not([data-ms-mode="dark"]) body[data-page="login"] .ms-auth-brand .ms-muted,
+html:not([data-ms-mode="dark"]) body[data-page="help"] .ms-page-head-copy .lead,
+html:not([data-ms-mode="dark"]) .ms-page-head-copy .lead,
+html:not([data-ms-mode="dark"]) .ms-page-head-copy p {
+  color: #6e6e73 !important;
+}
+
+html[data-ms-mode="dark"] .ms-page-head-copy .lead,
+html[data-ms-mode="dark"] .ms-page-head-copy p {
+  color: #a1a1a6 !important;
 }
 
 body[data-page="home"] .ms-home-sub {

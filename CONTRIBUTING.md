@@ -34,9 +34,12 @@ If you are proposing a change, keep the focus on the user experience and busines
 
 ## Conduct
 
-Be respectful. No harassment, spam, or bad-faith reports.
+Be respectful. No harassment, spam, or bad-faith reports. See [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md).
+
+For security reports, use [SECURITY.md](SECURITY.md) — never post secrets or exploit details in public issues.
 
 ## Contact
 
+- Website: [trymoonrise.com](https://trymoonrise.com)
 - Email: [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com)
 - Phone: [(401) 300-0957](tel:+14013000957)

@@ -6,7 +6,10 @@ If you believe you found a security issue in Moonrise Studio, please report it p
 
 **Do not** open a public issue for sensitive security reports.
 
-Email: [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com)
+Preferred options:
+
+1. **GitHub private vulnerability reporting** on this repository (Security → Report a vulnerability)
+2. Email: [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com)
 
 Please include:
 
@@ -14,10 +17,11 @@ Please include:
 - Steps to reproduce, if possible
 - Impact (what an attacker could do)
 - Any suggested mitigation
+- Affected URL, commit, or version when known
 
 ## What to expect
 
-We aim to acknowledge reports as soon as practical, investigate in good faith, and follow up when a fix or next step is available.
+We aim to acknowledge reports within a few business days, investigate in good faith, and follow up when a fix or next step is available. Please give us a reasonable window before any public disclosure.
 
 ## Breach notification plan
 
@@ -72,10 +76,16 @@ Out of scope (examples):
 - Reports without a realistic impact
 - Issues that only affect outdated local copies you control
 
+## Secrets and local setup
+
+- Never commit `.env`, `accesstokens.env`, private keys, dumps, or real credentials
+- Use `.env.example` and `worker/.env.example` as templates only
+- Rotate keys if they were ever pasted into chat, screenshots, or public issues
+
 ## Safe use
 
 - Keep your account credentials private
-- Use strong unique passwords
+- Use strong unique passwords or a passkey when available
 - Contact support if you notice suspicious account activity
 
 Thank you for helping keep Moonrise users safe.
