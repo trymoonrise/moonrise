@@ -3,6 +3,21 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.5.1",
+      "date": "2026-11-08",
+      "title": "Clickable home flow",
+      "tag": "v2.5.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.5.1",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The home page lets you pick a shop, turn site pieces on or off, and send a link to see the 90% payout."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.5.0",
       "date": "2026-11-08",
       "title": "Shaded home with a serif headline",

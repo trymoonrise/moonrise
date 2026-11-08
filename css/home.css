@@ -303,6 +303,39 @@ body[data-page="home"] .ms-home-cta:hover {
   background: #2c2c2e;
 }
 
+body[data-page="home"] .ms-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 1.75rem;
+}
+
+body[data-page="home"] .ms-hero-actions .ms-home-cta {
+  margin-top: 0;
+}
+
+body[data-page="home"] .ms-home-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  padding: 0 1.25rem;
+  border: 1px solid #d2d2d7;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ms-char);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+body[data-page="home"] .ms-home-ghost:hover {
+  background: #f3f1ee;
+}
+
 /* Quiet bands with room between them */
 body[data-page="home"] .ms-band {
   padding: clamp(6.5rem, 16vh, 10rem) 0;
@@ -330,84 +363,295 @@ body[data-page="home"] .ms-home-faq {
   background: #f3f2f0;
 }
 
-body[data-page="home"] .ms-steps {
-  display: grid;
-  gap: clamp(2.25rem, 6vh, 3.5rem);
-  width: min(100%, var(--ms-measure));
-  margin: clamp(3rem, 7vh, 4.5rem) auto 0;
-  padding: 0;
-  list-style: none;
+body[data-page="home"] .ms-stage-lead {
+  margin: 0.85rem auto 0;
+  max-width: 22rem;
+  color: var(--ms-muted);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
   text-align: center;
 }
 
-body[data-page="home"] .ms-steps li {
+body[data-page="home"] .ms-seg {
   display: grid;
-  gap: 0.35rem;
-  justify-items: center;
-  width: 100%;
-  padding: 1.5rem 1.35rem 1.6rem;
-  border-radius: 1.35rem;
-  background: #fff;
-}
-
-body[data-page="home"] .ms-steps li:nth-child(2) {
-  background: var(--ms-warm);
-}
-
-body[data-page="home"] .ms-steps li:nth-child(3) {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.2rem;
+  width: min(100%, 22rem);
+  margin: 1.6rem auto 0;
+  padding: 0.22rem;
+  border-radius: 999px;
   background: var(--ms-cool);
 }
 
-body[data-page="home"] .ms-steps span {
-  color: var(--ms-faint);
-  font-size: 0.75rem;
+body[data-page="home"] .ms-seg button {
+  height: 2.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ms-muted);
+  font: inherit;
+  font-size: 0.9rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: -0.02em;
+  cursor: pointer;
 }
 
-body[data-page="home"] .ms-steps strong {
+body[data-page="home"] .ms-seg button[aria-selected="true"] {
+  background: #fff;
   color: var(--ms-ink);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+}
+
+body[data-page="home"] .ms-stage {
+  margin-top: 1rem;
+  padding: 1.15rem 1.1rem 1.2rem;
+  border-radius: 1.5rem;
+  background: #fff;
+}
+
+body[data-page="home"] .ms-panel-lead,
+body[data-page="home"] .ms-pick-note {
+  margin: 0;
+  color: var(--ms-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+body[data-page="home"] .ms-picks {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+body[data-page="home"] .ms-picks button,
+body[data-page="home"] .ms-toggles button,
+body[data-page="home"] .ms-linkrow button,
+body[data-page="home"] .ms-next {
+  font: inherit;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+}
+
+body[data-page="home"] .ms-picks button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--ms-line);
+  border-radius: 1rem;
+  background: #f7f6f4;
+  color: var(--ms-ink);
+  font-size: 0.95rem;
+  font-weight: 650;
+  text-align: left;
+}
+
+body[data-page="home"] .ms-picks button span {
+  color: var(--ms-faint);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+body[data-page="home"] .ms-picks button[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--ms-char);
+  color: #fff;
+}
+
+body[data-page="home"] .ms-picks button[aria-pressed="true"] span {
+  color: rgb(255 255 255 / 72%);
+}
+
+body[data-page="home"] .ms-pick-note {
+  margin-top: 0.85rem;
+}
+
+body[data-page="home"] .ms-preview {
+  margin-top: 0.9rem;
+  overflow: hidden;
+  border: 1px solid var(--ms-line);
+  border-radius: 1.1rem;
+  background: #f5f5f7;
+}
+
+body[data-page="home"] .ms-preview-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.6rem 0.75rem;
+  background: #fff;
+}
+
+body[data-page="home"] .ms-preview-bar i {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 99px;
+  background: #e3e3e8;
+}
+
+body[data-page="home"] .ms-preview-bar em {
+  margin-left: 0.35rem;
+  color: var(--ms-faint);
+  font-style: normal;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+body[data-page="home"] .ms-preview-hero {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1.05rem 0.95rem 0.75rem;
+}
+
+body[data-page="home"] .ms-preview-hero strong {
+  color: var(--ms-char);
   font-family: var(--ms-heading);
-  font-size: clamp(1.45rem, 2.6vw, 1.85rem);
+  font-size: 1.45rem;
   font-weight: 560;
   letter-spacing: -0.03em;
 }
 
-body[data-page="home"] .ms-steps p {
-  margin: 0;
-  max-width: 18rem;
+body[data-page="home"] .ms-preview-hero span {
   color: var(--ms-muted);
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.88rem;
 }
 
-body[data-page="home"] .ms-cut {
-  background: var(--ms-bg);
-  text-align: center;
+body[data-page="home"] .ms-blocks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+  padding: 0 0.85rem 0.9rem;
 }
 
-body[data-page="home"] .ms-cut .ms-wrap {
-  padding: clamp(2.75rem, 7vh, 4rem) 1.5rem;
-  border-radius: 1.75rem;
+body[data-page="home"] .ms-blocks div {
+  display: grid;
+  place-items: center;
+  min-height: 3.3rem;
+  border-radius: 0.75rem;
+  background: #fff;
+  color: var(--ms-muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+body[data-page="home"] .ms-blocks div.is-off {
+  background: transparent;
+  color: transparent;
+  box-shadow: inset 0 0 0 1px #e3e3e8;
+}
+
+body[data-page="home"] .ms-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+body[data-page="home"] .ms-toggles button {
+  height: 2rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--ms-line);
+  border-radius: 999px;
+  background: #f7f6f4;
+  color: var(--ms-muted);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+body[data-page="home"] .ms-toggles button[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--ms-stone);
+  color: var(--ms-char);
+}
+
+body[data-page="home"] .ms-linkrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.95rem;
+  padding: 0.45rem 0.45rem 0.45rem 0.95rem;
+  border-radius: 999px;
+  background: #f5f5f7;
+}
+
+body[data-page="home"] .ms-linkrow span {
+  overflow: hidden;
+  color: var(--ms-ink);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body[data-page="home"] .ms-linkrow button {
+  flex: none;
+  height: 2.15rem;
+  padding: 0 0.95rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ms-char);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+body[data-page="home"] .ms-linkrow button[aria-pressed="true"] {
+  background: #8e8e93;
+}
+
+body[data-page="home"] .ms-payout {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+body[data-page="home"] .ms-payout div {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.9rem 0.85rem;
+  border-radius: 1rem;
+  background: #f5f5f7;
+}
+
+body[data-page="home"] .ms-payout span,
+body[data-page="home"] .ms-payout em {
+  color: var(--ms-muted);
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
+body[data-page="home"] .ms-payout strong {
+  color: var(--ms-ink);
+  font-family: var(--ms-heading);
+  font-size: 1.7rem;
+  font-weight: 560;
+  letter-spacing: -0.03em;
+}
+
+body[data-page="home"] .ms-payout .is-yours {
   background: var(--ms-stone);
 }
 
-body[data-page="home"] .ms-cut-stat {
-  margin: 0;
+body[data-page="home"] .ms-next {
+  display: inline-flex;
+  margin-top: 1rem;
+  padding: 0;
+  border: 0;
+  background: none;
   color: var(--ms-char);
-  font-family: var(--ms-heading);
-  font-size: clamp(4.5rem, 14vw, 8rem);
-  font-weight: 560;
-  letter-spacing: -0.04em;
-  line-height: 0.9;
-}
-
-body[data-page="home"] .ms-cut p:not(.ms-cut-stat) {
-  margin: 1.15rem auto 0;
-  max-width: 16rem;
-  color: var(--ms-muted);
-  font-size: 1.05rem;
-  font-weight: 550;
+  font-size: 0.92rem;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 body[data-page="home"] .ms-home-faq .ms-wrap {

@@ -270,7 +270,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261106-mono">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
-  <link rel="stylesheet" href="css/home.css?v=20261108-shade2">
+  <link rel="stylesheet" href="css/home.css?v=20261108-flow">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-shade">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -364,36 +364,66 @@ document.documentElement.classList.add("ms-boot");
       <section class="ms-home-hero" aria-label="Moonrise">
         <h1>Build websites.<br>Get paid.</h1>
         <p class="ms-home-hero-lead">Create a site for a local business. Earn when they go live.</p>
-        <a class="ms-home-cta" href="login">Start earning</a>
-      </section>
-
-      <section class="ms-band" id="how" aria-labelledby="how-title">
-        <div class="ms-wrap">
-          <h2 id="how-title">How it works</h2>
-          <ol class="ms-steps">
-            <li>
-              <span>01</span>
-              <strong>Find a business</strong>
-              <p>Pick a shop that needs a site.</p>
-            </li>
-            <li>
-              <span>02</span>
-              <strong>Build it</strong>
-              <p>Generate the site, then refine it.</p>
-            </li>
-            <li>
-              <span>03</span>
-              <strong>Send the link</strong>
-              <p>They unlock. You get paid.</p>
-            </li>
-          </ol>
+        <div class="ms-hero-actions">
+          <a class="ms-home-cta" href="login">Start earning</a>
+          <a class="ms-home-ghost" href="#how">See how it works</a>
         </div>
       </section>
 
-      <section class="ms-band ms-cut" aria-label="Your cut">
-        <div class="ms-wrap">
-          <p class="ms-cut-stat">90%</p>
-          <p>Yours when a business goes live.</p>
+      <section class="ms-band" id="how" aria-labelledby="how-title">
+        <div class="ms-wrap ms-stage-wrap">
+          <h2 id="how-title">Try the flow</h2>
+          <p class="ms-stage-lead">Three steps. Click through them.</p>
+          <div class="ms-seg" role="tablist" aria-label="Product steps">
+            <button type="button" role="tab" id="tab-find" aria-selected="true" aria-controls="stage-find">Find</button>
+            <button type="button" role="tab" id="tab-build" aria-selected="false" aria-controls="stage-build" tabindex="-1">Build</button>
+            <button type="button" role="tab" id="tab-earn" aria-selected="false" aria-controls="stage-earn" tabindex="-1">Earn</button>
+          </div>
+          <div class="ms-stage">
+            <div class="ms-panel" id="stage-find" role="tabpanel" aria-labelledby="tab-find">
+              <p class="ms-panel-lead">Pick a shop that still needs a site.</p>
+              <ul class="ms-picks">
+                <li><button type="button" aria-pressed="true">Northside Cafe<span>No website</span></button></li>
+                <li><button type="button" aria-pressed="false">Harbor Dental<span>Outdated site</span></button></li>
+                <li><button type="button" aria-pressed="false">Elm Street Gym<span>No website</span></button></li>
+              </ul>
+              <p class="ms-pick-note" id="pick-note">Northside Cafe is ready to build.</p>
+              <button type="button" class="ms-next" data-next="build">Next, build the site</button>
+            </div>
+            <div class="ms-panel" id="stage-build" role="tabpanel" aria-labelledby="tab-build" hidden>
+              <p class="ms-panel-lead">Turn pieces of the site on or off.</p>
+              <div class="ms-preview" aria-hidden="true">
+                <div class="ms-preview-bar"><i></i><i></i><i></i><em id="preview-host">northsidecafe.com</em></div>
+                <div class="ms-preview-hero">
+                  <strong id="preview-name">Northside Cafe</strong>
+                  <span>Open today. Come by.</span>
+                </div>
+                <div class="ms-blocks">
+                  <div data-block="photos">Photos</div>
+                  <div data-block="hours">Hours</div>
+                  <div data-block="menu">Menu</div>
+                </div>
+              </div>
+              <div class="ms-toggles">
+                <button type="button" aria-pressed="true" data-toggle="photos">Photos</button>
+                <button type="button" aria-pressed="true" data-toggle="hours">Hours</button>
+                <button type="button" aria-pressed="true" data-toggle="menu">Menu</button>
+              </div>
+              <button type="button" class="ms-next" data-next="earn">Next, send the link</button>
+            </div>
+            <div class="ms-panel" id="stage-earn" role="tabpanel" aria-labelledby="tab-earn" hidden>
+              <p class="ms-panel-lead">Send the live link. You get paid when they unlock it.</p>
+              <div class="ms-linkrow">
+                <span id="earn-link">northside.moonrise.site</span>
+                <button type="button" id="ms-send">Send</button>
+              </div>
+              <div class="ms-payout" id="ms-payout" hidden>
+                <div><span>They pay</span><strong>$450</strong></div>
+                <div class="is-yours"><span>You keep</span><strong>$405</strong><em>90%</em></div>
+              </div>
+              <p class="ms-pick-note" id="earn-note">Nothing is sent yet.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -435,6 +465,7 @@ document.documentElement.classList.add("ms-boot");
   </div>
 
   <script defer src="js/home-menu.js?v=20261108-minimal"></script>
+  <script defer src="js/home-stage.js?v=20261108-flow"></script>
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
   <script defer src="js/toast.js"></script>
   <script defer>
