@@ -5,7 +5,7 @@
  */
 (function () {
   const QUERY_MS = 10000;
-  const CLIENTS_CACHE_KEY = "ms_clients_cache_v4";
+  const CLIENTS_CACHE_KEY = "ms_clients_cache_v5";
   const PROJECT_SELECT =
     "id, user_id, business_name, status, watermark_enabled, price_cents, vercel_url, business_context, updated_at, created_at";
 
@@ -15,7 +15,7 @@
   let isOwnerView = false;
   let removeTarget = null;
   let revokeTarget = null;
-  const openKeys = new Set();
+  let detailTarget = null;
 
   const $ = (id) => document.getElementById(id);
   const esc = (s) =>
@@ -128,21 +128,47 @@
     return String(ctx.phone || ctx.businessPhone || "").trim();
   }
 
-  function emailFromProject(project) {
+  function readCtx(project) {
     const ctx = project?.business_context;
-    if (!ctx || typeof ctx !== "object") return "";
+    return ctx && typeof ctx === "object" && !Array.isArray(ctx) ? ctx : {};
+  }
+
+  function emailFromProject(project) {
+    const ctx = readCtx(project);
     return String(ctx.hostingBuyerEmail || ctx.purchaseInvoiceEmailTo || "").trim();
   }
 
   function hostingFromProject(project) {
-    const ctx = project?.business_context;
-    if (!ctx || typeof ctx !== "object") {
-      return { hostingStatus: "", hostingSubscriptionId: "" };
-    }
+    const ctx = readCtx(project);
     return {
       hostingStatus: String(ctx.hostingStatus || "").toLowerCase(),
       hostingSubscriptionId: String(ctx.hostingSubscriptionId || "").trim(),
     };
+  }
+
+  function initialFor(name) {
+    const letter = String(name || "C")
+      .trim()
+      .replace(/^[^a-z0-9]+/i, "")
+      .charAt(0)
+      .toUpperCase();
+    return letter || "C";
+  }
+
+  function creatorCutCents(row) {
+    const sale = Math.max(0, Math.round(Number(row?.price_cents) || 0));
+    const rate = Number(window.StudioIncome?.INCOME_RATE);
+    return Math.round(sale * (Number.isFinite(rate) ? rate : 0.9));
+  }
+
+  function chipHtml(label, value) {
+    return (
+      '<span class="ms-clients-chip"><span class="ms-clients-chip-label">' +
+      esc(label) +
+      '</span><span class="ms-clients-chip-value">' +
+      esc(value) +
+      "</span></span>"
+    );
   }
 
   function hostingLabel(status) {
@@ -171,6 +197,7 @@
           ? amountFromProject
           : null;
     const hosting = hostingFromProject(project);
+    const ctx = readCtx(project);
     return {
       id: project.id,
       list_key: "project:" + project.id,
@@ -191,6 +218,8 @@
       has_paid: true,
       hostingStatus: hosting.hostingStatus,
       hostingSubscriptionId: hosting.hostingSubscriptionId,
+      category: String(ctx.category || ctx.categoryGroup || ctx.businessType || "").trim(),
+      address: String(ctx.address || ctx.businessAddress || "").trim(),
     };
   }
 
@@ -216,6 +245,8 @@
       has_paid: true,
       hostingStatus: "",
       hostingSubscriptionId: "",
+      category: "",
+      address: "",
     };
   }
 
@@ -231,7 +262,7 @@
     document.body.classList.toggle("ms-clients-owner", !!isOwnerView);
   }
 
-  function detailRow(label, valueHtml) {
+  function detailFact(label, valueHtml) {
     if (!valueHtml) return "";
     return (
       "<div><dt>" +
@@ -251,9 +282,12 @@
         r.creator_handle,
         r.phone,
         r.email,
+        r.category,
+        r.address,
         siteDisplay(r.website),
         formatMoney(r.price_cents),
         statusLabel(r),
+        hostingLabel(r.hostingStatus),
       ]
         .join(" ")
         .toLowerCase()
@@ -299,110 +333,145 @@
     body.innerHTML = rows
       .map((row) => {
         const key = esc(row.list_key);
-        const open = openKeys.has(row.list_key);
-        const phone = String(row.phone || "").trim();
-        const email = String(row.email || "").trim();
-        const tel = telHref(phone);
-        const phoneHtml = phone
-          ? tel
-            ? '<a class="ms-clients-link" href="' + esc(tel) + '">' + esc(phone) + "</a>"
-            : esc(phone)
-          : "";
-        const emailHtml = email
-          ? '<a class="ms-clients-link" href="mailto:' + esc(email) + '">' + esc(email) + "</a>"
-          : "";
-        const web = String(row.website || "").trim();
-        const webDisp = siteDisplay(web);
-        const webHref = siteUrl(web);
-        const webHtml = webDisp
-          ? webHref
-            ? '<a class="ms-clients-link" href="' +
-              esc(webHref) +
-              '" target="_blank" rel="noopener noreferrer">' +
-              esc(webDisp) +
-              "</a>"
-            : esc(webDisp)
-          : "";
-        const paid = formatMoney(row.price_cents);
+        const paid = formatMoney(row.price_cents) || "—";
+        const cut = formatMoney(creatorCutCents(row)) || "—";
         const when = formatDate(row.paid_at);
-        const creatorHtml =
-          isOwnerView && row.creator_handle
-            ? '<span class="ms-clients-creator">@' + esc(row.creator_handle) + "</span>"
-            : "";
-        const openBtn =
-          row.source === "project" && row.project_id
-            ? '<a class="ms-clients-row-btn" href="editor?project_id=' +
-              encodeURIComponent(row.project_id) +
-              '">Open</a>'
-            : "";
-        const metaBits = [when, statusLabel(row)].filter(Boolean).join(" · ");
+        const name = row.business_name || "Untitled business";
         return (
-          '<li class="ms-clients-row' +
-          (open ? " is-expanded" : "") +
-          '" data-client-key="' +
+          '<li class="ms-clients-row" data-client-key="' +
           key +
           '">' +
-          '<div class="ms-clients-row-main">' +
-          '<div class="ms-clients-row-top">' +
-          '<div class="ms-clients-row-identity">' +
-          "<strong>" +
-          esc(row.business_name || "Untitled business") +
-          "</strong>" +
-          (metaBits ? '<p class="ms-clients-row-meta">' + esc(metaBits) + "</p>" : "") +
-          (creatorHtml ? '<p class="ms-clients-row-creator">' + creatorHtml + "</p>" : "") +
-          "</div>" +
-          '<span class="ms-clients-row-amount">' +
-          (paid ? esc(paid) : "—") +
+          '<div class="ms-clients-identity">' +
+          '<span class="ms-clients-avatar" aria-hidden="true">' +
+          esc(initialFor(name)) +
           "</span>" +
+          '<div class="ms-clients-main">' +
+          '<div class="ms-clients-name-row">' +
+          "<strong>" +
+          esc(name) +
+          "</strong>" +
+          (when ? '<span class="ms-clients-joined">' + esc(when) + "</span>" : "") +
           "</div>" +
-          '<button type="button" class="ms-clients-more" data-client-more="' +
+          '<div class="ms-clients-stats" aria-label="Client snapshot">' +
+          chipHtml("Paid", paid) +
+          chipHtml("Your cut", cut) +
+          chipHtml("Hosting", hostingLabel(row.hostingStatus)) +
+          chipHtml("Status", statusLabel(row)) +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          '<div class="ms-clients-side">' +
+          '<button type="button" class="ms-clients-more-btn" data-client-more="' +
           key +
-          '" aria-expanded="' +
-          (open ? "true" : "false") +
-          '">' +
-          (open ? "View less" : "View more") +
-          "</button>" +
-          "</div>" +
-          '<div class="ms-clients-row-more"' +
-          (open ? "" : " hidden") +
-          ">" +
-          '<dl class="ms-clients-details">' +
-          detailRow("Phone", phoneHtml || emptyCell()) +
-          detailRow("Email", emailHtml || emptyCell()) +
-          detailRow("Site", webHtml || emptyCell()) +
-          detailRow("Status", statusBadge(row)) +
-          detailRow(
-            "Hosting",
-            '<span class="ms-clients-badge ms-clients-badge--' +
-              (row.hostingStatus === "paying"
-                ? "ok"
-                : row.hostingStatus === "canceled"
-                  ? "neutral"
-                  : row.hostingStatus
-                    ? "warn"
-                    : "muted") +
-              '">' +
-              esc(hostingLabel(row.hostingStatus)) +
-              "</span>"
-          ) +
-          (isOwnerView ? detailRow("Creator", creatorHtml || emptyCell()) : "") +
-          "</dl>" +
-          '<div class="ms-clients-row-actions">' +
-          openBtn +
-          (canRevokeHosting(row)
-            ? '<button type="button" class="ms-clients-row-btn ms-clients-row-btn--danger ms-clients-revoke" data-client-key="' +
-              key +
-              '">Revoke hosting</button>'
-            : "") +
-          '<button type="button" class="ms-clients-row-btn ms-clients-row-btn--danger ms-clients-remove" data-client-key="' +
-          key +
-          '">Remove</button>' +
-          "</div>" +
+          '">View more</button>' +
           "</div>" +
           "</li>"
         );
       })
       .join("");
+  }
+
+  function fillClientDetail(row) {
+    detailTarget = row;
+    const name = row.business_name || "Untitled business";
+    const phone = String(row.phone || "").trim();
+    const email = String(row.email || "").trim();
+    const tel = telHref(phone);
+    const web = String(row.website || "").trim();
+    const webDisp = siteDisplay(web);
+    const webHref = siteUrl(web);
+    const paid = formatMoney(row.price_cents) || "—";
+    const cut = formatMoney(creatorCutCents(row)) || "—";
+    const sub = phone || email || (isOwnerView && row.creator_handle ? "@" + row.creator_handle : "No contact on file");
+
+    const avatar = $("ms-clients-detail-avatar");
+    const title = $("ms-clients-detail-title");
+    const subEl = $("ms-clients-detail-sub");
+    const facts = $("ms-clients-detail-facts");
+    const actions = $("ms-clients-detail-actions");
+    if (avatar) avatar.textContent = initialFor(name);
+    if (title) title.textContent = name;
+    if (subEl) subEl.textContent = sub;
+    if ($("ms-clients-detail-paid")) $("ms-clients-detail-paid").textContent = paid;
+    if ($("ms-clients-detail-cut")) $("ms-clients-detail-cut").textContent = cut;
+    if ($("ms-clients-detail-hosting")) $("ms-clients-detail-hosting").textContent = hostingLabel(row.hostingStatus);
+    if ($("ms-clients-detail-status")) $("ms-clients-detail-status").textContent = statusLabel(row);
+
+    const phoneHtml = phone
+      ? tel
+        ? '<a class="ms-clients-link" href="' + esc(tel) + '">' + esc(phone) + "</a>"
+        : esc(phone)
+      : emptyCell();
+    const emailHtml = email
+      ? '<a class="ms-clients-link" href="mailto:' + esc(email) + '">' + esc(email) + "</a>"
+      : emptyCell();
+    const webHtml = webDisp
+      ? webHref
+        ? '<a class="ms-clients-link" href="' +
+          esc(webHref) +
+          '" target="_blank" rel="noopener noreferrer">' +
+          esc(webDisp) +
+          "</a>"
+        : esc(webDisp)
+      : emptyCell();
+
+    if (facts) {
+      facts.innerHTML = [
+        detailFact("Phone", phoneHtml),
+        detailFact("Email", emailHtml),
+        detailFact("Site", webHtml),
+        row.address ? detailFact("Address", esc(row.address)) : "",
+        row.category ? detailFact("Category", esc(row.category)) : "",
+        detailFact("Sold", formatDate(row.paid_at) ? esc(formatDate(row.paid_at)) : emptyCell()),
+        isOwnerView
+          ? detailFact(
+              "Creator",
+              row.creator_handle
+                ? '<span class="ms-clients-creator">@' + esc(row.creator_handle) + "</span>"
+                : emptyCell()
+            )
+          : "",
+      ].join("");
+    }
+
+    if (actions) {
+      const openBtn =
+        row.source === "project" && row.project_id
+          ? '<a class="ms-clients-row-btn" href="editor?project_id=' +
+            encodeURIComponent(row.project_id) +
+            '">Open editor</a>'
+          : "";
+      const siteBtn =
+        webHref
+          ? '<a class="ms-clients-row-btn" href="' +
+            esc(webHref) +
+            '" target="_blank" rel="noopener noreferrer">Open site</a>'
+          : "";
+      actions.innerHTML =
+        openBtn +
+        siteBtn +
+        (canRevokeHosting(row)
+          ? '<button type="button" class="ms-clients-row-btn ms-clients-row-btn--danger ms-clients-revoke" data-client-key="' +
+            esc(row.list_key) +
+            '">Revoke hosting</button>'
+          : "") +
+        '<button type="button" class="ms-clients-row-btn ms-clients-row-btn--danger ms-clients-remove" data-client-key="' +
+        esc(row.list_key) +
+        '">Remove</button>';
+    }
+  }
+
+  function openClientDetail(row) {
+    const dialog = $("ms-clients-detail-dialog");
+    if (!dialog || !row) return;
+    fillClientDetail(row);
+    dialog.showModal();
+    $("ms-clients-detail-close")?.focus();
+  }
+
+  function closeClientDetail() {
+    detailTarget = null;
+    $("ms-clients-detail-dialog")?.close();
   }
 
   async function loadCreatorHandles(sb, userIds) {
@@ -887,6 +956,8 @@
       const user = await window.StudioAuth?.getUser?.().catch(() => null);
       if (user?.id) writeClientsCache(user.id);
       renderClients();
+      const refreshed = clients.find((c) => c.list_key === row.list_key);
+      if (refreshed && $("ms-clients-detail-dialog")?.open) fillClientDetail(refreshed);
       closeRevokeDialog();
       window.StudioToast?.success?.(
         data.alreadyCanceled ? "Hosting was already canceled." : "Hosting revoked."
@@ -954,6 +1025,7 @@
       renderClients();
       writeClientsCache(user.id);
       closeRemoveDialog();
+      if (detailTarget?.list_key === row.list_key) closeClientDetail();
       window.StudioToast?.success?.("Client removed.");
     } catch (ex) {
       if (error) {
@@ -994,15 +1066,13 @@
       if (e.target === $("ms-clients-add-dialog")) closeAddDialog();
     });
 
-    $("ms-clients-body")?.addEventListener("click", (e) => {
+    function onClientActionClick(e) {
       const more = e.target.closest("[data-client-more]");
       if (more) {
         e.preventDefault();
         const key = more.getAttribute("data-client-more");
-        if (!key) return;
-        if (openKeys.has(key)) openKeys.delete(key);
-        else openKeys.add(key);
-        renderClients();
+        const row = clients.find((c) => c.list_key === key);
+        if (row) openClientDetail(row);
         return;
       }
       const revokeBtn = e.target.closest(".ms-clients-revoke");
@@ -1019,6 +1089,16 @@
       const key = btn.getAttribute("data-client-key");
       const row = clients.find((c) => c.list_key === key);
       if (row) openRemoveDialog(row);
+    }
+    $("ms-clients-body")?.addEventListener("click", onClientActionClick);
+    $("ms-clients-detail-actions")?.addEventListener("click", onClientActionClick);
+    $("ms-clients-detail-close")?.addEventListener("click", closeClientDetail);
+    $("ms-clients-detail-dialog")?.addEventListener("cancel", (e) => {
+      e.preventDefault();
+      closeClientDetail();
+    });
+    $("ms-clients-detail-dialog")?.addEventListener("click", (e) => {
+      if (e.target === $("ms-clients-detail-dialog")) closeClientDetail();
     });
     $("ms-clients-remove-cancel")?.addEventListener("click", closeRemoveDialog);
     $("ms-clients-remove-submit")?.addEventListener("click", () => void confirmRemoveClient());

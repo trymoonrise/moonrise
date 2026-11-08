@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.2",
+      "date": "2026-11-07",
+      "title": "My Clients tracks paid cut hosting and status at a glance",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "My Clients rows show paid amount, your cut, hosting, and status chips, with View more opening a full client detail card."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.1",
       "date": "2026-11-07",
       "title": "Revoke client hosting from My Clients",

@@ -235,7 +235,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script src="js/auth-gate-head.js?v=20261108-preload-sync"></script>
   <title>My Clients - Moonrise Studio</title>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261108-clients-compact">
+  <link rel="stylesheet" href="css/studio.css?v=20261108-client-track">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 <link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark-chrome">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
@@ -374,6 +374,43 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     </div>
   </dialog>
 
+  <dialog class="ms-clients-dialog" id="ms-clients-detail-dialog" aria-labelledby="ms-clients-detail-title">
+    <div class="ms-clients-dialog-panel ms-clients-detail-panel">
+      <div class="ms-clients-detail-scroll">
+        <div class="ms-clients-detail-head">
+          <span class="ms-clients-detail-avatar" id="ms-clients-detail-avatar" aria-hidden="true">M</span>
+          <div class="ms-clients-detail-copy">
+            <h2 class="ms-clients-dialog-title" id="ms-clients-detail-title">Client</h2>
+            <p class="ms-clients-detail-sub" id="ms-clients-detail-sub">—</p>
+          </div>
+        </div>
+        <div class="ms-clients-detail-stats" aria-label="Client snapshot">
+          <div class="ms-clients-detail-stat">
+            <span class="ms-clients-detail-stat-label">Paid</span>
+            <span class="ms-clients-detail-stat-value" id="ms-clients-detail-paid">—</span>
+          </div>
+          <div class="ms-clients-detail-stat">
+            <span class="ms-clients-detail-stat-label">Your cut</span>
+            <span class="ms-clients-detail-stat-value" id="ms-clients-detail-cut">—</span>
+          </div>
+          <div class="ms-clients-detail-stat">
+            <span class="ms-clients-detail-stat-label">Hosting</span>
+            <span class="ms-clients-detail-stat-value" id="ms-clients-detail-hosting">—</span>
+          </div>
+          <div class="ms-clients-detail-stat">
+            <span class="ms-clients-detail-stat-label">Status</span>
+            <span class="ms-clients-detail-stat-value" id="ms-clients-detail-status">—</span>
+          </div>
+        </div>
+        <dl class="ms-clients-detail-facts" id="ms-clients-detail-facts"></dl>
+        <div class="ms-clients-detail-actions" id="ms-clients-detail-actions" role="group" aria-label="Client actions"></div>
+      </div>
+      <div class="ms-clients-dialog-actions ms-clients-detail-foot">
+        <button type="button" class="ms-clients-dialog-back" id="ms-clients-detail-close">Close</button>
+      </div>
+    </div>
+  </dialog>
+
   <script defer src="js/config.js?v=20261108-no-lf"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
@@ -385,6 +422,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
-  <script defer src="js/clients.js?v=20261108-revoke-hosting"></script>
+  <script defer src="js/clients.js?v=20261108-client-track"></script>
 </body>
 </html>
