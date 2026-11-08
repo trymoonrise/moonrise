@@ -1140,15 +1140,30 @@
       location.replace("login.html?next=" + next);
       return null;
     }
-    const profile = await getProfile();
-    if (profile?.frozen) {
-      try {
-        await signOut();
-      } catch (_) {
-        /* ignore */
+    // Channel hops already painted chrome — freeze-check in the background.
+    if (global.__msTabHop) {
+      void getProfile()
+        .then(async (profile) => {
+          if (!profile?.frozen) return;
+          try {
+            await signOut();
+          } catch (_) {
+            /* ignore */
+          }
+          location.replace("login.html?frozen=1");
+        })
+        .catch(() => {});
+    } else {
+      const profile = await getProfile();
+      if (profile?.frozen) {
+        try {
+          await signOut();
+        } catch (_) {
+          /* ignore */
+        }
+        location.replace("login.html?frozen=1");
+        return null;
       }
-      location.replace("login.html?frozen=1");
-      return null;
     }
     releaseAuthGate();
     return session;

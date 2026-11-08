@@ -262,11 +262,21 @@ Rules:
 - Do not write HTML. Do not invent contact facts.`;
 
 /** Stage 2 - assemble collected components into one site. */
-const GENERATION_SYSTEM_PROMPT = `You assemble complete handmade-feeling single-page business websites FROM a Website Presets kit.
+const GENERATION_SYSTEM_PROMPT = `You are the Moonrise website agent. Work like a careful coding agent: think through the layout, draft deliberately, then self-review before you ship.
+
+You assemble complete handmade-feeling single-page business websites FROM a Website Presets kit.
 
 You receive business facts, an atmosphere/palette plan, a trade-specific page bone structure, Website Preset HTML/CSS components (REQUIRED visual building blocks), and a REQUIRED stock media pack of absolute https image + video URLs.
 
 Return ONLY one complete HTML document (doctype + html). No markdown fences. No preamble. No commentary.
+Take the time needed. Prefer a polished, finished page over a fast incomplete one.
+
+## Agent workflow (follow silently, then output HTML only)
+1) Read the business facts and locked copy. Note name, phone, address, hours, trade, and city.
+2) Choose ONE composition: hero treatment, section order, type scale, and button system.
+3) Adapt kit presets into that one system. Do not dump alternate layout CSS you are not using.
+4) Self-review: alignment, spacing on a 4px grid, image aspect ratios, nav wrapping, form focus, mobile width, and contact facts.
+5) Fix anything that looks unfinished, overlapping, cut off, or placeholder-like. Then return the final document.
 
 ## Design north star (critical)
 Build a super-modern, clean, minimal business site. Think a current product site: lots of white or near-black, ink type, hairline rules, huge tight headlines, one strong photo or video, almost no chrome.
@@ -319,12 +329,15 @@ Modern bar (must pass):
 - Hero: follow the style family. When it calls for full-bleed media, use an edge-to-edge photo or muted looping video. When it calls for type-first or a split, do that instead. Never a flat navy fill with no media.
 - Hero copy budget: one headline (3-7 words) + one short support line (max ~10 words) + the family's primary action. No paragraph under the headline.
 - Nav: simple sticky bar. Brand left, a few links, one action. Do not import a decorative nav from the kit.
-- Services: a short list, a numbered list, or a hairline grid. Not a wall of icon cards. Title (2-4 words) + one short line.
+- Services: photo cards or a clean numbered list WITH visible media. Never hide service images. Title (2-4 words) + one short line.
 - Proof: a quiet line or omit it. No fake stars, scores, or awards.
 - Contact form: stacked fields, same button as the rest of the page.
 - Footer: business name, phone, address, and hours when provided. Match the family (black band, or a hairline on a dark page).
+- Hours: only the cleaned hours string from the facts. Never include Google Maps junk like "Copy open hours", "Hours might differ", or holiday parentheticals that make the line unreadable.
 - Motion: at most one soft fade. Honor prefers-reduced-motion.
 - Avoid: orange, neon, purple, clip-art icons, chip clusters, mixed radii, filler, per-section themes.
+- Avoid unused variant CSS soup (do not ship is-split / is-quiet / svc-list / gal-row rules you are not applying). One intentional layout only.
+- Every section must look finished on desktop and phone: no overlapping text, no cut-off cards, no collapsed FAQ answers, no horizontal page scroll.
 
 ## Website Presets kit rule (critical)
 1) The kit is NOT optional inspiration. When a Kit skeleton draft is provided, START FROM THAT MARKUP. Your page must be an adaptation of those components - never a freestyle rewrite that drops kit structure.
@@ -1257,6 +1270,27 @@ function assessSiteCompleteness(html, structure, ctx = null) {
     reasons.push("missing reduced-motion");
   }
   if (!/\.btn\b|button\b/i.test(raw)) reasons.push("missing buttons");
+
+  if (/copy open hours|hours might differ|suggest an edit/i.test(raw)) {
+    reasons.push("junk hours copy");
+  }
+  if (/svc-list[\s\S]{0,400}\.card img\s*\{\s*display:\s*none/i.test(raw) ||
+      /body\.svc-list[\s\S]{0,800}\.card img\s*\{[^}]*display:\s*none/i.test(raw)) {
+    reasons.push("services hide images");
+  }
+  if (/\bis-split\b[\s\S]*\bis-quiet\b[\s\S]*\bsvc-list\b/i.test(raw) &&
+      /body\.is-split[\s\S]*body\.is-quiet[\s\S]*body\.svc-list/i.test(raw)) {
+    // Shell-style alternate-layout dump: many unused body.* rules in one stylesheet.
+    const variantRules = (raw.match(/body\.(?:is-split|is-quiet|is-stone|svc-list|gal-row|gal-stack|notes-cards|about-flip|contact-flip)/gi) || []).length;
+    if (variantRules >= 8) reasons.push("unused layout variant soup");
+  }
+  if (/<section[^>]*class=["'][^"']*hero/i.test(raw) || /class=["']hero["']/i.test(raw)) {
+    const heroChunk = raw.slice(0, Math.min(raw.length, 12000));
+    if (!/<h1[\s>]/i.test(heroChunk)) reasons.push("missing hero headline");
+  }
+  if (/<details[\s>]/i.test(raw) && !/<\/details>/i.test(raw)) {
+    reasons.push("broken faq details");
+  }
 
   return {
     ok: reasons.length === 0,

@@ -233,18 +233,18 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261108-skel-nav"></script>
+  <script src="js/auth-gate-head.js?v=20261108-instant-hop"></script>
   <title>Editor - Moonrise Studio</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/generation-announce.css?v=20260721-float">
-  <link rel="stylesheet" href="css/studio.css?v=20261108-agent-timeline">
+  <link rel="stylesheet" href="css/studio.css?v=20261108-editor-nomenu">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 <link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-finder-notab">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-editor-nomenu">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
   <link rel="stylesheet" href="css/mvp-gate.css?v=20260717-mvp-fix">
   <style>
@@ -623,6 +623,13 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                         <span>Special Prompt and preset kit</span>
                       </div>
                     </div>
+                    <div class="ms-lb-tl-item" data-agent-step="enhance" role="listitem">
+                      <span class="ms-lb-tl-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Enhancing design</strong>
+                        <span>Spacing, media, and component polish</span>
+                      </div>
+                    </div>
                     <div class="ms-lb-tl-item" data-agent-step="check" role="listitem">
                       <span class="ms-lb-tl-dot" aria-hidden="true"></span>
                       <div>
@@ -672,7 +679,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                   aria-label="Resize preview height"
                   tabindex="0"
                 ></div>
-                <iframe class="ms-preview-frame is-desktop is-parked" id="preview-frame" title="Site preview" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+                <iframe class="ms-preview-frame is-desktop is-parked" id="preview-frame" title="Site preview" sandbox="allow-scripts allow-forms"></iframe>
                 <div
                   class="ms-preview-vp-resizer is-bottom"
                   id="preview-vp-resizer-bottom"
@@ -974,14 +981,14 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   </div>
 
   <script defer src="js/config.js?v=20261108-skel-nav"></script>
-  <script defer src="js/app.js?v=20261108-finder-notab"></script>
+  <script defer src="js/app.js?v=20261108-instant-hop"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/auth-security.js?v=20261003-session"></script>
   <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
-  <script defer src="js/auth.js?v=20261108-skel-nav"></script>
+  <script defer src="js/auth.js?v=20261108-instant-hop"></script>
   <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20261107-accent-btn"></script>
+  <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/generation-announce.js?v=20260721-float"></script>
@@ -989,6 +996,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/generation-lock.js?v=20260721-one-gen"></script>
   <script defer src="js/site-features.js?v=20260930-seed"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
-  <script defer src="js/builder.js?v=20261108-agent-timeline"></script>
+  <script defer src="js/builder.js?v=20261108-agent-enhance"></script>
 </body>
 </html>

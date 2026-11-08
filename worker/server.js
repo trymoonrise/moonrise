@@ -163,6 +163,7 @@ const {
   normalizeSiteCopy,
   parseCopyJson,
   renderBusinessSite,
+  sanitizeBusinessHours,
 } = require("./site-shell");
 const { loadCraftPrompt } = require("./craft/load-craft");
 const {
@@ -3309,19 +3310,37 @@ function craftAgentSystemPrompt() {
     GENERATION_SYSTEM_PROMPT,
     "",
     "## Moonrise Special Prompt (required)",
-    "You are the Moonrise Builder agent. Apply the Moonrise Special Prompt while assembling the site.",
+    "You are the Moonrise Builder agent. Work carefully, like Cursor Agent: plan, draft, then polish before you ship.",
     "Keep every business fact exact. Do not invent contact details. Prefer Special Prompt spacing, buttons, hover, focus, loading, and empty or error states.",
     craft || "Use calm surfaces, a 4px spacing grid, one accent, and real button hover/press/focus/loading states.",
     "",
     "## Ship bar (hard fail if any miss)",
     "- Modern, minimal, professional local-business UI. Calm surfaces. One accent. No purple gradients, glows, glass blobs, or noisy motion.",
     "- Business name, phone, address, and hours must appear when provided. Never invent missing contact facts. Never leave placeholders.",
+    "- Hours must be readable business hours only — never Google Maps junk (Copy open hours, Hours might differ, holiday parentheses).",
     "- Complete document: doctype, html, head with viewport, body, nav, hero, content sections, contact form, footer, closed tags.",
     "- One shared button system with hover, press, disabled, and a stable loading state. Forms have visible focus rings.",
     "- Motion is short (about 150–220ms) and always includes prefers-reduced-motion. No stuttering loops, layout thrash, or broken overlays.",
-    "- Components must look finished: aligned columns, reserved image space, no cut-off text, no overlapping controls, no horizontal page scroll.",
+    "- Components must look finished: aligned columns, reserved image space, visible service photos, no cut-off text, no overlapping controls, no horizontal page scroll.",
+    "- Do not dump unused alternate-layout CSS. One intentional composition only.",
     "- If you cannot meet this bar, return a simpler complete Special Prompt page rather than a broken fancy one.",
   ].join("\n");
+}
+
+function sanitizeCtxHours(ctx) {
+  const next = ctx && typeof ctx === "object" ? { ...ctx } : {};
+  next.hours = sanitizeBusinessHours(next.hours);
+  return next;
+}
+
+function scrubJunkHoursInHtml(html) {
+  return String(html || "")
+    .replace(/\bCopy open hours\b/gi, "")
+    .replace(/\bSuggest an edit\b/gi, "")
+    .replace(/\bHours might differ\b/gi, "")
+    .replace(/\bHours may differ\b/gi, "")
+    .replace(/\s*,\s*,+/g, ",")
+    .replace(/\s{2,}/g, " ");
 }
 
 function lockedCopyBlock(copy) {
@@ -3339,6 +3358,7 @@ function lockedCopyBlock(copy) {
 
 function finalizeGeneratedHtml(html, ctx, stockMedia) {
   let out = String(html || "");
+  out = scrubJunkHoursInHtml(out);
   out = ensureMobileFriendlyHtml(out);
   out = sanitizeGeneratedCopy(out);
   out = ensurePaletteContrast(out);
@@ -3357,19 +3377,24 @@ function qualityGate(html, plan, ctx) {
   return assessSiteCompleteness(html, plan?.structure, ctx);
 }
 
-async function generateWithOpenRouter(ctx, presetPack, plan) {
+async function generateWithOpenRouter(rawCtx, presetPack, plan) {
+  const ctx = sanitizeCtxHours(rawCtx);
   const stockMedia = selectStockMedia(ctx);
   const shellPlan = plan || buildLocalPlan(ctx);
+  const assembleMaxTokens = Math.max(
+    12000,
+    Number(process.env.WEBSITE_ASSEMBLE_MAX_TOKENS || 16000)
+  );
   let copy = fallbackSiteCopy(ctx, shellPlan);
 
   try {
     const result = await openRouterChat({
       system: COPY_SYSTEM_PROMPT,
       user: buildCopyUserPrompt(ctx, shellPlan),
-      temperature: 0.4,
-      maxTokens: 1800,
-      prefer: "throughput",
+      temperature: 0.35,
+      maxTokens: 2000,
       title: "Moonrise Agent Copy",
+      expectHtml: false,
     });
     copy = normalizeSiteCopy(parseCopyJson(result.content), ctx, shellPlan);
   } catch (err) {
@@ -3393,29 +3418,72 @@ async function generateWithOpenRouter(ctx, presetPack, plan) {
   }
 
   const assembleSystem = craftAgentSystemPrompt();
+  const qualityLock = [
+    "",
+    "## Quality lock",
+    "Ship only a modern, minimal, professional page.",
+    "Include the exact business name and every provided phone, address, and cleaned hours string.",
+    "Never print Google Maps junk in hours.",
+    "Service sections must keep photos visible. No display:none on service images.",
+    "No placeholders, no broken tags, no stuttering animation, no overlapping or cut-off UI.",
+    "Buttons and fields must feel smooth: hover, press, focus, and a stable submit loading state.",
+    "One intentional layout only — do not include unused alternate body.* CSS variants.",
+  ].join("\n");
+
   const assembleUser =
     buildGenerationUserPrompt(ctx, pack, shellPlan, stockMedia) +
     lockedCopyBlock(copy) +
-    [
-      "",
-      "## Quality lock",
-      "Ship only a modern, minimal, professional page.",
-      "Include the exact business name and every provided phone, address, and hours string.",
-      "No placeholders, no broken tags, no stuttering animation, no overlapping or cut-off UI.",
-      "Buttons and fields must feel smooth: hover, press, focus, and a stable submit loading state.",
-    ].join("\n");
+    qualityLock;
 
   try {
+    // Pass 1 — deliberate assemble (no throughput race).
     const assembled = await openRouterChat({
       system: assembleSystem,
       user: assembleUser,
-      temperature: 0.45,
-      maxTokens: Math.max(8000, Number(process.env.WEBSITE_ASSEMBLE_MAX_TOKENS || 12000)),
-      prefer: "throughput",
-      title: "Moonrise Agent Craft",
+      temperature: 0.32,
+      maxTokens: assembleMaxTokens,
+      title: "Moonrise Agent Assemble",
       expectHtml: true,
     });
     let html = String(assembled.content || "").trim();
+
+    // Pass 2 — enhance like a careful agent review.
+    try {
+      const enhanced = await openRouterChat({
+        system: [
+          assembleSystem,
+          "",
+          "Enhance mode: you are reviewing your own draft like Cursor Agent.",
+          "Return ONLY one complete improved HTML document. No markdown. No commentary.",
+          "Fix spacing, alignment, broken components, weak hero hierarchy, junk hours, hidden media, and unfinished UI.",
+          "Keep every business fact exact. Prefer polish over novelty.",
+        ].join("\n"),
+        user: [
+          "## Draft to enhance",
+          html.slice(0, 120000),
+          "",
+          lockedCopyBlock(copy),
+          qualityLock,
+          "",
+          "## Enhance checklist",
+          "- Hero has a clear headline and one calm support or CTA group",
+          "- Services show real photos and readable cards or rows",
+          "- FAQ opens cleanly; form has focus rings and a stable submit state",
+          "- Hours are cleaned; phone and address are exact",
+          "- Mobile: no horizontal scroll, no overlapping controls",
+          "- Remove unused alternate-layout CSS you are not applying",
+        ].join("\n"),
+        temperature: 0.22,
+        maxTokens: assembleMaxTokens,
+        title: "Moonrise Agent Enhance",
+        expectHtml: true,
+      });
+      const next = String(enhanced.content || "").trim();
+      if (/<html[\s>]/i.test(next) && next.length > 4000) html = next;
+    } catch (enhanceErr) {
+      console.warn("Moonrise agent enhance skipped:", enhanceErr.message);
+    }
+
     let finalized = finalizeGeneratedHtml(html, ctx, stockMedia);
     let check = qualityGate(finalized, shellPlan, ctx);
     if (!check.ok) {
@@ -3435,15 +3503,15 @@ async function generateWithOpenRouter(ctx, presetPack, plan) {
           check.reasons.map((reason) => "- " + reason).join("\n"),
           "",
           lockedCopyBlock(copy),
+          qualityLock,
           "",
           "## Required outcome",
           "Complete <!DOCTYPE html> document with nav, hero, content, contact form, footer.",
           "Exact business details from the facts. Modern, minimal, professional.",
-          "Smooth buttons and fields. prefers-reduced-motion for any animation. No placeholders or broken UI.",
+          "Visible service photos. Clean hours. Smooth buttons and fields.",
         ].join("\n"),
-        temperature: 0.25,
-        maxTokens: Math.max(8000, Number(process.env.WEBSITE_ASSEMBLE_MAX_TOKENS || 12000)),
-        prefer: "throughput",
+        temperature: 0.18,
+        maxTokens: assembleMaxTokens,
         title: "Moonrise Agent Repair",
         expectHtml: true,
       });

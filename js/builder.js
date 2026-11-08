@@ -403,18 +403,19 @@
     }
   }
 
-  const AGENT_TIMELINE_STEPS = ["preparing", "copy", "assemble", "check", "ready"];
+  const AGENT_TIMELINE_STEPS = ["preparing", "copy", "assemble", "enhance", "check", "ready"];
 
   function resolveAgentStep(label, pct) {
     const text = String(label || "").toLowerCase();
     if (/ready|opening preview|website ready|complete/.test(text) || pct >= 100) {
       return "ready";
     }
-    if (/check|quality|repair|verif/.test(text) || pct >= 85) return "check";
-    if (/assembl|craft|layout|special prompt|redesign|building|preset/.test(text) || pct >= 30) {
+    if (/check|quality|repair|verif/.test(text) || pct >= 90) return "check";
+    if (/enhanc|polish|review|improv/.test(text) || pct >= 55) return "enhance";
+    if (/assembl|craft|layout|special prompt|redesign|building|preset/.test(text) || pct >= 28) {
       return "assemble";
     }
-    if (/writ|copy|headline/.test(text) || pct >= 15) return "copy";
+    if (/writ|copy|headline/.test(text) || pct >= 12) return "copy";
     if (/load(ing)? project/.test(text)) return "preparing";
     return "preparing";
   }
@@ -474,7 +475,8 @@
       let stage = "Preparing facts...";
       if (elapsed > 8000) stage = "Writing copy...";
       if (elapsed > 22000) stage = "Assembling with Special Prompt...";
-      if (elapsed > 55000) stage = "Checking quality...";
+      if (elapsed > 55000) stage = "Enhancing design...";
+      if (elapsed > 95000) stage = "Checking quality...";
       if (target > genProgressPct) renderGenerateProgress(target, stage);
 
       // Hard stop so the bar never sits at 92% forever.
@@ -792,7 +794,7 @@
         const preview = previewUrl
           ? '<iframe class="ms-lb-tpl-preview" title="' +
             t.name +
-            ' preview" loading="lazy" scrolling="no" tabindex="-1" sandbox="allow-scripts allow-same-origin"></iframe>'
+            ' preview" loading="lazy" scrolling="no" tabindex="-1" sandbox="allow-scripts"></iframe>'
           : '<div class="ms-lb-tpl-fallback">' + t.name + "</div>";
         const frameAttrs = previewUrl
           ? ' class="ms-lb-tpl-frame is-loading" data-preview-src="' +
@@ -3265,7 +3267,9 @@
   const EDIT_REORDERABLE_ATTR = "data-ms-edit-reorderable";
   const EDIT_DROP_IMAGE_ATTR = "data-ms-edit-drop-image";
   const EDIT_DRAG_THRESHOLD_PX = 6;
-  const PREVIEW_SANDBOX_PREVIEW = "allow-same-origin allow-scripts allow-forms";
+  // Preview may run site scripts, but never with allow-same-origin (that combo escapes the sandbox).
+  // Edit mode needs same-origin DOM access and strips scripts instead.
+  const PREVIEW_SANDBOX_PREVIEW = "allow-scripts allow-forms";
   const PREVIEW_SANDBOX_EDIT = "allow-same-origin";
 
   /** Remove scripts/handlers so edit-mode sandbox="" does not flood the console. */
@@ -3771,16 +3775,25 @@
       const live = getPreviewFrame();
       if (!live) return;
       bindPreviewScrollBridge();
+      let doc = null;
       try {
-        bindUploadSitePreviewNav(live.contentDocument);
+        doc = live.contentDocument;
       } catch (_) {
-        /* ignore */
+        doc = null;
+      }
+      // Preview sandbox omits allow-same-origin, so contentDocument is often opaque.
+      if (doc) {
+        try {
+          bindUploadSitePreviewNav(doc);
+        } catch (_) {
+          /* ignore */
+        }
       }
       live.classList.remove("is-parked");
       applyPreviewViewportSize();
       let painted = false;
       try {
-        painted = previewDocLooksPainted(live.contentDocument);
+        painted = doc ? previewDocLooksPainted(doc) : false;
       } catch (_) {
         painted = false;
       }
@@ -3791,9 +3804,10 @@
       if (!painted) {
         window.setTimeout(() => {
           try {
-            markPreviewPainted(previewDocLooksPainted(getPreviewFrame()?.contentDocument));
+            const retry = getPreviewFrame()?.contentDocument;
+            markPreviewPainted(retry ? previewDocLooksPainted(retry) : true);
           } catch (_) {
-            /* ignore */
+            markPreviewPainted(true);
           }
         }, 200);
       }
@@ -6127,7 +6141,9 @@
       }
       renderGenerateProgress(
         Math.max(genProgressPct, 40),
-        "Assembling with Special Prompt..."
+        genProgressPct < 60
+          ? "Assembling with Special Prompt..."
+          : "Enhancing design..."
       );
       await sleepMs((Number(data.retryAfterSec) || 3) * 1000);
     }
@@ -6368,7 +6384,8 @@
       });
       renderGenerateProgress(Math.max(genProgressPct, 25), "Assembling with Special Prompt...");
       const data = await runGenerateRequest(base, requestId, intake, headers, signal);
-      renderGenerateProgress(Math.max(genProgressPct, 88), "Checking quality...");
+      renderGenerateProgress(Math.max(genProgressPct, 70), "Enhancing design...");
+      renderGenerateProgress(Math.max(genProgressPct, 90), "Checking quality...");
       if (data.credits) {
         state.totalCredits = Number(data.credits.totalCredits) || 0;
         document.dispatchEvent(new CustomEvent("ms:credits-changed", { detail: data.credits }));

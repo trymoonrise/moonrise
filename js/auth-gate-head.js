@@ -110,7 +110,9 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261108-skel-nav", "js/auth.js?v=20261108-skel-nav", "js/app.js?v=20261108-tab-instant"].forEach(function (href) {
+  // Keep these query strings in sync with the <script defer> tags on studio pages,
+  // or the browser warns that a preload was unused.
+  ["js/config.js?v=20261108-skel-nav", "js/auth.js?v=20261108-instant-hop", "js/app.js?v=20261108-instant-hop"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -201,7 +203,6 @@ function mountTabBarEarly() {
     builder: 1,
     clients: 1,
     settings: 1,
-    leads: 1,
     guide: 1,
     help: 1,
     course: 1,
@@ -211,7 +212,7 @@ function mountTabBarEarly() {
     projects: 1,
     pricing: 1,
   };
-  var activeTabs = { dashboard: 1, builder: 1, clients: 1, settings: 1, leads: 1 };
+  var activeTabs = { dashboard: 1, builder: 1, clients: 1, settings: 1 };
   if (!pages[stem]) return;
 
   var icons = {

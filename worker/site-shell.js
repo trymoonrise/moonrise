@@ -77,6 +77,33 @@ function cleanText(value, max) {
   return text.slice(0, max - 1).replace(/\s+\S*$/, "").trim();
 }
 
+/** Strip Google Maps UI junk and holiday noise from hours strings. */
+function sanitizeBusinessHours(value) {
+  let text = cleanText(value, 240);
+  if (!text) return "";
+  text = text
+    .replace(/\bCopy open hours\b/gi, "")
+    .replace(/\bSuggest an edit\b/gi, "")
+    .replace(/\bHours might differ\b/gi, "")
+    .replace(/\bHours may differ\b/gi, "")
+    .replace(/\bUpdated by (?:the )?business\b/gi, "")
+    .replace(/\([^)]*(?:Holiday|Veterans Day|Christmas|Thanksgiving|New Year(?:'?s)?)[^)]*\)/gi, "")
+    .replace(/\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s*\([^)]*\)/gi, (m) =>
+      m.replace(/\s*\([^)]*\)/, "")
+    )
+    .replace(/\s*[·|]\s*/g, ", ")
+    .replace(/(?:\s*,\s*){2,}/g, ", ")
+    .replace(/^[\s,.\-–—]+|[\s,.\-–—]+$/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  const parts = text
+    .split(",")
+    .map((part) => part.trim())
+    .filter((part) => part && !/copy open|might differ|suggest an edit|updated by/i.test(part));
+  text = parts.join(", ");
+  return cleanText(text, 120);
+}
+
 function hexOr(value, fallback) {
   const raw = String(value || "").trim();
   const parsed = parseHexColor(raw);
@@ -262,10 +289,11 @@ function styleFamily(name) {
 }
 
 function componentKit(name) {
+  // Prefer media-forward service layouts. "list" hid photos and looked unfinished.
   return {
     hero: styleFamily(name),
-    nav: pickVariant(name, "nav", ["bar", "center", "quiet"]),
-    services: pickVariant(name, "svc", ["tiles", "list", "feature"]),
+    nav: pickVariant(name, "nav", ["bar", "bar", "center", "quiet"]),
+    services: pickVariant(name, "svc", ["tiles", "tiles", "feature"]),
     gallery: pickVariant(name, "gal", ["mosaic", "row", "stack"]),
     notes: pickVariant(name, "notes", ["line", "cards"]),
     about: pickVariant(name, "about", ["side", "flip", "band"]),
@@ -280,7 +308,7 @@ function renderBusinessSite(ctx, copy, media) {
   const phone = cleanText(ctx?.phone, 40);
   const phoneHref = phone.replace(/[^\d+]/g, "");
   const address = cleanText(ctx?.address, 160);
-  const hours = cleanText(ctx?.hours, 120);
+  const hours = sanitizeBusinessHours(ctx?.hours);
   const maps = String(ctx?.mapsUrl || "").trim();
   const mapsOk = /^https?:\/\//i.test(maps) ? maps : "";
   const img = media?.images || {};
@@ -572,11 +600,12 @@ function renderBusinessSite(ctx, copy, media) {
     body.nav-center .brand { width: 100%; text-align: center; }
     body.nav-center .nav-links { margin-left: 0; justify-content: center; }
     body.nav-quiet .nav-cta { background: transparent; color: var(--ink); padding: 0; min-height: 0; border-radius: 0; text-decoration: underline; text-underline-offset: 0.18em; }
-    body.svc-list .grid-3 { display: block; counter-reset: svc; }
-    body.svc-list .card { aspect-ratio: auto; display: grid; grid-template-columns: 4.5rem 1fr; align-items: center; border-radius: 0; color: var(--ink); background: transparent; border-top: 1px solid var(--line); counter-increment: svc; }
-    body.svc-list .card img { display: none; }
-    body.svc-list .card-copy { position: static; padding: 1.15rem 0; background: none; }
+    body.svc-list .grid-3 { display: grid; grid-template-columns: 1fr; gap: 0.85rem; counter-reset: svc; }
+    body.svc-list .card { aspect-ratio: auto; display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 1rem; align-items: center; border-radius: 1rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); padding: 0.85rem; counter-increment: svc; overflow: hidden; }
+    body.svc-list .card img { position: static; width: 5.5rem; height: 5.5rem; border-radius: 0.75rem; display: block; object-fit: cover; }
+    body.svc-list .card-copy { position: static; padding: 0; background: none; }
     body.svc-list .card h3::before { content: counter(svc, decimal-leading-zero); display: block; margin-bottom: 0.2rem; color: var(--muted); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; }
+    body.svc-list .card h3 { color: var(--ink); }
     body.svc-list .card p { color: var(--muted); }
     body.svc-feature .grid-3 { grid-template-columns: 1.15fr 0.85fr; }
     body.svc-feature .card:first-child { grid-row: span 2; }
@@ -728,4 +757,5 @@ module.exports = {
   normalizeSiteCopy,
   parseCopyJson,
   renderBusinessSite,
+  sanitizeBusinessHours,
 };

@@ -85,12 +85,15 @@ When the project is Moonrise Studio / trymoonrise.com:
 
 When assembling a full business website (Moonrise Builder agent or similar):
 
+- Work carefully: plan the composition, draft, then self-review spacing, media, and contact facts before shipping.
 - Modern, minimal, professional. Calm surfaces. One accent. No purple gradients, glows, glass blobs, or noisy motion.
-- Exact business name, phone, address, and hours when provided. Never invent contact facts. Never leave placeholders.
+- Exact business name, phone, address, and cleaned hours when provided. Never invent contact facts. Never leave placeholders or Google Maps junk in hours.
 - Complete document: doctype, viewport, nav, hero, content, contact form, footer, closed tags.
 - Shared button system with hover, press, disabled, and a stable loading state. Visible field focus rings.
+- Service photos stay visible. Do not hide media with display:none.
 - Motion about 150–220ms with `prefers-reduced-motion`. No stuttering loops or broken overlays.
 - Finished components only: aligned columns, reserved image space, no cut-off text, no overlapping controls, no horizontal page scroll.
+- One intentional layout only — do not dump unused alternate-layout CSS variants.
 - Prefer a simpler complete page over a broken fancy one. Do not ship a page that fails this bar.
 
 ## Done when

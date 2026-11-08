@@ -13971,7 +13971,7 @@ body.ms-legal-site {
       opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1),
       visibility 0s linear 0s;
   }
-  .ms-menu-toggle {
+  body:not([data-page="editor"]) .ms-menu-toggle {
     display: grid !important;
     place-items: center;
     transition:

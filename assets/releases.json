@@ -3,6 +3,30 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.3.3",
+      "date": "2026-11-07",
+      "title": "Instant studio channel switching",
+      "tag": "v2.3.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.3.3",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Studio channels switch instantly by painting chrome right away and prefetching the next pages.",
+            "Generated sites scrub Google Maps hours junk and keep service photos visible.",
+            "The Moonrise agent now takes longer on purpose: assemble, enhance, then quality-check before a site ships.",
+            "Builder progress shows an Enhancing design step while the agent polishes layout and components."
+          ],
+          "fixes": [
+            "Channel hops no longer wait on a full auth and profile round-trip before the page appears.",
+            "Editor stays full-bleed with no studio menu or phone tab dock.",
+            "Builder viewport icon buttons stay borderless in the light theme.",
+            "Shell fallbacks no longer hide service photos or keep Google Maps hours junk."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.2",
       "date": "2026-11-07",
       "title": "Finder Scan nearby and Services fixes",
@@ -18,11 +42,14 @@
         {
           "heading": "Studio",
           "added": [
-            "While the Moonrise agent builds a site, the preview shows a Designer Tips-style timeline of the step it is working on.",
-            "Builder preview shows a Moonrise agent timeline while a site is building."
+            "While the Moonrise agent builds a site, the preview shows a Designer Tips-style timeline of the step it is working on."
           ],
           "fixes": [
-            "Settings Services no longer false-warns on Supabase when sign-in is healthy."
+            "Settings Services no longer false-warns on Supabase when sign-in is healthy.",
+            "Editor preview iframes no longer combine allow-scripts with allow-same-origin, which stops the sandbox escape warning.",
+            "Studio script preloads match the app.js version that actually loads, so unused-preload warnings stop.",
+            "Builder tool and viewport icons no longer get black outlined borders.",
+            "The Editor no longer shows the floating studio menu button."
           ]
         },
         {

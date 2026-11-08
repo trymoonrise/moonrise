@@ -428,6 +428,16 @@
     document.body.classList.remove("ms-nav-open");
     try {
       sessionStorage.removeItem(CHANNEL_HOP_KEY);
+      sessionStorage.setItem("ms_studio_booted", "1");
+      const from = document.body?.dataset?.page || "";
+      const to =
+        String(link.getAttribute("data-nav") || "")
+          .trim()
+          .toLowerCase() || "";
+      sessionStorage.setItem(
+        "ms_tab_switch",
+        JSON.stringify({ from: from, to: to || from, t: Date.now() })
+      );
     } catch (_) {
       /* ignore */
     }

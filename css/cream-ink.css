@@ -199,7 +199,6 @@ html:not([data-ms-mode="dark"]) :where(
   .ms-lb-redesign-btn,
   .ms-lb-unpublish-btn,
   .ms-lb-dev-unlock-btn,
-  .ms-lb-icon-btn,
   body[data-page="download"] .ms-download-actions .ms-btn-secondary
 ) {
   background: transparent !important;
@@ -209,6 +208,22 @@ html:not([data-ms-mode="dark"]) :where(
   border-radius: var(--ms-radius-pill) !important;
   box-shadow: none !important;
   background-image: none !important;
+}
+
+/* Builder tool / viewport icons stay borderless inside the segment strip. */
+html:not([data-ms-mode="dark"]) .ms-lb-viewports .ms-lb-icon-btn {
+  border: 0 !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  color: #666666 !important;
+  -webkit-text-fill-color: #666666 !important;
+}
+
+html:not([data-ms-mode="dark"]) .ms-lb-viewports .ms-lb-icon-btn:hover,
+html:not([data-ms-mode="dark"]) .ms-lb-viewports .ms-lb-icon-btn.is-active {
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
 }
 
 html:not([data-ms-mode="dark"]) :where(
