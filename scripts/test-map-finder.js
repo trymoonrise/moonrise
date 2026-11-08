@@ -66,7 +66,7 @@ async function main() {
   ok("leads.html loads osm-finder.js", html.includes("js/osm-finder.js"));
   ok("leads.html has #lf-map", html.includes('id="lf-map"'));
   ok("leads.html has Scan Near Me + All", html.includes("lf-scan-near") && html.includes("lf-scan-all"));
-  ok("CSS has dark map stage", css.includes(".ms-lf-map-stage") && css.includes("#0f172a"));
+  ok("CSS has dark map stage", css.includes(".ms-lf-map-stage") && css.includes("#0b1220"));
   ok("JS uses OpenFreeMap styles", searchJs.includes("tiles.openfreemap.org/styles/"));
   ok("JS searches via OsmFinder", searchJs.includes("searchViaOpenStreetMap") && osmJs.includes("overpass-api.de"));
   ok("JS has map init + markers", searchJs.includes("initLeadMap") && searchJs.includes("syncMapMarkers"));

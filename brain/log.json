@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.6",
+      "date": "2026-11-07",
+      "title": "Map smoke test matches dark stage color",
+      "sections": [
+        {
+          "heading": "Finder",
+          "fixes": [
+            "Map finder smoke test checks the real dark stage color so the suite no longer fails on a stale hex."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.5",
       "date": "2026-11-07",
       "title": "Quiet anonymous session checks in the console",
