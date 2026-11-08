@@ -620,63 +620,49 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
   color: var(--ms-min-quiet);
 }
 
-.ms-status-head .ms-set-row-value {
+#set-status-toggle .ms-status-wave {
   margin-left: auto;
-  margin-right: 0.35rem;
+}
+
+#set-status-overall {
+  margin-left: 0.4rem;
+  margin-right: 0.15rem;
   font-size: 0.78rem;
   font-weight: 650;
   color: var(--ms-min-muted);
 }
 
-.ms-status-head .ms-set-row-value[data-state="ok"] {
+#set-status-overall[data-state="ok"] {
   color: #059669;
 }
 
-.ms-status-head .ms-set-row-value[data-state="degraded"] {
+#set-status-overall[data-state="degraded"] {
   color: #d97706;
 }
 
-.ms-status-head .ms-set-row-value[data-state="down"] {
+#set-status-overall[data-state="down"] {
   color: #dc2626;
 }
 
-.ms-status-refresh {
-  appearance: none;
-  width: 2rem;
-  height: 2rem;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 999px;
-  background: var(--ms-min-fill);
-  color: var(--ms-ink);
-  cursor: pointer;
-  flex-shrink: 0;
+#set-status-toggle.is-loading .ms-status-wave {
+  opacity: 0.55;
 }
 
-.ms-status-refresh svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-.ms-status-refresh.is-busy svg {
-  animation: ms-status-spin 0.8s linear infinite;
-}
-
-@keyframes ms-status-spin {
-  to {
-    transform: rotate(360deg);
-  }
+.ms-status-legend {
+  margin: 0.35rem 0 0.55rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--ms-min-quiet);
 }
 
 .ms-status-list {
   display: grid;
   gap: 0;
-  padding: 0 0 0.35rem;
+  padding: 0 0 0.2rem;
 }
 
 .ms-status-item + .ms-status-item {
-  box-shadow: inset 3.25rem 0 0 0 var(--ms-group), inset 0 1px 0 0 var(--ms-min-border);
+  box-shadow: inset 0 1px 0 0 var(--ms-min-border);
 }
 
 .ms-status-row {
@@ -741,6 +727,8 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
   stroke-width: 1.75;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
+  stroke-dasharray: 28 10;
+  animation: ms-status-wave 1.1s linear infinite;
 }
 
 .ms-status-wave.is-ok {
@@ -753,11 +741,6 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
 
 .ms-status-wave.is-bad {
   color: #ef4444;
-}
-
-.ms-status-wave-path {
-  stroke-dasharray: 28 10;
-  animation: ms-status-wave 1.1s linear infinite;
 }
 
 .ms-status-wave-path--delay {
@@ -787,14 +770,42 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
   flex-shrink: 0;
 }
 
-.ms-status-panel {
-  padding: 0 1rem 0.85rem 3.25rem !important;
+.ms-status-detail-panel {
+  margin: 0;
+}
+
+.ms-status-detail-panel .ms-set-panel-inner {
+  padding-left: 0.35rem;
+  padding-right: 0.35rem;
+}
+
+.ms-status-detail-panel.is-expanded .ms-set-panel-inner {
+  padding: 0.15rem 0.35rem 0.75rem;
 }
 
 .ms-status-detail {
   display: grid;
   gap: 0.45rem;
-  padding: 0.15rem 0 0.25rem;
+  padding: 0.15rem 0.5rem 0.2rem 2.85rem;
+}
+
+.ms-status-feedback {
+  margin: 0 0 0.15rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  font-weight: 550;
+}
+
+.ms-status-feedback.is-ok {
+  color: #059669;
+}
+
+.ms-status-feedback.is-warn {
+  color: #d97706;
+}
+
+.ms-status-feedback.is-bad {
+  color: #dc2626;
 }
 
 .ms-status-detail-row {
@@ -815,20 +826,22 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
   text-align: right;
 }
 
-html[data-ms-mode="dark"] .ms-status-head .ms-set-row-value[data-state="ok"] {
+html[data-ms-mode="dark"] #set-status-overall[data-state="ok"],
+html[data-ms-mode="dark"] .ms-status-feedback.is-ok {
   color: #34d399;
 }
 
-html[data-ms-mode="dark"] .ms-status-head .ms-set-row-value[data-state="degraded"] {
+html[data-ms-mode="dark"] #set-status-overall[data-state="degraded"],
+html[data-ms-mode="dark"] .ms-status-feedback.is-warn {
   color: #fbbf24;
 }
 
-html[data-ms-mode="dark"] .ms-status-head .ms-set-row-value[data-state="down"] {
+html[data-ms-mode="dark"] #set-status-overall[data-state="down"],
+html[data-ms-mode="dark"] .ms-status-feedback.is-bad {
   color: #f87171;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ms-status-refresh.is-busy svg,
   .ms-status-wave-path {
     animation: none !important;
   }

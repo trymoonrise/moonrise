@@ -129,6 +129,7 @@
   bindPanelToggle("set-profile-toggle", "set-profile-panel");
   bindPanelToggle("set-theme-toggle", "set-theme-panel");
   bindPanelToggle("set-text-toggle", "set-text-panel");
+  bindPanelToggle("set-status-toggle", "set-status-panel");
   bindPanelToggle("set-passkeys-toggle", "settings-passkeys");
   bindPanelToggle("set-delete-toggle", "set-delete-panel");
 

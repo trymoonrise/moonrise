@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.2.6",
+      "date": "2026-11-07",
+      "title": "Simpler Status button",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Settings Status is one animated Status button that opens the service list, with green, yellow, or red waves and plain-language feedback for each state."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.2.5",
       "date": "2026-11-07",
       "title": "Settings Status board",
