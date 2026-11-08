@@ -769,6 +769,7 @@
               .join(" · ") || "Account"
           ) +
           "</span></span></span>" +
+          '<span class="ms-admin-employee-metrics">' +
           '<span class="ms-admin-metric"><span>Websites</span><b>' +
           employee.sites.length +
           "</b></span>" +
@@ -778,9 +779,10 @@
           '<span class="ms-admin-metric"><span>Sales</span><b>' +
           esc(money(employee.saleCents)) +
           "</b></span>" +
-          '<span class="ms-admin-metric"><span>Their share</span><b>' +
+          '<span class="ms-admin-metric"><span>Share</span><b>' +
           esc(money(employee.shareCents)) +
           "</b></span>" +
+          "</span>" +
           "</button>" +
           (open
             ? '<div class="ms-admin-sites">' +

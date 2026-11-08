@@ -13,9 +13,11 @@
   const initialsEl = document.getElementById("set-avatar-initials");
   const removeBtn = document.getElementById("set-avatar-remove");
   const wrapEl = document.getElementById("set-avatar-wrap");
-  const notifToggle = document.getElementById("set-client-purchase-notif");
   const notifHint = document.getElementById("set-notif-hint");
   const notifError = document.getElementById("set-notif-error");
+  const notifSummary = document.getElementById("set-notif-summary");
+  const notifInputs = () =>
+    Array.from(document.querySelectorAll("#set-notif-panel [data-notif-key]"));
 
   let avatarUrl = "";
   let started = false;
@@ -129,6 +131,7 @@
   bindPanelToggle("set-profile-toggle", "set-profile-panel");
   bindPanelToggle("set-theme-toggle", "set-theme-panel");
   bindPanelToggle("set-text-toggle", "set-text-panel");
+  bindPanelToggle("set-notif-toggle", "set-notif-panel");
   bindPanelToggle("set-status-toggle", "set-status-panel");
   bindPanelToggle("set-passkeys-toggle", "settings-passkeys");
   bindPanelToggle("set-delete-toggle", "set-delete-panel");
@@ -344,22 +347,28 @@
   }
 
   function syncNotificationToggle(profile) {
-    if (!notifToggle) return;
-    const enabled = !!window.MoonrisePush?.readPref?.(profile?.notification_prefs);
-    notifToggle.checked = enabled;
+    const prefs = window.MoonrisePush?.readPrefs?.(profile?.notification_prefs) || {};
+    const inputs = notifInputs();
+    inputs.forEach((input) => {
+      const key = input.getAttribute("data-notif-key") || "";
+      input.checked = !!prefs[key];
+    });
+    if (notifSummary) {
+      notifSummary.textContent = window.MoonrisePush?.summaryLabel?.(prefs) || "Off";
+    }
 
     if (!window.MoonrisePush?.supported?.()) {
-      notifToggle.disabled = true;
+      inputs.forEach((input) => {
+        input.disabled = true;
+      });
       setNotifHint("Push alerts need a modern browser (and on iPhone, Add to Home Screen).");
       return;
     }
 
-    notifToggle.disabled = false;
-    if (enabled) {
-      setNotifHint("On for paid client go-lives");
-    } else {
-      setNotifHint("Alert when a business pays to go live");
-    }
+    inputs.forEach((input) => {
+      input.disabled = false;
+    });
+    setNotifHint("Choose which alerts reach this device.");
   }
 
   fileInput?.addEventListener("change", async () => {
@@ -508,31 +517,33 @@
     }
   });
 
-  notifToggle?.addEventListener("change", async () => {
-    if (notifBusy) return;
-    const wantOn = !!notifToggle.checked;
+  document.getElementById("set-notif-panel")?.addEventListener("change", async (event) => {
+    const input = event.target?.closest?.("[data-notif-key]");
+    if (!input || notifBusy) return;
+    const key = input.getAttribute("data-notif-key") || "";
+    const wantOn = !!input.checked;
     notifBusy = true;
-    notifToggle.disabled = true;
+    notifInputs().forEach((el) => {
+      el.disabled = true;
+    });
     setNotifError("");
     try {
-      if (!window.MoonrisePush?.setClientPurchaseAlerts) {
+      if (!window.MoonrisePush?.setAlert) {
         throw new Error("Notification helper is not loaded.");
       }
-      await window.MoonrisePush.setClientPurchaseAlerts(wantOn);
-      notifToggle.checked = wantOn;
-      if (wantOn) {
-        setNotifHint("On - you will get a notification when a client purchases their website.");
-        window.StudioToast?.success?.("Client purchase alerts enabled.");
-      } else {
-        setNotifHint("Turn on to get a device notification for each new paid client.");
-        window.StudioToast?.success?.("Client purchase alerts turned off.");
-      }
+      const prefs = await window.MoonrisePush.setAlert(key, wantOn);
+      syncNotificationToggle({ notification_prefs: prefs });
+      window.StudioToast?.success?.(wantOn ? "Notification enabled." : "Notification turned off.");
     } catch (e) {
-      notifToggle.checked = !wantOn;
+      input.checked = !wantOn;
       setNotifError(e.message || "Could not update notifications");
     } finally {
       notifBusy = false;
-      if (window.MoonrisePush?.supported?.()) notifToggle.disabled = false;
+      if (window.MoonrisePush?.supported?.()) {
+        notifInputs().forEach((el) => {
+          el.disabled = false;
+        });
+      }
     }
   });
 

@@ -3,6 +3,40 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.2.9",
+      "date": "2026-11-07",
+      "title": "Phone tabs, alerts, and roomier Finder",
+      "tag": "v2.2.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.2.9",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "On a phone the menu sits at the top left and Settings joins the bottom tab bar.",
+            "Settings Notifications can alert this device for paid go-lives, site visits, and contact messages.",
+            "The status row is labeled Services.",
+            "Builder on a phone centers the title, the start choices, the instructions, and the actions.",
+            "The admin console uses the same slim left-aligned layout as Settings, and employee rows show websites, sales, and share together."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Finder",
+          "added": [
+            "Business Finder on a phone uses larger search controls, filters, cards, and the Scan button."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "Published sites can notify the creator when someone opens the site or sends a contact message, when those alerts are on."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.2.8",
       "date": "2026-11-07",
       "title": "Onboarding fit and spacing",

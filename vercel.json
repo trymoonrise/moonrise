@@ -91,6 +91,7 @@
     { "source": "/embed.js", "destination": "/api" },
     { "source": "/contact-form.js", "destination": "/api" },
     { "source": "/contact-submit", "destination": "/api" },
+    { "source": "/site-visit", "destination": "/api" },
     { "source": "/webhooks/stripe", "destination": "/api" },
     { "source": "/donate/config", "destination": "/api" },
     { "source": "/donate/leaderboard", "destination": "/api" },

@@ -1,5 +1,5 @@
 /**
- * Settings → Status button: expand to services, tap a service for details.
+ * Settings → Services button: expand to services, tap a service for details.
  * Secrets stay on the server (/studio/status).
  */
 (function () {
@@ -357,7 +357,7 @@
     if (document.body?.dataset?.msAuthFired === "1") prefetch();
     else document.addEventListener("ms:auth-ready", prefetch, { once: true });
 
-    // Refresh whenever the Status panel opens.
+    // Refresh whenever the Services panel opens.
     toggle.addEventListener("click", () => {
       window.setTimeout(() => {
         const open = panel.classList.contains("is-open") && !panel.hidden;

@@ -857,7 +857,12 @@
             display_name:
               (handleOverride || metaHandle || base).replace(/^@/, "").trim() || base,
             branding_defaults: {},
-            notification_prefs: { email: true, clientPurchases: false },
+            notification_prefs: {
+              email: true,
+              clientPurchases: false,
+              siteVisits: false,
+              contactMessages: false,
+            },
           },
           { onConflict: "id" }
         ),

@@ -781,6 +781,30 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     }
   }
 
+  function pingSiteVisit(projectId, workerUrl) {
+    const base = String(workerUrl || "").replace(/\/$/, "");
+    const id = String(projectId || "").trim();
+    if (!base || !id) return;
+    try {
+      const key = "mr_visit_ping_" + id;
+      if (sessionStorage.getItem(key) === "1") return;
+      sessionStorage.setItem(key, "1");
+    } catch (_) {
+      /* still try once */
+    }
+    try {
+      fetch(base + "/site-visit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId: id }),
+        keepalive: true,
+        mode: "cors",
+      }).catch(() => {});
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
   function autoMountFromScript() {
     // Capture at parse time - document.currentScript is null inside deferred
     // callbacks / DOMContentLoaded, which is how live sites load this file.
@@ -794,6 +818,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     const workerUrl = script.getAttribute("data-worker") || "";
     const creatorContact = readContactFromScript(script, "data-creator-contact");
     const hqContact = readContactFromScript(script, "data-hq-contact") || DEFAULT_HQ;
+    pingSiteVisit(projectId, workerUrl);
     void fulfillPaidReturn(projectId, workerUrl).then((handled) => {
       if (handled) return;
       mount({

@@ -232,6 +232,8 @@ const {
   upsertPushSubscription,
   deletePushSubscription,
   notifyCreatorClientPurchase,
+  notifyCreatorSiteVisit,
+  notifyCreatorContactMessage,
 } = require("./creator-push");
 const { recordPendingCreatorPayout } = require("./creator-payouts");
 const { sendContactLeadEmail, sendPurchaseInvoiceEmail } = require("./contact-mail");
@@ -2118,6 +2120,12 @@ const contactSubmitLimiter = rateLimit({
   max: 30,
   name: "contact-submit",
   keyFn: (req) => "cform:" + clientIp(req) + ":" + String(req.body?.projectId || ""),
+});
+const siteVisitLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 60,
+  name: "site-visit",
+  keyFn: (req) => "svisit:" + clientIp(req) + ":" + String(req.body?.projectId || req.query?.projectId || ""),
 });
 const deleteAccountLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
@@ -4543,10 +4551,47 @@ app.post("/contact-submit", contactSubmitLimiter, async (req, res) => {
       });
     }
 
+    try {
+      await notifyCreatorContactMessage(supabase, {
+        project,
+        name,
+      });
+    } catch (pushErr) {
+      console.error("Creator contact-message push failed:", pushErr.message || pushErr);
+    }
+
     res.json({ ok: true });
   } catch (e) {
     console.error("contact-submit", e);
     respondApiError(res, e, "Could not send message");
+  }
+});
+
+/** Public ping from published sites so creators can get visit alerts. */
+app.post("/site-visit", siteVisitLimiter, async (req, res) => {
+  try {
+    const projectId = String(req.body?.projectId || req.body?.project_id || "").trim();
+    if (!projectId) return res.status(400).json({ error: "projectId required" });
+
+    const supabase = db();
+    const { data: project, error } = await supabase
+      .from("projects")
+      .select("id,user_id,business_name,business_context,status")
+      .eq("id", projectId)
+      .maybeSingle();
+    if (error) throw error;
+    if (!project) return res.status(404).json({ error: "Project not found" });
+
+    const status = String(project.status || "").toLowerCase();
+    if (status !== "published" && status !== "paid") {
+      return res.json({ ok: true, skipped: true, reason: "not_live" });
+    }
+
+    const result = await notifyCreatorSiteVisit(supabase, { project });
+    res.json({ ok: true, ...result });
+  } catch (e) {
+    console.error("site-visit", e);
+    respondApiError(res, e, "Could not record visit");
   }
 });
 
@@ -5187,6 +5232,20 @@ function injectContactFormHandler(html, project) {
   return src + tag;
 }
 
+function injectSiteVisitBeacon(html, project) {
+  const projectId = String(project?.id || "").trim();
+  if (!projectId) return String(html || "");
+  const workerBase = resolveWorkerPublicUrl();
+  const src = String(html || "");
+  // Lightweight one-shot visit ping for creator notifications (session-deduped in browser).
+  const tag =
+    `\n<script>(function(){try{var id=${JSON.stringify(projectId)},base=${JSON.stringify(
+      workerBase
+    )},k="mr_visit_ping_"+id;if(sessionStorage.getItem(k)==="1")return;sessionStorage.setItem(k,"1");fetch(String(base||"").replace(/\\/$/,"")+"/site-visit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({projectId:id}),keepalive:true,mode:"cors"}).catch(function(){})}catch(e){}})();</script>\n`;
+  if (/<\/body>/i.test(src)) return src.replace(/<\/body>/i, `${tag}</body>`);
+  return src + tag;
+}
+
 function preparePublishedHtml(project) {
   let html = ensureMobileFriendlyHtml(
     stripRuntimeEmbedsFromStoredHtml(project.html || "<!doctype html><title>Site</title>")
@@ -5203,6 +5262,7 @@ function preparePublishedHtml(project) {
     html = injectWatermarkEmbed(html, project);
   }
   html = injectContactFormHandler(html, project);
+  html = injectSiteVisitBeacon(html, project);
   return html;
 }
 

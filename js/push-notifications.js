@@ -1,8 +1,10 @@
 /**
- * Client Web Push helpers for creator "My Clients" purchase alerts.
+ * Creator Web Push helpers for Settings → Notifications.
  */
 (function (global) {
+  const ALERT_KEYS = ["clientPurchases", "siteVisits", "contactMessages"];
   const PREF_KEY = "clientPurchases";
+  const LEGACY_PURCHASE = "purchaseAlerts";
 
   function workerBase() {
     if (typeof global.resolveWorkerUrl === "function") {
@@ -136,23 +138,46 @@
     return { ok: true };
   }
 
+  function normalizePrefs(prefs) {
+    const src = prefs && typeof prefs === "object" && !Array.isArray(prefs) ? prefs : {};
+    const next = {
+      email: src.email !== false,
+      clientPurchases: src.clientPurchases === true || src[LEGACY_PURCHASE] === true,
+      siteVisits: src.siteVisits === true,
+      contactMessages: src.contactMessages === true,
+    };
+    return next;
+  }
+
+  function anyAlertEnabled(prefs) {
+    const n = normalizePrefs(prefs);
+    return ALERT_KEYS.some((key) => n[key] === true);
+  }
+
   function readPref(prefs) {
-    if (!prefs || typeof prefs !== "object") return false;
-    return prefs[PREF_KEY] === true || prefs.purchaseAlerts === true;
+    return normalizePrefs(prefs).clientPurchases === true;
+  }
+
+  function readPrefs(prefs) {
+    return normalizePrefs(prefs);
   }
 
   function withPref(prefs, enabled) {
-    const next =
-      prefs && typeof prefs === "object" && !Array.isArray(prefs) ? { ...prefs } : { email: true };
+    const next = normalizePrefs(prefs);
     next[PREF_KEY] = !!enabled;
     return next;
   }
 
-  async function savePref(enabled) {
+  function withAlert(prefs, key, enabled) {
+    const next = normalizePrefs(prefs);
+    if (!ALERT_KEYS.includes(key)) return next;
+    next[key] = !!enabled;
+    return next;
+  }
+
+  async function savePrefs(notification_prefs) {
     const user = await global.StudioAuth?.getUser?.();
     if (!user) throw new Error("Not signed in");
-    const profile = await global.StudioAuth?.getProfile?.();
-    const notification_prefs = withPref(profile?.notification_prefs, enabled);
     const { error } = await global.SiteSupabase.getClient()
       .from("profiles")
       .update({
@@ -164,28 +189,57 @@
     return notification_prefs;
   }
 
+  async function savePref(enabled) {
+    const profile = await global.StudioAuth?.getProfile?.();
+    return savePrefs(withPref(profile?.notification_prefs, enabled));
+  }
+
+  /**
+   * Toggle one alert type. Keeps the push subscription while any alert is on.
+   */
+  async function setAlert(key, enabled) {
+    if (!ALERT_KEYS.includes(key)) throw new Error("Unknown notification setting.");
+    const profile = await global.StudioAuth?.getProfile?.();
+    const next = withAlert(profile?.notification_prefs, key, enabled);
+    if (anyAlertEnabled(next)) {
+      await subscribe();
+      await savePrefs(next);
+    } else {
+      await savePrefs(next);
+      await unsubscribe();
+    }
+    return next;
+  }
+
   /**
    * Turn client-purchase alerts on or off: save pref + manage push subscription.
    */
   async function setClientPurchaseAlerts(enabled) {
-    if (enabled) {
-      await subscribe();
-      await savePref(true);
-      return { enabled: true };
-    }
-    await savePref(false);
-    await unsubscribe();
-    return { enabled: false };
+    return setAlert(PREF_KEY, enabled);
+  }
+
+  function summaryLabel(prefs) {
+    const n = normalizePrefs(prefs);
+    const count = ALERT_KEYS.filter((key) => n[key]).length;
+    if (!count) return "Off";
+    if (count === ALERT_KEYS.length) return "All on";
+    return count + " on";
   }
 
   global.MoonrisePush = {
     PREF_KEY,
+    ALERT_KEYS,
     supported,
     readPref,
+    readPrefs,
+    summaryLabel,
+    anyAlertEnabled,
     currentSubscription,
     subscribe,
     unsubscribe,
+    setAlert,
     setClientPurchaseAlerts,
     savePref,
+    savePrefs,
   };
 })(window);

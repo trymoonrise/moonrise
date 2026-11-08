@@ -511,23 +511,6 @@ html:not([data-ms-mode="dark"]) a.ms-sidebar-legal-link.is-active {
     padding-top: calc(env(safe-area-inset-top, 0px) + 0.85rem) !important;
   }
 
-  /* Pages without the bottom tab bar still get a floating menu (top-right). */
-  body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="clients"]):not([data-page="settings"]):not([data-page="leads"]) .ms-menu-toggle:not(.ms-tab-menu) {
-    position: fixed !important;
-    top: var(--ms-chrome-top, calc(env(safe-area-inset-top, 0px) + 0.75rem)) !important;
-    right: var(--ms-chrome-right, 0.75rem) !important;
-    left: auto !important;
-    z-index: 220 !important;
-    width: 2.75rem !important;
-    height: 2.75rem !important;
-    display: grid !important;
-    place-items: center;
-    background: rgba(255, 255, 255, 0.94) !important;
-    border: 1px solid #e5e5e5 !important;
-    border-radius: 999px !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
-    color: #232427 !important;
-  }
 }
 
 html[data-ms-mode="dark"] .ms-quick-nav,
@@ -666,7 +649,6 @@ html[data-ms-mode="dark"] .ms-quick-nav {
   border-bottom-color: rgb(255 255 255 / 10%) !important;
 }
 
-html[data-ms-mode="dark"] .ms-menu-toggle,
 html[data-ms-mode="dark"] .ms-help-btn {
   background: transparent !important;
   border-color: transparent !important;
@@ -1396,6 +1378,79 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   border-color: rgb(255 255 255 / 16%) !important;
 }
 
+/* Phone: keep the start form in the middle of the screen. */
+@media (max-width: 900px) {
+  body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
+    display: flex !important;
+    align-items: safe center;
+    justify-content: center;
+    min-height: 100dvh;
+    box-sizing: border-box;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+
+  body[data-page="builder"].ms-lb-setup .ms-bs-layout {
+    width: min(100%, 28rem);
+    margin-inline: auto;
+    text-align: center;
+    justify-items: center;
+  }
+
+  body[data-page="builder"].ms-lb-setup .ms-page-head,
+  body[data-page="builder"].ms-lb-setup .ms-page-head-copy,
+  body[data-page="builder"].ms-lb-setup .ms-page-head h1,
+  body[data-page="builder"].ms-lb-setup .ms-bs-hero .lead,
+  body[data-page="builder"].ms-lb-setup .ms-bs-path-head,
+  body[data-page="builder"].ms-lb-setup .ms-bs-path-copy,
+  body[data-page="builder"].ms-lb-setup .ms-bs-path-copy p,
+  body[data-page="builder"].ms-lb-setup .ms-lb-onboard-label,
+  body[data-page="builder"].ms-lb-setup .ms-bs-gh-hint,
+  body[data-page="builder"].ms-lb-setup .ms-bs-upload-watermark-note,
+  body[data-page="builder"].ms-lb-setup .ms-bs-status,
+  body[data-page="builder"].ms-lb-setup .ms-error {
+    text-align: center !important;
+  }
+
+  body[data-page="builder"].ms-lb-setup .ms-bs-mode-tabs,
+  body[data-page="builder"].ms-lb-setup .ms-bs-card,
+  body[data-page="builder"].ms-lb-setup .ms-bs-path,
+  body[data-page="builder"].ms-lb-setup .ms-bs-path-head,
+  body[data-page="builder"].ms-lb-setup .ms-bs-path-copy,
+  body[data-page="builder"].ms-lb-setup .ms-bs-path-copy p,
+  body[data-page="builder"].ms-lb-setup .ms-lb-onboard-maps,
+  body[data-page="builder"].ms-lb-setup .ms-lb-onboard-field,
+  body[data-page="builder"].ms-lb-setup .ms-bs-gh-hint,
+  body[data-page="builder"].ms-lb-setup .ms-bs-upload-watermark-note,
+  body[data-page="builder"].ms-lb-setup .ms-bs-recent-link-wrap {
+    width: 100%;
+  }
+
+  body[data-page="builder"].ms-lb-setup .ms-bs-path-head {
+    justify-content: center;
+  }
+
+  body[data-page="builder"].ms-lb-setup .ms-bs-gh-progress {
+    justify-content: center;
+  }
+
+  body[data-page="builder"].ms-lb-setup .ms-lb-onboard-foot {
+    justify-content: center !important;
+  }
+
+  body[data-page="builder"].ms-lb-setup .ms-lb-onboard-foot .ms-lb-onboard-next,
+  body[data-page="builder"].ms-lb-setup .ms-lb-onboard-foot .ms-btn:last-child {
+    margin-left: 0 !important;
+  }
+
+  body[data-page="builder"].ms-lb-setup .ms-lb-onboard-input,
+  body[data-page="builder"].ms-lb-setup .ms-bs-gh-select-trigger,
+  body[data-page="builder"].ms-lb-setup .ms-bs-gh-select-label,
+  body[data-page="builder"].ms-lb-setup .ms-bs-gh-path {
+    text-align: left !important;
+  }
+}
+
 /* Mobile toolbar: flush bottom, icons only, roomy tap targets. */
 @media (max-width: 900px) {
   .ms-tabbar {
@@ -1444,8 +1499,7 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
 
   .ms-tab,
   .ms-tab.is-active,
-  .ms-tabbar.is-pill-ready .ms-tab.is-active,
-  .ms-tabbar .ms-menu-toggle.ms-tab-menu {
+  .ms-tabbar.is-pill-ready .ms-tab.is-active {
     flex: 1 1 0;
     min-width: 0;
     height: 3.15rem;
@@ -1468,29 +1522,6 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   }
 
   .ms-tab-ico svg {
-    width: 24px !important;
-    height: 24px !important;
-    display: block !important;
-  }
-
-  .ms-tabbar .ms-menu-toggle.ms-tab-menu {
-    position: relative !important;
-    inset: auto !important;
-    display: grid !important;
-    place-items: center;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: auto !important;
-    min-width: 0 !important;
-    border: 0 !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    color: #1d1d1f !important;
-    -webkit-text-fill-color: #1d1d1f !important;
-  }
-
-  .ms-tabbar .ms-menu-toggle.ms-tab-menu svg {
     width: 24px !important;
     height: 24px !important;
     display: block !important;

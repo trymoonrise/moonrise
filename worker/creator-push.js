@@ -44,6 +44,16 @@ function prefsAllowClientPurchases(prefs) {
   return false;
 }
 
+function prefsAllowSiteVisits(prefs) {
+  if (!prefs || typeof prefs !== "object" || Array.isArray(prefs)) return false;
+  return prefs.siteVisits === true;
+}
+
+function prefsAllowContactMessages(prefs) {
+  if (!prefs || typeof prefs !== "object" || Array.isArray(prefs)) return false;
+  return prefs.contactMessages === true;
+}
+
 function moneyLabel(cents) {
   const n = Number(cents);
   if (!Number.isFinite(n) || n < 0) return "";
@@ -229,11 +239,110 @@ async function notifyCreatorClientPurchase(
   return result;
 }
 
+/**
+ * Notify the project creator that someone opened a published site.
+ * Throttled with business_context.lastVisitPushAt (once per 12 hours).
+ */
+async function notifyCreatorSiteVisit(supabase, { project }) {
+  if (!project?.id) {
+    return { ok: false, skipped: true, reason: "missing_project" };
+  }
+
+  const creatorId = project.user_id || null;
+  if (!creatorId) {
+    return { ok: false, skipped: true, reason: "missing_owner" };
+  }
+
+  const ctx = readBusinessContext(project);
+  const lastAt = Date.parse(String(ctx.lastVisitPushAt || ""));
+  if (Number.isFinite(lastAt) && Date.now() - lastAt < 12 * 60 * 60 * 1000) {
+    return { ok: true, skipped: true, reason: "throttled" };
+  }
+
+  const { data: profile, error: profileErr } = await supabase
+    .from("profiles")
+    .select("notification_prefs")
+    .eq("id", creatorId)
+    .maybeSingle();
+  if (profileErr) throw profileErr;
+
+  if (!prefsAllowSiteVisits(profile?.notification_prefs)) {
+    return { ok: false, skipped: true, reason: "prefs_disabled" };
+  }
+
+  const businessName =
+    String(project.business_name || ctx.businessName || "").trim() || "Your site";
+  const payload = {
+    title: "Site visit",
+    body: "Someone opened " + businessName + ".",
+    url: "clients.html",
+    tag: "site-visit-" + project.id,
+    projectId: project.id,
+  };
+
+  const result = await sendPushToUser(supabase, creatorId, payload);
+  if (result.ok) {
+    await supabase
+      .from("projects")
+      .update({
+        business_context: {
+          ...ctx,
+          lastVisitPushAt: new Date().toISOString(),
+        },
+      })
+      .eq("id", project.id);
+  }
+  return result;
+}
+
+/**
+ * Notify the project creator that someone submitted the site contact form.
+ */
+async function notifyCreatorContactMessage(supabase, { project, name }) {
+  if (!project?.id) {
+    return { ok: false, skipped: true, reason: "missing_project" };
+  }
+
+  const creatorId = project.user_id || null;
+  if (!creatorId) {
+    return { ok: false, skipped: true, reason: "missing_owner" };
+  }
+
+  const { data: profile, error: profileErr } = await supabase
+    .from("profiles")
+    .select("notification_prefs")
+    .eq("id", creatorId)
+    .maybeSingle();
+  if (profileErr) throw profileErr;
+
+  if (!prefsAllowContactMessages(profile?.notification_prefs)) {
+    return { ok: false, skipped: true, reason: "prefs_disabled" };
+  }
+
+  const ctx = readBusinessContext(project);
+  const businessName =
+    String(project.business_name || ctx.businessName || "").trim() || "Your site";
+  const who = String(name || "").trim() || "Someone";
+  const payload = {
+    title: "New contact message",
+    body: who + " messaged " + businessName + ".",
+    url: "clients.html",
+    tag: "contact-" + project.id + "-" + Date.now(),
+    projectId: project.id,
+  };
+
+  return sendPushToUser(supabase, creatorId, payload);
+}
+
 module.exports = {
   vapidConfigured,
   upsertPushSubscription,
   deletePushSubscription,
   notifyCreatorClientPurchase,
+  notifyCreatorSiteVisit,
+  notifyCreatorContactMessage,
   sendPushToUser,
   prefsAllowClientPurchases,
+  prefsAllowSiteVisits,
+  prefsAllowContactMessages,
 };

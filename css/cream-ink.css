@@ -447,16 +447,6 @@ html:not([data-ms-mode="dark"]) .ms-nav-link.is-generating .ms-nav-progress::aft
 }
 
 html:not([data-ms-mode="dark"]) .ms-menu-toggle {
-  background: transparent !important;
-  border: 0 !important;
-  color: var(--ms-ink) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-html:not([data-ms-mode="dark"]) .ms-tabbar .ms-menu-toggle.ms-tab-menu {
-  background: transparent !important;
-  border: 0 !important;
   color: var(--ms-ink) !important;
 }
 

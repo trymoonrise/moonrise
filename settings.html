@@ -232,18 +232,18 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261108-status"></script>
+  <script src="js/auth-gate-head.js?v=20261108-top-menu"></script>
   <title>Settings - Moonrise Studio</title>
   <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio.css?v=20261108-top-menu">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-<link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261108-top-menu">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261108-top-menu">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-status2">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-top-menu">
   <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
 </head>
 <body data-page="settings">
@@ -374,43 +374,53 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
         </div>
       </section>
 
-      <section class="ms-set-group" id="settings-status">
-        <button type="button" class="ms-set-row" id="set-status-toggle" aria-expanded="false" aria-controls="set-status-panel">
+      <section class="ms-set-group" id="settings-notifications">
+        <button type="button" class="ms-set-row" id="set-notif-toggle" aria-expanded="false" aria-controls="set-notif-panel">
           <span class="ms-set-row-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           </span>
-          <span class="ms-set-row-label">Status</span>
-          <span class="ms-status-wave is-ok" id="set-status-wave" aria-hidden="true">
-            <svg viewBox="0 0 64 24" preserveAspectRatio="none">
-              <path class="ms-status-wave-path" d="M0 12 Q8 2 16 12 T32 12 T48 12 T64 12"/>
-              <path class="ms-status-wave-path ms-status-wave-path--delay" d="M0 12 Q8 22 16 12 T32 12 T48 12 T64 12"/>
-            </svg>
-          </span>
-          <span class="ms-set-row-value" id="set-status-overall">Checking…</span>
+          <span class="ms-set-row-label">Notifications</span>
+          <span class="ms-set-row-value" id="set-notif-summary">Off</span>
           <span class="ms-set-chevron" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </span>
         </button>
-        <div class="ms-set-panel" id="set-status-panel" hidden>
-          <p class="ms-status-legend" id="set-status-legend">Green waves mean everything is running smoothly. Yellow is a warning. Red means an error.</p>
-          <div class="ms-status-list" id="set-status-list" role="list" aria-live="polite"></div>
-          <p class="ms-error" id="set-status-error" hidden></p>
+        <div class="ms-set-panel" id="set-notif-panel" hidden>
+          <p class="ms-settings-hint ms-muted" id="set-notif-hint">Choose which alerts reach this device.</p>
+          <div class="ms-notif-list" role="group" aria-label="Notification settings">
+            <label class="ms-notif-option">
+              <span class="ms-notif-option-copy">
+                <strong>Client paid</strong>
+                <span>When a business pays to keep their site</span>
+              </span>
+              <span class="ms-switch">
+                <input type="checkbox" id="set-notif-purchase" data-notif-key="clientPurchases" autocomplete="off">
+                <span class="ms-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="ms-notif-option">
+              <span class="ms-notif-option-copy">
+                <strong>Site visits</strong>
+                <span>When someone opens a site you published</span>
+              </span>
+              <span class="ms-switch">
+                <input type="checkbox" id="set-notif-visit" data-notif-key="siteVisits" autocomplete="off">
+                <span class="ms-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="ms-notif-option">
+              <span class="ms-notif-option-copy">
+                <strong>Contact messages</strong>
+                <span>When someone submits the site contact form</span>
+              </span>
+              <span class="ms-switch">
+                <input type="checkbox" id="set-notif-contact" data-notif-key="contactMessages" autocomplete="off">
+                <span class="ms-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+          </div>
+          <p class="ms-error" id="set-notif-error" hidden></p>
         </div>
-      </section>
-
-      <section class="ms-set-group" id="settings-notifications">
-        <div class="ms-set-row ms-set-row--static">
-          <span class="ms-set-row-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          </span>
-          <span class="ms-set-row-label">Client purchases</span>
-          <label class="ms-switch" title="Client purchase notifications">
-            <input type="checkbox" id="set-client-purchase-notif" autocomplete="off">
-            <span class="ms-switch-track" aria-hidden="true"></span>
-          </label>
-        </div>
-        <p class="ms-set-quiet" id="set-notif-hint">Alert when a business pays to go live</p>
-        <p class="ms-error" id="set-notif-error" hidden></p>
       </section>
 
       <section class="ms-set-group">
@@ -446,6 +456,30 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           </span>
         </button>
         <p class="ms-error" id="set-onboard-error" hidden></p>
+      </section>
+
+      <section class="ms-set-group" id="settings-status">
+        <button type="button" class="ms-set-row" id="set-status-toggle" aria-expanded="false" aria-controls="set-status-panel">
+          <span class="ms-set-row-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </span>
+          <span class="ms-set-row-label">Services</span>
+          <span class="ms-status-wave is-ok" id="set-status-wave" aria-hidden="true">
+            <svg viewBox="0 0 64 24" preserveAspectRatio="none">
+              <path class="ms-status-wave-path" d="M0 12 Q8 2 16 12 T32 12 T48 12 T64 12"/>
+              <path class="ms-status-wave-path ms-status-wave-path--delay" d="M0 12 Q8 22 16 12 T32 12 T48 12 T64 12"/>
+            </svg>
+          </span>
+          <span class="ms-set-row-value" id="set-status-overall">Checking…</span>
+          <span class="ms-set-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+        </button>
+        <div class="ms-set-panel" id="set-status-panel" hidden>
+          <p class="ms-status-legend" id="set-status-legend">Green waves mean everything is running smoothly. Yellow is a warning. Red means an error.</p>
+          <div class="ms-status-list" id="set-status-list" role="list" aria-live="polite"></div>
+          <p class="ms-error" id="set-status-error" hidden></p>
+        </div>
       </section>
 
       <section class="ms-set-group" id="settings-account">
@@ -486,7 +520,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   </div>
 
   <script defer src="js/config.js?v=20261108-skel-nav"></script>
-  <script defer src="js/app.js?v=20261108-skel-nav"></script>
+  <script defer src="js/app.js?v=20261108-top-menu"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/handles.js"></script>
@@ -497,8 +531,8 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
-  <script defer src="js/push-notifications.js?v=20260719-client-push"></script>
-  <script defer src="js/settings.js?v=20261108-status2"></script>
-  <script defer src="js/settings-status.js?v=20261108-status2"></script>
+  <script defer src="js/push-notifications.js?v=20261108-notifs"></script>
+  <script defer src="js/settings.js?v=20261108-notifs"></script>
+  <script defer src="js/settings-status.js?v=20261108-services"></script>
 </body>
 </html>

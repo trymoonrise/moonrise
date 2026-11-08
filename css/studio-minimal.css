@@ -611,6 +611,56 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
   line-height: 1.4;
 }
 
+.ms-notif-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0.55rem;
+}
+
+.ms-notif-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--ms-min-border);
+  border-radius: 12px;
+  background: var(--ms-min-fill);
+  cursor: pointer;
+}
+
+.ms-notif-option-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+}
+
+.ms-notif-option-copy strong {
+  font-size: 0.9rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--ms-ink);
+}
+
+.ms-notif-option-copy span {
+  font-size: 0.76rem;
+  line-height: 1.35;
+  color: var(--ms-min-quiet);
+}
+
+.ms-notif-option .ms-switch {
+  flex-shrink: 0;
+}
+
+#set-notif-summary {
+  margin-left: auto;
+  margin-right: 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 650;
+  color: var(--ms-min-muted);
+}
+
 .ms-set-section-label {
   margin: 1.15rem 0.35rem 0.45rem;
   font-size: 0.72rem;
@@ -1076,7 +1126,7 @@ a.ms-dash-tool {
     left: 50% !important;
     right: auto !important;
     bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px)) !important;
-    width: min(22.25rem, calc(100% - 1.5rem)) !important;
+    width: min(24.75rem, calc(100% - 1.35rem)) !important;
     min-height: 0 !important;
     margin: 0 !important;
     padding: 0.3rem !important;
@@ -1098,6 +1148,12 @@ a.ms-dash-tool {
     visibility: visible !important;
     pointer-events: auto !important;
     z-index: 220 !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+    transition:
+      transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.32s ease,
+      visibility 0s linear 0s !important;
   }
 
   html body.ms-nav-open .ms-tabbar {
@@ -1105,18 +1161,40 @@ a.ms-dash-tool {
     visibility: hidden !important;
     pointer-events: none !important;
     transform: translate3d(-50%, 110%, 0) !important;
+    transition:
+      transform 0.38s cubic-bezier(0.4, 0, 0.7, 0.2),
+      opacity 0.28s ease,
+      visibility 0s linear 0.38s !important;
   }
 
-  /* Sliding pill unused — active tab uses soft wash chip. */
+  /* Sliding active pill — keeps tab switches smooth across hops. */
   html .ms-tab-pill,
   html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab-pill {
-    display: none !important;
+    display: block !important;
+    position: absolute !important;
+    top: 0.3rem !important;
+    left: 0 !important;
+    z-index: 0 !important;
+    height: 46px !important;
+    width: 0 !important;
+    border-radius: 999px !important;
+    background: #ececef !important;
     opacity: 0 !important;
     pointer-events: none !important;
+    transform: translate3d(0, 0, 0) !important;
+    transition:
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.22s ease !important;
+    will-change: transform, width;
+  }
+
+  html .ms-tabbar.is-pill-ready .ms-tab-pill,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab-pill {
+    opacity: 1 !important;
   }
 
   html .ms-tab,
-  html .ms-tabbar .ms-menu-toggle.ms-tab-menu,
   html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab,
   html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active,
   html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
@@ -1137,19 +1215,24 @@ a.ms-dash-tool {
     color: #8e8e93 !important;
     -webkit-text-fill-color: #8e8e93 !important;
     transform: none !important;
-    transition: background-color 0.22s ease, color 0.22s ease, transform 0.15s ease !important;
+    transition: color 0.22s ease, transform 0.16s ease !important;
   }
 
+  /* Fallback chip before pill measures; transparent once pill is ready. */
   html .ms-tab.is-active,
-  html .ms-tabbar.is-pill-ready .ms-tab.is-active,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active {
     background: #ececef !important;
     background-color: #ececef !important;
     color: #1d1d1f !important;
     -webkit-text-fill-color: #1d1d1f !important;
     border-radius: 999px !important;
     box-shadow: none !important;
+  }
+
+  html .ms-tabbar.is-pill-ready .ms-tab.is-active,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
+    background: transparent !important;
+    background-color: transparent !important;
   }
 
   html .ms-tab.is-active .ms-tab-ico,
@@ -1160,8 +1243,12 @@ a.ms-dash-tool {
     -webkit-text-fill-color: #1d1d1f !important;
   }
 
+  html[data-ms-mode="dark"] .ms-tab-pill,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab-pill {
+    background: rgb(255 255 255 / 12%) !important;
+  }
+
   html[data-ms-mode="dark"] .ms-tab.is-active,
-  html[data-ms-mode="dark"] .ms-tabbar.is-pill-ready .ms-tab.is-active,
   html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active {
     background: rgb(255 255 255 / 12%) !important;
     background-color: rgb(255 255 255 / 12%) !important;
@@ -1169,15 +1256,16 @@ a.ms-dash-tool {
     -webkit-text-fill-color: #f4f4f5 !important;
   }
 
+  html[data-ms-mode="dark"] .ms-tabbar.is-pill-ready .ms-tab.is-active,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
   html[data-ms-mode="dark"] .ms-tab.is-active .ms-tab-ico,
   html[data-ms-mode="dark"] .ms-tab.is-active .ms-tab-label,
   html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico,
   html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-label {
-    color: #f4f4f5 !important;
-    -webkit-text-fill-color: #f4f4f5 !important;
-  }
-
-  html[data-ms-mode="dark"] .ms-tabbar .ms-menu-toggle.ms-tab-menu {
     color: #f4f4f5 !important;
     -webkit-text-fill-color: #f4f4f5 !important;
   }
@@ -1199,30 +1287,21 @@ a.ms-dash-tool {
     stroke-width: 2 !important;
   }
 
-  html .ms-tabbar .ms-menu-toggle.ms-tab-menu {
-    inset: auto !important;
-    display: grid !important;
-    place-items: center !important;
-    width: auto !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    color: #1d1d1f !important;
-    -webkit-text-fill-color: #1d1d1f !important;
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
+  html .ms-tab:active {
+    transform: scale(0.96) !important;
   }
 
-  html .ms-tabbar .ms-menu-toggle.ms-tab-menu svg {
-    width: 21px !important;
-    height: 21px !important;
-    stroke-width: 1.85 !important;
+  html .ms-tabbar.is-switching {
+    pointer-events: none !important;
   }
 
-  html .ms-tab:active,
-  html .ms-tabbar .ms-menu-toggle.ms-tab-menu:active {
-    transform: scale(0.94) !important;
+  @media (prefers-reduced-motion: reduce) {
+    html .ms-tabbar,
+    html .ms-tab-pill,
+    html .ms-tab,
+    html body .ms-menu-toggle {
+      transition: none !important;
+    }
   }
 
   body[data-page="dashboard"] #page-body,
@@ -1252,12 +1331,91 @@ html[data-ms-mode="dark"] .ms-tab-pill {
   background: rgb(255 255 255 / 10%) !important;
 }
 
-.ms-menu-toggle:not(.ms-tab-menu),
 .ms-help-btn {
   border: 0 !important;
   background: color-mix(in srgb, var(--ms-group) 92%, transparent) !important;
   box-shadow: var(--ms-min-shadow) !important;
   border-radius: 999px !important;
+}
+
+/* Floating top-left menu — frosted circular control */
+@media (max-width: 900px) {
+  html body .ms-menu-toggle,
+  html body .ms-menu-toggle:not(.ms-tab-menu) {
+    position: fixed !important;
+    top: max(0.65rem, env(safe-area-inset-top, 0px)) !important;
+    left: max(0.65rem, env(safe-area-inset-left, 0px)) !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 240 !important;
+    width: 2.75rem !important;
+    height: 2.75rem !important;
+    min-width: 2.75rem !important;
+    min-height: 2.75rem !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 999px !important;
+    border: 1px solid rgb(0 0 0 / 8%) !important;
+    background: color-mix(in srgb, #ffffff 86%, transparent) !important;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 10px 28px rgba(0, 0, 0, 0.12) !important;
+    backdrop-filter: saturate(1.55) blur(18px) !important;
+    -webkit-backdrop-filter: saturate(1.55) blur(18px) !important;
+    color: #1d1d1f !important;
+    -webkit-text-fill-color: #1d1d1f !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+
+  html body .ms-menu-toggle svg {
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+    stroke-width: 2.1 !important;
+  }
+
+  html body .ms-menu-toggle:active {
+    transform: scale(0.94) !important;
+  }
+
+  html[data-ms-mode="dark"] body .ms-menu-toggle,
+  html[data-ms-mode="dark"] body .ms-menu-toggle:not(.ms-tab-menu) {
+    background: color-mix(in srgb, #1c1c1e 86%, transparent) !important;
+    border-color: rgb(255 255 255 / 12%) !important;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 12px 30px rgba(0, 0, 0, 0.45) !important;
+    color: #f5f5f0 !important;
+    -webkit-text-fill-color: #f5f5f0 !important;
+  }
+
+  html body.ms-nav-open .ms-menu-toggle {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: scale(0.92) !important;
+  }
+
+  /* Clear the floating menu so page titles never sit under it */
+  html body:is(
+    [data-page="dashboard"],
+    [data-page="builder"],
+    [data-page="clients"],
+    [data-page="settings"],
+    [data-page="admin-console"],
+    [data-page="projects"],
+    [data-page="course"],
+    [data-page="donate"],
+    [data-page="leaderboard"],
+    [data-page="hosting-billing"],
+    [data-page="creator-contact"]
+  ) #page-body {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 3.55rem) !important;
+  }
 }
 
 /* —— Forms / rows —— */

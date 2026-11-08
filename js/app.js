@@ -863,7 +863,7 @@
       '</div></aside>' +
       '<div class="ms-sidebar-resizer" id="ms-sidebar-resizer" role="separator" aria-orientation="vertical" aria-label="Resize sidebar" tabindex="0"></div>';
 
-    // Mount menu on body so overflow/stacking on #shell cannot hide it.
+    // Mount menu on body (top-left chrome). Never park it in the tab bar.
     let menuToggle = document.getElementById("ms-menu-toggle");
     if (!menuToggle) {
       menuToggle = document.createElement("button");
@@ -871,8 +871,10 @@
       menuToggle.id = "ms-menu-toggle";
       menuToggle.className = "ms-menu-toggle";
       document.body.appendChild(menuToggle);
-    } else if (menuToggle.parentElement !== document.body) {
-      document.body.appendChild(menuToggle);
+    } else {
+      menuToggle.classList.remove("ms-tab-menu");
+      menuToggle.className = "ms-menu-toggle";
+      if (menuToggle.parentElement !== document.body) document.body.appendChild(menuToggle);
     }
     menuToggle.setAttribute("aria-label", "Open menu");
     menuToggle.innerHTML = ICONS.menu;
@@ -2008,7 +2010,7 @@
   }
 
   function ensureQuickNav() {
-    // Top app bar removed: menu lives in the bottom tab bar.
+    // Top app bar removed: menu is a floating top-left control; Settings is in the tab bar.
     document.getElementById("ms-quick-nav")?.remove();
     try {
       let theme = document.querySelector('meta[name="theme-color"]');
@@ -2025,15 +2027,15 @@
     }
   }
 
-  function placeMenuInTabBar(nav) {
-    if (!nav) return;
+  function placeMenuTopLeft() {
     const menuToggle = document.getElementById("ms-menu-toggle");
     if (!menuToggle) return;
-    menuToggle.classList.add("ms-tab-menu");
-    if (menuToggle.parentElement !== nav) nav.appendChild(menuToggle);
+    menuToggle.classList.remove("ms-tab-menu");
+    menuToggle.className = "ms-menu-toggle";
+    if (menuToggle.parentElement !== document.body) document.body.appendChild(menuToggle);
   }
 
-  const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings"];
+  const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings", "leads"];
   const TAB_SWITCH_KEY = "ms_tab_switch";
   const STUDIO_BOOTED_KEY = "ms_studio_booted";
 
@@ -2064,13 +2066,13 @@
     if (!pill) return;
     const width = tab.offsetWidth;
     const left = tab.offsetLeft;
-    if (!animate) {
+    if (!animate || prefersTabMotionReduce()) {
       const prev = pill.style.transition;
       pill.style.transition = "none";
       pill.style.width = width + "px";
       pill.style.transform = "translate3d(" + left + "px, 0, 0)";
       void pill.offsetWidth;
-      pill.style.transition = prev;
+      pill.style.transition = prev || "";
       return;
     }
     pill.style.width = width + "px";
@@ -2193,7 +2195,8 @@
 
       writeTabSwitch(page, toId || "leads");
       setActiveTab(nav, link);
-      syncTabPill(nav, link, { animate: false });
+      nav.classList.add("is-pill-ready");
+      syncTabPill(nav, link, { animate: !prefersTabMotionReduce() });
 
       try {
         sessionStorage.removeItem("ms_channel_hop");
@@ -2201,14 +2204,26 @@
         /* ignore */
       }
 
-      location.href = link.href;
+      const go = () => {
+        location.href = link.href;
+      };
+      if (prefersTabMotionReduce()) {
+        go();
+        return;
+      }
+      // Let the pill slide before the hop so the bar never snaps.
+      window.setTimeout(go, 210);
     });
 
+    let resizeTimer = 0;
     window.addEventListener(
       "resize",
       () => {
-        const active = nav.querySelector(".ms-tab.is-active");
-        if (active) syncTabPill(nav, active, { animate: false });
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          const active = nav.querySelector(".ms-tab.is-active");
+          if (active) syncTabPill(nav, active, { animate: false });
+        }, 80);
       },
       { passive: true }
     );
@@ -2217,11 +2232,7 @@
   function ensureTabBar(page) {
     if (!TAB_BAR_PAGES.includes(page)) {
       document.getElementById("ms-tabbar")?.remove();
-      const orphanMenu = document.getElementById("ms-menu-toggle");
-      if (orphanMenu) {
-        orphanMenu.classList.remove("ms-tab-menu");
-        if (orphanMenu.parentElement !== document.body) document.body.appendChild(orphanMenu);
-      }
+      placeMenuTopLeft();
       return;
     }
     const items = [
@@ -2235,6 +2246,7 @@
         icon: "search",
       },
       { id: "clients", href: "clients.html", label: "Clients", aria: "My Clients", icon: "users" },
+      { id: "settings", href: "settings.html", label: "Settings", icon: "gear" },
     ];
     let nav = document.getElementById("ms-tabbar");
     if (!nav) {
@@ -2246,13 +2258,20 @@
     }
     const switchAnim = readTabSwitch();
     const tabCount = nav.querySelectorAll("a.ms-tab").length;
+    const hasSettingsTab = !!nav.querySelector('a.ms-tab[data-tab="settings"]');
+    const hasLegacyMenu = !!nav.querySelector("#ms-menu-toggle, .ms-tab-menu");
     const alreadyMounted =
       nav.dataset.mounted === "1" &&
       tabCount === items.length &&
+      hasSettingsTab &&
+      !hasLegacyMenu &&
       !!nav.querySelector(".ms-tab-ico svg");
     if (!alreadyMounted) {
       const menuToggle = document.getElementById("ms-menu-toggle");
-      if (menuToggle && menuToggle.parentElement === nav) document.body.appendChild(menuToggle);
+      if (menuToggle && menuToggle.parentElement === nav) {
+        menuToggle.classList.remove("ms-tab-menu");
+        document.body.appendChild(menuToggle);
+      }
       nav.innerHTML =
         '<span class="ms-tab-pill" aria-hidden="true"></span>' +
         items
@@ -2282,7 +2301,7 @@
     }
     nav.dataset.mounted = "1";
 
-    placeMenuInTabBar(nav);
+    placeMenuTopLeft();
     bindTabBarSwitch(nav, page);
 
     const activeTab = nav.querySelector(".ms-tab.is-active");
@@ -2291,21 +2310,28 @@
         ? nav.querySelector('.ms-tab[data-tab="' + switchAnim.from + '"]')
         : null;
 
+    // Double rAF waits for menu placement + layout so the pill never starts mid-jump.
     requestAnimationFrame(() => {
-      if (
-        fromTab &&
-        activeTab &&
-        fromTab !== activeTab &&
-        !prefersTabMotionReduce() &&
-        window.matchMedia("(max-width: 900px)").matches
-      ) {
-        syncTabPill(nav, fromTab, { animate: false });
-        nav.classList.add("is-pill-ready");
-        requestAnimationFrame(() => syncTabPill(nav, activeTab, { animate: true }));
-      } else if (activeTab) {
-        syncTabPill(nav, activeTab, { animate: false });
-        nav.classList.add("is-pill-ready");
-      }
+      requestAnimationFrame(() => {
+        if (
+          fromTab &&
+          activeTab &&
+          fromTab !== activeTab &&
+          !prefersTabMotionReduce() &&
+          window.matchMedia("(max-width: 900px)").matches
+        ) {
+          syncTabPill(nav, fromTab, { animate: false });
+          nav.classList.add("is-pill-ready");
+          requestAnimationFrame(() => syncTabPill(nav, activeTab, { animate: true }));
+        } else if (activeTab) {
+          syncTabPill(nav, activeTab, { animate: false });
+          nav.classList.add("is-pill-ready");
+        } else {
+          const pill = nav.querySelector(".ms-tab-pill");
+          if (pill) pill.style.opacity = "0";
+          nav.classList.remove("is-pill-ready");
+        }
+      });
     });
   }
 
