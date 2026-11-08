@@ -873,19 +873,15 @@ html[data-ms-mode="dark"] .ms-status-logo.is-mono {
   text-align: left;
 }
 
-.ms-status-summary {
-  font-size: 0.72rem;
-  color: var(--ms-min-quiet);
-  line-height: 1.25;
+.ms-status-row .ms-status-wave {
+  margin-left: auto;
 }
 
-.ms-status-blurb {
-  display: block;
-  margin-top: 0.18rem;
-  font-size: 0.7rem;
-  line-height: 1.35;
-  color: var(--ms-min-muted);
-  max-width: 18rem;
+.ms-status-feedback-explain {
+  margin: -0.2rem 0 0.15rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--ms-min-quiet);
 }
 
 .ms-status-context {

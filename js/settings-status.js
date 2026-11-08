@@ -1,5 +1,6 @@
 /**
- * Settings → Services button: expand to services, tap a service for details.
+ * Settings → Services: list shows logo + name + waves + ping;
+ * expand a row for context, indication, and copyable status.
  * Secrets stay on the server (/studio/status).
  */
 (function () {
@@ -156,7 +157,7 @@
   }
 
   function overallLegend(overall) {
-    const tip = " Tap a service for what it is, what it’s for, and a copyable status code.";
+    const tip = " Tap a service for details.";
     if (overall === "ok") {
       return "Green waves mean everything is running smoothly." + tip;
     }
@@ -423,6 +424,11 @@
       '<p class="ms-status-feedback is-' +
       toneFor(service.status) +
       '">' +
+      escapeHtml(fb.short) +
+      " · " +
+      escapeHtml(serviceSummary(service)) +
+      "</p>" +
+      '<p class="ms-status-feedback-explain">' +
       escapeHtml(fb.explain) +
       "</p>" +
       '<div class="ms-status-detail-row"><span>Code</span><strong class="ms-status-code">' +
@@ -471,7 +477,14 @@
       .map((service, index) => {
         const id = String(service.id || "svc-" + index).replace(/[^a-z0-9_-]/gi, "");
         const panelId = "set-status-panel-" + id;
-        const fb = feedbackFor(service.status);
+        const name = serviceName(service);
+        const ping = formatPing(service.pingMs);
+        const aria =
+          name +
+          ", " +
+          feedbackFor(service.status).short +
+          ", ping " +
+          ping;
         return (
           '<div class="ms-status-item" role="listitem" data-status="' +
           escapeHtml(service.status || "down") +
@@ -482,23 +495,17 @@
           id +
           '" aria-expanded="false" aria-controls="' +
           panelId +
+          '" aria-label="' +
+          escapeHtml(aria) +
           '">' +
           logoHtml(service) +
           '<span class="ms-status-copy">' +
           '<span class="ms-set-row-label">' +
-          escapeHtml(serviceName(service)) +
-          "</span>" +
-          '<span class="ms-status-summary">' +
-          escapeHtml(fb.short) +
-          " · " +
-          escapeHtml(serviceSummary(service)) +
-          "</span>" +
-          '<span class="ms-status-blurb">' +
-          escapeHtml(serviceContext(service).usedFor) +
+          escapeHtml(name) +
           "</span></span>" +
           waveSvg(service.status) +
           '<span class="ms-status-ping">' +
-          escapeHtml(formatPing(service.pingMs)) +
+          escapeHtml(ping) +
           "</span>" +
           '<span class="ms-set-chevron" aria-hidden="true">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +

@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.6",
+      "date": "2026-11-07",
+      "title": "Compact Services list until you expand",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Settings Services lists each check as logo, name, waves, and ping until you expand it for context and status details."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.5",
       "date": "2026-11-07",
       "title": "Clean URLs without .html",
@@ -428,7 +441,7 @@
         {
           "heading": "Studio",
           "added": [
-            "Settings → Appearance offers fourteen theme colors plus a custom picker again."
+            "Settings \u2192 Appearance offers fourteen theme colors plus a custom picker again."
           ],
           "fixes": []
         }
@@ -442,7 +455,7 @@
         {
           "heading": "Studio",
           "added": [
-            "Studio is locked to black, white, and grey only — theme color accents are removed.",
+            "Studio is locked to black, white, and grey only \u2014 theme color accents are removed.",
             "Buttons, tabs, nav rows, and controls use a snappy press and hover motion."
           ],
           "fixes": []
@@ -551,7 +564,7 @@
           "added": [
             "Home uses the simple moonrise loading bar instead of a logo splash.",
             "Landing hero is just the headline, supporting line, and Start earning / Learn More CTAs.",
-            "Version numbers use base-10 rollup: patch 0–9, then minor; minor 0–9, then major (1.0.9 → 1.1.0 → … → 2.0.0).",
+            "Version numbers use base-10 rollup: patch 0\u20139, then minor; minor 0\u20139, then major (1.0.9 \u2192 1.1.0 \u2192 \u2026 \u2192 2.0.0).",
             "Historical release notes and GitHub Releases are remapped from the old 1.0.N patch line onto the new scheme."
           ],
           "fixes": [
