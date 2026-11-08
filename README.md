@@ -11,8 +11,8 @@
 <p align="center">
   <a href="https://trymoonrise.com"><img src="https://img.shields.io/badge/Live-TryMoonrise.com-3b82f6?style=for-the-badge" alt="Live site"></a>
   <a href="mailto:trymoonrise@gmail.com"><img src="https://img.shields.io/badge/Contact-Email-0f172a?style=for-the-badge" alt="Email"></a>
-  <a href="privacy.html"><img src="https://img.shields.io/badge/Privacy-Policy-64748b?style=for-the-badge" alt="Privacy"></a>
-  <a href="terms.html"><img src="https://img.shields.io/badge/Terms-of%20Service-64748b?style=for-the-badge" alt="Terms"></a>
+  <a href="privacy"><img src="https://img.shields.io/badge/Privacy-Policy-64748b?style=for-the-badge" alt="Privacy"></a>
+  <a href="terms"><img src="https://img.shields.io/badge/Terms-of%20Service-64748b?style=for-the-badge" alt="Terms"></a>
 </p>
 
 <p align="center">
@@ -200,8 +200,8 @@ Third-party fonts, MapLibre, map data, and npm packages keep their own licenses 
 
 Product terms:
 
-- [Terms of Service](https://trymoonrise.com/terms.html)  
-- [Privacy Policy](https://trymoonrise.com/privacy.html)  
+- [Terms of Service](https://trymoonrise.com/terms)  
+- [Privacy Policy](https://trymoonrise.com/privacy)  
 - [Security Policy](SECURITY.md) 
 
 ---

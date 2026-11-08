@@ -731,7 +731,7 @@
     } catch (_) {
       /* ignore */
     }
-    location.href = "index.html";
+    location.href = "/";
   });
 
   document.getElementById("set-delete-account")?.addEventListener("click", async () => {
@@ -763,7 +763,7 @@
     try {
       await window.StudioAuth.deleteAccount(confirm);
       window.StudioToast?.info?.("Your account was deleted.");
-      location.href = "index.html";
+      location.href = "/";
     } catch (e) {
       const msg = friendlyMessage(e, "Could not delete account");
       if (errEl) {
@@ -787,7 +787,7 @@
     }
     if (btn) btn.disabled = true;
     const target =
-      "onboarding.html?replay=1&next=" + encodeURIComponent("settings.html");
+      "onboarding?replay=1&next=" + encodeURIComponent("settings");
     try {
       window.StudioAuth.setForceOnboardingReplay?.(true);
       try {

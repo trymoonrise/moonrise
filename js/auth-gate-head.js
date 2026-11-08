@@ -45,20 +45,29 @@
 
   var PUBLIC = {
     "": 1,
-    "index.html": 1,
-    "login.html": 1,
-    "orders.html": 1,
-    "contact.html": 1,
-    "privacy.html": 1,
-    "terms.html": 1,
-    "refund.html": 1,
-    "legal.html": 1,
-    "report.html": 1,
-    "download.html": 1,
-    "404.html": 1,
+    "/": 1,
+    index: 1,
+    login: 1,
+    orders: 1,
+    contact: 1,
+    privacy: 1,
+    terms: 1,
+    refund: 1,
+    legal: 1,
+    report: 1,
+    download: 1,
+    "404": 1,
+    "designer-tips": 1,
+    guide: 1,
+    pricing: 1,
+    donate: 1,
+    leaderboard: 1,
+    "hosting-billing": 1,
+    "creator-contact": 1,
   };
 
-  var file = location.pathname.split("/").pop() || "index.html";
+  var file = (location.pathname.split("/").pop() || "").replace(/\.html$/i, "");
+  if (!file || file === "index") file = "/";
 
   // Channel hop storage cleared - navigation is static (no enter hide/ease).
   try {
@@ -112,7 +121,7 @@
 
   // Keep these query strings in sync with the <script defer> tags on studio pages,
   // or the browser warns that a preload was unused.
-  ["js/config.js?v=20261108-skel-nav", "js/auth.js?v=20261108-instant-hop", "js/app.js?v=20261108-instant-hop"].forEach(function (href) {
+  ["js/config.js?v=20261108-skel-nav", "js/auth.js?v=20261108-clean-urls", "js/app.js?v=20261108-clean-urls"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -136,7 +145,7 @@
       sessionStorage.removeItem("ms_tab_switch");
     } catch (e) {}
     var next = encodeURIComponent(file + location.search + location.hash);
-    location.replace("login.html?next=" + next);
+    location.replace("login?next=" + next);
   }
 
   try {
@@ -169,7 +178,7 @@
   setTimeout(function () {
     if (window.__msAuthRedirecting) return;
     if (document.body && document.body.dataset.msShellPainted === "1" && !document.getElementById("ms-boot")) return;
-    if (file === "onboarding.html") {
+    if (file === "onboarding") {
       try {
         if (document.body) document.body.dataset.msShellPainted = "1";
         document.documentElement.classList.remove("ms-boot");
@@ -190,14 +199,14 @@
       document.documentElement.classList.remove("ms-auth-gating");
       document.getElementById("ms-boot")?.remove();
     } catch (e) {}
-    location.replace("404.html");
+    location.replace("404");
   }, 5000);
 
   mountTabBarEarly();
 })();
 
 function mountTabBarEarly() {
-  var stem = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/i, "") || "index";
+  var stem = (location.pathname.split("/").pop() || "/").replace(/\.html$/i, "") || "index";
   var pages = {
     dashboard: 1,
     builder: 1,
@@ -224,11 +233,11 @@ function mountTabBarEarly() {
     menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="7" x2="19" y2="7"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="17" x2="19" y2="17"/></svg>',
   };
   var items = [
-    ["dashboard", "dashboard.html", "Dashboard", "Dashboard", icons.grid],
-    ["builder", "builder.html", "Builder", "Builder", icons.hammer],
-    ["leads", "leads.html", "Finder", "Business Finder", icons.search],
-    ["clients", "clients.html", "Clients", "My Clients", icons.users],
-    ["settings", "settings.html", "Settings", "Settings", icons.gear],
+    ["dashboard", "dashboard", "Dashboard", "Dashboard", icons.grid],
+    ["builder", "builder", "Builder", "Builder", icons.hammer],
+    ["leads", "leads", "Finder", "Business Finder", icons.search],
+    ["clients", "clients", "Clients", "My Clients", icons.users],
+    ["settings", "settings", "Settings", "Settings", icons.gear],
   ];
 
   function paint() {

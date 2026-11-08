@@ -3,6 +3,26 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.5",
+      "date": "2026-11-07",
+      "title": "Clean URLs without .html",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Public and Studio pages use clean paths like /dashboard instead of /dashboard.html, with legacy .html links redirected."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "The Moonrise Special Prompt cites unslop as the professional UI craft reference for generated and agent-polished sites.",
+            "Settings Services explains what each check is and what Moonrise uses it for, without secrets."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.4",
       "date": "2026-11-07",
       "title": "Stronger agent model and roomier phone menu",

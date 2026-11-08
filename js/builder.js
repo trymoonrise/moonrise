@@ -199,7 +199,7 @@
   function editorPageUrl(query) {
     const q = query instanceof URLSearchParams ? query : new URLSearchParams(query || {});
     const s = q.toString();
-    return "editor.html" + (s ? "?" + s : "");
+    return "editor" + (s ? "?" + s : "");
   }
 
   function redirectToEditor(extra) {
@@ -1086,7 +1086,7 @@
   function setOnboardOpen(open) {
     if (isEditorPage()) {
       if (!open) return;
-      location.href = "builder.html";
+      location.href = "builder";
       return;
     }
     if (
@@ -1103,18 +1103,20 @@
   /** Send the user back to the page they opened from (Business Finder, Projects, Dashboard...). */
   function leaveBuilder() {
     if (isEditorPage()) {
-      location.href = "builder.html";
+      location.href = "builder";
       return;
     }
-    const fallback = "dashboard.html";
+    const fallback = "dashboard";
     let target = fallback;
     try {
       const ref = document.referrer;
       if (ref) {
         const url = new URL(ref, location.href);
         const samePage = url.pathname === location.pathname;
-        if (url.origin === location.origin && !samePage && /\.html?$/i.test(url.pathname)) {
-          target = url.pathname.split("/").pop() + url.search;
+        const leaf = (url.pathname.split("/").pop() || "").replace(/\.html?$/i, "");
+        // Prefer the prior studio page (clean or legacy .html URLs).
+        if (url.origin === location.origin && !samePage && leaf && !leaf.includes(".")) {
+          target = leaf + url.search;
         }
       }
     } catch (_) {
@@ -1288,7 +1290,7 @@
       return false;
     }
     if (isEditorPage()) {
-      location.href = "builder.html";
+      location.href = "builder";
       return true;
     }
     showOnboardStep(1);
@@ -2470,7 +2472,7 @@
         /* ignore */
       }
     }
-    location.href = "donate.html";
+    location.href = "donate";
     return false;
   }
 
@@ -5891,7 +5893,7 @@
     try {
       if (location.protocol === "file:") {
         return (
-          "Generation needs the live Moonrise site. Open https://trymoonrise.com/editor.html instead of a file on your computer." +
+          "Generation needs the live Moonrise site. Open https://trymoonrise.com/editor instead of a file on your computer." +
           detail
         );
       }
@@ -6974,7 +6976,7 @@
           mapsUrl: businessValue("mapsUrl") || "",
         },
       });
-      location.href = "dashboard.html";
+      location.href = "dashboard";
     } catch (e) {
       setStatus("");
       setError(e.message || "Could not delete project");

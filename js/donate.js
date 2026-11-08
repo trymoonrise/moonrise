@@ -355,7 +355,7 @@
     const sessionId = params.get("session_id");
     if (params.get("canceled") === "1") {
       window.StudioToast?.error?.("Checkout canceled.");
-      history.replaceState({}, "", "donate.html");
+      history.replaceState({}, "", "donate");
       return;
     }
     if (params.get("paid") !== "1" || !sessionId) return;
@@ -377,7 +377,7 @@
       } catch (_) {
         /* ignore */
       }
-      history.replaceState({}, "", "donate.html");
+      history.replaceState({}, "", "donate");
       await loadLeaderboard();
     } catch (e) {
       setError(e.message || "Payment received but confirmation failed. Refresh in a moment.");
@@ -424,7 +424,7 @@
     try {
       await window.StudioAuth?.requireAuth?.();
     } catch (_) {
-      location.href = "login.html?next=donate.html";
+      location.href = "login?next=donate.html";
       return;
     }
     bindUi();

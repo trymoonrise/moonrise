@@ -86,9 +86,9 @@
 
   function safeNext(raw) {
     if (typeof window.StudioAuth?.safeNextPath === "function") {
-      return window.StudioAuth.safeNextPath(raw, "dashboard.html");
+      return window.StudioAuth.safeNextPath(raw, "dashboard");
     }
-    const s = String(raw || "dashboard.html").trim();
+    const s = String(raw || "dashboard").trim();
     if (
       !s ||
       s.startsWith("http") ||
@@ -97,9 +97,9 @@
       s.includes("..") ||
       s.includes(":")
     ) {
-      return "dashboard.html";
+      return "dashboard";
     }
-    if (s.startsWith("onboarding.html")) return "dashboard.html";
+    if (s.startsWith("onboarding")) return "dashboard";
     return s;
   }
 
@@ -121,7 +121,7 @@
   }
 
   const isReplay = pageParams.get("replay") === "1" || hasForceReplay();
-  const nextUrl = safeNext(pageParams.get("next") || "dashboard.html");
+  const nextUrl = safeNext(pageParams.get("next") || "dashboard");
 
   const P = window.MoonrisePayoutProfile;
   const SC = window.MoonriseSecurityCard;
@@ -942,7 +942,7 @@
         await showStep(9, { direction: "forward" });
         const finder = document.getElementById("onb-go-finder");
         const dash = document.getElementById("onb-go-dash");
-        if (finder) finder.href = "leads.html";
+        if (finder) finder.href = "leads";
         if (dash) dash.href = nextUrl;
       } catch (e) {
         setError(e.message || "Could not save your profile.");

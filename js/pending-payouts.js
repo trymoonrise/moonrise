@@ -860,7 +860,7 @@
     if (started) return;
     started = true;
 
-    const allowed = await window.StudioOwner?.gateOwnerPage?.("dashboard.html");
+    const allowed = await window.StudioOwner?.gateOwnerPage?.("dashboard");
     if (!allowed) return;
 
     bindUi();

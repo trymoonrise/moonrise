@@ -164,7 +164,7 @@
     const msg = lastError?.message || "Please try again shortly.";
     if (/failed to fetch|networkerror|load failed|network request failed/i.test(msg)) {
       throw new Error(
-        "Could not reach the Moonrise catalog API. Check your connection, or open Studio from https://trymoonrise.com/orders.html"
+        "Could not reach the Moonrise catalog API. Check your connection, or open Studio from https://trymoonrise.com/orders"
       );
     }
     throw lastError || new Error("Could not load published sites");

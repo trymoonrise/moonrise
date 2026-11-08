@@ -46,6 +46,58 @@
     },
   };
 
+  /** Plain-language context for each Services row — no secrets, product meaning only. */
+  const SERVICE_CONTEXT = {
+    app: {
+      about: "The public Moonrise website creators and clients open in the browser.",
+      usedFor: "Marketing pages, login entry, and the Studio shell at trymoonrise.com.",
+    },
+    worker: {
+      about: "Moonrise’s Studio API — the backend that powers signed-in Studio actions.",
+      usedFor: "Generate sites, publish, checkout webhooks, Business Finder proxy, and this status board.",
+    },
+    dns: {
+      about: "Domain name resolution for trymoonrise.com, plus whether email sending is configured.",
+      usedFor: "Making sure the Moonrise domain resolves and transactional email can be turned on.",
+    },
+    supabase: {
+      about: "Cloud auth and database for Moonrise accounts and Studio data.",
+      usedFor: "Sign-in, sessions, profiles, projects, leads, payments records, and saved settings.",
+    },
+    stripe: {
+      about: "Payment processor for Moonrise checkout and billing.",
+      usedFor: "Go-live payments, hosting subscriptions, credits, and related payouts paths.",
+    },
+    ai: {
+      about: "OpenRouter connects Moonrise Builder to AI models for site generation.",
+      usedFor: "Writing and assembling business website HTML from prompts and presets.",
+    },
+    email: {
+      about: "Resend sends Moonrise transactional email.",
+      usedFor: "Receipts, notices, and other automated mail Studio or checkout triggers.",
+    },
+    deploy: {
+      about: "Vercel hosts Studio and deploys published client websites.",
+      usedFor: "Keeping trymoonrise.com online and shipping each creator’s live site URL.",
+    },
+    github: {
+      about: "The Moonrise source repository on GitHub.",
+      usedFor: "Product source of truth, website presets, and ship/release history.",
+    },
+    leadfinder: {
+      about: "Cloud search service behind Business Finder.",
+      usedFor: "Scanning maps and finding local businesses you can claim as leads.",
+    },
+    push: {
+      about: "Browser push notifications (Web Push / VAPID).",
+      usedFor: "Optional alerts in the installed Moonrise app or browser — not required for core Studio.",
+    },
+    fleet: {
+      about: "Moonrise’s count of creator sites that are published with a live URL.",
+      usedFor: "Seeing how many client websites are live across the product — not a third-party vendor.",
+    },
+  };
+
   let busy = false;
   let lastReport = null;
   let loadedOnce = false;
@@ -104,13 +156,14 @@
   }
 
   function overallLegend(overall) {
+    const tip = " Tap a service for what it is, what it’s for, and a copyable status code.";
     if (overall === "ok") {
-      return "Green waves mean everything is running smoothly.";
+      return "Green waves mean everything is running smoothly." + tip;
     }
     if (overall === "degraded") {
-      return "Yellow waves mean a warning — something needs attention, but Studio can still work.";
+      return "Yellow waves mean a warning — something needs attention, but Studio can still work." + tip;
     }
-    return "Red waves mean an error — one or more services are down.";
+    return "Red waves mean an error — one or more services are down." + tip;
   }
 
   function waveSvg(status) {
@@ -149,6 +202,20 @@
     return String(service?.summary || "")
       .replace(/builder ai/gi, "OpenRouter")
       .replace(/data store/gi, "Supabase");
+  }
+
+  function serviceContext(service) {
+    const id = String(service?.id || "").toLowerCase();
+    const logo = String(service?.logo || "").toLowerCase();
+    return (
+      SERVICE_CONTEXT[id] ||
+      SERVICE_CONTEXT[logo] ||
+      (id === "builder" || logo === "openrouter" ? SERVICE_CONTEXT.ai : null) ||
+      (id === "data" ? SERVICE_CONTEXT.supabase : null) || {
+        about: "A Moonrise dependency checked by Settings → Services.",
+        usedFor: "Keeps Studio features working when this check stays healthy.",
+      }
+    );
   }
 
   function logoHtml(service) {
@@ -239,6 +306,7 @@
   /** Secret-free paste for coding agents. Only status labels already shown in UI. */
   function issueText(service, report) {
     const fb = feedbackFor(service.status);
+    const ctx = serviceContext(service);
     const rows = Array.isArray(service.details) ? service.details : [];
     const detailLines = rows
       .filter((row) => row && row.label && row.value)
@@ -248,6 +316,8 @@
       "Moonrise Services issue",
       "Code: " + serviceCode(service),
       "Service: " + serviceName(service),
+      "About: " + ctx.about,
+      "Used for: " + ctx.usedFor,
       "Status: " + fb.short,
       "Summary: " + serviceSummary(service),
       "Ping: " + formatPing(service.pingMs),
@@ -328,6 +398,7 @@
 
   function detailRows(service) {
     const fb = feedbackFor(service.status);
+    const ctx = serviceContext(service);
     const rows = Array.isArray(service.details) ? service.details : [];
     const safe = rows
       .filter((row) => row && row.label && row.value)
@@ -342,6 +413,13 @@
       )
       .join("");
     return (
+      '<div class="ms-status-context">' +
+      '<p class="ms-status-context-about"><span>What it is</span>' +
+      escapeHtml(ctx.about) +
+      "</p>" +
+      '<p class="ms-status-context-for"><span>What it’s for</span>' +
+      escapeHtml(ctx.usedFor) +
+      "</p></div>" +
       '<p class="ms-status-feedback is-' +
       toneFor(service.status) +
       '">' +
@@ -414,6 +492,9 @@
           escapeHtml(fb.short) +
           " · " +
           escapeHtml(serviceSummary(service)) +
+          "</span>" +
+          '<span class="ms-status-blurb">' +
+          escapeHtml(serviceContext(service).usedFor) +
           "</span></span>" +
           waveSvg(service.status) +
           '<span class="ms-status-ping">' +

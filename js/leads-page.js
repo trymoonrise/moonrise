@@ -1268,11 +1268,11 @@
       } catch (_) {
         /* ignore */
       }
-      window.location.href = "editor.html?" + params.toString();
+      window.location.href = "editor?" + params.toString();
     } catch (e) {
       console.warn("Generate site fallback failed", e);
       window.location.href =
-        "editor.html?from_finder=1&auto_generate=1&lead_id=" +
+        "editor?from_finder=1&auto_generate=1&lead_id=" +
         encodeURIComponent(id) +
         "&name=" +
         encodeURIComponent(String(lead?.name || "").trim());

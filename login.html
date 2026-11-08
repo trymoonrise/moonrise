@@ -51,12 +51,12 @@ setTimeout(function () {
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
   <title>Login - Moonrise Studio</title>
   <meta name="description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
-  <link rel="canonical" href="https://trymoonrise.com/login.html">
+  <link rel="canonical" href="https://trymoonrise.com/login">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Moonrise Studio">
   <meta property="og:title" content="Login - Moonrise Studio">
   <meta property="og:description" content="Sign in or create a free Moonrise Studio account. Build websites for local businesses and get paid when clients go live.">
-  <meta property="og:url" content="https://trymoonrise.com/login.html">
+  <meta property="og:url" content="https://trymoonrise.com/login">
   <meta property="og:image" content="https://trymoonrise.com/assets/embed.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Login - Moonrise Studio">
@@ -71,7 +71,7 @@ setTimeout(function () {
 <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-menu-lg">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
   <meta name="color-scheme" content="light">
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
@@ -82,7 +82,7 @@ setTimeout(function () {
 <body data-page="login">
   <a class="ms-skip" href="#main">Skip to content</a>
   <header class="ms-home-nav">
-    <a class="ms-home-brand" href="index.html">
+    <a class="ms-home-brand" href="/">
       <img src="assets/MoonriseLogo.png" alt="" width="40" height="40">
       <strong>moonrise.</strong>
     </a>
@@ -92,18 +92,18 @@ setTimeout(function () {
   </header>
   <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
     <nav class="ms-home-bloom-nav" aria-label="Primary">
-      <a href="index.html" style="--nav-i:0">Home</a>
-      <a href="login.html" style="--nav-i:1">Start earning</a>
-      <a href="index.html#method" style="--nav-i:2">Learn More</a>
-      <a href="download.html" style="--nav-i:3">Download app</a>
-      <a href="orders.html" style="--nav-i:4">Locate my order</a>
-      <a href="designer-tips.html" style="--nav-i:5">Designer Tips</a>
-      <a href="login.html" style="--nav-i:6">Sign in</a>
+      <a href="/" style="--nav-i:0">Home</a>
+      <a href="login" style="--nav-i:1">Start earning</a>
+      <a href="/#method" style="--nav-i:2">Learn More</a>
+      <a href="download" style="--nav-i:3">Download app</a>
+      <a href="orders" style="--nav-i:4">Locate my order</a>
+      <a href="designer-tips" style="--nav-i:5">Designer Tips</a>
+      <a href="login" style="--nav-i:6">Sign in</a>
     </nav>
   </div>
   <p class="ms-auth-file-warning" id="auth-file-warning" hidden role="alert">
     This page was opened as a local file, so sign-in cannot connect to Moonrise.
-    <a href="https://trymoonrise.com/login.html">Open the live login page</a> instead.
+    <a href="https://trymoonrise.com/login">Open the live login page</a> instead.
   </p>
   <main id="main" class="ms-auth-card">
     <div class="ms-auth-brand">
@@ -188,7 +188,7 @@ setTimeout(function () {
         <p class="ms-muted ms-auth-passkey-hint">Optional. Use a passkey you saved in Settings, or keep using the email link.</p>
       </div>
       <p class="ms-auth-home-wrap">
-        <a class="ms-auth-home" href="index.html">Back to home</a>
+        <a class="ms-auth-home" href="/">Back to home</a>
       </p>
       <p class="ms-error" id="auth-error" hidden></p>
       <p class="ms-muted" id="auth-hint" style="margin-top:0.75rem;font-size:0.85rem"></p>
@@ -205,7 +205,7 @@ setTimeout(function () {
   <script defer src="js/handles.js"></script>
   <script defer src="js/auth-security.js?v=20261003-session"></script>
   <script defer src="js/supabase-client.js?v=20261106-mono"></script>
-  <script defer src="js/auth.js?v=20261108-instant-hop"></script>
+  <script defer src="js/auth.js?v=20261108-clean-urls"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();
@@ -227,16 +227,16 @@ setTimeout(function () {
       if (foreignEmailLink) window.SiteSupabase?.setSessionCookieSyncHeld?.(true);
       const nextUrl =
         (typeof window.StudioAuth?.safeNextPath === "function"
-          ? window.StudioAuth.safeNextPath(params.get("next"), "dashboard.html")
-          : "dashboard.html");
+          ? window.StudioAuth.safeNextPath(params.get("next"), "dashboard")
+          : "dashboard");
       const isLocate = params.get("intent") === "locate";
       if (isLocate) {
-        location.replace("orders.html");
+        location.replace("orders");
         return;
       }
       async function continueAfterAuth(opts) {
         if (isLocate) {
-          location.replace("orders.html");
+          location.replace("orders");
           return;
         }
         try {
@@ -871,10 +871,10 @@ setTimeout(function () {
           const qs = new URLSearchParams(location.search);
           qs.delete("check_email");
           qs.delete("confirmed");
-          const next = qs.get("next") || "dashboard.html";
+          const next = qs.get("next") || "dashboard";
           qs.delete("next");
           const kept = new URLSearchParams();
-          if (next !== "dashboard.html") kept.set("next", next);
+          if (next !== "dashboard") kept.set("next", next);
           if (qs.get("mode") === "signup") kept.set("mode", "signup");
           const suffix = kept.toString() ? "?" + kept.toString() : "";
           history.replaceState(null, "", location.pathname + suffix);

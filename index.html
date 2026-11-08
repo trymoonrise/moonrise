@@ -64,7 +64,7 @@ document.documentElement.classList.add("ms-boot");
     if(window.__msAuthRedirecting)return;
     window.__msAuthRedirecting=true;
     forceReveal();
-    location.replace("404.html");
+    location.replace("404");
   }
 
   function setProgress(p){
@@ -202,7 +202,7 @@ document.documentElement.classList.add("ms-boot");
         return;
       }
       if (params.get("go") === "app") {
-        location.replace("dashboard.html");
+        location.replace("dashboard");
         return;
       }
 
@@ -232,7 +232,7 @@ document.documentElement.classList.add("ms-boot");
       }
 
       if (installedLaunch() && signedIn()) {
-        location.replace("dashboard.html");
+        location.replace("dashboard");
         return;
       }
 
@@ -344,7 +344,7 @@ document.documentElement.classList.add("ms-boot");
   <div class="ms-home-shell">
     <header class="ms-home-nav">
       <div class="ms-home-nav-inner">
-        <a class="ms-home-brand" href="index.html">
+        <a class="ms-home-brand" href="/">
           <img src="assets/MoonriseLogo.png" alt="" width="28" height="28">
           <strong>moonrise.</strong>
         </a>
@@ -354,7 +354,7 @@ document.documentElement.classList.add("ms-boot");
           <a href="#faq">FAQ</a>
         </nav>
         <div class="ms-home-nav-end">
-          <a class="ms-home-nav-cta" href="login.html">Start earning</a>
+          <a class="ms-home-nav-cta" href="login">Start earning</a>
           <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
             <i></i><i></i><i></i>
           </button>
@@ -364,25 +364,25 @@ document.documentElement.classList.add("ms-boot");
 
     <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
       <nav class="ms-home-bloom-nav" aria-label="Primary">
-        <a href="index.html" style="--nav-i:0">Home</a>
-        <a href="login.html" style="--nav-i:1">Start earning</a>
+        <a href="/" style="--nav-i:0">Home</a>
+        <a href="login" style="--nav-i:1">Start earning</a>
         <a href="#product" style="--nav-i:2">Product</a>
         <a href="#how" style="--nav-i:3">How it works</a>
         <a href="#faq" style="--nav-i:4">FAQ</a>
-        <a href="download.html" style="--nav-i:5">Download app</a>
-        <a href="orders.html" style="--nav-i:6">Locate my order</a>
-        <a href="designer-tips.html" style="--nav-i:7">Designer Tips</a>
-        <a href="login.html" style="--nav-i:8">Sign in</a>
+        <a href="download" style="--nav-i:5">Download app</a>
+        <a href="orders" style="--nav-i:6">Locate my order</a>
+        <a href="designer-tips" style="--nav-i:7">Designer Tips</a>
+        <a href="login" style="--nav-i:8">Sign in</a>
       </nav>
     </div>
 
     <main id="main">
       <section class="ms-home-hero" aria-label="Moonrise">
         <div class="ms-home-hero-glow" aria-hidden="true"></div>
-        <a class="ms-home-live" href="login.html">Now open</a>
+        <a class="ms-home-live" href="login">Now open</a>
         <h1>Build websites.<br>Get paid.</h1>
         <p class="ms-home-hero-lead">Create a site for a local business. Earn when they go live — no design degree required.</p>
-        <a class="ms-home-cta" href="login.html">Start earning</a>
+        <a class="ms-home-cta" href="login">Start earning</a>
         <ul class="ms-home-hero-points">
           <li>
             <span class="ms-home-ico" aria-hidden="true">
@@ -458,7 +458,7 @@ document.documentElement.classList.add("ms-boot");
             <article class="ms-home-panel">
               <h3>Build</h3>
               <p>Pick a local business, generate their site, and polish the copy and look.</p>
-              <a href="login.html">Open studio <span aria-hidden="true">→</span></a>
+              <a href="login">Open studio <span aria-hidden="true">→</span></a>
               <div class="ms-home-panel-art ms-home-panel-build" aria-hidden="true">
                 <div></div><div></div><div></div>
               </div>
@@ -531,7 +531,7 @@ document.documentElement.classList.add("ms-boot");
               <p>Yes. There’s no long contract — use Moonrise when you have a business ready to go live.</p>
             </details>
           </div>
-          <a class="ms-home-text-link" href="help.html">Read more help</a>
+          <a class="ms-home-text-link" href="help">Read more help</a>
         </div>
       </section>
 
@@ -549,7 +549,7 @@ document.documentElement.classList.add("ms-boot");
             <h3>One cut. Clear rules.</h3>
             <p class="ms-home-close-stat">90%</p>
             <p>Yours when a business unlocks. They pay on the live site.</p>
-            <a class="ms-home-cta" href="login.html">Start earning</a>
+            <a class="ms-home-cta" href="login">Start earning</a>
           </div>
         </div>
       </section>
@@ -559,23 +559,23 @@ document.documentElement.classList.add("ms-boot");
       <div class="ms-home-wrap ms-home-footer-grid">
         <div>
           <p class="ms-home-footer-label">Product</p>
-          <a href="login.html">Start earning</a>
+          <a href="login">Start earning</a>
           <a href="#how">How it works</a>
-          <a href="download.html">Download app</a>
-          <a href="designer-tips.html">Designer Tips</a>
+          <a href="download">Download app</a>
+          <a href="designer-tips">Designer Tips</a>
         </div>
         <div>
           <p class="ms-home-footer-label">Account</p>
-          <a href="login.html">Sign in</a>
-          <a href="login.html?mode=signup">Sign up</a>
-          <a href="orders.html">Locate order</a>
+          <a href="login">Sign in</a>
+          <a href="login?mode=signup">Sign up</a>
+          <a href="orders">Locate order</a>
         </div>
         <div>
           <p class="ms-home-footer-label">Help</p>
-          <a href="help.html">Help</a>
-          <a href="contact.html">Contact</a>
-          <a href="legal.html">Legal</a>
-          <a href="report.html">Report</a>
+          <a href="help">Help</a>
+          <a href="contact">Contact</a>
+          <a href="legal">Legal</a>
+          <a href="report">Report</a>
         </div>
       </div>
       <div class="ms-home-wrap">

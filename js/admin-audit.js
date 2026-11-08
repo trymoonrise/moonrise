@@ -1386,7 +1386,7 @@
   }
 
   async function boot() {
-    const allowed = await window.StudioOwner?.gateOwnerPage?.("dashboard.html");
+    const allowed = await window.StudioOwner?.gateOwnerPage?.("dashboard");
     if (!allowed) return;
     bind();
     await load();

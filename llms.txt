@@ -25,13 +25,13 @@ Moonrise Studio (trymoonrise.com) is an AI-powered web platform for selling webs
 ## Primary pages
 
 - Home: https://trymoonrise.com/
-- Sign up / Sign in: https://trymoonrise.com/login.html
-- Locate a published order: https://trymoonrise.com/orders.html
-- Download app / install: https://trymoonrise.com/download.html
-- Contact: https://trymoonrise.com/contact.html
-- Designer Tips (UI pattern dictionary): https://trymoonrise.com/designer-tips.html
-- Privacy: https://trymoonrise.com/legal.html#privacy
-- Terms: https://trymoonrise.com/legal.html#terms
+- Sign up / Sign in: https://trymoonrise.com/login
+- Locate a published order: https://trymoonrise.com/orders
+- Download app / install: https://trymoonrise.com/download
+- Contact: https://trymoonrise.com/contact
+- Designer Tips (UI pattern dictionary): https://trymoonrise.com/designer-tips
+- Privacy: https://trymoonrise.com/legal#privacy
+- Terms: https://trymoonrise.com/legal#terms
 
 ## Support
 

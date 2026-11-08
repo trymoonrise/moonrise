@@ -11,7 +11,18 @@
     "contact",
     "privacy",
     "terms",
+    "refund",
+    "legal",
+    "report",
     "download",
+    "designer-tips",
+    "guide",
+    "pricing",
+    "donate",
+    "leaderboard",
+    "hosting-billing",
+    "creator-contact",
+    "404",
   ]);
   const SUPPORT_EMAIL = "trymoonrise@gmail.com";
   /** Session / API probes during page boot — keep short so the loader cannot stall. */
@@ -42,7 +53,7 @@
     if (isLocalFilePage()) {
       throw authError({
         error:
-          "Sign-in does not work when this page is opened as a file. Use https://trymoonrise.com/login.html instead.",
+          "Sign-in does not work when this page is opened as a file. Use https://trymoonrise.com/login instead.",
         code: "file_protocol",
       });
     }
@@ -162,7 +173,7 @@
       lower.includes("network request failed")
     ) {
       if (isLocalFilePage()) {
-        return "Sign-in does not work when this page is opened as a file. Use https://trymoonrise.com/login.html instead.";
+        return "Sign-in does not work when this page is opened as a file. Use https://trymoonrise.com/login instead.";
       }
       if (fallback) return fallback;
       return "Can't reach the sign-in service. Check your connection and try again.";
@@ -441,10 +452,10 @@
       params.delete("type");
       params.delete("confirmed");
       params.delete("check_email");
-      const next = safeNextPath(params.get("next"), "dashboard.html");
+      const next = safeNextPath(params.get("next"), "dashboard");
       params.delete("next");
       const qs = new URLSearchParams();
-      if (next !== "dashboard.html") qs.set("next", next);
+      if (next !== "dashboard") qs.set("next", next);
       if (params.get("mode") === "signup") qs.set("mode", "signup");
       const suffix = qs.toString() ? "?" + qs.toString() : "";
       history.replaceState(null, "", location.pathname + suffix);
@@ -958,10 +969,10 @@
     );
   }
 
-  /** Keep post-login redirects on same-origin relative paths only. */
+  /** Keep post-login redirects on same-origin relative paths only (extensionless). */
   function safeNextPath(raw, fallback) {
-    const fallbackPath = String(fallback || "dashboard.html");
-    const s = String(raw || fallbackPath).trim();
+    const fallbackPath = String(fallback || "dashboard").replace(/\.html\b/gi, "");
+    let s = String(raw || fallbackPath).trim();
     if (!s) return fallbackPath;
     if (
       s.startsWith("http") ||
@@ -974,17 +985,22 @@
     ) {
       return fallbackPath;
     }
-    if (s.startsWith("onboarding.html")) return fallbackPath;
-    return s;
+    s = s.replace(/\.html\b/gi, "");
+    if (s === "/" || s === "index" || s.startsWith("/?") || s.startsWith("/#")) {
+      /* home is fine */
+    } else if (s.startsWith("onboarding")) {
+      return fallbackPath;
+    }
+    return s || fallbackPath;
   }
 
   async function studioOnboardingRedirect(nextUrl) {
-    const destination = safeNextPath(nextUrl, "dashboard.html");
+    const destination = safeNextPath(nextUrl, "dashboard");
     const profile = await getProfile();
     if (studioOnboarded(profile)) {
       return destination;
     }
-    return "onboarding.html?next=" + encodeURIComponent(destination);
+    return "onboarding?next=" + encodeURIComponent(destination);
   }
 
   async function ensureStudioOnboarding(existingSession) {
@@ -1001,10 +1017,10 @@
     }
 
     const next =
-      (location.pathname.split("/").pop() || "dashboard.html") + location.search + location.hash;
+      (location.pathname.split("/").pop() || "dashboard") + location.search + location.hash;
     const replayQs = hasForceOnboardingReplay() ? "replay=1&" : "";
     location.replace(
-      "onboarding.html?" + replayQs + "next=" + encodeURIComponent(next)
+      "onboarding?" + replayQs + "next=" + encodeURIComponent(next)
     );
     return "redirect";
   }
@@ -1031,7 +1047,7 @@
   async function requestPasswordReset(email) {
     const address = String(email || "").trim();
     if (!address) throw new Error("Enter your email");
-    const redirectTo = new URL("login.html?mode=recover", location.href).href;
+    const redirectTo = new URL("login?mode=recover", location.href).href;
     return workerAuth("/auth/forgot", { email: address, redirectTo });
   }
 
@@ -1135,9 +1151,9 @@
       global.__msAuthRedirecting = true;
       clearClientSessionMarker();
       const next = encodeURIComponent(
-        (location.pathname.split("/").pop() || "dashboard.html") + location.search + location.hash
+        (location.pathname.split("/").pop() || "dashboard") + location.search + location.hash
       );
-      location.replace("login.html?next=" + next);
+      location.replace("login?next=" + next);
       return null;
     }
     // Channel hops already painted chrome — freeze-check in the background.
@@ -1150,7 +1166,7 @@
           } catch (_) {
             /* ignore */
           }
-          location.replace("login.html?frozen=1");
+          location.replace("login?frozen=1");
         })
         .catch(() => {});
     } else {
@@ -1161,7 +1177,7 @@
         } catch (_) {
           /* ignore */
         }
-        location.replace("login.html?frozen=1");
+        location.replace("login?frozen=1");
         return null;
       }
     }
@@ -1193,11 +1209,11 @@
   function sendToLogin() {
     try {
       if (document.prerendering) return;
-      const file = (location.pathname.split("/").pop() || "index.html").split("?")[0];
+      const file = (location.pathname.split("/").pop() || "/").split("?")[0];
       const page = file.replace(/\.html$/, "") || "index";
-      if (PUBLIC_PAGES.has(page) || file === "login.html") return;
+      if (PUBLIC_PAGES.has(page) || file === "login") return;
       const next = encodeURIComponent(file + location.search + location.hash);
-      location.replace("login.html?next=" + next);
+      location.replace("login?next=" + next);
     } catch (_) {
       /* ignore */
     }

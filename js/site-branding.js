@@ -13,18 +13,18 @@
 
   const PUBLIC_PAGES = {
     "": 1,
-    "index.html": 1,
-    "login.html": 1,
-    "orders.html": 1,
-    "contact.html": 1,
-    "privacy.html": 1,
-    "terms.html": 1,
-    "download.html": 1,
-    "legal.html": 1,
-    "refund.html": 1,
-    "report.html": 1,
-    "designer-tips.html": 1,
-    "404.html": 1,
+    "/": 1,
+    "login": 1,
+    "orders": 1,
+    "contact": 1,
+    "privacy": 1,
+    "terms": 1,
+    "download": 1,
+    "legal": 1,
+    "refund": 1,
+    "report": 1,
+    "designer-tips": 1,
+    "404": 1,
   };
 
   function absoluteUrl(pathOrUrl) {
@@ -38,14 +38,14 @@
   }
 
   function currentFile() {
-    if (typeof location === "undefined") return "index.html";
-    return location.pathname.split("/").pop() || "index.html";
+    if (typeof location === "undefined") return "/";
+    return location.pathname.split("/").pop() || "/";
   }
 
   function canonicalUrl() {
     if (typeof location === "undefined") return siteUrl + "/";
     const file = currentFile();
-    if (file === "index.html" || file === "") return siteUrl + "/";
+    if (file === "/" || file === "") return siteUrl + "/";
     return siteUrl + "/" + file;
   }
 
@@ -162,7 +162,7 @@
 
   const graph = [organization, webPage];
 
-  if (page === "home" || currentFile() === "index.html" || currentFile() === "") {
+  if (page === "home" || currentFile() === "/" || currentFile() === "") {
     graph.push({
       "@context": "https://schema.org",
       "@type": "WebSite",

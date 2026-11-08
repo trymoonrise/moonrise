@@ -264,14 +264,14 @@
       '<article class="ms-dash-preview">' +
       shot +
       deleteBtn +
-      '<a class="ms-dash-preview-meta" href="editor.html?project_id=' +
+      '<a class="ms-dash-preview-meta" href="editor?project_id=' +
       encodeURIComponent(p.id) +
       '">' +
       '<span class="ms-dash-preview-name">' +
       escapeHtml(name) +
       "</span>" +
       "</a>" +
-      '<a class="ms-dash-preview-hit" href="editor.html?project_id=' +
+      '<a class="ms-dash-preview-hit" href="editor?project_id=' +
       encodeURIComponent(p.id) +
       '" aria-label="Open ' +
       escapeAttr(name) +

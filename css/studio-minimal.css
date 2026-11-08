@@ -879,6 +879,43 @@ html[data-ms-mode="dark"] .ms-status-logo.is-mono {
   line-height: 1.25;
 }
 
+.ms-status-blurb {
+  display: block;
+  margin-top: 0.18rem;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: var(--ms-min-muted);
+  max-width: 18rem;
+}
+
+.ms-status-context {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0 0 0.35rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
+  background: var(--ms-min-fill);
+}
+
+.ms-status-context-about,
+.ms-status-context-for {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--ms-ink);
+}
+
+.ms-status-context-about span,
+.ms-status-context-for span {
+  display: block;
+  margin-bottom: 0.12rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ms-min-quiet);
+}
+
 .ms-status-wave {
   width: 3.25rem;
   height: 1.15rem;

@@ -277,7 +277,7 @@
           : "";
         const openBtn =
           row.source === "project" && row.project_id
-            ? '<a class="ms-clients-row-btn" href="editor.html?project_id=' +
+            ? '<a class="ms-clients-row-btn" href="editor?project_id=' +
               encodeURIComponent(row.project_id) +
               '">Open</a>'
             : "";

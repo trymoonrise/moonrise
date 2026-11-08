@@ -25,7 +25,7 @@
     try {
       await window.StudioAuth?.requireAuth?.();
     } catch (_) {
-      location.href = "login.html?next=leaderboard.html";
+      location.href = "login?next=leaderboard.html";
       return;
     }
 

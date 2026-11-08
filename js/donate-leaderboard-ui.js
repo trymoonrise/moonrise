@@ -84,7 +84,7 @@
     const list = Array.isArray(entries) ? entries : [];
     if (!list.length) {
       listEl.innerHTML =
-        '<li class="ms-ldb-empty">No supporters yet. <a href="donate.html">Be the first.</a></li>';
+        '<li class="ms-ldb-empty">No supporters yet. <a href="donate">Be the first.</a></li>';
       return;
     }
     listEl.innerHTML = list.map((entry) => renderRankRow(entry)).join("");

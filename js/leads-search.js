@@ -2913,7 +2913,7 @@
     } catch (_) {
       /* ignore */
     }
-    return { href: "editor.html?" + params.toString(), pick };
+    return { href: "editor?" + params.toString(), pick };
   }
 
   async function launchBuilderForLead(lead, opts) {

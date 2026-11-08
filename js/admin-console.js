@@ -141,8 +141,8 @@
 
   function sendToLogin() {
     if (document.prerendering) return;
-    const next = encodeURIComponent("admin-console.html" + location.search + location.hash);
-    location.replace("login.html?next=" + next);
+    const next = encodeURIComponent("admin-console" + location.search + location.hash);
+    location.replace("login?next=" + next);
   }
 
   async function refresh() {
@@ -192,7 +192,7 @@
   }
 
   function inviteSignupUrl(code) {
-    const url = new URL("login.html", location.href);
+    const url = new URL("login", location.href);
     url.search = "";
     url.hash = "";
     url.searchParams.set("mode", "signup");
@@ -251,7 +251,7 @@
   let pollTimer = 0;
 
   ensureDigits();
-  window.StudioOwner?.gateOwnerPage?.("dashboard.html").then((ok) => {
+  window.StudioOwner?.gateOwnerPage?.("dashboard").then((ok) => {
     if (!ok) return;
     setStatus("Loading the Employee ID…");
     refresh();

@@ -1,5 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
@@ -35,6 +37,12 @@
       ]
     },
     {
+      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|course|help|guide|donate|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|leaderboard|designer-tips|hosting-billing|creator-contact|privacy|terms|refund|404)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
       "source": "/api/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" }
@@ -54,12 +62,12 @@
     }
   ],
   "redirects": [
-    { "source": "/apply", "destination": "/login.html", "permanent": true },
-    { "source": "/apply.html", "destination": "/login.html", "permanent": true },
-    { "source": "/store", "destination": "/donate.html", "permanent": true },
-    { "source": "/store.html", "destination": "/donate.html", "permanent": true },
-    { "source": "/pending-payouts", "destination": "/admin-console.html", "permanent": true },
-    { "source": "/pending-payouts.html", "destination": "/admin-console.html", "permanent": true }
+    { "source": "/apply", "destination": "/login", "permanent": true },
+    { "source": "/apply.html", "destination": "/login", "permanent": true },
+    { "source": "/store", "destination": "/donate", "permanent": true },
+    { "source": "/store.html", "destination": "/donate", "permanent": true },
+    { "source": "/pending-payouts", "destination": "/admin-console", "permanent": true },
+    { "source": "/pending-payouts.html", "destination": "/admin-console", "permanent": true }
   ],
   "rewrites": [
     { "source": "/doc/:path*", "destination": "/assets/:path*" },

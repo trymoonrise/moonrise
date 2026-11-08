@@ -64,7 +64,7 @@ document.documentElement.classList.add("ms-boot");
     if(window.__msAuthRedirecting)return;
     window.__msAuthRedirecting=true;
     forceReveal();
-    location.replace("404.html");
+    location.replace("404");
   }
 
   function setProgress(p){
@@ -224,7 +224,7 @@ document.documentElement.classList.add("ms-boot");
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261108-instant-hop"></script>
+  <script src="js/auth-gate-head.js?v=20261108-clean-urls"></script>
   <title>Help - Moonrise Studio</title>
   <meta name="description" content="Help for Moonrise Studio creators: accounts, websites, payouts, and how to reach support.">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
@@ -234,7 +234,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-menu-lg">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
 </head>
 <body data-page="help">
@@ -354,7 +354,7 @@ document.documentElement.classList.add("ms-boot");
     </section>
 
     <section class="ms-help-guide-section" aria-label="Creator guide">
-      <a class="ms-help-guide-card" href="guide.html">
+      <a class="ms-help-guide-card" href="guide">
         <span class="ms-help-vcard-icon ms-help-vcard-icon--guide" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
@@ -376,8 +376,8 @@ document.documentElement.classList.add("ms-boot");
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261106-mono"></script>
-  <script defer src="js/auth.js?v=20261108-instant-hop"></script>
-  <script defer src="js/app.js?v=20261108-instant-hop"></script>
+  <script defer src="js/auth.js?v=20261108-clean-urls"></script>
+  <script defer src="js/app.js?v=20261108-clean-urls"></script>
   
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>

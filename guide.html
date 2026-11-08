@@ -73,7 +73,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     if(window.__msAuthRedirecting)return;
     window.__msAuthRedirecting=true;
     forceReveal();
-    location.replace("404.html");
+    location.replace("404");
   }
 
   function setProgress(p){
@@ -233,7 +233,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261108-instant-hop"></script>
+  <script src="js/auth-gate-head.js?v=20261108-clean-urls"></script>
   <title>Guide - Moonrise Studio</title>
   <meta name="description" content="Moonrise creator guide: find businesses, build sites, publish, and get paid.">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
@@ -243,7 +243,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
 <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-menu-lg">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
 </head>
 <body data-page="guide">
@@ -291,7 +291,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <li><strong>They pay on the watermark</strong> - the live site stays watermarked until the owner completes Moonrise checkout.</li>
           <li><strong>You never charge them for go-live</strong> - no cash, Venmo, invoices, or off-platform payment for the same unlock.</li>
           <li><strong>You keep 90%</strong> - Moonrise keeps 10% of each go-live payment to run checkout, hosting, and the platform (before processor fees and adjustments).</li>
-          <li><strong>Paid clients appear under</strong> <a href="clients.html">My Clients</a>; income tracks on the <a href="dashboard.html">Dashboard</a>.</li>
+          <li><strong>Paid clients appear under</strong> <a href="clients">My Clients</a>; income tracks on the <a href="dashboard">Dashboard</a>.</li>
         </ul>
         <p class="ms-settings-hint">
           Moonrise is a software tool. You still own your sales conversations, how you present the preview, and any
@@ -320,7 +320,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <p><strong>2. Set Website Price before you publish.</strong> That is what the owner sees at checkout. You keep 90%; Moonrise keeps 10% of that go-live amount (subject to processor fees and Terms).</p>
           <p><strong>3. Do not remove or hide the watermark</strong> before the owner pays. Do not tell them to pay you instead of Moonrise checkout.</p>
           <p><strong>4. Contact form and custom domain are optional.</strong> They stay off until you turn them on and save. They are not required to publish.</p>
-          <p>Breaking the payment rules can lead to permanent ban, withheld payouts, site removal, and other consequences described in the <a href="legal.html#terms">Terms of Service</a>.</p>
+          <p>Breaking the payment rules can lead to permanent ban, withheld payouts, site removal, and other consequences described in the <a href="legal#terms">Terms of Service</a>.</p>
         </div>
       </section>
 
@@ -330,7 +330,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
         <ol class="ms-help-steps">
           <li>
             <strong>Find</strong>
-            <span>Open <a href="leads.html">Business Finder</a> and search by city and category, or paste a Google Maps link in <a href="builder.html">Builder</a>. Pick businesses that look active and under-served online.</span>
+            <span>Open <a href="leads">Business Finder</a> and search by city and category, or paste a Google Maps link in <a href="builder">Builder</a>. Pick businesses that look active and under-served online.</span>
           </li>
           <li>
             <strong>Generate</strong>
@@ -360,7 +360,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
         <div class="ms-creator-policy-notice">
           <p><strong>Creators do not charge business owners.</strong> Your job is to build, publish, and share the live site link. The owner pays only through the Moonrise watermark on the deployed website - that is the sole checkout for going live.</p>
           <p>When they pay, the watermark is removed automatically, the site stays live, and you receive <strong>90%</strong> of the go-live sale (Moonrise keeps <strong>10%</strong>). Set the unlock price in the editor before you publish.</p>
-          <p>Charging the owner directly - or asking them to pay outside the watermark - violates Moonrise Terms and may result in <strong>permanent ban, withheld payouts, site removal, and other severe consequences</strong>. See <a href="legal.html#terms">Terms of Service</a>.</p>
+          <p>Charging the owner directly - or asking them to pay outside the watermark - violates Moonrise Terms and may result in <strong>permanent ban, withheld payouts, site removal, and other severe consequences</strong>. See <a href="legal#terms">Terms of Service</a>.</p>
         </div>
         <ul class="ms-help-list">
           <li>Checkout is powered by Stripe on the live watermark page.</li>
@@ -384,7 +384,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <li>Lead data can come from public or third-party sources. Always verify phone and business name before you publish or call.</li>
         </ul>
         <div class="ms-settings-actions">
-          <a class="ms-btn" href="leads.html">Open Business Finder</a>
+          <a class="ms-btn" href="leads">Open Business Finder</a>
         </div>
       </section>
 
@@ -404,8 +404,8 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <li><strong>Watermark widget</strong> - unpaid live sites show the Moonrise watermark until the owner pays.</li>
         </ul>
         <div class="ms-settings-actions">
-          <a class="ms-btn" href="builder.html">Open Builder</a>
-          <a class="ms-btn ms-btn-secondary" href="projects.html">My Projects</a>
+          <a class="ms-btn" href="builder">Open Builder</a>
+          <a class="ms-btn ms-btn-secondary" href="projects">My Projects</a>
         </div>
       </section>
 
@@ -464,13 +464,13 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
         <ul class="ms-help-list">
           <li>Set Website Price, publish, and share the live site link.</li>
           <li>Walk the owner through paying on the site if they are unsure - stay on the watermark checkout path.</li>
-          <li>After payment, the project appears under <a href="clients.html">My Clients</a> and counts toward Dashboard income.</li>
-          <li>Set an income goal on the <a href="dashboard.html">Dashboard</a> to track how you are pacing.</li>
+          <li>After payment, the project appears under <a href="clients">My Clients</a> and counts toward Dashboard income.</li>
+          <li>Set an income goal on the <a href="dashboard">Dashboard</a> to track how you are pacing.</li>
           <li>Extra custom work beyond go-live should be scoped clearly and must never replace watermark payment for the same unlock.</li>
         </ul>
         <div class="ms-settings-actions">
-          <a class="ms-btn ms-btn-secondary" href="dashboard.html">Dashboard</a>
-          <a class="ms-btn" href="clients.html">My Clients</a>
+          <a class="ms-btn ms-btn-secondary" href="dashboard">Dashboard</a>
+          <a class="ms-btn" href="clients">My Clients</a>
         </div>
       </section>
 
@@ -482,14 +482,14 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           according to current platform practice (including manual payout outside the app where noted in product copy).
         </p>
         <ul class="ms-help-list">
-          <li>Keep payout details accurate in <a href="settings.html">Settings</a>.</li>
+          <li>Keep payout details accurate in <a href="settings">Settings</a>.</li>
           <li>Income on the Dashboard reflects your 90% creator share after Moonrise&rsquo;s 10% platform fee (before any processor or dispute adjustments).</li>
           <li>Chargebacks, refunds, or Terms violations can delay or reverse amounts - see the Terms for details.</li>
           <li>You are responsible for taxes on your earnings.</li>
         </ul>
         <div class="ms-settings-actions">
-          <a class="ms-btn" href="settings.html">Open Settings</a>
-          <a class="ms-btn ms-btn-secondary" href="admin-console.html#payouts">Pending payouts</a>
+          <a class="ms-btn" href="settings">Open Settings</a>
+          <a class="ms-btn ms-btn-secondary" href="admin-console#payouts">Pending payouts</a>
         </div>
       </section>
 
@@ -503,27 +503,27 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <li><strong>Free platform</strong> - build sites, use Business Finder, and get paid when clients go live.</li>
           <li><strong>MVP+ perks</strong> - View code and download HTML in Builder. One donation of any amount keeps MVP+ for life.</li>
           <li><strong>How to donate</strong> - MVP+ from about <strong>$5/mo</strong>, or choose a one-time amount (amounts may appear on the leaderboard).</li>
-          <li>Open the <a href="donate.html">Donate</a> page for current options and the <a href="donate.html#store">Store</a>.</li>
+          <li>Open the <a href="donate">Donate</a> page for current options and the <a href="donate#store">Store</a>.</li>
         </ul>
         <div class="ms-settings-actions">
-          <a class="ms-btn" href="donate.html">Donate � unlock MVP+</a>
+          <a class="ms-btn" href="donate">Donate � unlock MVP+</a>
         </div>
       </section>
 
       <section class="ms-doc-block" id="dashboard">
         <h2 class="ms-doc-title">Dashboard &amp; projects</h2>
         <ul class="ms-help-list">
-          <li><a href="dashboard.html">Dashboard</a> - income, goals, and a snapshot of your creator activity.</li>
-          <li><a href="projects.html">Projects</a> - all sites you have generated or imported; open any project to keep editing.</li>
-          <li><a href="orders.html">Orders</a> - locate order-related information when you need it for a client payment.</li>
-          <li><a href="leaderboard.html">Leaderboard</a> - community standings where donations and activity may appear.</li>
+          <li><a href="dashboard">Dashboard</a> - income, goals, and a snapshot of your creator activity.</li>
+          <li><a href="projects">Projects</a> - all sites you have generated or imported; open any project to keep editing.</li>
+          <li><a href="orders">Orders</a> - locate order-related information when you need it for a client payment.</li>
+          <li><a href="leaderboard">Leaderboard</a> - community standings where donations and activity may appear.</li>
         </ul>
       </section>
 
       <section class="ms-doc-block" id="account">
         <h2 class="ms-doc-title">Account &amp; security</h2>
         <ul class="ms-help-list">
-          <li>Update handle, display name, and photo in <a href="settings.html">Settings</a>.</li>
+          <li>Update handle, display name, and photo in <a href="settings">Settings</a>.</li>
           <li>Change password or passkey under Security where available.</li>
           <li>Creator contact details you save may appear on watermarked sites so owners can reach you about edits.</li>
           <li>Sign out from the arrow icon next to your name, or from Settings -> Session.</li>
@@ -534,12 +534,12 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
       <section class="ms-doc-block" id="community">
         <h2 class="ms-doc-title">Course &amp; community</h2>
         <ul class="ms-help-list">
-          <li>Watch the creator walkthrough on the <a href="course.html">Course</a> page.</li>
+          <li>Watch the creator walkthrough on the <a href="course">Course</a> page.</li>
           <li>Join Telegram and Discord from the Account section in the sidebar for updates and creator chat.</li>
-          <li>Browse the <a href="donate.html#store">Store</a> to purchase creator tools. The store is separate from donations and MVP+.</li>
+          <li>Browse the <a href="donate#store">Store</a> to purchase creator tools. The store is separate from donations and MVP+.</li>
         </ul>
         <div class="ms-settings-actions">
-          <a class="ms-btn" href="course.html">Open Course</a>
+          <a class="ms-btn" href="course">Open Course</a>
         </div>
       </section>
 
@@ -553,7 +553,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <li><strong>Domain still pending?</strong> Remove conflicting A/CNAME records at your DNS host, add the records Moonrise shows, wait a few minutes, then Check status.</li>
           <li><strong>Code button locked?</strong> Unlock with MVP+ or an eligible plan - see Donate / Store.</li>
           <li><strong>Mobile chrome cramped?</strong> Preview / Edit / Code stretch beside Back on phones; scroll the tools row if device icons overflow.</li>
-          <li><strong>Want UI pattern ideas?</strong> Browse the interactive <a href="designer-tips.html">Designer Tips</a> dictionary — loaders, buttons, forms, menus, and more.</li>
+          <li><strong>Want UI pattern ideas?</strong> Browse the interactive <a href="designer-tips">Designer Tips</a> dictionary — loaders, buttons, forms, menus, and more.</li>
         </ul>
       </section>
 
@@ -564,9 +564,9 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           control rights and obligations.
         </p>
         <ul class="ms-help-list">
-          <li><a href="legal.html#terms">Terms of Service</a> - payment rules, acceptable use, bans, liability limits.</li>
-          <li><a href="legal.html#privacy">Privacy Policy</a> - what we collect, how we use it, and your choices.</li>
-          <li><a href="help.html">Help / Contact</a> - reach the team for billing, access, or product issues.</li>
+          <li><a href="legal#terms">Terms of Service</a> - payment rules, acceptable use, bans, liability limits.</li>
+          <li><a href="legal#privacy">Privacy Policy</a> - what we collect, how we use it, and your choices.</li>
+          <li><a href="help">Help / Contact</a> - reach the team for billing, access, or product issues.</li>
         </ul>
       </section>
 
@@ -581,18 +581,18 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <li>Phone: <a href="tel:+14013000957">(401) 300-0957</a></li>
         </ul>
         <div class="ms-settings-actions">
-          <a class="ms-btn" href="help.html">Contact us</a>
+          <a class="ms-btn" href="help">Contact us</a>
         </div>
         <p class="ms-help-legal">
-          <a href="legal.html#privacy">Privacy</a>
+          <a href="legal#privacy">Privacy</a>
           <span aria-hidden="true">�</span>
-          <a href="legal.html#terms">Terms</a>
+          <a href="legal#terms">Terms</a>
           <span aria-hidden="true">�</span>
-          <a href="legal.html#refunds">Refunds</a>
+          <a href="legal#refunds">Refunds</a>
           <span aria-hidden="true">�</span>
-          <a href="report.html">Report</a>
+          <a href="report">Report</a>
           <span aria-hidden="true">�</span>
-          <a href="settings.html">Settings</a>
+          <a href="settings">Settings</a>
         </p>
       </section>
     </div>
@@ -602,8 +602,8 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261106-mono"></script>
-  <script defer src="js/auth.js?v=20261108-instant-hop"></script>
-  <script defer src="js/app.js?v=20261108-instant-hop"></script>
+  <script defer src="js/auth.js?v=20261108-clean-urls"></script>
+  <script defer src="js/app.js?v=20261108-clean-urls"></script>
   
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>

@@ -334,10 +334,10 @@
         if (tries < 10) window.setTimeout(poll, 1500);
       };
       void poll();
-      history.replaceState({}, "", "pricing.html");
+      history.replaceState({}, "", "pricing");
     } else if (q.get("sub") === "canceled") {
       window.StudioToast?.error?.("Checkout canceled.");
-      history.replaceState({}, "", "pricing.html");
+      history.replaceState({}, "", "pricing");
     } else if (q.get("topup") === "1") {
       window.StudioToast?.success?.("Top-up received - adding credits...");
       void (async () => {
@@ -350,10 +350,10 @@
           window.StudioToast?.error?.(e.message || "Could not add credits");
         }
       })();
-      history.replaceState({}, "", "pricing.html");
+      history.replaceState({}, "", "pricing");
     } else if (q.get("topup") === "canceled") {
       window.StudioToast?.error?.("Top-up canceled.");
-      history.replaceState({}, "", "pricing.html");
+      history.replaceState({}, "", "pricing");
     }
   }
 

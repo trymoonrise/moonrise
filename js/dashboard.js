@@ -822,7 +822,7 @@
     const paid = !canDeleteProject(p);
     const live = isLiveProject(p);
     const made = formatMadeWhen(p.created_at || p.updated_at);
-    const href = "editor.html?project_id=" + encodeURIComponent(p.id);
+    const href = "editor?project_id=" + encodeURIComponent(p.id);
     const liveBadge = live
       ? '<span class="ms-dash-preview-live" aria-label="Live site">Live</span>'
       : "";

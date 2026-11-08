@@ -3,13 +3,13 @@
  */
 (function (global) {
   const MENU = [
-    { id: "dashboard", href: "dashboard.html", label: "Dashboard", icon: "grid" },
-    { id: "leads", href: "leads.html", label: "Business Finder", icon: "search" },
-    { id: "builder", href: "builder.html", label: "Builder", icon: "hammer" },
-    { id: "clients", href: "clients.html", label: "My Clients", icon: "users" },
+    { id: "dashboard", href: "dashboard", label: "Dashboard", icon: "grid" },
+    { id: "leads", href: "leads", label: "Business Finder", icon: "search" },
+    { id: "builder", href: "builder", label: "Builder", icon: "hammer" },
+    { id: "clients", href: "clients", label: "My Clients", icon: "users" },
     {
       id: "donate",
-      href: "donate.html",
+      href: "donate",
       label: "Support",
       icon: "heart",
       pages: ["donate", "store"],
@@ -19,7 +19,7 @@
   const OWNER_MENU = [
     {
       id: "admin-console",
-      href: "admin-console.html",
+      href: "admin-console",
       label: "Admin Console",
       icon: "key",
       ownerOnly: true,
@@ -27,9 +27,9 @@
   ];
 
   const ACCOUNT = [
-    { id: "settings", href: "settings.html", label: "Settings", icon: "gear" },
-    { id: "course", href: "course.html", label: "Course", icon: "grad" },
-    { id: "help", href: "help.html", label: "Help", icon: "help" },
+    { id: "settings", href: "settings", label: "Settings", icon: "gear" },
+    { id: "course", href: "course", label: "Course", icon: "grad" },
+    { id: "help", href: "help", label: "Help", icon: "help" },
     {
       id: "telegram",
       href: (window.SITE_CONFIG && window.SITE_CONFIG.telegramUrl) || "https://t.me/c/3541685239/1",
@@ -46,7 +46,7 @@
     },
     {
       id: "download-app",
-      href: "download.html",
+      href: "download",
       label: "Download app",
       icon: "download",
       download: true,
@@ -54,10 +54,10 @@
   ];
 
   const SIDEBAR_LEGAL = [
-    { id: "guide", href: "guide.html", label: "Guide" },
-    { id: "designer-tips", href: "designer-tips.html", label: "Designer Tips" },
-    { id: "privacy", href: "legal.html#privacy", label: "Privacy", legalHash: "privacy" },
-    { id: "terms", href: "legal.html#terms", label: "Terms", legalHash: "terms" },
+    { id: "guide", href: "guide", label: "Guide" },
+    { id: "designer-tips", href: "designer-tips", label: "Designer Tips" },
+    { id: "privacy", href: "legal#privacy", label: "Privacy", legalHash: "privacy" },
+    { id: "terms", href: "legal#terms", label: "Terms", legalHash: "terms" },
   ];
 
   const ICONS = {
@@ -194,7 +194,7 @@
   function gateOwnerPage(fallback) {
     return isSiteOwner().then((ok) => {
       if (ok) return true;
-      window.location.replace(fallback || "dashboard.html");
+      window.location.replace(fallback || "dashboard");
       return false;
     });
   }
@@ -598,8 +598,8 @@
     nav.querySelectorAll(".ms-sidebar-legal-link").forEach((link) => {
       const href = String(link.getAttribute("href") || "");
       let on = false;
-      if (href.indexOf("guide.html") !== -1) on = page === "guide";
-      else if (href.indexOf("designer-tips.html") !== -1) on = page === "designer-tips";
+      if (href.indexOf("guide") !== -1) on = page === "guide";
+      else if (href.indexOf("designer-tips") !== -1) on = page === "designer-tips";
       else if (href.indexOf("#privacy") !== -1)
         on = page === "legal" && (hash === "privacy" || !hash);
       else if (href.indexOf("#terms") !== -1) on = page === "legal" && hash === "terms";
@@ -839,7 +839,7 @@
       navGroup("Account", "user", accountHtml, "Account") +
       '<p class="ms-sidebar-updated" id="ms-sidebar-updated" hidden>Last updated: ...</p>' +
       "</div>" +
-      '<a class="ms-credits-tag ms-income-tag" id="ms-user-income" href="dashboard.html" title="View income on Dashboard">' +
+      '<a class="ms-credits-tag ms-income-tag" id="ms-user-income" href="dashboard" title="View income on Dashboard">' +
       '<span class="ms-credits-tag-label">Income</span>' +
       '<strong class="ms-credits-tag-value" id="ms-user-income-value">' +
       bootIncomeLabel +
@@ -848,7 +848,7 @@
       sidebarLegal(page) +
       '<div class="ms-sidebar-foot">' +
       '<div class="ms-user-row">' +
-      '<a class="ms-user-profile" href="settings.html" aria-label="Open settings">' +
+      '<a class="ms-user-profile" href="settings" aria-label="Open settings">' +
       '<div class="ms-user-avatar-wrap">' +
       '<div class="ms-user-avatar' +
       avatarBusy +
@@ -896,7 +896,7 @@
     document.getElementById("ms-signout")?.addEventListener("click", async () => {
       clearStudioBooted();
       await window.StudioAuth?.signOut?.();
-      location.href = "index.html";
+      location.href = "/";
     });
 
     const sidebar = document.getElementById("ms-sidebar");
@@ -1160,7 +1160,7 @@
     ensureRedirectModal();
     ensureInstallHintScript();
     pendingRedirectKind = "download";
-    pendingRedirectUrl = "download.html";
+    pendingRedirectUrl = "download";
     const installed = !!window.MoonriseInstall?.isStandalone?.();
     const title = document.getElementById("ms-redirect-title");
     const copy = document.querySelector("#ms-redirect-modal .ms-redirect-copy");
@@ -1260,7 +1260,7 @@
           await install.promptInstall();
           return;
         }
-        location.href = url || "download.html";
+        location.href = url || "download";
         return;
       }
       window.open(url, "_blank", "noopener,noreferrer");
@@ -1890,16 +1890,16 @@
   }
 
   const STUDIO_PREFETCH_PAGES = [
-    "dashboard.html",
-    "builder.html",
-    "clients.html",
-    "settings.html",
-    "leads.html",
-    "projects.html",
-    "course.html",
-    "help.html",
-    "guide.html",
-    "donate.html",
+    "dashboard",
+    "builder",
+    "clients",
+    "settings",
+    "leads",
+    "projects",
+    "course",
+    "help",
+    "guide",
+    "donate",
   ];
 
   function warmStudioUrl(href) {
@@ -2021,7 +2021,7 @@
     if (page !== "admin-console") return true;
     const owner = await window.StudioOwner?.isSiteOwner?.();
     if (owner) return true;
-    window.location.replace("dashboard.html");
+    window.location.replace("dashboard");
     return false;
   }
 
@@ -2043,7 +2043,7 @@
       return;
     }
     window.__msAuthRedirecting = true;
-    location.replace("404.html");
+    location.replace("404");
   }
 
   async function confirmHopSession() {
@@ -2386,17 +2386,17 @@
       return;
     }
     const items = [
-      { id: "dashboard", href: "dashboard.html", label: "Dashboard", icon: "grid" },
-      { id: "builder", href: "builder.html", label: "Builder", icon: "hammer" },
+      { id: "dashboard", href: "dashboard", label: "Dashboard", icon: "grid" },
+      { id: "builder", href: "builder", label: "Builder", icon: "hammer" },
       {
         id: "leads",
-        href: "leads.html",
+        href: "leads",
         label: "Finder",
         aria: "Business Finder",
         icon: "search",
       },
-      { id: "clients", href: "clients.html", label: "Clients", aria: "My Clients", icon: "users" },
-      { id: "settings", href: "settings.html", label: "Settings", icon: "gear" },
+      { id: "clients", href: "clients", label: "Clients", aria: "My Clients", icon: "users" },
+      { id: "settings", href: "settings", label: "Settings", icon: "gear" },
     ];
     let nav = document.getElementById("ms-tabbar");
     if (!nav) {
