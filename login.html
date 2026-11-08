@@ -71,8 +71,8 @@ setTimeout(function () {
 <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-skel-nav">
-  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-dark-chrome">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
   <meta name="color-scheme" content="light">
   <link rel="preconnect" href="https://erfaxgmnzdropviormpj.supabase.co" crossorigin>
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -264,6 +264,32 @@ setTimeout(function () {
       }
 
       let mode = params.get("mode") === "signup" ? "signup" : "signin";
+      const INVITE_EID_KEY = "ms_invite_employee_id";
+      function readInviteEmployeeId() {
+        const fromUrl = String(
+          params.get("eid") || params.get("employee_id") || params.get("employeeId") || ""
+        )
+          .replace(/\D/g, "")
+          .slice(0, 6);
+        if (fromUrl.length === 6) {
+          try {
+            sessionStorage.setItem(INVITE_EID_KEY, fromUrl);
+          } catch (_) {
+            /* ignore */
+          }
+          return fromUrl;
+        }
+        try {
+          const saved = String(sessionStorage.getItem(INVITE_EID_KEY) || "")
+            .replace(/\D/g, "")
+            .slice(0, 6);
+          return saved.length === 6 ? saved : "";
+        } catch (_) {
+          return "";
+        }
+      }
+      const inviteEmployeeId = readInviteEmployeeId();
+      if (inviteEmployeeId.length === 6) mode = "signup";
       const hashParams = new URLSearchParams(location.hash.replace(/^#/, ""));
       const hashType = String(hashParams.get("type") || params.get("type") || "").toLowerCase();
       const emailConfirmPending =
@@ -592,6 +618,25 @@ setTimeout(function () {
         if (authCodeInput.value !== cleaned) authCodeInput.value = cleaned;
       });
       setMode(mode, true);
+      if (inviteEmployeeId.length === 6) {
+        const codeHint = document.getElementById("auth-code-hint");
+        if (codeHint) {
+          codeHint.textContent = "Employee ID filled from your invite link. It works once.";
+        }
+        if (!hint.textContent) {
+          hint.textContent = "Finish signup with your handle and email. Employee ID is already filled in.";
+        }
+        try {
+          const clean = new URL(location.href);
+          clean.searchParams.delete("eid");
+          clean.searchParams.delete("employee_id");
+          clean.searchParams.delete("employeeId");
+          if (!clean.searchParams.get("mode")) clean.searchParams.set("mode", "signup");
+          history.replaceState({}, "", clean.pathname + clean.search + clean.hash);
+        } catch (_) {
+          /* ignore */
+        }
+      }
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -631,6 +676,11 @@ setTimeout(function () {
             const signedUp = await window.StudioAuth.signUp(email, handleVal, authCode, {
               ageConfirmed: true,
             });
+            try {
+              sessionStorage.removeItem(INVITE_EID_KEY);
+            } catch (_) {
+              /* ignore */
+            }
             savePendingSignIn(signedUp);
             window.StudioToast?.info?.("We sent a confirmation email - open it to finish signing up");
             void watchPendingSignIn();
@@ -1040,7 +1090,11 @@ setTimeout(function () {
         if (authCodeInput) {
           authCodeInput.disabled = !showSignup;
           authCodeInput.required = showSignup;
-          if (!showSignup) authCodeInput.value = "";
+          if (!showSignup) {
+            authCodeInput.value = "";
+          } else if (inviteEmployeeId.length === 6) {
+            authCodeInput.value = inviteEmployeeId;
+          }
         }
         const ageField = document.getElementById("age-confirm-field");
         const ageInput = document.getElementById("age-confirm");

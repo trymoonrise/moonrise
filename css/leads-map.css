@@ -1291,9 +1291,7 @@ body[data-page="leads"] .ms-lf-map-results.ms-lead-list {
   align-content: flex-start !important;
 }
 
-body[data-page="leads"] .ms-menu-toggle,
 body[data-page="leads"] .ms-quick-nav,
-body[data-page="leads"] .ms-tabbar,
 body[data-page="leads"] .ms-hard-refresh,
 body[data-page="leads"] #ms-hard-refresh,
 #lf-refresh,
@@ -2895,4 +2893,72 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
 
 html[data-ms-mode="dark"] .ms-lf-map-loader-label {
   color: #f4f4f5 !important;
+}
+
+/* The search bar already has the menu. Hide the floating studio button. */
+html body[data-page="leads"] .ms-menu-toggle {
+  display: none !important;
+}
+
+/* Phone chrome hard-codes light surfaces. Beat those in dark mode. */
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-pill,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-filters,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-actions,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-panel,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-card,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map .maplibregl-ctrl-group,
+html[data-ms-mode="dark"] body[data-page="leads"] .leaflet-control-zoom {
+  background: #1c1c1e !important;
+  border-color: rgb(255 255 255 / 12%) !important;
+  color: #f4f4f5 !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
+}
+
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-chip,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-count,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-search-field input,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-filter-btn,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-actions .ms-lf-map-all,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-option,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-head h2,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map .maplibregl-ctrl-group button,
+html[data-ms-mode="dark"] body[data-page="leads"] .leaflet-control-zoom a {
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+  border-color: rgb(255 255 255 / 16%) !important;
+}
+
+html[data-ms-mode="dark"] body[data-page="leads"] #lf-scan-near,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-actions .ms-lf-map-scan {
+  background: #f4f4f5 !important;
+  color: #1c1c1e !important;
+  -webkit-text-fill-color: #1c1c1e !important;
+  border: 0 !important;
+}
+
+html[data-ms-mode="dark"] body[data-page="leads"] #lf-scan-all {
+  background: transparent !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+  border: 1.5px solid rgb(255 255 255 / 28%) !important;
+}
+
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-filter-btn.is-active,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-filter-btn[aria-pressed="true"],
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-option.is-active {
+  background: #f4f4f5 !important;
+  color: #1c1c1e !important;
+  -webkit-text-fill-color: #1c1c1e !important;
+}
+
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-filter-option:hover {
+  background: rgb(255 255 255 / 8%) !important;
+}
+
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-card,
+html[data-ms-mode="dark"] body[data-page="leads"] .ms-lf-map-card .ms-lf-pro-avatar {
+  background: #2c2c2e !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+  border-color: rgb(255 255 255 / 12%) !important;
 }

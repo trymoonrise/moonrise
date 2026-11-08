@@ -1005,7 +1005,7 @@ app.get("/health", async (_req, res) => {
   });
 });
 
-async function timedProbe(label, run, timeoutMs = 4500) {
+async function timedProbe(label, run, timeoutMs = 4500, meta = {}) {
   const started = Date.now();
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -1022,6 +1022,8 @@ async function timedProbe(label, run, timeoutMs = 4500) {
     const aborted = e?.name === "AbortError";
     return {
       id: label,
+      name: meta.name || label,
+      logo: meta.logo || "",
       status: "down",
       pingMs: Math.max(1, Date.now() - started),
       summary: aborted ? "Timed out" : "Unreachable",
@@ -1045,7 +1047,7 @@ async function buildStudioStatusReport() {
   const hasAuth = !!(supabaseUrl && process.env.SUPABASE_ANON_KEY);
 
   const probes = await Promise.all([
-    timedProbe("studio", async () => {
+    timedProbe("worker", async () => {
       let presetsReady = false;
       try {
         await githubPresets.ensureManifest();
@@ -1056,8 +1058,8 @@ async function buildStudioStatusReport() {
       }
       const status = presetsReady ? "ok" : "degraded";
       return {
-        id: "studio",
-        name: "Moonrise Studio",
+        id: "worker",
+        name: "Studio worker",
         logo: "moonrise",
         status,
         summary: presetsReady ? "API responding" : "API up · presets warming",
@@ -1067,8 +1069,8 @@ async function buildStudioStatusReport() {
           statusDetail("State", status === "ok" ? "Operational" : "Degraded"),
         ],
       };
-    }),
-    timedProbe("site", async (signal) => {
+    }, 4500, { name: "Studio worker", logo: "moonrise" }),
+    timedProbe("app", async (signal) => {
       const target = siteUrl || "https://trymoonrise.com";
       const res = await fetch(target + "/", {
         method: "HEAD",
@@ -1078,8 +1080,8 @@ async function buildStudioStatusReport() {
       });
       const ok = res.ok || (res.status >= 300 && res.status < 400);
       return {
-        id: "site",
-        name: "Website",
+        id: "app",
+        name: "trymoonrise.com",
         logo: "moonrise",
         status: ok ? "ok" : "degraded",
         summary: ok ? "Site reachable" : "Site returned an unexpected response",
@@ -1088,132 +1090,365 @@ async function buildStudioStatusReport() {
           statusDetail("State", ok ? "Operational" : "Degraded"),
         ],
       };
-    }),
-    timedProbe("auth", async (signal) => {
-      if (!hasAuth || !supabaseUrl) {
+    }, 4500, { name: "trymoonrise.com", logo: "moonrise" }),
+    timedProbe(
+      "dns",
+      async () => {
+        let resolved = false;
+        try {
+          const addrs = await dns.resolve4("trymoonrise.com");
+          resolved = Array.isArray(addrs) && addrs.length > 0;
+        } catch (_) {
+          resolved = false;
+        }
+        const mailReady = !!String(process.env.RESEND_API_KEY || "").trim();
+        const status = !resolved ? "down" : mailReady ? "ok" : "degraded";
         return {
-          id: "auth",
-          name: "Sign-in",
-          logo: "auth",
-          status: "down",
-          summary: "Sign-in is not configured",
-          details: [statusDetail("State", "Not configured")],
-        };
-      }
-      const res = await fetch(supabaseUrl + "/auth/v1/health", {
-        method: "GET",
-        cache: "no-store",
-        signal,
-        headers: { Accept: "application/json" },
-      });
-      const ok = res.ok;
-      return {
-        id: "auth",
-        name: "Sign-in",
-        logo: "auth",
-        status: ok ? "ok" : "degraded",
-        summary: ok ? "Auth reachable" : "Auth check failed",
-        details: [
-          statusDetail("Service", "Account authentication"),
-          statusDetail("State", ok ? "Operational" : "Degraded"),
-        ],
-      };
-    }),
-    timedProbe("payments", async (signal) => {
-      if (!hasStripe) {
-        return {
-          id: "payments",
-          name: "Payments",
-          logo: "stripe",
-          status: "down",
-          summary: "Payments are not configured",
-          details: [statusDetail("State", "Not configured")],
-        };
-      }
-      // Reachability only — never call authenticated Stripe APIs or return balances.
-      const res = await fetch("https://stripe.com/", {
-        method: "HEAD",
-        redirect: "follow",
-        cache: "no-store",
-        signal,
-      });
-      const ok = res.ok || (res.status >= 300 && res.status < 500);
-      return {
-        id: "payments",
-        name: "Payments",
-        logo: "stripe",
-        status: ok ? "ok" : "degraded",
-        summary: ok ? "Checkout ready" : "Payments check failed",
-        details: [
-          statusDetail("Service", "Checkout"),
-          statusDetail("Configured", "Yes"),
-          statusDetail("State", ok ? "Operational" : "Degraded"),
-        ],
-      };
-    }),
-    timedProbe("builder", async () => {
-      if (!hasOpenRouter) {
-        return {
-          id: "builder",
-          name: "Builder AI",
-          logo: "builder",
-          status: "down",
-          summary: "Builder AI is not configured",
-          details: [statusDetail("State", "Not configured")],
-        };
-      }
-      return {
-        id: "builder",
-        name: "Builder AI",
-        logo: "builder",
-        status: "ok",
-        summary: "Generation configured",
-        details: [
-          statusDetail("Service", "Site generation"),
-          statusDetail("Configured", "Yes"),
-          statusDetail("State", "Operational"),
-        ],
-      };
-    }),
-    timedProbe("data", async () => {
-      if (!hasSupabase) {
-        return {
-          id: "data",
-          name: "Data",
-          logo: "data",
-          status: "down",
-          summary: "Data store is not configured",
-          details: [statusDetail("State", "Not configured")],
-        };
-      }
-      try {
-        const { error } = await db().from("profiles").select("id").limit(1);
-        const ok = !error;
-        return {
-          id: "data",
-          name: "Data",
-          logo: "data",
-          status: ok ? "ok" : "degraded",
-          summary: ok ? "Database reachable" : "Database check failed",
+          id: "dns",
+          name: "DNS + email",
+          logo: "dns",
+          status,
+          summary: !resolved ? "Domain did not resolve" : mailReady ? "Domain and email ready" : "Domain resolves · email not configured",
           details: [
-            statusDetail("Service", "Studio database"),
+            statusDetail("Domain", resolved ? "Resolves" : "Unreachable"),
+            statusDetail("Email", mailReady ? "Configured" : "Not configured"),
+          ],
+        };
+      },
+      4500,
+      { name: "DNS + email", logo: "dns" }
+    ),
+    timedProbe(
+      "supabase",
+      async (signal) => {
+        if (!hasSupabase && !hasAuth) {
+          return {
+            id: "supabase",
+            name: "Supabase",
+            logo: "supabase",
+            status: "down",
+            summary: "Supabase is not configured",
+            details: [statusDetail("State", "Not configured")],
+          };
+        }
+        let authOk = false;
+        if (hasAuth && supabaseUrl) {
+          try {
+            const res = await fetch(supabaseUrl + "/auth/v1/health", {
+              method: "GET",
+              cache: "no-store",
+              signal,
+              headers: { Accept: "application/json" },
+            });
+            authOk = res.ok;
+          } catch (_) {
+            authOk = false;
+          }
+        }
+        let dbOk = false;
+        if (hasSupabase) {
+          try {
+            const { error } = await db().from("profiles").select("id").limit(1);
+            dbOk = !error;
+          } catch (_) {
+            dbOk = false;
+          }
+        }
+        const status = authOk && dbOk ? "ok" : authOk || dbOk ? "degraded" : "down";
+        return {
+          id: "supabase",
+          name: "Supabase",
+          logo: "supabase",
+          status,
+          summary: status === "ok" ? "Supabase reachable" : status === "degraded" ? "Partly reachable" : "Supabase unreachable",
+          details: [
+            statusDetail("Sign-in", authOk ? "Operational" : hasAuth ? "Check failed" : "Not configured"),
+            statusDetail("Database", dbOk ? "Operational" : hasSupabase ? "Check failed" : "Not configured"),
+          ],
+        };
+      },
+      4500,
+      { name: "Supabase", logo: "supabase" }
+    ),
+    timedProbe(
+      "stripe",
+      async (signal) => {
+        if (!hasStripe) {
+          return {
+            id: "stripe",
+            name: "Stripe",
+            logo: "stripe",
+            status: "down",
+            summary: "Payments are not configured",
+            details: [statusDetail("State", "Not configured")],
+          };
+        }
+        // Reachability only — never call authenticated Stripe APIs or return balances.
+        const res = await fetch("https://stripe.com/", {
+          method: "HEAD",
+          redirect: "follow",
+          cache: "no-store",
+          signal,
+        });
+        const ok = res.ok || (res.status >= 300 && res.status < 500);
+        return {
+          id: "stripe",
+          name: "Stripe",
+          logo: "stripe",
+          status: ok ? "ok" : "degraded",
+          summary: ok ? "Checkout ready" : "Payments check failed",
+          details: [
+            statusDetail("Service", "Checkout"),
+            statusDetail("Configured", "Yes"),
             statusDetail("State", ok ? "Operational" : "Degraded"),
           ],
         };
-      } catch (_) {
+      },
+      4500,
+      { name: "Stripe", logo: "stripe" }
+    ),
+    timedProbe(
+      "ai",
+      async (signal) => {
+        if (!hasOpenRouter) {
+          return {
+            id: "ai",
+            name: "OpenRouter",
+            logo: "openrouter",
+            status: "down",
+            summary: "OpenRouter is not configured",
+            details: [statusDetail("State", "Not configured")],
+          };
+        }
+        let reachable = false;
+        try {
+          const res = await fetch("https://openrouter.ai/", {
+            method: "HEAD",
+            redirect: "follow",
+            cache: "no-store",
+            signal,
+          });
+          reachable = res.ok || (res.status >= 300 && res.status < 500);
+        } catch (_) {
+          reachable = false;
+        }
         return {
-          id: "data",
-          name: "Data",
-          logo: "data",
-          status: "down",
-          summary: "Database unreachable",
-          details: [statusDetail("State", "Unreachable")],
+          id: "ai",
+          name: "OpenRouter",
+          logo: "openrouter",
+          status: reachable ? "ok" : "degraded",
+          summary: reachable ? "API ready" : "Configured · API check failed",
+          details: [
+            statusDetail("Service", "OpenRouter API"),
+            statusDetail("State", reachable ? "Operational" : "Degraded"),
+          ],
         };
-      }
-    }),
+      },
+      4500,
+      { name: "OpenRouter", logo: "openrouter" }
+    ),
+    timedProbe(
+      "email",
+      async (signal) => {
+        const ready = !!String(process.env.RESEND_API_KEY || "").trim();
+        if (!ready) {
+          return {
+            id: "email",
+            name: "Resend",
+            logo: "resend",
+            status: "down",
+            summary: "Email is not configured",
+            details: [statusDetail("State", "Not configured")],
+          };
+        }
+        let reachable = false;
+        try {
+          const res = await fetch("https://resend.com/", {
+            method: "HEAD",
+            redirect: "follow",
+            cache: "no-store",
+            signal,
+          });
+          reachable = res.ok || (res.status >= 300 && res.status < 500);
+        } catch (_) {
+          reachable = false;
+        }
+        return {
+          id: "email",
+          name: "Resend",
+          logo: "resend",
+          status: reachable ? "ok" : "degraded",
+          summary: reachable ? "Email ready" : "Configured · email check failed",
+          details: [
+            statusDetail("Service", "Transactional email"),
+            statusDetail("State", reachable ? "Operational" : "Degraded"),
+          ],
+        };
+      },
+      4500,
+      { name: "Resend", logo: "resend" }
+    ),
+    timedProbe(
+      "deploy",
+      async (signal) => {
+        const ready = !!String(process.env.VERCEL_TOKEN || "").trim();
+        let reachable = false;
+        try {
+          const res = await fetch("https://moonrise-studio.vercel.app/", {
+            method: "HEAD",
+            redirect: "follow",
+            cache: "no-store",
+            signal,
+          });
+          reachable = res.ok || (res.status >= 300 && res.status < 400);
+        } catch (_) {
+          reachable = false;
+        }
+        const status = reachable && ready ? "ok" : reachable || ready ? "degraded" : "down";
+        return {
+          id: "deploy",
+          name: "Vercel",
+          logo: "vercel",
+          status,
+          summary: status === "ok" ? "Hosting ready" : reachable ? "Site up · deploys not configured" : ready ? "Configured · alias check failed" : "Hosting is not configured",
+          details: [
+            statusDetail("Site", reachable ? "Reachable" : "Unreachable"),
+            statusDetail("Deploys", ready ? "Configured" : "Not configured"),
+          ],
+        };
+      },
+      4500,
+      { name: "Vercel", logo: "vercel" }
+    ),
+    timedProbe(
+      "github",
+      async (signal) => {
+        const res = await fetch("https://api.github.com/repos/trymoonrise/moonrise", {
+          method: "GET",
+          cache: "no-store",
+          signal,
+          headers: {
+            Accept: "application/vnd.github+json",
+            "User-Agent": "moonrise-studio-status",
+          },
+        });
+        const ok = res.ok;
+        return {
+          id: "github",
+          name: "GitHub",
+          logo: "github",
+          status: ok ? "ok" : "degraded",
+          summary: ok ? "Source reachable" : "Source check failed",
+          details: [
+            statusDetail("Service", "Source repository"),
+            statusDetail("State", ok ? "Operational" : "Degraded"),
+          ],
+        };
+      },
+      4500,
+      { name: "GitHub", logo: "github" }
+    ),
+    timedProbe(
+      "leadfinder",
+      async (signal) => {
+        const upstream = leadFinderUpstreamBase();
+        if (!upstream) {
+          return {
+            id: "leadfinder",
+            name: "Leadfinder",
+            logo: "leadfinder",
+            status: "down",
+            summary: "Lead search is not configured",
+            details: [statusDetail("State", "Not configured")],
+          };
+        }
+        const res = await fetch(upstream + "/health", {
+          method: "GET",
+          cache: "no-store",
+          signal,
+          headers: leadFinderUpstreamHeaders({ Accept: "application/json" }),
+        });
+        const ok = res.ok;
+        return {
+          id: "leadfinder",
+          name: "Leadfinder",
+          logo: "leadfinder",
+          status: ok ? "ok" : "degraded",
+          summary: ok ? "Search ready" : "Search check failed",
+          details: [
+            statusDetail("Service", "Business search"),
+            statusDetail("State", ok ? "Operational" : "Degraded"),
+          ],
+        };
+      },
+      4500,
+      { name: "Leadfinder", logo: "leadfinder" }
+    ),
+    timedProbe(
+      "push",
+      async () => {
+        const ready = !!(
+          String(process.env.VAPID_PUBLIC_KEY || "").trim() &&
+          String(process.env.VAPID_PRIVATE_KEY || "").trim() &&
+          String(process.env.VAPID_SUBJECT || "").trim()
+        );
+        return {
+          id: "push",
+          name: "Web Push",
+          logo: "push",
+          status: ready ? "ok" : "down",
+          summary: ready ? "Alerts ready" : "Alerts are not configured",
+          details: [statusDetail("State", ready ? "Operational" : "Not configured")],
+        };
+      },
+      4500,
+      { name: "Web Push", logo: "push" }
+    ),
+    timedProbe(
+      "fleet",
+      async () => {
+        if (!hasSupabase) {
+          return {
+            id: "fleet",
+            name: "Client websites",
+            logo: "fleet",
+            status: "down",
+            summary: "Published sites could not be counted",
+            details: [statusDetail("State", "Not configured")],
+          };
+        }
+        const { count, error } = await db()
+          .from("projects")
+          .select("id", { count: "exact", head: true })
+          .in("status", ["published", "paid"])
+          .not("vercel_url", "is", null)
+          .neq("vercel_url", "");
+        if (error) {
+          return {
+            id: "fleet",
+            name: "Client websites",
+            logo: "fleet",
+            status: "degraded",
+            summary: "Could not count published sites",
+            details: [statusDetail("State", "Check failed")],
+          };
+        }
+        const total = Number(count) || 0;
+        return {
+          id: "fleet",
+          name: "Client websites",
+          logo: "fleet",
+          status: "ok",
+          summary: total === 1 ? "1 published site" : total + " published sites",
+          details: [statusDetail("Published", String(total))],
+        };
+      },
+      4500,
+      { name: "Client websites", logo: "fleet" }
+    ),
   ]);
 
-  const order = ["studio", "site", "auth", "payments", "builder", "data"];
+  const order = ["app", "worker", "dns", "supabase", "stripe", "ai", "email", "deploy", "github", "leadfinder", "push", "fleet"];
   const byId = Object.fromEntries(probes.map((p) => [p.id, p]));
   const services = order.map((id) => byId[id]).filter(Boolean);
   const worst = services.some((s) => s.status === "down")

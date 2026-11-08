@@ -54,45 +54,64 @@
   }
 
   /* —— Progress —— */
-  let progressTimer = 0;
-  function runProgress(toComplete) {
+  let progressRaf = 0;
+  function runProgress() {
     const fill = $(".dt-stage[data-demo='progress'] .dt-progress-fill");
     const pct = $(".dt-stage[data-demo='progress'] .dt-progress-pct");
     if (!fill || !pct) return;
-    if (progressTimer) window.clearInterval(progressTimer);
-    let n = toComplete ? 100 : 12;
-    const tick = () => {
-      fill.style.width = n + "%";
-      pct.textContent = n + "%";
-      if (n >= 100) {
-        window.clearInterval(progressTimer);
-        progressTimer = 0;
+    if (progressRaf) window.cancelAnimationFrame(progressRaf);
+    const duration = reduceMotion ? 700 : 4200;
+    const start = performance.now();
+    const from = 0;
+    const to = 100;
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+    // Extra slowdown near the end: remap time so late progress stretches.
+    const remap = (t) => {
+      if (t < 0.72) return t * 0.88;
+      const u = (t - 0.72) / 0.28;
+      return 0.72 * 0.88 + (1 - 0.72 * 0.88) * easeOutCubic(u);
+    };
+    const frame = (now) => {
+      const raw = Math.min(1, (now - start) / duration);
+      const n = from + (to - from) * remap(raw);
+      const shown = Math.min(100, Math.round(n));
+      fill.style.width = n.toFixed(2) + "%";
+      pct.textContent = shown + "%";
+      if (raw < 1) {
+        progressRaf = window.requestAnimationFrame(frame);
+      } else {
+        fill.style.width = "100%";
+        pct.textContent = "100%";
+        progressRaf = 0;
       }
     };
-    tick();
-    if (toComplete) return;
-    progressTimer = window.setInterval(() => {
-      n = Math.min(100, n + 8);
-      tick();
-    }, reduceMotion ? 40 : 120);
+    fill.style.width = "0%";
+    pct.textContent = "0%";
+    progressRaf = window.requestAnimationFrame(frame);
   }
 
-  /* —— Button loader —— */
-  function runButtonLoader() {
-    const btn = $("[data-btn-loader]");
-    if (!btn) return;
-    const label = btn.dataset.label || btn.textContent;
-    btn.dataset.label = label;
-    btn.classList.add("is-loading");
-    btn.disabled = true;
-    btn.setAttribute("aria-busy", "true");
-    btn.innerHTML = '<span class="dt-spinner dt-spinner-sm dt-spinner-on-dark is-on"></span>';
-    window.setTimeout(() => {
-      btn.classList.remove("is-loading");
-      btn.disabled = false;
-      btn.removeAttribute("aria-busy");
-      btn.textContent = label;
-    }, reduceMotion ? 400 : 1400);
+  /* —— Button loader morph —— */
+  function runButtonLoader(target) {
+    const buttons = target
+      ? [target]
+      : $all("[data-btn-loader], [data-btn-loader-static]");
+    buttons.forEach((btn) => {
+      if (!btn || btn.classList.contains("is-loading")) return;
+      window.clearTimeout(btn._dtMorphTimer);
+      btn.classList.remove("is-done");
+      btn.classList.add("is-loading");
+      btn.disabled = true;
+      btn.setAttribute("aria-busy", "true");
+      btn._dtMorphTimer = window.setTimeout(() => {
+        btn.classList.remove("is-loading");
+        btn.classList.add("is-done");
+        btn.removeAttribute("aria-busy");
+        btn._dtMorphTimer = window.setTimeout(() => {
+          btn.classList.remove("is-done");
+          btn.disabled = false;
+        }, reduceMotion ? 700 : 1600);
+      }, reduceMotion ? 500 : 1600);
+    });
   }
 
   /* —— Fullscreen boot —— */
@@ -102,7 +121,58 @@
     stage.classList.remove("is-on");
     void stage.offsetWidth;
     stage.classList.add("is-on");
-    window.setTimeout(() => stage.classList.remove("is-on"), reduceMotion ? 500 : 1800);
+    window.setTimeout(() => stage.classList.remove("is-on"), reduceMotion ? 800 : 3800);
+  }
+
+  function pulseStage(demo, ms) {
+    const stage = $('.dt-stage[data-demo="' + demo + '"]');
+    if (!stage) return;
+    stage.classList.add("is-on");
+    stage.querySelector(".dt-pulse-row")?.classList.add("is-on");
+    stage.querySelectorAll(".dt-skel").forEach((el) => el.classList.add("is-on"));
+    if (ms) {
+      window.clearTimeout(stage._dtOff);
+      stage._dtOff = window.setTimeout(() => {
+        stage.classList.remove("is-on");
+        stage.querySelector(".dt-pulse-row")?.classList.remove("is-on");
+        if (demo === "shimmer-pulse") {
+          stage.querySelectorAll(".dt-skel").forEach((el) => el.classList.remove("is-on"));
+        }
+      }, ms);
+    }
+  }
+
+  function togglePulse() {
+    const stage = $('.dt-stage[data-demo="pulse"]');
+    if (!stage) return;
+    const on = !stage.classList.contains("is-on");
+    stage.classList.toggle("is-on", on);
+    stage.querySelector(".dt-pulse-row")?.classList.toggle("is-on", on);
+  }
+
+  function openDangerConfirm() {
+    const flow = $("[data-danger-flow]");
+    const panel = $("[data-danger-confirm]", flow);
+    const trigger = $("[data-danger-trigger]", flow);
+    if (!panel) return;
+    panel.hidden = false;
+    if (trigger) trigger.hidden = true;
+  }
+
+  function closeDangerConfirm() {
+    const flow = $("[data-danger-flow]");
+    const panel = $("[data-danger-confirm]", flow);
+    const trigger = $("[data-danger-trigger]", flow);
+    if (!panel) return;
+    panel.hidden = true;
+    if (trigger) trigger.hidden = false;
+  }
+
+  function flashHover(sel) {
+    const el = $(sel);
+    if (!el) return;
+    el.classList.add("is-demo-hover");
+    window.setTimeout(() => el.classList.remove("is-demo-hover"), reduceMotion ? 400 : 900);
   }
 
   /* —— Pull to refresh —— */
@@ -256,47 +326,114 @@
 
   function runCookSubmit() {
     const btn = $("[data-cook-submit]");
-    if (!btn) return;
-    const label = btn.textContent;
+    if (!btn || btn.classList.contains("is-loading")) return;
+    const label = btn.dataset.label || btn.textContent.trim() || "Submit order";
+    btn.dataset.label = label;
     btn.classList.add("is-loading");
     btn.disabled = true;
+    btn.setAttribute("aria-busy", "true");
     btn.innerHTML = '<span class="dt-spinner dt-spinner-sm dt-spinner-on-dark is-on"></span>';
     window.setTimeout(() => {
       btn.classList.remove("is-loading");
       btn.disabled = false;
+      btn.removeAttribute("aria-busy");
       btn.textContent = label;
+      showToast("Order submitted");
     }, reduceMotion ? 400 : 1300);
   }
 
-  /* —— Play buttons —— */
+  function runDemo(kind, playBtn) {
+    if (playBtn) {
+      playBtn.classList.add("is-playing");
+      window.setTimeout(() => playBtn.classList.remove("is-playing"), 700);
+    }
+    if (kind === "spinner") {
+      const stage = $('.dt-stage[data-demo="spinner"]');
+      stage?.classList.add("is-on");
+      window.clearTimeout(stage?._dtOff);
+      if (stage) stage._dtOff = window.setTimeout(() => stage.classList.remove("is-on"), reduceMotion ? 900 : 2400);
+    } else if (kind === "skeleton") {
+      pulseStage("skeleton", reduceMotion ? 900 : 2400);
+    } else if (kind === "progress") runProgress();
+    else if (kind === "pulse") togglePulse();
+    else if (kind === "button-loader") runButtonLoader();
+    else if (kind === "fullscreen") runFullscreen();
+    else if (kind === "ptr") refreshPtr();
+    else if (kind === "infinite-reset") infiniteMain.reset();
+    else if (kind === "rise") replayRise();
+    else if (kind === "stagger") replayStagger();
+    else if (kind === "success") playSuccess();
+    else if (kind === "shake") shakeField();
+    else if (kind === "shimmer-pulse") pulseStage("shimmer-pulse", reduceMotion ? 900 : 2600);
+    else if (kind === "primary-expand") flashHover("[data-primary-demo]");
+    else if (kind === "secondary-hover") {
+      flashHover("[data-ghost-demo]");
+      window.setTimeout(() => flashHover("[data-secondary-demo]"), 350);
+    } else if (kind === "danger") openDangerConfirm();
+    else if (kind === "icon-pop") {
+      $all("[data-icon-demo]").forEach((btn, i) => {
+        window.setTimeout(() => {
+          btn.classList.remove("is-pop");
+          void btn.offsetWidth;
+          btn.classList.add("is-pop");
+        }, i * 180);
+      });
+    } else if (kind === "step-next") step(1);
+    else if (kind === "step-back") step(-1);
+    else if (kind === "cook-search") runCookSearch();
+    else if (kind === "cook-submit") runCookSubmit();
+    else if (kind === "cook-scroll-reset") infiniteCook.reset();
+  }
+
+  /* —— Play buttons + stage taps —— */
   function bindPlay() {
     document.addEventListener("click", (e) => {
       const play = e.target.closest("[data-play]");
-      if (!play) return;
-      const kind = play.getAttribute("data-play");
-      if (kind === "spinner") {
-        const stage = $('.dt-stage[data-demo="spinner"]');
-        stage?.classList.toggle("is-on");
-      } else if (kind === "skeleton") {
-        const stage = $('.dt-stage[data-demo="skeleton"]');
-        stage?.classList.add("is-on");
-        window.setTimeout(() => stage?.classList.remove("is-on"), 1800);
-      } else if (kind === "progress") runProgress(false);
-      else if (kind === "progress-complete") runProgress(true);
-      else if (kind === "pulse") $('.dt-stage[data-demo="pulse"]')?.classList.toggle("is-on");
-      else if (kind === "button-loader") runButtonLoader();
-      else if (kind === "fullscreen") runFullscreen();
-      else if (kind === "ptr") refreshPtr();
-      else if (kind === "infinite-reset") infiniteMain.reset();
-      else if (kind === "rise") replayRise();
-      else if (kind === "stagger") replayStagger();
-      else if (kind === "success") playSuccess();
-      else if (kind === "shake") shakeField();
-      else if (kind === "step-next") step(1);
-      else if (kind === "step-back") step(-1);
-      else if (kind === "cook-search") runCookSearch();
-      else if (kind === "cook-submit") runCookSubmit();
-      else if (kind === "cook-scroll-reset") infiniteCook.reset();
+      if (play) {
+        e.preventDefault();
+        runDemo(play.getAttribute("data-play"), play);
+        return;
+      }
+
+      const cookSubmit = e.target.closest("[data-cook-submit]");
+      if (cookSubmit) {
+        runCookSubmit();
+        return;
+      }
+
+      const morphBtn = e.target.closest("[data-btn-loader], [data-btn-loader-static]");
+      if (morphBtn) {
+        runButtonLoader(morphBtn);
+        return;
+      }
+
+      const icon = e.target.closest("[data-icon-demo]");
+      if (icon) {
+        icon.classList.remove("is-pop");
+        void icon.offsetWidth;
+        icon.classList.add("is-pop");
+        return;
+      }
+
+      const dangerTrigger = e.target.closest("[data-danger-trigger]");
+      if (dangerTrigger) {
+        openDangerConfirm();
+        return;
+      }
+      if (e.target.closest("[data-danger-cancel]")) {
+        closeDangerConfirm();
+        return;
+      }
+      if (e.target.closest("[data-danger-yes]")) {
+        closeDangerConfirm();
+        showToast("Project deleted");
+        return;
+      }
+
+      const stage = e.target.closest("[data-stage-tap]");
+      if (stage && !e.target.closest("button, a, input, select, textarea")) {
+        runDemo(stage.getAttribute("data-stage-tap"));
+      }
     });
   }
 
@@ -677,112 +814,6 @@
     });
   }
 
-  function loopProgress() {
-    const fill = $(".dt-stage[data-demo='progress'] .dt-progress-fill");
-    const pct = $(".dt-stage[data-demo='progress'] .dt-progress-pct");
-    if (!fill || !pct) return;
-    let n = 8;
-    const tick = () => {
-      n += reduceMotion ? 20 : 6;
-      if (n > 100) n = 8;
-      fill.style.width = n + "%";
-      pct.textContent = n + "%";
-    };
-    tick();
-    window.setInterval(tick, reduceMotion ? 500 : 160);
-  }
-
-  function loopButtonLoader() {
-    const btn = $("[data-btn-loader]");
-    if (!btn) return;
-    const label = "Save changes";
-    const run = () => {
-      btn.classList.add("is-loading");
-      btn.disabled = true;
-      btn.setAttribute("aria-busy", "true");
-      btn.innerHTML = '<span class="dt-spinner dt-spinner-sm dt-spinner-on-dark is-on"></span>';
-      window.setTimeout(() => {
-        btn.classList.remove("is-loading");
-        btn.disabled = false;
-        btn.removeAttribute("aria-busy");
-        btn.textContent = "Saved";
-        window.setTimeout(() => {
-          btn.textContent = label;
-        }, 900);
-      }, reduceMotion ? 500 : 1400);
-    };
-    run();
-    window.setInterval(run, reduceMotion ? 2200 : 3200);
-  }
-
-  function loopPtr() {
-    const indicator = $(".dt-ptr-indicator");
-    if (!indicator) return;
-    const cycle = () => {
-      indicator.classList.add("is-on");
-      window.setTimeout(() => indicator.classList.remove("is-on"), reduceMotion ? 400 : 900);
-    };
-    cycle();
-    window.setInterval(cycle, reduceMotion ? 2400 : 3200);
-  }
-
-  function loopShake() {
-    const field = $("#dt-shake-field");
-    if (!field || reduceMotion) return;
-    window.setInterval(() => {
-      field.classList.remove("is-shaking");
-      void field.offsetWidth;
-      field.classList.add("is-shaking");
-    }, 2800);
-  }
-
-  function loopCookSearch() {
-    const out = $("#dt-cook-search-out");
-    if (!out) return;
-    const cycle = () => {
-      out.classList.add("is-loading");
-      out.innerHTML =
-        '<div class="dt-skel-row"><span class="dt-skel dt-skel-circle"></span><span class="dt-skel dt-skel-line"></span></div><span class="dt-skel dt-skel-line"></span><span class="dt-skel dt-skel-line dt-skel-short"></span>';
-      window.setTimeout(() => {
-        out.classList.remove("is-loading");
-        out.innerHTML =
-          '<div class="dt-list-row"><strong>River Dental</strong><span>Austin · Match</span></div><div class="dt-list-row"><strong>Cedar Dental</strong><span>Denver · Match</span></div>';
-      }, reduceMotion ? 400 : 1100);
-    };
-    cycle();
-    window.setInterval(cycle, reduceMotion ? 2800 : 3600);
-  }
-
-  function loopCookSubmit() {
-    const btn = $("[data-cook-submit]");
-    if (!btn) return;
-    const label = "Submit order";
-    const cycle = () => {
-      btn.classList.add("is-loading");
-      btn.disabled = true;
-      btn.innerHTML = '<span class="dt-spinner dt-spinner-sm dt-spinner-on-dark is-on"></span>';
-      window.setTimeout(() => {
-        btn.classList.remove("is-loading");
-        btn.disabled = false;
-        btn.textContent = "Submitted";
-        window.setTimeout(() => {
-          btn.textContent = label;
-        }, 1000);
-      }, reduceMotion ? 450 : 1300);
-    };
-    cycle();
-    window.setInterval(cycle, reduceMotion ? 3200 : 4200);
-  }
-
-  function startAutoDemos() {
-    loopProgress();
-    loopButtonLoader();
-    loopPtr();
-    loopShake();
-    loopCookSearch();
-    loopCookSubmit();
-  }
-
   document.addEventListener("DOMContentLoaded", () => {
     bindToc();
     bindPlay();
@@ -790,7 +821,6 @@
     bindDropdowns();
     bindOverlays();
     bindPtrDrag();
-    startAutoDemos();
     requestAnimationFrame(() => {
       syncAllPills();
       window.addEventListener("resize", syncAllPills);

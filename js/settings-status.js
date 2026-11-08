@@ -6,13 +6,29 @@
   const LOGOS = {
     moonrise: "assets/MoonriseLogo.png",
     stripe: "assets/Stripe.png",
+    supabase: "assets/Supabase.svg",
+    data: "assets/Supabase.svg",
+    openrouter: "assets/OpenRouter.svg",
+    builder: "assets/OpenRouter.svg",
+    vercel: "assets/Vercel.svg",
+    github: "assets/GitHub.svg",
+    resend: "assets/Resend.svg",
+  };
+
+  const MONO_LOGOS = {
+    vercel: true,
+    github: true,
+    resend: true,
   };
 
   const ICONS = {
     auth: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
-    builder:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m14.5 7.5 3.5-3.5a2.12 2.12 0 0 1 3 3L17.5 10.5"/></svg>',
-    data: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>',
+    dns: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>',
+    leadfinder:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+    push: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>',
+    fleet:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>',
   };
 
   const FEEDBACK = {
@@ -116,16 +132,37 @@
     wave.classList.add("is-" + toneFor(status));
   }
 
+  function serviceName(service) {
+    const id = String(service?.id || "");
+    const logo = String(service?.logo || "");
+    const name = String(service?.name || "");
+    if (id === "builder" || id === "ai" || logo === "builder" || logo === "openrouter" || /builder ai/i.test(name)) {
+      return "OpenRouter";
+    }
+    if (id === "data" || id === "supabase" || logo === "data" || logo === "supabase" || /^data$/i.test(name)) {
+      return "Supabase";
+    }
+    return name || "Service";
+  }
+
+  function serviceSummary(service) {
+    return String(service?.summary || "")
+      .replace(/builder ai/gi, "OpenRouter")
+      .replace(/data store/gi, "Supabase");
+  }
+
   function logoHtml(service) {
     const key = String(service.logo || service.id || "");
     if (LOGOS[key]) {
       return (
-        '<img class="ms-status-logo" src="' +
+        '<img class="ms-status-logo' +
+        (MONO_LOGOS[key] ? " is-mono" : "") +
+        '" src="' +
         escapeHtml(LOGOS[key]) +
         '" alt="" width="28" height="28" loading="lazy" decoding="async">'
       );
     }
-    const icon = ICONS[key] || ICONS.data;
+    const icon = ICONS[key] || ICONS.fleet;
     return '<span class="ms-status-logo ms-status-logo--icon" aria-hidden="true">' + icon + "</span>";
   }
 
@@ -253,12 +290,12 @@
           logoHtml(service) +
           '<span class="ms-status-copy">' +
           '<span class="ms-set-row-label">' +
-          escapeHtml(service.name || "Service") +
+          escapeHtml(serviceName(service)) +
           "</span>" +
           '<span class="ms-status-summary">' +
           escapeHtml(fb.short) +
           " · " +
-          escapeHtml(service.summary || "") +
+          escapeHtml(serviceSummary(service)) +
           "</span></span>" +
           waveSvg(service.status) +
           '<span class="ms-status-ping">' +

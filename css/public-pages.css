@@ -1,5 +1,6 @@
 /* Cream + ink for public / legal / contact / download / orders pages.
-   Load after cream-ink.css. Forces light theme so OS dark mode cannot discolor these pages. */
+   Load after cream-ink.css. Forces light theme so OS dark mode cannot discolor these pages.
+   Keep these surfaces slim and Settings-like: narrow column, soft groups, quiet chrome. */
 
 html:has(body.ms-legal-site),
 html:has(body.ms-contact-public),
@@ -33,8 +34,8 @@ html:has(body[data-page="designer-tips"]) {
   --ms-surface: #fafafa;
   --ms-surface-alt: #f4f4f5;
   --ms-ink: #232427;
-  --ms-muted: #666666;
-  --ms-line: #e5e5e5;
+  --ms-muted: #77776e;
+  --ms-line: #e8e8ea;
   --ms-link: #232427;
   --ms-accent: #232427;
   --ms-accent-bright: #232427;
@@ -43,6 +44,8 @@ html:has(body[data-page="designer-tips"]) {
   --ms-accent-rgb: 35, 36, 39;
   --ms-select: #e0e0e0;
   --ms-select-soft: #f4f4f5;
+  --ms-group: #fafafa;
+  --ms-min-border: #e8e8ea;
   background: #ffffff !important;
   color: #232427 !important;
   min-height: 100dvh;
@@ -50,10 +53,9 @@ html:has(body[data-page="designer-tips"]) {
   text-size-adjust: 100%;
 }
 
-/* Kill leftover gradient washes / dark chrome */
 body.ms-legal-site {
   background: #ffffff !important;
-  padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
 }
 
 body.ms-legal-site .ms-orders-field,
@@ -66,19 +68,19 @@ body[data-page="designer-tips"] .ms-orders-field {
 /* —— Sticky top bar —— */
 .ms-legal-top,
 .ms-orders-nav {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border-bottom: 1px solid #e5e5e5 !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: color-mix(in srgb, #ffffff 92%, transparent) !important;
+  border-bottom: 1px solid #e8e8ea !important;
+  backdrop-filter: saturate(1.4) blur(16px);
+  -webkit-backdrop-filter: saturate(1.4) blur(16px);
   box-shadow: none !important;
-  padding-left: max(1.15rem, env(safe-area-inset-left, 0px)) !important;
-  padding-right: max(1.15rem, env(safe-area-inset-right, 0px)) !important;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px)) !important;
+  padding-right: max(1rem, env(safe-area-inset-right, 0px)) !important;
 }
 
 .ms-legal-top {
-  padding-top: calc(0.85rem + env(safe-area-inset-top, 0px)) !important;
-  padding-bottom: 0.85rem !important;
-  max-width: 40rem;
+  padding-top: calc(0.65rem + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: 0.65rem !important;
+  max-width: 560px;
   margin: 0 auto;
   width: 100%;
 }
@@ -89,36 +91,44 @@ body[data-page="designer-tips"] .ms-orders-field {
 .ms-orders-nav .ms-home-brand strong {
   color: #000 !important;
   -webkit-text-fill-color: #000;
-  font-weight: 900;
-  letter-spacing: -0.06em;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  font-size: 0.98rem;
+}
+
+.ms-legal-brand img {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 7px !important;
 }
 
 .ms-legal-nav {
-  gap: 0.2rem !important;
-  max-width: min(100%, 16rem);
+  gap: 0.1rem !important;
+  max-width: min(100%, 15rem);
 }
 
 .ms-legal-nav a,
 .ms-orders-nav-link {
-  color: #666666 !important;
+  color: #77776e !important;
   background: transparent !important;
   box-shadow: none !important;
-  font-size: 0.92rem !important;
-  font-weight: 650 !important;
-  padding: 0.4rem 0.65rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  padding: 0.3rem 0.5rem !important;
   border-radius: 999px !important;
 }
 
 .ms-legal-nav a:hover,
 .ms-orders-nav-link:hover {
   color: #232427 !important;
-  background: #f4f4f5 !important;
+  background: #f3f3f0 !important;
 }
 
-.ms-legal-nav a.is-active {
+.ms-legal-nav a.is-active,
+.ms-orders-nav-link.is-active {
   color: #232427 !important;
-  background: var(--ms-accent) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+  background: #f3f3f0 !important;
+  box-shadow: none !important;
 }
 
 /* —— Page width / padding —— */
@@ -127,9 +137,10 @@ body[data-page="designer-tips"] .ms-orders-field {
 .ms-download-main,
 .ms-orders-main,
 body[data-page="guide"] #page-body,
-body[data-page="help"] #page-body {
-  width: min(40rem, calc(100% - 2.3rem)) !important;
-  max-width: 40rem !important;
+body[data-page="help"] #page-body,
+body[data-page="course"] #page-body {
+  width: min(560px, calc(100% - 2rem)) !important;
+  max-width: 560px !important;
   margin-left: auto !important;
   margin-right: auto !important;
   padding-left: 0 !important;
@@ -138,80 +149,113 @@ body[data-page="help"] #page-body {
 }
 
 .ms-legal-wrap {
-  padding-top: 1.25rem !important;
-  padding-bottom: 2.5rem !important;
+  padding-top: 1rem !important;
+  padding-bottom: 2rem !important;
+}
+
+.ms-legal-hero {
+  margin: 0 0 0.55rem !important;
 }
 
 .ms-legal-hero h1,
 .ms-contact-head h1,
 .ms-download-card h1,
 .ms-orders-head h1,
-.ms-page-head h1 {
+body.ms-legal-site .ms-page-head h1,
+body.ms-contact-public .ms-page-head h1,
+body[data-page="guide"] .ms-page-head h1,
+body[data-page="help"] .ms-page-head h1,
+body[data-page="course"] .ms-page-head h1 {
   color: #232427 !important;
   -webkit-text-fill-color: #232427 !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.03em !important;
-  font-size: clamp(1.85rem, 6vw, 2.35rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+  font-size: 1.75rem !important;
+  line-height: 1.1 !important;
+  margin: 0 !important;
 }
 
 .ms-legal-intro,
 .ms-contact-lead,
 .ms-download-lead,
-.ms-page-head p,
-.ms-muted {
-  color: #666666 !important;
+.ms-legal-updated,
+:is(
+  body.ms-legal-site,
+  body.ms-contact-public,
+  body.ms-download-page,
+  body[data-page="orders"],
+  body[data-page="help"],
+  body[data-page="guide"],
+  body[data-page="course"],
+  body[data-page="pricing"],
+  body[data-page="contact"],
+  body[data-page="report"]
+) :is(.ms-page-head p, .ms-muted) {
+  color: #77776e !important;
   opacity: 1 !important;
-  -webkit-text-fill-color: #666666 !important;
+  -webkit-text-fill-color: #77776e !important;
   font-weight: 500;
-  line-height: 1.5;
+  font-size: 0.84rem !important;
+  line-height: 1.45;
+}
+
+.ms-legal-intro {
+  margin: 0.35rem 0 0 !important;
+  max-width: 34rem;
+}
+
+.ms-legal-updated {
+  margin: 0 0 0.85rem !important;
+  font-size: 0.76rem !important;
 }
 
 /* —— On this page TOC —— */
-.ms-legal-toc {
-  position: sticky;
-  top: calc(3.4rem + env(safe-area-inset-top, 0px));
-  z-index: 30;
+.ms-legal-toc,
+.ms-help-toc {
+  position: static;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.85rem 1.25rem;
-  margin: 0.85rem 0 1.5rem !important;
-  padding: 0.55rem 0 0.75rem !important;
-  background: #ffffff !important;
+  gap: 0.35rem !important;
+  margin: 0 0 0.9rem !important;
+  padding: 0 !important;
+  background: transparent !important;
   border: 0 !important;
-  border-bottom: 1px solid #e5e5e5 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 
 .ms-legal-toc-label {
   display: none !important;
 }
 
-.ms-legal-toc a {
-  color: #666666 !important;
-  background: transparent !important;
+.ms-legal-toc a,
+.ms-help-toc a {
+  color: #77776e !important;
+  background: #f3f3f0 !important;
   border: 0 !important;
   box-shadow: none !important;
-  font-size: 0.92rem !important;
-  font-weight: 650 !important;
-  padding: 0.15rem 0 !important;
-  border-radius: 0 !important;
+  font-size: 0.74rem !important;
+  font-weight: 600 !important;
+  padding: 0.28rem 0.55rem !important;
+  border-radius: 999px !important;
   text-decoration: none !important;
+  line-height: 1.2;
 }
 
 .ms-legal-toc a:hover,
-.ms-legal-toc a:focus-visible {
-  background: transparent !important;
-  border-color: transparent !important;
+.ms-legal-toc a:focus-visible,
+.ms-help-toc a:hover,
+.ms-help-toc a:focus-visible {
+  background: #ecece8 !important;
   color: #232427 !important;
 }
 
 /* —— Content cards / articles —— */
-.ms-legal-doc {
+.ms-legal-doc,
+.ms-help-guide {
   display: grid;
-  gap: 1.25rem;
+  gap: 0.65rem;
 }
 
 .ms-legal-doc .ms-card,
@@ -219,61 +263,82 @@ body[data-page="help"] #page-body {
 body.ms-legal-site .ms-card,
 body.ms-contact-public .ms-card,
 body.ms-download-page .ms-download-card,
-body[data-page="orders"] .ms-orders-card {
+body[data-page="orders"] .ms-orders-card,
+body[data-page="guide"] .ms-help-guide .ms-card,
+body[data-page="guide"] .ms-help-guide .ms-settings-card,
+body[data-page="guide"] .ms-help-guide .ms-doc-block {
   background: #fafafa !important;
-  border: 1px solid #e5e5e5 !important;
-  border-radius: 20px !important;
+  border: 1px solid #e8e8ea !important;
+  border-radius: 14px !important;
   box-shadow: none !important;
   color: #232427 !important;
-  padding: 1.65rem 1.5rem !important;
+  padding: 0.95rem 1rem !important;
 }
 
-.ms-legal-section-head {
-  margin: 0 0 0.35rem !important;
-  font-size: clamp(1.35rem, 3.2vw, 1.6rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.03em !important;
+.ms-legal-section-head,
+body[data-page="guide"] .ms-settings-card-title,
+body[data-page="guide"] .ms-doc-title,
+body[data-page="guide"] .ms-doc-block > h2 {
+  margin: 0 0 0.45rem !important;
+  font-size: 0.98rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
   color: #232427 !important;
   -webkit-text-fill-color: #232427 !important;
 }
 
 .ms-legal-doc .ms-card h2:not(.ms-legal-section-head),
 .ms-legal-doc .ms-card h3 {
-  margin: 1.35rem 0 0.45rem !important;
-  font-size: 1.08rem !important;
-  font-weight: 750 !important;
+  margin: 1rem 0 0.35rem !important;
+  font-size: 0.9rem !important;
+  font-weight: 650 !important;
   letter-spacing: -0.015em !important;
   color: #232427 !important;
   -webkit-text-fill-color: #232427 !important;
 }
 
 .ms-legal-doc .ms-card p,
-.ms-legal-doc .ms-card li {
-  color: #3a3c36 !important;
-  -webkit-text-fill-color: #3a3c36 !important;
-  font-size: 1rem !important;
-  line-height: 1.7 !important;
+.ms-legal-doc .ms-card li,
+body[data-page="guide"] .ms-settings-hint,
+body[data-page="guide"] .ms-help-list,
+body[data-page="guide"] .ms-help-list li,
+body[data-page="guide"] .ms-help-steps {
+  color: #4a4a45 !important;
+  -webkit-text-fill-color: #4a4a45 !important;
+  font-size: 0.86rem !important;
+  line-height: 1.5 !important;
 }
 
-.ms-legal-updated {
-  color: #666666 !important;
-  -webkit-text-fill-color: #666666 !important;
-  font-size: 0.92rem !important;
+.ms-legal-doc .ms-card p,
+.ms-legal-doc .ms-card li {
+  margin: 0 0 0.55rem !important;
+}
+
+.ms-legal-doc .ms-card p:last-child,
+.ms-legal-doc .ms-card li:last-child {
+  margin-bottom: 0 !important;
+}
+
+.ms-legal-doc .ms-card ul {
+  margin: 0;
+  padding-left: 1.05rem;
 }
 
 .ms-legal-doc .ms-card a,
 .ms-legal-foot a,
 body.ms-legal-site a:not(.ms-legal-nav a):not(.ms-legal-toc a):not(.ms-legal-brand),
-body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-btn):not(.dt-hero-cta):not(.dt-btn):not(.dt-play):not(.dt-badge) {
+body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-btn):not(.dt-hero-cta):not(.dt-btn):not(.dt-play):not(.dt-badge),
+body[data-page="guide"] .ms-help-guide a:not(.ms-btn) {
   color: var(--ms-link) !important;
   -webkit-text-fill-color: var(--ms-link) !important;
   font-weight: 650;
+  text-decoration: none;
 }
 
 .ms-legal-doc .ms-card a:hover,
-.ms-legal-foot a:hover {
-  color: #232427 !important;
-  -webkit-text-fill-color: #232427 !important;
+.ms-legal-foot a:hover,
+body[data-page="guide"] .ms-help-guide a:not(.ms-btn):hover {
+  text-decoration: underline;
 }
 
 /* —— Footer —— */
@@ -282,56 +347,254 @@ body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-bt
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 0.35rem 1.1rem;
-  background: rgba(255, 255, 255, 0.96) !important;
-  border-top: 1px solid #e5e5e5 !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  gap: 0.25rem 0.85rem;
+  background: color-mix(in srgb, #ffffff 94%, transparent) !important;
+  border-top: 1px solid #e8e8ea !important;
+  backdrop-filter: saturate(1.4) blur(16px);
+  -webkit-backdrop-filter: saturate(1.4) blur(16px);
+  padding: 0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom, 0px)) !important;
+  font-size: 0;
 }
 
 .ms-legal-foot a {
-  color: #666666 !important;
+  color: #77776e !important;
   text-decoration: none !important;
-  font-weight: 650 !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
 }
 
 .ms-legal-foot a:hover {
   color: #232427 !important;
 }
 
-/* Drop decorative separators if any remain */
-.ms-legal-foot {
-  font-size: 0;
-}
-.ms-legal-foot a {
-  font-size: 0.92rem;
-}
-
-/* —— Contact / download / orders —— */
+/* —— Contact / help / download —— */
 .ms-help-vcard,
 .ms-download-card,
 .ms-orders-card,
 .ms-auth-card {
   background: #fafafa !important;
-  border: 1px solid #e5e5e5 !important;
-  border-radius: 28px !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid #e8e8ea !important;
+  border-radius: 16px !important;
+  box-shadow: none !important;
   color: #232427 !important;
 }
 
-.ms-help-vcard-name,
-.ms-help-vcard-brand,
-.ms-download-brand,
-.ms-auth-title {
+.ms-download-card {
+  padding: 1rem !important;
+}
+
+.ms-download-card h1 {
+  font-size: 1.75rem !important;
+  margin: 0.75rem 0 0.35rem !important;
+}
+
+.ms-download-brand img {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+}
+
+.ms-download-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.ms-download-actions .ms-btn {
+  min-height: 2.15rem !important;
+  padding: 0.35rem 0.85rem !important;
+  font-size: 0.82rem !important;
+  border-radius: 999px !important;
+}
+
+.ms-download-back {
+  display: inline-flex;
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #77776e !important;
+  text-decoration: none;
+}
+
+.ms-download-back:hover {
   color: #232427 !important;
+}
+
+.ms-help-vcard {
+  max-width: none !important;
+  margin: 0 0 0.75rem !important;
+  overflow: hidden;
+}
+
+.ms-help-vcard-hero {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+}
+
+.ms-help-vcard-body {
+  padding: 0.95rem 0.95rem 0.85rem !important;
+  text-align: left !important;
+}
+
+.ms-help-vcard-top {
+  position: static !important;
+  margin: 0 0 0.75rem !important;
+}
+
+.ms-help-vcard-brand {
+  font-size: 0.68rem !important;
+  letter-spacing: 0.06em !important;
+  color: #77776e !important;
+}
+
+.ms-help-vcard-share {
+  width: 2.15rem !important;
+  height: 2.15rem !important;
+  border: 1px solid #e8e8ea !important;
+  background: #fff !important;
+  color: #232427 !important;
+  box-shadow: none !important;
+}
+
+.ms-help-vcard-avatar {
+  width: 3.25rem !important;
+  height: 3.25rem !important;
+  margin: 0 0 0.75rem !important;
+  border-radius: 12px !important;
+  border: 1px solid #e8e8ea !important;
+  box-shadow: none !important;
+  background: #fff !important;
+}
+
+.ms-help-vcard-identity {
+  text-align: left !important;
+  margin: 0 0 0.75rem !important;
+}
+
+.ms-help-vcard-name {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  color: #232427 !important;
+}
+
+.ms-help-vcard-role {
+  margin-top: 0.2rem !important;
+  font-size: 0.8rem !important;
+  color: #77776e !important;
+}
+
+.ms-help-vcard-save {
+  width: 100% !important;
+  min-height: 2.25rem !important;
+  margin: 0 0 0.75rem !important;
+  border-radius: 999px !important;
+  font-size: 0.84rem !important;
+  font-weight: 650 !important;
+}
+
+.ms-help-vcard-links {
+  display: grid !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  border: 1px solid #e8e8ea !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  background: #fff !important;
+}
+
+.ms-help-vcard-links li + li {
+  border-top: 1px solid #e8e8ea !important;
+}
+
+.ms-help-vcard-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.7rem !important;
+  padding: 0.7rem 0.75rem !important;
+  text-decoration: none !important;
+  color: inherit !important;
+  background: transparent !important;
+}
+
+.ms-help-vcard-icon {
+  width: 2rem !important;
+  height: 2rem !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  flex: 0 0 auto;
+  display: grid !important;
+  place-items: center;
+  background: #f3f3f0 !important;
+}
+
+.ms-help-vcard-icon img,
+.ms-help-vcard-icon svg {
+  width: 1.15rem !important;
+  height: 1.15rem !important;
+  object-fit: contain;
+}
+
+.ms-help-vcard-link-text {
+  display: grid !important;
+  gap: 0.08rem !important;
+  min-width: 0;
+  text-align: left !important;
+}
+
+.ms-help-vcard-link-text strong {
+  font-size: 0.86rem !important;
+  font-weight: 650 !important;
+  color: #232427 !important;
+}
+
+.ms-help-vcard-link-text em {
+  font-style: normal !important;
+  font-size: 0.76rem !important;
+  color: #77776e !important;
+}
+
+.ms-help-guide-section {
+  margin: 0 !important;
+}
+
+.ms-help-guide-card {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.7rem !important;
+  padding: 0.75rem 0.85rem !important;
+  border-radius: 14px !important;
+  border: 1px solid #e8e8ea !important;
+  background: #fafafa !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.ms-help-guide-card:hover {
+  background: #f3f3f0 !important;
+}
+
+.ms-help-guide-card-arrow {
+  margin-left: auto !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: #77776e !important;
 }
 
 .ms-help-vcard-share,
-.ms-dash-tool {
-  border: 1.5px solid #232427 !important;
-  background: transparent !important;
+:is(body[data-page="help"], body[data-page="download"], body[data-page="orders"], body[data-page="login"]) .ms-dash-tool {
+  border: 1px solid #e8e8ea !important;
+  background: #fff !important;
   color: #232427 !important;
   border-radius: 999px !important;
+  box-shadow: none !important;
 }
 
 /* Forms on public pages */
@@ -347,8 +610,9 @@ body[data-page="login"] input {
   color: #232427 !important;
   -webkit-text-fill-color: #232427 !important;
   caret-color: #232427;
-  background: transparent !important;
-  border-color: #232427 !important;
+  background: #fff !important;
+  border-color: #e8e8ea !important;
+  border-radius: 12px !important;
 }
 
 body.ms-legal-site ::placeholder,
@@ -356,8 +620,130 @@ body.ms-contact-public ::placeholder,
 body[data-page="report"] ::placeholder,
 body[data-page="orders"] ::placeholder,
 body[data-page="login"] ::placeholder {
-  color: #6a6a62 !important;
+  color: #77776e !important;
   opacity: 1 !important;
+}
+
+/* Course video */
+body[data-page="course"] .ms-course-video {
+  border-radius: 14px !important;
+  overflow: hidden;
+  border: 1px solid #e8e8ea !important;
+  background: #111 !important;
+  aspect-ratio: 16 / 9;
+}
+
+body[data-page="course"] .ms-course-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Guide denser steps / lists */
+body[data-page="guide"] .ms-help-list {
+  margin: 0.25rem 0 0 !important;
+  padding-left: 1rem !important;
+}
+
+body[data-page="guide"] .ms-help-list li + li {
+  margin-top: 0.3rem !important;
+}
+
+body[data-page="guide"] .ms-help-steps {
+  gap: 0.55rem !important;
+}
+
+body[data-page="guide"] .ms-help-steps li {
+  grid-template-columns: 1.5rem 1fr !important;
+  gap: 0.2rem 0.55rem !important;
+}
+
+body[data-page="guide"] .ms-help-steps li::before {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  font-size: 0.72rem !important;
+  background: #ecece8 !important;
+}
+
+body[data-page="guide"] .ms-help-steps strong {
+  font-size: 0.86rem !important;
+}
+
+body[data-page="guide"] .ms-help-steps span {
+  font-size: 0.82rem !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="guide"] .ms-creator-policy-notice {
+  padding: 0.7rem 0.8rem !important;
+  border-radius: 12px !important;
+  border: 1px solid #e8e8ea !important;
+  background: #fff !important;
+}
+
+body[data-page="guide"] .ms-creator-policy-notice p {
+  font-size: 0.82rem !important;
+  line-height: 1.45 !important;
+  margin: 0 0 0.45rem !important;
+}
+
+body[data-page="guide"] .ms-creator-policy-notice p:last-child {
+  margin-bottom: 0 !important;
+}
+
+body[data-page="guide"] .ms-help-legal {
+  margin-top: 0.75rem !important;
+  font-size: 0.76rem !important;
+  gap: 0.25rem 0.45rem !important;
+}
+
+/* Designer Tips — quieter hero, keep demos intact */
+body[data-page="designer-tips"] .dt-shell {
+  width: min(64rem, calc(100% - 1.5rem)) !important;
+  padding-top: 0.85rem !important;
+}
+
+body[data-page="designer-tips"] .dt-hero {
+  padding: 0.65rem 0 0.85rem !important;
+  max-width: 32rem !important;
+}
+
+body[data-page="designer-tips"] .dt-kicker {
+  display: none !important;
+}
+
+body[data-page="designer-tips"] .dt-hero h1 {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+}
+
+body[data-page="designer-tips"] .dt-lead {
+  font-size: 0.86rem !important;
+  color: #77776e !important;
+  -webkit-text-fill-color: #77776e !important;
+  margin-bottom: 0.75rem !important;
+}
+
+body[data-page="designer-tips"] .dt-hero-cta {
+  min-height: 2.15rem !important;
+  padding: 0.35rem 0.85rem !important;
+  font-size: 0.8rem !important;
+  border-radius: 999px !important;
+}
+
+body[data-page="designer-tips"] .dt-toc {
+  gap: 0.3rem !important;
+  margin-bottom: 1rem !important;
+}
+
+body[data-page="designer-tips"] .dt-toc a {
+  font-size: 0.74rem !important;
+  padding: 0.28rem 0.55rem !important;
+  border-radius: 999px !important;
+  background: #f3f3f0 !important;
+  border: 0 !important;
 }
 
 /* Responsive */
@@ -371,38 +757,20 @@ body[data-page="login"] ::placeholder {
   .ms-legal-wrap,
   .ms-contact-main,
   .ms-download-main,
-  .ms-orders-main {
+  .ms-orders-main,
+  body[data-page="guide"] #page-body,
+  body[data-page="help"] #page-body,
+  body[data-page="course"] #page-body {
     width: min(100%, calc(100% - 2rem)) !important;
   }
 
   .ms-legal-nav {
-    max-width: min(58vw, 14rem);
+    max-width: min(58vw, 13rem);
   }
 
   .ms-legal-nav a {
-    font-size: 0.84rem !important;
-    padding: 0.35rem 0.55rem !important;
-  }
-
-  .ms-legal-toc {
-    top: calc(3.15rem + env(safe-area-inset-top, 0px));
-  }
-
-  .ms-legal-doc .ms-card,
-  .ms-legal-article {
-    padding: 1.35rem 1.2rem !important;
-    border-radius: 18px !important;
-  }
-}
-
-@media (max-width: 420px) {
-  .ms-legal-brand span {
-    font-size: 0.95rem;
-  }
-
-  .ms-legal-toc a {
-    font-size: 0.88rem !important;
-    padding: 0.15rem 0 !important;
+    font-size: 0.76rem !important;
+    padding: 0.28rem 0.45rem !important;
   }
 }
 
@@ -430,7 +798,7 @@ body[data-page="login"] ::placeholder {
   .ms-legal-foot,
   .ms-orders-nav {
     background: #ffffff !important;
-    border-color: #e5e5e5 !important;
+    border-color: #e8e8ea !important;
   }
 
   .ms-legal-toc a,
@@ -443,6 +811,6 @@ body[data-page="login"] ::placeholder {
   .ms-legal-intro,
   .ms-legal-doc .ms-card p,
   .ms-legal-doc .ms-card li {
-    color: #666666 !important;
+    color: #77776e !important;
   }
 }

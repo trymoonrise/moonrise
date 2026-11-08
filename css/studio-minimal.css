@@ -74,7 +74,30 @@ body[data-page="leads"] {
   letter-spacing: -0.04em !important;
   line-height: 1.1 !important;
   color: var(--ms-ink) !important;
+  -webkit-text-fill-color: var(--ms-ink) !important;
   text-align: left !important;
+}
+
+html[data-ms-mode="dark"] .ms-page-head h1,
+html[data-ms-mode="dark"] .ms-dash-head h1,
+html[data-ms-mode="dark"] .ms-settings-card-title,
+html[data-ms-mode="dark"] .ms-muted,
+html[data-ms-mode="dark"] .ms-settings-hint {
+  color: var(--ms-ink) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+html[data-ms-mode="dark"] .ms-muted,
+html[data-ms-mode="dark"] .ms-settings-hint {
+  color: var(--ms-min-muted) !important;
+}
+
+html[data-ms-mode="dark"] .ms-dash-tool,
+html[data-ms-mode="dark"] a.ms-dash-tool {
+  background: transparent !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+  border-color: rgb(255 255 255 / 18%) !important;
 }
 
 .ms-page-head .lead {
@@ -728,6 +751,12 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
   object-fit: contain;
   background: var(--ms-min-fill);
   flex-shrink: 0;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+html[data-ms-mode="dark"] .ms-status-logo.is-mono {
+  filter: invert(1);
 }
 
 .ms-status-logo--icon {
@@ -781,16 +810,22 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
   animation: ms-status-wave 1.1s linear infinite;
 }
 
-.ms-status-wave.is-ok {
-  color: #10b981;
+.ms-status-wave.is-ok,
+.ms-status-wave.is-ok .ms-status-wave-path {
+  color: #10b981 !important;
+  stroke: #10b981 !important;
 }
 
-.ms-status-wave.is-warn {
-  color: #f59e0b;
+.ms-status-wave.is-warn,
+.ms-status-wave.is-warn .ms-status-wave-path {
+  color: #f59e0b !important;
+  stroke: #f59e0b !important;
 }
 
-.ms-status-wave.is-bad {
-  color: #ef4444;
+.ms-status-wave.is-bad,
+.ms-status-wave.is-bad .ms-status-wave-path {
+  color: #ef4444 !important;
+  stroke: #ef4444 !important;
 }
 
 .ms-status-wave-path--delay {
@@ -876,19 +911,28 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
   text-align: right;
 }
 
+html[data-ms-mode="dark"] .ms-status-wave.is-ok,
+html[data-ms-mode="dark"] .ms-status-wave.is-ok .ms-status-wave-path,
 html[data-ms-mode="dark"] #set-status-overall[data-state="ok"],
 html[data-ms-mode="dark"] .ms-status-feedback.is-ok {
-  color: #34d399;
+  color: #34d399 !important;
+  stroke: #34d399 !important;
 }
 
+html[data-ms-mode="dark"] .ms-status-wave.is-warn,
+html[data-ms-mode="dark"] .ms-status-wave.is-warn .ms-status-wave-path,
 html[data-ms-mode="dark"] #set-status-overall[data-state="degraded"],
 html[data-ms-mode="dark"] .ms-status-feedback.is-warn {
-  color: #fbbf24;
+  color: #fbbf24 !important;
+  stroke: #fbbf24 !important;
 }
 
+html[data-ms-mode="dark"] .ms-status-wave.is-bad,
+html[data-ms-mode="dark"] .ms-status-wave.is-bad .ms-status-wave-path,
 html[data-ms-mode="dark"] #set-status-overall[data-state="down"],
 html[data-ms-mode="dark"] .ms-status-feedback.is-bad {
-  color: #f87171;
+  color: #f87171 !important;
+  stroke: #f87171 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1270,6 +1314,24 @@ a.ms-dash-tool {
     -webkit-text-fill-color: #f4f4f5 !important;
   }
 
+  html[data-ms-mode="dark"] .ms-tabbar,
+  html[data-ms-mode="dark"] body .ms-tabbar,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar {
+    background: color-mix(in srgb, #1c1c1e 88%, transparent) !important;
+    border-color: rgb(255 255 255 / 12%) !important;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 14px 36px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  html[data-ms-mode="dark"] .ms-tab:not(.is-active),
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab:not(.is-active),
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab:not(.is-active) .ms-tab-ico,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab:not(.is-active) .ms-tab-label {
+    color: #a1a1aa !important;
+    -webkit-text-fill-color: #a1a1aa !important;
+  }
+
   html .ms-tab-ico {
     width: 22px !important;
     height: 22px !important;
@@ -1308,12 +1370,21 @@ a.ms-dash-tool {
   body[data-page="clients"] #page-body,
   body[data-page="settings"] #page-body,
   body[data-page="leads"] #page-body,
+  body[data-page="guide"] #page-body,
+  body[data-page="help"] #page-body,
+  body[data-page="course"] #page-body,
+  body[data-page="donate"] #page-body,
+  body[data-page="leaderboard"] #page-body,
+  body[data-page="admin-console"] #page-body,
+  body[data-page="projects"] #page-body,
+  body[data-page="pricing"] #page-body,
   body[data-page="builder"].ms-lb-setup #page-body,
   body[data-page="builder"].ms-lb-setup .ms-builder-setup-page,
   #page-body.ms-dash-page,
   #page-body.ms-settings-page,
   #page-body.ms-clients-page,
-  #page-body.ms-projects-page {
+  #page-body.ms-projects-page,
+  #page-body.ms-content-page {
     padding-bottom: calc(5.35rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
@@ -1409,6 +1480,8 @@ html[data-ms-mode="dark"] .ms-tab-pill {
     [data-page="admin-console"],
     [data-page="projects"],
     [data-page="course"],
+    [data-page="guide"],
+    [data-page="help"],
     [data-page="donate"],
     [data-page="leaderboard"],
     [data-page="hosting-billing"],

@@ -4,9 +4,10 @@
   const statusEl = document.getElementById("admin-status");
   const ringEl = document.getElementById("admin-ring");
   const copyBtn = document.getElementById("admin-copy");
+  const shareBtn = document.getElementById("admin-share");
 
-  const READY = "Copy this ID. It works once and expires in 6 hours if unused.";
-  const USED = "This ID was already used. Copy the next one.";
+  const READY = "Share or copy this ID. It works once and expires in 6 hours if unused.";
+  const USED = "This ID was already used. Share the next one.";
 
   let snapshot = null;
   let expiresAt = 0;
@@ -121,7 +122,9 @@
     }
     if (codeEl) codeEl.classList.toggle("is-used", !!snapshot.used);
     setStatus(snapshot.used ? USED : READY);
-    if (copyBtn) copyBtn.disabled = !snapshot.code || !!snapshot.used || leftMs <= 0;
+    const codeReady = !!snapshot.code && !snapshot.used && leftMs > 0;
+    if (copyBtn) copyBtn.disabled = !codeReady;
+    if (shareBtn) shareBtn.disabled = !codeReady;
     if (leftMs <= 0 && Date.now() >= nextFetchAt) {
       nextFetchAt = Date.now() + 800;
       refresh();
@@ -188,6 +191,15 @@
     }
   }
 
+  function inviteSignupUrl(code) {
+    const url = new URL("login.html", location.href);
+    url.search = "";
+    url.hash = "";
+    url.searchParams.set("mode", "signup");
+    url.searchParams.set("eid", String(code || "").trim());
+    return url.toString();
+  }
+
   copyBtn?.addEventListener("click", async () => {
     const code = String(snapshot?.code || "").trim();
     if (!code || snapshot?.used) return;
@@ -196,6 +208,32 @@
       window.StudioToast?.success?.("Employee ID copied");
     } catch (_) {
       setStatus("Couldn't copy. Select the ID instead.");
+    }
+  });
+
+  shareBtn?.addEventListener("click", async () => {
+    const code = String(snapshot?.code || "").trim();
+    if (!code || snapshot?.used) return;
+    const link = inviteSignupUrl(code);
+    const payload = {
+      title: "Join Moonrise",
+      text: "Use this link to sign up. Your Employee ID is filled in automatically.",
+      url: link,
+    };
+    try {
+      if (typeof navigator.share === "function") {
+        await navigator.share(payload);
+        window.StudioToast?.success?.("Invite shared");
+        return;
+      }
+    } catch (err) {
+      if (err && (err.name === "AbortError" || err.name === "NotAllowedError")) return;
+    }
+    try {
+      await navigator.clipboard.writeText(link);
+      window.StudioToast?.success?.("Signup link copied");
+    } catch (_) {
+      setStatus("Couldn't share. Copy the ID instead.");
     }
   });
 

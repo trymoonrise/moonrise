@@ -110,7 +110,7 @@
   cdn.crossOrigin = "anonymous";
   document.head.appendChild(cdn);
 
-  ["js/config.js?v=20261108-skel-nav", "js/auth.js?v=20261108-skel-nav", "js/app.js?v=20261108-skel-nav"].forEach(function (href) {
+  ["js/config.js?v=20261108-skel-nav", "js/auth.js?v=20261108-skel-nav", "js/app.js?v=20261108-tab-instant"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -196,7 +196,22 @@
 
 function mountTabBarEarly() {
   var stem = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/i, "") || "index";
-  var pages = { dashboard: 1, builder: 1, clients: 1, settings: 1, leads: 1 };
+  var pages = {
+    dashboard: 1,
+    builder: 1,
+    clients: 1,
+    settings: 1,
+    leads: 1,
+    guide: 1,
+    help: 1,
+    course: 1,
+    donate: 1,
+    leaderboard: 1,
+    "admin-console": 1,
+    projects: 1,
+    pricing: 1,
+  };
+  var activeTabs = { dashboard: 1, builder: 1, clients: 1, settings: 1, leads: 1 };
   if (!pages[stem]) return;
 
   var icons = {
@@ -231,7 +246,7 @@ function mountTabBarEarly() {
     var html = '<span class="ms-tab-pill" aria-hidden="true"></span>';
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
-      var active = stem === item[0];
+      var active = !!activeTabs[stem] && stem === item[0];
       html +=
         '<a class="ms-tab' +
         (active ? " is-active" : "") +
@@ -254,6 +269,7 @@ function mountTabBarEarly() {
     nav.className = "ms-tabbar";
     nav.setAttribute("aria-label", "Main pages");
     nav.dataset.mounted = "1";
+    nav.dataset.page = stem;
     nav.innerHTML = html;
     document.body.appendChild(nav);
   }

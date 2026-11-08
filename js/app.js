@@ -2035,7 +2035,23 @@
     if (menuToggle.parentElement !== document.body) document.body.appendChild(menuToggle);
   }
 
-  const TAB_BAR_PAGES = ["dashboard", "builder", "clients", "settings", "leads"];
+  // Primary dock tabs. Secondary studio pages still show the same dock (no active tab).
+  const TAB_BAR_PAGES = [
+    "dashboard",
+    "builder",
+    "clients",
+    "settings",
+    "leads",
+    "guide",
+    "help",
+    "course",
+    "donate",
+    "leaderboard",
+    "admin-console",
+    "projects",
+    "pricing",
+  ];
+  const TAB_BAR_ACTIVE = ["dashboard", "builder", "clients", "settings", "leads"];
   const TAB_SWITCH_KEY = "ms_tab_switch";
   const STUDIO_BOOTED_KEY = "ms_studio_booted";
 
@@ -2080,11 +2096,12 @@
   }
 
   function setActiveTab(nav, tab) {
-    if (!nav || !tab) return;
+    if (!nav) return;
     nav.querySelectorAll(".ms-tab").forEach((el) => {
       el.classList.remove("is-active");
       el.removeAttribute("aria-current");
     });
+    if (!tab) return;
     tab.classList.add("is-active");
     tab.setAttribute("aria-current", "page");
   }
@@ -2136,6 +2153,9 @@
       leaderboard: 1,
       "hosting-billing": 1,
       "creator-contact": 1,
+      guide: 1,
+      help: 1,
+      pricing: 1,
     };
     return studio[file] ? file : "";
   }
@@ -2190,13 +2210,9 @@
       }
 
       event.preventDefault();
-      if (nav.classList.contains("is-switching")) return;
-      nav.classList.add("is-switching");
 
       writeTabSwitch(page, toId || "leads");
       setActiveTab(nav, link);
-      nav.classList.add("is-pill-ready");
-      syncTabPill(nav, link, { animate: !prefersTabMotionReduce() });
 
       try {
         sessionStorage.removeItem("ms_channel_hop");
@@ -2204,15 +2220,7 @@
         /* ignore */
       }
 
-      const go = () => {
-        location.href = link.href;
-      };
-      if (prefersTabMotionReduce()) {
-        go();
-        return;
-      }
-      // Let the pill slide before the hop so the bar never snaps.
-      window.setTimeout(go, 210);
+      location.href = link.href;
     });
 
     let resizeTimer = 0;
@@ -2230,9 +2238,9 @@
   }
 
   function ensureTabBar(page) {
+    placeMenuTopLeft();
     if (!TAB_BAR_PAGES.includes(page)) {
       document.getElementById("ms-tabbar")?.remove();
-      placeMenuTopLeft();
       return;
     }
     const items = [
@@ -2257,6 +2265,7 @@
       document.body.appendChild(nav);
     }
     const switchAnim = readTabSwitch();
+    const activeId = TAB_BAR_ACTIVE.includes(page) ? page : "";
     const tabCount = nav.querySelectorAll("a.ms-tab").length;
     const hasSettingsTab = !!nav.querySelector('a.ms-tab[data-tab="settings"]');
     const hasLegacyMenu = !!nav.querySelector("#ms-menu-toggle, .ms-tab-menu");
@@ -2276,7 +2285,7 @@
         '<span class="ms-tab-pill" aria-hidden="true"></span>' +
         items
           .map((item) => {
-            const active = page === item.id;
+            const active = activeId === item.id;
             const icon = ICONS[item.icon] || "";
             const mark = '<span class="ms-tab-ico" aria-hidden="true">' + icon + "</span>";
             return (
@@ -2298,15 +2307,21 @@
             );
           })
           .join("");
+    } else {
+      setActiveTab(
+        nav,
+        activeId ? nav.querySelector('.ms-tab[data-tab="' + activeId + '"]') : null
+      );
     }
     nav.dataset.mounted = "1";
+    nav.dataset.page = page || "";
 
     placeMenuTopLeft();
     bindTabBarSwitch(nav, page);
 
-    const activeTab = nav.querySelector(".ms-tab.is-active");
+    const activeTab = activeId ? nav.querySelector('.ms-tab[data-tab="' + activeId + '"]') : null;
     const fromTab =
-      switchAnim && switchAnim.to === page
+      switchAnim && activeId && switchAnim.to === page
         ? nav.querySelector('.ms-tab[data-tab="' + switchAnim.from + '"]')
         : null;
 
@@ -2328,7 +2343,10 @@
           nav.classList.add("is-pill-ready");
         } else {
           const pill = nav.querySelector(".ms-tab-pill");
-          if (pill) pill.style.opacity = "0";
+          if (pill) {
+            pill.style.opacity = "0";
+            pill.style.width = "0px";
+          }
           nav.classList.remove("is-pill-ready");
         }
       });

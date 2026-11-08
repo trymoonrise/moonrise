@@ -3,6 +3,46 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.0",
+      "date": "2026-11-07",
+      "title": "Interactive Designer Tips and clearer public docs",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Designer Tips demos stay idle until you try them, with play controls for the full effect.",
+            "Guide, Legal, Help, Contact, Report, Course, and Download use the same slim Settings-like layout."
+          ],
+          "fixes": [
+            "Designer Tips text stays readable on dark and light controls.",
+            "Designer Tips cards stay minimal with slim buttons and clearer spacing."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Sharing an employee ID opens signup with that ID already filled in."
+          ],
+          "fixes": [
+            "Tab bar taps on a phone open the next page immediately.",
+            "Dark mode keeps page titles readable and turns the phone tab bar dark.",
+            "The Builder title stays on the left on a phone, while the start form stays centered.",
+            "Admin payouts and subscribers keep dark cards, charts, search, and dialogs readable.",
+            "Settings Services waves stay green, yellow, and red in dark mode.",
+            "Settings Services lists the status-report services and uses the Supabase, OpenRouter, Stripe, Vercel, GitHub, and Resend logos.",
+            "The OpenRouter API service is labeled OpenRouter.",
+            "The database service is labeled Supabase."
+          ]
+        },
+        {
+          "heading": "Finder",
+          "fixes": [
+            "Business Finder dark mode darkens the search bar, filters, cards, and Scan dock, and keeps only the menu in that bar."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.2.9",
       "date": "2026-11-07",
       "title": "Phone tabs, alerts, and roomier Finder",

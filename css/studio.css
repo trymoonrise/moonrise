@@ -925,9 +925,8 @@ body.ms-sidebar-resizing iframe {
   display: none;
 }
 
-body:not([data-page="dashboard"]):not([data-page="builder"]):not([data-page="clients"]):not([data-page="settings"]) .ms-tabbar {
-  display: none !important;
-}
+/* Tab bar visibility is owned by the mobile dock rules + studio-minimal.
+   Do not blanket-hide it on secondary studio pages (guide, help, course, etc.). */
 
 #settings-session .ms-hard-refresh {
   display: inline-flex;

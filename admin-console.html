@@ -234,17 +234,17 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
   <meta name="robots" content="noindex">
-  <script src="js/auth-gate-head.js?v=20261108-top-menu"></script>
+  <script src="js/auth-gate-head.js?v=20261108-chrome-sync"></script>
   <title>Admin Console - Moonrise Studio</title>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261108-top-menu">
+  <link rel="stylesheet" href="css/studio.css?v=20261108-chrome-sync">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-<link rel="stylesheet" href="css/studio-ui.css?v=20261108-top-menu">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark-chrome">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-top-menu">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-top-menu">
-  <link rel="stylesheet" href="css/public-pages.css?v=20261028-strict-bw">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-chrome-sync">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
   <style>
     /* Slim admin console — same density language as Settings */
     body[data-page="admin-console"] #page-body.ms-admin-page {
@@ -1049,6 +1049,92 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     html[data-ms-mode="dark"] .ms-admin-status-track {
       background: #3a3a3c;
     }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-stat,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-clients-table-wrap,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-clients-empty,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-modal-card,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-modal-summary {
+      background: #1c1c1e !important;
+      border-color: rgb(255 255 255 / 12%) !important;
+      color: #f4f4f5 !important;
+      box-shadow: none !important;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-tabs {
+      background: #2c2c2e !important;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-tab {
+      background: transparent !important;
+      color: #a1a1aa !important;
+      -webkit-text-fill-color: #a1a1aa !important;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-chart,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-website {
+      background: #1c1c1e !important;
+      border-color: rgb(255 255 255 / 12%) !important;
+      color: #f4f4f5 !important;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-tabs .ms-payouts-tab.is-active {
+      background: #f4f4f5 !important;
+      color: #1c1c1e !important;
+      -webkit-text-fill-color: #1c1c1e !important;
+      box-shadow: none !important;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item-title h3,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item-meta,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item-method,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item-owed strong,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-modal-card h2,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-modal-summary-row strong,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-chart h2,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-status-row,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-status-row b,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-website-head strong,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-website-grid dd,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-clients-empty-title,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-clients-search {
+      background: transparent !important;
+      color: #f4f4f5 !important;
+      -webkit-text-fill-color: #f4f4f5 !important;
+      color-scheme: dark;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item-address,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item-details,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item-owed-label,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item-meta em,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-paid-stamp,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-modal-lead,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-modal-summary-row span,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-modal-label,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-bar em,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-website-grid dt,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-note,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-clients-count,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-clients-empty-desc,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-stat-label {
+      color: #a1a1aa !important;
+      -webkit-text-fill-color: #a1a1aa !important;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item-pay,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-clients-table-toolbar {
+      border-color: rgb(255 255 255 / 12%) !important;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-clients-search-field {
+      border-color: rgb(255 255 255 / 18%) !important;
+      background: transparent !important;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-modal-textarea,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-filter {
+      background: #2c2c2e !important;
+      color: #f4f4f5 !important;
+      -webkit-text-fill-color: #f4f4f5 !important;
+      border-color: rgb(255 255 255 / 14%) !important;
+    }
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-admin-website a,
+    html[data-ms-mode="dark"] body[data-page="admin-console"] .ms-payouts-item a {
+      color: #f4f4f5 !important;
+      -webkit-text-fill-color: #f4f4f5 !important;
+    }
     @media (max-width: 720px) {
       .ms-admin-tabs {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1138,6 +1224,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
       <p class="ms-admin-status" id="admin-status">One-time ID. Expires in 6 hours if unused.</p>
       <div class="ms-admin-actions">
         <button type="button" class="ms-btn" id="admin-copy">Copy ID</button>
+        <button type="button" class="ms-btn ms-btn-secondary" id="admin-share">Share</button>
       </div>
     </section>
     <section class="ms-admin-overview" id="admin-overview" aria-label="Company totals">
@@ -1331,14 +1418,14 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
   <script defer src="js/auth.js?v=20261108-skel-nav"></script>
-  <script defer src="js/app.js?v=20261108-top-menu"></script>
+  <script defer src="js/app.js?v=20261108-chrome-sync"></script>
   
   <script defer src="js/segment-switch.js?v=20261002-admin-toggle"></script>
   <script defer src="js/ui-motion.js?v=20261107-accent-btn"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/payout-profile.js"></script>
-  <script defer src="js/admin-console.js?v=20261003-code"></script>
+  <script defer src="js/admin-console.js?v=20261108-share-eid"></script>
   <script defer src="js/pending-payouts.js?v=20261002-playtest"></script>
   <script defer src="js/admin-audit.js?v=20261108-admin-slim"></script>
 </body>
