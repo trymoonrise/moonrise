@@ -270,7 +270,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261106-mono">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
-  <link rel="stylesheet" href="css/home.css?v=20261107-center">
+  <link rel="stylesheet" href="css/home.css?v=20261108-minimal-2">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -339,178 +339,69 @@ document.documentElement.classList.add("ms-boot");
 </head>
 <body data-page="home">
   <a class="ms-skip" href="#main">Skip to content</a>
-  <div class="ms-scroll-line" aria-hidden="true"></div>
 
   <div class="ms-home-shell">
-    <header class="ms-home-nav">
-      <div class="ms-home-nav-inner">
-        <a class="ms-home-brand" href="/">
-          <img src="assets/MoonriseLogo.png" alt="" width="28" height="28">
-          <strong>moonrise.</strong>
-        </a>
-        <nav class="ms-home-topnav" aria-label="Primary">
-          <a href="#product">Product</a>
-          <a href="#how">How it works</a>
-          <a href="#faq">FAQ</a>
-        </nav>
-        <div class="ms-home-nav-end">
-          <a class="ms-home-nav-cta" href="login">Start earning</a>
-          <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
-            <i></i><i></i><i></i>
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
-      <nav class="ms-home-bloom-nav" aria-label="Primary">
-        <a href="/" style="--nav-i:0">Home</a>
-        <a href="login" style="--nav-i:1">Start earning</a>
-        <a href="#product" style="--nav-i:2">Product</a>
-        <a href="#how" style="--nav-i:3">How it works</a>
-        <a href="#faq" style="--nav-i:4">FAQ</a>
-        <a href="download" style="--nav-i:5">Download app</a>
-        <a href="orders" style="--nav-i:6">Locate my order</a>
-        <a href="ui-library" style="--nav-i:7">UI Library</a>
-        <a href="login" style="--nav-i:8">Sign in</a>
+    <header class="ms-site-bar">
+      <a class="ms-home-btn" href="/" aria-label="Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.6 12 4l8 6.6V20a1 1 0 0 1-1 1h-5v-6.2H10V21H5a1 1 0 0 1-1-1z"/></svg>
+      </a>
+      <button class="ms-menu-btn" type="button" aria-expanded="false" aria-controls="ms-menu" aria-label="Open menu">
+        <span class="ms-menu-label">Menu</span>
+        <span class="ms-menu-bars" aria-hidden="true"></span>
+      </button>
+      <nav class="ms-menu-screen" id="ms-menu" aria-label="Pages">
+        <a href="login" style="--i:0">Start earning</a>
+        <a href="#how" style="--i:1">How it works</a>
+        <a href="#faq" style="--i:2">FAQ</a>
+        <a href="download" style="--i:3">Download</a>
+        <a href="orders" style="--i:4">Orders</a>
+        <a href="help" style="--i:5">Help</a>
+        <a href="legal" style="--i:6">Legal</a>
       </nav>
-    </div>
+    </header>
 
     <main id="main">
       <section class="ms-home-hero" aria-label="Moonrise">
-        <div class="ms-home-hero-glow" aria-hidden="true"></div>
-        <a class="ms-home-live" href="login">Now open</a>
         <h1>Build websites.<br>Get paid.</h1>
-        <p class="ms-home-hero-lead">Create a site for a local business. Earn when they go live — no design degree required.</p>
+        <p class="ms-home-hero-lead">Create a site for a local business. Earn when they go live.</p>
         <a class="ms-home-cta" href="login">Start earning</a>
-        <ul class="ms-home-hero-points">
-          <li>
-            <span class="ms-home-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h10M4 17h14"/></svg>
-            </span>
-            Sites in minutes
-          </li>
-          <li>
-            <span class="ms-home-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 1.5"/></svg>
-            </span>
-            Paid when they unlock
-          </li>
-          <li>
-            <span class="ms-home-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M7 8h7a3 3 0 010 6H9a3 3 0 000 6h8"/></svg>
-            </span>
-            You keep 90%
-          </li>
-        </ul>
-        <div class="ms-home-hero-stage" aria-hidden="true">
-          <div class="ms-home-glass ms-home-glass-a">
-            <span class="ms-home-glass-kicker">Preview</span>
-            <strong>Northside Cafe</strong>
-            <em>Live watermark · Ready to send</em>
-          </div>
-          <div class="ms-home-glass ms-home-glass-b">
-            <span class="ms-home-glass-kicker">Payout</span>
-            <strong>$450</strong>
-            <em>Unlocked · Your cut $405</em>
-          </div>
-        </div>
       </section>
 
-      <section class="ms-home-band" id="why" aria-labelledby="why-heading">
-        <div class="ms-home-wrap ms-home-band-head">
-          <h2 id="why-heading">A clear path<br>from lead to payout.</h2>
-          <p>Find a business, ship a site, send the link. Activate from anywhere.</p>
-        </div>
-        <ul class="ms-home-wrap ms-home-features">
-          <li class="ms-home-feature" style="--feat:linear-gradient(180deg,#e8ecef 0%,#f3f5f7 100%)">
-            <div class="ms-home-feature-visual ms-home-feature-price">
-              <span>Creator cut</span>
-              <strong>90%</strong>
-              <em>All inclusive</em>
-            </div>
-            <h3>Simple</h3>
-            <p>One flow from lead to live site — without a long agency process.</p>
-          </li>
-          <li class="ms-home-feature" style="--feat:linear-gradient(180deg,#eaeff3 0%,#f4f6f8 100%)">
-            <div class="ms-home-feature-visual ms-home-feature-scan" aria-hidden="true">
-              <span></span><span></span><span></span>
-            </div>
-            <h3>Fast</h3>
-            <p>Generate a polished preview in minutes, then refine the details.</p>
-          </li>
-          <li class="ms-home-feature" style="--feat:linear-gradient(180deg,#edf1f4 0%,#f5f7f9 100%)">
-            <div class="ms-home-feature-visual ms-home-feature-status">
-              <div><b>Cafe</b><i>Live</i></div>
-              <div><b>Dental</b><i>Draft</i></div>
-              <div><b>Gym</b><i>Sent</i></div>
-            </div>
-            <h3>Borderless</h3>
-            <p>Work local or remote. Businesses unlock from the live link.</p>
-          </li>
-        </ul>
-      </section>
-
-      <section class="ms-home-product" id="product" aria-labelledby="product-heading">
-        <div class="ms-home-wrap">
-          <h2 id="product-heading">One flow<br>that does it all.</h2>
-          <div class="ms-home-panels">
-            <article class="ms-home-panel">
-              <h3>Build</h3>
-              <p>Pick a local business, generate their site, and polish the copy and look.</p>
-              <a href="login">Open studio <span aria-hidden="true">→</span></a>
-              <div class="ms-home-panel-art ms-home-panel-build" aria-hidden="true">
-                <div></div><div></div><div></div>
-              </div>
-            </article>
-            <article class="ms-home-panel">
-              <h3>Earn</h3>
-              <p>Publish a watermarked preview. When they unlock, you get paid.</p>
-              <a href="#how">See how it works <span aria-hidden="true">→</span></a>
-              <div class="ms-home-panel-art ms-home-panel-earn" aria-hidden="true">
-                <strong>$405</strong>
-                <span>Paid to you</span>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="ms-home-steps" id="how" aria-labelledby="how-title">
-        <div class="ms-home-wrap">
-          <h2 id="how-title">Online in three steps.</h2>
-          <p class="ms-home-steps-lead">No design skills needed. Keep 90% when a business goes live.</p>
-          <ol class="ms-home-steps-list">
+      <section class="ms-band" id="how" aria-labelledby="how-title">
+        <div class="ms-wrap">
+          <h2 id="how-title">How it works</h2>
+          <ol class="ms-steps">
             <li>
-              <span>1</span>
-              <div>
-                <strong>Find a local business</strong>
-                <p>Pick a shop that still needs a real website.</p>
-              </div>
+              <span>01</span>
+              <strong>Find a business</strong>
+              <p>Pick a shop that needs a site.</p>
             </li>
             <li>
-              <span>2</span>
-              <div>
-                <strong>Build in one swipe</strong>
-                <p>Generate their site, then refine the details.</p>
-              </div>
+              <span>02</span>
+              <strong>Build it</strong>
+              <p>Generate the site, then refine it.</p>
             </li>
             <li>
-              <span>3</span>
-              <div>
-                <strong>Send the link and earn</strong>
-                <p>They unlock at checkout. You get paid.</p>
-              </div>
+              <span>03</span>
+              <strong>Send the link</strong>
+              <p>They unlock. You get paid.</p>
             </li>
           </ol>
         </div>
       </section>
 
-      <section class="ms-home-faq" id="faq" aria-labelledby="faq-title">
-        <div class="ms-home-wrap">
-          <h2 id="faq-title">Got questions?<br>Here’s the answers.</h2>
+      <section class="ms-band ms-cut" aria-label="Your cut">
+        <div class="ms-wrap">
+          <p class="ms-cut-stat">90%</p>
+          <p>Yours when a business goes live.</p>
+        </div>
+      </section>
+
+      <section class="ms-band ms-home-faq" id="faq" aria-labelledby="faq-title">
+        <div class="ms-wrap">
+          <h2 id="faq-title">Questions</h2>
           <div class="ms-home-faq-list">
-            <details class="ms-home-faq-item" open>
+            <details class="ms-home-faq-item">
               <summary>What is Moonrise?</summary>
               <p>A simple way to build websites for local businesses and get paid when they go live.</p>
             </details>
@@ -522,86 +413,34 @@ document.documentElement.classList.add("ms-boot");
               <summary>Do owners need an account?</summary>
               <p>No. They pay on the live site through secure checkout.</p>
             </details>
-            <details class="ms-home-faq-item">
-              <summary>Do I need design skills?</summary>
-              <p>No. Start from a generated site, then tweak copy, photos, and layout until it feels right.</p>
-            </details>
-            <details class="ms-home-faq-item">
-              <summary>Can I cancel anytime?</summary>
-              <p>Yes. There’s no long contract — use Moonrise when you have a business ready to go live.</p>
-            </details>
-          </div>
-          <a class="ms-home-text-link" href="help">Read more help</a>
-        </div>
-      </section>
-
-      <section class="ms-home-close" aria-labelledby="close-title">
-        <div class="ms-home-wrap ms-home-close-grid">
-          <div class="ms-home-close-card">
-            <h2 id="close-title">Get started in minutes.</h2>
-            <ol>
-              <li><span>1</span> Sign up</li>
-              <li><span>2</span> Build a site</li>
-              <li><span>3</span> Send &amp; earn</li>
-            </ol>
-          </div>
-          <div class="ms-home-close-card ms-home-close-price">
-            <h3>One cut. Clear rules.</h3>
-            <p class="ms-home-close-stat">90%</p>
-            <p>Yours when a business unlocks. They pay on the live site.</p>
-            <a class="ms-home-cta" href="login">Start earning</a>
           </div>
         </div>
       </section>
     </main>
 
     <footer class="ms-home-site-footer">
-      <div class="ms-home-wrap ms-home-footer-grid">
-        <div>
-          <p class="ms-home-footer-label">Product</p>
-          <a href="login">Start earning</a>
-          <a href="#how">How it works</a>
-          <a href="download">Download app</a>
+      <div class="ms-wrap">
+        <strong>moonrise.</strong>
+        <nav class="ms-home-foot-links" aria-label="Footer">
+          <a href="login">Start</a>
+          <a href="download">Download</a>
           <a href="ui-library">UI Library</a>
-        </div>
-        <div>
-          <p class="ms-home-footer-label">Account</p>
-          <a href="login">Sign in</a>
-          <a href="login?mode=signup">Sign up</a>
-          <a href="orders">Locate order</a>
-        </div>
-        <div>
-          <p class="ms-home-footer-label">Help</p>
           <a href="help">Help</a>
           <a href="contact">Contact</a>
           <a href="legal">Legal</a>
-          <a href="report">Report</a>
-        </div>
-      </div>
-      <div class="ms-home-wrap">
-        <p class="ms-home-footer-note"><strong>moonrise.</strong> Build websites for local businesses and get paid when they go live. Questions: <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>.</p>
+        </nav>
+        <p class="ms-home-footer-note"><a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a></p>
       </div>
     </footer>
   </div>
 
-  <script defer src="js/home-bloom-nav.js?v=20261028-minimal-stage"></script>
+  <script defer src="js/home-menu.js?v=20261108-minimal"></script>
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
   <script defer src="js/toast.js"></script>
   <script defer>
     (function () {
       if (window.__msReleaseBoot) window.__msReleaseBoot();
       document.body.classList.add("is-home-ready");
-
-      var line = document.querySelector(".ms-scroll-line");
-      function syncScrollLine() {
-        if (!line) return;
-        var doc = document.documentElement;
-        var max = Math.max(1, doc.scrollHeight - window.innerHeight);
-        line.style.transform = "scaleX(" + Math.min(1, window.scrollY / max).toFixed(4) + ")";
-      }
-      window.addEventListener("scroll", syncScrollLine, { passive: true });
-      window.addEventListener("resize", syncScrollLine, { passive: true });
-      syncScrollLine();
     })();
   </script>
 </body>
