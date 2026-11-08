@@ -223,6 +223,109 @@
     }, 280);
   }
 
+  function serviceCode(service) {
+    const existing = String(service?.code || "").trim();
+    if (existing) return existing;
+    const id = String(service?.id || "service")
+      .trim()
+      .toUpperCase()
+      .replace(/[^A-Z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") || "SERVICE";
+    const state =
+      service?.status === "ok" ? "OK" : service?.status === "degraded" ? "WARN" : "ERR";
+    return "MR-" + id + "-" + state;
+  }
+
+  /** Secret-free paste for coding agents. Only status labels already shown in UI. */
+  function issueText(service, report) {
+    const fb = feedbackFor(service.status);
+    const rows = Array.isArray(service.details) ? service.details : [];
+    const detailLines = rows
+      .filter((row) => row && row.label && row.value)
+      .slice(0, 8)
+      .map((row) => "- " + String(row.label) + ": " + String(row.value));
+    const lines = [
+      "Moonrise Services issue",
+      "Code: " + serviceCode(service),
+      "Service: " + serviceName(service),
+      "Status: " + fb.short,
+      "Summary: " + serviceSummary(service),
+      "Ping: " + formatPing(service.pingMs),
+    ];
+    if (report?.overall) {
+      lines.push(
+        "Overall: " +
+          overallLabel(report.overall) +
+          (report.code ? " (" + String(report.code) + ")" : "")
+      );
+    }
+    if (report?.checkedAt) lines.push("Checked: " + String(report.checkedAt));
+    if (detailLines.length) {
+      lines.push("Details:");
+      lines.push(...detailLines);
+    }
+    lines.push("Note: no secrets — status labels only.");
+    return lines.join("\n");
+  }
+
+  function overallIssueText(report) {
+    const services = Array.isArray(report?.services) ? report.services : [];
+    const focus = services.filter((s) => s && s.status !== "ok");
+    const list = focus.length ? focus : services;
+    const lines = [
+      "Moonrise Services report",
+      "Code: " + String(report?.code || serviceCode({ id: "overall", status: report?.overall })),
+      "Overall: " + overallLabel(report?.overall || "down"),
+      "Checked: " + String(report?.checkedAt || ""),
+      "",
+    ];
+    list.forEach((service) => {
+      lines.push(
+        serviceCode(service) +
+          " · " +
+          serviceName(service) +
+          " · " +
+          feedbackFor(service.status).short +
+          " · " +
+          serviceSummary(service)
+      );
+    });
+    lines.push("");
+    lines.push("Note: no secrets — status labels only.");
+    return lines.join("\n");
+  }
+
+  async function copyIssue(text, btn) {
+    const value = String(text || "").trim();
+    if (!value) return;
+    const label = btn?.querySelector(".ms-status-copy-label");
+    const reset = () => {
+      if (label) label.textContent = "Copy";
+      btn?.classList.remove("is-copied");
+    };
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(value);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = value;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      if (label) label.textContent = "Copied";
+      btn?.classList.add("is-copied");
+      window.setTimeout(reset, 1600);
+    } catch (_) {
+      if (label) label.textContent = "Copy failed";
+      window.setTimeout(reset, 1600);
+    }
+  }
+
   function detailRows(service) {
     const fb = feedbackFor(service.status);
     const rows = Array.isArray(service.details) ? service.details : [];
@@ -244,13 +347,19 @@
       '">' +
       escapeHtml(fb.explain) +
       "</p>" +
+      '<div class="ms-status-detail-row"><span>Code</span><strong class="ms-status-code">' +
+      escapeHtml(serviceCode(service)) +
+      "</strong></div>" +
       safe +
       '<div class="ms-status-detail-row"><span>Indication</span><strong>' +
       escapeHtml(fb.short) +
       "</strong></div>" +
       '<div class="ms-status-detail-row"><span>Ping</span><strong>' +
       escapeHtml(formatPing(service.pingMs)) +
-      "</strong></div>"
+      "</strong></div>" +
+      '<button type="button" class="ms-status-copy-btn" data-status-copy="service">' +
+      '<span class="ms-status-copy-label">Copy</span>' +
+      "</button>"
     );
   }
 
@@ -266,7 +375,14 @@
       overall.dataset.state = state;
     }
     setOverallWave(state);
-    if (legend) legend.textContent = overallLegend(state);
+    if (legend) {
+      legend.innerHTML =
+        '<span class="ms-status-legend-text">' +
+        escapeHtml(overallLegend(state)) +
+        "</span>" +
+        '<button type="button" class="ms-status-copy-btn ms-status-copy-btn--inline" data-status-copy="report">' +
+        '<span class="ms-status-copy-label">Copy</span></button>';
+    }
 
     if (!services.length) {
       list.innerHTML = '<p class="ms-set-quiet">No status data yet.</p>';
@@ -281,6 +397,8 @@
         return (
           '<div class="ms-status-item" role="listitem" data-status="' +
           escapeHtml(service.status || "down") +
+          '" data-service-id="' +
+          escapeHtml(id) +
           '">' +
           '<button type="button" class="ms-set-row ms-status-row" id="set-status-toggle-' +
           id +
@@ -332,6 +450,26 @@
         setPanelOpen(btn, panel, !open);
       });
     });
+
+    const panelRoot = document.getElementById("set-status-panel");
+    panelRoot?.querySelectorAll("[data-status-copy]").forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const kind = btn.getAttribute("data-status-copy");
+        if (kind === "report") {
+          void copyIssue(overallIssueText(report), btn);
+          return;
+        }
+        const item = btn.closest(".ms-status-item");
+        const sid = item?.getAttribute("data-service-id") || "";
+        const service =
+          services.find((s) => String(s.id || "").replace(/[^a-z0-9_-]/gi, "") === sid) ||
+          null;
+        if (!service) return;
+        void copyIssue(issueText(service, report), btn);
+      });
+    });
   }
 
   function setError(msg) {
@@ -366,17 +504,42 @@
       loadedOnce = true;
       renderList(data);
     } catch (err) {
-      setError(String(err?.message || err || "Could not load status"));
+      const errMsg = String(err?.message || err || "Could not load status");
+      setError(errMsg);
       if (overall) {
         overall.textContent = "Error";
         overall.dataset.state = "down";
       }
       setOverallWave("down");
-      const legend = document.getElementById("set-status-legend");
-      if (legend) legend.textContent = overallLegend("down");
-      if (!lastReport) {
+      if (lastReport) {
+        renderList(lastReport);
+      } else {
         const list = document.getElementById("set-status-list");
         if (list) list.innerHTML = "";
+        const legend = document.getElementById("set-status-legend");
+        if (legend) {
+          legend.innerHTML =
+            '<span class="ms-status-legend-text">' +
+            escapeHtml(overallLegend("down")) +
+            "</span>" +
+            '<button type="button" class="ms-status-copy-btn ms-status-copy-btn--inline" data-status-copy="load-error">' +
+            '<span class="ms-status-copy-label">Copy</span></button>';
+          const btn = legend.querySelector("[data-status-copy]");
+          btn?.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            void copyIssue(
+              [
+                "Moonrise Services issue",
+                "Code: MR-STATUS-LOAD-ERR",
+                "Status: Error",
+                "Summary: " + errMsg,
+                "Note: no secrets — status labels only.",
+              ].join("\n"),
+              btn
+            );
+          });
+        }
       }
     } finally {
       busy = false;

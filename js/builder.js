@@ -423,7 +423,7 @@
     genProgressPct = 0;
     document.body.classList.add("ms-lb-generating");
     document.documentElement.classList.remove("ms-lb-boot-generating");
-    renderGenerateProgress(0, label || "Building your website...");
+    renderGenerateProgress(0, label || "Preparing facts...");
     syncBuilderChannelGenerating({ cancellable: false });
     const startedAt = Date.now();
     const approachMs = 90000;
@@ -435,7 +435,11 @@
       // Climb toward 95% while waiting; 100% is reserved for a finished site.
       const cap = generateAbort ? 95 : 90;
       const target = Math.floor(5 + eased * (cap - 5));
-      if (target > genProgressPct) renderGenerateProgress(target);
+      let stage = "Preparing facts...";
+      if (elapsed > 8000) stage = "Writing copy...";
+      if (elapsed > 22000) stage = "Crafting layout...";
+      if (elapsed > 55000) stage = "Checking the page...";
+      if (target > genProgressPct) renderGenerateProgress(target, stage);
 
       // Hard stop so the bar never sits at 92% forever.
       if (elapsed > 165000 && !(state.html && String(state.html).trim())) {
@@ -459,7 +463,7 @@
     genProgressPct = 0;
     document.body.classList.remove("ms-lb-generating");
     document.documentElement.classList.remove("ms-lb-boot-generating");
-    renderGenerateProgress(0, "Building your website...");
+    renderGenerateProgress(0, "Preparing facts...");
     const loading = document.getElementById("preview-loading");
     if (loading) {
       loading.hidden = true;
@@ -536,7 +540,7 @@
     const status = document.getElementById("builder-status");
     const setupStatus = document.getElementById("builder-setup-status");
     if (busy) {
-      if (!genProgressActive) startGenerateProgress(label || "Building your website...");
+      if (!genProgressActive) startGenerateProgress(label || "Preparing facts...");
       else if (label) renderGenerateProgress(genProgressPct, label);
       if (setupStatus) {
         setupStatus.hidden = true;
@@ -6087,7 +6091,7 @@
       }
       renderGenerateProgress(
         Math.max(genProgressPct, 40),
-        "Still building your website..."
+        "Crafting layout..."
       );
       await sleepMs((Number(data.retryAfterSec) || 3) * 1000);
     }
@@ -6148,7 +6152,7 @@
     editState.previewPainted = false;
     // Show preparing progress immediately so swipe never lands on "No code generated yet".
     if (!genProgressActive && !(state.html && String(state.html).trim())) {
-      startGenerateProgress("Preparing your website...");
+      startGenerateProgress("Preparing facts...");
     } else {
       syncEmptyState();
     }
@@ -6275,9 +6279,9 @@
       setBuilderPhase("workspace");
     }
 
-    renderGenerateProgress(Math.max(genProgressPct, 6), "Starting generation...");
+    renderGenerateProgress(Math.max(genProgressPct, 6), "Preparing facts...");
     if (!genProgressActive) {
-      startGenerateProgress("Starting generation...");
+      startGenerateProgress("Preparing facts...");
     }
 
     if (!(await ensureCreditsForGeneration())) {
@@ -6299,7 +6303,7 @@
     }, GENERATE_TIMEOUT_MS);
     // Real generate request armed - consume the stored pick and show building progress.
     applyPickFromStorageOrQuery(params(), { retain: false });
-    setPromptBusy(true, isRedesign ? "Redesigning your website..." : "Building your website...");
+    setPromptBusy(true, isRedesign ? "Redesigning with Craft..." : "Moonrise agent is building...");
     updateOnboardContinue();
     const generatedHtmlKeep = { html: "" };
     let generationSucceeded = false;
@@ -6314,7 +6318,7 @@
           typeof window.resolveWorkerUrl === "function" ? window.resolveWorkerUrl() : base;
         throw new Error(workerUnreachableMessage(primary || base, e?.message || e));
       }
-      renderGenerateProgress(Math.max(genProgressPct, 18), "Building your website...");
+      renderGenerateProgress(Math.max(genProgressPct, 18), "Writing copy...");
       const headers = await authHeaders();
       const requestId = createGenerateRequestId(isRedesign, opts);
       writeGenInflight({
@@ -6323,9 +6327,9 @@
         leadId: intake.leadId || state.leadId || null,
         redesign: isRedesign,
       });
-      renderGenerateProgress(Math.max(genProgressPct, 25), "Building your website...");
+      renderGenerateProgress(Math.max(genProgressPct, 25), "Crafting layout...");
       const data = await runGenerateRequest(base, requestId, intake, headers, signal);
-      renderGenerateProgress(Math.max(genProgressPct, 88), "Finishing your website...");
+      renderGenerateProgress(Math.max(genProgressPct, 88), "Checking the page...");
       if (data.credits) {
         state.totalCredits = Number(data.credits.totalCredits) || 0;
         document.dispatchEvent(new CustomEvent("ms:credits-changed", { detail: data.credits }));

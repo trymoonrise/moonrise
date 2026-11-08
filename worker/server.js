@@ -153,6 +153,7 @@ const {
   selectStockMedia,
   ensureStockMediaInHtml,
   ensurePaletteContrast,
+  assessSiteCompleteness,
 } = require("./generate-prompt");
 const { catalogStats } = require("./stock-media");
 const {
@@ -163,6 +164,7 @@ const {
   parseCopyJson,
   renderBusinessSite,
 } = require("./site-shell");
+const { loadCraftPrompt } = require("./craft/load-craft");
 const {
   getBusinessStructure,
   getStructurePresetRoles,
@@ -1036,6 +1038,25 @@ function statusDetail(label, value) {
   return { label: String(label || ""), value: String(value || "") };
 }
 
+/** Stable, secret-free issue code for Settings → Services copy/paste. */
+function statusCode(id, status) {
+  const key = String(id || "service")
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || "SERVICE";
+  const state = status === "ok" ? "OK" : status === "degraded" ? "WARN" : "ERR";
+  return "MR-" + key + "-" + state;
+}
+
+function withStatusCode(row) {
+  if (!row || typeof row !== "object") return row;
+  return {
+    ...row,
+    code: statusCode(row.id, row.status),
+  };
+}
+
 async function buildStudioStatusReport() {
   const siteUrl = String(process.env.PUBLIC_APP_URL || "https://trymoonrise.com")
     .trim()
@@ -1237,9 +1258,9 @@ async function buildStudioStatusReport() {
           name: "OpenRouter",
           logo: "openrouter",
           status: reachable ? "ok" : "degraded",
-          summary: reachable ? "API ready" : "Configured · API check failed",
+          summary: reachable ? "Generation configured" : "Configured · API check failed",
           details: [
-            statusDetail("Service", "OpenRouter API"),
+            statusDetail("Service", "Site generation"),
             statusDetail("State", reachable ? "Operational" : "Degraded"),
           ],
         };
@@ -1450,7 +1471,7 @@ async function buildStudioStatusReport() {
 
   const order = ["app", "worker", "dns", "supabase", "stripe", "ai", "email", "deploy", "github", "leadfinder", "push", "fleet"];
   const byId = Object.fromEntries(probes.map((p) => [p.id, p]));
-  const services = order.map((id) => byId[id]).filter(Boolean);
+  const services = order.map((id) => byId[id]).filter(Boolean).map(withStatusCode);
   const worst = services.some((s) => s.status === "down")
     ? "down"
     : services.some((s) => s.status === "degraded")
@@ -1461,6 +1482,7 @@ async function buildStudioStatusReport() {
     ok: worst !== "down",
     checkedAt: new Date().toISOString(),
     overall: worst,
+    code: statusCode("overall", worst),
     services,
   };
 }
@@ -3269,10 +3291,65 @@ function sanitizeGeneratedCopy(html) {
   });
 }
 
+function craftAgentSystemPrompt() {
+  const craft = loadCraftPrompt();
+  return [
+    GENERATION_SYSTEM_PROMPT,
+    "",
+    "## Moonrise Special Prompt (required)",
+    "You are the Moonrise Builder agent. Apply the Moonrise Special Prompt while assembling the site.",
+    "Keep every business fact exact. Do not invent contact details. Prefer Special Prompt spacing, buttons, hover, focus, loading, and empty or error states.",
+    craft || "Use calm surfaces, a 4px spacing grid, one accent, and real button hover/press/focus/loading states.",
+    "",
+    "## Ship bar (hard fail if any miss)",
+    "- Modern, minimal, professional local-business UI. Calm surfaces. One accent. No purple gradients, glows, glass blobs, or noisy motion.",
+    "- Business name, phone, address, and hours must appear when provided. Never invent missing contact facts. Never leave placeholders.",
+    "- Complete document: doctype, html, head with viewport, body, nav, hero, content sections, contact form, footer, closed tags.",
+    "- One shared button system with hover, press, disabled, and a stable loading state. Forms have visible focus rings.",
+    "- Motion is short (about 150–220ms) and always includes prefers-reduced-motion. No stuttering loops, layout thrash, or broken overlays.",
+    "- Components must look finished: aligned columns, reserved image space, no cut-off text, no overlapping controls, no horizontal page scroll.",
+    "- If you cannot meet this bar, return a simpler complete Special Prompt page rather than a broken fancy one.",
+  ].join("\n");
+}
+
+function lockedCopyBlock(copy) {
+  try {
+    return [
+      "",
+      "## Locked copy (use these exact strings)",
+      "Rewrite layout, not the facts. Keep contact details and service names exactly as given.",
+      JSON.stringify(copy || {}, null, 2),
+    ].join("\n");
+  } catch (_) {
+    return "";
+  }
+}
+
+function finalizeGeneratedHtml(html, ctx, stockMedia) {
+  let out = String(html || "");
+  out = ensureMobileFriendlyHtml(out);
+  out = sanitizeGeneratedCopy(out);
+  out = ensurePaletteContrast(out);
+  if (stockMedia) {
+    try {
+      out = ensureStockMediaInHtml(out, stockMedia);
+    } catch (_) {
+      /* keep html */
+    }
+  }
+  out = ensureContactFormHtml(out, ctx);
+  return out;
+}
+
+function qualityGate(html, plan, ctx) {
+  return assessSiteCompleteness(html, plan?.structure, ctx);
+}
+
 async function generateWithOpenRouter(ctx, presetPack, plan) {
   const stockMedia = selectStockMedia(ctx);
   const shellPlan = plan || buildLocalPlan(ctx);
   let copy = fallbackSiteCopy(ctx, shellPlan);
+
   try {
     const result = await openRouterChat({
       system: COPY_SYSTEM_PROMPT,
@@ -3280,17 +3357,100 @@ async function generateWithOpenRouter(ctx, presetPack, plan) {
       temperature: 0.4,
       maxTokens: 1800,
       prefer: "throughput",
-      title: "Moonrise Studio Copy",
+      title: "Moonrise Agent Copy",
     });
     copy = normalizeSiteCopy(parseCopyJson(result.content), ctx, shellPlan);
   } catch (err) {
     console.warn("Copy JSON failed, using the business facts directly:", err.message);
     copy = fallbackSiteCopy(ctx, shellPlan);
   }
-  const html = ensurePaletteContrast(
-    sanitizeGeneratedCopy(ensureMobileFriendlyHtml(renderBusinessSite(ctx, copy, stockMedia)))
-  );
-  return ensureContactFormHtml(html, ctx);
+
+  const shellFallback = () => {
+    const html = finalizeGeneratedHtml(renderBusinessSite(ctx, copy, stockMedia), ctx, stockMedia);
+    const check = qualityGate(html, shellPlan, ctx);
+    if (!check.ok) {
+      console.warn("Craft shell quality warnings (shipping shell anyway):", check.reasons.join(", "));
+    }
+    return html;
+  };
+
+  const pack = Array.isArray(presetPack) ? presetPack : [];
+  if (!pack.length) {
+    console.warn("Moonrise agent: empty preset kit, using Craft shell fallback");
+    return shellFallback();
+  }
+
+  const assembleSystem = craftAgentSystemPrompt();
+  const assembleUser =
+    buildGenerationUserPrompt(ctx, pack, shellPlan, stockMedia) +
+    lockedCopyBlock(copy) +
+    [
+      "",
+      "## Quality lock",
+      "Ship only a modern, minimal, professional page.",
+      "Include the exact business name and every provided phone, address, and hours string.",
+      "No placeholders, no broken tags, no stuttering animation, no overlapping or cut-off UI.",
+      "Buttons and fields must feel smooth: hover, press, focus, and a stable submit loading state.",
+    ].join("\n");
+
+  try {
+    const assembled = await openRouterChat({
+      system: assembleSystem,
+      user: assembleUser,
+      temperature: 0.45,
+      maxTokens: Math.max(8000, Number(process.env.WEBSITE_ASSEMBLE_MAX_TOKENS || 12000)),
+      prefer: "throughput",
+      title: "Moonrise Agent Craft",
+      expectHtml: true,
+    });
+    let html = String(assembled.content || "").trim();
+    let finalized = finalizeGeneratedHtml(html, ctx, stockMedia);
+    let check = qualityGate(finalized, shellPlan, ctx);
+    if (!check.ok) {
+      console.warn("Moonrise agent quality gate failed, repairing once:", check.reasons.join(", "));
+      const repaired = await openRouterChat({
+        system: [
+          assembleSystem,
+          "",
+          "Repair mode: return ONLY one complete fixed HTML document. No markdown. No commentary.",
+          "Fix every listed issue. Prefer a simpler modern Craft layout over a broken fancy one.",
+        ].join("\n"),
+        user: [
+          "## Previous draft (rejected)",
+          html.slice(0, 120000),
+          "",
+          "## Rejected because",
+          check.reasons.map((reason) => "- " + reason).join("\n"),
+          "",
+          lockedCopyBlock(copy),
+          "",
+          "## Required outcome",
+          "Complete <!DOCTYPE html> document with nav, hero, content, contact form, footer.",
+          "Exact business details from the facts. Modern, minimal, professional.",
+          "Smooth buttons and fields. prefers-reduced-motion for any animation. No placeholders or broken UI.",
+        ].join("\n"),
+        temperature: 0.25,
+        maxTokens: Math.max(8000, Number(process.env.WEBSITE_ASSEMBLE_MAX_TOKENS || 12000)),
+        prefer: "throughput",
+        title: "Moonrise Agent Repair",
+        expectHtml: true,
+      });
+      html = String(repaired.content || "").trim();
+      finalized = finalizeGeneratedHtml(html, ctx, stockMedia);
+      check = qualityGate(finalized, shellPlan, ctx);
+    }
+    if (!check.ok || !/<html[\s>]/i.test(finalized)) {
+      console.warn(
+        "Moonrise agent still failing quality gate, using Craft shell fallback:",
+        check.reasons.join(", ")
+      );
+      return shellFallback();
+    }
+    return finalized;
+  } catch (err) {
+    console.warn("Moonrise agent assemble failed, using Craft shell fallback:", err.message);
+    return shellFallback();
+  }
 }
 
 /** Map manifest category/tags to bone-structure section role for assembly. */

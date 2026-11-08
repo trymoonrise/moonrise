@@ -89,6 +89,69 @@ body[data-page="designer-tips"] .ms-orders-nav-link {
   display: none !important;
 }
 
+.dt-craft-card .dt-card-head {
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dt-craft-card .dt-card-head .dt-btn {
+  flex-shrink: 0;
+}
+
+.dt-craft-stage {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem !important;
+  align-items: stretch !important;
+  justify-items: stretch !important;
+}
+
+.dt-craft-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.dt-craft-prompt {
+  display: block;
+  width: 100%;
+  min-height: 18rem;
+  max-height: 28rem;
+  margin: 0;
+  padding: 0.95rem 1rem;
+  border: 0;
+  border-radius: 14px;
+  resize: vertical;
+  background: #ffffff;
+  color: #111111;
+  -webkit-text-fill-color: #111111;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  box-shadow: inset 0 0 0 1px #e4e4e7;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.dt-craft-prompt:focus {
+  box-shadow:
+    inset 0 0 0 1px #111111,
+    0 0 0 3px rgb(17 17 17 / 10%);
+}
+
+.dt-craft-card .dt-tip a {
+  color: #111111;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
 .dt-hero-cta,
 .dt-play,
 .dt-btn {

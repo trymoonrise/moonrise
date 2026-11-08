@@ -666,6 +666,28 @@
       }
     });
 
+    $("[data-copy-craft]")?.addEventListener("click", async () => {
+      const prompt = $("#dt-craft-prompt");
+      const text = String(prompt?.value || "").trim();
+      if (!text) {
+        showToast("Prompt missing");
+        return;
+      }
+      try {
+        await navigator.clipboard?.writeText(text);
+        showToast("Special prompt copied");
+      } catch (_) {
+        try {
+          prompt.focus();
+          prompt.select();
+          document.execCommand("copy");
+          showToast("Special prompt copied");
+        } catch (_) {
+          showToast("Copy ready");
+        }
+      }
+    });
+
     $all("[data-confirm]").forEach((box) => {
       const q = $("[data-confirm-q]", box);
       $("[data-confirm-yes]", box)?.addEventListener("click", () => {

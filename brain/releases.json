@@ -3,6 +3,31 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.3.1",
+      "date": "2026-11-07",
+      "title": "Moonrise agent and Special Prompt",
+      "tag": "v2.3.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.3.1",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Designer Tips includes the Moonrise Special Prompt you can copy into any coding agent, with pasteable UI presets on GitHub.",
+            "The Moonrise Special Prompt includes a ship bar so generated business sites stay modern, complete, and free of broken UI.",
+            "The public prompt repo is renamed to moonrise-special-prompt with fuller docs, badges, embeds, topics, and contribution guides."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Settings Services shows a copyable status code so you can paste success, warning, or error details into a coding agent without secrets.",
+            "Builder generation runs as a Moonrise agent that uses the Moonrise Special Prompt, assembles with the preset kit, and falls back to a Special Prompt-quality shell.",
+            "The Moonrise agent quality-gates each site for complete markup, real business details, modern Special Prompt UI, and smooth controls, then repairs once or falls back to the shell instead of shipping a broken page."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.0",
       "date": "2026-11-07",
       "title": "Interactive Designer Tips and clearer public docs",

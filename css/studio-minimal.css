@@ -44,14 +44,46 @@ body[data-page="leads"] {
   background: var(--ms-canvas) !important;
 }
 
+/* Channel pages: pad + center in the panel beside the sidebar.
+   Do not use margin:auto on #page-body — that centers on the full window. */
+#page-body.ms-channel-page,
 #page-body.ms-dash-page,
+#page-body.ms-lf-page,
+#page-body.ms-content-page,
 #page-body.ms-settings-page,
+#page-body.ms-pricing-page,
 #page-body.ms-clients-page,
 #page-body.ms-projects-page,
-#page-body.ms-content-page,
-#page-body.ms-pricing-page {
+#page-body.ms-store-page,
+body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
   padding-top: 1.15rem !important;
   padding-bottom: 5.5rem !important;
+  width: min(var(--ms-channel-w), calc(100% - var(--ms-sidebar-w) - 2rem));
+  max-width: var(--ms-channel-w);
+  margin-left: calc(
+    var(--ms-sidebar-w) +
+      max(
+        0px,
+        (
+            100% - var(--ms-sidebar-w) -
+              min(var(--ms-channel-w), calc(100% - var(--ms-sidebar-w) - 2rem))
+          ) / 2
+      )
+  );
+  margin-right: auto;
+}
+
+/* Compact settings / dashboard: one narrow column centered in the panel */
+#page-body.ms-settings-page,
+#page-body.ms-dash-page {
+  --ms-channel-w: 560px;
+}
+
+/* Stacks fill that column; keep auto margins for nested compact groups */
+.ms-settings-stack,
+.ms-settings-compact,
+.ms-dash-stack {
+  width: 100%;
   max-width: 560px;
   margin-left: auto;
   margin-right: auto;
@@ -122,7 +154,11 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
 
 .ms-sidebar-scroll {
   gap: 0.75rem !important;
-  padding: 0.85rem 0.75rem 0.5rem !important;
+  padding: 0.85rem 0.75rem 1.25rem !important;
+  align-items: stretch !important;
+  /* Allow nav groups to size to their channels; this region scrolls */
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
 
 .ms-brand {
@@ -148,12 +184,18 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
   flex-direction: column !important;
   gap: 0 !important;
   margin: 0 !important;
-  padding: 0.35rem 0 !important;
+  padding: 0.4rem 0 0.55rem !important;
   background: var(--ms-group) !important;
   border: 0 !important;
   border-radius: var(--ms-min-radius) !important;
   box-shadow: none !important;
-  overflow: hidden;
+  /* Never shrink or clip channel rows — scroll the sidebar instead */
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  min-height: min-content !important;
+  height: auto !important;
+  max-height: none !important;
 }
 
 .ms-nav-section {
@@ -182,11 +224,17 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
 }
 
 .ms-nav {
-  gap: 0 !important;
-  padding: 0.15rem 0.35rem 0.35rem !important;
+  gap: 0.1rem !important;
+  padding: 0.2rem 0.4rem 0.55rem !important;
   background: transparent !important;
   border-radius: 0 !important;
   box-shadow: none !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  min-height: min-content !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
 }
 
 .ms-nav-pill {
@@ -195,8 +243,8 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
 
 .ms-nav-link {
   gap: 0.7rem !important;
-  min-height: 2.75rem !important;
-  padding: 0.55rem 0.7rem !important;
+  min-height: 2.65rem !important;
+  padding: 0.5rem 0.7rem !important;
   border-radius: 12px !important;
   font-size: 0.9375rem !important;
   font-weight: 500 !important;
@@ -205,6 +253,8 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
 }
 
 .ms-nav-link .ms-nav-ico {
@@ -330,9 +380,6 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
 .ms-settings-stack,
 .ms-dash-stack {
   gap: 0.75rem !important;
-  max-width: 560px !important;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .ms-settings-card-title,
@@ -723,9 +770,55 @@ body[data-page="settings"] .ms-set-panel #set-delete-account,
 
 .ms-status-legend {
   margin: 0.35rem 0 0.55rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
   font-size: 0.78rem;
   line-height: 1.4;
   color: var(--ms-min-quiet);
+}
+
+.ms-status-legend-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.ms-status-code {
+  font-family: var(--ms-mono, ui-monospace, monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+}
+
+.ms-status-copy-btn {
+  appearance: none;
+  border: 0;
+  background: var(--ms-min-fill);
+  color: var(--ms-ink);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  width: fit-content;
+  margin-top: 0.2rem;
+}
+
+.ms-status-copy-btn--inline {
+  margin-top: 0;
+  flex-shrink: 0;
+  padding: 0.28rem 0.65rem;
+}
+
+.ms-status-copy-btn:hover {
+  background: color-mix(in srgb, var(--ms-ink) 8%, var(--ms-min-fill));
+}
+
+.ms-status-copy-btn.is-copied {
+  background: color-mix(in srgb, #10b981 16%, transparent);
+  color: #059669;
 }
 
 .ms-status-list {
@@ -1743,12 +1836,22 @@ html:not([data-ms-mode="dark"]) .ms-nav-group,
 html[data-ms-mode="dark"] .ms-nav-group {
   background: var(--ms-group) !important;
   border-radius: var(--ms-min-radius) !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  min-height: min-content !important;
+  max-height: none !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-nav,
 html[data-ms-mode="dark"] .ms-nav {
   background: transparent !important;
   box-shadow: none !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  min-height: min-content !important;
+  max-height: none !important;
 }
 
 html:not([data-ms-mode="dark"]) .ms-nav-link.is-active,

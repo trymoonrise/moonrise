@@ -1180,7 +1180,7 @@ function ensurePaletteContrast(html) {
 /**
  * Structural completeness for auto-retry (section / form / footer heuristics).
  */
-function assessSiteCompleteness(html, structure) {
+function assessSiteCompleteness(html, structure, ctx = null) {
   const raw = String(html || "");
   const expected = structure?.sections?.length || 10;
   const sectionTags = (raw.match(/<section[\s>]/gi) || []).length;
@@ -1189,12 +1189,75 @@ function assessSiteCompleteness(html, structure) {
   const hasFooter = /<footer[\s>]/i.test(raw);
   const minSections = Math.max(6, Math.ceil(expected * 0.7));
   const reasons = [];
+  if (!raw.trim()) reasons.push("empty html");
+  if (!/<!DOCTYPE\s+html/i.test(raw) && !/<html[\s>]/i.test(raw)) {
+    reasons.push("missing html document");
+  }
+  if (!/<\/html>/i.test(raw)) reasons.push("unclosed html");
+  if (!/<\/body>/i.test(raw) && /<body[\s>]/i.test(raw)) reasons.push("unclosed body");
+  if (!/<meta[^>]+name=["']viewport["']/i.test(raw)) reasons.push("missing viewport");
   if (sectionTags < minSections && landmarks < minSections + 1) {
     reasons.push(`sections ${sectionTags}/${expected} (min ${minSections})`);
   }
   if (!hasForm) reasons.push("missing form");
   if (!hasFooter) reasons.push("missing footer");
+  if (!/<nav[\s>]/i.test(raw) && !/class=["'][^"']*\bnav\b/i.test(raw)) {
+    reasons.push("missing navigation");
+  }
   if (raw.length < 6000 && expected >= 10) reasons.push("too short");
+
+  const openScript = (raw.match(/<script\b(?![^>]*\/>)/gi) || []).length;
+  const closeScript = (raw.match(/<\/script>/gi) || []).length;
+  if (openScript > closeScript) reasons.push("unclosed script");
+  const openStyle = (raw.match(/<style\b/gi) || []).length;
+  const closeStyle = (raw.match(/<\/style>/gi) || []).length;
+  if (openStyle > closeStyle) reasons.push("unclosed style");
+
+  const placeholder =
+    /\[business name\]|\[phone\]|\[address\]|\(555\)|555-0100|lorem ipsum|your business|company name here|placeholder|todo:|coming soon/i;
+  if (placeholder.test(raw)) reasons.push("placeholder copy");
+
+  const name = String(ctx?.businessName || "").trim();
+  if (name && name.length >= 2) {
+    const compact = raw.replace(/\s+/g, " ");
+    if (!compact.toLowerCase().includes(name.toLowerCase())) {
+      reasons.push("missing business name");
+    }
+  }
+  const phoneDigits = String(ctx?.phone || "").replace(/[^\d]/g, "");
+  if (phoneDigits.length >= 7) {
+    const htmlDigits = raw.replace(/[^\d]/g, "");
+    const tail = phoneDigits.slice(-7);
+    if (!htmlDigits.includes(tail)) reasons.push("missing phone");
+  }
+  const address = String(ctx?.address || "").trim();
+  if (address.length >= 8) {
+    const street = address.split(",")[0].trim();
+    if (street.length >= 5 && !raw.toLowerCase().includes(street.toLowerCase())) {
+      reasons.push("missing address");
+    }
+  }
+
+  // Slop / broken-motion bar — never ship these patterns.
+  if (/purple|violet|#7c3aed|#8b5cf6|#a855f7|#6366f1/i.test(raw) && /gradient/i.test(raw)) {
+    reasons.push("gradient purple slop");
+  }
+  if (
+    /box-shadow:\s*0\s+0\s+(?:20|30|40|60)px/i.test(raw) ||
+    /drop-shadow\(/i.test(raw) ||
+    /(?<!backdrop-)filter:\s*blur\(/i.test(raw)
+  ) {
+    reasons.push("glow or blur decoration");
+  }
+  if (/animation:\s*[^;]*(?:infinite)[^;]*;[^\n]*animation:\s*[^;]*infinite/i.test(raw) &&
+      (raw.match(/animation:\s*[^;]*infinite/gi) || []).length >= 4) {
+    reasons.push("noisy infinite animations");
+  }
+  if (!/@media\s*\(\s*prefers-reduced-motion/i.test(raw) && /animation:|@keyframes/i.test(raw)) {
+    reasons.push("missing reduced-motion");
+  }
+  if (!/\.btn\b|button\b/i.test(raw)) reasons.push("missing buttons");
+
   return {
     ok: reasons.length === 0,
     expected,

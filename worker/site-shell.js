@@ -42,7 +42,7 @@ Rules:
 - If a fact is missing, speak generally ("Call to confirm") instead of making one up.
 - The headline is 2 or 3 words. No business name, no city, no period. A barber shop can say "Fresh cuts". A plumber can say "Same-day repairs".
 - No "Welcome to", "Your trusted", or "Quality you can count on".
-- Palette is unused. The page is black, white, and gray. Do not invent a brand color.
+- Palette must stay readable: one neutral ramp (bg, surface, ink, muted) and one accent used sparingly. Prefer calm local-business colors. No neon, purple gradients, or glow.
 - Keep every string short enough to fit a designed layout.`;
 
 function buildCopyUserPrompt(ctx, plan) {
@@ -337,11 +337,13 @@ function renderBusinessSite(ctx, copy, media) {
   <title>${esc(name)}</title>
 <style>
     :root {
-      --bg: #ffffff;
-      --ink: #1d1d1f;
-      --muted: #6e6e73;
-      --line: #d2d2d7;
-      --soft: #f5f5f7;
+      --bg: ${esc(copy.palette.bg)};
+      --surface: ${esc(copy.palette.surface)};
+      --ink: ${esc(copy.palette.ink)};
+      --muted: ${esc(copy.palette.muted)};
+      --accent: ${esc(copy.palette.accent)};
+      --line: color-mix(in srgb, var(--ink) 12%, transparent);
+      --soft: ${esc(copy.palette.surface)};
       --font: "Segoe UI", system-ui, -apple-system, sans-serif;
     }
     * { box-sizing: border-box; }
@@ -380,18 +382,52 @@ function renderBusinessSite(ctx, copy, media) {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 2.5rem;
-      padding: 0 1.15rem;
+      gap: 0.5rem;
+      min-height: 44px;
+      padding: 0 1.2rem;
       border: 0;
-      border-radius: 980px;
-      background: var(--ink);
+      border-radius: 999px;
+      background: var(--accent);
       color: #fff;
       font: inherit;
       font-size: 0.95rem;
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: -0.015em;
       text-decoration: none;
       cursor: pointer;
+      transform-origin: center;
+      transition:
+        transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.22s ease,
+        background 0.15s ease,
+        opacity 0.15s ease;
     }
+    .nav-cta:hover, .btn:hover:not(:disabled) {
+      transform: scale(1.03);
+      box-shadow: 0 4px 14px rgb(0 0 0 / 12%);
+    }
+    .nav-cta:active, .btn:active:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgb(0 0 0 / 14%);
+    }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    .btn.is-loading {
+      pointer-events: none;
+    }
+    .btn-spin {
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgb(255 255 255 / 35%);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: site-spin 0.7s linear infinite;
+    }
+    @keyframes site-spin { to { transform: rotate(360deg); } }
     .nav-cta { margin-left: 0.2rem; }
     .hero { position: relative; min-height: 100svh; color: #fff; background: #070708; overflow: hidden; }
     .hero-stage { position: absolute; inset: 0; background: #070708 center/cover no-repeat; }
@@ -413,7 +449,15 @@ function renderBusinessSite(ctx, copy, media) {
     .lede { max-width: 34rem; margin: 0.7rem 0 0; color: rgb(255 255 255 / 78%); font-size: 1.02rem; }
     .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem 1.1rem; margin-top: 1.2rem; align-items: center; }
     .hero .btn-solid { background: #fff; color: var(--ink); }
-    .btn-ghost { background: transparent; color: #fff; text-decoration: underline; text-underline-offset: 0.18em; }
+    .btn-ghost {
+      background: transparent;
+      color: #fff;
+      box-shadow: inset 0 0 0 1px rgb(255 255 255 / 45%);
+      text-decoration: none;
+    }
+    .btn-ghost:hover:not(:disabled) {
+      background: rgb(255 255 255 / 10%);
+    }
     .notes { padding: 1.35rem 0; background: #fff; border-bottom: 1px solid var(--line); }
     .notes ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem 1.6rem; margin: 0; padding: 0; list-style: none; color: var(--muted); }
     section { padding: clamp(4rem, 8vw, 6.5rem) 0; }
@@ -477,14 +521,28 @@ function renderBusinessSite(ctx, copy, media) {
     label { display: grid; gap: 0.35rem; font-size: 0.92rem; font-weight: 600; }
     input, textarea {
       width: 100%;
+      min-height: 44px;
       padding: 0.85rem 0.95rem;
-      border: 1px solid var(--line);
-      border-radius: 0.9rem;
+      border: 0;
+      border-radius: 14px;
       background: #fff;
       color: var(--ink);
       font: inherit;
+      box-shadow: inset 0 0 0 1px var(--line);
+      outline: none;
+      transition: box-shadow 0.15s ease, background 0.15s ease;
+    }
+    input:hover, textarea:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 28%, transparent); }
+    input:focus, textarea:focus {
+      box-shadow:
+        inset 0 0 0 1px var(--ink),
+        0 0 0 3px color-mix(in srgb, var(--ink) 12%, transparent);
     }
     textarea { min-height: 140px; resize: vertical; }
+    .media-slot { background: var(--soft); aspect-ratio: 4 / 5; border-radius: 1.2rem; overflow: hidden; }
+    @media (prefers-reduced-motion: reduce) {
+      .nav-cta, .btn, .btn-spin, input, textarea { transition: none; animation: none; }
+    }
     footer { background: #000; color: #a1a1a6; padding: 2.4rem 0; }
     footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
     footer strong { color: #fff; }
@@ -493,14 +551,20 @@ function renderBusinessSite(ctx, copy, media) {
     body.is-split .hero-stage::after { display: none; }
     body.is-split .hero-content { min-height: 100svh; align-items: flex-start; text-align: left; padding: 6rem 6vw; }
     body.is-split .eyebrow, body.is-split .lede { color: var(--muted); }
-    body.is-split .hero .btn-solid { background: var(--ink); color: #fff; }
-    body.is-split .btn-ghost { color: var(--ink); }
+    body.is-split .hero .btn-solid { background: var(--accent); color: #fff; }
+    body.is-split .btn-ghost {
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent);
+    }
     body.is-quiet .hero { min-height: 0; color: var(--ink); background: #fff; }
     body.is-quiet .hero-stage { display: none; }
     body.is-quiet .hero-content { min-height: 0; padding: 5.5rem 1.5rem 2rem; }
     body.is-quiet .eyebrow, body.is-quiet .lede { color: var(--muted); }
-    body.is-quiet .hero .btn-solid { background: var(--ink); color: #fff; }
-    body.is-quiet .btn-ghost { color: var(--ink); }
+    body.is-quiet .hero .btn-solid { background: var(--accent); color: #fff; }
+    body.is-quiet .btn-ghost {
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent);
+    }
     body.is-quiet .hero-photo { display: block; width: min(1120px, calc(100% - 3rem)); height: min(68vh, 640px); margin: 0 auto 0; border-radius: 1.2rem; object-fit: cover; }
     .hero-photo { display: none; }
     body.is-stone .hero-content { align-items: flex-start; text-align: left; justify-content: flex-end; padding-bottom: 4.5rem; }
@@ -581,7 +645,7 @@ function renderBusinessSite(ctx, copy, media) {
     </section>
     <section id="about">
       <div class="wrap grid-2">
-        <div class="about-media"><img src="${esc(about)}" alt="${esc(name)}" width="900" height="1120"></div>
+        <div class="about-media media-slot"><img src="${esc(about)}" alt="${esc(name)}" width="900" height="1120"></div>
         <div class="about-copy">
           <p class="eyebrow">About</p>
           <h2>${esc(copy.aboutTitle)}</h2>
@@ -619,7 +683,7 @@ function renderBusinessSite(ctx, copy, media) {
           <label>Name<input name="name" type="text" autocomplete="name" required placeholder="Your name"></label>
           <label>Phone number<input name="phone" type="tel" autocomplete="tel" required placeholder="(555) 123-4567"></label>
           <label>How can we help?<textarea name="message" required placeholder="Tell us what you need"></textarea></label>
-          <button class="btn btn-solid" type="submit">Send message</button>
+          <button class="btn btn-solid" type="submit" data-site-submit>Send message</button>
         </form>
       </div>
     </section>
@@ -630,6 +694,29 @@ function renderBusinessSite(ctx, copy, media) {
       <span>${esc([address, phone].filter(Boolean).join(" · "))}</span>
     </div>
   </footer>
+  <script>
+  (function () {
+    var form = document.querySelector("form");
+    var btn = document.querySelector("[data-site-submit]");
+    if (!form || !btn) return;
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (btn.classList.contains("is-loading")) return;
+      var label = btn.textContent;
+      btn.classList.add("is-loading");
+      btn.setAttribute("aria-busy", "true");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="btn-spin" aria-hidden="true"></span>Sending';
+      window.setTimeout(function () {
+        btn.classList.remove("is-loading");
+        btn.removeAttribute("aria-busy");
+        btn.disabled = false;
+        btn.textContent = "Sent";
+        window.setTimeout(function () { btn.textContent = label; }, 1400);
+      }, 1200);
+    });
+  })();
+  </script>
 </body>
 </html>`;
 }
