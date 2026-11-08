@@ -2035,13 +2035,13 @@
     if (menuToggle.parentElement !== document.body) document.body.appendChild(menuToggle);
   }
 
-  // Primary dock tabs. Secondary studio pages still show the same dock (no active tab).
+  // Primary dock tabs. Business Finder hides the dock so Scan nearby stays tappable.
+  // Secondary studio pages still show the same dock (no active tab).
   const TAB_BAR_PAGES = [
     "dashboard",
     "builder",
     "clients",
     "settings",
-    "leads",
     "guide",
     "help",
     "course",
@@ -2051,7 +2051,7 @@
     "projects",
     "pricing",
   ];
-  const TAB_BAR_ACTIVE = ["dashboard", "builder", "clients", "settings", "leads"];
+  const TAB_BAR_ACTIVE = ["dashboard", "builder", "clients", "settings"];
   const TAB_SWITCH_KEY = "ms_tab_switch";
   const STUDIO_BOOTED_KEY = "ms_studio_booted";
 

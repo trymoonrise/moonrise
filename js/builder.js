@@ -403,6 +403,41 @@
     }
   }
 
+  const AGENT_TIMELINE_STEPS = ["preparing", "copy", "assemble", "check", "ready"];
+
+  function resolveAgentStep(label, pct) {
+    const text = String(label || "").toLowerCase();
+    if (/ready|opening preview|website ready|complete/.test(text) || pct >= 100) {
+      return "ready";
+    }
+    if (/check|quality|repair|verif/.test(text) || pct >= 85) return "check";
+    if (/assembl|craft|layout|special prompt|redesign|building|preset/.test(text) || pct >= 30) {
+      return "assemble";
+    }
+    if (/writ|copy|headline/.test(text) || pct >= 15) return "copy";
+    if (/load(ing)? project/.test(text)) return "preparing";
+    return "preparing";
+  }
+
+  function syncAgentTimeline(label, pct) {
+    const root = document.getElementById("preview-agent-timeline");
+    if (!root) return;
+    const step = resolveAgentStep(label, pct);
+    const idx = Math.max(0, AGENT_TIMELINE_STEPS.indexOf(step));
+    root.querySelectorAll("[data-agent-step]").forEach((el) => {
+      const key = el.getAttribute("data-agent-step");
+      const elIdx = AGENT_TIMELINE_STEPS.indexOf(key);
+      el.classList.toggle("is-done", elIdx >= 0 && elIdx < idx);
+      el.classList.toggle("is-current", elIdx === idx);
+    });
+    const kicker = document.getElementById("preview-loading-kicker");
+    if (kicker) {
+      kicker.textContent =
+        step === "ready" ? "Moonrise agent · done" : "Moonrise agent · working";
+    }
+    root.setAttribute("data-current-step", step);
+  }
+
   function renderGenerateProgress(pct, label) {
     const clamped = Math.max(0, Math.min(100, Math.round(pct)));
     genProgressPct = clamped;
@@ -414,6 +449,7 @@
     if (pctEl) pctEl.textContent = clamped + "%";
     if (bar) bar.setAttribute("aria-valuenow", String(clamped));
     if (label && copy) copy.textContent = label;
+    syncAgentTimeline(label || (copy && copy.textContent) || "", clamped);
   }
 
   function startGenerateProgress(label) {
@@ -437,8 +473,8 @@
       const target = Math.floor(5 + eased * (cap - 5));
       let stage = "Preparing facts...";
       if (elapsed > 8000) stage = "Writing copy...";
-      if (elapsed > 22000) stage = "Crafting layout...";
-      if (elapsed > 55000) stage = "Checking the page...";
+      if (elapsed > 22000) stage = "Assembling with Special Prompt...";
+      if (elapsed > 55000) stage = "Checking quality...";
       if (target > genProgressPct) renderGenerateProgress(target, stage);
 
       // Hard stop so the bar never sits at 92% forever.
@@ -6091,7 +6127,7 @@
       }
       renderGenerateProgress(
         Math.max(genProgressPct, 40),
-        "Crafting layout..."
+        "Assembling with Special Prompt..."
       );
       await sleepMs((Number(data.retryAfterSec) || 3) * 1000);
     }
@@ -6303,7 +6339,10 @@
     }, GENERATE_TIMEOUT_MS);
     // Real generate request armed - consume the stored pick and show building progress.
     applyPickFromStorageOrQuery(params(), { retain: false });
-    setPromptBusy(true, isRedesign ? "Redesigning with Craft..." : "Moonrise agent is building...");
+    setPromptBusy(
+      true,
+      isRedesign ? "Redesigning with Special Prompt..." : "Moonrise agent is building..."
+    );
     updateOnboardContinue();
     const generatedHtmlKeep = { html: "" };
     let generationSucceeded = false;
@@ -6327,9 +6366,9 @@
         leadId: intake.leadId || state.leadId || null,
         redesign: isRedesign,
       });
-      renderGenerateProgress(Math.max(genProgressPct, 25), "Crafting layout...");
+      renderGenerateProgress(Math.max(genProgressPct, 25), "Assembling with Special Prompt...");
       const data = await runGenerateRequest(base, requestId, intake, headers, signal);
-      renderGenerateProgress(Math.max(genProgressPct, 88), "Checking the page...");
+      renderGenerateProgress(Math.max(genProgressPct, 88), "Checking quality...");
       if (data.credits) {
         state.totalCredits = Number(data.credits.totalCredits) || 0;
         document.dispatchEvent(new CustomEvent("ms:credits-changed", { detail: data.credits }));

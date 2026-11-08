@@ -1255,11 +1255,19 @@ a.ms-dash-tool {
   border-color: color-mix(in srgb, var(--ms-accent) 22%, transparent) !important;
 }
 
+/* Business Finder: no phone dock — it covers Scan nearby */
+body[data-page="leads"] .ms-tabbar,
+html body[data-page="leads"] .ms-tabbar {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 /* —— Tabs / mobile chrome: floating compact dock —— */
 @media (max-width: 900px) {
   html .ms-tabbar,
   html body .ms-tabbar,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar {
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar {
     left: 50% !important;
     right: auto !important;
     bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px)) !important;
@@ -1306,7 +1314,7 @@ a.ms-dash-tool {
 
   /* Sliding active pill — keeps tab switches smooth across hops. */
   html .ms-tab-pill,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab-pill {
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab-pill {
     display: block !important;
     position: absolute !important;
     top: 0.3rem !important;
@@ -1327,14 +1335,14 @@ a.ms-dash-tool {
   }
 
   html .ms-tabbar.is-pill-ready .ms-tab-pill,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab-pill {
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar.is-pill-ready .ms-tab-pill {
     opacity: 1 !important;
   }
 
   html .ms-tab,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
     position: relative !important;
     z-index: 1 !important;
     flex: 1 1 0 !important;
@@ -1357,7 +1365,7 @@ a.ms-dash-tool {
 
   /* Fallback chip before pill measures; transparent once pill is ready. */
   html .ms-tab.is-active,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active {
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active {
     background: #ececef !important;
     background-color: #ececef !important;
     color: #1d1d1f !important;
@@ -1367,26 +1375,26 @@ a.ms-dash-tool {
   }
 
   html .ms-tabbar.is-pill-ready .ms-tab.is-active,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
     background: transparent !important;
     background-color: transparent !important;
   }
 
   html .ms-tab.is-active .ms-tab-ico,
   html .ms-tab.is-active .ms-tab-label,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico,
-  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-label {
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico,
+  html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active .ms-tab-label {
     color: #1d1d1f !important;
     -webkit-text-fill-color: #1d1d1f !important;
   }
 
   html[data-ms-mode="dark"] .ms-tab-pill,
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab-pill {
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab-pill {
     background: rgb(255 255 255 / 12%) !important;
   }
 
   html[data-ms-mode="dark"] .ms-tab.is-active,
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active {
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active {
     background: rgb(255 255 255 / 12%) !important;
     background-color: rgb(255 255 255 / 12%) !important;
     color: #f4f4f5 !important;
@@ -1394,22 +1402,22 @@ a.ms-dash-tool {
   }
 
   html[data-ms-mode="dark"] .ms-tabbar.is-pill-ready .ms-tab.is-active,
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
     background: transparent !important;
     background-color: transparent !important;
   }
 
   html[data-ms-mode="dark"] .ms-tab.is-active .ms-tab-ico,
   html[data-ms-mode="dark"] .ms-tab.is-active .ms-tab-label,
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico,
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab.is-active .ms-tab-label {
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active .ms-tab-label {
     color: #f4f4f5 !important;
     -webkit-text-fill-color: #f4f4f5 !important;
   }
 
   html[data-ms-mode="dark"] .ms-tabbar,
   html[data-ms-mode="dark"] body .ms-tabbar,
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar {
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar {
     background: color-mix(in srgb, #1c1c1e 88%, transparent) !important;
     border-color: rgb(255 255 255 / 12%) !important;
     box-shadow:
@@ -1418,9 +1426,9 @@ a.ms-dash-tool {
   }
 
   html[data-ms-mode="dark"] .ms-tab:not(.is-active),
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab:not(.is-active),
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab:not(.is-active) .ms-tab-ico,
-  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab:not(.is-active) .ms-tab-label {
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab:not(.is-active),
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab:not(.is-active) .ms-tab-ico,
+  html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab:not(.is-active) .ms-tab-label {
     color: #a1a1aa !important;
     -webkit-text-fill-color: #a1a1aa !important;
   }

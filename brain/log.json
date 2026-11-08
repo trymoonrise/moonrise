@@ -3,6 +3,35 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.2",
+      "date": "2026-11-07",
+      "title": "Finder Scan nearby and Services fixes",
+      "sections": [
+        {
+          "heading": "Finder",
+          "fixes": [
+            "Business Finder no longer shows the phone tab bar over Scan nearby."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "While the Moonrise agent builds a site, the preview shows a Designer Tips-style timeline of the step it is working on.",
+            "Builder preview shows a Moonrise agent timeline while a site is building."
+          ],
+          "fixes": [
+            "Settings Services no longer false-warns on Supabase when sign-in is healthy."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "fixes": [
+            "The Supabase sign-in health probe sends the required API key so Services stops a false warning."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.1",
       "date": "2026-11-07",
       "title": "Moonrise agent and Special Prompt",

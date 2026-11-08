@@ -1590,7 +1590,7 @@ html[data-ms-mode="dark"] .ms-tabbar.is-pill-ready .ms-tab.is-active {
 
 /* Floating dock active wash lives in studio-minimal.css (soft chip, not ink-only). */
 @media (max-width: 900px) {
-  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab-pill {
+  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab-pill {
     display: none !important;
   }
 }

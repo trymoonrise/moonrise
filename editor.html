@@ -238,13 +238,13 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/generation-announce.css?v=20260721-float">
-  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio.css?v=20261108-agent-timeline">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 <link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-status-copy">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-finder-notab">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
   <link rel="stylesheet" href="css/mvp-gate.css?v=20260717-mvp-fix">
   <style>
@@ -592,16 +592,53 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
               </div>
             </div>
             <div class="ms-preview-frame-wrap" id="preview-wrap">
-              <div class="ms-lb-loading" id="preview-loading" hidden aria-busy="true" aria-live="polite" aria-label="Building website">
+              <div class="ms-lb-loading" id="preview-loading" hidden aria-busy="true" aria-live="polite" aria-label="Moonrise agent building website">
                 <div class="ms-lb-loading-inner">
-                  <span class="ms-lb-loading-spinner" aria-hidden="true"></span>
+                  <p class="ms-lb-loading-kicker" id="preview-loading-kicker">Moonrise agent</p>
                   <div class="ms-lb-progress" id="preview-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                     <div class="ms-lb-progress-track">
                       <div class="ms-lb-progress-fill" id="preview-progress-fill"></div>
                     </div>
                     <span class="ms-lb-progress-pct" id="preview-progress-pct">0%</span>
                   </div>
-                  <p class="ms-lb-loading-copy" id="preview-loading-copy">Building your website...</p>
+                  <div class="ms-lb-agent-timeline" id="preview-agent-timeline" role="list" aria-label="What the agent is doing">
+                    <div class="ms-lb-tl-item is-current" data-agent-step="preparing" role="listitem">
+                      <span class="ms-lb-tl-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Preparing facts</strong>
+                        <span>Business name, phone, and address</span>
+                      </div>
+                    </div>
+                    <div class="ms-lb-tl-item" data-agent-step="copy" role="listitem">
+                      <span class="ms-lb-tl-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Writing copy</strong>
+                        <span>Headlines and section text</span>
+                      </div>
+                    </div>
+                    <div class="ms-lb-tl-item" data-agent-step="assemble" role="listitem">
+                      <span class="ms-lb-tl-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Assembling layout</strong>
+                        <span>Special Prompt and preset kit</span>
+                      </div>
+                    </div>
+                    <div class="ms-lb-tl-item" data-agent-step="check" role="listitem">
+                      <span class="ms-lb-tl-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Checking quality</strong>
+                        <span>Details, markup, and smooth UI</span>
+                      </div>
+                    </div>
+                    <div class="ms-lb-tl-item" data-agent-step="ready" role="listitem">
+                      <span class="ms-lb-tl-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Opening preview</strong>
+                        <span>Your site is ready</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="ms-lb-loading-copy" id="preview-loading-copy">Preparing facts...</p>
                 </div>
               </div>
               <div class="ms-lb-gen-error" id="preview-gen-error" hidden role="alert">
@@ -937,7 +974,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   </div>
 
   <script defer src="js/config.js?v=20261108-skel-nav"></script>
-  <script defer src="js/app.js?v=20261108-skel-nav"></script>
+  <script defer src="js/app.js?v=20261108-finder-notab"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/auth-security.js?v=20261003-session"></script>
@@ -952,6 +989,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/generation-lock.js?v=20260721-one-gen"></script>
   <script defer src="js/site-features.js?v=20260930-seed"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
-  <script defer src="js/builder.js?v=20261028-flyer2"></script>
+  <script defer src="js/builder.js?v=20261108-agent-timeline"></script>
 </body>
 </html>

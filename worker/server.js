@@ -1153,26 +1153,38 @@ async function buildStudioStatusReport() {
           };
         }
         let authOk = false;
+        let authDetail = hasAuth ? "Check failed" : "Not configured";
         if (hasAuth && supabaseUrl) {
           try {
+            // GoTrue /auth/v1/health requires the project apikey (anon) header.
+            const anon = String(process.env.SUPABASE_ANON_KEY || "").trim();
             const res = await fetch(supabaseUrl + "/auth/v1/health", {
               method: "GET",
               cache: "no-store",
               signal,
-              headers: { Accept: "application/json" },
+              headers: {
+                Accept: "application/json",
+                apikey: anon,
+                Authorization: "Bearer " + anon,
+              },
             });
             authOk = res.ok;
+            authDetail = authOk ? "Operational" : "HTTP " + res.status;
           } catch (_) {
             authOk = false;
+            authDetail = "Unreachable";
           }
         }
         let dbOk = false;
+        let dbDetail = hasSupabase ? "Check failed" : "Not configured";
         if (hasSupabase) {
           try {
             const { error } = await db().from("profiles").select("id").limit(1);
             dbOk = !error;
+            dbDetail = dbOk ? "Operational" : "Check failed";
           } catch (_) {
             dbOk = false;
+            dbDetail = "Unreachable";
           }
         }
         const status = authOk && dbOk ? "ok" : authOk || dbOk ? "degraded" : "down";
@@ -1183,8 +1195,8 @@ async function buildStudioStatusReport() {
           status,
           summary: status === "ok" ? "Supabase reachable" : status === "degraded" ? "Partly reachable" : "Supabase unreachable",
           details: [
-            statusDetail("Sign-in", authOk ? "Operational" : hasAuth ? "Check failed" : "Not configured"),
-            statusDetail("Database", dbOk ? "Operational" : hasSupabase ? "Check failed" : "Not configured"),
+            statusDetail("Sign-in", authDetail),
+            statusDetail("Database", dbDetail),
           ],
         };
       },
