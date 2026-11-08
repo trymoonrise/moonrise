@@ -3,6 +3,23 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.8",
+      "date": "2026-11-07",
+      "title": "Admin Console tracks promo website sales",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Admin Console website rows show buyer email, phone, and sold date."
+          ],
+          "fixes": [
+            "Promo or  go-live checkouts still count as sold in the Admin Console.",
+            "Abandoned hosting checkouts no longer mark a later paid site as canceled."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.7",
       "date": "2026-11-07",
       "title": "OpenStreetMap Finder and animated onboarding",
@@ -470,7 +487,7 @@
         {
           "heading": "Studio",
           "added": [
-            "Settings \u2192 Appearance offers fourteen theme colors plus a custom picker again."
+            "Settings → Appearance offers fourteen theme colors plus a custom picker again."
           ],
           "fixes": []
         }
@@ -484,7 +501,7 @@
         {
           "heading": "Studio",
           "added": [
-            "Studio is locked to black, white, and grey only \u2014 theme color accents are removed.",
+            "Studio is locked to black, white, and grey only — theme color accents are removed.",
             "Buttons, tabs, nav rows, and controls use a snappy press and hover motion."
           ],
           "fixes": []
@@ -593,7 +610,7 @@
           "added": [
             "Home uses the simple moonrise loading bar instead of a logo splash.",
             "Landing hero is just the headline, supporting line, and Start earning / Learn More CTAs.",
-            "Version numbers use base-10 rollup: patch 0\u20139, then minor; minor 0\u20139, then major (1.0.9 \u2192 1.1.0 \u2192 \u2026 \u2192 2.0.0).",
+            "Version numbers use base-10 rollup: patch 0–9, then minor; minor 0–9, then major (1.0.9 → 1.1.0 → … → 2.0.0).",
             "Historical release notes and GitHub Releases are remapped from the old 1.0.N patch line onto the new scheme."
           ],
           "fixes": [

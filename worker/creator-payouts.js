@@ -19,14 +19,18 @@ function readPayoutProfile(profile) {
 async function recordPendingCreatorPayout(supabase, { projectId, ownerId, session, project }) {
   if (!supabase || !projectId || !ownerId) return { ok: false, skipped: true };
 
-  const saleCents = Number(session?.amount_total);
-  const fallbackCents = Number(project?.price_cents);
+  // Prefer charged total; for full promos use pre-discount subtotal, then listed site price.
+  const charged = Number(session?.amount_total);
+  const subtotal = Number(session?.amount_subtotal);
+  const listed = Number(project?.price_cents);
   const amountCents =
-    Number.isFinite(saleCents) && saleCents > 0
-      ? saleCents
-      : Number.isFinite(fallbackCents) && fallbackCents > 0
-        ? fallbackCents
-        : 0;
+    Number.isFinite(charged) && charged > 0
+      ? Math.round(charged)
+      : Number.isFinite(subtotal) && subtotal > 0
+        ? Math.round(subtotal)
+        : Number.isFinite(listed) && listed > 0
+          ? Math.round(listed)
+          : 0;
   if (!amountCents) return { ok: false, skipped: true, reason: "no_amount" };
 
   let payout = readPayoutProfile(null);

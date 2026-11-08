@@ -92,9 +92,30 @@
     return String(project.status || "").toLowerCase() === "paid";
   }
 
+  function isUnlockedSite(project) {
+    if (!project) return false;
+    if (project.watermark_enabled === false) return true;
+    const status = String(project.status || "").toLowerCase();
+    if (status === "paid") return true;
+    const ctx = readContext(project);
+    return !!(ctx.paidAt || ctx.hostingBuyerEmail || ctx.purchaseInvoiceEmailTo);
+  }
+
   function isLive(project) {
     const status = String(project?.status || "").toLowerCase();
     return status === "paid" || status === "published";
+  }
+
+  function siteSold(site) {
+    return !!(site && (site.sold || site.saleCents > 0));
+  }
+
+  function paymentLabel(site) {
+    if (!siteSold(site)) return "Not paid";
+    const charged = Number(site.saleCents) || 0;
+    if (charged > 0) return "Paid " + money(charged);
+    if (site.discountCents > 0 || site.listCents > 0) return "Paid $0.00 (promo)";
+    return "Paid";
   }
 
   async function fetchAll(makeQuery) {
@@ -128,7 +149,7 @@
     const ready = [];
     (list || []).forEach((employee) => {
       employee.sites.forEach((site) => {
-        if (site.saleCents > 0) return;
+        if (siteSold(site)) return;
         if (site.status === "preview" || site.status === "published") {
           ready.push((employee.handle ? "@" + employee.handle : "Account") + " · " + site.name);
         }
@@ -200,9 +221,9 @@
     let monthSales = 0;
     list.forEach((employee) => {
       employee.sites.forEach((site) => {
-        if (!site.saleCents || !site.soldAt) return;
+        if (!siteSold(site) || !site.soldAt) return;
         const sold = new Date(site.soldAt);
-        if (!Number.isNaN(sold.getTime()) && sold >= monthStart) monthSales += site.saleCents;
+        if (!Number.isNaN(sold.getTime()) && sold >= monthStart) monthSales += site.saleCents || 0;
       });
     });
     setStat("admin-stat-employees", String(list.length));
@@ -322,11 +343,21 @@
   function filteredSites(sites) {
     const q = siteQuery.trim().toLowerCase();
     return sites.filter((site) => {
-      if (siteFilter === "paid" && !(site.saleCents > 0)) return false;
-      if (siteFilter === "unpaid" && site.saleCents > 0) return false;
+      if (siteFilter === "paid" && !siteSold(site)) return false;
+      if (siteFilter === "unpaid" && siteSold(site)) return false;
       if (["draft", "preview", "published"].includes(siteFilter) && site.status !== siteFilter) return false;
       if (!q) return true;
-      return [site.name, site.handle, site.displayName, site.category, site.address, site.href, site.sampleHost]
+      return [
+        site.name,
+        site.handle,
+        site.displayName,
+        site.category,
+        site.address,
+        site.href,
+        site.sampleHost,
+        site.buyerEmail,
+        site.buyerPhone,
+      ]
         .join(" ")
         .toLowerCase()
         .includes(q);
@@ -341,13 +372,24 @@
     return status ? "On file" : "Not subscribed";
   }
 
-  function hostingState(ctx, saleCents) {
+  function hostingState(ctx, sold) {
     const stored = String(ctx.hostingStatus || "").toLowerCase();
-    if (["paying", "canceling", "past_due", "canceled"].includes(stored)) return stored;
-    if (ctx.hostingEndedAt) return "canceled";
     const sub = String(ctx.hostingSubscriptionId || "");
+    const hasSub = sub.startsWith("sub_");
+    const paidAt = ctx.paidAt ? new Date(ctx.paidAt) : null;
+    const endedAt = ctx.hostingEndedAt ? new Date(ctx.hostingEndedAt) : null;
+    // Abandoned checkout can mark canceled before the real payment lands.
+    const staleCancel =
+      stored === "canceled" &&
+      hasSub &&
+      paidAt &&
+      !Number.isNaN(paidAt.getTime()) &&
+      (!endedAt || Number.isNaN(endedAt.getTime()) || endedAt < paidAt);
+    if (staleCancel) return "paying";
+    if (["paying", "canceling", "past_due", "canceled"].includes(stored)) return stored;
+    if (endedAt && !hasSub) return "canceled";
     const email = String(ctx.hostingBuyerEmail || ctx.purchaseInvoiceEmailTo || "").trim();
-    if (sub.startsWith("sub_") || email || saleCents > 0) return "paying";
+    if (hasSub || email || sold) return "paying";
     return "";
   }
 
@@ -364,7 +406,7 @@
         if (inWeek(site.createdAt, week)) week.count += 1;
       });
       sold.forEach((week) => {
-        if (site.saleCents > 0 && inWeek(site.soldAt || site.createdAt, week)) week.cents += site.saleCents;
+        if (siteSold(site) && inWeek(site.soldAt || site.createdAt, week)) week.cents += site.saleCents || 0;
       });
     });
     charts.innerHTML =
@@ -397,19 +439,21 @@
             ? esc(site.sampleHost)
             : "No link yet";
         const maker = site.handle ? "@" + site.handle : site.displayName || "Unknown";
-        const paid = site.saleCents > 0 ? "Paid " + money(site.saleCents) : "Not paid";
         const fields = [
           ["Made by", maker + (site.owner ? " · Owner" : "")],
+          ["Buyer", site.buyerEmail || "Email not on file"],
+          ["Phone", site.buyerPhone || "—"],
           ["Created", when(site.createdAt) || "—"],
+          ["Sold", when(site.soldAt) || (siteSold(site) ? "Yes" : "—")],
           ["Updated", when(site.updatedAt) || when(site.createdAt) || "—"],
-          ["Payment", paid],
+          ["Payment", paymentLabel(site)],
           ["Asking", site.listCents > 0 ? money(site.listCents) : "—"],
           ["Category", site.category || "—"],
           ["Watermark", site.watermark === false ? "Off" : "On"],
           ["Hosting", site.hostingStatus ? hostingLabel(site.hostingStatus) : "Not subscribed"],
           ["Link", href],
         ];
-        if (site.address) fields.splice(6, 0, ["Address", site.address]);
+        if (site.address) fields.splice(8, 0, ["Address", site.address]);
         return (
           '<article class="ms-admin-website">' +
           '<header class="ms-admin-website-head"><strong>' +
@@ -675,7 +719,9 @@
       const blob = [
         employee.handle,
         employee.displayName,
-        ...employee.sites.map((site) => site.name + " " + site.href),
+        ...employee.sites.map(
+          (site) => site.name + " " + site.href + " " + (site.buyerEmail || "") + " " + (site.buyerPhone || "")
+        ),
       ]
         .join(" ")
         .toLowerCase();
@@ -715,12 +761,15 @@
               : site.sampleHost
                 ? '<span class="ms-clients-muted">' + esc(site.sampleHost) + "</span>"
                 : '<span class="ms-clients-muted">No link yet</span>';
-            const priceLabel =
-              site.saleCents > 0
+            const priceLabel = siteSold(site)
+              ? site.saleCents > 0
                 ? money(site.saleCents)
                 : site.listCents > 0
-                  ? "Asking " + money(site.listCents)
-                  : "Not sold";
+                  ? money(site.listCents) + " promo"
+                  : "Sold"
+              : site.listCents > 0
+                ? "Asking " + money(site.listCents)
+                : "Not sold";
             return (
               '<div class="ms-admin-site">' +
               "<div><strong>" +
@@ -1075,25 +1124,29 @@
         const project = projectMap.get(String(payment.project_id || ""));
         if (!isGoLiveSale(payment, project)) return;
         const id = String(project.id);
-        const prev = salesByProject.get(id) || { cents: 0, soldAt: "" };
+        const prev = salesByProject.get(id) || { cents: 0, soldAt: "", sold: false };
         const amount = Math.max(0, Number(payment.amount_cents) || 0);
         const soldAt =
           payment.created_at && (!prev.soldAt || String(payment.created_at) > String(prev.soldAt))
             ? payment.created_at
             : prev.soldAt;
-        salesByProject.set(id, { cents: prev.cents + amount, soldAt });
+        salesByProject.set(id, { cents: prev.cents + amount, soldAt, sold: true });
       });
 
       const sitesByUser = new Map();
       projects.forEach((project) => {
         const userId = String(project.user_id || "");
         if (!userId) return;
-        const sale = salesByProject.get(String(project.id)) || { cents: 0, soldAt: "" };
+        const sale = salesByProject.get(String(project.id)) || { cents: 0, soldAt: "", sold: false };
         const ctx = readContext(project);
+        const unlocked = isUnlockedSite(project);
+        const sold = !!(sale.sold || unlocked);
+        const discountCents = Math.max(0, Number(ctx.purchaseDiscountCents) || 0);
+        const listedCharge = Math.max(0, Number(ctx.purchaseSubtotalCents) || 0);
         const hostingPayments = (hostingByProject.get(String(project.id)) || []).sort((a, b) =>
           String(b.at || "").localeCompare(String(a.at || ""))
         );
-        const hostingStatus = hostingState(ctx, sale.cents);
+        const hostingStatus = hostingState(ctx, sold);
         const monthlyRaw = Number(ctx.hostingMonthlyCents);
         const bucket = sitesByUser.get(userId) || [];
         bucket.push({
@@ -1105,8 +1158,10 @@
           href: siteHref(project),
           sampleHost: "",
           saleCents: sale.cents,
-          soldAt: sale.soldAt,
-          listCents: Number(project.price_cents) || 0,
+          sold,
+          soldAt: sale.soldAt || ctx.paidAt || "",
+          discountCents,
+          listCents: Number(project.price_cents) || listedCharge || 0,
           category: String(ctx.category || ctx.categoryGroup || ctx.businessType || "").trim(),
           address: String(ctx.address || ctx.businessAddress || "").trim(),
           watermark: project.watermark_enabled !== false,
@@ -1133,18 +1188,19 @@
         let owedCents = 0;
         let soldCount = 0;
         sites.forEach((site) => {
-          if (site.saleCents > 0) {
-            soldCount += 1;
-            const cut = shares(site.saleCents);
-            saleCents += cut.sale;
-            shareCents += cut.creator;
-            platformCents += cut.platform;
-            const payout = payoutByProject.get(site.id);
-            const payoutStatus = String(payout?.status || "pending").toLowerCase();
-            if (payoutStatus !== "paid" && payoutStatus !== "cancelled") {
-              const recorded = Number(payout?.creator_share_cents);
-              owedCents += recorded > 0 ? recorded : cut.creator;
-            }
+          if (!siteSold(site)) return;
+          soldCount += 1;
+          const payout = payoutByProject.get(site.id);
+          const payoutSale = Math.max(0, Number(payout?.sale_cents) || 0);
+          const valueCents = site.saleCents > 0 ? site.saleCents : payoutSale || site.listCents || 0;
+          const cut = shares(valueCents);
+          saleCents += cut.sale;
+          shareCents += cut.creator;
+          platformCents += cut.platform;
+          const payoutStatus = String(payout?.status || "pending").toLowerCase();
+          if (payoutStatus !== "paid" && payoutStatus !== "cancelled") {
+            const recorded = Number(payout?.creator_share_cents);
+            owedCents += recorded > 0 ? recorded : cut.creator;
           }
         });
         const handle = String(profile.handle || profile.display_name || "").replace(/^@/, "").trim();

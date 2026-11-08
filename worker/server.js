@@ -462,6 +462,22 @@ function buyerEmailFromSession(session) {
   return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : "";
 }
 
+/** Charged cents for a completed go-live Checkout Session (0 is valid when a promo covers the total). */
+function goLiveChargedCents(session, project) {
+  const charged = Math.round(Number(session?.amount_total));
+  if (Number.isFinite(charged) && charged >= 0) return charged;
+  const subtotal = Math.round(Number(session?.amount_subtotal));
+  if (Number.isFinite(subtotal) && subtotal > 0) return subtotal;
+  const listed = Math.round(Number(project?.price_cents));
+  if (Number.isFinite(listed) && listed > 0) return listed;
+  return 0;
+}
+
+function goLiveDiscountCents(session) {
+  const discount = Math.round(Number(session?.total_details?.amount_discount));
+  return Number.isFinite(discount) && discount > 0 ? discount : 0;
+}
+
 function stripeId(value) {
   if (!value) return "";
   if (typeof value === "string") return value;
@@ -719,11 +735,20 @@ async function syncSiteHostingStatus(sub) {
       ? project.business_context
       : {};
   const status = String(sub.status || "");
+  const active = status === "active" || status === "trialing";
+  const currentSubId = String(ctx.hostingSubscriptionId || "").trim();
+  const incomingId = stripeId(sub);
+  // Abandoned/incomplete checkouts must not overwrite a newer active subscription.
+  if (currentSubId && incomingId && currentSubId !== incomingId && !active) {
+    return;
+  }
   let hostingStatus = "paying";
-  if (status === "canceled" || sub.ended_at) hostingStatus = "canceled";
-  else if (sub.cancel_at_period_end) hostingStatus = "canceling";
+  if (status === "canceled" || status === "incomplete_expired" || sub.ended_at) {
+    hostingStatus = "canceled";
+  } else if (sub.cancel_at_period_end) hostingStatus = "canceling";
   else if (status === "past_due" || status === "unpaid") hostingStatus = "past_due";
-  else if (status !== "active" && status !== "trialing") hostingStatus = "unknown";
+  else if (status === "incomplete") hostingStatus = "unknown";
+  else if (!active) hostingStatus = "unknown";
 
   const item = sub.items?.data?.[0];
   const periodEnd = sub.current_period_end || item?.current_period_end || null;
@@ -733,17 +758,18 @@ async function syncSiteHostingStatus(sub) {
     .update({
       business_context: {
         ...ctx,
-        hostingSubscriptionId: sub.id || ctx.hostingSubscriptionId || null,
+        hostingSubscriptionId: incomingId || ctx.hostingSubscriptionId || null,
         hostingStripeCustomerId: stripeId(sub.customer) || ctx.hostingStripeCustomerId || null,
         hostingStatus,
         hostingMonthlyCents:
           Number.isFinite(monthlyRaw) && monthlyRaw > 0 ? monthlyRaw : ctx.hostingMonthlyCents || HOSTING_MONTHLY_CENTS,
         hostingRenewsAt: periodEnd ? new Date(periodEnd * 1000).toISOString() : ctx.hostingRenewsAt || null,
-        hostingEndedAt: sub.ended_at
-          ? new Date(sub.ended_at * 1000).toISOString()
-          : hostingStatus === "canceled"
-            ? ctx.hostingEndedAt || new Date().toISOString()
-            : ctx.hostingEndedAt || null,
+        hostingEndedAt:
+          hostingStatus === "canceled"
+            ? sub.ended_at
+              ? new Date(sub.ended_at * 1000).toISOString()
+              : ctx.hostingEndedAt || new Date().toISOString()
+            : null,
       },
     })
     .eq("id", project.id);
@@ -781,6 +807,13 @@ async function unlockGoLiveAfterPayment(supabase, { projectId, session, userId }
   const invoiceEmailAlreadySent = !!priorCtx.purchaseInvoiceEmailSentAt;
   const saleTelegramAlreadySent = !!priorCtx.saleTelegramSentAt;
   const creatorPushAlreadySent = !!priorCtx.creatorPushSentAt;
+  const chargedCents = goLiveChargedCents(session, existingProject);
+  const discountCents = goLiveDiscountCents(session);
+  const subtotalCents = Math.round(Number(session?.amount_subtotal));
+  const listedSubtotal =
+    Number.isFinite(subtotalCents) && subtotalCents > 0
+      ? subtotalCents
+      : Math.max(chargedCents, Number(existingProject.price_cents) || 0);
 
   const { error: unlockErr } = await supabase
     .from("projects")
@@ -794,7 +827,12 @@ async function unlockGoLiveAfterPayment(supabase, { projectId, session, userId }
         hostingStripeCustomerId: customerId || priorCtx.hostingStripeCustomerId || null,
         hostingBuyerEmail: buyerEmail || priorCtx.hostingBuyerEmail || priorCtx.purchaseInvoiceEmailTo || null,
         hostingMonthlyCents: HOSTING_MONTHLY_CENTS,
+        hostingStatus: "paying",
+        hostingEndedAt: null,
         paidAt: priorCtx.paidAt || new Date().toISOString(),
+        purchaseChargedCents: chargedCents,
+        purchaseSubtotalCents: listedSubtotal,
+        purchaseDiscountCents: discountCents,
       },
     })
     .eq("id", projectId);
@@ -810,7 +848,8 @@ async function unlockGoLiveAfterPayment(supabase, { projectId, session, userId }
           typeof session.payment_intent === "string"
             ? session.payment_intent
             : session.payment_intent?.id || null,
-        amount_cents: session.amount_total,
+        // Keep charged total (may be 0 with a full promo). Admin still marks these sold.
+        amount_cents: chargedCents,
         currency: session.currency || "usd",
         kind: "go_live",
         status: "paid",
