@@ -3,6 +3,25 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.3.4",
+      "date": "2026-11-07",
+      "title": "Stronger agent model and roomier phone menu",
+      "sections": [
+        {
+          "heading": "Worker",
+          "added": [
+            "Website generation defaults to Claude Sonnet 5.5 on OpenRouter for copy, assemble, enhance, and repair, with quality-first routing and longer timeouts."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "fixes": [
+            "The phone studio menu toggle is larger and leaves more room under the top chrome."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.3",
       "date": "2026-11-07",
       "title": "Instant studio channel switching",

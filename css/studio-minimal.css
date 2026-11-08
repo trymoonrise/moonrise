@@ -1531,10 +1531,10 @@ html body[data-page="editor"] .ms-quick-nav {
     right: auto !important;
     bottom: auto !important;
     z-index: 240 !important;
-    width: 2.75rem !important;
-    height: 2.75rem !important;
-    min-width: 2.75rem !important;
-    min-height: 2.75rem !important;
+    width: 3.15rem !important;
+    height: 3.15rem !important;
+    min-width: 3.15rem !important;
+    min-height: 3.15rem !important;
     margin: 0 !important;
     padding: 0 !important;
     display: grid !important;
@@ -1556,9 +1556,9 @@ html body[data-page="editor"] .ms-quick-nav {
   }
 
   html body .ms-menu-toggle svg {
-    width: 1.2rem !important;
-    height: 1.2rem !important;
-    stroke-width: 2.1 !important;
+    width: 1.4rem !important;
+    height: 1.4rem !important;
+    stroke-width: 2.15 !important;
   }
 
   html body .ms-menu-toggle:active {
@@ -1599,7 +1599,7 @@ html body[data-page="editor"] .ms-quick-nav {
     [data-page="hosting-billing"],
     [data-page="creator-contact"]
   ) #page-body {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 3.55rem) !important;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 3.95rem) !important;
   }
 }
 

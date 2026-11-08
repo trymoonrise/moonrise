@@ -208,7 +208,8 @@ Quality bar: handmade boutique craft (MindWell / Angie's energy) - full-bleed re
 
 - **System prompt:** this document -> `GENERATION_SYSTEM_PROMPT`
 - **User prompt:** built by `buildGenerationUserPrompt()` - business brief, atmosphere, blueprint, bone structure, assembly map, stock pack, preset kit HTML
-- **Model:** `WEBSITE_GENERATION_MODEL` (OpenRouter)
+- **Model:** `WEBSITE_GENERATION_MODEL` (OpenRouter; default `anthropic/claude-sonnet-5.5`)
+- **Stages:** copy → assemble → enhance → quality gate / repair (each can override with `WEBSITE_COPY_MODEL`, `WEBSITE_ASSEMBLE_MODEL`, `WEBSITE_ENHANCE_MODEL`, `WEBSITE_REPAIR_MODEL`)
 - **Post-processing:** `ensurePaletteContrast`, `ensureMobileFriendlyHtml`, `ensureStockMediaInHtml`, `assessSiteCompleteness` + optional retry
 
 To test locally: run the worker, open Builder (`builder.html`), enter business details, Generate.

@@ -72,18 +72,30 @@ const WORKER_PUBLIC_URL = resolveWorkerPublicUrl();
 const WATERMARK_EMBED_PATH = path.join(__dirname, "..", "watermark", "embed.js");
 const CONTACT_FORM_SCRIPT_PATH = path.join(__dirname, "..", "watermark", "contact-form.js");
 /**
- * Website generation and editing - override with WEBSITE_GENERATION_MODEL.
- * DeepSeek V4.1 Flash is the cheap coding tier (about $0.40–$1.20 / 1M output,
- * 1M context) and is stronger at finishing long HTML than MiniMax M2.7.
- * Thinking is disabled below so the token budget is the page, not a trace.
+ * Website generation models (OpenRouter).
+ * Default is Claude Sonnet 5.5 — strong on WebDev / HTML layout quality.
+ * Override per stage with WEBSITE_*_MODEL, or set WEBSITE_GENERATION_MODEL for all.
+ * Thinking stays off so max_tokens is the HTML page, not a reasoning trace.
  */
 const WEBSITE_GENERATION_MODEL = String(
-  process.env.WEBSITE_GENERATION_MODEL || "deepseek/deepseek-v4.1-flash"
+  process.env.WEBSITE_GENERATION_MODEL || "anthropic/claude-sonnet-5.5"
+).trim();
+const WEBSITE_COPY_MODEL = String(
+  process.env.WEBSITE_COPY_MODEL || WEBSITE_GENERATION_MODEL
+).trim();
+const WEBSITE_ASSEMBLE_MODEL = String(
+  process.env.WEBSITE_ASSEMBLE_MODEL || WEBSITE_GENERATION_MODEL
+).trim();
+const WEBSITE_ENHANCE_MODEL = String(
+  process.env.WEBSITE_ENHANCE_MODEL || WEBSITE_GENERATION_MODEL
+).trim();
+const WEBSITE_REPAIR_MODEL = String(
+  process.env.WEBSITE_REPAIR_MODEL || WEBSITE_GENERATION_MODEL
 ).trim();
 /** Assemble output budget (output tokens dominate cost + latency). */
 const WEBSITE_MAX_OUTPUT_TOKENS = Math.max(
   8000,
-  Number(process.env.WEBSITE_MAX_OUTPUT_TOKENS || 12000)
+  Number(process.env.WEBSITE_MAX_OUTPUT_TOKENS || 16000)
 );
 /** Edit output budget. */
 const WEBSITE_EDIT_MAX_OUTPUT_TOKENS = Math.max(
@@ -2984,10 +2996,20 @@ async function openRouterChat({
   } else if (reasoningEffort) {
     body.reasoning = { effort: reasoningEffort };
   }
-  // Prefer faster providers for generate; cheaper is fine for light JSON tasks.
-  const sort = prefer === "price" ? "price" : prefer === "throughput" ? "throughput" : "";
+  // Website agent stages prefer quality providers unless a stage opts into speed/price.
+  const sort =
+    prefer === "price"
+      ? "price"
+      : prefer === "throughput"
+        ? "throughput"
+        : prefer === "quality"
+          ? ""
+          : "";
   if (sort) {
     body.provider = { sort };
+  } else if (prefer === "quality") {
+    // Ask OpenRouter for capable providers; ignore unknown fields gracefully.
+    body.provider = { require_parameters: true, allow_fallbacks: true };
   }
   const headers = {
     Authorization: `Bearer ${key}`,
@@ -2995,7 +3017,10 @@ async function openRouterChat({
     "HTTP-Referer": PUBLIC_APP_URL,
     "X-Title": title || "Moonrise Studio",
   };
-  const timeoutMs = Math.max(60000, Number(process.env.OPENROUTER_TIMEOUT_MS || 150000));
+  const timeoutMs = Math.max(
+    90000,
+    Number(process.env.OPENROUTER_TIMEOUT_MS || 240000)
+  );
   let res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers,
@@ -3382,17 +3407,32 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan) {
   const stockMedia = selectStockMedia(ctx);
   const shellPlan = plan || buildLocalPlan(ctx);
   const assembleMaxTokens = Math.max(
-    12000,
-    Number(process.env.WEBSITE_ASSEMBLE_MAX_TOKENS || 16000)
+    WEBSITE_MAX_OUTPUT_TOKENS,
+    Number(process.env.WEBSITE_ASSEMBLE_MAX_TOKENS || WEBSITE_MAX_OUTPUT_TOKENS)
   );
   let copy = fallbackSiteCopy(ctx, shellPlan);
 
+  console.info("Moonrise agent models", {
+    copy: WEBSITE_COPY_MODEL,
+    assemble: WEBSITE_ASSEMBLE_MODEL,
+    enhance: WEBSITE_ENHANCE_MODEL,
+    repair: WEBSITE_REPAIR_MODEL,
+  });
+
+  // —— Stage 1: Copy (exact facts, strong JSON discipline) ——
   try {
     const result = await openRouterChat({
-      system: COPY_SYSTEM_PROMPT,
+      model: WEBSITE_COPY_MODEL,
+      system: [
+        COPY_SYSTEM_PROMPT,
+        "",
+        "This is stage 1 of a multi-stage Moonrise agent. Quality over speed.",
+        "Return precise JSON only. Every string must fit a modern local-business layout.",
+      ].join("\n"),
       user: buildCopyUserPrompt(ctx, shellPlan),
-      temperature: 0.35,
-      maxTokens: 2000,
+      temperature: 0.28,
+      maxTokens: 2200,
+      prefer: "quality",
       title: "Moonrise Agent Copy",
       expectHtml: false,
     });
@@ -3436,26 +3476,37 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan) {
     qualityLock;
 
   try {
-    // Pass 1 — deliberate assemble (no throughput race).
+    // —— Stage 2: Assemble (strong model, deliberate craft) ——
     const assembled = await openRouterChat({
-      system: assembleSystem,
+      model: WEBSITE_ASSEMBLE_MODEL,
+      system: [
+        assembleSystem,
+        "",
+        "This is stage 2 (Assemble). Build the full page carefully from the kit and locked copy.",
+        "Do not rush. Prefer a finished modern composition over a clever but broken one.",
+      ].join("\n"),
       user: assembleUser,
-      temperature: 0.32,
+      temperature: 0.3,
       maxTokens: assembleMaxTokens,
+      prefer: "quality",
       title: "Moonrise Agent Assemble",
       expectHtml: true,
     });
     let html = String(assembled.content || "").trim();
+    if (!/<html[\s>]/i.test(html) || html.length < 4000) {
+      throw new Error("Assemble returned incomplete HTML");
+    }
 
-    // Pass 2 — enhance like a careful agent review.
+    // —— Stage 3: Enhance (strong model, design review) ——
     try {
       const enhanced = await openRouterChat({
+        model: WEBSITE_ENHANCE_MODEL,
         system: [
           assembleSystem,
           "",
-          "Enhance mode: you are reviewing your own draft like Cursor Agent.",
+          "This is stage 3 (Enhance). You are a senior product designer reviewing the draft.",
           "Return ONLY one complete improved HTML document. No markdown. No commentary.",
-          "Fix spacing, alignment, broken components, weak hero hierarchy, junk hours, hidden media, and unfinished UI.",
+          "Raise spacing, hierarchy, media, and component finish to a ship-ready bar.",
           "Keep every business fact exact. Prefer polish over novelty.",
         ].join("\n"),
         user: [
@@ -3465,34 +3516,39 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan) {
           lockedCopyBlock(copy),
           qualityLock,
           "",
-          "## Enhance checklist",
-          "- Hero has a clear headline and one calm support or CTA group",
-          "- Services show real photos and readable cards or rows",
-          "- FAQ opens cleanly; form has focus rings and a stable submit state",
-          "- Hours are cleaned; phone and address are exact",
-          "- Mobile: no horizontal scroll, no overlapping controls",
-          "- Remove unused alternate-layout CSS you are not applying",
+          "## Enhance checklist (fix every item)",
+          "- Hero: clear headline, calm support or CTA, no clutter",
+          "- Services: real photos visible, even spacing, readable cards or rows",
+          "- FAQ: opens cleanly; form has focus rings and a stable submit state",
+          "- Contact: cleaned hours; exact phone and address",
+          "- Mobile: no horizontal scroll, no overlapping controls, reserved image space",
+          "- CSS: remove unused alternate-layout variants you are not applying",
+          "- Overall: looks intentional, modern, minimal, professional",
         ].join("\n"),
-        temperature: 0.22,
+        temperature: 0.2,
         maxTokens: assembleMaxTokens,
+        prefer: "quality",
         title: "Moonrise Agent Enhance",
         expectHtml: true,
       });
       const next = String(enhanced.content || "").trim();
       if (/<html[\s>]/i.test(next) && next.length > 4000) html = next;
+      else console.warn("Moonrise agent enhance returned weak HTML; keeping assemble draft");
     } catch (enhanceErr) {
       console.warn("Moonrise agent enhance skipped:", enhanceErr.message);
     }
 
+    // —— Stage 4: Quality gate (+ repair on strong model if needed) ——
     let finalized = finalizeGeneratedHtml(html, ctx, stockMedia);
     let check = qualityGate(finalized, shellPlan, ctx);
     if (!check.ok) {
       console.warn("Moonrise agent quality gate failed, repairing once:", check.reasons.join(", "));
       const repaired = await openRouterChat({
+        model: WEBSITE_REPAIR_MODEL,
         system: [
           assembleSystem,
           "",
-          "Repair mode: return ONLY one complete fixed HTML document. No markdown. No commentary.",
+          "This is stage 4 (Repair). Return ONLY one complete fixed HTML document.",
           "Fix every listed issue. Prefer a simpler modern Craft layout over a broken fancy one.",
         ].join("\n"),
         user: [
@@ -3510,8 +3566,9 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan) {
           "Exact business details from the facts. Modern, minimal, professional.",
           "Visible service photos. Clean hours. Smooth buttons and fields.",
         ].join("\n"),
-        temperature: 0.18,
+        temperature: 0.15,
         maxTokens: assembleMaxTokens,
+        prefer: "quality",
         title: "Moonrise Agent Repair",
         expectHtml: true,
       });
@@ -5537,11 +5594,12 @@ app.post("/edit", requireUser, editLimiter, async (req, res) => {
     }
 
     const editResult = await openRouterChat({
+      model: WEBSITE_GENERATION_MODEL,
       system: EDIT_SYSTEM_PROMPT,
       user: buildEditUserPrompt(instruction, currentHtml, WEBSITE_EDIT_MAX_INPUT_CHARS),
-      temperature: 0.3,
+      temperature: 0.25,
       maxTokens: WEBSITE_EDIT_MAX_OUTPUT_TOKENS,
-      prefer: "throughput",
+      prefer: "quality",
       expectHtml: true,
       title: "Moonrise Studio Edit",
     });
