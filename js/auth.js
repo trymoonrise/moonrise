@@ -302,6 +302,7 @@
       );
       const data = await res.json().catch(() => ({}));
       if (res.status === 401) return { status: "expired" };
+      if (data?.authenticated === false || data?.code === "no_session") return { status: "unavailable" };
       if (!res.ok || !data?.access_token || !data?.refresh_token) return { status: "unavailable" };
       return { status: "ok", data };
     } catch (_) {

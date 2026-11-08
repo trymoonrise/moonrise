@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.5",
+      "date": "2026-11-07",
+      "title": "Quiet anonymous session checks in the console",
+      "sections": [
+        {
+          "heading": "Studio",
+          "fixes": [
+            "Logged-out pages no longer hit a 401 on /auth/session, so Login and Pricing stop logging a false session error in the console."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.4",
       "date": "2026-11-07",
       "title": "Unique clean sites without Uncategorized copy",

@@ -813,7 +813,8 @@ function mountAuthRoutes(app, { db, security }) {
     try {
       const refresh = readCookie(req, "ms_rt");
       if (!refresh) {
-        return res.status(401).json({ error: "Session expired", code: "session_expired" });
+        // No cookie = anonymous visitor. Prefer 200 so browsers do not log a console error.
+        return res.status(200).json({ authenticated: false, code: "no_session" });
       }
       if (sessionIsIdle(req)) {
         clearAuthCookies(req, res);
