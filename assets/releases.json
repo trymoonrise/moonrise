@@ -3,6 +3,21 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.4.7",
+      "date": "2026-11-08",
+      "title": "Designer Tips play buttons use black primary",
+      "tag": "v2.4.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.4.7",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Designer Tips play controls use the black primary fill so they match the page’s main actions."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.4.6",
       "date": "2026-11-07",
       "title": "Map smoke test matches dark stage color",
