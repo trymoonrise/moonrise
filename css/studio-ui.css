@@ -1513,38 +1513,11 @@ html[data-ms-mode="dark"] .ms-tabbar.is-pill-ready .ms-tab.is-active {
   background: transparent !important;
 }
 
-/* Active mobile tab is ink only — no grey chip on Dashboard, Builder, Clients, or Settings. */
+/* Floating dock active wash lives in studio-minimal.css (soft chip, not ink-only). */
 @media (max-width: 900px) {
-  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab-pill {
+  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"], [data-page="leads"]) .ms-tabbar .ms-tab-pill {
     display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-    background: none !important;
-    opacity: 0 !important;
   }
-
-  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab,
-  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active,
-  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar.is-pill-ready .ms-tab.is-active {
-    background: none !important;
-    background-color: transparent !important;
-    box-shadow: none !important;
-  }
-
-  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active,
-  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico,
-  body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active .ms-tab-label {
-    color: #1d1d1f !important;
-    -webkit-text-fill-color: #1d1d1f !important;
-  }
-}
-
-html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active,
-html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active .ms-tab-ico,
-html[data-ms-mode="dark"] body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab.is-active .ms-tab-label {
-  color: #f4f4f5 !important;
-  -webkit-text-fill-color: #f4f4f5 !important;
-  background: none !important;
 }
 
 /* List-view business cards, same flat treatment as the map cards. */

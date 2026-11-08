@@ -25,21 +25,76 @@
     return toggle?.closest(".ms-set-row") || toggle;
   }
 
+  function prefersReduceMotion() {
+    try {
+      return !!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function ensurePanelInner(panel) {
+    if (!panel || panel.querySelector(":scope > .ms-set-panel-inner")) return;
+    const inner = document.createElement("div");
+    inner.className = "ms-set-panel-inner";
+    while (panel.firstChild) inner.appendChild(panel.firstChild);
+    panel.appendChild(inner);
+  }
+
   function setPanelOpen(toggle, panel, open) {
     if (!toggle || !panel) return;
+    ensurePanelInner(panel);
     const next = !!open;
-    panel.hidden = !next;
+    const row = chevronFor(toggle);
     toggle.setAttribute("aria-expanded", next ? "true" : "false");
-    chevronFor(toggle)?.classList.toggle("is-open", next);
+    row?.classList.toggle("is-open", next);
+    panel.setAttribute("aria-hidden", next ? "false" : "true");
+
+    if (panel._msCloseTimer) {
+      window.clearTimeout(panel._msCloseTimer);
+      panel._msCloseTimer = 0;
+    }
+
+    if (next) {
+      panel.hidden = false;
+      panel.classList.add("is-open");
+      if (prefersReduceMotion()) {
+        panel.classList.add("is-expanded");
+        return;
+      }
+      panel.classList.remove("is-expanded");
+      void panel.offsetHeight;
+      requestAnimationFrame(() => {
+        panel.classList.add("is-expanded");
+      });
+      return;
+    }
+
+    panel.classList.remove("is-expanded");
+    if (prefersReduceMotion()) {
+      panel.classList.remove("is-open");
+      panel.hidden = true;
+      return;
+    }
+    panel._msCloseTimer = window.setTimeout(() => {
+      panel.classList.remove("is-open");
+      panel.hidden = true;
+      panel._msCloseTimer = 0;
+    }, 280);
   }
 
   function bindPanelToggle(toggleId, panelId) {
     const toggle = document.getElementById(toggleId);
     const panel = document.getElementById(panelId);
     if (!toggle || !panel) return;
+    ensurePanelInner(panel);
+    panel.hidden = true;
+    panel.classList.remove("is-open", "is-expanded");
+    panel.setAttribute("aria-hidden", "true");
     toggle.addEventListener("click", (event) => {
       event.preventDefault();
-      setPanelOpen(toggle, panel, panel.hidden);
+      const currentlyOpen = panel.classList.contains("is-open") && !panel.hidden;
+      setPanelOpen(toggle, panel, !currentlyOpen);
     });
   }
 
