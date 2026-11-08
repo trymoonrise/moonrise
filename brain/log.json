@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.4.0",
+      "date": "2026-11-07",
+      "title": "Compact My Clients with View more",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "My Clients shows a short summary per business with View more for phone, email, site, and actions."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.3.9",
       "date": "2026-11-07",
       "title": "Stop unused config.js preload warning",

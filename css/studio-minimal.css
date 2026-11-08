@@ -1922,7 +1922,9 @@ html.ms-boot-done #page-body {
   display: none !important;
 }
 
+.ms-clients-list.is-skel-loading,
 .ms-clients-table.is-skel-loading,
+.ms-clients-list-wrap:has(#ms-clients-skel:not([hidden])) .ms-clients-list,
 .ms-clients-table-wrap:has(#ms-clients-skel:not([hidden])) .ms-clients-table {
   display: none !important;
 }

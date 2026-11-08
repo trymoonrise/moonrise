@@ -14,6 +14,7 @@
   let started = false;
   let isOwnerView = false;
   let removeTarget = null;
+  const openKeys = new Set();
 
   const $ = (id) => document.getElementById(id);
   const esc = (s) =>
@@ -126,6 +127,12 @@
     return String(ctx.phone || ctx.businessPhone || "").trim();
   }
 
+  function emailFromProject(project) {
+    const ctx = project?.business_context;
+    if (!ctx || typeof ctx !== "object") return "";
+    return String(ctx.hostingBuyerEmail || ctx.purchaseInvoiceEmailTo || "").trim();
+  }
+
   function mapProject(project, payment, creatorHandle) {
     if (!project) return null;
     const amountFromPay = Number(payment?.amount_cents);
@@ -146,6 +153,7 @@
       creator_handle: creatorHandle || "",
       business_name: project.business_name || "Untitled business",
       phone: phoneFromProject(project),
+      email: emailFromProject(project),
       website: project.vercel_url || "",
       price_cents: priceCents,
       paid_at: payment?.created_at || project.updated_at || project.created_at,
@@ -168,6 +176,7 @@
       creator_handle: creatorHandle || "",
       business_name: row.business_name || "Untitled business",
       phone: String(row.phone || "").trim(),
+      email: "",
       website: String(row.website || "").trim(),
       price_cents: Number.isFinite(Number(row.price_cents)) ? Number(row.price_cents) : null,
       paid_at: row.paid_at || row.created_at || null,
@@ -180,16 +189,25 @@
 
   function syncOwnerChrome() {
     const title = $("ms-clients-section-title");
-    const creatorCol = $("ms-clients-creator-col");
     const search = $("ms-clients-search");
     if (title) title.textContent = isOwnerView ? "All clients" : "Paid clients";
-    if (creatorCol) creatorCol.hidden = !isOwnerView;
     if (search) {
       search.placeholder = isOwnerView
         ? "Search by business, creator, or site..."
         : "Search by business or site...";
     }
     document.body.classList.toggle("ms-clients-owner", !!isOwnerView);
+  }
+
+  function detailRow(label, valueHtml) {
+    if (!valueHtml) return "";
+    return (
+      "<div><dt>" +
+      esc(label) +
+      "</dt><dd>" +
+      valueHtml +
+      "</dd></div>"
+    );
   }
 
   function filteredRows() {
@@ -200,6 +218,7 @@
         r.business_name,
         r.creator_handle,
         r.phone,
+        r.email,
         siteDisplay(r.website),
         formatMoney(r.price_cents),
         statusLabel(r),
@@ -213,7 +232,7 @@
   function clearClientsSkeleton() {
     const skel = $("ms-clients-skel");
     if (skel) skel.hidden = true;
-    document.querySelector(".ms-clients-table")?.classList.remove("is-skel-loading");
+    document.querySelector(".ms-clients-list")?.classList.remove("is-skel-loading");
   }
 
   function renderClients() {
@@ -248,17 +267,22 @@
     body.innerHTML = rows
       .map((row) => {
         const key = esc(row.list_key);
+        const open = openKeys.has(row.list_key);
         const phone = String(row.phone || "").trim();
+        const email = String(row.email || "").trim();
         const tel = telHref(phone);
-        const phoneCell = phone
+        const phoneHtml = phone
           ? tel
             ? '<a class="ms-clients-link" href="' + esc(tel) + '">' + esc(phone) + "</a>"
             : esc(phone)
-          : emptyCell();
+          : "";
+        const emailHtml = email
+          ? '<a class="ms-clients-link" href="mailto:' + esc(email) + '">' + esc(email) + "</a>"
+          : "";
         const web = String(row.website || "").trim();
         const webDisp = siteDisplay(web);
         const webHref = siteUrl(web);
-        const webCell = webDisp
+        const webHtml = webDisp
           ? webHref
             ? '<a class="ms-clients-link" href="' +
               esc(webHref) +
@@ -266,43 +290,65 @@
               esc(webDisp) +
               "</a>"
             : esc(webDisp)
-          : emptyCell();
-        const paid = formatMoney(row.price_cents);
-        const creatorCell = isOwnerView
-          ? "<td>" +
-            (row.creator_handle
-              ? '<span class="ms-clients-creator">@' + esc(row.creator_handle) + "</span>"
-              : emptyCell()) +
-            "</td>"
           : "";
+        const paid = formatMoney(row.price_cents);
+        const when = formatDate(row.paid_at);
+        const creatorHtml =
+          isOwnerView && row.creator_handle
+            ? '<span class="ms-clients-creator">@' + esc(row.creator_handle) + "</span>"
+            : "";
         const openBtn =
           row.source === "project" && row.project_id
             ? '<a class="ms-clients-row-btn" href="editor?project_id=' +
               encodeURIComponent(row.project_id) +
               '">Open</a>'
             : "";
+        const metaBits = [when, statusLabel(row)].filter(Boolean).join(" · ");
         return (
-          '<tr data-client-key="' +
+          '<li class="ms-clients-row' +
+          (open ? " is-expanded" : "") +
+          '" data-client-key="' +
           key +
-          '"><th scope="row" class="ms-clients-business">' +
-          esc(row.business_name || "-") +
-          "</th>" +
-          creatorCell +
-          "<td>" +
-          phoneCell +
-          '</td><td class="ms-clients-website-cell">' +
-          webCell +
-          '</td><td class="ms-clients-price">' +
-          (paid ? esc(paid) : emptyCell()) +
-          "</td><td>" +
-          (formatDate(row.paid_at) ? esc(formatDate(row.paid_at)) : emptyCell()) +
-          "</td><td>" +
-          statusBadge(row) +
-          '</td><td class="ms-clients-actions-cell"><div class="ms-clients-row-actions">' +
+          '">' +
+          '<div class="ms-clients-row-main">' +
+          '<div class="ms-clients-row-top">' +
+          '<div class="ms-clients-row-identity">' +
+          "<strong>" +
+          esc(row.business_name || "Untitled business") +
+          "</strong>" +
+          (metaBits ? '<p class="ms-clients-row-meta">' + esc(metaBits) + "</p>" : "") +
+          (creatorHtml ? '<p class="ms-clients-row-creator">' + creatorHtml + "</p>" : "") +
+          "</div>" +
+          '<span class="ms-clients-row-amount">' +
+          (paid ? esc(paid) : "—") +
+          "</span>" +
+          "</div>" +
+          '<button type="button" class="ms-clients-more" data-client-more="' +
+          key +
+          '" aria-expanded="' +
+          (open ? "true" : "false") +
+          '">' +
+          (open ? "View less" : "View more") +
+          "</button>" +
+          "</div>" +
+          '<div class="ms-clients-row-more"' +
+          (open ? "" : " hidden") +
+          ">" +
+          '<dl class="ms-clients-details">' +
+          detailRow("Phone", phoneHtml || emptyCell()) +
+          detailRow("Email", emailHtml || emptyCell()) +
+          detailRow("Site", webHtml || emptyCell()) +
+          detailRow("Status", statusBadge(row)) +
+          (isOwnerView ? detailRow("Creator", creatorHtml || emptyCell()) : "") +
+          "</dl>" +
+          '<div class="ms-clients-row-actions">' +
           openBtn +
           '<button type="button" class="ms-clients-row-btn ms-clients-row-btn--danger ms-clients-remove" data-client-key="' +
           key +
-          '">Remove</button></div></td></tr>'
+          '">Remove</button>' +
+          "</div>" +
+          "</div>" +
+          "</li>"
         );
       })
       .join("");
@@ -805,6 +851,16 @@
     });
 
     $("ms-clients-body")?.addEventListener("click", (e) => {
+      const more = e.target.closest("[data-client-more]");
+      if (more) {
+        e.preventDefault();
+        const key = more.getAttribute("data-client-more");
+        if (!key) return;
+        if (openKeys.has(key)) openKeys.delete(key);
+        else openKeys.add(key);
+        renderClients();
+        return;
+      }
       const btn = e.target.closest(".ms-clients-remove");
       if (!btn) return;
       e.preventDefault();
