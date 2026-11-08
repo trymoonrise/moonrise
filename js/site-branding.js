@@ -23,6 +23,7 @@
     "legal.html": 1,
     "refund.html": 1,
     "report.html": 1,
+    "designer-tips.html": 1,
     "404.html": 1,
   };
 

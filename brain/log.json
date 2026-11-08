@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.2.1",
+      "date": "2026-11-07",
+      "title": "Designer Tips dictionary",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "New public Designer Tips page is an interactive UI dictionary with loaders, buttons, forms, menus, and more."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.2.0",
       "date": "2026-11-07",
       "title": "Floating mobile dock and Settings polish",

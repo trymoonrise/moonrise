@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html.ms-hold body{visibility:hidden!important}</style>
+<script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <title>Designer Tips - Moonrise</title>
+  <meta name="description" content="A living dictionary of UI patterns: loaders, buttons, forms, menus, motion, and more. Interactive demos for designers and creators.">
+  <link rel="canonical" href="https://trymoonrise.com/designer-tips.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Moonrise Studio">
+  <meta property="og:title" content="Designer Tips - Moonrise">
+  <meta property="og:description" content="A living dictionary of UI patterns with interactive demos for designers and creators.">
+  <meta property="og:url" content="https://trymoonrise.com/designer-tips.html">
+  <meta property="og:image" content="https://trymoonrise.com/assets/embed.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Designer Tips - Moonrise">
+  <meta name="twitter:description" content="A living dictionary of UI patterns with interactive demos for designers and creators.">
+  <meta name="twitter:image" content="https://trymoonrise.com/assets/embed.png">
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="document.documentElement.classList.remove('ms-hold')">
+  <link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261107-compact-ui6">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261107-designer-tips">
+  <link rel="stylesheet" href="css/designer-tips.css?v=20261107-designer-tips">
+  <script defer src="js/config.js?v=20261106-mono"></script>
+  <script defer src="js/site-branding.js?v=20261107-designer-tips"></script>
+</head>
+<body data-page="designer-tips" class="ms-contact-public dt-page">
+  <div class="ms-orders-field" aria-hidden="true">
+    <div class="ms-orders-wash"></div>
+  </div>
+
+  <header class="ms-orders-nav">
+    <a class="ms-home-brand" href="index.html">
+      <img src="assets/MoonriseLogo.png" alt="" width="36" height="36">
+      <strong>moonrise.</strong>
+    </a>
+    <nav class="ms-orders-nav-links" aria-label="Page">
+      <a class="ms-orders-nav-link" href="index.html">Home</a>
+      <a class="ms-orders-nav-link" href="guide.html">Guide</a>
+      <a class="ms-orders-nav-link is-active" href="designer-tips.html" aria-current="page">Designer Tips</a>
+    </nav>
+  </header>
+
+  <div class="dt-shell">
+    <header class="dt-hero">
+      <p class="dt-kicker">moonrise.</p>
+      <h1>Designer Tips</h1>
+      <p class="dt-lead">A living dictionary of UI patterns. Tap any demo, learn when to use it, then ship clearer interfaces.</p>
+      <a class="dt-hero-cta" href="#loaders">Browse loaders</a>
+    </header>
+
+    <nav class="dt-toc" aria-label="Categories">
+      <a href="#loaders">Loaders</a>
+      <a href="#buttons">Buttons</a>
+      <a href="#motion">Motion</a>
+      <a href="#forms">Forms</a>
+      <a href="#menus">Menus</a>
+      <a href="#choice">Choice</a>
+      <a href="#feedback">Feedback</a>
+      <a href="#navigation">Navigation</a>
+      <a href="#surfaces">Surfaces</a>
+      <a href="#typography">Type</a>
+      <a href="#advanced">Inputs</a>
+      <a href="#cookbook">Cookbook</a>
+    </nav>
+
+    <main class="dt-main">
+
+      <!-- 1. Loaders -->
+      <section class="dt-section" id="loaders">
+        <header class="dt-section-head">
+          <h2>Loaders</h2>
+          <p>Tell people the system is working. Match the loader to wait time and layout.</p>
+        </header>
+        <div class="dt-grid">
+
+          <article class="dt-card" id="loaders-spinner">
+            <div class="dt-card-top">
+              <h3>Spinner</h3>
+              <p class="dt-tip">Short waits under a few seconds. Keep it next to the action that triggered it.</p>
+            </div>
+            <div class="dt-stage" data-demo="spinner">
+              <div class="dt-spinner" aria-hidden="true"></div>
+            </div>
+            <button type="button" class="dt-play" data-play="spinner">Try spinner</button>
+          </article>
+
+          <article class="dt-card" id="loaders-skeleton">
+            <div class="dt-card-top">
+              <h3>Skeleton</h3>
+              <p class="dt-tip">Use when content shape is known. Reduces layout jump better than a lone spinner.</p>
+            </div>
+            <div class="dt-stage" data-demo="skeleton">
+              <div class="dt-skel-row">
+                <span class="dt-skel dt-skel-circle"></span>
+                <span class="dt-skel dt-skel-line"></span>
+              </div>
+              <span class="dt-skel dt-skel-block"></span>
+              <span class="dt-skel dt-skel-line dt-skel-short"></span>
+            </div>
+            <button type="button" class="dt-play" data-play="skeleton">Pulse skeleton</button>
+          </article>
+
+          <article class="dt-card" id="loaders-progress">
+            <div class="dt-card-top">
+              <h3>Progress bar</h3>
+              <p class="dt-tip">Best when you can estimate completion. Always show a percent or step label.</p>
+            </div>
+            <div class="dt-stage" data-demo="progress">
+              <div class="dt-progress">
+                <div class="dt-progress-track"><div class="dt-progress-fill" style="width:12%"></div></div>
+                <span class="dt-progress-pct">12%</span>
+              </div>
+            </div>
+            <div class="dt-actions">
+              <button type="button" class="dt-play" data-play="progress">Run</button>
+              <button type="button" class="dt-play dt-play-ghost" data-play="progress-complete">Complete</button>
+            </div>
+          </article>
+
+          <article class="dt-card" id="loaders-pulse">
+            <div class="dt-card-top">
+              <h3>Pulsing loader</h3>
+              <p class="dt-tip">Soft attention for ambient status. Avoid stacking with other motion-heavy UI.</p>
+            </div>
+            <div class="dt-stage" data-demo="pulse">
+              <span class="dt-pulse-orb" aria-hidden="true"></span>
+            </div>
+            <button type="button" class="dt-play" data-play="pulse">Toggle pulse</button>
+          </article>
+
+          <article class="dt-card" id="loaders-button">
+            <div class="dt-card-top">
+              <h3>Button loader</h3>
+              <p class="dt-tip">Lock the control while submitting so people cannot double-send.</p>
+            </div>
+            <div class="dt-stage" data-demo="button-loader">
+              <button type="button" class="dt-btn dt-btn-primary" data-btn-loader>Save changes</button>
+            </div>
+            <button type="button" class="dt-play" data-play="button-loader">Simulate save</button>
+          </article>
+
+          <article class="dt-card" id="loaders-fullscreen">
+            <div class="dt-card-top">
+              <h3>Full screen loader</h3>
+              <p class="dt-tip">First paint and hard auth gates only. Prefer skeletons once the shell exists.</p>
+            </div>
+            <div class="dt-stage dt-stage-tall" data-demo="fullscreen">
+              <div class="dt-boot" aria-hidden="true">
+                <strong>moonrise.</strong>
+                <div class="dt-boot-bar"></div>
+              </div>
+            </div>
+            <button type="button" class="dt-play" data-play="fullscreen">Replay boot</button>
+          </article>
+
+          <article class="dt-card" id="loaders-ptr">
+            <div class="dt-card-top">
+              <h3>Pull to refresh</h3>
+              <p class="dt-tip">Mobile feeds and lists. Drag down, or use the button on desktop.</p>
+            </div>
+            <div class="dt-stage dt-stage-phone" data-demo="ptr">
+              <div class="dt-phone" id="dt-ptr-phone">
+                <div class="dt-ptr-indicator" aria-hidden="true"><span class="dt-spinner dt-spinner-sm"></span></div>
+                <div class="dt-ptr-list" id="dt-ptr-list">
+                  <div class="dt-list-row">Northside Cafe</div>
+                  <div class="dt-list-row">River Dental</div>
+                  <div class="dt-list-row">Oak Street Gym</div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="dt-play" data-play="ptr">Refresh list</button>
+          </article>
+
+          <article class="dt-card" id="loaders-infinite">
+            <div class="dt-card-top">
+              <h3>Infinite scroll</h3>
+              <p class="dt-tip">Long catalogs. Append quietly; keep a footer spinner while the next page loads.</p>
+            </div>
+            <div class="dt-stage dt-stage-scroll" data-demo="infinite" id="dt-infinite-viewport">
+              <div class="dt-feed" id="dt-infinite-feed"></div>
+              <div class="dt-infinite-sentinel" id="dt-infinite-sentinel" aria-hidden="true">
+                <span class="dt-spinner dt-spinner-sm"></span>
+              </div>
+            </div>
+            <button type="button" class="dt-play" data-play="infinite-reset">Reset feed</button>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- 2. Buttons -->
+      <section class="dt-section" id="buttons">
+        <header class="dt-section-head">
+          <h2>Buttons</h2>
+          <p>One primary action per view. Secondary actions stay quieter.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="buttons-primary">
+            <div class="dt-card-top"><h3>Primary</h3><p class="dt-tip">The single most important next step.</p></div>
+            <div class="dt-stage dt-stage-row"><button type="button" class="dt-btn dt-btn-primary">Publish site</button></div>
+          </article>
+          <article class="dt-card" id="buttons-secondary">
+            <div class="dt-card-top"><h3>Secondary / ghost</h3><p class="dt-tip">Cancel, back, or less urgent paths.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <button type="button" class="dt-btn dt-btn-ghost">Cancel</button>
+              <button type="button" class="dt-btn dt-btn-secondary">Preview</button>
+            </div>
+          </article>
+          <article class="dt-card" id="buttons-danger">
+            <div class="dt-card-top"><h3>Danger</h3><p class="dt-tip">Destructive actions. Pair with a confirm step.</p></div>
+            <div class="dt-stage dt-stage-row"><button type="button" class="dt-btn dt-btn-danger">Delete project</button></div>
+          </article>
+          <article class="dt-card" id="buttons-icon">
+            <div class="dt-card-top"><h3>Icon button</h3><p class="dt-tip">Always keep an accessible name. Prefer labels when space allows.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <button type="button" class="dt-icon-btn" aria-label="Share">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              </button>
+              <button type="button" class="dt-icon-btn" aria-label="More">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+              </button>
+            </div>
+          </article>
+          <article class="dt-card" id="buttons-loading">
+            <div class="dt-card-top"><h3>Loading state</h3><p class="dt-tip">Replace the label with a compact spinner; keep width stable.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <button type="button" class="dt-btn dt-btn-primary is-loading" disabled aria-busy="true"><span class="dt-spinner dt-spinner-sm dt-spinner-on-dark"></span></button>
+            </div>
+          </article>
+          <article class="dt-card" id="buttons-disabled">
+            <div class="dt-card-top"><h3>Disabled</h3><p class="dt-tip">Explain nearby why it is locked when possible.</p></div>
+            <div class="dt-stage dt-stage-row"><button type="button" class="dt-btn dt-btn-primary" disabled>Continue</button></div>
+          </article>
+          <article class="dt-card" id="buttons-press">
+            <div class="dt-card-top"><h3>Press scale</h3><p class="dt-tip">Subtle scale on press confirms the tap without flashy bounce.</p></div>
+            <div class="dt-stage dt-stage-row"><button type="button" class="dt-btn dt-btn-primary dt-btn-press">Press me</button></div>
+          </article>
+          <article class="dt-card" id="buttons-shapes">
+            <div class="dt-card-top"><h3>Pill vs soft rect</h3><p class="dt-tip">Pills feel app-like; soft rectangles feel editorial.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <button type="button" class="dt-btn dt-btn-primary">Pill</button>
+              <button type="button" class="dt-btn dt-btn-primary dt-btn-rect">Soft rect</button>
+            </div>
+          </article>
+          <article class="dt-card" id="buttons-group">
+            <div class="dt-card-top"><h3>Button group</h3><p class="dt-tip">Related actions that share one decision space.</p></div>
+            <div class="dt-stage">
+              <div class="dt-btn-group" role="group" aria-label="View">
+                <button type="button" class="is-active">List</button>
+                <button type="button">Map</button>
+                <button type="button">Grid</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 3. Motion -->
+      <section class="dt-section" id="motion">
+        <header class="dt-section-head">
+          <h2>Motion</h2>
+          <p>Motion should clarify hierarchy, not decorate every pixel.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="motion-rise">
+            <div class="dt-card-top"><h3>Fade / rise</h3><p class="dt-tip">Entrance for new content blocks.</p></div>
+            <div class="dt-stage" data-demo="rise"><div class="dt-motion-panel" id="dt-rise-panel">New panel</div></div>
+            <button type="button" class="dt-play" data-play="rise">Replay</button>
+          </article>
+          <article class="dt-card" id="motion-press">
+            <div class="dt-card-top"><h3>Hover press</h3><p class="dt-tip">Feedback for clickable surfaces.</p></div>
+            <div class="dt-stage"><button type="button" class="dt-motion-tile">Hover or press</button></div>
+          </article>
+          <article class="dt-card" id="motion-stagger">
+            <div class="dt-card-top"><h3>Staggered list</h3><p class="dt-tip">Reveal rows in sequence so the eye can track.</p></div>
+            <div class="dt-stage" data-demo="stagger" id="dt-stagger">
+              <div class="dt-list-row dt-stagger-item">First lead</div>
+              <div class="dt-list-row dt-stagger-item">Second lead</div>
+              <div class="dt-list-row dt-stagger-item">Third lead</div>
+            </div>
+            <button type="button" class="dt-play" data-play="stagger">Replay</button>
+          </article>
+          <article class="dt-card" id="motion-success">
+            <div class="dt-card-top"><h3>Success check</h3><p class="dt-tip">Confirm completion after a short async action.</p></div>
+            <div class="dt-stage" data-demo="success">
+              <div class="dt-success" id="dt-success"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg></div>
+            </div>
+            <button type="button" class="dt-play" data-play="success">Play</button>
+          </article>
+          <article class="dt-card" id="motion-shake">
+            <div class="dt-card-top"><h3>Shake / error</h3><p class="dt-tip">Call attention to invalid input without blocking the page.</p></div>
+            <div class="dt-stage" data-demo="shake">
+              <input class="dt-field" id="dt-shake-field" type="text" value="bad@" aria-label="Email sample">
+            </div>
+            <button type="button" class="dt-play" data-play="shake">Shake</button>
+          </article>
+          <article class="dt-card" id="motion-shimmer-pulse">
+            <div class="dt-card-top"><h3>Shimmer vs pulse</h3><p class="dt-tip">Shimmer for structure; pulse for a single hotspot.</p></div>
+            <div class="dt-stage dt-stage-split">
+              <span class="dt-skel dt-skel-block is-on"></span>
+              <span class="dt-pulse-orb is-on"></span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 4. Forms -->
+      <section class="dt-section" id="forms">
+        <header class="dt-section-head">
+          <h2>Forms</h2>
+          <p>Clear labels, honest validation, and visible focus.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="forms-text">
+            <div class="dt-card-top"><h3>Text field</h3><p class="dt-tip">Focus ring should match brand ink, not browser blue.</p></div>
+            <div class="dt-stage dt-stage-form">
+              <label class="dt-label" for="dt-name">Business name</label>
+              <input class="dt-field" id="dt-name" type="text" placeholder="Northside Cafe">
+            </div>
+          </article>
+          <article class="dt-card" id="forms-password">
+            <div class="dt-card-top"><h3>Password reveal</h3><p class="dt-tip">Let people check their input without leaving the field.</p></div>
+            <div class="dt-stage dt-stage-form">
+              <label class="dt-label" for="dt-pass">Password</label>
+              <div class="dt-pass-wrap">
+                <input class="dt-field" id="dt-pass" type="password" value="moonrise123" autocomplete="off">
+                <button type="button" class="dt-pass-toggle" data-pass-toggle aria-label="Show password">Show</button>
+              </div>
+            </div>
+          </article>
+          <article class="dt-card" id="forms-search">
+            <div class="dt-card-top"><h3>Search field</h3><p class="dt-tip">Icon on the leading edge; clear control when filled.</p></div>
+            <div class="dt-stage">
+              <label class="dt-search">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <input type="search" placeholder="Search leads" aria-label="Search leads">
+              </label>
+            </div>
+          </article>
+          <article class="dt-card" id="forms-toggle">
+            <div class="dt-card-top"><h3>Toggle</h3><p class="dt-tip">Binary settings that apply immediately.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <button type="button" class="dt-switch" role="switch" aria-checked="false" data-switch>
+                <span class="dt-switch-knob"></span>
+              </button>
+              <span class="dt-switch-label" data-switch-label>Off</span>
+            </div>
+          </article>
+          <article class="dt-card" id="forms-check">
+            <div class="dt-card-top"><h3>Checkbox</h3><p class="dt-tip">Multi-select options or agreement gates.</p></div>
+            <div class="dt-stage dt-stage-form">
+              <label class="dt-check"><input type="checkbox" checked> Email me updates</label>
+              <label class="dt-check"><input type="checkbox"> Include phone</label>
+            </div>
+          </article>
+          <article class="dt-card" id="forms-radio">
+            <div class="dt-card-top"><h3>Radio</h3><p class="dt-tip">One choice from a short list.</p></div>
+            <div class="dt-stage dt-stage-form">
+              <label class="dt-check"><input type="radio" name="dt-plan" checked> Starter</label>
+              <label class="dt-check"><input type="radio" name="dt-plan"> Growth</label>
+            </div>
+          </article>
+          <article class="dt-card" id="forms-segmented">
+            <div class="dt-card-top"><h3>Segmented control</h3><p class="dt-tip">Two to four peer modes in one control.</p></div>
+            <div class="dt-stage">
+              <div class="dt-segment" role="tablist" aria-label="Mode">
+                <button type="button" class="is-active" data-seg>Edit</button>
+                <button type="button" data-seg>Preview</button>
+                <button type="button" data-seg>Code</button>
+              </div>
+            </div>
+          </article>
+          <article class="dt-card" id="forms-validation">
+            <div class="dt-card-top"><h3>Validation</h3><p class="dt-tip">Show error text under the field, not only a red border.</p></div>
+            <div class="dt-stage dt-stage-form">
+              <label class="dt-label" for="dt-email-bad">Email</label>
+              <input class="dt-field is-error" id="dt-email-bad" type="email" value="oops">
+              <p class="dt-field-msg is-error">Enter a valid email.</p>
+              <label class="dt-label" for="dt-email-ok">Email</label>
+              <input class="dt-field is-ok" id="dt-email-ok" type="email" value="hello@cafe.com">
+              <p class="dt-field-msg is-ok">Looks good.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 5. Menus -->
+      <section class="dt-section" id="menus">
+        <header class="dt-section-head">
+          <h2>Menus and overlays</h2>
+          <p>Layered UI needs clear open, close, and focus behavior.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="menus-select">
+            <div class="dt-card-top"><h3>Native select</h3><p class="dt-tip">Fast to ship; style the closed state carefully.</p></div>
+            <div class="dt-stage">
+              <label class="dt-label" for="dt-select">City</label>
+              <select class="dt-select" id="dt-select">
+                <option>Austin</option>
+                <option>Denver</option>
+                <option>Portland</option>
+              </select>
+            </div>
+          </article>
+          <article class="dt-card" id="menus-dropdown">
+            <div class="dt-card-top"><h3>Custom dropdown</h3><p class="dt-tip">Use when options need icons, descriptions, or search.</p></div>
+            <div class="dt-stage">
+              <div class="dt-dropdown" data-dropdown>
+                <button type="button" class="dt-dropdown-trigger" aria-expanded="false" aria-haspopup="listbox">
+                  <span data-dropdown-label>Choose industry</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <ul class="dt-dropdown-menu" role="listbox" hidden>
+                  <li role="option" tabindex="-1">Restaurants</li>
+                  <li role="option" tabindex="-1">Dentists</li>
+                  <li role="option" tabindex="-1">Gyms</li>
+                  <li role="option" tabindex="-1">Salons</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+          <article class="dt-card" id="menus-action">
+            <div class="dt-card-top"><h3>Action menu</h3><p class="dt-tip">Secondary actions for a single object.</p></div>
+            <div class="dt-stage">
+              <div class="dt-dropdown dt-dropdown-end" data-dropdown>
+                <button type="button" class="dt-icon-btn" aria-expanded="false" aria-haspopup="menu" aria-label="Actions">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                </button>
+                <ul class="dt-dropdown-menu" role="menu" hidden>
+                  <li role="menuitem" tabindex="-1">Duplicate</li>
+                  <li role="menuitem" tabindex="-1">Rename</li>
+                  <li role="menuitem" tabindex="-1" class="is-danger">Delete</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+          <article class="dt-card" id="menus-tooltip">
+            <div class="dt-card-top"><h3>Tooltip</h3><p class="dt-tip">Short hints for icon-only controls. Hover or focus to show.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <span class="dt-tooltip-wrap">
+                <button type="button" class="dt-icon-btn" aria-describedby="dt-tip-1">?</button>
+                <span class="dt-tooltip" id="dt-tip-1" role="tooltip">Opens publish settings</span>
+              </span>
+            </div>
+          </article>
+          <article class="dt-card" id="menus-modal">
+            <div class="dt-card-top"><h3>Modal</h3><p class="dt-tip">Blocking decisions. Esc and backdrop should close when safe.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <button type="button" class="dt-btn dt-btn-primary" data-open-modal>Open modal</button>
+            </div>
+          </article>
+          <article class="dt-card" id="menus-sheet">
+            <div class="dt-card-top"><h3>Bottom sheet</h3><p class="dt-tip">Mobile-first choices without covering the whole story.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <button type="button" class="dt-btn dt-btn-secondary" data-open-sheet>Open sheet</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 6. Choice -->
+      <section class="dt-section" id="choice">
+        <header class="dt-section-head">
+          <h2>Choice patterns</h2>
+          <p>Help people decide with clear selected and unselected states.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="choice-cards">
+            <div class="dt-card-top"><h3>Single-select cards</h3><p class="dt-tip">Great for plans or templates.</p></div>
+            <div class="dt-stage dt-choice-cards" data-choice-cards>
+              <button type="button" class="dt-choice-card is-selected">Clean</button>
+              <button type="button" class="dt-choice-card">Bold</button>
+              <button type="button" class="dt-choice-card">Soft</button>
+            </div>
+          </article>
+          <article class="dt-card" id="choice-chips">
+            <div class="dt-card-top"><h3>Multi-select chips</h3><p class="dt-tip">Filters and tags people can combine.</p></div>
+            <div class="dt-stage dt-chips" data-chips>
+              <button type="button" class="dt-chip is-selected">Cafe</button>
+              <button type="button" class="dt-chip">Dental</button>
+              <button type="button" class="dt-chip is-selected">Fitness</button>
+              <button type="button" class="dt-chip">Salon</button>
+            </div>
+          </article>
+          <article class="dt-card" id="choice-quiz">
+            <div class="dt-card-top"><h3>Multiple choice</h3><p class="dt-tip">Quiz-style pick with immediate feedback.</p></div>
+            <div class="dt-stage" data-quiz>
+              <p class="dt-quiz-q">Which loader fits unknown content shape?</p>
+              <button type="button" class="dt-quiz-opt" data-quiz-opt data-correct="0">Skeleton</button>
+              <button type="button" class="dt-quiz-opt" data-quiz-opt data-correct="1">Spinner</button>
+              <button type="button" class="dt-quiz-opt" data-quiz-opt data-correct="0">Progress bar</button>
+              <p class="dt-quiz-feedback" data-quiz-feedback hidden></p>
+            </div>
+          </article>
+          <article class="dt-card" id="choice-stars">
+            <div class="dt-card-top"><h3>Star rating</h3><p class="dt-tip">Quick qualitative feedback.</p></div>
+            <div class="dt-stage dt-stage-row" data-stars>
+              <button type="button" class="dt-star" aria-label="1 star">★</button>
+              <button type="button" class="dt-star" aria-label="2 stars">★</button>
+              <button type="button" class="dt-star" aria-label="3 stars">★</button>
+              <button type="button" class="dt-star" aria-label="4 stars">★</button>
+              <button type="button" class="dt-star" aria-label="5 stars">★</button>
+            </div>
+          </article>
+          <article class="dt-card" id="choice-like">
+            <div class="dt-card-top"><h3>Like toggle</h3><p class="dt-tip">Lightweight save or favorite.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <button type="button" class="dt-like" data-like aria-pressed="false" aria-label="Like">♡</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 7. Feedback -->
+      <section class="dt-section" id="feedback">
+        <header class="dt-section-head">
+          <h2>Feedback</h2>
+          <p>Confirm outcomes without hijacking the whole screen.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="feedback-toast">
+            <div class="dt-card-top"><h3>Toast stack</h3><p class="dt-tip">Transient success or info. Auto-dismiss.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <button type="button" class="dt-btn dt-btn-primary" data-toast>Show toast</button>
+            </div>
+          </article>
+          <article class="dt-card" id="feedback-banner">
+            <div class="dt-card-top"><h3>Inline banner</h3><p class="dt-tip">Persistent notices that stay until resolved.</p></div>
+            <div class="dt-stage">
+              <div class="dt-banner" role="status">Hosting renews in 3 days. <a href="#">Review plan</a></div>
+            </div>
+          </article>
+          <article class="dt-card" id="feedback-empty">
+            <div class="dt-card-top"><h3>Empty state</h3><p class="dt-tip">Explain what is missing and offer one clear action.</p></div>
+            <div class="dt-stage dt-empty">
+              <strong>No clients yet</strong>
+              <p>Claim a lead from Business Finder to get started.</p>
+              <button type="button" class="dt-btn dt-btn-primary">Find businesses</button>
+            </div>
+          </article>
+          <article class="dt-card" id="feedback-callout">
+            <div class="dt-card-top"><h3>Success / error callout</h3><p class="dt-tip">Inline outcomes tied to a form or panel.</p></div>
+            <div class="dt-stage dt-stage-form">
+              <div class="dt-callout is-ok">Site published successfully.</div>
+              <div class="dt-callout is-error">Payment failed. Try another card.</div>
+            </div>
+          </article>
+          <article class="dt-card" id="feedback-badge">
+            <div class="dt-card-top"><h3>Badge pill</h3><p class="dt-tip">Counts and status chips beside titles.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <span class="dt-badge">12 leads</span>
+              <span class="dt-badge is-soft">Draft</span>
+              <span class="dt-badge is-alert">Action needed</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 8. Navigation -->
+      <section class="dt-section" id="navigation">
+        <header class="dt-section-head">
+          <h2>Navigation</h2>
+          <p>Orient people. Show where they are and where they can go next.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="nav-tabs">
+            <div class="dt-card-top"><h3>Tabs</h3><p class="dt-tip">Peer views of the same object.</p></div>
+            <div class="dt-stage">
+              <div class="dt-tabs" data-tabs>
+                <button type="button" class="is-active">Overview</button>
+                <button type="button">Orders</button>
+                <button type="button">Notes</button>
+              </div>
+              <p class="dt-tabs-panel" data-tabs-panel>Overview content</p>
+            </div>
+          </article>
+          <article class="dt-card" id="nav-stepper">
+            <div class="dt-card-top"><h3>Stepper</h3><p class="dt-tip">Multi-step flows with clear progress.</p></div>
+            <div class="dt-stage">
+              <ol class="dt-stepper" data-stepper>
+                <li class="is-done">Details</li>
+                <li class="is-current">Design</li>
+                <li>Publish</li>
+              </ol>
+              <div class="dt-actions">
+                <button type="button" class="dt-play dt-play-ghost" data-play="step-back">Back</button>
+                <button type="button" class="dt-play" data-play="step-next">Next</button>
+              </div>
+            </div>
+          </article>
+          <article class="dt-card" id="nav-crumbs">
+            <div class="dt-card-top"><h3>Breadcrumbs</h3><p class="dt-tip">Deep hierarchies need an escape hatch up.</p></div>
+            <div class="dt-stage">
+              <nav class="dt-crumbs" aria-label="Breadcrumb">
+                <a href="#">Clients</a>
+                <span>/</span>
+                <a href="#">Northside Cafe</a>
+                <span>/</span>
+                <span aria-current="page">Settings</span>
+              </nav>
+            </div>
+          </article>
+          <article class="dt-card" id="nav-pagination">
+            <div class="dt-card-top"><h3>Pagination</h3><p class="dt-tip">When infinite scroll is too loose.</p></div>
+            <div class="dt-stage dt-stage-row" data-pager>
+              <button type="button" class="dt-page-btn" data-pager-prev aria-label="Previous">‹</button>
+              <button type="button" class="dt-page-btn is-active">1</button>
+              <button type="button" class="dt-page-btn">2</button>
+              <button type="button" class="dt-page-btn">3</button>
+              <button type="button" class="dt-page-btn" data-pager-next aria-label="Next">›</button>
+            </div>
+          </article>
+          <article class="dt-card" id="nav-dock">
+            <div class="dt-card-top"><h3>Floating dock</h3><p class="dt-tip">Mobile primary destinations in a compact pill.</p></div>
+            <div class="dt-stage dt-stage-dock">
+              <nav class="dt-dock" aria-label="Demo dock">
+                <button type="button" class="is-active" aria-current="page">Home</button>
+                <button type="button">Build</button>
+                <button type="button">Find</button>
+                <button type="button">More</button>
+              </nav>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 9. Surfaces -->
+      <section class="dt-section" id="surfaces">
+        <header class="dt-section-head">
+          <h2>Content surfaces</h2>
+          <p>Structure dense information without noisy chrome.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="surfaces-rows">
+            <div class="dt-card-top"><h3>List rows</h3><p class="dt-tip">Scanable primary + secondary text.</p></div>
+            <div class="dt-stage">
+              <div class="dt-list-row"><strong>River Dental</strong><span>Austin · No site</span></div>
+              <div class="dt-list-row"><strong>Oak Gym</strong><span>Denver · Weak site</span></div>
+            </div>
+          </article>
+          <article class="dt-card" id="surfaces-metrics">
+            <div class="dt-card-top"><h3>Metric tiles</h3><p class="dt-tip">One number, one label. Avoid chart clutter in first view.</p></div>
+            <div class="dt-stage dt-metrics">
+              <div><strong>24</strong><span>Leads</span></div>
+              <div><strong>$1.2k</strong><span>Earned</span></div>
+              <div><strong>6</strong><span>Live</span></div>
+            </div>
+          </article>
+          <article class="dt-card" id="surfaces-image">
+            <div class="dt-card-top"><h3>Image placeholder</h3><p class="dt-tip">Reserve space before media arrives.</p></div>
+            <div class="dt-stage"><div class="dt-img-ph" aria-hidden="true">Photo</div></div>
+          </article>
+          <article class="dt-card" id="surfaces-avatars">
+            <div class="dt-card-top"><h3>Avatar stack</h3><p class="dt-tip">Show collaborators or claimers at a glance.</p></div>
+            <div class="dt-stage dt-stage-row">
+              <div class="dt-avatars" aria-label="3 people">
+                <span>A</span><span>B</span><span>C</span>
+              </div>
+            </div>
+          </article>
+          <article class="dt-card" id="surfaces-header">
+            <div class="dt-card-top"><h3>Section header</h3><p class="dt-tip">Quiet labels that group related rows.</p></div>
+            <div class="dt-stage">
+              <p class="dt-section-label">This week</p>
+              <div class="dt-list-row">Published Northside Cafe</div>
+              <div class="dt-list-row">Claimed River Dental</div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 10. Typography -->
+      <section class="dt-section" id="typography">
+        <header class="dt-section-head">
+          <h2>Typography</h2>
+          <p>Hierarchy does more than decoration. Keep one display voice.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="type-display">
+            <div class="dt-card-top"><h3>Display vs body</h3><p class="dt-tip">Heavy display for titles; calm body for reading.</p></div>
+            <div class="dt-stage dt-type-sample">
+              <p class="dt-type-display">Build websites.</p>
+              <p class="dt-type-body">Get paid when local businesses go live. Keep the story short and clear.</p>
+            </div>
+          </article>
+          <article class="dt-card" id="type-meta">
+            <div class="dt-card-top"><h3>Caption / meta</h3><p class="dt-tip">Timestamps and helper text stay quieter than body.</p></div>
+            <div class="dt-stage">
+              <p class="dt-type-body">Published site</p>
+              <p class="dt-type-meta">Updated 2 hours ago · Austin, TX</p>
+            </div>
+          </article>
+          <article class="dt-card" id="type-mono">
+            <div class="dt-card-top"><h3>Mono values</h3><p class="dt-tip">Prices, IDs, and percents read cleaner in mono.</p></div>
+            <div class="dt-stage">
+              <p class="dt-type-mono">$500.00</p>
+              <p class="dt-type-mono">ord_18f2a9</p>
+            </div>
+          </article>
+          <article class="dt-card" id="type-links">
+            <div class="dt-card-top"><h3>Links</h3><p class="dt-tip">Ink links with clear underline on hover/focus.</p></div>
+            <div class="dt-stage">
+              <p class="dt-type-body">Read the <a class="dt-link" href="guide.html">Creator Guide</a> or <a class="dt-link" href="contact.html">contact support</a>.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 11. Advanced inputs -->
+      <section class="dt-section" id="advanced">
+        <header class="dt-section-head">
+          <h2>Advanced inputs</h2>
+          <p>Richer controls for precise values and collections.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card" id="adv-slider">
+            <div class="dt-card-top"><h3>Slider</h3><p class="dt-tip">Continuous ranges with a live value readout.</p></div>
+            <div class="dt-stage">
+              <label class="dt-label" for="dt-slider">Website price · <span data-slider-val>$500</span></label>
+              <input class="dt-slider" id="dt-slider" type="range" min="100" max="2000" step="50" value="500" data-slider>
+            </div>
+          </article>
+          <article class="dt-card" id="adv-qty">
+            <div class="dt-card-top"><h3>Quantity stepper</h3><p class="dt-tip">Discrete counts without free typing.</p></div>
+            <div class="dt-stage dt-stage-row" data-qty>
+              <button type="button" class="dt-icon-btn" data-qty-dec aria-label="Decrease">−</button>
+              <span class="dt-qty-val" data-qty-val>1</span>
+              <button type="button" class="dt-icon-btn" data-qty-inc aria-label="Increase">+</button>
+            </div>
+          </article>
+          <article class="dt-card" id="adv-date">
+            <div class="dt-card-top"><h3>Date picker UI</h3><p class="dt-tip">Teaching shell — show month grid and selected day.</p></div>
+            <div class="dt-stage">
+              <div class="dt-date" data-date>
+                <div class="dt-date-head">November 2026</div>
+                <div class="dt-date-grid">
+                  <button type="button">1</button><button type="button">2</button><button type="button">3</button>
+                  <button type="button">4</button><button type="button">5</button><button type="button">6</button>
+                  <button type="button" class="is-selected">7</button><button type="button">8</button><button type="button">9</button>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="dt-card" id="adv-drop">
+            <div class="dt-card-top"><h3>File dropzone</h3><p class="dt-tip">Visual affordance for uploads; keep a fallback button.</p></div>
+            <div class="dt-stage">
+              <div class="dt-drop" data-drop tabindex="0">
+                <strong>Drop logo here</strong>
+                <span>PNG or SVG · or click to browse</span>
+                <input type="file" accept="image/*" hidden data-drop-input>
+              </div>
+            </div>
+          </article>
+          <article class="dt-card" id="adv-tags">
+            <div class="dt-card-top"><h3>Tag input</h3><p class="dt-tip">Press Enter to add. Click × to remove.</p></div>
+            <div class="dt-stage">
+              <div class="dt-tags" data-tags>
+                <span class="dt-tag">cafe <button type="button" aria-label="Remove cafe">×</button></span>
+                <span class="dt-tag">local <button type="button" aria-label="Remove local">×</button></span>
+                <input type="text" placeholder="Add tag" aria-label="Add tag" data-tag-input>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 12. Cookbook -->
+      <section class="dt-section" id="cookbook">
+        <header class="dt-section-head">
+          <h2>Patterns cookbook</h2>
+          <p>Composed recipes that combine several tips into one flow.</p>
+        </header>
+        <div class="dt-grid">
+          <article class="dt-card dt-card-wide" id="cook-search">
+            <div class="dt-card-top"><h3>Search → skeleton → list</h3><p class="dt-tip">Keep the search field visible while results swap from skeleton to rows.</p></div>
+            <div class="dt-stage" data-demo="cook-search">
+              <label class="dt-search">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <input type="search" value="dental" aria-label="Search demo" readonly>
+              </label>
+              <div class="dt-cook-results" id="dt-cook-search-out">
+                <div class="dt-skel-row"><span class="dt-skel dt-skel-circle"></span><span class="dt-skel dt-skel-line"></span></div>
+                <span class="dt-skel dt-skel-line"></span>
+              </div>
+            </div>
+            <button type="button" class="dt-play" data-play="cook-search">Run recipe</button>
+          </article>
+          <article class="dt-card dt-card-wide" id="cook-submit">
+            <div class="dt-card-top"><h3>Submit → button loader → toast</h3><p class="dt-tip">Lock the button, finish the job, then confirm with a toast.</p></div>
+            <div class="dt-stage dt-stage-row" data-demo="cook-submit">
+              <button type="button" class="dt-btn dt-btn-primary" data-cook-submit>Submit order</button>
+            </div>
+            <button type="button" class="dt-play" data-play="cook-submit">Run recipe</button>
+          </article>
+          <article class="dt-card dt-card-wide" id="cook-scroll">
+            <div class="dt-card-top"><h3>Scroll → infinite loader</h3><p class="dt-tip">Same as the infinite scroll demo — scroll the feed to load more.</p></div>
+            <div class="dt-stage dt-stage-scroll" id="dt-cook-scroll">
+              <div class="dt-feed" id="dt-cook-feed"></div>
+              <div class="dt-infinite-sentinel" id="dt-cook-sentinel"><span class="dt-spinner dt-spinner-sm"></span></div>
+            </div>
+            <button type="button" class="dt-play" data-play="cook-scroll-reset">Reset feed</button>
+          </article>
+        </div>
+      </section>
+
+      <footer class="dt-foot">
+        <p>Keep exploring in the <a href="guide.html">Creator Guide</a>, or go back <a href="index.html">home</a>.</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Modal / sheet overlays -->
+  <div class="dt-overlay" id="dt-modal" hidden>
+    <div class="dt-modal" role="dialog" aria-modal="true" aria-labelledby="dt-modal-title">
+      <h3 id="dt-modal-title">Publish site?</h3>
+      <p>This sends the live link to your client with the watermark checkout.</p>
+      <div class="dt-actions">
+        <button type="button" class="dt-btn dt-btn-ghost" data-close-overlay>Cancel</button>
+        <button type="button" class="dt-btn dt-btn-primary" data-close-overlay>Publish</button>
+      </div>
+    </div>
+  </div>
+  <div class="dt-overlay dt-overlay-sheet" id="dt-sheet" hidden>
+    <div class="dt-sheet" role="dialog" aria-modal="true" aria-labelledby="dt-sheet-title">
+      <div class="dt-sheet-handle" aria-hidden="true"></div>
+      <h3 id="dt-sheet-title">Share options</h3>
+      <button type="button" class="dt-sheet-row">Copy link</button>
+      <button type="button" class="dt-sheet-row">Send email</button>
+      <button type="button" class="dt-sheet-row" data-close-overlay>Close</button>
+    </div>
+  </div>
+  <div class="dt-toasts" id="dt-toasts" aria-live="polite"></div>
+
+  <script defer src="js/designer-tips.js?v=20261107-designer-tips"></script>
+</body>
+</html>
