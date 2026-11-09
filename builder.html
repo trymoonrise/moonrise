@@ -237,11 +237,11 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261109-crown">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
-<link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark-chrome">
+<link rel="stylesheet" href="css/studio-ui.css?v=20261109-repo-menu">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
 </head>
 <body data-page="builder" class="ms-lb-setup">
@@ -329,7 +329,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                 </span>
                 <div class="ms-bs-path-copy">
                   <h3 id="bs-path-upload-title">Upload from GitHub</h3>
-                  <p id="bs-path-upload-lead">Connect GitHub, or paste a repository URL.</p>
+                  <p id="bs-path-upload-lead">Connect your GitHub account.</p>
                 </div>
               </header>
 
@@ -360,18 +360,12 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.35 6.84 9.71.5.1.68-.22.68-.48 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.57 2.34 1.12 2.91.86.09-.66.35-1.12.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.73 0 0 .84-.27 2.75 1.05A9.3 9.3 0 0 1 12 6.8c.85 0 1.71.12 2.51.34 1.91-1.32 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .26.18.58.69.48A10.03 10.03 0 0 0 22 12.26C22 6.58 17.52 2 12 2z"/></svg>
                     Connect GitHub
                   </button>
-                  <p class="ms-bs-gh-or" id="bs-gh-or">or</p>
-                  <div class="ms-lb-onboard-field">
-                    <label class="ms-lb-onboard-label" for="bs-gh-url">Repository URL</label>
-                    <input class="ms-lb-onboard-input" id="bs-gh-url" type="url" inputmode="url" placeholder="https://github.com/owner/repo" autocomplete="off" spellcheck="false" data-1p-ignore data-lpignore="true">
-                    <p class="ms-muted ms-bs-gh-hint">Paste a public repository, or connect GitHub to see every repo on the account, including private ones.</p>
-                    <p class="ms-muted ms-bs-gh-status" id="bs-gh-status" hidden></p>
-                  </div>
+                  <p class="ms-muted ms-bs-gh-status" id="bs-gh-status" hidden></p>
                 </div>
 
                 <div class="ms-bs-gh-step" data-gh-step-panel="2" hidden>
                   <div class="ms-lb-onboard-field ms-bs-gh-repo-field">
-                    <span class="ms-lb-onboard-label" id="bs-gh-repo-label">Repository <span class="ms-lb-onboard-optional">(required)</span></span>
+                    <span class="ms-lb-onboard-label" id="bs-gh-repo-label">Your repositories</span>
                     <div class="ms-bs-gh-select is-disabled" id="bs-gh-select">
                       <input type="hidden" id="bs-gh-repo" value="" required>
                       <button
@@ -390,6 +384,12 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                       <div class="ms-bs-gh-select-menu" id="bs-gh-repo-menu" role="listbox" aria-labelledby="bs-gh-repo-label" hidden></div>
                     </div>
                     <p class="ms-muted ms-bs-gh-hint" id="bs-gh-repo-hint">Choose one of your repositories.</p>
+                  </div>
+                  <p class="ms-bs-gh-or" id="bs-gh-or">or</p>
+                  <div class="ms-lb-onboard-field">
+                    <label class="ms-lb-onboard-label" for="bs-gh-url">Repository URL</label>
+                    <input class="ms-lb-onboard-input" id="bs-gh-url" type="url" inputmode="url" placeholder="https://github.com/owner/repo" autocomplete="off" spellcheck="false" data-1p-ignore data-lpignore="true">
+                    <p class="ms-muted ms-bs-gh-hint">Paste a repository URL if it is not in the list.</p>
                   </div>
                 </div>
 
@@ -444,6 +444,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
   <script defer src="js/project-lifecycle.js?v=20261028-paid-delete"></script>
-  <script defer src="js/builder.js?v=20261109-github-connect"></script>
+  <script defer src="js/builder.js?v=20261109-github-repo"></script>
 </body>
 </html>

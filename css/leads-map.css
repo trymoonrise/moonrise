@@ -1302,8 +1302,15 @@ body[data-page="leads"] #ms-hard-refresh,
   pointer-events: none !important;
 }
 
-/* Mobile mockup (matches phone design): centered chrome, menu + search + locate */
+/* Mobile mockup (matches phone design): centered chrome, back + search + locate */
 @media (max-width: 900px) {
+  html body[data-page="leads"] .ms-income-float,
+  html body[data-page="leads"] .ms-owner-crown {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
   #page-body.ms-lf-page.ms-lf-page--map {
     --lf-pill-h: 4.15rem;
     --lf-chip: 3.25rem;
@@ -1391,7 +1398,7 @@ body[data-page="leads"] #ms-hard-refresh,
     background: transparent;
   }
 
-  /* Mobile order: menu | search | count | locate */
+  /* Mobile order: back | search | count | locate */
   .ms-lf-map-menu {
     display: grid !important;
     order: 1;

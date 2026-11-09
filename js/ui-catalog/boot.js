@@ -158,6 +158,7 @@
     });
     if (window.dtMountDownloads) window.dtMountDownloads(section);
     syncAcc(section);
+    section.querySelectorAll(".lx-dock").forEach(armDock);
   }
 
   function accPanel(btn) {
@@ -177,11 +178,87 @@
     });
   }
 
+  const dockList = [];
+  const dockReduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  function dockButtons(dock) {
+    return Array.prototype.filter.call(dock.children, function (node) {
+      return node.tagName === "BUTTON";
+    });
+  }
+
+  function placeDockThumb(dock, instant) {
+    const thumb = dock.querySelector(":scope > .lx-dock-thumb");
+    const active = dock.querySelector(":scope > button.is-on");
+    if (!thumb || !active) return;
+    if (instant) thumb.style.transition = "none";
+    thumb.style.width = active.offsetWidth + "px";
+    thumb.style.height = active.offsetHeight + "px";
+    thumb.style.transform = "translate3d(" + active.offsetLeft + "px," + active.offsetTop + "px,0)";
+    if (instant) {
+      void thumb.offsetWidth;
+      thumb.style.transition = "";
+    }
+  }
+
+  function popDockIcon(button) {
+    const icon = button.querySelector(".lx-ico");
+    if (!icon) return;
+    icon.classList.remove("is-pop");
+    void icon.offsetWidth;
+    icon.classList.add("is-pop");
+  }
+
+  function armDock(dock) {
+    if (!dock || dock.dataset.lxArmed) return;
+    dock.dataset.lxArmed = "1";
+    dock.classList.add("is-armed");
+    const buttons = dockButtons(dock);
+    if (!dock.querySelector(":scope > button.is-on") && buttons[0]) buttons[0].classList.add("is-on");
+    dock.addEventListener("pointerenter", function () { dock._lxHover = true; });
+    dock.addEventListener("pointerleave", function () { dock._lxHover = false; });
+    dockList.push(dock);
+    placeDockThumb(dock, true);
+  }
+
+  function stepDock(dock) {
+    const buttons = dockButtons(dock);
+    if (buttons.length < 2) return;
+    let index = 0;
+    for (let i = 0; i < buttons.length; i += 1) {
+      if (buttons[i].classList.contains("is-on")) index = i;
+    }
+    const next = buttons[(index + 1) % buttons.length];
+    selectIn(dock, next, "button");
+    popDockIcon(next);
+  }
+
+  function startDockLoop() {
+    if (startDockLoop.started || dockReduce) return;
+    startDockLoop.started = true;
+    const tick = function () {
+      dockList.forEach(function (dock) {
+        if (!dock.isConnected || dock._lxHover) return;
+        if (performance.now() < (dock._lxUntil || 0)) return;
+        stepDock(dock);
+      });
+      window.setTimeout(tick, 1500);
+    };
+    window.setTimeout(tick, 700);
+    window.addEventListener("resize", function () {
+      dockList.forEach(function (dock) { placeDockThumb(dock, true); });
+    });
+  }
+
   function selectIn(parent, chosen, selector) {
     parent.querySelectorAll(selector).forEach(function (node) {
       if (node.parentElement !== parent) return;
       node.classList.toggle("is-on", node === chosen);
     });
+    const dock = parent.classList && parent.classList.contains("lx-dock")
+      ? parent
+      : (parent.closest ? parent.closest(".lx-dock") : null);
+    if (dock) placeDockThumb(dock, false);
   }
 
   function sectionFor(id) {
@@ -257,6 +334,14 @@
       }
       const opt = event.target.closest("[data-lx-opt]");
       if (opt && opt.parentElement && !opt.disabled) selectIn(opt.parentElement, opt, "[data-lx-opt]");
+      const dockBtn = event.target.closest(".lx-dock button");
+      if (dockBtn) {
+        const dock = dockBtn.closest(".lx-dock");
+        if (dock) {
+          dock._lxUntil = performance.now() + 2600;
+          popDockIcon(dockBtn);
+        }
+      }
       const bare = event.target.closest(".lx-cal-grid button, .lx-dock button, .lx-side button, .lx-top button, .lx-pages button, .lx-tree button");
       if (bare && !bare.disabled && !bare.hasAttribute("data-lx-opt") && !bare.hasAttribute("data-lx-folder") && !bare.hasAttribute("data-lx-toggle") && !bare.hasAttribute("data-lx-check") && !bare.hasAttribute("data-lx-acc")) {
         selectIn(bare.parentElement, bare, "button");
@@ -326,6 +411,7 @@
     });
     openHash();
     drain();
+    startDockLoop();
     window.addEventListener("hashchange", openHash);
   }
 

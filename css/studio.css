@@ -6510,11 +6510,9 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 
 .ms-builder-setup-page {
   --ms-channel-w: 640px;
-  width: min(var(--ms-channel-w), calc(100% - var(--ms-sidebar-w) - 2rem));
+  width: min(var(--ms-channel-w), calc(100% - var(--ms-sidebar-w) - 2.5rem));
   max-width: var(--ms-channel-w);
-  margin-left: calc(
-    var(--ms-sidebar-w) + max(0px, (100% - var(--ms-sidebar-w) - min(var(--ms-channel-w), calc(100% - var(--ms-sidebar-w) - 2rem))) / 2)
-  );
+  margin-left: calc(var(--ms-sidebar-w) + 1.25rem);
   margin-right: auto;
   padding: 2rem 1.35rem 4rem;
   box-sizing: border-box;
@@ -6848,7 +6846,7 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 }
 
 .ms-bs-path.is-enter {
-  animation: ms-bs-panel-enter 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: ms-bs-panel-enter 0.34s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes ms-bs-panel-enter {
@@ -7116,6 +7114,11 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 
 .ms-bs-gh-select.is-open {
   z-index: 80;
+}
+
+.ms-builder-setup-page #builder-setup-card .ms-lb-onboard-body:has(.ms-bs-gh-select.is-open) {
+  position: relative;
+  z-index: 20;
 }
 
 .ms-bs-gh-select-trigger {
@@ -14156,28 +14159,25 @@ body.ms-legal-site {
 }
 
 @media (max-width: 900px) {
-  .ms-sidebar {
-    width: min(84vw, 288px);
-    transform: translate3d(calc(-100% - 12px), 0, 0);
-    box-shadow: 16px 0 44px rgba(0, 0, 0, 0);
-    transition:
-      transform 0.44s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.44s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
+  .ms-sidebar,
+  .ms-sidebar-resizer,
+  body.ms-nav-open .ms-sidebar {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: none !important;
   }
   body.ms-nav-open #shell {
     position: relative;
     z-index: 46;
   }
   body.ms-nav-open #page-body {
-    pointer-events: none;
+    pointer-events: auto;
   }
-  body.ms-nav-open .ms-sidebar {
-    transform: translate3d(0, 0, 0);
-    box-shadow: 16px 0 44px rgba(0, 0, 0, 0.16);
-    transition:
-      transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+  body.ms-nav-open::after {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
   /* Closing: slightly snappier ease-in so it tucks away cleanly */
   body:not(.ms-nav-open) .ms-sidebar {
@@ -14221,28 +14221,34 @@ body.ms-legal-site {
 
   html body .ms-owner-crown {
     position: fixed !important;
-    top: max(0.65rem, env(safe-area-inset-top, 0px)) !important;
-    left: max(0.65rem, env(safe-area-inset-left, 0px)) !important;
+    top: max(0.7rem, env(safe-area-inset-top, 0px)) !important;
+    left: max(0.7rem, env(safe-area-inset-left, 0px)) !important;
     z-index: 280 !important;
     display: grid !important;
     visibility: visible !important;
     place-items: center !important;
-    width: 3.15rem !important;
-    height: 3.15rem !important;
+    width: 2.75rem !important;
+    height: 2.75rem !important;
     border-radius: 999px !important;
-    background: color-mix(in srgb, #ffffff 86%, transparent) !important;
-    color: #c8960c !important;
-    border: 1px solid rgb(226 179 64 / 45%) !important;
+    border: 1px solid rgb(138 97 16 / 16%) !important;
+    background: color-mix(in srgb, #ffffff 82%, #f4e4bf) !important;
+    color: #8a6110 !important;
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.04),
-      0 10px 24px rgba(0, 0, 0, 0.12) !important;
+      0 10px 28px rgba(90, 60, 10, 0.12) !important;
+    backdrop-filter: saturate(1.55) blur(18px) !important;
+    -webkit-backdrop-filter: saturate(1.55) blur(18px) !important;
     text-decoration: none !important;
+    transition: transform 0.16s ease, background 0.2s ease !important;
   }
 
   html body .ms-owner-crown svg {
-    width: 1.7rem !important;
-    height: 1.7rem !important;
-    filter: drop-shadow(0 1px 0 rgb(255 236 170 / 70%));
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+  }
+
+  html body .ms-owner-crown:active {
+    transform: scale(0.94) !important;
   }
 
   body:not([data-page="editor"]) .ms-menu-toggle {

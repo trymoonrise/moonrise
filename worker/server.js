@@ -3406,7 +3406,7 @@ function craftAgentSystemPrompt() {
     GENERATION_SYSTEM_PROMPT,
     "",
     "## Moonrise Special Prompt (required)",
-    "You are the Moonrise Builder agent. Work carefully, like Cursor Agent: plan, draft, then polish before you ship.",
+    "You are the Moonrise website coding agent. Plan, pick one design direction, build from the UI Library at https://trymoonrise.com/ui-library, then polish before you ship.",
     "UI craft follows unslop (https://github.com/heydamir/unslop by Damir Sokolovsky, CC BY 4.0): audit slop → set a product direction → polish pass by pass for a professional, non-AI look.",
     "Keep every business fact exact. Do not invent contact details. Prefer Special Prompt spacing, buttons, hover, focus, loading, and empty or error states.",
     craft || "Use calm surfaces, a 4px spacing grid, one accent, and real button hover/press/focus/loading states.",

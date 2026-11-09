@@ -3,12 +3,54 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.6.9",
+      "date": "2026-11-09",
+      "title": "Studio layout",
+      "tag": "v2.6.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.6.9",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The special prompt folds into a dropdown, and the card shows when that GitHub repo was last updated."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Builder starts beside the sidebar, and on a phone it starts at the top.",
+            "Upload asks you to connect GitHub, then shows your repositories or a repository URL."
+          ],
+          "fixes": [
+            "The repository list opens above Back and Continue.",
+            "On a phone, the channel sidebar stays closed and the bottom bar remains.",
+            "Calendar dates are shorter, and on a phone the month starts below income and Admin."
+          ]
+        },
+        {
+          "heading": "Finder",
+          "added": [
+            "On a phone, Business Finder hides income and Admin, and the menu control goes back."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.8",
       "date": "2026-11-09",
       "title": "Website coding agent",
       "tag": "v2.6.8",
       "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.6.8",
       "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Docks slide the active item on their own, and the icons lift as the pointer moves across them."
+          ],
+          "fixes": [
+            "Labeled dock names sit on one line."
+          ]
+        },
         {
           "heading": "Worker",
           "added": [

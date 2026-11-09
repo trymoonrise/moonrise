@@ -83,16 +83,39 @@
   function dock(title, html, extra) {
     return card("docks-" + title.toLowerCase().replace(/\s/g, "-"), title, html, extra);
   }
+  function dockBar(buttons, extraClass) {
+    const n = buttons.length;
+    const count = n > 1 ? " is-" + n : " is-solo";
+    const extra = extraClass ? " " + extraClass : "";
+    return '<div class="lx-dock' + count + extra + '" style="--n:' + n + '"><span class="lx-dock-thumb" aria-hidden="true"></span>' + buttons.join("") + "</div>";
+  }
   LX.spec("docks", ["nav-dock"], [
-    dock("Icons", '<div class="lx-dock">' + ["search", "file", "image", "user"].map(function (n) { return "<button type=\"button\">" + ico(n, "sm") + "</button>"; }).join("") + "</div>"),
-    dock("Labeled", '<div class="lx-dock">' + ["Sites", "Leads", "Guide"].map(function (n, i) { return '<button type="button" class="' + (i === 0 ? "is-on" : "") + '" data-lx-opt>' + n + "</button>"; }).join("") + "</div>"),
-    dock("Vertical", '<div class="lx-dock vert"><button type="button" class="is-on">' + ico("search", "sm") + '</button><button type="button">' + ico("file", "sm") + "</button><button type=\"button\">" + ico("user", "sm") + "</button></div>"),
-    dock("Badge", '<div class="lx-dock"><button type="button" class="is-on">' + ico("file", "sm") + '</button><button type="button">' + ico("alert", "sm") + '</button><span class="lx-badge go">3</span></div>'),
-    dock("Inverse", '<div class="lx-dock" style="background:#161616;border-color:#2a2a2a">' + ["search", "calendar", "user"].map(function (n) { return '<button type="button" style="background:#2a2a2a;color:#fff">' + ico(n, "sm") + "</button>"; }).join("") + "</div>", { stage: "lx-on-dark" }),
-    dock("Lift", '<div class="lx-dock"><button type="button">' + ico("image", "sm") + '</button><button type="button" class="is-on">' + ico("plus", "sm") + "</button><button type=\"button\">" + ico("pin", "sm") + "</button></div>"),
-    dock("Split", '<div class="lx-dock"><button type="button">' + ico("chevron", "sm") + '</button><i style="width:1px;background:#e4e4e7"></i><button type="button" class="is-on">' + ico("check", "sm") + "</button></div>"),
-    dock("Compact", '<div class="lx-dock" style="padding:4px;border-radius:10px"><button type="button" style="width:26px;height:26px">' + ico("search", "sm") + "</button><button type=\"button\" style=\"width:26px;height:26px\">" + ico("plus", "sm") + "</button></div>"),
-    dock("With caption", '<div style="display:grid;justify-items:center;gap:6px"><div class="lx-dock"><button type="button" class="is-on">' + ico("file", "sm") + "</button></div><p class=\"lx-meta\">Sites</p></div>")
+    dock("Icons", dockBar(["search", "file", "image", "user"].map(function (n) { return "<button type=\"button\">" + ico(n, "sm") + "</button>"; }))),
+    dock("Labeled", dockBar(["Sites", "Leads", "Guide"].map(function (n, i) { return '<button type="button" class="' + (i === 0 ? "is-on" : "") + '" data-lx-opt>' + n + "</button>"; }), "is-labeled")),
+    dock("Vertical", dockBar([
+      '<button type="button" class="is-on">' + ico("search", "sm") + "</button>",
+      "<button type=\"button\">" + ico("file", "sm") + "</button>",
+      "<button type=\"button\">" + ico("user", "sm") + "</button>"
+    ], "vert")),
+    dock("Badge", dockBar([
+      '<button type="button" class="is-on">' + ico("file", "sm") + '<span class="lx-badge go">3</span></button>',
+      "<button type=\"button\">" + ico("alert", "sm") + "</button>"
+    ])),
+    dock("Inverse", dockBar(["search", "calendar", "user"].map(function (n) { return "<button type=\"button\">" + ico(n, "sm") + "</button>"; }), "is-inverse"), { stage: "lx-on-dark" }),
+    dock("Lift", dockBar([
+      "<button type=\"button\">" + ico("image", "sm") + "</button>",
+      '<button type="button" class="is-on">' + ico("plus", "sm") + "</button>",
+      "<button type=\"button\">" + ico("pin", "sm") + "</button>"
+    ], "is-lift")),
+    dock("Split", dockBar([
+      "<button type=\"button\">" + ico("chevron", "sm") + "</button>",
+      '<button type="button" class="is-on">' + ico("check", "sm") + "</button>"
+    ], "is-split")),
+    dock("Compact", dockBar([
+      "<button type=\"button\">" + ico("search", "sm") + "</button>",
+      "<button type=\"button\">" + ico("plus", "sm") + "</button>"
+    ], "is-compact")),
+    dock("With caption", '<div style="display:grid;justify-items:center;gap:6px">' + dockBar(['<button type="button" class="is-on">' + ico("file", "sm") + "</button>"]) + '<p class="lx-meta">Sites</p></div>')
   ]);
 
   const GRADS = [["White to stage", "a"], ["Stage to ink", "b"], ["Ink from top", "c"], ["Ink from bottom", "d"], ["Radial ink", "e"], ["Diagonal grey", "f"], ["Soft grey", "g"], ["Left to right", "h"], ["Masked surface", "mask"], ["Four steps", "stripe"]];

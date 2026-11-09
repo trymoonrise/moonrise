@@ -80,13 +80,9 @@
     info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.2V16"/><circle cx="12" cy="8" r="0.8" fill="currentColor" stroke="none"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>',
     crown:
-      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
-      '<path fill="#e2b340" d="M3.8 16.7 5.2 9.1l3.5 2.6L12 4.8l3.3 6.9 3.5-2.6 1.4 7.6H3.8z"/>' +
-      '<path fill="#c8960c" d="M3.7 17.6h16.6c.4 0 .7.4.6.8l-.5 1.7a.8.8 0 0 1-.7.5H4.3a.8.8 0 0 1-.7-.5l-.5-1.7c-.1-.4.2-.8.6-.8z"/>' +
-      '<circle cx="5.2" cy="8.2" r="1.35" fill="#f6d56a"/>' +
-      '<circle cx="12" cy="4.15" r="1.5" fill="#f6d56a"/>' +
-      '<circle cx="18.8" cy="8.2" r="1.35" fill="#f6d56a"/>' +
-      '<circle cx="12" cy="4.15" r="0.45" fill="#fff6d0"/>' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M4.2 16.5 6.6 8.6l3.1 3.4L12 5.8l2.3 6.2 3.1-3.4 2.4 7.9H4.2z"/>' +
+      '<path d="M6 19.2h12"/>' +
       "</svg>",
   };
 
@@ -238,17 +234,6 @@
         btn.className = "ms-owner-crown";
         btn.href = "admin-console";
         btn.setAttribute("aria-label", "Admin Console");
-        btn.style.position = "fixed";
-        btn.style.top = "max(0.65rem, env(safe-area-inset-top, 0px))";
-        btn.style.left = "max(0.65rem, env(safe-area-inset-left, 0px))";
-        btn.style.zIndex = "280";
-        btn.style.display = "grid";
-        btn.style.placeItems = "center";
-        btn.style.width = "3.15rem";
-        btn.style.height = "3.15rem";
-        btn.style.borderRadius = "999px";
-        btn.style.background = "rgba(255,255,255,0.92)";
-        btn.style.color = "#1d1d1f";
         btn.innerHTML = ICONS.crown;
         document.body.appendChild(btn);
       }
@@ -978,28 +963,21 @@
         if (btn) btn.remove();
         return;
       }
-      if (btn) return;
-      btn = document.createElement("a");
-      btn.id = "ms-owner-crown";
-      btn.className = "ms-owner-crown";
-      btn.href = "admin-console";
-      btn.setAttribute("aria-label", "Admin Console");
-      btn.style.position = "fixed";
-      btn.style.top = "max(0.65rem, env(safe-area-inset-top, 0px))";
-      btn.style.left = "max(0.65rem, env(safe-area-inset-left, 0px))";
-      btn.style.zIndex = "280";
-      btn.style.display = "grid";
-      btn.style.placeItems = "center";
-      btn.style.width = "3.15rem";
-      btn.style.height = "3.15rem";
-      btn.style.borderRadius = "999px";
-      btn.style.background = "rgba(255,255,255,0.92)";
-      btn.style.color = "#1d1d1f";
-      btn.innerHTML = ICONS.crown;
-      document.body.appendChild(btn);
+      if (!btn) {
+        btn = document.createElement("a");
+        btn.id = "ms-owner-crown";
+        btn.className = "ms-owner-crown";
+        btn.href = "admin-console";
+        btn.setAttribute("aria-label", "Admin Console");
+        btn.innerHTML = ICONS.crown;
+        document.body.appendChild(btn);
+      }
+      if ((document.body?.dataset?.page || "") === "admin-console") btn.setAttribute("aria-current", "page");
+      else btn.removeAttribute("aria-current");
     }
 
     function setNavOpen(open) {
+      if (phoneLayout()) open = false;
       const menuToggle = document.getElementById("ms-menu-toggle");
       document.body.classList.toggle("ms-nav-open", open);
       if (!menuToggle) return;

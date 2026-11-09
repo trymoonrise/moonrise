@@ -3,7 +3,7 @@
  * Pages and app scripts stay network-first so a bad cached file cannot stick.
  * Other assets refresh in the background.
  */
-const CACHE_NAME = "ms-pwa-v82-tabs";
+const CACHE_NAME = "ms-pwa-v83-no-drawer";
 const CORE_ASSETS = ["./css/studio.css", "./css/studio-motion.css", "./index.html"];
 
 function isAssetPath(pathname) {

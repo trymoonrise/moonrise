@@ -4533,13 +4533,18 @@
     setSearchPillMode("idle");
   }
 
-  function openStudioMenu() {
-    const shellToggle = document.getElementById("ms-menu-toggle");
-    if (shellToggle) {
-      shellToggle.click();
+  function leaveFinder() {
+    let sameOrigin = false;
+    try {
+      sameOrigin = !!document.referrer && new URL(document.referrer).origin === location.origin;
+    } catch (_) {
+      sameOrigin = false;
+    }
+    if (sameOrigin) {
+      history.back();
       return;
     }
-    document.body.classList.toggle("ms-nav-open");
+    location.href = "dashboard";
   }
 
   function bindMapFinderUi() {
@@ -4556,8 +4561,7 @@
     menuToggleBtn?.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      if (searchPill?.dataset.mode === "search") setSearchPillMode("idle");
-      openStudioMenu();
+      leaveFinder();
     });
 
     let searchToggleAt = 0;

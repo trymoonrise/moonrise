@@ -150,12 +150,12 @@ body[data-page="calendar"] .ms-cal-day {
   display: grid;
   place-items: center;
   width: 100%;
-  aspect-ratio: 1;
-  height: auto;
+  aspect-ratio: auto;
+  height: 2.55rem;
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   background: transparent;
   color: #1d1d1f;
   font: inherit;
@@ -416,6 +416,31 @@ body[data-page="calendar"] #cal-error[hidden] {
 @media (min-width: 901px) {
   body[data-page="calendar"] .ms-cal-gate {
     left: var(--ms-sidebar-w, 0px);
+  }
+}
+
+@media (max-width: 900px) {
+  body[data-page="calendar"] #page-body.ms-cal-page {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 4.6rem) !important;
+  }
+
+  body[data-page="calendar"] .ms-cal-day {
+    height: 2.2rem;
+    border-radius: 9px;
+    font-size: 0.78rem;
+  }
+
+  body[data-page="calendar"] .ms-cal-week,
+  body[data-page="calendar"] .ms-cal-grid {
+    gap: 0.16rem;
+  }
+
+  body[data-page="calendar"] .ms-cal-week {
+    margin-top: 0.4rem;
+  }
+
+  body[data-page="calendar"] .ms-cal-day.has-event::after {
+    bottom: 0.12rem;
   }
 }
 

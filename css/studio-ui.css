@@ -1291,6 +1291,7 @@ body[data-page="builder"].ms-lb-setup .ms-bs-layout {
   background: none;
   padding: 1.15rem 0 0;
   position: static;
+  z-index: auto;
 }
 
 .ms-builder-setup-page #builder-setup-card .ms-lb-onboard-back {
@@ -1378,31 +1379,28 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   border-color: rgb(255 255 255 / 16%) !important;
 }
 
-/* Phone: keep the start form in the middle of the screen. */
+/* Phone: start the form at the top of the page. */
 @media (max-width: 900px) {
   body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
-    display: flex !important;
-    align-items: safe center;
-    justify-content: center;
-    min-height: 100dvh;
+    display: block !important;
+    align-items: start;
+    justify-content: flex-start;
+    min-height: 0;
     box-sizing: border-box;
     padding-left: 1.25rem !important;
     padding-right: 1.25rem !important;
   }
 
   body[data-page="builder"].ms-lb-setup .ms-bs-layout {
-    width: min(100%, 28rem);
-    margin-inline: auto;
-    text-align: center;
-    justify-items: center;
+    width: 100%;
+    margin: 0;
+    text-align: left;
+    justify-items: stretch;
   }
 
   body[data-page="builder"].ms-lb-setup .ms-page-head,
   body[data-page="builder"].ms-lb-setup .ms-page-head-copy,
-  body[data-page="builder"].ms-lb-setup .ms-page-head h1 {
-    text-align: left !important;
-  }
-
+  body[data-page="builder"].ms-lb-setup .ms-page-head h1,
   body[data-page="builder"].ms-lb-setup .ms-bs-hero .lead,
   body[data-page="builder"].ms-lb-setup .ms-bs-path-head,
   body[data-page="builder"].ms-lb-setup .ms-bs-path-copy,
@@ -1412,7 +1410,7 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   body[data-page="builder"].ms-lb-setup .ms-bs-upload-watermark-note,
   body[data-page="builder"].ms-lb-setup .ms-bs-status,
   body[data-page="builder"].ms-lb-setup .ms-error {
-    text-align: center !important;
+    text-align: left !important;
   }
 
   body[data-page="builder"].ms-lb-setup .ms-bs-mode-tabs,
@@ -1430,20 +1428,15 @@ html[data-ms-mode="dark"] .ms-builder-setup-page #builder-setup-card .ms-lb-onbo
   }
 
   body[data-page="builder"].ms-lb-setup .ms-bs-path-head {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   body[data-page="builder"].ms-lb-setup .ms-bs-gh-progress {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   body[data-page="builder"].ms-lb-setup .ms-lb-onboard-foot {
-    justify-content: center !important;
-  }
-
-  body[data-page="builder"].ms-lb-setup .ms-lb-onboard-foot .ms-lb-onboard-next,
-  body[data-page="builder"].ms-lb-setup .ms-lb-onboard-foot .ms-btn:last-child {
-    margin-left: 0 !important;
+    justify-content: space-between !important;
   }
 
   body[data-page="builder"].ms-lb-setup .ms-lb-onboard-input,

@@ -765,15 +765,19 @@
     });
 
     $all(".dt-dock").forEach((dock) => {
+      dock.classList.add("is-armed");
+      dock.addEventListener("pointerenter", () => { dock._dtHover = true; });
+      dock.addEventListener("pointerleave", () => { dock._dtHover = false; });
       dock.addEventListener("click", (e) => {
         const btn = e.target.closest("button");
-        if (!btn) return;
+        if (!btn || btn.classList.contains("dt-pill-thumb")) return;
         $all("button", dock).forEach((b) => {
           b.classList.remove("is-active");
           b.removeAttribute("aria-current");
         });
         btn.classList.add("is-active");
         btn.setAttribute("aria-current", "page");
+        dock._dtUntil = performance.now() + 2600;
         syncPill(dock);
       });
     });
@@ -865,6 +869,18 @@
       } catch (_) {
         showToast("Copy ready");
       }
+    });
+
+    const craftToggle = $(".dt-craft-toggle");
+    const craftPanel = $("#dt-craft-panel");
+    const craftCard = craftToggle?.closest(".dt-craft-card");
+    craftToggle?.addEventListener("click", () => {
+      if (!craftPanel || !craftCard) return;
+      const open = craftToggle.getAttribute("aria-expanded") !== "true";
+      craftToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      craftCard.classList.toggle("is-open", open);
+      craftPanel.setAttribute("aria-hidden", open ? "false" : "true");
+      craftPanel.inert = !open;
     });
 
     $("[data-copy-craft]")?.addEventListener("click", () => {
@@ -1137,6 +1153,26 @@
     return text;
   }
 
+  function loadCraftUpdated() {
+    const el = $("[data-craft-updated]");
+    if (!el) return;
+    fetch("https://api.github.com/repos/trymoonrise/moonrise-special-prompt", {
+      headers: { Accept: "application/vnd.github+json" },
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("repo"))))
+      .then((repo) => {
+        const raw = repo && (repo.pushed_at || repo.updated_at);
+        const when = raw ? new Date(raw) : null;
+        if (!when || Number.isNaN(when.getTime())) return;
+        const label = when.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+        el.textContent = "Last updated " + label;
+        el.hidden = false;
+      })
+      .catch(() => {
+        el.hidden = true;
+      });
+  }
+
   function ensureCraftPrompt() {
     if (!craftPromptPromise) {
       craftPromptPromise = loadCraftPromptText().catch((err) => {
@@ -1201,7 +1237,12 @@
     try {
       const stage = card.querySelector(".dt-stage");
       if (!stage) throw new Error("stage");
-      const stageHtml = stage.outerHTML;
+      const stageClone = stage.cloneNode(true);
+      stageClone.querySelectorAll(".lx-dock.is-armed, .dt-dock.is-armed").forEach((dock) => {
+        dock.classList.remove("is-armed");
+        dock.querySelectorAll(".lx-dock-thumb, .dt-pill-thumb").forEach((thumb) => thumb.removeAttribute("style"));
+      });
+      const stageHtml = stageClone.outerHTML;
       let extraHtml = "";
       const extraId = PATTERN_EXTRAS[id];
       if (extraId) {
@@ -1267,6 +1308,7 @@
       const field = $("#dt-craft-prompt");
       if (field) field.placeholder = "Prompt file unavailable";
     });
+    loadCraftUpdated();
     mountPatternDownloads();
     bindToc();
     bindPlay();
@@ -1277,6 +1319,26 @@
     requestAnimationFrame(() => {
       syncAllPills();
       window.addEventListener("resize", syncAllPills);
+      if (!reduceMotion) {
+        const stepFloatingDocks = () => {
+          $all(".dt-dock").forEach((dock) => {
+            if (dock._dtHover || performance.now() < (dock._dtUntil || 0)) return;
+            const buttons = $all("button", dock).filter((b) => !b.classList.contains("dt-pill-thumb"));
+            if (buttons.length < 2) return;
+            const index = Math.max(0, buttons.findIndex((b) => b.classList.contains("is-active")));
+            const next = buttons[(index + 1) % buttons.length];
+            buttons.forEach((b) => {
+              b.classList.remove("is-active");
+              b.removeAttribute("aria-current");
+            });
+            next.classList.add("is-active");
+            next.setAttribute("aria-current", "page");
+            syncPill(dock);
+          });
+          window.setTimeout(stepFloatingDocks, 1500);
+        };
+        window.setTimeout(stepFloatingDocks, 700);
+      }
     });
   });
 })();

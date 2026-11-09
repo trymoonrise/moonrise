@@ -1439,8 +1439,8 @@
 
   function isUploadPathReady() {
     const step = Number(state.githubWizardStep) || 1;
-    if (step === 1) return state.githubConnected || !!readGithubRepoUrl();
-    if (step === 2) return !!readGithubRepoSelection();
+    if (step === 1) return state.githubConnected;
+    if (step === 2) return !!readGithubRepoSelection() || !!readGithubRepoUrl();
     return !!readGithubRepoSelection();
   }
 
@@ -1532,11 +1532,9 @@
     if (lead) {
       lead.textContent =
         next === 1
-          ? state.githubConnected
-            ? "Choose a repository, or paste a URL."
-            : "Connect GitHub, or paste a repository URL."
+          ? "Connect your GitHub account."
           : next === 2
-            ? "Choose the repository."
+            ? "Choose one of your repositories, or paste a repository URL."
             : "Choose the site folder.";
     }
 
@@ -1681,11 +1679,9 @@
     const account = document.getElementById("bs-gh-account");
     const name = document.getElementById("bs-gh-account-name");
     const connect = document.getElementById("bs-gh-connect");
-    const or = document.getElementById("bs-gh-or");
     const connected = !!state.githubConnected;
     if (account) account.hidden = !connected;
     if (connect) connect.hidden = connected;
-    if (or) or.hidden = connected;
     if (name) {
       name.textContent = state.githubLogin
         ? "Connected as " + state.githubLogin
@@ -1707,9 +1703,7 @@
       if ((Number(state.githubWizardStep) || 1) === 1) {
         const lead = document.getElementById("bs-path-upload-lead");
         if (lead) {
-          lead.textContent = state.githubConnected
-            ? "Choose a repository, or paste a URL."
-            : "Connect GitHub, or paste a repository URL.";
+          lead.textContent = "Connect your GitHub account.";
         }
       }
       updateOnboardContinue();
@@ -1801,6 +1795,8 @@
       renderGithubAccount();
       renderGithubRepos([]);
       setGithubRepoValue("");
+      const urlInput = document.getElementById("bs-gh-url");
+      if (urlInput) urlInput.value = "";
       setGithubStatus("");
       setGithubWizardStep(1);
     } catch (e) {
@@ -1814,7 +1810,7 @@
   function githubReturnMessage(code) {
     if (code === "cancelled") return "GitHub connect was cancelled.";
     if (code === "not_configured") {
-      return "GitHub connect is not set up on this site yet. Paste a public repository URL.";
+      return "GitHub connect is not set up on this site yet.";
     }
     if (code === "connected") return "";
     return "Could not connect GitHub.";
@@ -6594,9 +6590,7 @@
       void markBuilderOnboarded();
       const statusMsg = isRedesign
         ? "Redesign complete."
-        : data.presetCount
-          ? "Generated with " + data.presetCount + " Website Presets. Watermark is on until payment."
-          : "Generated. Watermark is on until payment.";
+        : "Generated. Watermark is on until payment.";
       await revealGeneratedSite(generatedHtmlKeep.html, { status: statusMsg });
       clearGenInflight();
       generationSucceeded = true;
@@ -10292,20 +10286,8 @@
         if (state.builderMode === "upload") {
           const step = Number(state.githubWizardStep) || 1;
           if (step === 1) {
-            const rawUrl = String(document.getElementById("bs-gh-url")?.value || "").trim();
-            const pasted = readGithubRepoUrl();
-            if (rawUrl && !pasted) {
-              setOnboardError("Paste a GitHub repository URL, like https://github.com/owner/repo.");
-              updateOnboardContinue();
-              return;
-            }
-            if (pasted) {
-              onGithubRepoPicked(pasted, pasted);
-              setGithubWizardStep(3);
-              return;
-            }
             if (!state.githubConnected) {
-              setOnboardError("Connect GitHub, or paste a repository URL.");
+              setOnboardError("Connect GitHub to continue.");
               updateOnboardContinue();
               return;
             }
@@ -10325,8 +10307,20 @@
             return;
           }
           if (step === 2) {
+            const rawUrl = String(document.getElementById("bs-gh-url")?.value || "").trim();
+            const pasted = readGithubRepoUrl();
+            if (rawUrl && !pasted) {
+              setOnboardError("Paste a GitHub repository URL, like https://github.com/owner/repo.");
+              updateOnboardContinue();
+              return;
+            }
+            if (pasted) {
+              onGithubRepoPicked(pasted, pasted);
+              setGithubWizardStep(3);
+              return;
+            }
             if (!readGithubRepoSelection()) {
-              setOnboardError("Select a GitHub repository that contains your website.");
+              setOnboardError("Select one of your repositories, or paste a repository URL.");
               updateOnboardContinue();
               return;
             }
