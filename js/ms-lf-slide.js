@@ -3,8 +3,9 @@
  * Immediate gesture lock + delta tracking. List refreshes must not rebuild DOM mid-drag.
  */
 (function (global) {
-  const COMPLETE_RATIO = 0.94;
-  const RELEASE_COMMIT_RATIO = 0.82;
+  const COMPLETE_RATIO = 0.7;
+  const RELEASE_COMMIT_RATIO = 0.55;
+  const DRAG_GAIN = 1.35;
   const END_TOLERANCE_PX = 4;
   const RETURN_MS = 280;
   const COMPLETE_MS = 280;
@@ -181,7 +182,6 @@
     if (!e.target?.closest?.(".ms-lf-slide-thumb")) return false;
 
     const startX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
-    const startY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
     const originLeft = readX(slide);
     const pointerOriginX = startX;
     let current = Math.max(0, Math.min(max, originLeft));
@@ -192,7 +192,10 @@
     let latestX = startX;
     const pointerId = e.pointerId ?? 1;
     const usePointer = e.pointerId != null;
-    const AXIS = 10;
+
+    function draggedX(x) {
+      return originLeft + (x - pointerOriginX) * DRAG_GAIN;
+    }
 
     function clientX(ev) {
       if (ev && ev.clientX != null) return ev.clientX;
@@ -244,15 +247,11 @@
 
       if (shouldComplete) {
         completeSlide(slide, hooks.onComplete);
-      } else {
+      } else if (moved) {
         resetSlide(slide, true);
+      } else {
+        resetSlide(slide, false);
       }
-    }
-
-    function pointY(ev) {
-      if (ev && ev.clientY != null) return ev.clientY;
-      const touch = ev?.changedTouches?.[0] || ev?.touches?.[0];
-      return touch ? touch.clientY : startY;
     }
 
     function lockGesture() {
@@ -275,18 +274,12 @@
       }
     }
 
-    function abortPending() {
-      if (finished || locked) return;
-      finished = true;
-      teardownListeners();
-    }
-
     function applyFrame() {
       raf = 0;
       if (finished || !locked) return;
-      const next = originLeft + (latestX - pointerOriginX);
+      const next = draggedX(latestX);
       current = setX(slide, next, gestureMetrics, { drag: true });
-      if (Math.abs(latestX - pointerOriginX) >= 3) moved = true;
+      if (Math.abs(latestX - pointerOriginX) >= 2) moved = true;
       if (moved && completes(current, max, COMPLETE_RATIO)) {
         finish(true);
       }
@@ -295,50 +288,30 @@
     function onMove(ev) {
       if (finished) return;
       if (usePointer && ev.pointerId != null && ev.pointerId !== pointerId) return;
-      const x = clientX(ev);
-      if (!locked) {
-        const dx = Math.abs(x - pointerOriginX);
-        const dy = Math.abs(pointY(ev) - startY);
-        // Vertical wins: leave the gesture to the list scroll or map pan.
-        if (dy >= AXIS && dy >= dx) {
-          abortPending();
-          return;
-        }
-        if (dx < AXIS || dx <= dy) return;
-        lockGesture();
-      }
       try {
         ev.preventDefault();
       } catch (_) {
         /* ignore */
       }
-      latestX = x;
+      latestX = clientX(ev);
       if (!raf) raf = global.requestAnimationFrame(applyFrame);
     }
 
     function onRelease(ev) {
       if (usePointer && ev?.pointerId != null && ev.pointerId !== pointerId) return;
-      if (!locked) {
-        abortPending();
-        return;
-      }
+      if (!locked) return;
       latestX = clientX(ev || {});
-      current = setX(slide, originLeft + (latestX - pointerOriginX), gestureMetrics, { drag: true });
-      if (Math.abs(latestX - pointerOriginX) >= 3) moved = true;
+      current = setX(slide, draggedX(latestX), gestureMetrics, { drag: true });
+      if (Math.abs(latestX - pointerOriginX) >= 2) moved = true;
       finish(false);
     }
 
     function onCancel(ev) {
       if (usePointer && ev?.pointerId != null && ev.pointerId !== pointerId) return;
-      if (!locked) {
-        abortPending();
-        return;
-      }
-      // Browser stole the gesture (scroll/refresh). Keep progress: complete if far enough,
-      // otherwise soft-hold then return - never hard-clear mid-slide without animation.
+      if (!locked) return;
       latestX = clientX(ev || {});
-      current = setX(slide, originLeft + (latestX - pointerOriginX), gestureMetrics, { drag: true });
-      if (Math.abs(latestX - pointerOriginX) >= 3) moved = true;
+      current = setX(slide, draggedX(latestX), gestureMetrics, { drag: true });
+      if (Math.abs(latestX - pointerOriginX) >= 2) moved = true;
       finish(false);
     }
 
@@ -356,6 +329,12 @@
       global.addEventListener("mouseup", onRelease, true);
     }
 
+    try {
+      e.preventDefault();
+    } catch (_) {
+      /* ignore */
+    }
+    lockGesture();
     return true;
   }
 

@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.7.3",
+      "date": "2026-11-09",
+      "title": "Easier slide",
+      "sections": [
+        {
+          "heading": "Finder",
+          "fixes": [
+            "Slide to generate follows your finger and finishes before the end of the track."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.2",
       "date": "2026-11-09",
       "title": "Flyer prints",

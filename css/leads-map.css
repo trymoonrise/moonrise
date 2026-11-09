@@ -842,7 +842,7 @@
 
 /* Blue emphasized slide-to-generate (matches Sign in / Scan nearby) */
 .ms-lf-map-card .ms-lf-slide {
-  --ms-lf-slide-thumb: 36px;
+  --ms-lf-slide-thumb: 44px;
   --ms-lf-slide-pad: 6px;
   --ms-lf-slide-radius: var(--lf-btn-radius, 12px);
   --ms-lf-slide-thumb-radius: 10px;
@@ -882,7 +882,8 @@
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.95) inset,
     0 3px 10px rgba(0, 0, 0, 0.2) !important;
-  touch-action: pan-y !important;
+  touch-action: none !important;
+  cursor: grab;
 }
 
 .ms-lf-map-card .ms-lf-slide-thumb .ms-lf-pro-ico,
@@ -2007,7 +2008,7 @@ body[data-page="leads"] #ms-hard-refresh,
   }
 
   .ms-lf-map-card .ms-lf-slide {
-    --ms-lf-slide-thumb: 40px;
+    --ms-lf-slide-thumb: 44px;
     --ms-lf-slide-pad: 6px;
     --ms-lf-slide-radius: var(--lf-btn-radius, 12px);
     --ms-lf-slide-thumb-radius: 11px;
@@ -2634,11 +2635,14 @@ html[data-ms-mode="dark"] .ms-lf-map-card .ms-lf-slide-thumb {
   box-shadow: none !important;
 }
 
-/* Vertical drags scroll the list. The thumb only captures a sideways slide. */
+/* Vertical drags on the track still scroll the list. The knob keeps the slide. */
 .ms-lf-map-card .ms-lf-slide,
-.ms-lf-map-card .ms-lf-slide-track,
-.ms-lf-map-card .ms-lf-slide-thumb {
+.ms-lf-map-card .ms-lf-slide-track {
   touch-action: pan-y !important;
+}
+
+.ms-lf-map-card .ms-lf-slide-thumb {
+  touch-action: none !important;
 }
 
 .ms-lf-map-card .ms-lf-slide.is-dragging,

@@ -167,10 +167,10 @@
 .ms-lf-slide-thumb::before {
   content: "";
   position: absolute;
-  left: -6px;
-  right: -6px;
-  top: -8px;
-  bottom: -8px;
+  left: -14px;
+  right: -18px;
+  top: -12px;
+  bottom: -12px;
 }
 
 .ms-lf-slide-thumb .ms-lf-pro-ico,
