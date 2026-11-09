@@ -16,6 +16,7 @@
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     header.classList.toggle("is-open", open);
     document.documentElement.classList.toggle("ms-menu-open", open);
+    if (open) header.classList.remove("is-hidden");
     if (label) label.textContent = open ? "Close" : "Menu";
   }
 
@@ -45,4 +46,31 @@
   window.addEventListener("keydown", function (event) {
     if (event.key === "Escape") setOpen(false);
   });
+
+  var lastY = window.scrollY || 0;
+  var frame = 0;
+
+  function onScroll() {
+    var y = window.scrollY || 0;
+    var delta = y - lastY;
+    if (header.classList.contains("is-open") || y < 24) {
+      header.classList.remove("is-hidden");
+    } else if (delta > 8) {
+      header.classList.add("is-hidden");
+    } else if (delta < -8) {
+      header.classList.remove("is-hidden");
+    }
+    header.classList.toggle("is-scrolled", y > 12);
+    lastY = y;
+  }
+
+  window.addEventListener("scroll", function () {
+    if (frame) return;
+    frame = window.requestAnimationFrame(function () {
+      frame = 0;
+      onScroll();
+    });
+  }, { passive: true });
+
+  onScroll();
 })();

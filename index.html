@@ -271,7 +271,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/studio.css?v=20261106-mono">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
   <link rel="stylesheet" href="css/ui-library.css?v=20261108-home">
-  <link rel="stylesheet" href="css/home.css?v=20261108-dark2">
+  <link rel="stylesheet" href="css/home.css?v=20261108-story">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-shade">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -313,7 +313,7 @@ document.documentElement.classList.add("ms-boot");
             "name": "What is Moonrise?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "A simple way to build websites for local businesses and get paid when they go live."
+              "text": "Moonrise is a workspace for selling websites to local businesses. You find one that needs a site, build it, and get paid when the owner goes live."
             }
           },
           {
@@ -321,7 +321,7 @@ document.documentElement.classList.add("ms-boot");
             "name": "How do I get paid?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Publish the watermarked site, send the link, and earn when the owner pays to unlock it. You keep 90%."
+              "text": "Publish the site with a small watermark and send the owner the link. They pay on that page to remove it. You keep 90%."
             }
           },
           {
@@ -329,7 +329,7 @@ document.documentElement.classList.add("ms-boot");
             "name": "Do owners need an account?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. They pay on the live site through secure checkout."
+              "text": "No. They open the link and pay there. They never sign in to Moonrise."
             }
           }
         ]
@@ -343,15 +343,25 @@ document.documentElement.classList.add("ms-boot");
 
   <div class="ms-home-shell">
     <header class="ms-site-bar">
-      <a class="ms-home-btn" href="/" aria-label="Home">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.6 12 4l8 6.6V20a1 1 0 0 1-1 1h-5v-6.2H10V21H5a1 1 0 0 1-1-1z"/></svg>
-      </a>
-      <button class="ms-menu-btn" type="button" aria-expanded="false" aria-controls="ms-menu" aria-label="Open menu">
-        <span class="ms-menu-label">Menu</span>
-        <span class="ms-menu-bars" aria-hidden="true"></span>
-      </button>
+      <div class="ms-nav-row">
+        <div class="ms-nav-lead">
+          <a class="ms-home-btn" href="/" aria-label="Moonrise home">moonrise</a>
+          <nav class="ms-nav-links" aria-label="Main">
+            <a href="#how">How it works</a>
+            <a href="#faq">FAQ</a>
+            <a href="download">Download</a>
+          </nav>
+        </div>
+        <div class="ms-nav-end">
+          <a class="ms-nav-cta" href="login.html">Start earning</a>
+          <button class="ms-menu-btn" type="button" aria-expanded="false" aria-controls="ms-menu" aria-label="Open menu">
+            <span class="ms-menu-label">Menu</span>
+            <span class="ms-menu-bars" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
       <nav class="ms-menu-screen" id="ms-menu" aria-label="Pages">
-        <a href="login" style="--i:0">Start earning</a>
+        <a href="login.html" style="--i:0">Start earning</a>
         <a href="#how" style="--i:1">How it works</a>
         <a href="#faq" style="--i:2">FAQ</a>
         <a href="download" style="--i:3">Download</a>
@@ -362,64 +372,79 @@ document.documentElement.classList.add("ms-boot");
     </header>
 
     <main id="main">
+      <div class="ms-hero-lock">
       <section class="ms-home-hero" aria-label="Moonrise">
-        <div class="ms-moon" aria-hidden="true">
-          <svg class="ms-moon-glyph" viewBox="0 0 80 80">
-            <defs>
-              <mask id="ms-moon-cut">
-                <rect width="80" height="80" fill="#fff"></rect>
-                <circle cx="50" cy="40" r="23" fill="#000"></circle>
-              </mask>
-            </defs>
-            <circle cx="34" cy="40" r="26" fill="currentColor" mask="url(#ms-moon-cut)"></circle>
-          </svg>
-        </div>
-        <p class="ms-home-badge"><span class="dt-badge">Now open</span></p>
         <h1>Build websites.<br>Get paid.</h1>
-        <p class="ms-home-hero-lead">A site for a local business. One clear cut when they go live.</p>
-        <a class="ms-home-cta" href="login">Start earning</a>
-        <ul class="ms-facts">
-          <li>Sites in<br>minutes</li>
-          <li>Paid when<br>they go live</li>
-          <li>You keep<br>90%</li>
+        <p class="ms-home-hero-lead">A site for a local business.<br>One clear cut when they go live.</p>
+        <div class="ms-hero-actions">
+          <a class="ms-home-cta" href="login.html">Start earning</a>
+          <a class="ms-home-cta ms-home-cta-quiet" href="#how">How it works</a>
+        </div>
+        <ul class="ms-inspire" aria-label="Other website builders">
+          <li><img src="assets/builders/squarespace.svg" alt="" width="28" height="28"><span>Squarespace</span></li>
+          <li><img src="assets/builders/wix.svg" alt="" width="28" height="28"><span>Wix</span></li>
+          <li><img src="assets/builders/webflow.svg" alt="" width="28" height="28"><span>Webflow</span></li>
+          <li><img src="assets/builders/wordpress.svg" alt="" width="28" height="28"><span>WordPress</span></li>
         </ul>
       </section>
 
       <section class="ms-band" id="how" aria-labelledby="how-title">
         <div class="ms-wrap ms-wrap-wide">
-          <h2 id="how-title" class="ms-rise">A finished site,<br>with a clear payout.</h2>
-          <p class="ms-band-lead ms-rise">Get started in a few minutes.</p>
+          <p class="ms-how-badge ms-rise"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8.9 1.2a1 1 0 0 0-1.8 0l-.3 1.1a4.8 4.8 0 0 0-1.2.7L4.5 2.5a1 1 0 0 0-1.3 1.3l.5 1.1a4.8 4.8 0 0 0-.7 1.2L1.9 6.4a1 1 0 0 0 0 1.8l1.1.3c.1.4.3.8.7 1.2l-.5 1.1a1 1 0 0 0 1.3 1.3l1.1-.5c.4.3.8.5 1.2.7l.3 1.1a1 1 0 0 0 1.8 0l.3-1.1c.4-.1.8-.4 1.2-.7l1.1.5a1 1 0 0 0 1.3-1.3l-.5-1.1c.3-.4.5-.8.7-1.2l1.1-.3a1 1 0 0 0 0-1.8l-1.1-.3a4.8 4.8 0 0 0-.7-1.2l.5-1.1a1 1 0 0 0-1.3-1.3l-1.1.5a4.8 4.8 0 0 0-1.2-.7l-.3-1.1ZM8 10.1A2.1 2.1 0 1 1 8 5.9a2.1 2.1 0 0 1 0 4.2Z"/></svg> How it works</p>
+          <h2 id="how-title" class="ms-rise">Find it. Build it.<br>Sell it.</h2>
           <div class="ms-trio">
-            <article class="ms-card ms-rise">
-              <p class="ms-card-kicker">Simple</p>
-              <p class="ms-card-stat">90%</p>
-              <p>Of the go-live fee. Nothing else on top.</p>
-            </article>
-            <article class="ms-card ms-rise">
-              <p class="ms-card-kicker">Fast</p>
-              <p class="ms-card-title">Find a shop, build the site, send the link.</p>
-              <p>The owner pays on the live page.</p>
-            </article>
-            <article class="ms-card ms-rise">
-              <p class="ms-card-kicker">Local</p>
-              <p class="ms-card-title">Made for the shops around you.</p>
-              <div class="ms-pill-row">
-                <span class="dt-badge is-soft">Cafes</span>
-                <span class="dt-badge is-soft">Clinics</span>
-                <span class="dt-badge is-soft">Shops</span>
+            <article class="ms-card ms-how-card ms-rise">
+              <div class="ms-how-preview" aria-hidden="true">
+                <div class="ms-how-find">
+                  <p class="ms-how-search">Shops near you</p>
+                  <p class="ms-how-shop is-picked"><span class="ms-how-pin"></span><span><strong>Northside Cafe</strong><em>No website yet</em></span></p>
+                  <p class="ms-how-shop"><span class="ms-how-pin"></span><span><strong>Harbor Clinic</strong><em>Has a site</em></span></p>
+                </div>
               </div>
+              <p class="ms-how-step">01</p>
+              <h3>Find a business</h3>
+              <p>Pick a cafe, clinic, or shop nearby that still needs a site.</p>
+            </article>
+            <article class="ms-card ms-how-card ms-rise">
+              <div class="ms-how-preview" aria-hidden="true">
+                <div class="ms-how-site">
+                  <span class="ms-how-dots" aria-hidden="true"></span>
+                  <strong>Northside Cafe</strong>
+                  <span class="ms-how-line"></span>
+                  <span class="ms-how-line is-short"></span>
+                  <span class="ms-how-one">Build site</span>
+                </div>
+              </div>
+              <p class="ms-how-step">02</p>
+              <h3>Build the site</h3>
+              <p>One button turns that business into a page you can send.</p>
+            </article>
+            <article class="ms-card ms-how-card ms-rise">
+              <div class="ms-how-preview" aria-hidden="true">
+                <div class="ms-how-sale">
+                  <p class="ms-how-live"><span>Live</span><strong>Northside Cafe</strong></p>
+                  <p class="ms-how-cut"><span>You keep</span><strong>90%</strong></p>
+                </div>
+              </div>
+              <p class="ms-how-step">03</p>
+              <h3>Sell the site</h3>
+              <p>The owner pays when it goes live. Nothing else on top.</p>
             </article>
           </div>
+          <a class="ms-home-cta ms-how-cta" href="login.html">Start earning</a>
         </div>
       </section>
+      </div>
 
       <section class="ms-band ms-band-warm" aria-labelledby="flow-title">
         <div class="ms-wrap ms-wrap-wide">
-          <h2 id="flow-title" class="ms-rise">One flow<br>that does it all.</h2>
+          <h2 id="flow-title" class="ms-rise">Your workspace.</h2>
+          <p class="ms-band-note ms-rise">Find a business. Build the site. Get paid when they go live.</p>
           <div class="ms-pair">
             <article class="ms-card ms-product ms-rise">
-              <p class="ms-card-kicker">Build</p>
-              <h3>Turn the pieces on or off.</h3>
+              <p class="ms-card-kicker">Builder</p>
+              <h3>The site, in one place.</h3>
+              <p>Photos, hours, and a menu. Turn on only what that business needs.</p>
               <div class="ms-stage-card" aria-label="Site preview">
                 <p class="dt-status-row"><span class="dt-status-dot" aria-hidden="true"></span> Live preview</p>
                 <strong>Northside Cafe</strong>
@@ -443,8 +468,9 @@ document.documentElement.classList.add("ms-boot");
               </div>
             </article>
             <article class="ms-card ms-product ms-rise">
-              <p class="ms-card-kicker">Earn</p>
-              <h3>Send the link. See your cut.</h3>
+              <p class="ms-card-kicker">Go live</p>
+              <h3>They pay on the link.</h3>
+              <p>A small watermark stays on the site until the owner pays. You keep 90%.</p>
               <div class="ms-stage-card ms-pay-card">
                 <p class="dt-status-row"><span class="dt-status-dot" data-pay-dot aria-hidden="true"></span> <span data-pay-status>Ready to send</span></p>
                 <p class="ms-pay-label">You keep</p>
@@ -459,17 +485,17 @@ document.documentElement.classList.add("ms-boot");
 
       <section class="ms-band" aria-labelledby="cover-title">
         <div class="ms-wrap ms-wrap-wide">
-          <h2 id="cover-title" class="ms-rise">Works for the work you already do.</h2>
+          <h2 id="cover-title" class="ms-rise">Where you work.</h2>
           <div class="ms-pair">
             <article class="ms-card ms-cover ms-rise">
-              <p class="ms-card-kicker">Find</p>
-              <h3>Leads that still need a site.</h3>
-              <p>Cafes, clinics, and shops near you. Claim one and start building.</p>
+              <p class="ms-card-kicker">Business Finder</p>
+              <h3>Shops nearby with no site.</h3>
+              <p>Search cafes, clinics, and shops. Claim one, then open it in the Builder.</p>
             </article>
             <article class="ms-card ms-cover ms-rise">
-              <p class="ms-card-kicker">Paid</p>
-              <h3>Owners pay on the live site.</h3>
-              <p>No account for them. Secure checkout. You keep 90%.</p>
+              <p class="ms-card-kicker">My Clients</p>
+              <h3>After they pay, they stay with you.</h3>
+              <p>The watermark comes off. The live site stays in your client list.</p>
             </article>
           </div>
         </div>
@@ -477,19 +503,19 @@ document.documentElement.classList.add("ms-boot");
 
       <section class="ms-band ms-band-cool" id="faq" aria-labelledby="faq-title">
         <div class="ms-wrap">
-          <h2 id="faq-title" class="ms-rise">Got questions?<br>Here are the answers.</h2>
+          <h2 id="faq-title" class="ms-rise">Questions.</h2>
           <div class="dt-accordion ms-rise" data-accordion>
             <div class="dt-acc-item is-open">
               <button type="button" class="dt-acc-trigger" aria-expanded="true">What is Moonrise? <span aria-hidden="true">⌄</span></button>
-              <div class="dt-acc-panel"><div>A simple way to build websites for local businesses and get paid when they go live.</div></div>
+              <div class="dt-acc-panel"><div>A workspace for selling websites to local businesses. You find one that needs a site, build it, and get paid when the owner goes live.</div></div>
             </div>
             <div class="dt-acc-item">
               <button type="button" class="dt-acc-trigger" aria-expanded="false">How do I get paid? <span aria-hidden="true">⌄</span></button>
-              <div class="dt-acc-panel"><div>Publish the watermarked site, send the link, and earn when the owner pays to unlock it. You keep 90%.</div></div>
+              <div class="dt-acc-panel"><div>Publish the site with a small watermark and send the owner the link. They pay on that page to remove it. You keep 90%.</div></div>
             </div>
             <div class="dt-acc-item">
               <button type="button" class="dt-acc-trigger" aria-expanded="false">Do owners need an account? <span aria-hidden="true">⌄</span></button>
-              <div class="dt-acc-panel"><div>No. They pay on the live site through secure checkout.</div></div>
+              <div class="dt-acc-panel"><div>No. They open the link and pay there. They never sign in to Moonrise.</div></div>
             </div>
           </div>
         </div>
@@ -499,18 +525,18 @@ document.documentElement.classList.add("ms-boot");
         <div class="ms-wrap ms-wrap-wide">
           <div class="ms-pair">
             <article class="ms-card ms-rise">
-              <h2 id="close-title">Get paid<br>in three steps.</h2>
+              <h2 id="close-title">Three steps.</h2>
               <ol class="ms-steps">
-                <li><span>1</span> Sign in</li>
-                <li><span>2</span> Build the site</li>
-                <li><span>3</span> Send the link</li>
+                <li><span>1</span><span class="ms-step-copy"><strong>Find</strong><em>Pick a nearby business with no site.</em></span></li>
+                <li><span>2</span><span class="ms-step-copy"><strong>Build</strong><em>Make their page in the Builder.</em></span></li>
+                <li><span>3</span><span class="ms-step-copy"><strong>Send</strong><em>They pay on the link. You keep 90%.</em></span></li>
               </ol>
             </article>
             <article class="ms-card ms-price-card ms-rise">
               <p class="ms-card-kicker">Your cut</p>
               <p class="ms-price">90%</p>
-              <p>Of the go-live fee</p>
-              <a class="ms-home-cta" href="login">Start earning</a>
+              <p>When the owner pays to go live.</p>
+              <a class="ms-home-cta" href="login.html">Start earning</a>
             </article>
           </div>
         </div>
@@ -521,8 +547,9 @@ document.documentElement.classList.add("ms-boot");
       <div class="ms-wrap">
         <strong>moonrise.</strong>
         <nav class="ms-home-foot-links" aria-label="Footer">
-          <a href="login">Start</a>
+          <a href="login.html">Start</a>
           <a href="download">Download</a>
+          <a href="orders">Orders</a>
           <a href="ui-library">UI Library</a>
           <a href="help">Help</a>
           <a href="contact">Contact</a>
@@ -533,8 +560,8 @@ document.documentElement.classList.add("ms-boot");
     </footer>
   </div>
 
-  <script defer src="js/home-menu.js?v=20261108-minimal"></script>
-  <script defer src="js/home-stage.js?v=20261108-moon"></script>
+  <script defer src="js/home-menu.js?v=20261108-nav"></script>
+  <script defer src="js/home-stage.js?v=20261108-hero"></script>
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
   <script defer src="js/toast.js"></script>
   <script defer>

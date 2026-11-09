@@ -1,4 +1,13 @@
 /* Moonrise public landing. Scoped to the home page so studio chrome stays unchanged. */
+/* Newsreader is SIL Open Font License 1.1. https://openfontlicense.org */
+
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("../assets/fonts/newsreader-latin.woff2") format("woff2");
+}
 
 html:has(body[data-page="home"]) {
   scroll-behavior: smooth;
@@ -41,7 +50,7 @@ body[data-page="home"] {
   min-height: 100dvh;
   background: var(--ms-bg);
   color: var(--ms-ink);
-  overflow-x: clip;
+  overflow-x: visible;
   font-family: var(--ms-sans);
   font-size: 16px;
   font-weight: 500;
@@ -80,22 +89,144 @@ body[data-page="home"] main {
   width: 100%;
 }
 
-/* Floating home + menu, overlay sits under the two pills */
+/* Top bar: wordmark and links on the left, pill on the right. Slides away while scrolling down. */
 body[data-page="home"] .ms-site-bar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 80;
+  background: transparent;
+  pointer-events: none;
+  transform: translateY(0);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease;
+}
+
+body[data-page="home"] .ms-site-bar.is-hidden {
+  transform: translateY(-110%);
+}
+
+body[data-page="home"] .ms-site-bar.is-open {
+  transform: none;
+}
+
+body[data-page="home"] .ms-site-bar.is-scrolled {
+  background: rgb(245 245 247 / 92%);
+  box-shadow: 0 1px 0 rgb(0 0 0 / 6%);
+}
+
+body[data-page="home"] .ms-nav-row {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.15rem;
-  background: transparent;
+  width: min(100% - (var(--ms-gutter) * 2), 80rem);
+  margin: 0 auto;
+  padding: 1.15rem 0;
   pointer-events: none;
 }
 
-body[data-page="home"] .ms-home-btn,
+body[data-page="home"] .ms-nav-lead,
+body[data-page="home"] .ms-nav-end {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+body[data-page="home"] .ms-nav-lead {
+  gap: 1.15rem;
+}
+
+body[data-page="home"] .ms-nav-end {
+  gap: 0.65rem;
+}
+
+body[data-page="home"] .ms-home-btn {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  margin: -0.35rem;
+  padding: 0.35rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: #1d1d1f;
+  font: inherit;
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.2s ease;
+}
+
+body[data-page="home"] .ms-home-btn:hover {
+  opacity: 0.72;
+}
+
+body[data-page="home"] .ms-home-btn:focus-visible,
+body[data-page="home"] .ms-nav-links a:focus-visible,
+body[data-page="home"] .ms-nav-cta:focus-visible,
+body[data-page="home"] .ms-menu-btn:focus-visible {
+  outline: 2px solid #1d1d1f;
+  outline-offset: 3px;
+}
+
+body[data-page="home"] .ms-nav-links {
+  display: none;
+  align-items: center;
+  gap: 0.1rem;
+  pointer-events: auto;
+}
+
+body[data-page="home"] .ms-nav-links a {
+  display: inline-flex;
+  align-items: center;
+  height: 2.25rem;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  color: #6e6e73;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+body[data-page="home"] .ms-nav-links a:hover,
+body[data-page="home"] .ms-nav-links a:focus-visible {
+  color: #1d1d1f;
+}
+
+body[data-page="home"] .ms-nav-cta {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  padding: 0 1.7rem;
+  border-radius: 999px;
+  background: #1d1d1f;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  pointer-events: auto;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+body[data-page="home"] .ms-nav-cta:hover {
+  background: #2c2c2e;
+}
+
+body[data-page="home"] .ms-nav-cta:active {
+  transform: scale(0.97);
+}
+
 body[data-page="home"] .ms-menu-btn {
   position: relative;
   z-index: 2;
@@ -104,38 +235,34 @@ body[data-page="home"] .ms-menu-btn {
   justify-content: center;
   gap: 0.5rem;
   height: 2.5rem;
-  border: 1px solid #f0efef;
+  padding: 0 0.95rem 0 1.05rem;
+  border: 1px solid #1d1d1f;
   border-radius: 8px;
-  background: #fff;
-  color: var(--ms-char);
-  box-shadow: none;
+  background: #1d1d1f;
+  color: #f5f5f7;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: -0.02em;
-  text-decoration: none;
   cursor: pointer;
   pointer-events: auto;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-body[data-page="home"] .ms-home-btn {
-  width: 2.5rem;
-  padding: 0;
+body[data-page="home"] .ms-menu-btn:hover {
+  border-color: #2c2c2e;
+  background: #2c2c2e;
 }
 
-body[data-page="home"] .ms-home-btn svg {
-  width: 1.2rem;
-  height: 1.2rem;
-  display: block;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
+@media (min-width: 860px) {
+  body[data-page="home"] .ms-nav-links,
+  body[data-page="home"] .ms-nav-cta {
+    display: inline-flex;
+  }
 
-body[data-page="home"] .ms-menu-btn {
-  padding: 0 0.95rem 0 1.05rem;
+  body[data-page="home"] .ms-menu-btn {
+    display: none;
+  }
 }
 
 body[data-page="home"] .ms-menu-label {
@@ -247,8 +374,13 @@ body[data-page="home"] .ms-site-bar.is-open .ms-menu-screen a {
 }
 
 /* First screen: headline, action, three short lines */
-body[data-page="home"] .ms-home-hero {
+body[data-page="home"] .ms-hero-lock {
   position: relative;
+}
+
+body[data-page="home"] .ms-home-hero {
+  position: sticky;
+  top: 0;
   z-index: 1;
   background: var(--ms-bg);
   display: flex;
@@ -257,76 +389,43 @@ body[data-page="home"] .ms-home-hero {
   justify-content: center;
   width: 100%;
   max-width: none;
+  height: 100svh;
   min-height: 100svh;
   margin: 0;
   padding: 6.5rem var(--ms-gutter) 5.75rem;
   box-sizing: border-box;
   text-align: center;
-  overflow: clip;
 }
 
-body[data-page="home"] .ms-moon {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 40;
-  width: clamp(7.5rem, 22vw, 11rem);
-  aspect-ratio: 1;
-  color: #1d1d1f;
-  pointer-events: none;
-  opacity: 0;
-  transform-origin: 0 0;
-  transform: translate3d(calc(50vw - 50%), 110vh, 0);
-  will-change: transform;
-}
-
-body[data-page="home"] .ms-moon-glyph {
-  display: block;
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 16px 22px rgb(29 29 31 / 8%));
-}
-
-body[data-page="home"] .ms-moon.is-settled {
-  position: absolute;
+body[data-page="home"] .ms-home-hero h1,
+body[data-page="home"] .ms-home-hero-lead,
+body[data-page="home"] .ms-hero-actions,
+body[data-page="home"] .ms-inspire,
+body[data-page="home"] .ms-home-cta {
+  position: relative;
   z-index: 2;
-  opacity: 1;
-  will-change: auto;
-}
-
-body[data-page="home"] .ms-moon.is-settled .ms-moon-glyph {
-  animation: ms-moon-float 6.5s ease-in-out 0.4s infinite;
-}
-
-@keyframes ms-moon-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-body[data-page="home"] .ms-home-badge {
-  margin: 0 0 1.15rem;
 }
 
 body[data-page="home"] .ms-home-hero h1 {
   margin: 0;
-  max-width: 12ch;
-  color: var(--ms-char);
-  font-family: var(--ms-heading);
-  font-size: clamp(3.1rem, 7.4vw, 5.4rem);
-  font-weight: 560;
-  letter-spacing: -0.035em;
-  line-height: 0.96;
-  text-wrap: balance;
+  color: #2c2c2e;
+  font-family: "Newsreader", "Iowan Old Style", Palatino, Georgia, serif;
+  font-size: clamp(3.15rem, 7vw, 5.5rem);
+  font-weight: 450;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-align: center;
 }
 
 body[data-page="home"] .ms-home-hero-lead {
-  margin: 1.25rem auto 0;
-  max-width: 26rem;
-  color: var(--ms-muted);
-  font-size: 1.125rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.4;
+  margin: 1.45rem auto 0;
+  max-width: 24rem;
+  color: #6e6e73;
+  font-size: 1.0625rem;
+  font-weight: 400;
+  letter-spacing: -0.011em;
+  line-height: 1.45;
+  text-align: center;
 }
 
 body[data-page="home"] .ms-home-cta {
@@ -353,23 +452,58 @@ body[data-page="home"] .ms-home-cta:hover {
   transform: translateY(-1px);
 }
 
-body[data-page="home"] .ms-facts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-  width: min(100%, 46rem);
-  margin: clamp(2.75rem, 7vh, 4.5rem) 0 0;
+body[data-page="home"] .ms-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 2.85rem;
+}
+
+body[data-page="home"] .ms-hero-actions .ms-home-cta {
+  margin-top: 0;
+  padding: 0.75rem 1.85rem;
+  border-radius: 10px;
+}
+
+body[data-page="home"] .ms-inspire {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.15rem 2.4rem;
+  margin: 3.4rem 0 0;
   padding: 0;
   list-style: none;
 }
 
-body[data-page="home"] .ms-facts li {
-  color: var(--ms-char);
-  font-family: var(--ms-heading);
-  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
-  font-weight: 560;
-  letter-spacing: -0.03em;
-  line-height: 1.12;
+body[data-page="home"] .ms-inspire li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #b7b7bb;
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="home"] .ms-inspire img {
+  width: 1.7rem;
+  height: 1.7rem;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+body[data-page="home"] .ms-home-cta-quiet {
+  border: 1px solid #d2d2d7;
+  background: #fff;
+  color: #1d1d1f;
+}
+
+body[data-page="home"] .ms-home-cta-quiet:hover {
+  background: #f5f5f7;
 }
 
 body[data-page="home"] .ms-wrap-wide {
@@ -389,6 +523,17 @@ body[data-page="home"] .ms-band-cool {
   background: var(--ms-cool);
 }
 
+body[data-page="home"] .ms-band-note {
+  margin: 1rem auto 0;
+  max-width: 28rem;
+  color: var(--ms-muted);
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  text-align: center;
+}
+
 body[data-page="home"] .ms-band h2 {
   margin: 0 auto;
   max-width: 16ch;
@@ -400,13 +545,6 @@ body[data-page="home"] .ms-band h2 {
   line-height: 1.02;
   text-align: center;
   text-wrap: balance;
-}
-
-body[data-page="home"] .ms-band-lead {
-  margin: 1rem 0 0;
-  color: var(--ms-muted);
-  font-size: 1.05rem;
-  text-align: center;
 }
 
 body[data-page="home"] .ms-trio,
@@ -482,51 +620,281 @@ body[data-page="home"] .ms-pill-row {
   margin-top: 1rem;
 }
 
-/* Dark payout band, tucked slightly over the hero */
+/* How it works: dark band tucked over the hero */
 body[data-page="home"] #how {
   position: relative;
-  z-index: 3;
-  margin: -2.4rem clamp(0.75rem, 2.2vw, 1.35rem) 0;
-  padding: clamp(3.6rem, 8vh, 5.25rem) 0 clamp(3.75rem, 9vh, 5.75rem);
-  border-radius: 1.85rem;
+  z-index: 2;
+  margin: -2.4rem 0 0;
+  padding: clamp(4.25rem, 9vh, 6rem) 0 clamp(4.5rem, 10vh, 6.5rem);
+  border-radius: 1.85rem 1.85rem 0 0;
   background: #1d1d1f;
   color: #f5f5f7;
 }
 
+body[data-page="home"] #how .ms-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+body[data-page="home"] #how .ms-how-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 1.15rem;
+  padding: 0.38rem 0.8rem;
+  border-radius: 999px;
+  background: #2c2c2e;
+  color: #c7c7cc;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body[data-page="home"] #how .ms-how-badge svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
 body[data-page="home"] #how h2 {
   color: #f5f5f7;
+  font-weight: 650;
 }
 
-body[data-page="home"] #how .ms-band-lead {
-  color: #a1a1a6;
+body[data-page="home"] #how .ms-trio {
+  width: 100%;
+  gap: 1rem;
 }
 
-body[data-page="home"] #how .ms-card {
-  border-color: rgb(255 255 255 / 8%);
+body[data-page="home"] #how .ms-how-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem 0.8rem 1.2rem;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 24px;
   background: #2c2c2e;
+  text-align: left;
+  box-shadow: none;
 }
 
-body[data-page="home"] #how .ms-card-kicker {
+body[data-page="home"] #how .ms-how-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 9.25rem;
+  margin-bottom: 0.95rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: #161618;
+}
+
+body[data-page="home"] #how .ms-how-find,
+body[data-page="home"] #how .ms-how-site,
+body[data-page="home"] #how .ms-how-sale {
+  width: min(100%, 15.5rem);
+}
+
+body[data-page="home"] #how .ms-how-search,
+body[data-page="home"] #how .ms-how-shop,
+body[data-page="home"] #how .ms-how-live,
+body[data-page="home"] #how .ms-how-cut {
+  margin: 0;
+  border-radius: 12px;
+  background: #3a3a3c;
+}
+
+body[data-page="home"] #how .ms-how-search {
+  margin-bottom: 0.45rem;
+  padding: 0.55rem 0.75rem;
   color: #8e8e93;
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
-body[data-page="home"] #how .ms-card-stat,
-body[data-page="home"] #how .ms-card-title {
+body[data-page="home"] #how .ms-how-shop {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.65rem;
+  color: #6e6e73;
+}
+
+body[data-page="home"] #how .ms-how-shop strong,
+body[data-page="home"] #how .ms-how-shop em {
+  display: block;
+  font-style: normal;
+}
+
+body[data-page="home"] #how .ms-how-shop strong {
   color: #f5f5f7;
+  font-size: 0.86rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
 }
 
-body[data-page="home"] #how .ms-card p:not(.ms-card-stat):not(.ms-card-title):not(.ms-card-kicker) {
+body[data-page="home"] #how .ms-how-shop em {
+  color: #8e8e93;
+  font-size: 0.72rem;
+}
+
+body[data-page="home"] #how .ms-how-shop:not(.is-picked) {
+  opacity: 0.45;
+}
+
+body[data-page="home"] #how .ms-how-shop.is-picked {
+  outline: 1.5px solid #f5f5f7;
+}
+
+body[data-page="home"] #how .ms-how-pin {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #f5f5f7;
+  flex: none;
+}
+
+body[data-page="home"] #how .ms-how-shop:not(.is-picked) .ms-how-pin {
+  background: #c7c7cc;
+}
+
+body[data-page="home"] #how .ms-how-site {
+  padding: 0.85rem 0.9rem 0.95rem;
+  border-radius: 14px;
+  background: #3a3a3c;
+}
+
+body[data-page="home"] #how .ms-how-dots {
+  display: block;
+  height: 0.42rem;
+  margin-bottom: 0.7rem;
+}
+
+body[data-page="home"] #how .ms-how-dots::before {
+  content: "";
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: #636366;
+  box-shadow: 0.7rem 0 0 #636366, 1.4rem 0 0 #636366;
+}
+
+body[data-page="home"] #how .ms-how-site strong {
+  display: block;
+  color: #f5f5f7;
+  font-size: 0.95rem;
+  letter-spacing: -0.03em;
+}
+
+body[data-page="home"] #how .ms-how-line {
+  display: block;
+  height: 0.38rem;
+  margin-top: 0.45rem;
+  border-radius: 999px;
+  background: #48484a;
+}
+
+body[data-page="home"] #how .ms-how-line.is-short {
+  width: 62%;
+}
+
+body[data-page="home"] #how .ms-how-one {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  margin-top: 0.85rem;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="home"] #how .ms-how-sale {
+  display: grid;
+  gap: 0.45rem;
+}
+
+body[data-page="home"] #how .ms-how-live,
+body[data-page="home"] #how .ms-how-cut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.8rem;
+}
+
+body[data-page="home"] #how .ms-how-live span,
+body[data-page="home"] #how .ms-how-cut span {
+  color: #8e8e93;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+body[data-page="home"] #how .ms-how-live strong,
+body[data-page="home"] #how .ms-how-cut strong {
+  color: #f5f5f7;
+  font-size: 0.95rem;
+  letter-spacing: -0.03em;
+}
+
+body[data-page="home"] #how .ms-how-cut strong {
+  font-family: var(--ms-heading);
+  font-size: 1.65rem;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+}
+
+body[data-page="home"] #how .ms-how-step {
+  margin: 0 0.45rem;
+  color: #8e8e93;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+}
+
+body[data-page="home"] #how .ms-how-card h3 {
+  margin: 0.3rem 0.45rem 0;
+  color: #f5f5f7;
+  font-family: var(--ms-heading);
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+body[data-page="home"] #how .ms-how-card > p:last-child {
+  margin: 0.35rem 0.45rem 0;
   color: #c7c7cc;
+  font-size: 0.95rem;
+  line-height: 1.45;
 }
 
-body[data-page="home"] #how .dt-badge.is-soft {
-  background: rgb(255 255 255 / 10%);
-  color: #f5f5f7;
+body[data-page="home"] #how .ms-how-cta {
+  margin-top: 2.15rem;
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+body[data-page="home"] #how .ms-how-cta:hover {
+  background: #fff;
+}
+
+body[data-page="home"] .ms-product > p {
+  margin: 0 0 1.1rem;
+  max-width: 34rem;
+  color: var(--ms-muted);
 }
 
 body[data-page="home"] .ms-product h3,
 body[data-page="home"] .ms-cover h3 {
-  margin: 0 0 1rem;
+  margin: 0 0 0.4rem;
   color: var(--ms-char);
   font-family: var(--ms-heading);
   font-size: clamp(1.7rem, 2.4vw, 2.15rem);
@@ -638,25 +1006,40 @@ body[data-page="home"] .ms-steps {
 
 body[data-page="home"] .ms-steps li {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
-  padding: 0.7rem 0;
+  padding: 0.85rem 0;
   border-top: 1px solid var(--ms-line);
   color: var(--ms-char);
   font-size: 1.05rem;
   font-weight: 600;
 }
 
-body[data-page="home"] .ms-steps span {
+body[data-page="home"] .ms-steps li > span:first-child {
   display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
   width: 1.7rem;
   height: 1.7rem;
+  margin-top: 0.1rem;
   border-radius: 8px;
   background: var(--ms-bg);
   color: var(--ms-muted);
   font-size: 0.82rem;
+}
+
+body[data-page="home"] .ms-step-copy {
+  display: grid;
+  gap: 0.15rem;
+}
+
+body[data-page="home"] .ms-step-copy em {
+  color: var(--ms-muted);
+  font-size: 0.95rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.35;
 }
 
 body[data-page="home"] .ms-price-card .ms-home-cta {
@@ -725,19 +1108,18 @@ body[data-page="home"] .ms-trio .ms-rise:nth-child(3) {
   transition-delay: 0.16s;
 }
 
-body[data-page="home"] .ms-home-hero > :not(.ms-moon) {
+body[data-page="home"] .ms-home-hero > * {
   opacity: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  body[data-page="home"] .ms-home-hero.is-revealed > :not(.ms-moon) {
+  body[data-page="home"] .ms-home-hero.is-revealed > * {
     animation: ms-home-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
-  body[data-page="home"] .ms-home-hero.is-revealed > h1 { animation-delay: 0.18s; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-home-badge { animation-delay: 0.14s; }
+  body[data-page="home"] .ms-home-hero.is-revealed > h1 { animation-delay: 0.14s; }
   body[data-page="home"] .ms-home-hero.is-revealed > .ms-home-hero-lead { animation-delay: 0.22s; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-home-cta { animation-delay: 0.32s; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-facts { animation-delay: 0.42s; }
+  body[data-page="home"] .ms-home-hero.is-revealed > .ms-hero-actions { animation-delay: 0.28s; }
+  body[data-page="home"] .ms-home-hero.is-revealed > .ms-inspire { animation-delay: 0.36s; }
 }
 
 @keyframes ms-home-rise {
@@ -746,20 +1128,23 @@ body[data-page="home"] .ms-home-hero > :not(.ms-moon) {
 }
 
 @media (max-width: 800px) {
-  body[data-page="home"] .ms-facts,
   body[data-page="home"] .ms-trio,
   body[data-page="home"] .ms-pair {
     grid-template-columns: 1fr;
-  }
-  body[data-page="home"] .ms-facts {
-    text-align: center;
   }
   body[data-page="home"] .ms-home-hero {
     padding-top: 6.25rem;
   }
 }
 
+@media (max-width: 640px) {
+  body[data-page="home"] .ms-home-hero h1 {
+    font-size: clamp(2.7rem, 12vw, 3.35rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] .ms-site-bar,
   body[data-page="home"] .ms-menu-screen,
   body[data-page="home"] .ms-menu-screen a,
   body[data-page="home"] .ms-menu-screen a::after,
@@ -773,13 +1158,9 @@ body[data-page="home"] .ms-home-hero > :not(.ms-moon) {
     animation: none;
   }
   body[data-page="home"] .ms-rise,
-  body[data-page="home"] .ms-home-hero > :not(.ms-moon) {
+  body[data-page="home"] .ms-home-hero > * {
     opacity: 1;
     transform: none;
-    animation: none;
-  }
-  body[data-page="home"] .ms-moon,
-  body[data-page="home"] .ms-moon-glyph {
     animation: none;
   }
 }

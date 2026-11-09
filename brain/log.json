@@ -3,6 +3,25 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.5.5",
+      "date": "2026-11-08",
+      "title": "Workspace home",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The home headline is a large centered serif: Build websites. Get paid.",
+            "Start earning is a squared button beside How it works.",
+            "Four other website builders sit in grey under the hero buttons.",
+            "How it works is a dark band with three cards: find a business, build the site, and sell it.",
+            "The moon, the mountain layers, and the three hero facts are gone.",
+            "The top bar shows the wordmark, page links, and a Start earning pill, and it slides away while you scroll down.",
+            "The rest of the home page explains the workspace: Builder, Business Finder, My Clients, and keeping 90% when the owner pays."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.5.4",
       "date": "2026-11-08",
       "title": "Dark payout band",
