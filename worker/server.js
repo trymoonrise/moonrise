@@ -31,7 +31,7 @@ function loadWorkerEnv() {
   // Shared secrets vault at repo root (Moonrise/accesstokens.env).
   // Used for local/dev: Stripe, Vercel domains, unlock allowlist, etc.
   // Never overrides keys already set (worker/.env or host env wins).
-  const vaultPath = path.join(__dirname, "..", "..", "accesstokens.env");
+  const vaultPath = path.join(__dirname, "..", "accesstokens.env");
   if (!fs.existsSync(vaultPath)) return;
   const vault = dotenv.parse(fs.readFileSync(vaultPath));
   for (const [key, value] of Object.entries(vault)) {
@@ -277,6 +277,9 @@ const {
   waitForGenerationJob,
   ACTIVE_JOB_MS,
 } = require("./generate-jobs");
+const { siteSourceFiles } = require("../agent/src/sources");
+const { createWorkspace, removeWorkspace } = require("../agent/src/workspace");
+const { createAgentActivity } = require("./agent-activity");
 
 /** Same requestId retries (refresh/resume) must not consume generate rate limit slots. */
 const seenGenerateRequestIds = new Map();
@@ -2397,14 +2400,14 @@ const GLOBAL_RATE_SKIP = new Set([
   "/contact-form.js",
 ]);
 
-mountAuthRoutes(app, { db, security });
-
 function skipGlobalRateLimit(req) {
   if (req.method === "OPTIONS") return true;
   if (GLOBAL_RATE_SKIP.has(req.path)) return true;
   if (String(req.path || "").startsWith("/webhooks/cal/")) return true;
   return false;
 }
+
+mountAuthRoutes(app, { db, security });
 
 const globalApiLimiter = rateLimit({
   windowMs: 60 * 1000,
@@ -3472,10 +3475,14 @@ function qualityGate(html, plan, ctx) {
   return assessSiteCompleteness(html, plan?.structure, ctx);
 }
 
-async function generateWithOpenRouter(rawCtx, presetPack, plan) {
+async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
   const ctx = sanitizeCtxHours(rawCtx);
   const stockMedia = selectStockMedia(ctx);
   const shellPlan = plan || buildLocalPlan(ctx);
+  if (activity) {
+    const brief = siteSourceFiles(ctx, {}, shellPlan, stockMedia).find((file) => file.path === "brief.json");
+    if (brief) await activity.writeFiles([brief]);
+  }
   const assembleMaxTokens = Math.max(
     WEBSITE_MAX_OUTPUT_TOKENS,
     Number(process.env.WEBSITE_ASSEMBLE_MAX_TOKENS || WEBSITE_MAX_OUTPUT_TOKENS)
@@ -3512,19 +3519,26 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan) {
     copy = fallbackSiteCopy(ctx, shellPlan);
   }
 
-  const shellFallback = () => {
+  const shellFallback = async () => {
     const html = finalizeGeneratedHtml(renderBusinessSite(ctx, copy, stockMedia), ctx, stockMedia);
     const check = qualityGate(html, shellPlan, ctx);
     if (!check.ok) {
       console.warn("Craft shell quality warnings (shipping shell anyway):", check.reasons.join(", "));
     }
+    if (activity) await activity.savePage(html, "Saving the page");
     return html;
   };
+
+  if (activity) {
+    await activity.writeFiles(
+      siteSourceFiles(ctx, copy, shellPlan, stockMedia).filter((file) => file.path !== "brief.json")
+    );
+  }
 
   const pack = Array.isArray(presetPack) ? presetPack : [];
   if (!pack.length) {
     console.warn("Moonrise agent: empty preset kit, using Craft shell fallback");
-    return shellFallback();
+    return await shellFallback();
   }
 
   const assembleSystem = craftAgentSystemPrompt();
@@ -3566,6 +3580,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan) {
     if (!/<html[\s>]/i.test(html) || html.length < 4000) {
       throw new Error("Assemble returned incomplete HTML");
     }
+    if (activity) await activity.savePage(html, "Assembling the full page");
 
     // —— Stage 3: Enhance (strong model, design review) ——
     try {
@@ -3602,8 +3617,10 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan) {
         expectHtml: true,
       });
       const next = String(enhanced.content || "").trim();
-      if (/<html[\s>]/i.test(next) && next.length > 4000) html = next;
-      else console.warn("Moonrise agent enhance returned weak HTML; keeping assemble draft");
+      if (/<html[\s>]/i.test(next) && next.length > 4000) {
+        html = next;
+        if (activity) await activity.savePage(html, "Reviewing spacing and type");
+      } else console.warn("Moonrise agent enhance returned weak HTML; keeping assemble draft");
     } catch (enhanceErr) {
       console.warn("Moonrise agent enhance skipped:", enhanceErr.message);
     }
@@ -3645,18 +3662,20 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan) {
       html = String(repaired.content || "").trim();
       finalized = finalizeGeneratedHtml(html, ctx, stockMedia);
       check = qualityGate(finalized, shellPlan, ctx);
+      if (activity) await activity.savePage(finalized, "Repairing the page");
     }
     if (!check.ok || !/<html[\s>]/i.test(finalized)) {
       console.warn(
         "Moonrise agent still failing quality gate, using Craft shell fallback:",
         check.reasons.join(", ")
       );
-      return shellFallback();
+      return await shellFallback();
     }
+    if (activity) await activity.savePage(finalized, "Checking the finished page");
     return finalized;
   } catch (err) {
     console.warn("Moonrise agent assemble failed, using Craft shell fallback:", err.message);
-    return shellFallback();
+    return await shellFallback();
   }
 }
 
@@ -3803,6 +3822,8 @@ app.get("/generate/status", requireUser, async (req, res) => {
       jobId: job.id,
       requestId,
       retryAfterSec: 3,
+      thoughts: Array.isArray(job.prompt?.agent?.thoughts) ? job.prompt.agent.thoughts : [],
+      files: Array.isArray(job.prompt?.agent?.files) ? job.prompt.agent.files : [],
     });
   } catch (e) {
     console.error(e);
@@ -3810,10 +3831,30 @@ app.get("/generate/status", requireUser, async (req, res) => {
   }
 });
 
+app.get("/generate/activity", requireUser, async (req, res) => {
+  try {
+    const supabase = db();
+    const requestId = String(req.query.requestId || "").trim();
+    if (!requestId) return res.status(400).json({ error: "requestId required" });
+    const job = await findJobByRequestId(supabase, req.user.id, requestId);
+    if (!job) return res.status(404).json({ error: "Generation not found" });
+    const agent = job.prompt?.agent && typeof job.prompt.agent === "object" ? job.prompt.agent : {};
+    return res.json({
+      status: job.status,
+      thoughts: Array.isArray(agent.thoughts) ? agent.thoughts : [],
+      files: Array.isArray(agent.files) ? agent.files : [],
+    });
+  } catch (e) {
+    console.error(e);
+    respondApiError(res, e, "Could not load generation activity");
+  }
+});
+
 app.post("/generate", requireUser, generateLimiter, async (req, res) => {
   const supabase = db();
   const requestId = String(req.body.requestId || req.headers["x-request-id"] || "").trim();
   let activeJobId = null;
+  let workspaceDir = null;
 
   try {
     const existing = await resolveExistingGeneration(
@@ -3893,18 +3934,21 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       return res.status(400).json({ error: "Maps link must start with http:// or https://" });
     }
 
+    const jobPrompt = {
+      ...ctx,
+      requestId: requestId || null,
+      brief: buildBusinessBrief(ctx),
+      presetsDir: WEBSITE_PRESETS_DIR,
+      agent: { thoughts: [], files: [] },
+    };
+
     const jobInsert = await supabase
       .from("generation_jobs")
       .insert({
         user_id: req.user.id,
         project_id: req.body.projectId || null,
         status: "running",
-        prompt: {
-          ...ctx,
-          requestId: requestId || null,
-          brief: buildBusinessBrief(ctx),
-          presetsDir: WEBSITE_PRESETS_DIR,
-        },
+        prompt: jobPrompt,
       })
       .select("id")
       .single();
@@ -3926,6 +3970,13 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
     if (!activeJobId) {
       return res.status(500).json({ error: "Could not start generation job" });
     }
+    workspaceDir = createWorkspace(activeJobId);
+    const activity = createAgentActivity({
+      supabase,
+      jobId: activeJobId,
+      jobPrompt,
+      workspaceDir,
+    });
 
     // Manifest must be loaded before kit selection (GitHub cache is empty on cold start).
     try {
@@ -3978,22 +4029,20 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       );
     }
     if (jobInsert?.data?.id) {
+      Object.assign(jobPrompt, {
+        presetsSource: githubPresets.getPresetSourceMeta(),
+        atmosphere: plan?.atmosphere || "",
+        pickIds: ids,
+        kit: presetPack.map((p) => ({ id: p.id, role: p.role, title: p.title })),
+      });
       await supabase
         .from("generation_jobs")
         .update({
-          prompt: {
-            ...ctx,
-            brief: buildBusinessBrief(ctx),
-            presetsDir: WEBSITE_PRESETS_DIR,
-            presetsSource: githubPresets.getPresetSourceMeta(),
-            atmosphere: plan?.atmosphere || "",
-            pickIds: ids,
-            kit: presetPack.map((p) => ({ id: p.id, role: p.role, title: p.title })),
-          },
+          prompt: jobPrompt,
         })
         .eq("id", jobInsert.data.id);
     }
-    const html = await generateWithOpenRouter(ctx, presetPack, plan);
+    const html = await generateWithOpenRouter(ctx, presetPack, plan, activity);
     const ends = new Date(Date.now() + urgencyHours() * 3600 * 1000).toISOString();
 
     let projectId = req.body.projectId || null;
@@ -4057,6 +4106,7 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       projectId = data.id;
     }
 
+    jobPrompt.presetCount = presetPack.length;
     if (jobInsert?.data?.id) {
       await supabase
         .from("generation_jobs")
@@ -4064,13 +4114,7 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
           status: "done",
           project_id: projectId,
           result_html: html.slice(0, 200000),
-          prompt: {
-            ...ctx,
-            requestId: requestId || null,
-            brief: buildBusinessBrief(ctx),
-            presetsDir: WEBSITE_PRESETS_DIR,
-            presetCount: presetPack.length,
-          },
+          prompt: jobPrompt,
         })
         .eq("id", jobInsert.data.id);
     }
@@ -4092,6 +4136,8 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       error: formatted.message,
       code: formatted.code || e.code || undefined,
     });
+  } finally {
+    removeWorkspace(workspaceDir);
   }
 });
 
@@ -5842,13 +5888,21 @@ function patchHtmlCspForWatermark(html, workerBase) {
       } else {
         next = `${next}; connect-src 'self' ${origin} https://api.stripe.com`;
       }
+      const frameHosts = [
+        "https://js.stripe.com",
+        "https://checkout.stripe.com",
+        "https://hooks.stripe.com",
+        "https://cal.com",
+        "https://app.cal.com",
+      ];
       if (/frame-src/i.test(next)) {
-        if (!next.includes("checkout.stripe.com")) {
-          next = next.replace(
-            /frame-src([^;]*)/i,
-            (m, rest) => `${m} https://js.stripe.com https://checkout.stripe.com https://hooks.stripe.com`
-          );
-        }
+        frameHosts.forEach((origin) => {
+          if (!next.includes(origin)) {
+            next = next.replace(/frame-src([^;]*)/i, (m, rest) => `frame-src${rest} ${origin}`);
+          }
+        });
+      } else {
+        next = `${next}; frame-src 'self' ${frameHosts.join(" ")}`;
       }
       return full.replace(policy, next);
     }

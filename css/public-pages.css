@@ -792,12 +792,18 @@ body[data-page="ui-library"] .dt-toc a {
     color: #232427 !important;
   }
 
-  .ms-legal-toc,
   .ms-legal-top,
   .ms-legal-foot,
   .ms-orders-nav {
     background: #ffffff !important;
     border-color: #e8e8ea !important;
+  }
+
+  .ms-legal-toc,
+  .ms-help-toc {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
   }
 
   .ms-legal-toc a,

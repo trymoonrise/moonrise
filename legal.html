@@ -246,8 +246,8 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
-  <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
-  <link rel="stylesheet" href="css/docs.css?v=20261108-public">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261108-toc">
+  <link rel="stylesheet" href="css/docs.css?v=20261108-toc">
   <script defer src="js/config.js?v=20261106-mono"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
 </head>
@@ -977,6 +977,34 @@ document.documentElement.classList.add("ms-boot");
       </section>
     </div>
   </main>
+
+  <script>
+    (function () {
+      var nav = document.querySelector(".ms-legal-toc");
+      if (!nav) return;
+      var links = Array.prototype.filter.call(nav.querySelectorAll("a"), function (a) {
+        return (a.getAttribute("href") || "").charAt(0) === "#";
+      });
+      var items = links.map(function (a) {
+        return { a: a, el: document.getElementById(a.getAttribute("href").slice(1)) };
+      }).filter(function (item) { return item.el; });
+      if (!items.length) return;
+      function mark() {
+        var line = window.scrollY + 96;
+        var current = items[0];
+        items.forEach(function (item) {
+          var top = item.el.getBoundingClientRect().top + window.scrollY;
+          if (top <= line) current = item;
+        });
+        items.forEach(function (item) {
+          if (item === current) item.a.setAttribute("aria-current", "true");
+          else item.a.removeAttribute("aria-current");
+        });
+      }
+      mark();
+      window.addEventListener("scroll", mark, { passive: true });
+    })();
+  </script>
 
   <footer class="ms-legal-foot" aria-label="Legal footer">
     <a href="contact">Contact</a>

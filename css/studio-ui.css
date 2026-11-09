@@ -521,7 +521,7 @@ html[data-ms-mode="dark"] .ms-quick-nav::before {
 
 /* Ink: leftover blue chrome follows the black and white palette. */
 html[data-ms-accent-tone="dark"]:not([data-ms-mode="dark"]) :is(
-  a:not(.ms-btn):not(.ms-store-buy):not(.ms-home-cta-primary):not(.ms-home-method-cta):not(.ms-lf-find):not(.ms-lb-publish-btn):not(.ms-paywall-pay):not(.ms-fin-save):not(.ms-fin-next):not(.ms-dash-tool):not(.lf-action-builder):not(.ms-lf-map-scan):not(.ms-home-footer-signup):not(.ms-home-footer a),
+  a:not(.ms-btn):not(.ms-store-buy):not(.ms-home-cta-primary):not(.ms-home-cta):not(.ms-nav-cta):not(.ms-doc-cta):not(.ms-ord-cta):not(.ms-dl-btn):not(.ms-home-method-cta):not(.ms-lf-find):not(.ms-lb-publish-btn):not(.ms-paywall-pay):not(.ms-fin-save):not(.ms-fin-next):not(.ms-dash-tool):not(.lf-action-builder):not(.ms-lf-map-scan):not(.ms-home-footer-signup):not(.ms-home-footer a),
   .ms-nav-link.is-active .ms-nav-ico,
   .ms-nav-link.is-generating,
   .ms-nav-link.is-generating .ms-nav-ico,

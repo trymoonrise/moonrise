@@ -164,6 +164,7 @@
   let genProgressPct = 0;
   let genProgressTimer = null;
   let genProgressFinishTimer = null;
+  let agentActivityTimer = null;
   let previewSizeLabelHideTimer = null;
   let previewSizeLabelFadeTimer = null;
   const PREVIEW_SIZE_LABEL_MS = 1400;
@@ -403,40 +404,83 @@
     }
   }
 
-  const AGENT_TIMELINE_STEPS = ["preparing", "copy", "assemble", "enhance", "check", "ready"];
-
-  function resolveAgentStep(label, pct) {
-    const text = String(label || "").toLowerCase();
-    if (/ready|opening preview|website ready|complete/.test(text) || pct >= 100) {
-      return "ready";
+  function resetAgentActivityPanel() {
+    const thoughts = document.getElementById("preview-agent-thoughts");
+    const files = document.getElementById("preview-agent-files");
+    if (thoughts) {
+      thoughts.replaceChildren();
+      const line = document.createElement("p");
+      line.className = "ms-lb-agent-thought is-current";
+      line.textContent = "Reading the business…";
+      thoughts.appendChild(line);
     }
-    if (/check|quality|repair|verif/.test(text) || pct >= 90) return "check";
-    if (/enhanc|polish|review|improv/.test(text) || pct >= 55) return "enhance";
-    if (/assembl|craft|layout|special prompt|redesign|building|preset/.test(text) || pct >= 28) {
-      return "assemble";
-    }
-    if (/writ|copy|headline/.test(text) || pct >= 12) return "copy";
-    if (/load(ing)? project/.test(text)) return "preparing";
-    return "preparing";
+    if (files) files.replaceChildren();
   }
 
-  function syncAgentTimeline(label, pct) {
-    const root = document.getElementById("preview-agent-timeline");
-    if (!root) return;
-    const step = resolveAgentStep(label, pct);
-    const idx = Math.max(0, AGENT_TIMELINE_STEPS.indexOf(step));
-    root.querySelectorAll("[data-agent-step]").forEach((el) => {
-      const key = el.getAttribute("data-agent-step");
-      const elIdx = AGENT_TIMELINE_STEPS.indexOf(key);
-      el.classList.toggle("is-done", elIdx >= 0 && elIdx < idx);
-      el.classList.toggle("is-current", elIdx === idx);
-    });
-    const kicker = document.getElementById("preview-loading-kicker");
-    if (kicker) {
-      kicker.textContent =
-        step === "ready" ? "Moonrise agent · done" : "Moonrise agent · working";
+  function renderAgentActivity(data) {
+    const thoughts = Array.isArray(data?.thoughts) ? data.thoughts : [];
+    const files = Array.isArray(data?.files) ? data.files : [];
+    const thoughtRoot = document.getElementById("preview-agent-thoughts");
+    const fileRoot = document.getElementById("preview-agent-files");
+    if (thoughtRoot && thoughts.length) {
+      const shown = thoughts.slice(-8);
+      thoughtRoot.replaceChildren();
+      shown.forEach((item, index) => {
+        const line = document.createElement("p");
+        line.className =
+          "ms-lb-agent-thought" + (index === shown.length - 1 ? " is-current" : "");
+        line.textContent = String(item?.text || "");
+        thoughtRoot.appendChild(line);
+      });
+      thoughtRoot.scrollTop = thoughtRoot.scrollHeight;
     }
-    root.setAttribute("data-current-step", step);
+    if (!fileRoot || !files.length) return;
+    files.forEach((file) => {
+      const rel = String(file?.path || "");
+      if (!rel) return;
+      let row = null;
+      fileRoot.querySelectorAll("[data-agent-file]").forEach((el) => {
+        if (el.getAttribute("data-agent-file") === rel) row = el;
+      });
+      if (row) return;
+      row = document.createElement("div");
+      row.className = "ms-lb-agent-file";
+      row.setAttribute("data-agent-file", rel);
+      row.setAttribute("role", "listitem");
+      const name = document.createElement("code");
+      name.textContent = rel;
+      row.appendChild(name);
+      fileRoot.appendChild(row);
+    });
+    fileRoot.scrollTop = fileRoot.scrollHeight;
+  }
+
+  function stopAgentActivityPoll() {
+    if (agentActivityTimer) {
+      window.clearInterval(agentActivityTimer);
+      agentActivityTimer = null;
+    }
+  }
+
+  async function pollAgentActivityOnce(base, requestId, headers, signal) {
+    if (!base || !requestId || signal?.aborted) return;
+    const res = await fetch(
+      base + "/generate/activity?requestId=" + encodeURIComponent(requestId),
+      { headers, signal }
+    );
+    if (!res.ok) return;
+    const data = await res.json().catch(() => null);
+    if (data) renderAgentActivity(data);
+  }
+
+  function startAgentActivityPoll(base, requestId, headers, signal) {
+    stopAgentActivityPoll();
+    if (!base || !requestId) return;
+    const tick = () => {
+      pollAgentActivityOnce(base, requestId, headers, signal).catch(() => {});
+    };
+    tick();
+    agentActivityTimer = window.setInterval(tick, 700);
   }
 
   function renderGenerateProgress(pct, label) {
@@ -450,7 +494,6 @@
     if (pctEl) pctEl.textContent = clamped + "%";
     if (bar) bar.setAttribute("aria-valuenow", String(clamped));
     if (label && copy) copy.textContent = label;
-    syncAgentTimeline(label || (copy && copy.textContent) || "", clamped);
   }
 
   function startGenerateProgress(label) {
@@ -460,7 +503,8 @@
     genProgressPct = 0;
     document.body.classList.add("ms-lb-generating");
     document.documentElement.classList.remove("ms-lb-boot-generating");
-    renderGenerateProgress(0, label || "Preparing facts...");
+    resetAgentActivityPanel();
+    renderGenerateProgress(0, label || "Reading the business…");
     syncBuilderChannelGenerating({ cancellable: false });
     const startedAt = Date.now();
     const approachMs = 90000;
@@ -472,12 +516,7 @@
       // Climb toward 95% while waiting; 100% is reserved for a finished site.
       const cap = generateAbort ? 95 : 90;
       const target = Math.floor(5 + eased * (cap - 5));
-      let stage = "Preparing facts...";
-      if (elapsed > 8000) stage = "Writing copy...";
-      if (elapsed > 22000) stage = "Assembling with Special Prompt...";
-      if (elapsed > 55000) stage = "Enhancing design...";
-      if (elapsed > 95000) stage = "Checking quality...";
-      if (target > genProgressPct) renderGenerateProgress(target, stage);
+      if (target > genProgressPct) renderGenerateProgress(target);
 
       // Hard stop so the bar never sits at 92% forever.
       if (elapsed > 165000 && !(state.html && String(state.html).trim())) {
@@ -499,6 +538,7 @@
     stopGenerateProgressTick();
     genProgressActive = false;
     genProgressPct = 0;
+    stopAgentActivityPoll();
     document.body.classList.remove("ms-lb-generating");
     document.documentElement.classList.remove("ms-lb-boot-generating");
     renderGenerateProgress(0, "Preparing facts...");
@@ -6150,12 +6190,7 @@
       if (res.status >= 500 && data.code === "generation_failed") {
         throw new Error(data.error || "Generation failed");
       }
-      renderGenerateProgress(
-        Math.max(genProgressPct, 40),
-        genProgressPct < 60
-          ? "Assembling with Special Prompt..."
-          : "Enhancing design..."
-      );
+      renderAgentActivity(data);
       await sleepMs((Number(data.retryAfterSec) || 3) * 1000);
     }
     throw new Error(
@@ -6393,10 +6428,8 @@
         leadId: intake.leadId || state.leadId || null,
         redesign: isRedesign,
       });
-      renderGenerateProgress(Math.max(genProgressPct, 25), "Assembling with Special Prompt...");
+      startAgentActivityPoll(base, requestId, headers, signal);
       const data = await runGenerateRequest(base, requestId, intake, headers, signal);
-      renderGenerateProgress(Math.max(genProgressPct, 70), "Enhancing design...");
-      renderGenerateProgress(Math.max(genProgressPct, 90), "Checking quality...");
       if (data.credits) {
         state.totalCredits = Number(data.credits.totalCredits) || 0;
         document.dispatchEvent(new CustomEvent("ms:credits-changed", { detail: data.credits }));

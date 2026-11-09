@@ -2,6 +2,7 @@
 extra
 Extra
 .agents
+agent/workspaces
 .cursor
 .git
 

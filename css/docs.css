@@ -129,28 +129,82 @@ body.ms-contact-public .ms-page-head {
 
 body.ms-legal-site .ms-legal-toc,
 body.ms-public-doc .ms-help-toc {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 0.85rem !important;
-  margin: 0 0 1.75rem !important;
+  align-items: center;
+  gap: 0 4px !important;
+  margin: 8px 0 28px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 body.ms-legal-site .ms-legal-toc a,
 body.ms-public-doc .ms-help-toc a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
   background: transparent !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
+  box-shadow: none !important;
   color: #6e6e73 !important;
   -webkit-text-fill-color: #6e6e73 !important;
   font-size: 0.95rem !important;
-  font-weight: 560 !important;
-  letter-spacing: -0.015em;
+  font-weight: 500 !important;
+  letter-spacing: -0.011em;
+  line-height: 1.2;
+  text-decoration: none !important;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+body.ms-legal-site .ms-legal-toc a[aria-current="true"]::after,
+body.ms-public-doc .ms-help-toc a[aria-current="true"]::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 8px;
+  height: 2px;
+  border-radius: 1px;
+  background: #1d1d1f;
 }
 
 body.ms-legal-site .ms-legal-toc a:hover,
 body.ms-public-doc .ms-help-toc a:hover {
   color: #1d1d1f !important;
   -webkit-text-fill-color: #1d1d1f !important;
+  background: rgb(29 29 31 / 5%) !important;
+}
+
+body.ms-legal-site .ms-legal-toc a:focus-visible,
+body.ms-public-doc .ms-help-toc a:focus-visible {
+  outline: 2px solid #1d1d1f;
+  outline-offset: 2px;
+}
+
+body.ms-legal-site .ms-legal-toc a[aria-current="true"],
+body.ms-public-doc .ms-help-toc a[aria-current="true"] {
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
   background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.ms-legal-site .ms-legal-article,
+body.ms-public-doc .ms-doc-block {
+  scroll-margin-top: 88px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.ms-legal-site .ms-legal-toc a,
+  body.ms-public-doc .ms-help-toc a {
+    transition: none;
+  }
 }
 
 body.ms-legal-site .ms-legal-updated {

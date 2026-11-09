@@ -3,6 +3,30 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.6.1",
+      "date": "2026-11-08",
+      "title": "Build progress and watermark",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Legal and the guide underline the section you are reading.",
+            "The watermark is a short list, and Schedule a meeting shows when a booking page is connected."
+          ],
+          "fixes": [
+            "Dark buttons on the home page keep white text."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "While a site is building, the studio shows the agent's thoughts and the files it is writing."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.6.0",
       "date": "2026-11-08",
       "title": "Calendar on the phone",

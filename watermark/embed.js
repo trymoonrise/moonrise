@@ -15,7 +15,6 @@
     "https://moonrise-studio.vercel.app/assets/MoonriseLogo.png";
   const SITE_URL = "https://trymoonrise.com";
   const STYLE_ID = "mr-wm-embed-style";
-  const DEFAULT_URGENCY_MS = 96 * 3600000;
   const DEFAULT_HQ = {
     kind: "hq",
     name: "Moonrise",
@@ -28,7 +27,6 @@
     discordUrl: "https://discord.gg/gdbA3gEVY",
   };
 
-  let timerId = null;
   let keydownBound = false;
 
   function css() {
@@ -60,60 +58,28 @@
 .mr-wm-head p{margin:.3rem 0 0;color:var(--mr-muted,#64748b);font-size:.9rem;line-height:1.4}
 .mr-wm-close{appearance:none;margin-left:auto;width:34px;height:34px;border:1px solid var(--mr-line,#e8edf3);border-radius:10px;background:#fff;color:#94a3b8;font-size:1.15rem;line-height:1;cursor:pointer;flex-shrink:0}
 .mr-wm-close:hover{background:#f8fafc;color:#64748b}
-.mr-wm-body{padding:1.2rem 1.25rem 1.4rem;display:flex;flex-direction:column;gap:1rem}
-.mr-wm-lead{margin:0;color:var(--mr-muted,#64748b);font-size:.95rem;line-height:1.5}
-.mr-wm-offer{display:flex;flex-direction:column;gap:.7rem}
-.mr-wm-timer{margin:0;padding:0;text-align:center;font-family:var(--mr-font);font-size:.85rem;font-weight:650;letter-spacing:-.01em;color:#2563eb}
-.mr-wm-pay{appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:3.5rem;border:1px solid rgba(255,255,255,.18);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 42%),linear-gradient(135deg,#60a5fa 0%,#3b82f6 48%,#2563eb 100%);color:#fff;font:inherit;font-family:var(--mr-font);font-size:1.05rem;font-weight:650;letter-spacing:-.01em;cursor:pointer;box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 -1px 0 rgba(15,23,42,.12) inset,0 8px 18px rgba(37,99,235,.28),0 2px 4px rgba(37,99,235,.18)}
-.mr-wm-pay:hover:not(:disabled){filter:brightness(1.03);transform:translateY(-.5px)}
+.mr-wm-body{padding:1rem 1rem 1.15rem;display:flex;flex-direction:column;gap:.85rem}
+.mr-wm-pay{appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:3.25rem;border:0;border-radius:14px;background:#3b82f6;color:#fff;font:inherit;font-family:var(--mr-font);font-size:1.02rem;font-weight:650;letter-spacing:-.01em;cursor:pointer}
 .mr-wm-pay:disabled{opacity:.55;cursor:not-allowed}
 .mr-wm-note{margin:0;text-align:center;font-size:.78rem;color:#94a3b8;line-height:1.4}
-.mr-wm-help{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:.35rem;width:100%;min-height:2.65rem;margin-top:.15rem;padding:.55rem .75rem;border:1px solid var(--mr-line,#e8edf3);border-radius:12px;background:#fff;color:#475569;font:inherit;font-family:var(--mr-font);font-size:.9rem;font-weight:650;letter-spacing:-.01em;cursor:pointer;transition:border-color .15s ease,background .15s ease,color .15s ease}
-.mr-wm-help:hover{border-color:#bfdbfe;background:#f8fbff;color:#1d4ed8}
-.mr-wm-help.is-open{border-color:#bfdbfe;background:#f8fbff;color:#1d4ed8}
-.mr-wm-help-chevron{width:.85rem;height:.85rem;display:inline-block;transition:transform .22s ease;flex-shrink:0}
-.mr-wm-help.is-open .mr-wm-help-chevron{transform:rotate(180deg)}
-.mr-wm-help-panel{display:grid;gap:1rem;margin-top:.15rem}
-.mr-wm-help-panel[hidden]{display:none!important}
 .mr-wm-error{margin:0;color:#b91c1c;font-size:.85rem;font-weight:600;line-height:1.4}
-.mr-wm-contact-btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:2.85rem;padding:.65rem .75rem;border:1px solid var(--mr-line,#e8edf3);border-radius:12px;background:#fff;color:var(--mr-ink,#0f172a);font:inherit;font-family:var(--mr-font);font-size:.86rem;font-weight:650;letter-spacing:-.01em;text-decoration:none;text-align:center;transition:border-color .15s ease,background .15s ease,color .15s ease;box-sizing:border-box}
-.mr-wm-contact-btn:hover{border-color:#bfdbfe;background:#f8fbff;color:#1d4ed8}
-.mr-wm-contact-btn--primary{background:linear-gradient(180deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 42%),linear-gradient(135deg,#60a5fa 0%,#3b82f6 48%,#2563eb 100%);border-color:rgba(255,255,255,.18);color:#fff;box-shadow:0 8px 18px rgba(37,99,235,.24)}
-.mr-wm-contact-btn--primary:hover{filter:brightness(1.03);color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 42%),linear-gradient(135deg,#60a5fa 0%,#3b82f6 48%,#2563eb 100%)}
-.mr-wm-contact-btn--hq{min-height:2.85rem;padding:.65rem .75rem;font-size:.86rem;font-weight:650;border-radius:12px;color:#475569;background:#fff}
-.mr-wm-contact-btn--hq:hover{color:#1d4ed8;background:#f8fafc;border-color:#bfdbfe}
-.mr-wm-contacts{display:grid;gap:.55rem}
-.mr-wm-contacts-row{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;align-items:stretch}
-.mr-wm-contacts-row .mr-wm-contact-btn{width:100%}
-.mr-wm-contacts-row:has(> :only-child){grid-template-columns:1fr}
-.mr-wm-contacts-label{margin:0;font-size:.78rem;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:#94a3b8}
-@media (max-width:380px){.mr-wm-contacts-row{grid-template-columns:1fr}}
+.mr-wm-rows{display:flex;flex-direction:column;background:#fff;border:1px solid var(--mr-line,#e8edf3);border-radius:14px;overflow:hidden}
+.mr-wm-row{appearance:none;display:flex;align-items:center;justify-content:space-between;gap:.75rem;width:100%;min-height:52px;padding:.8rem 1rem;border:0;border-top:1px solid var(--mr-line,#e8edf3);background:#fff;color:var(--mr-ink,#0f172a);font:inherit;font-family:var(--mr-font);font-size:.95rem;font-weight:600;letter-spacing:-.01em;text-align:left;text-decoration:none;cursor:pointer;box-sizing:border-box}
+.mr-wm-rows>.mr-wm-row:first-child,.mr-wm-row[hidden]+.mr-wm-row{border-top:0}
+.mr-wm-row[hidden]{display:none!important}
+.mr-wm-row:hover{background:#f8fafc}
+.mr-wm-chevron{color:#94a3b8;font-size:1.15rem;line-height:1;font-weight:500}
+.mr-wm-row.is-open .mr-wm-chevron{transform:rotate(90deg)}
+.mr-wm-row>span:last-child:not(.mr-wm-chevron){color:#64748b;font-size:.8rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
 .mr-wm-step[hidden]{display:none!important}
-.mr-wm-vcard{display:grid;gap:.75rem}
-.mr-wm-vcard-back{appearance:none;border:0;background:transparent;color:#64748b;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;padding:0;text-align:left}
-.mr-wm-vcard-back:hover{color:#2563eb}
-.mr-wm-vcard-card{position:relative;border:1px solid rgba(15,23,42,.08);border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 14px 36px rgba(15,23,42,.08)}
-.mr-wm-vcard-hero{position:relative;height:6.5rem;background:radial-gradient(ellipse 90% 100% at 50% 0%,rgba(255,255,255,.85),transparent 58%),linear-gradient(165deg,#f4f7fb 0%,#e8eef6 48%,#dde6f0 100%)}
-.mr-wm-vcard-body{position:relative;padding:0 1.15rem 1.25rem;text-align:center}
-.mr-wm-vcard-top{position:absolute;top:1rem;left:1.1rem;right:1.1rem;z-index:3;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
-.mr-wm-vcard-brand{font-size:.72rem;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:rgba(71,85,105,.78)}
-.mr-wm-vcard-avatar{width:5rem;height:5rem;margin:-2.55rem auto 1rem;border-radius:1.15rem;display:grid;place-items:center;background:#fff;border:4px solid #fff;box-shadow:0 10px 28px rgba(15,23,42,.1);overflow:hidden;position:relative;z-index:1;font-size:1.2rem;font-weight:700;color:#2563eb}
-.mr-wm-vcard-avatar img{width:70%;height:70%;object-fit:contain;display:block}
-.mr-wm-vcard-identity{text-align:center;margin:0 0 1.1rem}
-.mr-wm-vcard-name{margin:0;font-size:1.45rem;font-weight:750;letter-spacing:-.035em;color:var(--mr-ink,#0f172a);line-height:1.1}
-.mr-wm-vcard-role{margin:.3rem 0 0;color:var(--mr-muted,#64748b);font-size:.9rem;font-weight:500;line-height:1.4;letter-spacing:-.01em}
-.mr-wm-vcard-save{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:2.85rem;padding:.85rem 1.15rem;border:0;border-radius:999px;background:#0f172a;color:#fff;font:inherit;font-size:.95rem;font-weight:650;letter-spacing:-.01em;cursor:pointer;margin:0 0 1.1rem;box-shadow:0 10px 24px rgba(15,23,42,.16)}
-.mr-wm-vcard-save:hover{filter:brightness(1.06)}
-.mr-wm-vcard-links{list-style:none;margin:0;padding:.1rem 0 0;display:grid;gap:.45rem;text-align:left}
-.mr-wm-vcard-link{display:flex;align-items:center;gap:.85rem;padding:.7rem .75rem;border:1px solid transparent;border-radius:14px;text-decoration:none;color:var(--mr-ink,#0f172a);background:transparent;transition:border-color .15s ease,background .15s ease}
-.mr-wm-vcard-link:hover{border-color:rgba(15,23,42,.06);background:#f8fafc}
-.mr-wm-vcard-icon{width:2.65rem;height:2.65rem;border-radius:.8rem;overflow:hidden;flex-shrink:0;background:#f8fafc;box-shadow:0 6px 14px rgba(15,23,42,.1)}
-.mr-wm-vcard-icon img{width:100%;height:100%;object-fit:cover;display:block}
-.mr-wm-vcard-link-text{display:grid;gap:.08rem;min-width:0}
-.mr-wm-vcard-link-text strong{font-size:.92rem;font-weight:650;letter-spacing:-.01em}
-.mr-wm-vcard-link-text em{font-style:normal;font-size:.8rem;color:var(--mr-muted,#64748b);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mr-wm-vcard-card .mr-wm-contact-btn{width:100%;margin-top:.35rem}
-.mr-wm-faq{display:grid;gap:0;margin:.15rem 0 0;border-top:1px solid var(--mr-line,#e8edf3)}
+.mr-wm-back{appearance:none;border:0;background:transparent;color:#64748b;font:inherit;font-family:var(--mr-font);font-size:.85rem;font-weight:600;cursor:pointer;padding:0;text-align:left}
+.mr-wm-back:hover{color:#2563eb}
+.mr-wm-contact{display:grid;gap:.55rem}
+.mr-wm-contact-name{margin:.15rem 0 0;font-size:1.2rem;font-weight:700;letter-spacing:-.03em;color:var(--mr-ink,#0f172a)}
+.mr-wm-contact-role{margin:0 0 .2rem;color:var(--mr-muted,#64748b);font-size:.85rem}
+.mr-wm-frame{width:100%;height:min(68vh,560px);border:0;border-radius:12px;background:#f8fafc}
+.mr-wm-open-tab{display:block;text-align:center;color:#2563eb;font-size:.85rem;font-weight:650;text-decoration:none}
+.mr-wm-faq{display:grid;gap:0;margin:.35rem 0 0;padding:0 .15rem}
 .mr-wm-faq details{border:0;border-bottom:1px solid var(--mr-line,#e8edf3);background:transparent}
 .mr-wm-faq summary{list-style:none;cursor:pointer;padding:.85rem 0;font-size:.9rem;font-weight:600;color:var(--mr-ink,#0f172a);display:flex;align-items:center;justify-content:space-between;gap:.75rem}
 .mr-wm-faq summary::-webkit-details-marker{display:none}
@@ -175,16 +141,6 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     return decodeContactPayload(script.getAttribute(attr));
   }
 
-  function contactInitials(name) {
-    const parts = String(name || "")
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean);
-    if (!parts.length) return "CR";
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  }
-
   function escapeHtml(value) {
     return String(value || "")
       .replace(/&/g, "&amp;")
@@ -193,7 +149,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       .replace(/"/g, "&quot;");
   }
 
-  function buildVcardHtml(contact, assetsBase, options) {
+  function buildVcardHtml(contact, _assetsBase, options) {
     const c = contact || {};
     const isHq = c.kind === "hq";
     const name = escapeHtml(c.name || (isHq ? "Moonrise" : "Creator"));
@@ -201,74 +157,52 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     const email = String(c.email || "").trim();
     const phone = String(c.phone || "").trim();
     const phoneDisplay = escapeHtml(c.phoneDisplay || phone);
-    const avatarHtml = isHq
-      ? '<img src="' + escapeHtml(assetsBase + "/assets/MoonriseLogo.png") + '" alt="" width="72" height="72">'
-      : escapeHtml(contactInitials(c.name));
-    const brand = isHq ? "moonrise" : "creator";
-    const links = [];
+    const rows = [];
     if (phone) {
-      links.push(
-        '<li><a class="mr-wm-vcard-link" href="tel:' +
+      rows.push(
+        '<a class="mr-wm-row" href="tel:' +
           escapeHtml(phone.replace(/\s/g, "")) +
-          '"><span class="mr-wm-vcard-icon"><img src="' +
-          escapeHtml(assetsBase + "/assets/iMessages.jpg") +
-          '" alt="" width="46" height="46"></span><span class="mr-wm-vcard-link-text"><strong>Number</strong><em>' +
+          '"><span>Phone</span><span>' +
           phoneDisplay +
-          "</em></span></a></li>"
+          "</span></a>"
       );
     }
     if (email) {
-      links.push(
-        '<li><a class="mr-wm-vcard-link" href="mailto:' +
+      rows.push(
+        '<a class="mr-wm-row" href="mailto:' +
           escapeHtml(email) +
-          '"><span class="mr-wm-vcard-icon"><img src="' +
-          escapeHtml(assetsBase + "/assets/Gmail.jpg") +
-          '" alt="" width="46" height="46"></span><span class="mr-wm-vcard-link-text"><strong>Email</strong><em>' +
+          '"><span>Email</span><span>' +
           escapeHtml(email) +
-          "</em></span></a></li>"
+          "</span></a>"
       );
     }
     if (isHq && c.discordUrl) {
-      links.push(
-        '<li><a class="mr-wm-vcard-link" href="' +
+      rows.push(
+        '<a class="mr-wm-row" href="' +
           escapeHtml(c.discordUrl) +
-          '" target="_blank" rel="noopener noreferrer"><span class="mr-wm-vcard-icon"><img src="' +
-          escapeHtml(assetsBase + "/assets/Discord.jpg") +
-          '" alt="" width="46" height="46"></span><span class="mr-wm-vcard-link-text"><strong>Discord</strong><em>Join the community</em></span></a></li>'
+          '" target="_blank" rel="noopener noreferrer"><span>Discord</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></a>'
       );
     }
-    const openPage =
-      options && options.pageUrl
-        ? '<a class="mr-wm-contact-btn" href="' +
+    if (options && options.pageUrl) {
+      rows.push(
+        '<a class="mr-wm-row" href="' +
           escapeHtml(options.pageUrl) +
-          '" target="_blank" rel="noopener noreferrer">Open full contact card</a>'
-        : "";
+          '" target="_blank" rel="noopener noreferrer"><span>Open full contact card</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></a>'
+      );
+    }
     return (
-      '<div class="mr-wm-vcard">' +
-      '<button type="button" class="mr-wm-vcard-back" data-mr-vcard-back>Back</button>' +
-      '<div class="mr-wm-vcard-card">' +
-      '<div class="mr-wm-vcard-hero" aria-hidden="true"></div>' +
-      '<div class="mr-wm-vcard-body">' +
-      '<div class="mr-wm-vcard-top"><span class="mr-wm-vcard-brand">' +
-      brand +
-      "</span></div>" +
-      '<div class="mr-wm-vcard-avatar" aria-hidden="true">' +
-      avatarHtml +
-      "</div>" +
-      '<div class="mr-wm-vcard-identity">' +
-      '<h3 class="mr-wm-vcard-name">' +
+      '<div class="mr-wm-contact">' +
+      '<button type="button" class="mr-wm-back" data-mr-vcard-back>Back</button>' +
+      '<h3 class="mr-wm-contact-name">' +
       name +
       "</h3>" +
-      '<p class="mr-wm-vcard-role">' +
+      '<p class="mr-wm-contact-role">' +
       subtitle +
       "</p>" +
-      "</div>" +
-      '<button type="button" class="mr-wm-vcard-save" data-mr-vcard-save>Save Contact</button>' +
-      '<ul class="mr-wm-vcard-links">' +
-      links.join("") +
-      "</ul>" +
-      openPage +
-      "</div></div></div>"
+      '<div class="mr-wm-rows">' +
+      '<button type="button" class="mr-wm-row" data-mr-vcard-save><span>Save contact</span></button>' +
+      rows.join("") +
+      "</div></div>"
     );
   }
 
@@ -311,40 +245,33 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     ].join("");
   }
 
-  function panelBodyHtml(creatorContact, hqContact, workerUrl, projectId) {
+  function panelBodyHtml(creatorContact) {
     const creatorName = String(creatorContact?.name || "your creator").trim();
     const creatorBtn = creatorContact
-      ? '<button type="button" class="mr-wm-contact-btn mr-wm-contact-btn--primary" id="mr-wm-contact-creator">Contact ' +
+      ? '<button type="button" class="mr-wm-row" id="mr-wm-contact-creator"><span>Contact ' +
         escapeHtml(creatorName) +
-        "</button>"
+        '</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>'
       : "";
-    const hqBtn =
-      '<button type="button" class="mr-wm-contact-btn mr-wm-contact-btn--hq" id="mr-wm-contact-hq">Contact Moonrise HQ</button>';
     return (
       '<div class="mr-wm-body" id="mr-wm-body">' +
       '<div class="mr-wm-step is-active" data-step="main">' +
-      '<div class="mr-wm-offer">' +
-      '<p class="mr-wm-timer" id="mr-wm-timer" aria-live="polite"></p>' +
       '<button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>' +
       '<p class="mr-wm-error" id="mr-wm-error" hidden></p>' +
-      '<p class="mr-wm-note">Secure Stripe checkout. Hosting renews every month until you cancel. <a href="https://trymoonrise.com/legal.html#refunds">Refund and cancellation policy</a></p>' +
-      '<button type="button" class="mr-wm-help" id="mr-wm-help" aria-expanded="false" aria-controls="mr-wm-help-panel">' +
-      "Help" +
-      '<svg class="mr-wm-help-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +
-      "</button>" +
-      "</div>" +
-      '<div class="mr-wm-help-panel" id="mr-wm-help-panel" hidden>' +
-      '<div class="mr-wm-contacts">' +
-      '<p class="mr-wm-contacts-label">Need a site change?</p>' +
-      '<div class="mr-wm-contacts-row">' +
+      '<p class="mr-wm-note">Hosting renews every month until you cancel.</p>' +
+      '<div class="mr-wm-rows">' +
+      '<button type="button" class="mr-wm-row" id="mr-wm-schedule" hidden><span>Schedule a meeting</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
       creatorBtn +
-      hqBtn +
+      '<button type="button" class="mr-wm-row" id="mr-wm-contact-hq"><span>Contact Moonrise</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
+      '<button type="button" class="mr-wm-row" id="mr-wm-questions" aria-expanded="false" aria-controls="mr-wm-faq"><span>Questions</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
       "</div>" +
-      "</div>" +
-      '<div class="mr-wm-faq" id="mr-wm-faq">' +
+      '<div class="mr-wm-faq" id="mr-wm-faq" hidden>' +
       faqHtml() +
-      "</div>" +
       "</div></div>" +
+      '<div class="mr-wm-step" data-step="schedule" hidden id="mr-wm-step-schedule">' +
+      '<button type="button" class="mr-wm-back" id="mr-wm-schedule-back">Back</button>' +
+      '<iframe class="mr-wm-frame" id="mr-wm-schedule-frame" title="Schedule a meeting" hidden></iframe>' +
+      '<a class="mr-wm-open-tab" id="mr-wm-schedule-open" target="_blank" rel="noopener noreferrer">Open in a new tab</a>' +
+      "</div>" +
       '<div class="mr-wm-step" data-step="creator" hidden id="mr-wm-step-creator"></div>' +
       '<div class="mr-wm-step" data-step="hq" hidden id="mr-wm-step-hq"></div>' +
       "</div>"
@@ -391,30 +318,6 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     });
   }
 
-  function formatRemaining(endsAt) {
-    const ms = new Date(endsAt).getTime() - Date.now();
-    if (!Number.isFinite(ms) || ms <= 0) return "Offer expired";
-    const h = Math.floor(ms / 3600000);
-    const m = Math.floor((ms % 3600000) / 60000);
-    const s = Math.floor((ms % 60000) / 1000);
-    return (
-      "Ends in " +
-      String(h).padStart(2, "0") +
-      ":" +
-      String(m).padStart(2, "0") +
-      ":" +
-      String(s).padStart(2, "0")
-    );
-  }
-
-  function resolveUrgencyEndsAt(raw) {
-    if (raw) {
-      const t = new Date(raw).getTime();
-      if (Number.isFinite(t) && t > Date.now()) return new Date(t).toISOString();
-    }
-    return new Date(Date.now() + DEFAULT_URGENCY_MS).toISOString();
-  }
-
   function ensureStyle() {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement("style");
@@ -433,26 +336,31 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     return "";
   }
 
-  function stopTimer() {
-    if (timerId) {
-      clearInterval(timerId);
-      timerId = null;
-    }
-  }
-
   function unmount() {
-    stopTimer();
     document.body.classList.remove("mr-wm-open");
     document.getElementById("mr-wm-chip-root")?.remove();
     document.getElementById("mr-wm-overlay-root")?.remove();
     document.getElementById("mr-wm-root")?.remove();
   }
 
+  function allowedBookingUrl(value) {
+    try {
+      const url = new URL(String(value || ""));
+      if (url.protocol !== "https:") return "";
+      if (!/^(www\.|app\.)?cal\.com$/i.test(url.hostname)) return "";
+      return url.toString();
+    } catch (_) {
+      return "";
+    }
+  }
+
   function bindContactSteps(root, creatorContact, hqContact, workerUrl, projectId) {
-    if (!root) return;
+    if (!root) return { setBookingUrl() {} };
     const assetsBase = studioBaseUrl(workerUrl);
+    let bookingUrl = "";
     const steps = {
       main: root.querySelector('[data-step="main"]'),
+      schedule: root.querySelector('[data-step="schedule"]'),
       creator: root.querySelector('[data-step="creator"]'),
       hq: root.querySelector('[data-step="hq"]'),
     };
@@ -497,6 +405,44 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     root.querySelector("#mr-wm-contact-hq")?.addEventListener("click", () => {
       showStep("hq");
     });
+    root.querySelector("#mr-wm-schedule-back")?.addEventListener("click", () => showStep("main"));
+
+    const scheduleBtn = root.querySelector("#mr-wm-schedule");
+    const frame = root.querySelector("#mr-wm-schedule-frame");
+    const openTab = root.querySelector("#mr-wm-schedule-open");
+    scheduleBtn?.addEventListener("click", () => {
+      const url = allowedBookingUrl(bookingUrl);
+      if (!url) return;
+      if (openTab) openTab.href = url;
+      if (frame && !frame.getAttribute("src")) {
+        const framed = new URL(url);
+        framed.searchParams.set("embed", "true");
+        frame.src = framed.toString();
+        frame.hidden = false;
+      }
+      showStep("schedule");
+    });
+
+    return {
+      setBookingUrl(next) {
+        bookingUrl = allowedBookingUrl(next);
+        if (scheduleBtn) scheduleBtn.hidden = !bookingUrl;
+        if (openTab && bookingUrl) openTab.href = bookingUrl;
+      },
+    };
+  }
+
+  function loadPublicBooking(workerUrl, projectId) {
+    const base = String(workerUrl || "").replace(/\/$/, "");
+    const id = String(projectId || "").trim();
+    if (!base || !id) return Promise.resolve("");
+    return fetch(base + "/public-booking?projectId=" + encodeURIComponent(id), {
+      cache: "no-store",
+      mode: "cors",
+    })
+      .then((res) => (res.ok ? res.json() : {}))
+      .then((data) => allowedBookingUrl(data?.url))
+      .catch(() => "");
   }
 
   function mount(opts) {
@@ -510,7 +456,6 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     ).replace(/\/$/, "");
     const paymentLink = String(opts.paymentLink || "").trim();
     const host = opts.host || null;
-    const urgencyEndsAt = resolveUrgencyEndsAt(opts.urgencyEndsAt);
     const creatorContact = opts.creatorContact || null;
     const hqContact = { ...DEFAULT_HQ, ...(opts.hqContact || {}) };
     const chipHidden = opts.chipHidden === true;
@@ -538,9 +483,9 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       AVATAR +
       '" alt="" width="40" height="40" />' +
       '<div><h2 id="mr-wm-title">Unlock your website</h2>' +
-      '<p id="mr-wm-subtitle">Watermark removed automatically after payment. This is a preview of your new website. Go live today and start sharing your link with customers.</p></div>' +
+      '<p id="mr-wm-subtitle">The watermark stays until you pay.</p></div>' +
       '<button type="button" class="mr-wm-close" id="mr-wm-close" aria-label="Close">&times;</button></header>' +
-      panelBodyHtml(creatorContact, hqContact, workerUrl, projectId) +
+      panelBodyHtml(creatorContact) +
       "</div></div>";
 
     const chipParent = host || document.body;
@@ -554,7 +499,6 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     const closeBtn = document.getElementById("mr-wm-close");
     const payBtn = document.getElementById("mr-wm-pay");
     const errEl = document.getElementById("mr-wm-error");
-    const timerEl = document.getElementById("mr-wm-timer");
 
     if (chipHidden) {
       chip?.classList.add("is-hidden");
@@ -564,16 +508,6 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       if (!chipHidden) chip?.classList.remove("is-hidden");
     }
 
-    function tickTimer() {
-      if (timerEl) timerEl.textContent = formatRemaining(urgencyEndsAt);
-    }
-
-    function startTimer() {
-      stopTimer();
-      tickTimer();
-      timerId = setInterval(tickTimer, 1000);
-    }
-
     function openPanel() {
       chip?.classList.add("is-hidden");
       document.body.classList.add("mr-wm-open");
@@ -581,7 +515,6 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       overlay.classList.add("is-open");
       overlay.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
-      startTimer();
     }
 
     function closePanel() {
@@ -591,19 +524,18 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       overlay.classList.remove("is-open");
       overlay.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
-      stopTimer();
       const body = document.getElementById("mr-wm-body");
       body?.querySelectorAll(".mr-wm-step").forEach((step) => {
         const isMain = step.getAttribute("data-step") === "main";
         step.hidden = !isMain;
         step.classList.toggle("is-active", isMain);
       });
-      const helpBtn = document.getElementById("mr-wm-help");
-      const helpPanel = document.getElementById("mr-wm-help-panel");
-      if (helpPanel) helpPanel.hidden = true;
-      if (helpBtn) {
-        helpBtn.classList.remove("is-open");
-        helpBtn.setAttribute("aria-expanded", "false");
+      const questions = document.getElementById("mr-wm-questions");
+      const faq = document.getElementById("mr-wm-faq");
+      if (faq) faq.hidden = true;
+      if (questions) {
+        questions.classList.remove("is-open");
+        questions.setAttribute("aria-expanded", "false");
       }
     }
 
@@ -622,22 +554,19 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       if (e.target === overlay) closePanel();
     });
 
-    const helpBtn = document.getElementById("mr-wm-help");
-    const helpPanel = document.getElementById("mr-wm-help-panel");
-    helpBtn?.addEventListener("click", () => {
-      if (!helpPanel) return;
-      const open = helpPanel.hasAttribute("hidden");
+    const questionsBtn = document.getElementById("mr-wm-questions");
+    const faq = document.getElementById("mr-wm-faq");
+    questionsBtn?.addEventListener("click", () => {
+      if (!faq) return;
+      const open = faq.hasAttribute("hidden");
       if (open) {
-        helpPanel.removeAttribute("hidden");
-        helpBtn.classList.add("is-open");
-        helpBtn.setAttribute("aria-expanded", "true");
-        requestAnimationFrame(() => {
-          helpPanel.scrollIntoView({ block: "nearest", behavior: "smooth" });
-        });
+        faq.hidden = false;
+        questionsBtn.classList.add("is-open");
+        questionsBtn.setAttribute("aria-expanded", "true");
       } else {
-        helpPanel.setAttribute("hidden", "");
-        helpBtn.classList.remove("is-open");
-        helpBtn.setAttribute("aria-expanded", "false");
+        faq.hidden = true;
+        questionsBtn.classList.remove("is-open");
+        questionsBtn.setAttribute("aria-expanded", "false");
       }
     });
 
@@ -652,14 +581,14 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     }
 
     bindExclusiveFaq(document.getElementById("mr-wm-faq"));
-    bindContactSteps(
+    const schedule = bindContactSteps(
       document.getElementById("mr-wm-body"),
       creatorContact,
       hqContact,
       workerUrl,
       projectId
     );
-    tickTimer();
+    void loadPublicBooking(workerUrl, projectId).then((url) => schedule?.setBookingUrl?.(url));
 
     payBtn?.addEventListener("click", async () => {
       showError("");

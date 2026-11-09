@@ -24,7 +24,7 @@ Thumbs.db
 .idea/
 .vscode/
 
-# deps / build
+agent/workspaces/
 worker/node_modules/
 **/node_modules/
 dist/

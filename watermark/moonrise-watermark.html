@@ -478,6 +478,39 @@
       color: #94a3b8;
       line-height: 1.4;
     }
+    .mr-wm-rows {
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border: 1px solid var(--mr-line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .mr-wm-row {
+      appearance: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      width: 100%;
+      min-height: 52px;
+      padding: 0.8rem 1rem;
+      border: 0;
+      border-top: 1px solid var(--mr-line);
+      background: #fff;
+      color: var(--mr-ink);
+      font: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-align: left;
+      text-decoration: none;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+    .mr-wm-rows > .mr-wm-row:first-child { border-top: 0; }
+    .mr-wm-chevron { color: #94a3b8; font-size: 1.15rem; line-height: 1; }
+    .mr-wm-faq[hidden] { display: none !important; }
     .mr-wm-help {
       appearance: none;
       display: inline-flex;
@@ -649,24 +682,20 @@
         <img src="https://moonrise-studio.vercel.app/assets/MoonriseLogo.png" alt="" width="40" height="40" />
         <div>
           <h2 id="mr-wm-title">Unlock your website</h2>
-          <p id="mr-wm-subtitle">Watermark removed automatically after payment. This is a preview of your new website. Go live today and start sharing your link with customers.</p>
+          <p id="mr-wm-subtitle">The watermark stays until you pay.</p>
         </div>
         <button type="button" class="mr-wm-close" id="mr-wm-close" aria-label="Close">&times;</button>
       </header>
       <div class="mr-wm-body">
-        <div class="mr-wm-offer">
-          <p class="mr-wm-timer" id="mr-wm-timer" aria-live="polite"></p>
-          <button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>
-          <p class="mr-wm-error" id="mr-wm-error" hidden></p>
-          <p class="mr-wm-note">Secure Stripe checkout &middot; hosting included</p>
-          <button type="button" class="mr-wm-help" id="mr-wm-help" aria-expanded="false" aria-controls="mr-wm-help-panel">
-            Help
-            <svg class="mr-wm-help-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-          </button>
+        <button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>
+        <p class="mr-wm-error" id="mr-wm-error" hidden></p>
+        <p class="mr-wm-note">Hosting renews every month until you cancel.</p>
+        <div class="mr-wm-rows">
+          <a class="mr-wm-row" id="mr-wm-schedule" href="https://cal.com" target="_blank" rel="noopener noreferrer"><span>Schedule a meeting</span><span class="mr-wm-chevron" aria-hidden="true">›</span></a>
+          <a class="mr-wm-row" id="mr-wm-contact" href="../contact.html" target="_blank" rel="noopener noreferrer"><span>Contact Moonrise</span><span class="mr-wm-chevron" aria-hidden="true">›</span></a>
+          <button type="button" class="mr-wm-row" id="mr-wm-questions" aria-expanded="false" aria-controls="mr-wm-faq"><span>Questions</span><span class="mr-wm-chevron" aria-hidden="true">›</span></button>
         </div>
-        <div class="mr-wm-help-panel" id="mr-wm-help-panel" hidden>
-          <a class="mr-wm-contact-btn" id="mr-wm-contact" href="../contact.html" target="_blank" rel="noopener noreferrer">Contact Moonrise</a>
-          <div class="mr-wm-faq" id="mr-wm-faq">
+        <div class="mr-wm-faq" id="mr-wm-faq" hidden>
             <details>
               <summary>What is this?</summary>
               <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
@@ -692,7 +721,6 @@
               </div></div>
             </details>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -713,50 +741,13 @@
       const closeBtn = document.getElementById("mr-wm-close");
       const payBtn = document.getElementById("mr-wm-pay");
       const errEl = document.getElementById("mr-wm-error");
-      const timerEl = document.getElementById("mr-wm-timer");
       const chip = document.getElementById("mr-wm");
-      let timerId = null;
-      const urgencyEndsAt = new Date(Date.now() + 96 * 3600000).toISOString();
-
-      function formatRemaining(endsAt) {
-        const ms = new Date(endsAt).getTime() - Date.now();
-        if (!Number.isFinite(ms) || ms <= 0) return "Offer expired";
-        const h = Math.floor(ms / 3600000);
-        const m = Math.floor((ms % 3600000) / 60000);
-        const s = Math.floor((ms % 60000) / 1000);
-        return (
-          "Ends in " +
-          String(h).padStart(2, "0") +
-          ":" +
-          String(m).padStart(2, "0") +
-          ":" +
-          String(s).padStart(2, "0")
-        );
-      }
-
-      function tickTimer() {
-        if (timerEl) timerEl.textContent = formatRemaining(urgencyEndsAt);
-      }
-
-      function stopTimer() {
-        if (timerId) {
-          clearInterval(timerId);
-          timerId = null;
-        }
-      }
-
-      function startTimer() {
-        stopTimer();
-        tickTimer();
-        timerId = setInterval(tickTimer, 1000);
-      }
 
       function openPanel() {
         chip?.style.setProperty("visibility", "hidden");
         overlay.classList.add("is-open");
         overlay.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
-        startTimer();
       }
 
       function closePanel() {
@@ -764,7 +755,6 @@
         overlay.classList.remove("is-open");
         overlay.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
-        stopTimer();
       }
 
       openBtn?.addEventListener("click", (e) => {
@@ -817,23 +807,14 @@
       }
       bindExclusiveFaq(document.getElementById("mr-wm-faq"));
 
-      const helpBtn = document.getElementById("mr-wm-help");
-      const helpPanel = document.getElementById("mr-wm-help-panel");
-      helpBtn?.addEventListener("click", () => {
-        if (!helpPanel) return;
-        const open = helpPanel.hasAttribute("hidden");
-        if (open) {
-          helpPanel.removeAttribute("hidden");
-          helpBtn.classList.add("is-open");
-          helpBtn.setAttribute("aria-expanded", "true");
-        } else {
-          helpPanel.setAttribute("hidden", "");
-          helpBtn.classList.remove("is-open");
-          helpBtn.setAttribute("aria-expanded", "false");
-        }
+      const questionsBtn = document.getElementById("mr-wm-questions");
+      const faq = document.getElementById("mr-wm-faq");
+      questionsBtn?.addEventListener("click", () => {
+        if (!faq) return;
+        const open = faq.hidden;
+        faq.hidden = !open;
+        questionsBtn.setAttribute("aria-expanded", open ? "true" : "false");
       });
-
-      tickTimer();
 
       function showError(msg) {
         if (!errEl) return;

@@ -1,0 +1,9 @@
+{
+  "name": "moonrise-agent",
+  "private": true,
+  "description": "Local Moonrise site agent. Writes a workspace of site files for one business.",
+  "scripts": {
+    "start": "node src/cli.js",
+    "smoke": "node scripts/smoke-site-agent.js"
+  }
+}
