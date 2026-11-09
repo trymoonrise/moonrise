@@ -1282,6 +1282,7 @@ body.ms-sidebar-resizing iframe {
 
   body[data-page="dashboard"] #page-body,
   body[data-page="clients"] #page-body,
+  body[data-page="calendar"] #page-body,
   body[data-page="settings"] #page-body,
   body[data-page="builder"].ms-lb-setup #page-body,
   body[data-page="builder"].ms-lb-setup .ms-builder-setup-page {
@@ -14018,6 +14019,9 @@ body.ms-legal-site {
     padding-bottom: 3.5rem;
     box-sizing: border-box;
     overflow-x: hidden;
+  }
+  body[data-page="calendar"] #page-body.ms-settings-page {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
   }
   .ms-page-head h1 {
     font-size: clamp(1.75rem, 7vw, 2.2rem);

@@ -2189,7 +2189,7 @@
     "calendar",
     "pricing",
   ];
-  const TAB_BAR_ACTIVE = ["dashboard", "builder", "clients", "settings"];
+  const TAB_BAR_ACTIVE = ["dashboard", "builder", "clients", "calendar", "settings"];
   const TAB_SWITCH_KEY = "ms_tab_switch";
   const STUDIO_BOOTED_KEY = "ms_studio_booted";
 
@@ -2417,6 +2417,7 @@
         icon: "search",
       },
       { id: "clients", href: "clients", label: "Clients", aria: "My Clients", icon: "users" },
+      { id: "calendar", href: "calendar", label: "Calendar", icon: "calendar" },
       { id: "settings", href: "settings", label: "Settings", icon: "gear" },
     ];
     let nav = document.getElementById("ms-tabbar");
