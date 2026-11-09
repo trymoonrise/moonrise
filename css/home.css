@@ -76,6 +76,7 @@ body[data-page="home"] .ms-skip:focus {
 }
 
 body[data-page="home"] .ms-home-shell {
+  position: relative;
   width: 100%;
   min-height: 100dvh;
 }
@@ -89,28 +90,21 @@ body[data-page="home"] main {
   width: 100%;
 }
 
-/* Top bar: wordmark and links on the left, pill on the right. Slides away while scrolling down. */
+/* Top bar sits in the hero and scrolls away with it. Fixed only while the menu is open. */
 body[data-page="home"] .ms-site-bar {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   z-index: 80;
   background: transparent;
   pointer-events: none;
-  transform: translateY(0);
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.35s ease;
 }
 
 body[data-page="home"] .ms-site-bar.is-open {
-  transform: none !important;
-}
-
-body[data-page="home"] .ms-site-bar.is-scrolled {
-  background: rgb(245 245 247 / 92%);
-  box-shadow: 0 1px 0 rgb(0 0 0 / 6%);
+  position: fixed;
+  background: var(--ms-bg);
+  box-shadow: none;
 }
 
 body[data-page="home"] .ms-nav-row {
@@ -319,12 +313,16 @@ body[data-page="home"] .ms-menu-screen {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.15rem;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0;
   margin: 0;
-  padding: 5.5rem 1.25rem;
+  padding: calc(4.75rem + env(safe-area-inset-top, 0px)) 1.35rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
   background: var(--ms-bg);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -338,37 +336,22 @@ body[data-page="home"] .ms-site-bar.is-open .ms-menu-screen {
 }
 
 body[data-page="home"] .ms-menu-screen a {
-  position: relative;
-  color: var(--ms-char);
-  font-family: var(--ms-heading);
-  font-size: clamp(2.15rem, 6.4vw, 3.85rem);
-  font-weight: 560;
-  letter-spacing: -0.03em;
-  line-height: 1.12;
+  display: flex;
+  align-items: center;
+  min-height: 3.25rem;
+  color: #1d1d1f;
+  font-family: var(--ms-sans);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   text-decoration: none;
+  border-bottom: 1px solid var(--ms-line);
   opacity: 0;
   transform: translateY(1.75rem);
   transition:
     opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-body[data-page="home"] .ms-menu-screen a::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0.04em;
-  left: 0;
-  height: 0.055em;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-body[data-page="home"] .ms-menu-screen a:hover::after,
-body[data-page="home"] .ms-menu-screen a:focus-visible::after {
-  transform: scaleX(1);
 }
 
 body[data-page="home"] .ms-site-bar.is-open .ms-menu-screen a {
@@ -380,14 +363,17 @@ body[data-page="home"] .ms-site-bar.is-open .ms-menu-screen a {
   transition-delay: calc(0.08s + (var(--i, 0) * 0.08s));
 }
 
+body[data-page="home"] .ms-menu-screen a:active {
+  color: #6e6e73;
+}
+
 /* First screen: headline, action, three short lines */
 body[data-page="home"] .ms-hero-lock {
   position: relative;
 }
 
 body[data-page="home"] .ms-home-hero {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1;
   background: var(--ms-bg);
   display: flex;
@@ -396,10 +382,9 @@ body[data-page="home"] .ms-home-hero {
   justify-content: center;
   width: 100%;
   max-width: none;
-  height: 100svh;
   min-height: 100svh;
   margin: 0;
-  padding: 6.5rem var(--ms-gutter) 5.75rem;
+  padding: 6.5rem var(--ms-gutter) 4.5rem;
   box-sizing: border-box;
   text-align: center;
 }
@@ -523,7 +508,7 @@ body[data-page="home"] .ms-wrap-wide {
 
 body[data-page="home"] .ms-band {
   padding: clamp(4.75rem, 12vh, 8rem) 0;
-  scroll-margin-top: 5.5rem;
+  scroll-margin-top: 0;
 }
 
 body[data-page="home"] .ms-band-warm {
@@ -802,7 +787,6 @@ body[data-page="home"] .ms-pill-row {
   margin-top: 1rem;
 }
 
-/* How it works: a full screen that tucks over the hero */
 body[data-page="home"] #how {
   position: relative;
   z-index: 2;
@@ -811,9 +795,8 @@ body[data-page="home"] #how {
   flex-direction: column;
   justify-content: center;
   min-height: 100svh;
-  margin: -2.4rem 0 0;
+  margin: 0;
   padding: clamp(3.25rem, 6vh, 4.5rem) 0;
-  border-radius: 1.85rem 1.85rem 0 0;
   background: #1d1d1f;
   color: #f5f5f7;
 }
@@ -1631,27 +1614,7 @@ body[data-page="home"] .dt-accordion > .ms-rise:nth-child(3) {
   transition-delay: 0.24s;
 }
 
-body[data-page="home"] .ms-home-hero > * {
-  opacity: 0;
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  body[data-page="home"] .ms-home-hero.is-revealed > * {
-    animation: ms-home-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-  body[data-page="home"] .ms-home-hero.is-revealed > h1 { animation-delay: 0.14s; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-home-hero-lead { animation-delay: 0.22s; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-hero-actions { animation-delay: 0.28s; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-inspire { animation: none; opacity: 1; }
-  body[data-page="home"] .ms-home-hero > .ms-inspire li { opacity: 0; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-inspire li {
-    animation: ms-home-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-inspire li:nth-child(1) { animation-delay: 0.36s; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-inspire li:nth-child(2) { animation-delay: 0.44s; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-inspire li:nth-child(3) { animation-delay: 0.52s; }
-  body[data-page="home"] .ms-home-hero.is-revealed > .ms-inspire li:nth-child(4) { animation-delay: 0.6s; }
-
   body[data-page="home"] .ms-how-card .ms-how-shop,
   body[data-page="home"] .ms-how-card .ms-how-line,
   body[data-page="home"] .ms-how-card .ms-how-one,
@@ -1746,6 +1709,7 @@ body[data-page="home"] .ms-home-hero > * {
   body[data-page="home"] .ms-site-bar,
   body[data-page="home"] .ms-menu-screen,
   body[data-page="home"] .ms-menu-screen a,
+  body[data-page="home"] .ms-site-bar.is-open .ms-menu-screen a,
   body[data-page="home"] .ms-menu-screen a::after,
   body[data-page="home"] .ms-menu-bars,
   body[data-page="home"] .ms-menu-bars::before,
@@ -1756,6 +1720,7 @@ body[data-page="home"] .ms-home-hero > * {
     transition: none;
     animation: none;
   }
+  body[data-page="home"] .ms-menu-screen a,
   body[data-page="home"] .ms-rise,
   body[data-page="home"] .ms-home-hero > *,
   body[data-page="home"] .ms-inspire li,
@@ -1775,8 +1740,3 @@ body[data-page="home"] .ms-home-hero > * {
   }
 }
 
-@media (max-height: 740px) {
-  body[data-page="home"] .ms-menu-screen a {
-    font-size: clamp(1.7rem, 5.2vh, 2.6rem);
-  }
-}

@@ -7186,11 +7186,13 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
 }
 
 .ms-bs-gh-select-menu {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  z-index: 90;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  width: 100%;
+  margin-top: 0.4rem;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -14243,8 +14245,8 @@ body.ms-legal-site {
   }
 
   html body .ms-owner-crown svg {
-    width: 1.2rem !important;
-    height: 1.2rem !important;
+    width: 1.35rem !important;
+    height: 1.35rem !important;
   }
 
   html body .ms-owner-crown:active {

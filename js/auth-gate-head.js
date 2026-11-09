@@ -74,6 +74,12 @@
   } catch (e) {}
 
   if (PUBLIC[file]) {
+    var publicHop = false;
+    try {
+      publicHop = !!sessionStorage.getItem("ms_tab_switch");
+    } catch (e) {}
+    if (publicHop) mountChannelSkeleton("dom");
+    bindInstantChannelNav();
     var releasePublic = function () {
       if (window.__msReleaseBoot) window.__msReleaseBoot();
     };
@@ -120,7 +126,7 @@
 
   // Keep these query strings in sync with the <script defer> tags on studio pages,
   // or the browser warns that a preload was unused.
-  ["js/config.js?v=20261108-no-lf", "js/auth.js?v=20261108-session-quiet", "js/app.js?v=20261108-mobile-chrome"].forEach(function (href) {
+  ["js/config.js?v=20261108-no-lf", "js/auth.js?v=20261108-session-quiet", "js/app.js?v=20261109-crown"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -166,6 +172,8 @@
     return;
   }
 
+  if (tabHop) mountChannelSkeleton("shell");
+
   window.__msReleaseAuthGate = function () {
     document.documentElement.classList.remove("ms-auth-gating");
     document.documentElement.classList.add("ms-auth-ready");
@@ -201,8 +209,156 @@
     location.replace("404");
   }, 5000);
 
+  bindInstantChannelNav();
   mountTabBarEarly();
 })();
+
+function mountChannelSkeleton(until) {
+  if (document.getElementById("ms-channel-skel")) return;
+  document.documentElement.classList.add("ms-channel-loading");
+  document.documentElement.setAttribute("aria-busy", "true");
+  var style = document.createElement("style");
+  style.id = "ms-channel-skel-style";
+  style.textContent =
+    "#ms-channel-skel{position:fixed;z-index:30;inset:0;display:grid;align-content:start;gap:.7rem;margin:0;padding:1.35rem 1.25rem 6rem;background:#fafafa;pointer-events:none}" +
+    "html[data-ms-mode=dark] #ms-channel-skel{background:#111}" +
+    "#ms-channel-skel i{display:block;height:.75rem;border-radius:8px;background:rgba(0,0,0,.08);position:relative;overflow:hidden}" +
+    "html[data-ms-mode=dark] #ms-channel-skel i{background:rgba(255,255,255,.1)}" +
+    "#ms-channel-skel i:nth-child(1){width:32%;height:.55rem}" +
+    "#ms-channel-skel i:nth-child(2){width:48%;height:1.35rem;margin:0 0 .35rem}" +
+    "#ms-channel-skel i:nth-child(3),#ms-channel-skel i:nth-child(4){height:4.4rem;border-radius:16px}" +
+    "#ms-channel-skel i:nth-child(5){width:72%}" +
+    "#ms-channel-skel i::after{content:\"\";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);transform:translateX(-100%);animation:ms-ch-skel 1.05s ease-in-out infinite}" +
+    "html[data-ms-mode=dark] #ms-channel-skel i::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)}" +
+    "@keyframes ms-ch-skel{to{transform:translateX(100%)}}" +
+    "@media(prefers-reduced-motion:reduce){#ms-channel-skel i::after{animation:none;display:none}}";
+  document.head.appendChild(style);
+  var skel = document.createElement("div");
+  skel.id = "ms-channel-skel";
+  skel.setAttribute("aria-hidden", "true");
+  skel.innerHTML = "<i></i><i></i><i></i><i></i><i></i>";
+  document.documentElement.appendChild(skel);
+
+  window.__msClearChannelSkeleton = function () {
+    document.documentElement.classList.remove("ms-channel-loading");
+    document.documentElement.removeAttribute("aria-busy");
+    var el = document.getElementById("ms-channel-skel");
+    if (el) el.remove();
+  };
+
+  function channelStillLoading() {
+    if (!document.body || document.body.dataset.page !== "calendar") return false;
+    var app = document.getElementById("cal-app");
+    var gate = document.getElementById("cal-gate");
+    return (!app || app.hidden) && (!gate || gate.hidden);
+  }
+
+  function maybeClear() {
+    if (channelStillLoading()) return;
+    if (typeof window.__msClearChannelSkeleton === "function") window.__msClearChannelSkeleton();
+  }
+
+  if (until === "dom") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (typeof window.__msClearChannelSkeleton === "function") window.__msClearChannelSkeleton();
+      }, { once: true });
+    } else if (typeof window.__msClearChannelSkeleton === "function") {
+      window.__msClearChannelSkeleton();
+    }
+  } else {
+    document.addEventListener("ms:shell-ready", maybeClear);
+    function watchShell() {
+      if (!document.body || watchShell.armed) return;
+      watchShell.armed = true;
+      new MutationObserver(maybeClear).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-ms-shell-painted"],
+      });
+      maybeClear();
+    }
+    if (document.body) watchShell();
+    else document.addEventListener("DOMContentLoaded", watchShell, { once: true });
+  }
+  setTimeout(function () {
+    if (typeof window.__msClearChannelSkeleton === "function") window.__msClearChannelSkeleton();
+  }, 8000);
+}
+
+function bindInstantChannelNav() {
+  var studio = {
+    dashboard: 1,
+    builder: 1,
+    clients: 1,
+    settings: 1,
+    leads: 1,
+    projects: 1,
+    editor: 1,
+    onboarding: 1,
+    "admin-console": 1,
+    course: 1,
+    pricing: 1,
+    calendar: 1,
+    help: 1,
+    guide: 1,
+  };
+  var leaving = false;
+
+  function channelLink(target) {
+    var link = target && target.closest && target.closest("a[href]");
+    if (!link) return null;
+    if (!link.closest(".ms-sidebar, #ms-tabbar, .ms-tabbar")) return null;
+    if (link.classList.contains("is-soon") || link.classList.contains("is-active")) return null;
+    if (link.getAttribute("aria-current") === "page") return null;
+    if (link.target && link.target !== "_self") return null;
+    if (link.hasAttribute("download") || link.hasAttribute("data-external-redirect")) return null;
+    return link;
+  }
+
+  document.addEventListener(
+    "pointerdown",
+    function (event) {
+      if (leaving || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var link = channelLink(event.target);
+      if (!link) return;
+      var url;
+      try {
+        url = new URL(link.getAttribute("href"), location.href);
+      } catch (err) {
+        return;
+      }
+      if (url.origin !== location.origin) return;
+      var file = (url.pathname.split("/").pop() || "").replace(/\.html$/i, "") || "index";
+      if (!studio[file]) return;
+      if (url.pathname === location.pathname && url.search === location.search) return;
+      leaving = true;
+      window.__msChannelLeaving = 1;
+      try {
+        var from = (document.body && document.body.dataset.page) || "";
+        sessionStorage.setItem("ms_studio_booted", "1");
+        sessionStorage.setItem(
+          "ms_tab_switch",
+          JSON.stringify({ from: from, to: file, t: Date.now() })
+        );
+      } catch (err) {}
+      location.assign(url.pathname + url.search + url.hash);
+    },
+    true
+  );
+
+  document.addEventListener(
+    "click",
+    function (event) {
+      if (!leaving) return;
+      var link = channelLink(event.target);
+      if (!link) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    },
+    true
+  );
+}
 
 function mountTabBarEarly() {
   var stem = (location.pathname.split("/").pop() || "/").replace(/\.html$/i, "") || "index";

@@ -2017,7 +2017,6 @@
         script.type = "speculationrules";
         script.textContent = JSON.stringify({
           prefetch: [{ source: "list", urls, eagerness: "immediate" }],
-          prerender: [{ source: "list", urls, eagerness: "immediate" }],
         });
         document.head.appendChild(script);
       } catch (_) {

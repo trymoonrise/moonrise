@@ -369,10 +369,12 @@ async function upsertBooking(supabase, userId, booking, trigger) {
   if (!booking.uid || !booking.startsAt) return { isNew: false };
   const { data: existing, error: readErr } = await supabase
     .from("calendar_bookings")
-    .select("id")
+    .select("id, status")
     .eq("provider_uid", booking.uid)
     .maybeSingle();
   if (readErr) throw readErr;
+  if (existing?.status === "cancelled") return { isNew: false };
+  if (existing?.status === "edited" && trigger !== "BOOKING_CANCELLED") return { isNew: false };
   let projectId = null;
   if (booking.projectId) {
     projectId = await ownedProjectId(supabase, userId, booking.projectId);
@@ -489,6 +491,93 @@ async function createRemoteWebhook(token, webhookToken) {
     webhookId: String(created?.data?.id || ""),
     webhookSecret: secret,
   };
+}
+
+function toClientBooking(row, businessName) {
+  return {
+    id: row.id,
+    title: row.title || "Meeting",
+    startsAt: row.starts_at,
+    endsAt: row.ends_at,
+    attendeeName: row.attendee_name || "Guest",
+    attendeeEmail: row.attendee_email || "",
+    status: row.status || "accepted",
+    businessName: businessName || "",
+  };
+}
+
+async function businessNamesFor(supabase, rows) {
+  const projectIds = [...new Set(rows.map((row) => row.project_id).filter(Boolean))];
+  const names = {};
+  if (!projectIds.length) return names;
+  const { data: projects, error } = await supabase
+    .from("projects")
+    .select("id, business_name")
+    .in("id", projectIds);
+  if (error) throw error;
+  for (const project of projects || []) {
+    names[project.id] = String(project.business_name || "").trim();
+  }
+  return names;
+}
+
+function parseEventEdit(body) {
+  const start = new Date(body?.startsAt);
+  const end = new Date(body?.endsAt);
+  if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()) || end <= start) {
+    const err = new Error("Choose a day and time.");
+    err.status = 400;
+    throw err;
+  }
+  const mins = (end.getTime() - start.getTime()) / 60000;
+  if (mins < 5 || mins > 480) {
+    const err = new Error("Meetings can be from 5 minutes to 8 hours.");
+    err.status = 400;
+    throw err;
+  }
+  const name = String(body?.attendeeName || "").trim().slice(0, 120);
+  const email = String(body?.attendeeEmail || "").trim().toLowerCase().slice(0, 200);
+  if (email && !email.includes("@")) {
+    const err = new Error("Enter an email address, or a phone number.");
+    err.status = 400;
+    throw err;
+  }
+  return {
+    startsAt: start.toISOString(),
+    endsAt: end.toISOString(),
+    attendeeName: name || "Guest",
+    attendeeEmail: email,
+  };
+}
+
+async function loadOwnedBooking(supabase, userId, id) {
+  if (!UUID_RE.test(String(id || ""))) return null;
+  const { data, error } = await supabase
+    .from("calendar_bookings")
+    .select("id, user_id, project_id, provider_uid, title, starts_at, ends_at, attendee_name, attendee_email, status")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data || data.user_id !== userId || data.status === "cancelled") return null;
+  return data;
+}
+
+async function cancelRemoteBooking(token, uid) {
+  const id = encodeURIComponent(String(uid || "").trim());
+  if (!token || !id) return;
+  try {
+    await calFetch(token, "/bookings/" + id + "/cancel", {
+      method: "POST",
+      body: JSON.stringify({ cancellationReason: "Removed in Moonrise" }),
+    });
+  } catch (e) {
+    if (e.status === 404) return;
+    try {
+      await calFetch(token, "/bookings/" + id, { method: "DELETE" });
+    } catch (err) {
+      console.error("cal booking cancel", err?.status || "", err?.message || err);
+    }
+  }
 }
 
 function sendError(res, e, fallback) {
@@ -772,33 +861,71 @@ function mountRoutes(app, { db, requireUser }) {
       const { data, error } = await query;
       if (error) throw error;
       const rows = data || [];
-      const projectIds = [...new Set(rows.map((row) => row.project_id).filter(Boolean))];
-      const names = {};
-      if (projectIds.length) {
-        const { data: projects, error: projectErr } = await supabase
-          .from("projects")
-          .select("id, business_name")
-          .in("id", projectIds);
-        if (projectErr) throw projectErr;
-        for (const project of projects || []) {
-          names[project.id] = String(project.business_name || "").trim();
-        }
-      }
+      const names = await businessNamesFor(supabase, rows);
       res.json({
         connected: !!conn,
-        bookings: rows.map((row) => ({
-          id: row.id,
-          title: row.title || "Meeting",
-          startsAt: row.starts_at,
-          endsAt: row.ends_at,
-          attendeeName: row.attendee_name || "Guest",
-          attendeeEmail: row.attendee_email || "",
-          status: row.status || "accepted",
-          businessName: row.project_id ? names[row.project_id] || "" : "",
-        })),
+        bookings: rows.map((row) => toClientBooking(row, row.project_id ? names[row.project_id] || "" : "")),
       });
     } catch (e) {
       sendError(res, e, "Could not load meetings");
+    }
+  });
+
+  app.patch("/calendar/bookings/:id", requireUser, async (req, res) => {
+    try {
+      const supabase = db();
+      const row = await loadOwnedBooking(supabase, req.user.id, req.params.id);
+      if (!row) return res.status(404).json({ error: "That event is no longer on the calendar." });
+      const parsed = parseEventEdit(req.body);
+      const { data, error } = await supabase
+        .from("calendar_bookings")
+        .update({
+          starts_at: parsed.startsAt,
+          ends_at: parsed.endsAt,
+          attendee_name: parsed.attendeeName,
+          attendee_email: parsed.attendeeEmail || null,
+          status: "edited",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", row.id)
+        .eq("user_id", req.user.id)
+        .select("id, title, starts_at, ends_at, attendee_name, attendee_email, status, project_id")
+        .single();
+      if (error) throw error;
+      const names = await businessNamesFor(supabase, [data]);
+      res.json({
+        booking: toClientBooking(data, data.project_id ? names[data.project_id] || "" : ""),
+      });
+    } catch (e) {
+      sendError(res, e, "Could not save that event");
+    }
+  });
+
+  app.delete("/calendar/bookings/:id", requireUser, async (req, res) => {
+    try {
+      const supabase = db();
+      const row = await loadOwnedBooking(supabase, req.user.id, req.params.id);
+      if (!row) return res.status(404).json({ error: "That event is no longer on the calendar." });
+      const { error } = await supabase
+        .from("calendar_bookings")
+        .update({ status: "cancelled", updated_at: new Date().toISOString() })
+        .eq("id", row.id)
+        .eq("user_id", req.user.id);
+      if (error) throw error;
+      if (row.provider_uid) {
+        try {
+          const conn = await loadConnection(supabase, req.user.id);
+          if (conn) {
+            const token = await accessTokenFor(supabase, conn);
+            await cancelRemoteBooking(token, row.provider_uid);
+          }
+        } catch (e) {
+          console.error("cal booking cancel", e?.message || e);
+        }
+      }
+      res.json({ ok: true });
+    } catch (e) {
+      sendError(res, e, "Could not remove that event");
     }
   });
 

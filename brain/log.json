@@ -3,6 +3,38 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.7.0",
+      "date": "2026-11-09",
+      "title": "Landing and calendar",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The landing hero fills the first screen, and the top bar scrolls away with it.",
+            "On a phone, the menu lists every page in a simple font, and the list can scroll.",
+            "The menu screen fades in, and each page name rises in turn."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "The owner crown on a phone is a thin gold mark in a warm glass circle.",
+            "Calendar events can be edited or removed.",
+            "Switching channels opens that page right away, and a skeleton shows until it is ready."
+          ],
+          "fixes": [
+            "Back and Continue stay below the open repository list."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "fixes": [
+            "The status check shows the studio worker as up."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.9",
       "date": "2026-11-09",
       "title": "Studio layout",

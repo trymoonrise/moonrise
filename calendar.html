@@ -232,7 +232,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261108-mobile-chrome"></script>
+  <script src="js/auth-gate-head.js?v=20261109-channel"></script>
   <title>Calendar - Moonrise Studio</title>
   <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
@@ -245,7 +245,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
-  <link rel="stylesheet" href="css/calendar.css?v=20261109-cal-compact">
+  <link rel="stylesheet" href="css/calendar.css?v=20261109-cal-edit">
 </head>
 <body data-page="calendar">
   <div id="shell"></div>
@@ -270,7 +270,10 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
         <input id="cal-form-contact" type="text" maxlength="200" placeholder="Email or phone" aria-label="Email or phone">
         <input id="cal-form-site" type="text" maxlength="120" placeholder="Site" aria-label="Site">
         <input id="cal-form-link" type="url" maxlength="300" placeholder="Meeting link" aria-label="Meeting link">
-        <button type="submit">Save event</button>
+        <div class="ms-cal-form-actions">
+          <button type="submit" class="ms-cal-form-save" id="cal-form-save">Save event</button>
+          <button type="button" class="ms-cal-form-cancel" id="cal-form-cancel">Cancel</button>
+        </div>
       </form>
       <div class="ms-cal-picker" id="cal-picker" hidden>
         <div class="ms-cal-year">
@@ -321,6 +324,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
-  <script defer src="js/calendar.js?v=20261109-cal"></script>
+  <script defer src="js/calendar.js?v=20261109-channel"></script>
 </body>
 </html>

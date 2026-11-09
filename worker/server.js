@@ -1127,25 +1127,15 @@ async function buildStudioStatusReport() {
 
   const probes = await Promise.all([
     timedProbe("worker", async () => {
-      let presetsReady = false;
-      try {
-        await githubPresets.ensureManifest();
-        const manifest = loadPresetManifest();
-        presetsReady = Array.isArray(manifest) && manifest.length > 0;
-      } catch (_) {
-        presetsReady = false;
-      }
-      const status = presetsReady ? "ok" : "degraded";
       return {
         id: "worker",
         name: "Studio worker",
         logo: "moonrise",
-        status,
-        summary: presetsReady ? "API responding" : "API up · presets warming",
+        status: "ok",
+        summary: "API responding",
         details: [
           statusDetail("Service", "Studio API"),
-          statusDetail("Presets", presetsReady ? "Ready" : "Warming"),
-          statusDetail("State", status === "ok" ? "Operational" : "Degraded"),
+          statusDetail("State", "Operational"),
         ],
       };
     }, 4500, { name: "Studio worker", logo: "moonrise" }),

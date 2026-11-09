@@ -26,6 +26,7 @@
   let bookings = [];
   let bookingUrl = "";
   const LOCAL_KEY = "ms_cal_local_events_v1";
+  const EXTRA_KEY = "ms_cal_event_extra_v1";
   let configured = true;
   let loadToken = 0;
 
@@ -103,6 +104,7 @@
   }
 
   function showGate(on) {
+    window.__msClearChannelSkeleton?.();
     if (gateEl) gateEl.hidden = !on;
     if (appEl) appEl.hidden = !!on;
     if (on) hideDetail();
@@ -121,12 +123,46 @@
     localStorage.setItem(LOCAL_KEY, JSON.stringify(items));
   }
 
+  function readExtras() {
+    try {
+      const data = JSON.parse(localStorage.getItem(EXTRA_KEY) || "{}");
+      return data && typeof data === "object" ? data : {};
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function writeExtra(id, extra) {
+    const all = readExtras();
+    if (!extra) delete all[id];
+    else all[id] = extra;
+    localStorage.setItem(EXTRA_KEY, JSON.stringify(all));
+  }
+
+  function decorate(item) {
+    const extra = readExtras()[item.id];
+    if (!extra || typeof extra !== "object") return item;
+    return {
+      ...item,
+      attendeePhone: extra.attendeePhone != null ? extra.attendeePhone : item.attendeePhone || "",
+      businessName: extra.businessName != null ? extra.businessName : item.businessName || "",
+      meetingUrl: extra.meetingUrl != null ? extra.meetingUrl : item.meetingUrl || "",
+    };
+  }
+
   function eventsOn(key) {
     const all = bookings.concat(localEvents());
-    return all.filter((item) => {
-      const date = new Date(item.startsAt);
-      return Number.isFinite(date.getTime()) && dateKey(date) === key;
-    });
+    return all
+      .filter((item) => {
+        const date = new Date(item.startsAt);
+        return Number.isFinite(date.getTime()) && dateKey(date) === key;
+      })
+      .map(decorate)
+      .sort((a, b) => new Date(a.startsAt) - new Date(b.startsAt));
+  }
+
+  function isLocalEvent(item) {
+    return item?.local === true || String(item?.id || "").startsWith("local-");
   }
 
   function paintMonthLabel() {
@@ -293,6 +329,31 @@
       addDetailRow(block, "Contact", contactLine(item));
       addDetailRow(block, "Site", item.businessName);
       addDetailLink(block, item.meetingUrl || bookingUrl);
+      const actions = document.createElement("div");
+      actions.className = "ms-cal-event-actions";
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "ms-cal-edit";
+      editBtn.textContent = "Edit";
+      editBtn.addEventListener("click", () => openForm(item));
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "ms-cal-remove";
+      removeBtn.textContent = "Remove";
+      removeBtn.addEventListener("click", () => {
+        if (removeBtn.dataset.confirm !== "yes") {
+          detailCardEl.querySelectorAll(".ms-cal-remove").forEach((btn) => {
+            btn.textContent = "Remove";
+            delete btn.dataset.confirm;
+          });
+          removeBtn.dataset.confirm = "yes";
+          removeBtn.textContent = "Remove?";
+          return;
+        }
+        void removeEvent(item, removeBtn);
+      });
+      actions.append(editBtn, removeBtn);
+      block.appendChild(actions);
       detailCardEl.appendChild(block);
     });
   }
@@ -301,6 +362,7 @@
     if (!detailEl) return;
     detailEl.classList.remove("is-in");
     detailEl.setAttribute("aria-hidden", "true");
+    detailCardEl?.replaceChildren();
   }
 
   function showDetail() {
@@ -380,13 +442,88 @@
   document.getElementById("cal-add")?.addEventListener("click", () => {
     const form = document.getElementById("cal-form");
     if (!form) return;
-    form.hidden = !form.hidden;
-    const date = document.getElementById("cal-form-date");
-    if (date && !date.value && selected) date.value = selected;
+    if (!form.hidden && !form.dataset.editing) {
+      closeForm();
+      return;
+    }
+    openForm(null);
   });
 
-  document.getElementById("cal-form")?.addEventListener("submit", (event) => {
-    event.preventDefault();
+  document.getElementById("cal-form-cancel")?.addEventListener("click", () => {
+    closeForm();
+  });
+
+  function formEl() {
+    return document.getElementById("cal-form");
+  }
+
+  function setSaveLabel(editing) {
+    const btn = document.getElementById("cal-form-save");
+    if (btn) btn.textContent = editing ? "Save changes" : "Save event";
+  }
+
+  function closeForm() {
+    const form = formEl();
+    if (!form) return;
+    form.hidden = true;
+    delete form.dataset.editing;
+    if (form instanceof HTMLFormElement) form.reset();
+    setSaveLabel(false);
+  }
+
+  function localParts(iso) {
+    const date = new Date(iso);
+    if (!Number.isFinite(date.getTime())) return { date: selected, time: "" };
+    const pad = (n) => String(n).padStart(2, "0");
+    return {
+      date: dateKey(date),
+      time: pad(date.getHours()) + ":" + pad(date.getMinutes()),
+    };
+  }
+
+  function lengthMins(item) {
+    const start = new Date(item.startsAt).getTime();
+    const end = new Date(item.endsAt).getTime();
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) return 30;
+    return Math.min(480, Math.max(5, Math.round((end - start) / 60000)));
+  }
+
+  function setField(id, value) {
+    const field = document.getElementById(id);
+    if (field) field.value = value;
+  }
+
+  function openForm(item) {
+    const form = formEl();
+    if (!form) return;
+    if (form instanceof HTMLFormElement) form.reset();
+    if (item) {
+      const parts = localParts(item.startsAt);
+      const contact = String(item.attendeeEmail || item.attendeePhone || "").trim();
+      form.dataset.editing = item.id;
+      setField("cal-form-date", parts.date);
+      setField("cal-form-time", parts.time);
+      setField("cal-form-mins", String(lengthMins(item)));
+      setField("cal-form-name", String(item.attendeeName || "").trim() === "Guest" ? "" : item.attendeeName || "");
+      setField("cal-form-contact", contact);
+      setField("cal-form-site", item.businessName || "");
+      setField("cal-form-link", item.meetingUrl || "");
+      setSaveLabel(true);
+    } else {
+      delete form.dataset.editing;
+      setField("cal-form-date", selected || "");
+      setField("cal-form-mins", "30");
+      setSaveLabel(false);
+    }
+    form.hidden = false;
+    detailCardEl?.querySelectorAll(".ms-cal-remove").forEach((btn) => {
+      btn.textContent = "Remove";
+      delete btn.dataset.confirm;
+    });
+    document.getElementById("cal-form-name")?.focus();
+  }
+
+  function readForm() {
     const date = String(document.getElementById("cal-form-date")?.value || "");
     const time = String(document.getElementById("cal-form-time")?.value || "");
     const mins = Number(document.getElementById("cal-form-mins")?.value) || 30;
@@ -395,12 +532,11 @@
     const site = String(document.getElementById("cal-form-site")?.value || "").trim();
     const link = String(document.getElementById("cal-form-link")?.value || "").trim();
     const start = new Date(date + "T" + time);
-    if (!date || !time || !Number.isFinite(start.getTime())) return;
-    const end = new Date(start.getTime() + mins * 60000);
+    if (!date || !time || !Number.isFinite(start.getTime())) return null;
+    const safeMins = Math.min(480, Math.max(5, mins));
+    const end = new Date(start.getTime() + safeMins * 60000);
     const email = contact.includes("@") ? contact : "";
-    const items = localEvents();
-    items.push({
-      id: "local-" + Date.now(),
+    return {
       startsAt: start.toISOString(),
       endsAt: end.toISOString(),
       attendeeName: name,
@@ -408,21 +544,93 @@
       attendeePhone: email ? "" : contact,
       businessName: site,
       meetingUrl: link,
-      local: true,
-    });
-    saveLocal(items);
-    const form = event.currentTarget;
-    if (form instanceof HTMLFormElement) {
-      form.hidden = true;
-      form.reset();
-    }
+    };
+  }
+
+  function showSaved(start) {
     selected = dateKey(start);
     viewYear = start.getFullYear();
     viewMonth = start.getMonth();
     pickerYear = viewYear;
+    closeForm();
     paintMonthLabel();
     paintGrid();
     showDetail();
+  }
+
+  async function removeEvent(item, button) {
+    if (button) button.disabled = true;
+    setError("");
+    try {
+      if (isLocalEvent(item)) {
+        saveLocal(localEvents().filter((row) => row.id !== item.id));
+      } else {
+        await api("/calendar/bookings/" + encodeURIComponent(item.id), { method: "DELETE" });
+        bookings = bookings.filter((row) => row.id !== item.id);
+        writeExtra(item.id, null);
+      }
+      const form = formEl();
+      if (form?.dataset.editing === item.id) closeForm();
+      paintGrid();
+      showDetail();
+    } catch (e) {
+      setError(e.message || "Could not remove that event");
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Remove";
+        delete button.dataset.confirm;
+      }
+    }
+  }
+
+  document.getElementById("cal-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const fields = readForm();
+    if (!fields) return;
+    const form = event.currentTarget;
+    const editingId = form instanceof HTMLFormElement ? form.dataset.editing || "" : "";
+    const saveBtn = document.getElementById("cal-form-save");
+    if (saveBtn) saveBtn.disabled = true;
+    setError("");
+    try {
+      if (editingId && !editingId.startsWith("local-")) {
+        const data = await api("/calendar/bookings/" + encodeURIComponent(editingId), {
+          method: "PATCH",
+          body: JSON.stringify({
+            startsAt: fields.startsAt,
+            endsAt: fields.endsAt,
+            attendeeName: fields.attendeeName,
+            attendeeEmail: fields.attendeeEmail,
+          }),
+        });
+        const booking = data?.booking;
+        if (!booking?.id) throw new Error("Could not save that event");
+        writeExtra(booking.id, {
+          attendeePhone: fields.attendeePhone,
+          businessName: fields.businessName,
+          meetingUrl: fields.meetingUrl,
+        });
+        const index = bookings.findIndex((row) => row.id === booking.id);
+        if (index === -1) bookings.push(booking);
+        else bookings[index] = booking;
+      } else if (editingId) {
+        const items = localEvents();
+        const index = items.findIndex((row) => row.id === editingId);
+        const next = { ...fields, id: editingId, local: true };
+        if (index === -1) items.push(next);
+        else items[index] = next;
+        saveLocal(items);
+      } else {
+        const items = localEvents();
+        items.push({ ...fields, id: "local-" + Date.now(), local: true });
+        saveLocal(items);
+      }
+      showSaved(new Date(fields.startsAt));
+    } catch (e) {
+      setError(e.message || "Could not save that event");
+    } finally {
+      if (saveBtn) saveBtn.disabled = false;
+    }
   });
 
   document.getElementById("cal-prev")?.addEventListener("click", () => shiftMonth(-1));
@@ -490,6 +698,7 @@
     try {
       await refresh();
     } catch (e) {
+      window.__msClearChannelSkeleton?.();
       showGate(false);
       setError(e.message || "Could not load the calendar");
     }
