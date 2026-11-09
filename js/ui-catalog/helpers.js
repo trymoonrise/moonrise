@@ -52,11 +52,15 @@
   function area(label, state) {
     const cls = ["lx-field"];
     if (state === "focus") cls.push("is-focus");
-    if (state === "error") cls.push("is-danger");
+    if (state === "error" || state === "danger") cls.push("is-danger");
+    if (state === "ghost") cls.push("is-ghost");
+    if (state === "hover") cls.push("is-hover");
     if (state === "disabled") cls.push("is-disabled");
+    if (state === "compact") cls.push("is-compact");
     const dis = state === "disabled" ? " disabled" : "";
-    const val = state === "filled" || state === "error" ? "Open Friday at 7." : "";
-    return '<label class="' + cls.join(" ") + '"><span>' + label + '</span><textarea' + dis + ' aria-label="' + label + '">' + val + "</textarea></label>";
+    const val = state === "filled" || state === "error" || state === "danger" ? "Open Friday at 7." : "";
+    const spin = state === "loading" ? '<i class="lx-spin is-on"></i>' : "";
+    return '<label class="' + cls.join(" ") + '"><span>' + label + '</span><span class="lx-input-wrap"><textarea' + dis + ' aria-label="' + label + '">' + val + "</textarea>" + spin + "</span></label>";
   }
 
   function visual(kind) {

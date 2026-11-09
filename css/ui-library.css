@@ -483,7 +483,8 @@ body[data-page="ui-library"] .dt-btn-primary:active:not(:disabled) {
   color: #71717a;
   background: transparent;
   border-radius: var(--dt-pill);
-  padding: 0.32rem 0.7rem;
+  padding: 0.52rem 0.85rem;
+  transition: background 0.28s ease, color 0.28s ease;
 }
 
 .dt-toc-switch button.is-on,
@@ -501,7 +502,14 @@ body[data-page="ui-library"] .dt-btn-primary:active:not(:disabled) {
   scrollbar-width: none;
 }
 
-.dt-toc-group.is-shown { display: flex; }
+.dt-toc-group.is-shown {
+  display: flex;
+  animation: dt-toc-in 0.28s ease;
+}
+@keyframes dt-toc-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
 
 .dt-toc-label {
   display: none;
@@ -513,7 +521,7 @@ body[data-page="ui-library"] .dt-btn-primary:active:not(:disabled) {
 
 .dt-toc a {
   flex: 0 0 auto;
-  padding: 0.32rem 0.7rem;
+  padding: 0.52rem 0.85rem;
   border-radius: var(--dt-pill);
   background: transparent;
   color: #71717a;
@@ -523,13 +531,39 @@ body[data-page="ui-library"] .dt-btn-primary:active:not(:disabled) {
   letter-spacing: -0.01em;
   border: 1px solid transparent;
   box-shadow: none;
+  transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease;
 }
 
-.dt-toc a:hover,
+.dt-toc a:hover {
+  background: #ececee;
+  color: #111111;
+}
+
 .dt-toc a.is-active {
   background: #111111;
   color: #fff;
   border-color: #111111;
+}
+
+body[data-page="ui-library"] .dt-toc a {
+  padding: 0.52rem 0.85rem !important;
+  background: transparent !important;
+  color: #71717a !important;
+  -webkit-text-fill-color: #71717a !important;
+  border-radius: var(--dt-pill) !important;
+  text-decoration: none !important;
+  transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease;
+}
+body[data-page="ui-library"] .dt-toc a:hover {
+  background: #ececee !important;
+  color: #111111 !important;
+  -webkit-text-fill-color: #111111 !important;
+}
+body[data-page="ui-library"] .dt-toc a.is-active {
+  background: #111111 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-color: #111111 !important;
 }
 
 .dt-main { display: grid; gap: 2.35rem; }
@@ -2383,13 +2417,21 @@ body[data-page="ui-library"] a.dt-link:hover,
     width: 100%;
     text-align: left;
     background: transparent;
-    padding: 0.4rem 0.55rem;
+    padding: 0.58rem 0.7rem;
     border-radius: 10px;
   }
-  .dt-toc a:hover,
-  .dt-toc a.is-active {
+  .dt-toc a:hover {
     background: var(--dt-fill);
     color: var(--dt-ink);
+  }
+  .dt-toc a.is-active {
+    background: #111111;
+    color: #ffffff;
+    border-color: #111111;
+  }
+  body[data-page="ui-library"] .dt-toc a {
+    padding: 0.58rem 0.7rem !important;
+    border-radius: 10px !important;
   }
   .dt-main { grid-column: 2; }
   .dt-section,
@@ -2801,7 +2843,7 @@ body[data-page="ui-library"] .dt-page-btn.is-active,
 body[data-page="ui-library"] .dt-stepper li.is-current,
 body[data-page="ui-library"] .dt-avatars span,
 body[data-page="ui-library"] .dt-toc a.is-active,
-body[data-page="ui-library"] .dt-toc a:hover,
+body[data-page="ui-library"] .dt-toc-switch button.is-on,
 body[data-page="ui-library"] .dt-play:not(.dt-play-ghost),
 body[data-page="ui-library"] .dt-icon-btn:hover,
 body[data-page="ui-library"] .dt-play-ico,
@@ -2956,6 +2998,7 @@ body[data-page="ui-library"] .dt-star.is-on {
   .dt-status-dot,
   .dt-typing i,
   .dt-scrub-fill,
+  .dt-toc-group.is-shown,
   .dt-carousel-track,
   .dt-carousel-progress button span,
   .dt-pill-thumb,

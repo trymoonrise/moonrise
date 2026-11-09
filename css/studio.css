@@ -7039,6 +7039,71 @@ body[data-page="editor"].ms-lb-workspace.ms-lb-show-shell .ms-sidebar-resizer {
   color: #166534;
 }
 
+.ms-bs-gh-connect {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.ms-bs-gh-connect:hover { background: #232427; }
+
+.ms-bs-gh-connect[hidden],
+.ms-bs-gh-or[hidden],
+.ms-bs-gh-account[hidden] { display: none; }
+
+.ms-bs-gh-or {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.15rem 0;
+  color: #71717a;
+  font-size: 0.75rem;
+}
+
+.ms-bs-gh-or::before,
+.ms-bs-gh-or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e5e5e5;
+}
+
+.ms-bs-gh-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.ms-bs-gh-account-name {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.ms-bs-gh-disconnect {
+  border: 0;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
 .ms-bs-gh-repo-field {
   position: relative;
   z-index: 5;
@@ -14142,6 +14207,44 @@ body.ms-legal-site {
       opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1),
       visibility 0s linear 0s;
   }
+  html body .ms-income-float {
+    position: fixed !important;
+    top: max(0.7rem, env(safe-area-inset-top, 0px)) !important;
+    right: max(0.7rem, env(safe-area-inset-right, 0px)) !important;
+    left: auto !important;
+    bottom: auto !important;
+    z-index: 280 !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    visibility: visible !important;
+  }
+
+  html body .ms-owner-crown {
+    position: fixed !important;
+    top: max(0.65rem, env(safe-area-inset-top, 0px)) !important;
+    left: max(0.65rem, env(safe-area-inset-left, 0px)) !important;
+    z-index: 280 !important;
+    display: grid !important;
+    visibility: visible !important;
+    place-items: center !important;
+    width: 3.15rem !important;
+    height: 3.15rem !important;
+    border-radius: 999px !important;
+    background: color-mix(in srgb, #ffffff 86%, transparent) !important;
+    color: #c8960c !important;
+    border: 1px solid rgb(226 179 64 / 45%) !important;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 10px 24px rgba(0, 0, 0, 0.12) !important;
+    text-decoration: none !important;
+  }
+
+  html body .ms-owner-crown svg {
+    width: 1.7rem !important;
+    height: 1.7rem !important;
+    filter: drop-shadow(0 1px 0 rgb(255 236 170 / 70%));
+  }
+
   body:not([data-page="editor"]) .ms-menu-toggle {
     display: none !important;
     visibility: hidden !important;

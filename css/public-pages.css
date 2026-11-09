@@ -327,7 +327,7 @@ body[data-page="guide"] .ms-help-steps {
 .ms-legal-doc .ms-card a,
 .ms-legal-foot a,
 body.ms-legal-site a:not(.ms-legal-nav a):not(.ms-legal-toc a):not(.ms-legal-brand),
-body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-btn):not(.dt-hero-cta):not(.dt-btn):not(.dt-play):not(.dt-badge):not(.lx-link):not(.lx-btn),
+body.ms-contact-public a:not(.ms-orders-nav-link):not(.ms-home-brand):not(.ms-btn):not(.dt-hero-cta):not(.dt-btn):not(.dt-play):not(.dt-badge):not(.lx-link):not(.lx-btn):not(.dt-toc a),
 body[data-page="guide"] .ms-help-guide a:not(.ms-btn) {
   color: var(--ms-link) !important;
   -webkit-text-fill-color: var(--ms-link) !important;

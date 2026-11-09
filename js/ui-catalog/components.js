@@ -132,8 +132,18 @@
 
   LX.spec("checkboxes", ["forms-check"], LX.states("checkboxes", function (k) {
     const on = k === "filled" || k === "focus";
-    const dis = k === "disabled" ? " disabled" : "";
-    return '<label class="lx-row"><span>' + chk(on).replace(">", dis + ">") + "</span><span>Show hours</span></label>" + (k === "error" ? '<p class="lx-hint is-danger">Choose one</p>' : "");
+    const extra = [];
+    if (k === "focus") extra.push("is-focus");
+    if (k === "ghost") extra.push("is-ghost");
+    if (k === "danger") extra.push("is-danger");
+    if (k === "hover") extra.push("is-hover");
+    if (k === "compact") extra.push("is-compact");
+    let box = chk(on);
+    if (extra.length) box = box.replace("lx-check", "lx-check " + extra.join(" "));
+    if (k === "disabled") box = box.replace(">", " disabled>");
+    const spin = k === "loading" ? ' <i class="lx-spin is-on"></i>' : "";
+    const hint = k === "error" ? '<p class="lx-hint is-danger">Choose one</p>' : (k === "danger" ? '<p class="lx-hint is-danger">Required</p>' : "");
+    return '<label class="lx-row"><span>' + box + "</span><span>Show hours" + spin + "</span></label>" + hint;
   }, 9));
 
   LX.spec("cursors", [], [
@@ -214,16 +224,16 @@
     card("empty-upload", "Upload", '<div class="lx-empty"><p class="lx-h">Drop a photo</p><p class="lx-meta">PNG or JPG</p></div>')
   ]);
 
-  function tree(sel) {
-    return '<div class="lx-tree"><button type="button">Sites</button><div class="sub"><button type="button" class="' + (sel ? "is-on" : "") + '">Harbor</button><button type="button">Northline</button></div></div>';
+  function tree(sel, open) {
+    return '<div class="lx-tree"><button type="button" data-lx-folder aria-expanded="' + (open ? "true" : "false") + '">Sites</button><div class="sub"' + (open ? "" : " hidden") + '><button type="button" class="' + (sel ? "is-on" : "") + '">Harbor</button><button type="button">Northline</button></div></div>';
   }
   LX.spec("file-trees", [], [
-    card("trees-nested", "Nested", tree(false)),
-    card("trees-selected", "Selected", tree(true)),
-    card("trees-open", "Open folder", tree(false)),
+    card("trees-nested", "Nested", tree(false, false)),
+    card("trees-selected", "Selected", tree(true, true)),
+    card("trees-open", "Open folder", tree(false, true)),
     card("trees-empty", "Empty", '<div class="lx-tree"><button type="button">Sites</button><p class="lx-meta sub">Empty</p></div>'),
     card("trees-loading", "Loading", '<div class="lx-row"><span>Sites</span><i class="lx-spin is-on"></i></div>', { play: "lx-live" }),
-    card("trees-filter", "Filter", '<input class="lx-input" placeholder="Filter files" aria-label="Filter">' + tree(true)),
+    card("trees-filter", "Filter", '<input class="lx-input" placeholder="Filter files" aria-label="Filter">' + tree(true, true)),
     card("trees-drag", "Drop target", '<div class="lx-pad" style="border-color:var(--dt-action)">Drop here</div>'),
     card("trees-error", "Error", '<div class="lx-alert is-bad">Could not read the folder</div>'),
     card("trees-compact", "Compact", '<div class="lx-tree"><button type="button" class="is-on">index</button><button type="button">hours</button></div>'),
@@ -433,8 +443,17 @@
   ]);
 
   LX.spec("search-bars", ["forms-search"], LX.states("search-bars", function (k) {
-    const val = k === "filled" ? "harbor" : "";
-    return '<label class="lx-field' + (k === "focus" ? " is-focus" : "") + (k === "error" ? " is-danger" : "") + '"><span>Search</span><span class="lx-input-wrap">' + ico("search", "sm") + '<input value="' + val + '" placeholder="Search" aria-label="Search"' + (k === "disabled" ? " disabled" : "") + "></span></label>";
+    const cls = ["lx-field"];
+    if (k === "focus") cls.push("is-focus");
+    if (k === "error" || k === "danger") cls.push("is-danger");
+    if (k === "ghost") cls.push("is-ghost");
+    if (k === "hover") cls.push("is-hover");
+    if (k === "disabled") cls.push("is-disabled");
+    if (k === "compact") cls.push("is-compact");
+    const val = k === "filled" || k === "danger" ? "harbor" : "";
+    const spin = k === "loading" ? '<i class="lx-spin is-on"></i>' : "";
+    const hint = k === "error" ? '<p class="lx-hint is-danger">Nothing matched</p>' : (k === "danger" ? '<p class="lx-hint is-danger">Search failed</p>' : "");
+    return '<label class="' + cls.join(" ") + '"><span>Search</span><span class="lx-input-wrap">' + ico("search", "sm") + '<input value="' + val + '" placeholder="Search" aria-label="Search"' + (k === "disabled" ? " disabled" : "") + ">" + spin + "</span></label>" + hint;
   }, 9));
 
   LX.spec("selects", ["menus-select"], [
@@ -529,7 +548,7 @@
   LX.spec("tabs", ["nav-tabs"], [
     card("tabs-line", "Line", '<div class="lx-tabs"><button type="button" class="lx-tab is-on" data-lx-opt>Hours</button><button type="button" class="lx-tab" data-lx-opt>Menu</button><button type="button" class="lx-tab" data-lx-opt>Visit</button></div>'),
     card("tabs-fill", "Filled", '<div class="lx-chips"><button type="button" class="lx-chip is-on" data-lx-opt>Day</button><button type="button" class="lx-chip" data-lx-opt>Week</button></div>'),
-    card("tabs-icon", "Icons", '<div class="lx-tabs"><button type="button" class="lx-tab is-on">' + ico("file", "sm") + '</button><button type="button" class="lx-tab">' + ico("user", "sm") + "</button></div>"),
+    card("tabs-icon", "Icons", '<div class="lx-tabs"><button type="button" class="lx-tab is-on" data-lx-opt>' + ico("file", "sm") + '</button><button type="button" class="lx-tab" data-lx-opt>' + ico("user", "sm") + "</button></div>"),
     card("tabs-vert", "Vertical", '<div class="lx-side"><button type="button" class="is-on">About</button><button type="button">Hours</button></div>'),
     card("tabs-count", "Count", '<button type="button" class="lx-tab is-on">Leads <span class="lx-badge go">3</span></button>'),
     card("tabs-disabled", "Disabled", '<button type="button" class="lx-tab" disabled>Soon</button>'),
@@ -542,7 +561,7 @@
     card("tags-neutral", "Neutral", '<span class="lx-badge">Friday</span>'),
     card("tags-selected", "Selected", '<span class="lx-badge go">Live</span>'),
     card("tags-remove", "Removable", '<span class="lx-badge">Pike <button type="button" class="lx-textbtn" data-lx-dismiss>×</button></span>'),
-    card("tags-add", "Add", '<div class="lx-compose"><input class="lx-input" placeholder="Add a tag" aria-label="Tag">' + btn("Add", "compact") + "</div>"),
+    card("tags-add", "Add", '<div class="lx-compose"><input class="lx-input" placeholder="Add a tag" aria-label="Tag"><button type="button" class="lx-btn is-compact" data-lx-add>Add</button></div>'),
     card("tags-more", "Overflow", '<span class="lx-badge">Cafe</span> <span class="lx-badge">+2</span>'),
     card("tags-status", "Status", '<span class="lx-badge"><i class="lx-dot ok"></i> Open</span>'),
     card("tags-filter", "Filter", '<div class="lx-chips"><button type="button" class="lx-chip is-on" data-lx-opt>All</button><button type="button" class="lx-chip" data-lx-opt>Live</button></div>'),
@@ -557,8 +576,8 @@
     card("toasts-info", "Info", '<div class="lx-toast">Saved</div>'),
     card("toasts-ok", "Success", '<div class="lx-toast"><span class="lx-dot ok"></span> Published</div>'),
     card("toasts-bad", "Error", '<div class="lx-toast"><span class="lx-dot bad"></span> Try again</div>'),
-    card("toasts-action", "Action", '<div class="lx-toast">Lead in <button type="button" class="lx-textbtn">View</button></div>'),
-    card("toasts-undo", "Undo", '<div class="lx-toast">Removed <button type="button" class="lx-textbtn">Undo</button></div>'),
+    card("toasts-action", "Action", '<div class="lx-toast">Lead in <button type="button" class="lx-textbtn" data-lx-act="Opened">View</button></div>'),
+    card("toasts-undo", "Undo", '<div class="lx-toast">Removed <button type="button" class="lx-textbtn" data-lx-act="Undone">Undo</button></div>'),
     card("toasts-stack", "Stack", '<div style="display:grid;gap:6px"><div class="lx-toast">First</div><div class="lx-toast">Second</div></div>'),
     card("toasts-top", "Top", '<div class="lx-toast">Top of the screen</div>'),
     card("toasts-bottom", "Bottom", '<div class="lx-toast">Bottom of the screen</div>'),

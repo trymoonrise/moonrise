@@ -275,7 +275,8 @@ body[data-page="ui-library"] a.lx-btn.lx-btn-ghost {
   font-size: 0.8rem;
   cursor: pointer;
 }
-.lx-acc button.is-open { border-color: #111; }
+.lx-acc button.is-open,
+.lx-acc button.is-on { border-color: #111; background: var(--dt-action-soft); }
 .lx-acc .lx-p { padding: 0 4px 4px; }
 
 .lx-feats { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
@@ -375,12 +376,18 @@ body[data-page="ui-library"] a.lx-btn.lx-btn-ghost {
   border-color: var(--dt-action);
   box-shadow: 0 0 0 3px var(--dt-action-soft);
 }
-.lx-field.is-hover input { border-color: #111; }
+.lx-field.is-hover input,
+.lx-field.is-hover textarea { border-color: #111; }
 .lx-field.is-danger input,
-.lx-field.is-danger textarea { border-color: var(--dt-danger); }
-.lx-field.is-ghost input { background: transparent; }
+.lx-field.is-danger textarea,
+.lx-field.is-danger select { border-color: var(--dt-danger); }
+.lx-field.is-ghost input,
+.lx-field.is-ghost textarea { background: transparent; }
 .lx-field.is-disabled { opacity: 0.45; }
-.lx-field.is-compact input { min-height: 28px; font-size: 0.75rem; }
+.lx-field.is-compact input,
+.lx-field.is-compact textarea { min-height: 28px; font-size: 0.75rem; }
+.lx-field.is-compact textarea { min-height: 3.2rem; }
+.lx-input-wrap .lx-spin { position: absolute; right: 10px; }
 .lx-hint { margin: 0; color: var(--dt-quiet); font-size: 0.72rem; }
 .lx-hint.is-danger { color: var(--dt-danger); }
 .lx-hint.is-ok { color: var(--dt-ok); }
@@ -585,6 +592,11 @@ body[data-page="ui-library"] a.lx-btn.lx-btn-ghost {
   width: 100%;
   border-radius: 12px;
   background-color: #efeff1;
+}
+.lx-shade-still {
+  background-color: #f7f7f8;
+  background-image: radial-gradient(rgb(0 0 0 / 18%) 0.7px, transparent 0.8px);
+  background-size: 5px 5px;
 }
 .lx-shade-grain {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/></svg>");
@@ -920,6 +932,26 @@ body[data-page="ui-library"] a.lx-btn.lx-btn-ghost {
   background: #fff;
 }
 .lx-check.is-on { background: var(--dt-action); border-color: var(--dt-action); }
+.lx-check.is-on::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.lx-check.is-focus { box-shadow: 0 0 0 3px var(--dt-action-soft); }
+.lx-check.is-ghost { background: transparent; border-style: dashed; }
+.lx-check.is-danger { border-color: var(--dt-danger); }
+.lx-check.is-hover { border-color: #111; }
+.lx-check.is-compact { width: 14px; height: 14px; }
+.lx-check.is-compact.is-on::after { left: 3px; top: 1px; height: 6px; }
+.lx-check:disabled,
+.lx-toggle:disabled { opacity: 0.4; cursor: not-allowed; }
+.lx-row .lx-spin { margin-left: 8px; vertical-align: middle; }
 
 .lx-slider { width: 100%; accent-color: #111; }
 .lx-slider.is-focus { outline: none; box-shadow: 0 0 0 3px var(--dt-action-soft); border-radius: 99px; }
@@ -983,6 +1015,7 @@ body[data-page="ui-library"] a.lx-btn.lx-btn-ghost {
   mask-image: linear-gradient(#000 70%, transparent);
 }
 .lx-scroll.thin { scrollbar-width: thin; }
+.lx-scroll.shade { box-shadow: inset 0 -22px 16px -18px rgb(0 0 0 / 22%); }
 .lx-scroll.x { overflow-x: auto; overflow-y: hidden; white-space: nowrap; }
 .lx-scroll.snap { scroll-snap-type: x mandatory; display: flex; gap: 8px; }
 .lx-scroll.snap .lx-cell { scroll-snap-align: start; min-width: 70%; }

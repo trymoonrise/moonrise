@@ -251,6 +251,7 @@ const {
   sendPushToUser,
 } = require("./creator-push");
 const calendar = require("./calendar");
+const githubAccount = require("./github-account");
 const { recordPendingCreatorPayout } = require("./creator-payouts");
 const { sendContactLeadEmail, sendPurchaseInvoiceEmail } = require("./contact-mail");
 const {
@@ -2420,6 +2421,7 @@ const globalApiLimiter = rateLimit({
 app.use(globalApiLimiter);
 
 calendar.mountRoutes(app, { db, requireUser });
+githubAccount.mountRoutes(app, { db, requireUser });
 
 const generateLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
@@ -4208,7 +4210,13 @@ app.post("/import-site", requireUser, generateLimiter, async (req, res) => {
 
 app.post("/github/repos", requireUser, generateLimiter, async (req, res) => {
   try {
-    const token = req.body?.token || req.body?.github_token || "";
+    const token = await githubAccount.tokenForUser(db(), req.user.id);
+    if (!token) {
+      return res.status(401).json({
+        error: "Connect GitHub to see your repositories.",
+        code: "github_not_connected",
+      });
+    }
     const repos = await githubImport.listUserRepos(token);
     res.json({ repos });
   } catch (e) {
@@ -4222,7 +4230,7 @@ app.post("/github/repos", requireUser, generateLimiter, async (req, res) => {
 
 app.post("/github/site-folders", requireUser, generateLimiter, async (req, res) => {
   try {
-    const token = req.body?.token || req.body?.github_token || "";
+    const token = await githubAccount.tokenForUser(db(), req.user.id);
     const fullName = req.body?.repo || req.body?.fullName || req.body?.full_name || "";
     if (!String(fullName || "").trim()) {
       return res.status(400).json({ error: "Select a GitHub repository first." });
@@ -4241,7 +4249,7 @@ app.post("/github/site-folders", requireUser, generateLimiter, async (req, res) 
 app.post("/github/import-site", requireUser, generateLimiter, async (req, res) => {
   try {
     const supabase = db();
-    const token = req.body?.token || req.body?.github_token || "";
+    const token = await githubAccount.tokenForUser(db(), req.user.id);
     const fullName = req.body?.repo || req.body?.fullName || req.body?.full_name || "";
     if (!String(fullName || "").trim()) {
       return res.status(400).json({ error: "Select a GitHub repository first." });

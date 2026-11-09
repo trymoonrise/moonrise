@@ -3,6 +3,32 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.6.7",
+      "date": "2026-11-09",
+      "title": "Special prompt library",
+      "tag": "v2.6.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.6.7",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The category you are reading turns black with white text, and those category buttons are a little taller.",
+            "Each library state shows its own look, and the category buttons, folders, calendars, tags, and accordions respond when you use them.",
+            "The special prompt tells an agent to download every UI Library type, and those types live as raw code in their category folders.",
+            "The special prompt asks the agent to keep the original as Before and leave a playback that scrubs each step to After."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Upload connects the person's GitHub account so they can pick any repository, or they can paste a repository URL.",
+            "You can add a meeting on the calendar with a name, a contact, a site, and a link.",
+            "Settings includes Course, the creator guide, and the legal pages."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.6",
       "date": "2026-11-09",
       "title": "UI Library catalog",

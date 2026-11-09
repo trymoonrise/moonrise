@@ -122,6 +122,8 @@
     githubToken: "",
     githubRepos: [],
     githubConnected: false,
+    githubLogin: "",
+    githubConfigured: true,
     githubListing: false,
     githubWizardStep: 1,
     githubFolders: [],
@@ -1410,15 +1412,36 @@
     return String(document.getElementById("bs-gh-repo")?.value || "").trim();
   }
 
-  function readGithubToken() {
-    return String(document.getElementById("bs-gh-token")?.value || "").trim();
+  function parseGithubRepoInput(raw) {
+    const text = String(raw || "").trim();
+    if (!text) return "";
+    let path = text;
+    try {
+      if (/^https?:\/\//i.test(text)) {
+        const url = new URL(text);
+        if (!/(^|\.)github\.com$/i.test(url.hostname)) return "";
+        path = url.pathname;
+      }
+    } catch (_) {
+      return "";
+    }
+    path = path.replace(/\.git$/i, "").replace(/^\/+|\/+$/g, "");
+    let parts = path.split("/").filter(Boolean);
+    if (/^(www\.)?github\.com$/i.test(parts[0] || "")) parts = parts.slice(1);
+    if (parts.length < 2) return "";
+    if (!/^[\w.-]+$/.test(parts[0]) || !/^[\w.-]+$/.test(parts[1])) return "";
+    return parts[0] + "/" + parts[1];
+  }
+
+  function readGithubRepoUrl() {
+    return parseGithubRepoInput(document.getElementById("bs-gh-url")?.value || "");
   }
 
   function isUploadPathReady() {
     const step = Number(state.githubWizardStep) || 1;
-    if (step === 1) return !!readGithubToken();
-    if (step === 2) return !!state.githubConnected && !!readGithubRepoSelection();
-    return !!state.githubConnected && !!readGithubRepoSelection();
+    if (step === 1) return state.githubConnected || !!readGithubRepoUrl();
+    if (step === 2) return !!readGithubRepoSelection();
+    return !!readGithubRepoSelection();
   }
 
   function renderGithubFolders(folders, suggested) {
@@ -1458,10 +1481,9 @@
 
   async function loadGithubSiteFolders() {
     const repo = readGithubRepoSelection();
-    const token = state.githubToken || readGithubToken();
     const select = document.getElementById("bs-gh-path");
     const hint = document.getElementById("bs-gh-path-hint");
-    if (!repo || !token) {
+    if (!repo) {
       renderGithubFolders([], "");
       return false;
     }
@@ -1476,7 +1498,7 @@
       const res = await fetch(base + "/github/site-folders", {
         method: "POST",
         headers,
-        body: JSON.stringify({ token, repo }),
+        body: JSON.stringify({ repo }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not list site folders (" + res.status + ")");
@@ -1510,7 +1532,9 @@
     if (lead) {
       lead.textContent =
         next === 1
-          ? "Paste a GitHub token."
+          ? state.githubConnected
+            ? "Choose a repository, or paste a URL."
+            : "Connect GitHub, or paste a repository URL."
           : next === 2
             ? "Choose the repository."
             : "Choose the site folder.";
@@ -1587,7 +1611,7 @@
     if (hint) {
       hint.textContent = value
         ? "Selected " + value
-        : "Choose the repo that contains your website HTML.";
+        : "Choose one of your repositories.";
     }
     const nameInput = document.getElementById("onb-upload-name");
     if (nameInput && !String(nameInput.value || "").trim() && value) {
@@ -1609,7 +1633,7 @@
         ? "Select a repository..."
         : state.githubConnected
           ? "No repositories found"
-          : "Connect with a token first...";
+          : "Connect GitHub first...";
     if (label) label.dataset.placeholder = placeholder;
 
     menu.innerHTML = "";
@@ -1617,8 +1641,8 @@
       const empty = document.createElement("p");
       empty.className = "ms-bs-gh-select-empty";
       empty.textContent = state.githubConnected
-        ? "No repositories found for this token."
-        : "Connect with a token first...";
+        ? "No repositories found on this GitHub account."
+        : "Connect GitHub to see your repositories.";
       menu.appendChild(empty);
     } else {
       list.forEach((repo) => {
@@ -1653,44 +1677,80 @@
     updateOnboardContinue();
   }
 
-  async function connectGithubRepos({ advance = true } = {}) {
-    const token = readGithubToken();
-    if (!token) {
-      setGithubStatus("Paste your GitHub token first.", "error");
+  function renderGithubAccount() {
+    const account = document.getElementById("bs-gh-account");
+    const name = document.getElementById("bs-gh-account-name");
+    const connect = document.getElementById("bs-gh-connect");
+    const or = document.getElementById("bs-gh-or");
+    const connected = !!state.githubConnected;
+    if (account) account.hidden = !connected;
+    if (connect) connect.hidden = connected;
+    if (or) or.hidden = connected;
+    if (name) {
+      name.textContent = state.githubLogin
+        ? "Connected as " + state.githubLogin
+        : "GitHub connected";
+    }
+  }
+
+  async function refreshGithubAccount() {
+    try {
+      const base = await pingWorker();
+      const headers = await authHeaders();
+      const res = await fetch(base + "/github/connection", { headers, cache: "no-store" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not load GitHub");
+      state.githubConfigured = data.configured !== false;
+      state.githubConnected = !!data.connected;
+      state.githubLogin = String(data.login || "").trim();
+      renderGithubAccount();
+      if ((Number(state.githubWizardStep) || 1) === 1) {
+        const lead = document.getElementById("bs-path-upload-lead");
+        if (lead) {
+          lead.textContent = state.githubConnected
+            ? "Choose a repository, or paste a URL."
+            : "Connect GitHub, or paste a repository URL.";
+        }
+      }
+      updateOnboardContinue();
+      return true;
+    } catch (e) {
+      renderGithubAccount();
+      return false;
+    }
+  }
+
+  async function loadGithubRepos({ advance = true } = {}) {
+    if (!state.githubConnected) {
+      setGithubStatus("Connect GitHub to see your repositories.", "error");
       updateOnboardContinue();
       return false;
     }
     state.githubListing = true;
-    state.githubConnected = false;
-    state.githubToken = token;
-    setGithubStatus("Connecting...");
+    setGithubStatus("Loading repositories...");
     updateOnboardContinue();
-    renderGithubRepos([]);
     try {
       const base = await pingWorker();
       const headers = await authHeaders();
       const res = await fetch(base + "/github/repos", {
         method: "POST",
         headers,
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({}),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not list GitHub repos (" + res.status + ")");
       const repos = Array.isArray(data.repos) ? data.repos : [];
-      state.githubConnected = true;
       renderGithubRepos(repos);
       if (!repos.length) {
-        setGithubStatus("Connected, but no repositories were found for this token.", "error");
+        setGithubStatus("Connected, but this GitHub account has no repositories.", "error");
         return false;
       }
-      setGithubStatus("Connected.", "ok");
+      setGithubStatus("");
       if (advance) setGithubWizardStep(2);
       return true;
     } catch (e) {
-      state.githubConnected = false;
-      state.githubToken = "";
       renderGithubRepos([]);
-      setGithubStatus(e?.message || "Could not connect to GitHub.", "error");
+      setGithubStatus(e?.message || "Could not list repositories.", "error");
       return false;
     } finally {
       state.githubListing = false;
@@ -1698,10 +1758,90 @@
     }
   }
 
+  async function startGithubConnect() {
+    setGithubStatus("");
+    setOnboardError("");
+    state.githubListing = true;
+    updateOnboardContinue();
+    try {
+      const base = await pingWorker();
+      const headers = await authHeaders();
+      const res = await fetch(base + "/github/connect", { headers, cache: "no-store" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not start GitHub");
+      let dest;
+      try {
+        dest = new URL(String(data.url || ""));
+      } catch (_) {
+        throw new Error("Could not start GitHub");
+      }
+      if (dest.protocol !== "https:" || dest.hostname !== "github.com") {
+        throw new Error("Could not start GitHub");
+      }
+      location.assign(dest.toString());
+    } catch (e) {
+      setGithubStatus(e?.message || "Could not connect GitHub.", "error");
+      state.githubListing = false;
+      updateOnboardContinue();
+    }
+  }
+
+  async function disconnectGithub() {
+    state.githubListing = true;
+    updateOnboardContinue();
+    try {
+      const base = await pingWorker();
+      const headers = await authHeaders();
+      const res = await fetch(base + "/github/connection", { method: "DELETE", headers });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not disconnect GitHub");
+      state.githubConnected = false;
+      state.githubLogin = "";
+      state.githubRepos = [];
+      renderGithubAccount();
+      renderGithubRepos([]);
+      setGithubRepoValue("");
+      setGithubStatus("");
+      setGithubWizardStep(1);
+    } catch (e) {
+      setGithubStatus(e?.message || "Could not disconnect GitHub.", "error");
+    } finally {
+      state.githubListing = false;
+      updateOnboardContinue();
+    }
+  }
+
+  function githubReturnMessage(code) {
+    if (code === "cancelled") return "GitHub connect was cancelled.";
+    if (code === "not_configured") {
+      return "GitHub connect is not set up on this site yet. Paste a public repository URL.";
+    }
+    if (code === "connected") return "";
+    return "Could not connect GitHub.";
+  }
+
+  async function resumeGithubConnect(query) {
+    const code = String(query?.get?.("github") || "").trim();
+    if (!code) return;
+    try {
+      const url = new URL(location.href);
+      url.searchParams.delete("github");
+      history.replaceState(null, "", url.pathname + url.search + url.hash);
+    } catch (_) {
+      /* keep */
+    }
+    setBuilderMode("upload");
+    if (code === "connected") {
+      const ok = await refreshGithubAccount();
+      if (ok && state.githubConnected) await loadGithubRepos({ advance: true });
+      return;
+    }
+    await refreshGithubAccount();
+    setGithubStatus(githubReturnMessage(code), "error");
+  }
+
   async function importGithubSite() {
     const repo = readGithubRepoSelection();
-    const token = state.githubToken || String(document.getElementById("bs-gh-token")?.value || "").trim();
-    if (!token) throw new Error("Paste your GitHub token and connect first.");
     if (!repo) throw new Error("Select a GitHub repository to continue.");
     const pathPrefix = sanitizeClientText(document.getElementById("bs-gh-path")?.value || "", 200);
     const businessName =
@@ -1727,7 +1867,6 @@
         method: "POST",
         headers,
         body: JSON.stringify({
-          token,
           repo,
           path: pathPrefix,
           businessName,
@@ -1786,7 +1925,7 @@
   function onboardCtaLabel() {
     if (state.builderMode !== "upload") return "Generate site";
     const step = Number(state.githubWizardStep) || 1;
-    if (step === 1) return state.githubConnected ? "Continue" : "Connect";
+    if (step === 1) return "Continue";
     if (step === 2) return "Continue";
     return "Open in Editor";
   }
@@ -1857,8 +1996,10 @@
         panel.classList.add("is-enter");
       }
     });
-    if (next === "upload") setGithubWizardStep(state.githubWizardStep || 1);
-    else {
+    if (next === "upload") {
+      setGithubWizardStep(state.githubWizardStep || 1);
+      void refreshGithubAccount();
+    } else {
       const backBtn = document.getElementById("onboard-cancel");
       if (backBtn) backBtn.textContent = "Back";
     }
@@ -10099,20 +10240,19 @@
       });
     });
 
-    document.getElementById("bs-gh-token")?.addEventListener("keydown", (e) => {
+    document.getElementById("bs-gh-connect")?.addEventListener("click", () => {
+      void startGithubConnect();
+    });
+    document.getElementById("bs-gh-disconnect")?.addEventListener("click", () => {
+      void disconnectGithub();
+    });
+    document.getElementById("bs-gh-url")?.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
         document.getElementById("onboard-generate")?.click();
       }
     });
-    document.getElementById("bs-gh-token")?.addEventListener("input", () => {
-      if (state.githubConnected) {
-        state.githubConnected = false;
-        state.githubToken = "";
-        renderGithubRepos([]);
-        setGithubStatus("Token changed - connect again.");
-        setGithubWizardStep(1);
-      }
+    document.getElementById("bs-gh-url")?.addEventListener("input", () => {
       updateOnboardContinue();
     });
     document.getElementById("bs-gh-repo-trigger")?.addEventListener("click", () => {
@@ -10152,20 +10292,32 @@
         if (state.builderMode === "upload") {
           const step = Number(state.githubWizardStep) || 1;
           if (step === 1) {
-            if (!readGithubToken()) {
-              setOnboardError("Paste a GitHub token to continue.");
+            const rawUrl = String(document.getElementById("bs-gh-url")?.value || "").trim();
+            const pasted = readGithubRepoUrl();
+            if (rawUrl && !pasted) {
+              setOnboardError("Paste a GitHub repository URL, like https://github.com/owner/repo.");
               updateOnboardContinue();
               return;
             }
-            if (state.githubConnected && state.githubRepos.length) {
+            if (pasted) {
+              onGithubRepoPicked(pasted, pasted);
+              setGithubWizardStep(3);
+              return;
+            }
+            if (!state.githubConnected) {
+              setOnboardError("Connect GitHub, or paste a repository URL.");
+              updateOnboardContinue();
+              return;
+            }
+            if (state.githubRepos.length) {
               setGithubWizardStep(2);
               return;
             }
             state.uploadBusy = true;
             updateOnboardContinue();
             try {
-              const ok = await connectGithubRepos({ advance: true });
-              if (!ok) setOnboardError(document.getElementById("bs-gh-status")?.textContent || "Could not connect.");
+              const ok = await loadGithubRepos({ advance: true });
+              if (!ok) setOnboardError(document.getElementById("bs-gh-status")?.textContent || "Could not list repositories.");
             } finally {
               state.uploadBusy = false;
               updateOnboardContinue();
@@ -10568,6 +10720,7 @@
     clearBuilderForNextVisit();
     showOnboardStep(1);
     setBuilderMode(state.builderMode || "google");
+    await resumeGithubConnect(p);
     updateOnboardContinue();
 
     requestAnimationFrame(() => {

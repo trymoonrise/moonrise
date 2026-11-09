@@ -172,7 +172,7 @@
     scroller("Sticky label", "", '<p class="lx-kicker" style="position:sticky;top:0;background:#fff">Hours</p>' + lines),
     scroller("Horizontal", "x", "Pike · Union · Pine · Seneca · Spring · Madison · Marion"),
     scroller("Thin bar", "thin", lines),
-    scroller("Shadow", "", lines),
+    scroller("Shadow", "shade", lines),
     scroller("Snap", "snap", '<div class="lx-cell">Site</div><div class="lx-cell">Leads</div><div class="lx-cell">Hours</div>'),
     scroller("Log", "thin", '<p class="lx-mono">09:00 publish</p><p class="lx-mono">09:02 lead</p><p class="lx-mono">09:10 edit</p><p class="lx-mono">09:40 call</p>'),
     scroller("Thread", "", '<p class="lx-bubble">Hours?</p><p class="lx-bubble is-you">Open at 7.</p><p class="lx-bubble">Thanks.</p>'),
@@ -180,7 +180,7 @@
     scroller("Hint", "fade", '<p class="lx-meta">Scroll for the rest of the week</p>' + lines)
   ]);
 
-  const SHADES = [["Grain", "lx-shade lx-shade-grain"], ["Scan", "lx-shade lx-shade-scan"], ["Dither", "lx-shade lx-shade-dither"], ["Crosshatch", "lx-shade lx-shade-hatch"], ["Drift", "lx-shade lx-shade-drift"], ["Line", "lx-shade lx-shade-line"], ["Paper", "lx-shade lx-shade-paper"], ["Wash", "lx-shade lx-shade-wash"], ["Still noise", "lx-shade lx-shade-grain"], ["Inverse noise", "lx-shade lx-shade-ink lx-shade-grain"]];
+  const SHADES = [["Grain", "lx-shade lx-shade-grain"], ["Scan", "lx-shade lx-shade-scan"], ["Dither", "lx-shade lx-shade-dither"], ["Crosshatch", "lx-shade lx-shade-hatch"], ["Drift", "lx-shade lx-shade-drift"], ["Line", "lx-shade lx-shade-line"], ["Paper", "lx-shade lx-shade-paper"], ["Wash", "lx-shade lx-shade-wash"], ["Still noise", "lx-shade lx-shade-still"], ["Inverse noise", "lx-shade lx-shade-ink lx-shade-grain"]];
   LX.spec("shaders", ["motion-shimmer-pulse"], SHADES.slice(0, 9).map(function (row, i) {
     const play = row[0] === "Drift" || row[0] === "Line" ? "lx-live" : "";
     return card("shaders-" + i, row[0], '<div class="' + row[1] + '"></div>', { play: play, stage: row[0] === "Inverse noise" ? "lx-on-dark" : "" });
@@ -192,16 +192,18 @@
       ["2", "Hours", "is-current"],
       ["3", "Publish", ""]
     ];
-    return '<div class="lx-steps ' + (extra || "") + '">' + items.map(function (it) {
-      return '<div class="lx-step ' + it[2] + '"><i>' + (it[2] === "is-done" ? "✓" : it[0]) + "</i><span>" + it[1] + "</span></div>";
+    return '<div class="lx-steps ' + (extra === "vert" ? "vert" : "") + '">' + items.map(function (it) {
+      const mark = extra === "nums" || it[2] !== "is-done" ? it[0] : "✓";
+      if (extra === "labels") return '<div class="lx-step ' + it[2] + '"><span>' + it[1] + "</span></div>";
+      return '<div class="lx-step ' + it[2] + '"><i>' + mark + "</i><span>" + it[1] + "</span></div>";
     }).join("") + "</div>";
   }
   LX.spec("steppers", ["nav-stepper"], [
     card("steppers-horiz", "Horizontal", stepRow("")),
     card("steppers-vert", "Vertical", stepRow("vert")),
-    card("steppers-num", "Numbered", stepRow("")),
+    card("steppers-num", "Numbered", stepRow("nums")),
     card("steppers-dots", "Dots", '<div class="lx-steps"><i class="lx-dot"></i><i class="lx-dot mute"></i><i class="lx-dot mute"></i></div>'),
-    card("steppers-labels", "Labels", stepRow("")),
+    card("steppers-labels", "Labels", stepRow("labels")),
     card("steppers-current", "Current", '<div class="lx-steps"><div class="lx-step is-current"><i>2</i><span>Hours</span></div></div>'),
     card("steppers-done", "Complete", '<div class="lx-step is-done"><i>✓</i><span>Published</span></div>'),
     card("steppers-error", "Error", '<div class="lx-step is-bad"><i>!</i><span>Phone missing</span></div>'),

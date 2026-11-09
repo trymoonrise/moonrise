@@ -21,7 +21,7 @@ body[data-page="calendar"] .ms-cal-head {
 body[data-page="calendar"] .ms-cal-nav {
   display: flex;
   align-items: center;
-  gap: 0.1rem;
+  gap: 0.35rem;
   flex-shrink: 0;
 }
 
@@ -52,7 +52,7 @@ body[data-page="calendar"] .ms-cal-month {
   background: transparent;
   color: #1d1d1f;
   font: inherit;
-  font-size: 1.65rem;
+  font-size: 1.35rem;
   font-weight: 700;
   letter-spacing: -0.045em;
   line-height: 1.1;
@@ -127,20 +127,21 @@ body[data-page="calendar"] .ms-cal-months button.is-on {
 body[data-page="calendar"] .ms-cal-week,
 body[data-page="calendar"] .ms-cal-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.28rem;
 }
 
 body[data-page="calendar"] .ms-cal-week {
-  margin-top: 1.15rem;
+  margin-top: 0.75rem;
   color: #8e8e93;
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   font-weight: 500;
   text-align: center;
 }
 
 body[data-page="calendar"] .ms-cal-grid {
-  margin-top: 0.55rem;
-  padding-bottom: 0.85rem;
+  margin-top: 0.35rem;
+  padding-bottom: 0.65rem;
   border-bottom: 1px solid #ececef;
 }
 
@@ -148,15 +149,17 @@ body[data-page="calendar"] .ms-cal-day {
   position: relative;
   display: grid;
   place-items: center;
-  height: 2.7rem;
-  margin: 0.12rem auto;
-  width: 2.15rem;
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
+  margin: 0;
+  padding: 0;
   border: 0;
-  border-radius: 10px;
+  border-radius: 12px;
   background: transparent;
   color: #1d1d1f;
   font: inherit;
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   font-weight: 500;
   cursor: pointer;
 }
@@ -173,11 +176,58 @@ body[data-page="calendar"] .ms-cal-day.is-on {
 body[data-page="calendar"] .ms-cal-day.has-event::after {
   content: "";
   position: absolute;
-  bottom: 0.28rem;
-  width: 4px;
-  height: 4px;
+  bottom: 0.22rem;
+  width: 5px;
+  height: 5px;
   border-radius: 99px;
-  background: currentColor;
+  background: #0a84ff;
+}
+
+body[data-page="calendar"] .ms-cal-day.is-on.has-event::after {
+  background: #7ec8ff;
+}
+
+body[data-page="calendar"] .ms-cal-add,
+body[data-page="calendar"] .ms-cal-form button {
+  border: 0;
+  border-radius: 999px;
+  background: #1d1d1f;
+  color: #fff;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+body[data-page="calendar"] .ms-cal-add {
+  min-height: 2rem;
+  padding: 0 0.75rem;
+}
+
+body[data-page="calendar"] .ms-cal-form {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0.2rem;
+}
+
+body[data-page="calendar"] .ms-cal-form[hidden] {
+  display: none;
+}
+
+body[data-page="calendar"] .ms-cal-form input {
+  width: 100%;
+  min-height: 2.4rem;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: 12px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font: inherit;
+  font-size: 0.92rem;
+}
+
+body[data-page="calendar"] .ms-cal-form button {
+  min-height: 2.5rem;
 }
 
 body[data-page="calendar"] .ms-cal-empty {
@@ -237,10 +287,15 @@ body[data-page="calendar"] .ms-cal-event + .ms-cal-event {
 
 body[data-page="calendar"] .ms-cal-event h2 {
   margin: 0 0 0.35rem;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
   line-height: 1.2;
+}
+
+body[data-page="calendar"] .ms-cal-event-row a {
+  color: #0a84ff;
+  text-decoration: none;
 }
 
 body[data-page="calendar"] .ms-cal-event-row {

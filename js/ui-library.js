@@ -17,6 +17,18 @@
   }
 
   /* —— TOC active state —— */
+  function showTocGroup(name) {
+    if (!name) return;
+    $all("[data-toc-group]").forEach((button) => {
+      const on = button.getAttribute("data-toc-group") === name;
+      button.classList.toggle("is-on", on);
+      button.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    $all(".dt-toc-group").forEach((group) => {
+      group.classList.toggle("is-shown", group.getAttribute("data-group") === name);
+    });
+  }
+
   function bindToc() {
     const links = $all(".dt-toc a");
     const sections = links
@@ -28,8 +40,17 @@
       (entries) => {
         entries.forEach((en) => {
           if (!en.isIntersecting) return;
+          const link = map.get(en.target);
+          if (!link) return;
           links.forEach((l) => l.classList.remove("is-active"));
-          map.get(en.target)?.classList.add("is-active");
+          link.classList.add("is-active");
+          const group = link.closest(".dt-toc-group");
+          if (group) showTocGroup(group.getAttribute("data-group"));
+          const bar = link.parentElement;
+          if (bar && bar.scrollWidth > bar.clientWidth) {
+            const left = link.offsetLeft - (bar.clientWidth - link.offsetWidth) / 2;
+            bar.scrollTo({ left: Math.max(0, left), behavior: reduceMotion ? "auto" : "smooth" });
+          }
         });
       },
       { rootMargin: "-20% 0px -65% 0px", threshold: 0.01 }
@@ -419,6 +440,20 @@
     stage.classList.remove("is-live");
     void stage.offsetWidth;
     stage.classList.add("is-live");
+    const slider = stage.querySelector("input.lx-slider, input[type='range']");
+    if (slider && !reduceMotion) {
+      const from = Number(slider.value) || 0;
+      const to = Math.min(100, from + 45);
+      const t0 = performance.now();
+      function frame(now) {
+        const p = Math.min(1, (now - t0) / 700);
+        slider.value = String(Math.round(from + (to - from) * p));
+        const mono = stage.querySelector(".lx-mono");
+        if (mono && !mono.hasAttribute("data-count")) mono.textContent = slider.value;
+        if (p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
     window.clearTimeout(stage._lxOff);
     stage._lxOff = window.setTimeout(() => stage.classList.remove("is-live"), reduceMotion ? 280 : 2600);
   }
@@ -1145,6 +1180,7 @@
       "  Generated from the live card. This is the current markup and css/ui-library.css.",
       "  Change colors and labels only. Do not redraw the control.",
       "  Rules: https://trymoonrise.com/assets/moonrise-special-prompt.md",
+      "  Same raw file, with every other type: https://github.com/trymoonrise/moonrise-special-prompt",
       "  Source: https://trymoonrise.com/ui-library#" + id,
       "-->",
       '<div class="dt-ref">',

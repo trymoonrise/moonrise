@@ -3,7 +3,7 @@
  * Pages and app scripts stay network-first so a bad cached file cannot stick.
  * Other assets refresh in the background.
  */
-const CACHE_NAME = "ms-pwa-v81-push";
+const CACHE_NAME = "ms-pwa-v82-tabs";
 const CORE_ASSETS = ["./css/studio.css", "./css/studio-motion.css", "./index.html"];
 
 function isAssetPath(pathname) {
@@ -105,6 +105,12 @@ self.addEventListener("fetch", (event) => {
 
   const navigate = req.mode === "navigate" || isHtmlPath(url.pathname);
   const liveAsset = isAssetPath(url.pathname);
+  const studioTab = /\/(?:dashboard|builder|leads|clients|calendar|settings)(?:\.html)?$/i.test(url.pathname);
+
+  if (navigate && studioTab) {
+    event.respondWith(staleWhileRevalidate(req, "./index.html"));
+    return;
+  }
 
   if (navigate) {
     event.respondWith(networkFirst(req, "./index.html"));

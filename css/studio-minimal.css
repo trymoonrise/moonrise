@@ -1776,13 +1776,14 @@ html body[data-page="editor"] .ms-quick-nav {
       0 10px 28px rgba(0, 0, 0, 0.12) !important;
     backdrop-filter: saturate(1.55) blur(18px) !important;
     -webkit-backdrop-filter: saturate(1.55) blur(18px) !important;
-    color: #1d1d1f !important;
+    color: #c8960c !important;
     text-decoration: none !important;
   }
 
   html body .ms-owner-crown svg {
-    width: 1.35rem !important;
-    height: 1.35rem !important;
+    width: 1.7rem !important;
+    height: 1.7rem !important;
+    filter: drop-shadow(0 1px 0 rgb(255 236 170 / 70%));
   }
 
   html[data-ms-mode="dark"] body .ms-owner-crown {

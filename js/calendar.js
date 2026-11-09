@@ -24,6 +24,8 @@
   let pickerYear = viewYear;
   let selected = dateKey(now);
   let bookings = [];
+  let bookingUrl = "";
+  const LOCAL_KEY = "ms_cal_local_events_v1";
   let configured = true;
   let loadToken = 0;
 
@@ -106,8 +108,22 @@
     if (on) hideDetail();
   }
 
+  function localEvents() {
+    try {
+      const data = JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]");
+      return Array.isArray(data) ? data : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function saveLocal(items) {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(items));
+  }
+
   function eventsOn(key) {
-    return bookings.filter((item) => {
+    const all = bookings.concat(localEvents());
+    return all.filter((item) => {
       const date = new Date(item.startsAt);
       return Number.isFinite(date.getTime()) && dateKey(date) === key;
     });
@@ -202,19 +218,16 @@
     return hours + " hr " + rest + " min";
   }
 
-  function statusLabel(status) {
-    const value = String(status || "").trim().toLowerCase();
-    if (!value || value === "accepted" || value === "confirmed") return "Confirmed";
-    if (value === "pending") return "Pending";
-    if (value === "cancelled" || value === "canceled") return "Cancelled";
-    return value.charAt(0).toUpperCase() + value.slice(1);
-  }
-
   function timeRange(item) {
     const start = clock(item.startsAt);
     const end = clock(item.endsAt);
     if (start && end && end !== start) return start + " – " + end;
     return start;
+  }
+
+  function shortDay(key) {
+    const date = parseKey(key);
+    return date.getDate() + " " + MONTHS[date.getMonth()].slice(0, 3);
   }
 
   function addDetailRow(parent, label, value) {
@@ -230,26 +243,56 @@
     parent.appendChild(row);
   }
 
+  function addDetailLink(parent, href) {
+    const url = String(href || "").trim();
+    if (!/^https?:\/\//i.test(url)) return;
+    const row = document.createElement("p");
+    row.className = "ms-cal-event-row";
+    const name = document.createElement("span");
+    name.textContent = "Meeting";
+    const link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open link";
+    row.append(name, link);
+    parent.appendChild(row);
+  }
+
+  function contactLine(item) {
+    const email = String(item.attendeeEmail || "").trim();
+    const phone = String(item.attendeePhone || "").trim();
+    if (email && phone) return email + " · " + phone;
+    return email || phone;
+  }
+
+  function whenLine(item) {
+    const time = timeRange(item);
+    const length = durationLabel(item);
+    if (time && length) return time + " · " + length;
+    return time || length;
+  }
+
   function paintDetail(key, items) {
     if (!detailCardEl) return;
     detailCardEl.replaceChildren();
     const day = document.createElement("p");
     day.className = "ms-cal-detail-day";
-    day.textContent = dayName(key);
+    day.textContent = shortDay(key);
     detailCardEl.appendChild(day);
     items.forEach((item) => {
       const block = document.createElement("article");
       block.className = "ms-cal-event";
-      const title = document.createElement("h2");
-      title.textContent = item.title || "Meeting";
-      block.appendChild(title);
       const person = String(item.attendeeName || "").trim();
-      addDetailRow(block, "Time", timeRange(item));
-      addDetailRow(block, "Length", durationLabel(item));
-      if (person && person !== "Guest") addDetailRow(block, "With", person);
-      addDetailRow(block, "Email", item.attendeeEmail);
+      if (person && person !== "Guest") {
+        const title = document.createElement("h2");
+        title.textContent = person;
+        block.appendChild(title);
+      }
+      addDetailRow(block, "When", whenLine(item));
+      addDetailRow(block, "Contact", contactLine(item));
       addDetailRow(block, "Site", item.businessName);
-      addDetailRow(block, "Status", statusLabel(item.status));
+      addDetailLink(block, item.meetingUrl || bookingUrl);
       detailCardEl.appendChild(block);
     });
   }
@@ -323,6 +366,7 @@
       showGate(true);
       return;
     }
+    bookingUrl = String(conn?.bookingUrl || "");
     showGate(false);
     paintGrid();
     await loadMonth();
@@ -331,6 +375,54 @@
   monthBtn?.addEventListener("click", (event) => {
     event.stopPropagation();
     setPicker(pickerEl?.hidden !== false);
+  });
+
+  document.getElementById("cal-add")?.addEventListener("click", () => {
+    const form = document.getElementById("cal-form");
+    if (!form) return;
+    form.hidden = !form.hidden;
+    const date = document.getElementById("cal-form-date");
+    if (date && !date.value && selected) date.value = selected;
+  });
+
+  document.getElementById("cal-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const date = String(document.getElementById("cal-form-date")?.value || "");
+    const time = String(document.getElementById("cal-form-time")?.value || "");
+    const mins = Number(document.getElementById("cal-form-mins")?.value) || 30;
+    const name = String(document.getElementById("cal-form-name")?.value || "").trim();
+    const contact = String(document.getElementById("cal-form-contact")?.value || "").trim();
+    const site = String(document.getElementById("cal-form-site")?.value || "").trim();
+    const link = String(document.getElementById("cal-form-link")?.value || "").trim();
+    const start = new Date(date + "T" + time);
+    if (!date || !time || !Number.isFinite(start.getTime())) return;
+    const end = new Date(start.getTime() + mins * 60000);
+    const email = contact.includes("@") ? contact : "";
+    const items = localEvents();
+    items.push({
+      id: "local-" + Date.now(),
+      startsAt: start.toISOString(),
+      endsAt: end.toISOString(),
+      attendeeName: name,
+      attendeeEmail: email,
+      attendeePhone: email ? "" : contact,
+      businessName: site,
+      meetingUrl: link,
+      local: true,
+    });
+    saveLocal(items);
+    const form = event.currentTarget;
+    if (form instanceof HTMLFormElement) {
+      form.hidden = true;
+      form.reset();
+    }
+    selected = dateKey(start);
+    viewYear = start.getFullYear();
+    viewMonth = start.getMonth();
+    pickerYear = viewYear;
+    paintMonthLabel();
+    paintGrid();
+    showDetail();
   });
 
   document.getElementById("cal-prev")?.addEventListener("click", () => shiftMonth(-1));

@@ -157,6 +157,31 @@
       grid.insertAdjacentHTML("beforeend", cardHtml(item));
     });
     if (window.dtMountDownloads) window.dtMountDownloads(section);
+    syncAcc(section);
+  }
+
+  function accPanel(btn) {
+    const next = btn.nextElementSibling;
+    if (next && next.classList.contains("lx-p")) return next;
+    const row = btn.parentElement;
+    const after = row && row.nextElementSibling;
+    if (after && after.classList.contains("lx-p")) return after;
+    return null;
+  }
+
+  function syncAcc(root) {
+    const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll("[data-lx-acc]").forEach(function (btn) {
+      const panel = accPanel(btn);
+      if (panel) panel.hidden = !btn.classList.contains("is-open");
+    });
+  }
+
+  function selectIn(parent, chosen, selector) {
+    parent.querySelectorAll(selector).forEach(function (node) {
+      if (node.parentElement !== parent) return;
+      node.classList.toggle("is-on", node === chosen);
+    });
   }
 
   function sectionFor(id) {
@@ -231,13 +256,42 @@
         if (note) note.remove();
       }
       const opt = event.target.closest("[data-lx-opt]");
-      if (opt && opt.parentElement) {
-        opt.parentElement.querySelectorAll("[data-lx-opt]").forEach(function (node) {
-          node.classList.toggle("is-on", node === opt);
-        });
+      if (opt && opt.parentElement && !opt.disabled) selectIn(opt.parentElement, opt, "[data-lx-opt]");
+      const bare = event.target.closest(".lx-cal-grid button, .lx-dock button, .lx-side button, .lx-top button, .lx-pages button, .lx-tree button");
+      if (bare && !bare.disabled && !bare.hasAttribute("data-lx-opt") && !bare.hasAttribute("data-lx-folder") && !bare.hasAttribute("data-lx-toggle") && !bare.hasAttribute("data-lx-check") && !bare.hasAttribute("data-lx-acc")) {
+        selectIn(bare.parentElement, bare, "button");
+      }
+      const folder = event.target.closest("[data-lx-folder]");
+      if (folder) {
+        const sub = folder.nextElementSibling;
+        const open = folder.getAttribute("aria-expanded") !== "true";
+        folder.setAttribute("aria-expanded", open ? "true" : "false");
+        if (sub) sub.hidden = !open;
       }
       const acc = event.target.closest("[data-lx-acc]");
-      if (acc) acc.classList.toggle("is-open");
+      if (acc) {
+        acc.classList.toggle("is-open");
+        const panel = accPanel(acc);
+        if (panel) panel.hidden = !acc.classList.contains("is-open");
+      }
+      const act = event.target.closest("[data-lx-act]");
+      if (act && !act.disabled) {
+        act.textContent = act.getAttribute("data-lx-act");
+        act.disabled = true;
+      }
+      const add = event.target.closest("[data-lx-add]");
+      if (add) {
+        const compose = add.closest(".lx-compose");
+        const input = compose && compose.querySelector("input");
+        const text = input && input.value.trim();
+        if (text) {
+          const badge = document.createElement("span");
+          badge.className = "lx-badge";
+          badge.textContent = text;
+          compose.parentElement.insertBefore(badge, compose);
+          input.value = "";
+        }
+      }
       const toggle = event.target.closest("[data-lx-toggle]");
       if (toggle && !toggle.disabled) {
         toggle.classList.toggle("is-on");
@@ -245,6 +299,14 @@
       }
       const check = event.target.closest("[data-lx-check]");
       if (check && !check.disabled) check.classList.toggle("is-on");
+    });
+
+    document.addEventListener("input", function (event) {
+      const slider = event.target.closest && event.target.closest("input.lx-slider");
+      if (!slider) return;
+      const stage = slider.closest(".dt-stage");
+      const mono = stage && stage.querySelector(".lx-mono");
+      if (mono && !mono.hasAttribute("data-count")) mono.textContent = slider.value;
     });
 
     const queue = Array.prototype.slice.call(document.querySelectorAll("[data-lx-cat]"));

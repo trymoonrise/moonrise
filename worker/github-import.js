@@ -52,12 +52,13 @@ function isTextish(path) {
 }
 
 async function githubFetch(token, path, { raw = false } = {}) {
+  const tok = String(token || "").trim();
   const headers = {
     Accept: raw ? "application/vnd.github.raw" : "application/vnd.github+json",
-    Authorization: "Bearer " + String(token || "").trim(),
     "X-GitHub-Api-Version": "2022-11-28",
     "User-Agent": GH_UA,
   };
+  if (tok) headers.Authorization = "Bearer " + tok;
   const res = await fetch(GH_API + path, { headers });
   const text = await res.text();
   if (!res.ok) {
@@ -68,8 +69,12 @@ async function githubFetch(token, path, { raw = false } = {}) {
     } catch (_) {
       /* keep */
     }
-    if (res.status === 401) message = "Invalid or expired GitHub token.";
-    if (res.status === 403) message = "GitHub access denied. Check token scopes (repo) and rate limits.";
+    if (res.status === 401) message = tok ? "GitHub connection expired. Connect GitHub again." : "GitHub rejected the request.";
+    if (res.status === 403) {
+      message = tok
+        ? "GitHub access denied. Reconnect GitHub so Moonrise can read repositories."
+        : "GitHub rate limit reached. Connect GitHub, or try again in a minute.";
+    }
     if (res.status === 404) message = "Repository or path not found.";
     const error = new Error(message);
     error.status = res.status;
@@ -96,6 +101,30 @@ function normalizeToken(token) {
     throw err;
   }
   return t;
+}
+
+async function resolveRepoToken(token, fullName) {
+  const given = String(token || "").trim();
+  if (given) return normalizeToken(given);
+  const { owner, repo } = parseOwnerRepo(fullName);
+  let meta;
+  try {
+    meta = await githubFetch("", "/repos/" + owner + "/" + repo);
+  } catch (e) {
+    if (e?.status === 404) {
+      const err = new Error("That repository is private or missing. Connect GitHub to import private repositories.");
+      err.status = 404;
+      throw err;
+    }
+    throw e;
+  }
+  if (meta?.private) {
+    const err = new Error("That repository is private. Connect GitHub to import it.");
+    err.status = 403;
+    throw err;
+  }
+  const server = String(process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "").trim();
+  return server || "";
 }
 
 function parseOwnerRepo(fullName) {
@@ -150,13 +179,14 @@ async function listUserRepos(token) {
 
 async function fetchBlob(token, owner, repo, sha, asText) {
   const url = GH_API + "/repos/" + owner + "/" + repo + "/git/blobs/" + encodeURIComponent(sha);
+  const tok = String(token || "").trim();
   const headers = {
     // Raw works for small and >1MB blobs; JSON content is often empty/encoding "none".
     Accept: "application/vnd.github.raw",
-    Authorization: "Bearer " + token,
     "X-GitHub-Api-Version": "2022-11-28",
     "User-Agent": GH_UA,
   };
+  if (tok) headers.Authorization = "Bearer " + tok;
   const res = await fetch(url, { headers });
   if (!res.ok) {
     let message = "Could not download file from GitHub (" + res.status + ")";
@@ -166,8 +196,8 @@ async function fetchBlob(token, owner, repo, sha, asText) {
     } catch (_) {
       /* keep */
     }
-    if (res.status === 401) message = "Invalid or expired GitHub token.";
-    if (res.status === 403) message = "GitHub access denied while downloading files. Check token scopes and rate limits.";
+    if (res.status === 401) message = "GitHub connection expired. Connect GitHub again.";
+    if (res.status === 403) message = "GitHub access denied while downloading files. Reconnect GitHub, or try a public repository URL.";
     const error = new Error(message);
     error.status = res.status >= 400 && res.status < 600 ? res.status : 502;
     throw error;
@@ -412,7 +442,7 @@ function pickEntryHtml(htmlKeys) {
 }
 
 async function listSiteFolders(token, { fullName } = {}) {
-  const tok = normalizeToken(token);
+  const tok = await resolveRepoToken(token, fullName);
   const { owner, repo } = parseOwnerRepo(fullName);
   const meta = await githubFetch(tok, "/repos/" + owner + "/" + repo);
   const branch = meta?.default_branch || "main";
@@ -470,7 +500,7 @@ async function listSiteFolders(token, { fullName } = {}) {
 }
 
 async function importRepoSite(token, { fullName, pathPrefix = "" } = {}) {
-  const tok = normalizeToken(token);
+  const tok = await resolveRepoToken(token, fullName);
   const { owner, repo, fullName: name } = parseOwnerRepo(fullName);
   let prefix = normalizePathPrefix(pathPrefix);
 
@@ -767,6 +797,7 @@ module.exports = {
   listUserRepos,
   listSiteFolders,
   importRepoSite,
+  resolveRepoToken,
   normalizeToken,
   parseOwnerRepo,
   normalizePathPrefix,

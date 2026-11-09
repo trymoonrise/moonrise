@@ -5,8 +5,9 @@
   const btn = LX.btn;
   const ico = LX.ico;
 
-  function screen(id, title, html) {
-    return card(id, title, html, { wide: true, stage: "lx-tall" });
+  function screen(id, title, html, extra) {
+    const o = extra || {};
+    return card(id, title, html, { wide: true, stage: ["lx-tall", o.stage].filter(Boolean).join(" ") });
   }
   function gate(title, body) {
     return '<div class="lx-panel" style="max-width:22rem;margin:0 auto"><p class="lx-kicker">Example</p><p class="lx-h">' + title + "</p>" + body + "</div>";
@@ -118,7 +119,7 @@
     screen("pscreen-activity", "Activity", '<div class="lx-row"><span>Published</span><span class="lx-meta">Today 9:00</span></div><div class="lx-row"><span>Lead</span><span class="lx-meta">Today 9:14</span></div>'),
     screen("pscreen-empty", "Empty", '<div class="lx-empty"><p class="lx-h">Profile is thin</p><p class="lx-p">Add hours and a phone.</p></div>'),
     screen("pscreen-compact", "Compact", '<div class="lx-row"><span class="lx-avatar">HK</span><span>Harbor</span><span class="lx-badge go">Live</span></div>'),
-    screen("pscreen-inverse", "Inverse", '<p class="lx-h">Harbor Coffee</p><p class="lx-p">Pike Street</p>'),
+    screen("pscreen-inverse", "Inverse", '<p class="lx-h">Harbor Coffee</p><p class="lx-p">Pike Street</p>', { stage: "lx-on-dark" }),
     screen("pscreen-tabs", "Tabs", '<div class="lx-tabs"><button type="button" class="lx-tab is-on" data-lx-opt>About</button><button type="button" class="lx-tab" data-lx-opt>Hours</button><button type="button" class="lx-tab" data-lx-opt>Leads</button></div><p class="lx-p">Coffee on Pike, open at 7.</p>')
   ]);
 
@@ -145,7 +146,7 @@
     screen("inbox-empty", "Empty", '<div class="lx-empty"><p class="lx-h">No notifications</p></div>'),
     screen("inbox-detail", "Detail", '<p class="lx-h">New lead</p><p class="lx-p">Ada asked about Friday hours.</p>' + btn("Open lead")),
     screen("inbox-days", "By day", '<p class="lx-kicker">Today</p><div class="lx-row"><span>Lead</span></div><p class="lx-kicker">Yesterday</p><div class="lx-row"><span>Publish</span></div>'),
-    screen("inbox-all", "Mark all", '<div class="lx-row"><span>2 unread</span><button type="button" class="lx-textbtn">Mark all read</button></div>'),
+    screen("inbox-all", "Mark all", '<div class="lx-row"><span>2 unread</span><button type="button" class="lx-textbtn" data-lx-act="All read">Mark all read</button></div>'),
     screen("inbox-prefs", "Preferences", '<label class="lx-row"><span>Leads</span><button type="button" class="lx-toggle is-on" data-lx-toggle aria-label="Leads"></button></label>'),
     screen("inbox-toast", "With toast", '<div class="lx-toast"><span>Lead saved</span></div><div class="lx-row"><span>Ada</span></div>'),
     screen("inbox-loading", "Loading", '<div class="lx-skel"></div><div class="lx-skel" style="width:80%"></div>')

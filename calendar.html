@@ -237,7 +237,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261108-mobile-chrome">
+  <link rel="stylesheet" href="css/studio.css?v=20261109-crown">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 <link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark-chrome">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
@@ -245,7 +245,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-mobile-chrome">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
-  <link rel="stylesheet" href="css/calendar.css?v=20261108-month-detail">
+  <link rel="stylesheet" href="css/calendar.css?v=20261109-cal">
 </head>
 <body data-page="calendar">
   <div id="shell"></div>
@@ -257,10 +257,21 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div class="ms-cal-nav">
+          <button type="button" class="ms-cal-add" id="cal-add">Add</button>
           <button type="button" class="ms-cal-shift" id="cal-prev" aria-label="Previous month">‹</button>
           <button type="button" class="ms-cal-shift" id="cal-next" aria-label="Next month">›</button>
         </div>
       </div>
+      <form class="ms-cal-form" id="cal-form" hidden>
+        <input id="cal-form-date" type="date" required aria-label="Day">
+        <input id="cal-form-time" type="time" required aria-label="Time">
+        <input id="cal-form-mins" type="number" min="5" max="480" step="5" value="30" required aria-label="Minutes">
+        <input id="cal-form-name" type="text" maxlength="120" placeholder="Name" aria-label="Name">
+        <input id="cal-form-contact" type="text" maxlength="200" placeholder="Email or phone" aria-label="Email or phone">
+        <input id="cal-form-site" type="text" maxlength="120" placeholder="Site" aria-label="Site">
+        <input id="cal-form-link" type="url" maxlength="300" placeholder="Meeting link" aria-label="Meeting link">
+        <button type="submit">Save event</button>
+      </form>
       <div class="ms-cal-picker" id="cal-picker" hidden>
         <div class="ms-cal-year">
           <button type="button" id="cal-year-prev" aria-label="Previous year">‹</button>
@@ -299,7 +310,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   </div>
 
   <script defer src="js/config.js?v=20261108-no-lf"></script>
-  <script defer src="js/app.js?v=20261108-mobile-chrome"></script>
+  <script defer src="js/app.js?v=20261109-crown"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/handles.js"></script>
@@ -310,6 +321,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
-  <script defer src="js/calendar.js?v=20261108-month-detail"></script>
+  <script defer src="js/calendar.js?v=20261109-cal"></script>
 </body>
 </html>

@@ -79,6 +79,15 @@
     menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="7" x2="19" y2="7"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="17" x2="19" y2="17"/></svg>',
     info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.2V16"/><circle cx="12" cy="8" r="0.8" fill="currentColor" stroke="none"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>',
+    crown:
+      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path fill="#e2b340" d="M3.8 16.7 5.2 9.1l3.5 2.6L12 4.8l3.3 6.9 3.5-2.6 1.4 7.6H3.8z"/>' +
+      '<path fill="#c8960c" d="M3.7 17.6h16.6c.4 0 .7.4.6.8l-.5 1.7a.8.8 0 0 1-.7.5H4.3a.8.8 0 0 1-.7-.5l-.5-1.7c-.1-.4.2-.8.6-.8z"/>' +
+      '<circle cx="5.2" cy="8.2" r="1.35" fill="#f6d56a"/>' +
+      '<circle cx="12" cy="4.15" r="1.5" fill="#f6d56a"/>' +
+      '<circle cx="18.8" cy="8.2" r="1.35" fill="#f6d56a"/>' +
+      '<circle cx="12" cy="4.15" r="0.45" fill="#fff6d0"/>' +
+      "</svg>",
   };
 
   const OWNER_NAV_KEY = "ms_owner_nav_v2";
@@ -229,8 +238,18 @@
         btn.className = "ms-owner-crown";
         btn.href = "admin-console";
         btn.setAttribute("aria-label", "Admin Console");
-        btn.innerHTML =
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18"/><path d="M4 17 6.2 8.2 10 12.2 12 6l2 6.2 3.8-4 2.2 8.8"/></svg>';
+        btn.style.position = "fixed";
+        btn.style.top = "max(0.65rem, env(safe-area-inset-top, 0px))";
+        btn.style.left = "max(0.65rem, env(safe-area-inset-left, 0px))";
+        btn.style.zIndex = "280";
+        btn.style.display = "grid";
+        btn.style.placeItems = "center";
+        btn.style.width = "3.15rem";
+        btn.style.height = "3.15rem";
+        btn.style.borderRadius = "999px";
+        btn.style.background = "rgba(255,255,255,0.92)";
+        btn.style.color = "#1d1d1f";
+        btn.innerHTML = ICONS.crown;
         document.body.appendChild(btn);
       }
     }
@@ -931,9 +950,22 @@
       if (!tag || !aside) return;
       if (phoneLayout()) {
         tag.classList.add("ms-income-float");
+        tag.style.position = "fixed";
+        tag.style.top = "max(0.7rem, env(safe-area-inset-top, 0px))";
+        tag.style.right = "max(0.7rem, env(safe-area-inset-right, 0px))";
+        tag.style.left = "auto";
+        tag.style.zIndex = "280";
+        tag.style.margin = "0";
+        tag.hidden = false;
         if (tag.parentElement !== document.body) document.body.appendChild(tag);
         return;
       }
+      tag.style.position = "";
+      tag.style.top = "";
+      tag.style.right = "";
+      tag.style.left = "";
+      tag.style.zIndex = "";
+      tag.style.margin = "";
       tag.classList.remove("ms-income-float");
       const anchor = aside.querySelector(".ms-sidebar-legal") || aside.querySelector(".ms-sidebar-foot");
       if (anchor && tag.parentElement !== aside) aside.insertBefore(tag, anchor);
@@ -952,8 +984,18 @@
       btn.className = "ms-owner-crown";
       btn.href = "admin-console";
       btn.setAttribute("aria-label", "Admin Console");
-      btn.innerHTML =
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18"/><path d="M4 17 6.2 8.2 10 12.2 12 6l2 6.2 3.8-4 2.2 8.8"/></svg>';
+      btn.style.position = "fixed";
+      btn.style.top = "max(0.65rem, env(safe-area-inset-top, 0px))";
+      btn.style.left = "max(0.65rem, env(safe-area-inset-left, 0px))";
+      btn.style.zIndex = "280";
+      btn.style.display = "grid";
+      btn.style.placeItems = "center";
+      btn.style.width = "3.15rem";
+      btn.style.height = "3.15rem";
+      btn.style.borderRadius = "999px";
+      btn.style.background = "rgba(255,255,255,0.92)";
+      btn.style.color = "#1d1d1f";
+      btn.innerHTML = ICONS.crown;
       document.body.appendChild(btn);
     }
 
@@ -1996,19 +2038,15 @@
         script.id = "ms-studio-speculation";
         script.type = "speculationrules";
         script.textContent = JSON.stringify({
-          prefetch: [{ source: "list", urls, eagerness: "eager" }],
-          prerender: [{ source: "list", urls, eagerness: "moderate" }],
+          prefetch: [{ source: "list", urls, eagerness: "immediate" }],
+          prerender: [{ source: "list", urls, eagerness: "immediate" }],
         });
         document.head.appendChild(script);
       } catch (_) {
         /* Speculation Rules unsupported */
       }
     };
-    if (typeof window.requestIdleCallback === "function") {
-      window.requestIdleCallback(run, { timeout: 1200 });
-    } else {
-      window.setTimeout(run, 180);
-    }
+    run();
   }
 
   function paintApp(opts) {
@@ -2409,22 +2447,15 @@
         return true;
       }
 
-      event?.preventDefault?.();
       writeTabSwitch(page, toId || "dashboard");
       setActiveTab(nav, link);
       warmStudioUrl(link.href);
-      try {
-        sessionStorage.removeItem("ms_channel_hop");
-      } catch (_) {
-        /* ignore */
-      }
-      location.href = link.href;
       return true;
     };
     nav.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0 || event.pointerType === "touch") return;
+      if (event.button !== 0) return;
       const link = event.target.closest("a.ms-tab[href]");
-      if (!link) return;
+      if (!link || link.classList.contains("is-active")) return;
       warmStudioUrl(link.href);
       writeTabSwitch(page, link.getAttribute("data-tab") || "dashboard");
     });
