@@ -5,8 +5,6 @@
   const ico = LX.ico;
 
   const COPIES = {
-    clients: { kicker: "Example marks", title: "Studios on Moonrise", body: "Placeholder names for the pattern. Not a client list.", action: "See layout", visual: "clients", note: "Example" },
-    comparisons: { kicker: "Example", title: "Hours, before and after", body: "The same shop, with the week written out.", action: "Compare", visual: "compare", note: "Friday" },
     faqs: { kicker: "Example", title: "Questions from the studio", body: "Short answers under the thing they ask about.", action: "Open", visual: "faq", note: "2 open" },
     features: { kicker: "Example", title: "What the site holds", body: "Publish, leads, and the studio editor. Nothing extra.", action: "Look", visual: "features", note: "Three" },
     footers: { kicker: "Example", title: "Close the page", body: "Name, guide, and the legal links in one quiet row.", action: "Privacy", visual: "footer", note: "moonrise." },
@@ -98,8 +96,90 @@
     })
   ]);
 
-  addLayouts("clients");
-  addLayouts("comparisons");
+  function face(src) {
+    return '<img src="' + src + '" alt="">';
+  }
+
+  function logo(file) {
+    return "assets/library/logos/" + file + ".svg";
+  }
+
+  function mark(file, name) {
+    return '<span class="lx-mark"><img src="' + logo(file) + '" alt="' + name + '"></span>';
+  }
+
+  function word(file, name) {
+    return '<div><span class="lx-word"><img src="' + logo(file) + '" alt=""><span>' + name + "</span></span></div>";
+  }
+
+  function named(file, name) {
+    return '<li><img src="' + logo(file) + '" alt=""><span>' + name + "</span></li>";
+  }
+
+  LX.spec("clients", [], [
+    card("clients-faces", "Portrait row",
+      '<section class="lx-clients lx-clients-faces"><h3>Happy<span>Clients</span></h3><div class="lx-faces">' +
+        face("assets/library/client-miles.jpg") +
+        face("assets/library/client-leo.jpg") +
+        face("assets/library/client-ada.jpg") +
+        face("assets/library/client-nora.jpg") +
+      "</div></section>",
+      { wide: true, stage: "lx-client-stage is-plain" }),
+    card("clients-card", "Logo card",
+      '<article class="lx-clients lx-clients-card"><h3>Trusted by Businesses Worldwide</h3><p>Founders, developers, and business leaders across the globe chose us for their digital asset operations.</p><hr><div class="lx-mark-row">' +
+        mark("shopify", "Shopify") +
+        mark("blender", "Blender") +
+        mark("figma", "Figma") +
+        mark("spotify", "Spotify") +
+        mark("notion", "Notion") +
+      "</div></article>",
+      { wide: true, stage: "lx-client-stage" }),
+    card("clients-grid", "Plus grid",
+      '<section class="lx-clients lx-clients-grid"><p>Companies we collaborate with.</p><div class="lx-plus-grid">' +
+        word("nvidia", "NVIDIA") +
+        word("supabase", "Supabase") +
+        word("github", "GitHub") +
+        word("openai", "OpenAI") +
+        word("turso", "Turso") +
+        word("clerk", "Clerk") +
+        word("claude", "Claude") +
+        word("vercel", "Vercel") +
+      "</div></section>",
+      { wide: true, stage: "lx-client-stage is-plain" }),
+    card("clients-names", "Named marks",
+      '<section class="lx-clients lx-clients-names"><h3>Trusted by the best companies</h3><p>The world\u2019s most ambitious teams build with our platform.</p><ul class="lx-name-row">' +
+        named("google", "Google") +
+        named("apple", "Apple") +
+        named("amazon", "Amazon") +
+        named("meta", "Meta") +
+        named("microsoft", "Microsoft") +
+        named("nvidia", "Nvidia") +
+        named("netflix", "Netflix") +
+        named("spotify", "Spotify") +
+      "</ul><ul class=\"lx-name-row is-center\">" +
+        named("tesla", "Tesla") +
+        named("airbnb", "Airbnb") +
+        named("github", "GitHub") +
+        named("vercel", "Vercel") +
+      "</ul></section>",
+      { wide: true, stage: "lx-client-stage is-plain" }),
+    card("clients-strip", "Wordmark bar",
+      '<div class="lx-clients lx-clients-strip"><img src="' + logo("nintendo") + '" alt="Nintendo"><img src="' + logo("jquery") + '" alt="jQuery"><img src="' + logo("prada") + '" alt="Prada"><img src="' + logo("applemusic") + '" alt="Apple Music"></div>',
+      { wide: true, stage: "lx-client-stage is-strip" })
+  ]);
+  function compareWord() {
+    return '<div class="lx-compare is-word" data-lx-compare><div class="lx-compare-base"><span>COMPARE</span></div><div class="lx-compare-top"><span>COMPARE</span></div><i class="lx-compare-rule" aria-hidden="true"></i><button type="button" class="lx-compare-knob" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Drag to compare"></button></div>';
+  }
+
+  function comparePhoto(src) {
+    return '<figure class="lx-compare is-photo" data-lx-compare><img class="lx-compare-after" src="' + src + '" alt=""><div class="lx-compare-before"><img src="' + src + '" alt=""></div><span class="lx-compare-tag is-before">Before</span><span class="lx-compare-tag is-after">After</span><i class="lx-compare-rule" aria-hidden="true"></i><button type="button" class="lx-compare-knob is-chev" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Drag to compare"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5 5.5 12 9 16.5M15 7.5 18.5 12 15 16.5"/></svg></button></figure>';
+  }
+
+  LX.spec("comparisons", [], [
+    card("comparisons-word", "Split word", compareWord(), { wide: true, stage: "lx-compare-stage" }),
+    card("comparisons-coast", "Photo slider", comparePhoto("assets/library/hero-coast.jpg"), { wide: true, stage: "lx-compare-stage" }),
+    card("comparisons-shop", "Shop slider", comparePhoto("assets/library/hero-coffee.jpg"), { wide: true, stage: "lx-compare-stage" })
+  ]);
   addLayouts("faqs");
   addLayouts("features");
   addLayouts("footers");
@@ -159,7 +239,7 @@
     card("borders-drop", "Dashed drop", '<div class="lx-drop"><span class="lx-drop-ico" aria-hidden="true"><i></i><i></i><svg class="lx-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V7M8.5 10.5 12 7l3.5 3.5"/></svg></span><strong>Click to upload or drop files</strong><p>PDF, DOC, XLSX, CSV, PNG, or JPG</p><button type="button" class="lx-drop-btn"><svg class="lx-ico sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V7M8.5 10.5 12 7l3.5 3.5"/></svg>Browse files</button></div>', { wide: true, stage: "lx-border-stage" }),
     card("borders-arc", "Partial stroke", '<p class="lx-arc"><i class="lx-arc-rotor" aria-hidden="true"></i><span>Borders are cool</span></p>', { stage: "lx-border-stage" }),
     card("borders-progress", "Progress edge", '<div class="lx-progress"><button type="button" class="lx-progress-btn">Submit</button><span class="lx-progress-line"></span></div>', { wide: true, play: "lx-live", stage: "lx-border-stage" }),
-    card("borders-frames", "Color frames", '<div class="lx-frames"><div class="lx-frame is-blue"><i></i><em>NEW</em></div><div class="lx-frame is-red"><i></i><em>NEW</em></div><div class="lx-frame is-gold"><i></i><em>NEW</em></div></div>', { wide: true, stage: "lx-border-stage" })
+    card("borders-frames", "Color frames", '<div class="lx-frames"><div class="lx-frame is-blue"><img src="assets/library/hero-coast.jpg" alt=""><em>NEW</em></div><div class="lx-frame is-red"><img src="assets/library/hero-coffee.jpg" alt=""><em>NEW</em></div><div class="lx-frame is-gold"><img src="assets/library/hero-wind.jpg" alt=""><em>NEW</em></div></div>', { wide: true, stage: "lx-border-stage" })
   ]);
 
   function dock(id, title, html, extra) {
@@ -168,41 +248,38 @@
     return card("docks-" + id, title, html, o);
   }
   function dockBtn(name, label, extra) {
-    return '<button type="button" aria-label="' + label + '"' + (extra || "") + ">" + ico(name) + "</button>";
+    return '<button type="button" data-lx-opt aria-label="' + label + '"' + (extra || "") + ">" + ico(name) + "</button>";
+  }
+  function dockBtns(names) {
+    return names.map(function (name, i) {
+      return dockBtn(name, name, i === 0 ? ' class="is-on"' : "");
+    }).join("");
   }
   function dockBar(kind, buttons) {
     return '<div class="lx-float is-' + kind + '">' + buttons + "</div>";
   }
   LX.spec("docks", ["nav-dock"], [
-    dock("tools", "Tools", dockBar("tools", ["dash", "toggle", "pencil", "export", "list"].map(function (name) {
-      return dockBtn(name, name);
-    }).join("")), { wide: true }),
-    dock("circles", "Circles", dockBar("orbs", ["home", "box", "gems", "pulse", "file", "mail", "spark"].map(function (name) {
-      return dockBtn(name, name);
-    }).join("")), { wide: true }),
+    dock("tools", "Tools", dockBar("tools", dockBtns(["dash", "toggle", "pencil", "export", "list"])), { wide: true }),
+    dock("circles", "Circles", dockBar("orbs", dockBtns(["home", "box", "gems", "pulse", "file", "mail", "spark"])), { wide: true }),
     dock("mark", "Center mark", dockBar("mark", [
       dockBtn("home", "Home"),
       dockBtn("image", "Image"),
       dockBtn("crop", "Frame"),
-      '<button type="button" class="lx-brand" aria-label="moonrise."><span class="lx-brand-tip">moonrise.</span><span class="lx-brand-mark">m</span></button>',
+      '<button type="button" class="lx-brand is-on" data-lx-opt aria-label="moonrise."><span class="lx-brand-tip">moonrise.</span><span class="lx-brand-mark">m</span></button>',
       dockBtn("nodes", "Share"),
       dockBtn("close", "Close"),
       dockBtn("funnel", "Filter")
     ].join("")), { wide: true }),
-    dock("quiet", "Quiet", dockBar("quiet", ["home", "search", "bell", "user", "gear"].map(function (name) {
-      return dockBtn(name, name);
-    }).join(""))),
-    dock("outline", "Outline", dockBar("line", ["plus", "search", "bell", "user", "sun"].map(function (name) {
-      return dockBtn(name, name);
-    }).join("")), { stage: "lx-dock-stage is-gray" }),
+    dock("quiet", "Quiet", dockBar("quiet", dockBtns(["home", "search", "bell", "user", "gear"]))),
+    dock("outline", "Outline", dockBar("line", dockBtns(["plus", "search", "bell", "user", "sun"])), { stage: "lx-dock-stage is-gray" }),
     dock("badge", "Badge", dockBar("inbox", [
-      dockBtn("home", "Home", ' class="is-on" data-lx-opt'),
-      dockBtn("search", "Search", " data-lx-opt"),
-      dockBtn("folder", "Folder", " data-lx-opt"),
+      dockBtn("home", "Home", ' class="is-on"'),
+      dockBtn("search", "Search"),
+      dockBtn("folder", "Folder"),
       '<button type="button" data-lx-opt aria-label="Mail">' + ico("mail") + '<span class="lx-count">3</span></button>',
-      dockBtn("music", "Music", " data-lx-opt"),
-      dockBtn("gear", "Settings", " data-lx-opt"),
-      dockBtn("trash", "Trash", " data-lx-opt")
+      dockBtn("music", "Music"),
+      dockBtn("gear", "Settings"),
+      dockBtn("trash", "Trash")
     ].join("")), { wide: true }),
     dock("labels", "Labels", '<div class="lx-float is-modes">' +
       '<button type="button" data-lx-opt>' + ico("sun") + "Light</button>" +

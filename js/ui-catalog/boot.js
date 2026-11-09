@@ -157,6 +157,8 @@
     if (window.dtMountDownloads) window.dtMountDownloads(section);
     syncAcc(section);
     section.querySelectorAll(".lx-dock").forEach(armDock);
+    section.querySelectorAll("[data-lx-compare]").forEach(armCompare);
+    section.querySelectorAll(".lx-float").forEach(armFloat);
   }
 
   function accPanel(btn) {
@@ -205,6 +207,84 @@
     icon.classList.remove("is-pop");
     void icon.offsetWidth;
     icon.classList.add("is-pop");
+  }
+
+  const floatList = [];
+
+  function placeFloatThumb(dock, instant) {
+    const thumb = dock.querySelector(":scope > .lx-float-thumb");
+    const active = dock.querySelector(":scope > button.is-on");
+    if (!thumb || !active) return;
+    if (instant) thumb.style.transition = "none";
+    const dot = dock.classList.contains("is-inbox");
+    const w = dot ? 4 : active.offsetWidth;
+    const h = dot ? 4 : active.offsetHeight;
+    const x = active.offsetLeft + (dot ? (active.offsetWidth - w) / 2 : 0);
+    const y = active.offsetTop + (dot ? active.offsetHeight - 8 : 0);
+    thumb.style.width = w + "px";
+    thumb.style.height = h + "px";
+    thumb.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+    if (instant) {
+      void thumb.offsetWidth;
+      thumb.style.transition = "";
+    }
+  }
+
+  function armFloat(dock) {
+    if (!dock || dock.dataset.lxFloat) return;
+    dock.dataset.lxFloat = "1";
+    if (!dock.querySelector(":scope > button.is-on")) {
+      const first = dock.querySelector(":scope > button");
+      if (first) first.classList.add("is-on");
+    }
+    if (dock.classList.contains("is-orbs")) return;
+    const thumb = document.createElement("span");
+    thumb.className = "lx-float-thumb";
+    thumb.setAttribute("aria-hidden", "true");
+    dock.insertBefore(thumb, dock.firstChild);
+    floatList.push(dock);
+    placeFloatThumb(dock, true);
+    window.requestAnimationFrame(function () { placeFloatThumb(dock, true); });
+  }
+
+  function armCompare(root) {
+    if (!root || root.dataset.lxCompare) return;
+    root.dataset.lxCompare = "1";
+    const knob = root.querySelector(".lx-compare-knob");
+    function place(clientX) {
+      const rect = root.getBoundingClientRect();
+      const raw = ((clientX - rect.left) / Math.max(rect.width, 1)) * 100;
+      const pct = Math.min(97, Math.max(3, raw));
+      root.style.setProperty("--lx-pos", pct.toFixed(2) + "%");
+      if (knob) knob.setAttribute("aria-valuenow", String(Math.round(pct)));
+    }
+    root.addEventListener("pointerdown", function (event) {
+      if (event.button != null && event.button !== 0) return;
+      root.classList.add("is-drag");
+      try { root.setPointerCapture(event.pointerId); } catch (err) { /* pointer already released */ }
+      place(event.clientX);
+    });
+    root.addEventListener("pointermove", function (event) {
+      if (!root.classList.contains("is-drag")) return;
+      place(event.clientX);
+    });
+    function end() { root.classList.remove("is-drag"); }
+    root.addEventListener("pointerup", end);
+    root.addEventListener("pointercancel", end);
+    if (!knob) return;
+    knob.addEventListener("keydown", function (event) {
+      const current = parseFloat(knob.getAttribute("aria-valuenow") || "50");
+      let next = current;
+      if (event.key === "ArrowLeft") next = current - 4;
+      else if (event.key === "ArrowRight") next = current + 4;
+      else if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = 100;
+      else return;
+      event.preventDefault();
+      next = Math.min(97, Math.max(3, next));
+      root.style.setProperty("--lx-pos", next + "%");
+      knob.setAttribute("aria-valuenow", String(Math.round(next)));
+    });
   }
 
   function armDock(dock) {
@@ -257,6 +337,8 @@
       ? parent
       : (parent.closest ? parent.closest(".lx-dock") : null);
     if (dock) placeDockThumb(dock, false);
+    const float = parent.classList && parent.classList.contains("lx-float") ? parent : null;
+    if (float) placeFloatThumb(float, false);
   }
 
   function sectionFor(id) {
@@ -427,6 +509,9 @@
     openHash();
     drain();
     startDockLoop();
+    window.addEventListener("resize", function () {
+      floatList.forEach(function (dock) { placeFloatThumb(dock, true); });
+    });
     window.addEventListener("hashchange", openHash);
   }
 

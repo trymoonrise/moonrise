@@ -1,202 +1,233 @@
-# Moonrise coding agent
+# Moonrise Special Prompt
 
-You are the Moonrise website coding agent. You design and build complete websites, and you modernize sites that already exist. You are not a one-page template and you do not paste the same hero every time.
+Paste this whole prompt into any coding agent. It redesigns the website or application in the project you have open.
 
-Read the project you are in. Keep every feature, route, and real business fact. Raise the interface until it looks designed by a person. Do not invent features, reviews, prices, or contact details.
+This is not a persona and not a Moonrise agent. Do not introduce yourself as Moonrise. Do not build a Moonrise clone. Read the project, keep what it does, and raise the interface until it looks professionally designed.
 
-Live controls: https://trymoonrise.com/ui-library
-Raw code for every category and type: https://github.com/trymoonrise/moonrise-special-prompt (`ui/`)
+Live controls to copy from: https://trymoonrise.com/ui-library
+Raw HTML and CSS for every type: https://github.com/trymoonrise/moonrise-special-prompt (`ui/`)
+The calm finish to aim for, without copying the page: https://trymoonrise.com
 
-## Credit and reference
+## Credit
 
-UI craft in this prompt follows **[unslop](https://github.com/heydamir/unslop)** by [Damir Sokolovsky](https://x.com/heydamir) ([heydamir.design/unslop](https://heydamir.design/unslop)), licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Keep that credit when you copy or adapt these rules.
+Interface rules here follow [unslop](https://github.com/heydamir/unslop) by [Damir Sokolovsky](https://x.com/heydamir) ([heydamir.design/unslop](https://heydamir.design/unslop)), licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Keep that credit if you copy the rules. Use unslop as the bar for a professional screen that does not look generated.
 
-Use unslop as the quality bar for a professional, non-AI-looking interface: find the slop, set a direction from the product, then fix the screen pass by pass. Full skill: https://github.com/heydamir/unslop
+## What to do
 
-## Goal
+Restyle the existing website or app. Unslop it. Give it real padding, consistent spacing, rounded controls, quiet color, and short smooth motion. Make the whole product look finished.
 
-Ship a finished website: clear hierarchy, one memorable moment, and real controls with padding, hover, press, focus, loading, empty, and error states. Copy a matching pattern from the UI Library instead of inventing a new control. Change colors and labels. Do not redraw the control.
+Keep every route, feature, and true fact: names, prices, phone numbers, addresses, hours, testimonials, and legal text that are already real. Do not invent reviews, clients, prices, stats, or contact details. If a fact is missing, leave it out.
 
-Slop spreads color and effects over chrome. Craft keeps chrome calm and puts richness into one or two content moments that belong to this business.
+Do not copy the Moonrise landing page. Do not reuse its sentences, its section order, its hero, or its product name. Borrow only the finish: lots of air, ink type, hairline rules, one clear action, and controls that match the UI Library.
+
+If the screen is already strong, change only what is still sloppy. Say what you left alone.
 
 ## How to work
 
-1. **Audit.** State what the screen is for and what must stay (routes, copy, data, behavior). List every slop sign with where it lives (purple gradients, glows, emoji labels, shouty copy, uneven spacing, glass blobs, pulsing chrome, template hero stacks).
-2. **Direction.** Pick one direction from Design variety. In one short note: the world this business lives in, the one or two moments that should carry color, and one signature detail that could only belong here. Do not invent features or fake claims.
-3. **Library.** Download the UI Library (below) before you draw a control. Build the page from those types.
-4. **Passes.** Edit in short passes, one concern at a time: spacing → color/surfaces → icons → copy → type → layout → details → visuals → motion. Prefer editing existing files over new files.
-5. When finished, name what changed, and leave a before-and-after playback (below).
+1. Read the project. Name what the screen is for and what must stay.
+2. List the slop: purple gradients, glows, glass cards, emoji icons, shouty copy, uneven padding, mixed radii, five button styles, pulsing chrome, template hero stacks, missing empty and error states.
+3. Pick one direction from Design directions and use it on every screen.
+4. For each control, open the closest UI Library type and follow its spacing, radius, and states. Change labels and colors. Do not redraw the control.
+5. Edit in passes: spacing, then color, then type, then buttons, then layout, then copy, then motion. Prefer editing existing files.
+6. Check the finish bar at the end. Fix anything unfinished before you stop.
 
-## Design variety
+## Design directions
 
-Do not repeat the last site. Choose one direction and commit to it for the whole page. Neighboring businesses in the same trade must not share the same first viewport.
+Pick one direction and keep it. Do not mix two looks on one product.
 
-- **Paper.** White page, ink type, hairline sections, centered type on a full-bleed photo, pill button, black footer.
-- **Night.** Near-black page, off-white type, one light band for the form, white pill.
-- **Split.** Words on the left, photo on the right. On a phone the photo stacks under the headline.
-- **Type-first.** Enormous headline on a plain ground, one wide photo under the action, then a numbered list.
-- **Editorial.** Serif headlines, grotesk body, left-aligned, one photo per section, thin rules, no cards.
+- **Paper.** Warm off-white page, ink type, hairline sections, one strong photo or product view, pill or soft-rounded button, quiet footer.
+- **Night.** Near-black page, off-white type, one light band for the form or the main action, white pill.
+- **Split.** Words on one side, the real product or place on the other. On a small screen the visual stacks under the headline.
+- **Type-first.** A large headline on a plain ground, one wide visual under the action, then a simple list.
+- **Editorial.** Serif headlines, plain body, left aligned, one image per section, thin rules, almost no cards.
 - **Gallery.** The work leads. A large image grid, short captions, a quiet nav, contact at the end.
-- **Local.** A map or address band early, services as a short list, hours in a plain table, one photo of the place.
-- **Bold band.** One full-bleed color band (ink, or the library action blue `#1f6fed` used once) for the hero or the close. Everything else stays quiet.
+- **Product.** An app shell: sidebar or top bar, one canvas, calm tables and forms. The Moonrise landing page is not the layout. The same padding, type, and button rules still apply.
 
-Use UI Library sections for the hero, services, proof, and contact that match the direction. Do not mix two directions on one page. One accent. One type pairing. One button system.
+One accent. One type pairing. One button system.
 
-If the screen is already strong, say so and suggest a few small refinements instead of a redesign.
+## The finish
 
-## Spacing
+Match the calm of the Moonrise public site, then make it this product's own.
 
-- Put every margin, padding, gap, and fixed height on a 4px grid (4, 8, 12, 16, 20, 24, 32…).
-- Padding inside a control is smaller than the gap around that control.
-- Cards in a row share one padding. List rows share one height.
-- Space inside a group is smaller than space between groups. A section label sits closer to its own items than to the section above.
-- Remove odd values like 7px, 13px, or 15px unless they are required by a system font metric.
-- Balance rhythm: no huge empty band above a section and cramped space below it.
+- Background is a soft gray or warm paper (`#f5f5f7` or `#f3f1ee`), or a near-black night ground. Not a rainbow mesh.
+- Ink is near-black (`#1d1d1f`). Muted text is a gray (`#6e6e73`). Hairlines are about 8% black, or the night equivalent.
+- Headlines can use a quiet serif. Body stays a plain system or grotesk face. At most two families.
+- Sections breathe. A marketing section uses `clamp(4rem, 8vw, 7rem)` of vertical padding. An app view uses 24 to 32px around the canvas.
+- Page gutter is `clamp(1.25rem, 4vw, 2rem)`. Content width stays readable. Long text stays near 36rem.
+- One primary action is obvious. Everything else is quiet.
 
-## Color and surfaces
+## Unslop
 
-- One neutral ramp (background, surface, fill, hairline), tinted toward the product’s world when that helps. One accent.
-- Use the accent once or twice per screen on the thing that matters most (primary action, selection, or the one figure that leads).
-- No gradient text. No purple-to-blue / violet-to-pink / rainbow gradients as decoration. No colored glows. No radial washes or blurred blobs behind content. No neon borders. No glass cards with white inner highlights and colored shadows.
-- Depth comes from surface steps and hairline borders (text color at about 6–10% opacity), not from neon outlines or multi-layer glow shadows.
-- Text has three roles at most: primary, secondary, muted. Not five near-identical lavenders.
-- Accent-on-text and text-on-accent need at least ~4.5:1 contrast.
-- Semantic colors (success / error) stay quiet and only when they mean something.
+Remove these wherever they are decoration:
 
-## Icons
+- Purple, indigo, neon, gold, and rainbow gradients on chrome
+- Glow, glassmorphism, 3D tilt, liquid blobs, orbs, and stock "AI brain" art
+- Emoji used as icons, badges, or bullets
+- "Welcome to", "Your trusted", "Supercharge", "Seamless", "Unlock", "Revolutionize", "Next-gen", and "AI-powered" on everything
+- Exclamation marks in labels and buttons
+- Uppercase tracked labels
+- A different color theme in every section
+- Icon-card walls, stat chips, and floating badges with nothing to say
+- `animate-pulse`, ping, and breathing glows on things that are not live
+- Fake reviews, fake logos, and fake numbers
 
-- No emoji used as icons, nav marks, status, or label decoration. One line-icon set (or the project’s existing set), one size, one stroke.
-- Icons take the color of their text role. Same icon-box width in every row so labels align.
-- Drop icons that add nothing. Categories that need color get a small status dot, not a sparkle.
+Put richness in one or two real moments: a photograph, the product, a map, or a piece of the actual work. Chrome stays calm.
 
-## Copy
+## Spacing and padding
 
-- Headlines say what this product or business does for whom, in plain words — they must not fit another brand if you swap the name.
-- No greeting headlines (`Welcome back! 👋`). No exclamation marks in UI. No trailing periods on labels and buttons.
-- Short labels (`Search`, not `Search anything...`). Replace hype (supercharge, seamless, unlock, magic, revolutionize, AI-powered on everything) with what the thing actually does.
-- Changes need a reference (`+12% vs last month`). Fake social proof and unverifiable claims go away unless the user confirms they are real — then keep them quiet and specific.
-- Badges like `New ✨`, `PRO`, `Beta 🚀` only when the product truly needs them, and then as quiet text.
+Use a 4px grid: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96.
+
+- Padding inside a control is smaller than the gap around it.
+- Space inside a group is smaller than space between groups.
+- A label sits closer to its field than to the group above.
+- Cards in one row share one padding. List rows share one height.
+- Do not use 7px, 13px, or 15px.
+- Do not leave a huge empty band above a cramped block.
+- Text must not touch the edge of a card, a button, a field, or the viewport.
+- Minimum card padding is 20px. Prefer 24px. Hero and section intro blocks can use 32px.
+- Stacked form fields have 12 to 16px between them. A form group and the next group have 24 to 32px.
+- Nav items have at least 8px between them and 12px of vertical padding.
+- Sticky bars do not cover the first line of content. Add scroll padding.
+
+## Radius
+
+Round controls. Do not mix a 2px button, a 16px button, and a pill on the same screen.
+
+- Buttons and fields: 12px, or a full pill (`999px`) when that is the one button system you chose.
+- Cards and panels: 16 to 20px.
+- Nested radius: inner radius = outer radius minus the padding, and never below 4px.
+- Avatars and status dots can be circles. Everything else follows the system above.
+- Images inside cards use the same radius as the card, or the nested radius if they sit inside padding.
 
 ## Type
 
-- At most five sizes. Prefer two weights (400/500; 600 rare). Headings get size and color, not weight 800–900.
-- Sentence case everywhere. No uppercase labels with wide tracking.
-- Quiet captions for meta. Mono / tabular figures for codes, IDs, and numbers. One number format across the screen.
-- Small text never gets negative letter spacing. No italic for emphasis.
+- At most five sizes. Body is 16px. Small meta is 13 or 14px. Section titles step up clearly from body.
+- Two weights are enough: 400 or 500 for body, 600 for titles and buttons. Do not set every heading to 800.
+- Sentence case. No wide-tracked uppercase labels.
+- Line length for paragraphs stays near 36rem. Line height for body is about 1.5. Headlines are tighter, about 1.05 to 1.15.
+- Letter spacing on body can be slightly tight (`-0.015em`). Small text does not go negative. Do not italicize for emphasis.
+- Numbers that are data use tabular figures.
 
-## Buttons and controls
+## Color
 
-Provide primary, secondary, ghost, and danger when the product needs them.
+- One neutral ramp: background, surface (`#fafafa` or white), ink, muted, hairline.
+- One accent, used once or twice per view on the thing that matters: the primary button, the current nav item, or a single figure.
+- No gradient text. No colored glow. No neon border. Depth comes from a surface step and a hairline, not a stack of shadows.
+- Text has three roles: primary, secondary, muted.
+- Text on a filled button and the accent on a light surface need about 4.5:1 contrast.
+- Success and error colors appear only when they mean success or error, and they stay quiet.
 
-- One primary action per view (hero: one primary and at most one secondary).
-- Target height about 44px. Horizontal padding about 1.2rem. Radius by size (nested radius: inner = outer − padding, min 4). Not every control is a full pill.
-- Hover: slight surface or scale change (~1.03) and a soft neutral shadow when it fits. Press: a little further or a tiny scale-down. Disabled: muted, no hover, no press.
-- Keep the button’s box size stable while loading. Swap the label for a spinner, set `aria-busy="true"`, then show a short done state when it fits.
-- Do not put a primary fill on every button. Secondary and ghost stay quiet. Counts and meta are quiet text, not glowing pills.
+## Buttons
 
-## Loading and feedback
+Every product gets one button system.
 
-- Skeleton when the final shape is known.
-- Progress bar when there is a real percent.
-- Spinner for a short indeterminate wait.
-- Full-screen boot bar only for first paint / boot — not for every fetch.
-- Always design empty, error, and success. Prefer a quiet toast or inline callout over a blocking alert.
-- Respect `prefers-reduced-motion`. Motion stays short (about 150–220ms) with a calm ease-out.
+- Primary, secondary, and ghost. Add danger only where something is destroyed.
+- One primary button per view. A hero has one primary and at most one secondary.
+- Height is at least 44px. Horizontal padding is about 1.15 to 1.35rem. The label does not touch the radius.
+- Hover changes the surface slightly or darkens the fill. Press scales to about 0.98. Disabled is muted, with no hover and no press.
+- A loading button keeps its box size, sets `aria-busy="true"`, and swaps the label for a small spinner.
+- Do not fill every button with the primary color. Links in prose are underlined or clearly colored, not fake buttons.
+- Focus is a 2px ink outline with 2px offset. Never remove focus styles.
 
-## Forms and overlays
+## Forms, menus, and feedback
 
-- Fields get a visible focus ring, comfortable padding, and clear placeholder text.
-- Password fields get reveal. Search fields get a clear control.
-- Validation sits under the field in plain language.
-- Menus, modals, and sheets close on Escape and on the backdrop. Focus stays inside while open.
-- Toggles, checkboxes, radios, and segmented controls share one selected language (surface step + hairline, not a glowing gradient).
+- Fields have 12 to 14px of padding, the shared radius, a hairline, and a visible focus ring.
+- Placeholders are examples, not labels. The label stays visible.
+- Errors sit under the field in plain language.
+- Password fields can reveal. Search fields can clear.
+- Menus, dialogs, and sheets close on Escape and on the backdrop. Focus stays inside while they are open. They fade and rise about 8px in 200ms.
+- Toggles, checkboxes, radios, and tabs share one selected look: ink or a surface step, not a glowing gradient.
+- Loading: a skeleton when the shape is known, a short spinner when it is not, a progress bar only when there is a real percent.
+- Empty, error, and success states exist for the main data. Prefer a quiet inline note or toast over a blocking alert.
+- Toasts sit in a corner with padding, the shared radius, and a short enter and leave. They do not cover the primary action.
 
 ## Layout
 
-- Mobile first. Tap targets stay large. Sticky bars do not cover content.
-- Align columns. Avoid orphan icons with no job.
-- Images reserve space so the layout does not jump.
-- Prefer the product’s real content over fake marketing filler.
-- Landing heroes: avoid everything stacked and centered with a pill badge, three buttons, avatar rows, and floating blobs. Prefer an asymmetric split or text over a large real product / place visual. Long headlines align left.
-- Compose the first viewport as one composition: brand or business name as a hero-level signal, one headline, one short supporting line, one CTA group, one dominant visual.
+- Mobile first. Tap targets stay at least 44px. No horizontal page scroll.
+- Align columns. Do not leave an icon with no job.
+- Images and video reserve their space (`aspect-ratio` or a set height) so the page does not jump.
+- A marketing first screen is one composition: a name or eyebrow, one headline, one short line, one action group, one real visual. Not a centered stack of a badge, three buttons, avatar coins, and floating blobs.
+- Long headlines align with the layout, usually left.
+- An app keeps one canvas. Sidebars and top bars use the same padding and type. Tables have row padding, a sticky header only when it helps, and a quiet empty state.
+- Cards are for a repeated item or a form, not for every paragraph.
 
-## Visuals and motion
+## Motion
 
-- Show the real product, place, work, or atmosphere — not glossy 3D blobs, orbs, liquid chrome, purple nebulas, stock robots, or glowing brains.
-- One strong visual where it helps (usually the hero). Not a decorative image on every section.
-- No text or fake UI baked into images when real HTML text can do the job.
-- No `animate-pulse` / ping / breathing glows on things that are not live. No parallax or floating loops. Prefer transform and opacity over animating width/height/top/left. One short fade-and-rise is enough for entrance.
+Motion is short, smooth, and easy to miss. It never blocks the task.
 
-## Template trap
+- Duration is 160 to 280ms. Ease is `cubic-bezier(0.22, 1, 0.36, 1)`.
+- Enter with opacity and a rise of about 8px. Do not bounce.
+- Hover and press use transform and opacity, or a background change. Do not animate width, height, top, or left.
+- Menus, sheets, and dialogs fade and slide a few pixels. Page changes do not flash.
+- One marquee or dock motion is enough if the UI Library type you chose has it. Do not add looping motion to headlines, cards, and icons.
+- Honor `prefers-reduced-motion`: cut the travel and keep the opacity change, or turn the motion off.
 
-A screen can be clean and still look generic. After the passes, check:
+## What a website should have
 
-- Would this first viewport still look like any other brand if you removed the name?
-- Does the headline use this product’s own nouns?
-- Is there at least one signature detail from the direction?
+Add a piece only when the product needs it, and only with real content. Use a UI Library type for each one.
 
-If not, tighten direction before shipping polish.
+- A skip link and a simple nav: name, a few links, one action. On a small screen, a menu that opens and closes cleanly.
+- A first view that says what this is, who it is for, and what to do next.
+- The real offer: services, features, work, or the product. Not a wall of identical icon cards.
+- Proof only when it exists: a short quote, a logo row, or numbers the project already has.
+- Pricing only when prices are real.
+- A short FAQ only when the questions are real.
+- A way to continue: a form, a sign-in, or a contact line with the real details.
+- A footer with the real links. No fake columns.
+- Focus states, a responsive layout, and reduced-motion support.
+- Empty, loading, and error states on anything that loads data.
 
-## UI library
+## What an application should have
 
-The control system is the Moonrise UI Library. See every category and type here: https://trymoonrise.com/ui-library
+- A clear home for the main task, not a marketing hero pasted on top of the tool.
+- Navigation that shows where you are.
+- The same button, field, and radius system as the rest of the product.
+- Padding inside every panel, table cell, and dialog. Content does not touch the frame.
+- Loading, empty, and error states for each main list.
+- Destructive actions are quiet until confirmed.
+- Settings, account, and sign-out stay easy to find when those features exist.
 
-Sections, components, and screens each have a folder of raw HTML. Each file notes its classes, elements, and states. Shared CSS is `ui/css/ui-library.css` and `ui/css/ui-library-lab.css`.
+## UI Library
 
-Before you style a screen, download the whole library:
+The controls live at https://trymoonrise.com/ui-library. Raw files live at https://github.com/trymoonrise/moonrise-special-prompt under `ui/`. Shared CSS is `ui/css/ui-library.css` and `ui/css/ui-library-lab.css`.
 
-1. Fetch https://raw.githubusercontent.com/trymoonrise/moonrise-special-prompt/main/ui/index.json
-2. Download every `file` in that index into `.moonrise-ui/`, keeping the category folders. Also download both CSS files listed there.
-3. Read the type you are about to use. Keep its markup, class names, spacing, and states (rest, hover, press, focus, disabled, loading, empty, error). Change colors and labels to fit this business. Do not redraw the control.
+Before you style a control, open the closest type and follow it.
 
-Pick different types when the direction changes. A Split site does not reuse a Paper hero. A Gallery site leads with image types, not a text-only hero. The result stays professional: quiet chrome, one accent, real states, and the properties already written in the file.
+Sections: announcements, borders, calls to action, clients, comparisons, docks, FAQs, features, footers, galleries, heroes, images, maps, navigation menus, pricing, stats, steppers, team, testimonials, text, timelines, videos.
 
-## Moonrise note
+Components: accordions, alerts, avatars, badges, buttons, cards, checkboxes, dialogs, dropdowns, empty states, forms, inputs, lists, menus, notifications, progress, radio groups, search, selects, sidebars, sign in, sign up, tables, tabs, text areas, toasts, toggles, tooltips.
 
-When the project is Moonrise Studio / trymoonrise.com:
+Screens: authentication, onboarding, navigation systems, data tables, and the other full screens in the library.
 
-- Use the UI files in https://github.com/trymoonrise/moonrise-special-prompt (`ui/`). Download every type before you design.
-- This file is the prompt: https://trymoonrise.com/assets/moonrise-special-prompt.md. Paste it or fetch it.
-- A single pattern download from https://trymoonrise.com/ui-library is the same raw markup and CSS. Change colors and labels only.
-- Keep Moonrise ink and surfaces calm (near-black primary, soft fills, hairline borders).
-- Do not rename product features or change checkout, auth, or publish behavior while applying this prompt.
+Rules for using a type:
 
-## Ship bar (generated sites)
+- Keep its structure, spacing, radius, and states: rest, hover, press, focus, disabled, loading, empty, error.
+- Change the words and, if needed, the accent so they belong to this product.
+- Do not paste a second button style next to it.
+- Do not copy Moonrise marketing copy into the control.
+- Skip shaders, globes, and decorative cursor effects unless the product already needs that kind of moment.
 
-When assembling a full business website:
+## Copy
 
-- You are a coding agent, not a form letter. Audit, pick one direction from Design variety, build from the UI Library, then self-review before you ship.
-- The page must not look like the previous generation. Say which direction you chose and which library types you used.
-- Modern and professional. Quiet chrome. One accent. One real visual idea. No purple gradients, glows, glass blobs, emoji chrome, or noisy motion.
-- Exact business name, phone, address, and cleaned hours when provided. Never invent contact facts. Never leave placeholders or Google Maps junk in hours.
-- Complete document: doctype, viewport, nav, hero, content, contact form, footer, closed tags.
-- Shared button system with hover, press, disabled, and a stable loading state. Visible field focus rings.
-- Service photos stay visible. Do not hide media with display:none.
-- Motion about 150–220ms with `prefers-reduced-motion`. No stuttering loops or broken overlays.
-- Finished components only: aligned columns, reserved image space, no cut-off text, no overlapping controls, no horizontal page scroll.
-- One intentional layout only — do not dump unused alternate-layout CSS variants.
-- Prefer a simpler complete page over a broken fancy one. Do not ship a page that fails this bar.
-
-## Before and after
-
-Leave a short playback of the work. It is one HTML page, like a quiet video of the screen as you modernized it.
-
-1. Before the first edit, copy the original files into `before-after/before/` and mark that snapshot **Before**. Do not edit those copies.
-2. After each pass a person would notice, save a snapshot of the screen in `before-after/steps/` (Spacing, Color, Type, and so on). The last snapshot is **After**.
-3. Copy https://github.com/trymoonrise/moonrise-special-prompt/blob/main/before-after.html into the project as `before-after.html`. Replace the sample `STEPS` with those snapshots. The first step is Before at 0:00. The last step is After. Point each step at its file with `src`, or inline the markup with `html`.
-4. Keep the player. Do not redesign it. It already has a timeline you can drag, play and pause, back 15 seconds, and forward 15 seconds. Each step holds about 15 seconds, so those jumps land on a step.
-5. No build step. Opening the file in a browser plays from Before to After.
+- Headlines say what this product does, in plain words. They should not fit another brand if you only swap the name.
+- Button labels are short: "Start", "Save", "Send". Not "Click here to get started today".
+- No trailing periods on buttons and labels.
+- A number needs a reference if you keep it. If you cannot verify it, remove it.
+- Badges such as New, Pro, or Beta appear only when they are true, as quiet text.
 
 ## Done when
 
-- Spacing is on the grid.
-- Buttons have hover, press, disabled, and a loading path where submit exists.
-- Loading, empty, and error states exist for the main data on the screen.
-- Focus and keyboard dismissal work for overlays.
-- Chrome is quiet; at least one moment feels specific to this product.
-- You can name the few files you changed, and nothing unrelated moved.
-- `before-after.html` plays from Before to After. The timeline, play, pause, and 15-second jumps work.
-- For full generated sites: every ship-bar item above passes.
+- Slop listed in the audit is gone, or you named why a piece stayed.
+- Spacing is on the 4px grid. Padding is visible inside every card, button, field, and section.
+- One radius system. One button system, with hover, press, focus, disabled, and a loading path where something submits.
+- Type is calm. Color is one ramp plus one accent.
+- Motion is short, smooth, and reduced when the person asks for less motion.
+- The first screen looks specific to this product and does not look like the Moonrise landing page.
+- Real facts are unchanged. Nothing fake was added.
+- Empty, error, and loading states exist for the main data.
+- Overlays close on Escape and return focus.
+- The layout works on a phone and does not scroll sideways.
+- You can name the files you changed.
 
 ---
 

@@ -3,6 +3,38 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.7.4",
+      "date": "2026-11-09",
+      "title": "Library and prompt",
+      "tag": "v2.7.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.7.4",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Clients in the UI Library are a portrait row, a logo card, a plus grid, named marks, and a wordmark bar.",
+            "Client rows in the UI Library use official company logos.",
+            "Color frames in the UI Library show a photo inside each border.",
+            "Comparisons in the UI Library are before-and-after sliders.",
+            "Every dock in the UI Library moves its highlight when you click.",
+            "Dashboards in the UI Library are a workspace, a stat grid, billing history, revenue, and a balance chart.",
+            "The special prompt restyles the project you have open and does not introduce itself as a Moonrise agent."
+          ],
+          "fixes": [
+            "The progress edge sits centered on the bottom of its card."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "The build screen drops the Moonrise agent label, rings the moon avatar, and shows thinking lines in thin light type.",
+            "The website coding agent designs each business on its own instead of repeating the old overlay hero and template brochure.",
+            "The website flyer print uses a dark visit button and more space around the page prints."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.3",
       "date": "2026-11-09",
       "title": "Easier slide",

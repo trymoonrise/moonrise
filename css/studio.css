@@ -9069,16 +9069,6 @@ body.ms-lb-pane-resizing .ms-lb-pane-resizer::before {
   width: min(26rem, calc(100% - 2rem));
 }
 
-.ms-lb-loading-kicker {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 650;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #737373;
-  text-align: left;
-}
-
 .ms-lb-loading-spinner {
   display: inline-block;
   width: 28px;
@@ -9149,9 +9139,11 @@ body.ms-lb-generating .ms-lb-agent {
 .ms-lb-agent-logo {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: 50%;
   display: block;
   object-fit: cover;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(35, 36, 39, 0.28);
 }
 
 .ms-lb-dots {
@@ -9174,11 +9166,11 @@ body.ms-lb-generating .ms-lb-agent {
 
 .ms-lb-agent-thought {
   margin: 0;
-  font-size: 1.05rem;
-  font-weight: 620;
-  letter-spacing: -0.03em;
-  line-height: 1.35;
-  color: #232427;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: #a3a3a3;
 }
 
 .ms-lb-agent-files {
@@ -9202,8 +9194,9 @@ body.ms-lb-generating .ms-lb-agent {
   display: block;
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-size: 0.78rem;
+  font-weight: 400;
   line-height: 1.35;
-  color: #6e6e73;
+  color: #b0b0b0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -9339,7 +9332,6 @@ html[data-ms-mode="dark"] .ms-lb-loading {
   background: #fff;
 }
 
-html[data-ms-mode="dark"] .ms-lb-loading-kicker,
 html[data-ms-mode="dark"] .ms-lb-agent-status,
 html[data-ms-mode="dark"] .ms-lb-agent-file code,
 html[data-ms-mode="dark"] .ms-lb-tl-item span {
@@ -9347,8 +9339,6 @@ html[data-ms-mode="dark"] .ms-lb-tl-item span {
 }
 
 html[data-ms-mode="dark"] .ms-lb-loading-copy,
-html[data-ms-mode="dark"] .ms-lb-agent-thought.is-current,
-html[data-ms-mode="dark"] .ms-lb-agent-file code,
 html[data-ms-mode="dark"] .ms-lb-tl-item strong,
 html[data-ms-mode="dark"] .ms-lb-tl-item.is-current strong {
   color: #f5f5f5;
@@ -9358,15 +9348,17 @@ html[data-ms-mode="dark"] .ms-lb-dots i {
   background: #737373;
 }
 
-html[data-ms-mode="dark"] .ms-lb-loading-kicker,
 html[data-ms-mode="dark"] .ms-lb-agent-status,
 html[data-ms-mode="dark"] .ms-lb-agent-file code {
-  color: #737373;
+  color: #b0b0b0;
 }
 
-html[data-ms-mode="dark"] .ms-lb-loading-copy,
-html[data-ms-mode="dark"] .ms-lb-agent-thought.is-current {
+html[data-ms-mode="dark"] .ms-lb-loading-copy {
   color: #232427;
+}
+
+html[data-ms-mode="dark"] .ms-lb-agent-thought.is-current {
+  color: #a3a3a3;
 }
 
 body.ms-lb-generating .ms-preview-frame-wrap {
@@ -20399,10 +20391,11 @@ body.ms-lb-flyer-open {
 .ms-lb-flyer-stage {
   position: relative;
   z-index: 1;
-  width: min(100%, 62rem);
+  width: min(100%, 64rem);
   display: grid;
-  gap: 1rem;
+  gap: 1.15rem;
   justify-items: stretch;
+  padding-top: 3rem;
   animation: ms-lb-flyer-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -20419,7 +20412,7 @@ body.ms-lb-flyer-open {
 
 .ms-lb-flyer-close {
   position: absolute;
-  top: -2.5rem;
+  top: 0;
   right: 0;
   z-index: 3;
   width: 2.2rem;
@@ -20439,24 +20432,20 @@ body.ms-lb-flyer-open {
 }
 
 .ms-lb-flyer-sheet {
-  --ms-flyer-gap: 0.9rem;
-  --ms-flyer-pad: 1rem;
-  --ms-flyer-radius: 1.35rem;
+  --ms-flyer-gap: 1.35rem;
+  --ms-flyer-pad: 1.5rem;
+  --ms-flyer-radius: 1.5rem;
   --ms-flyer-card-radius: 1.15rem;
   display: grid;
-  grid-template-columns: 16.25rem minmax(0, 1fr);
+  grid-template-columns: 18.75rem minmax(0, 1fr);
   gap: var(--ms-flyer-gap);
   padding: var(--ms-flyer-pad);
-  height: min(72dvh, 36rem);
-  min-height: 28rem;
+  height: min(76dvh, 40rem);
+  min-height: 32rem;
   border-radius: var(--ms-flyer-radius);
-  background:
-    radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.38) 1px, transparent 0) 0 0 / 16px 16px,
-    linear-gradient(180deg, #eceff4 0%, #e5e5e5 100%);
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.75) inset,
-    0 28px 60px rgba(0, 0, 0, 0.22);
+  background: #ececee;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
   box-sizing: border-box;
 }
 
@@ -20473,13 +20462,13 @@ body.ms-lb-flyer-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.85rem;
+  min-height: 3.25rem;
   max-width: 100%;
-  padding: 0.65rem 0.9rem;
+  padding: 0.85rem 1.25rem;
   border-radius: 1rem;
   background: #fafafa;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: none;
   color: #232427;
   font-family: "DM Sans", system-ui, sans-serif;
   font-size: 0.98rem;
@@ -20502,12 +20491,12 @@ body.ms-lb-flyer-open {
   place-items: center;
   min-height: 0;
   height: 100%;
-  padding: 0.75rem;
+  padding: 1.35rem;
   overflow: hidden;
   border-radius: var(--ms-flyer-card-radius);
   background: #fafafa;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: none;
   text-decoration: none;
   box-sizing: border-box;
   container-type: size;
@@ -20516,9 +20505,9 @@ body.ms-lb-flyer-open {
 .ms-lb-flyer-qr-frame {
   display: grid;
   place-items: center;
-  width: min(100cqi, 100cqb, 12rem);
+  width: min(100cqi, 100cqb, 14rem);
   aspect-ratio: 1;
-  padding: 0.7rem;
+  padding: 1rem;
   border-radius: 1rem;
   background: #e5e5e5;
   box-sizing: border-box;
@@ -20536,19 +20525,19 @@ body.ms-lb-flyer-open {
 
 .ms-lb-flyer-cta {
   margin: 0;
-  min-height: 2.85rem;
+  min-height: 3.25rem;
   display: grid;
   place-items: center;
-  padding: 0.7rem 1rem;
+  padding: 0.9rem 1.25rem;
   border-radius: 1rem;
-  background: linear-gradient(180deg, #232427, #232427);
+  background: #232427;
   color: #fff;
-  font-size: 0.84rem;
-  font-weight: 700;
+  font-size: 0.92rem;
+  font-weight: 650;
   letter-spacing: -0.01em;
   text-align: center;
-  line-height: 1.25;
-  box-shadow: 0 10px 22px rgba(35, 36, 39, 0.24);
+  line-height: 1.3;
+  box-shadow: none;
 }
 
 .ms-lb-flyer-right {
@@ -20565,16 +20554,16 @@ body.ms-lb-flyer-open {
   border-radius: var(--ms-flyer-card-radius);
   overflow: hidden;
   background: #fafafa;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: none;
 }
 
 .ms-lb-flyer-preview-chrome {
   display: grid;
   grid-template-columns: auto auto auto minmax(0, 1fr);
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.7rem 0.9rem;
+  gap: 0.5rem;
+  padding: 0.95rem 1.2rem;
   background: linear-gradient(180deg, #f4f4f5, #e5e5e5);
   border-bottom: 1px solid rgba(226, 232, 240, 0.95);
 }
@@ -20599,24 +20588,24 @@ body.ms-lb-flyer-open {
 }
 
 .ms-lb-flyer-preview-chrome em {
-  margin-left: 0.4rem;
+  margin-left: 0.55rem;
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
   font-style: normal;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: #666666;
   background: #fafafa;
-  border: 1px solid rgba(226, 232, 240, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 999px;
-  padding: 0.28rem 0.8rem;
+  padding: 0.4rem 0.95rem;
 }
 
 .ms-lb-flyer-preview-pad {
   min-height: 0;
   height: 100%;
-  padding: 0.7rem;
+  padding: 1.15rem;
   background: #fafafa;
   box-sizing: border-box;
 }
@@ -20625,7 +20614,7 @@ body.ms-lb-flyer-open {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 0.55rem;
+  gap: 0.9rem;
   height: 100%;
   min-height: 0;
 }
@@ -20635,7 +20624,7 @@ body.ms-lb-flyer-open {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  border-radius: 0.7rem;
+  border-radius: 0.95rem;
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
@@ -20710,53 +20699,58 @@ body.ms-lb-flyer-open {
     grid-template-columns: 1fr;
     height: auto;
     min-height: 0;
-    padding: 1rem;
-    gap: 0.9rem;
+    padding: 1.25rem;
+    gap: 1.15rem;
   }
 
   .ms-lb-flyer-left {
-    grid-template-columns: minmax(0, 1fr) 8.25rem;
-    grid-template-rows: auto auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    justify-items: stretch;
     height: auto;
+    gap: 1rem;
   }
 
   .ms-lb-flyer-domain {
-    grid-column: 1 / -1;
+    grid-column: auto;
   }
 
   .ms-lb-flyer-qr-wrap {
-    grid-column: 1;
-    grid-row: 2;
-    width: 8.5rem;
-    height: 8.5rem;
-    padding: 0.5rem;
+    grid-column: auto;
+    grid-row: auto;
+    width: min(100%, 16rem);
+    height: auto;
+    aspect-ratio: 1;
+    justify-self: center;
+    padding: 1.15rem;
   }
 
   .ms-lb-flyer-qr-frame {
     width: 100%;
-    height: 100%;
-    aspect-ratio: auto;
-    padding: 0.45rem;
+    height: auto;
+    aspect-ratio: 1;
+    padding: 0.9rem;
   }
 
   .ms-lb-flyer-cta {
-    grid-column: 2;
-    grid-row: 2;
+    grid-column: auto;
+    grid-row: auto;
     align-self: stretch;
-    min-height: 0;
+    min-height: 3.1rem;
     height: auto;
   }
 
   .ms-lb-flyer-preview {
-    min-height: 22rem;
+    min-height: 24rem;
   }
 
   .ms-lb-flyer-prints {
-    min-height: 20rem;
+    min-height: 20.5rem;
+    gap: 0.75rem;
   }
 
   .ms-lb-flyer-preview-pad {
-    padding: 0.7rem;
+    padding: 1rem;
   }
 
   .ms-lb-flyer-actions {

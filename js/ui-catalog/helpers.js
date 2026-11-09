@@ -88,10 +88,6 @@
 
   function visual(kind) {
     switch (kind) {
-      case "clients":
-        return '<div class="lx-logos"><span>Northline</span><span>Harbor</span><span>Cedar</span><span>Field</span></div>';
-      case "compare":
-        return '<div class="lx-cols"><div><p class="lx-kicker">Before</p><p class="lx-p">No hours listed.</p></div><div class="is-pick"><p class="lx-kicker">After</p><p class="lx-p">Fri 9:00–5:00</p></div></div>';
       case "faq":
         return '<div class="lx-acc"><button type="button" class="is-open" data-lx-acc>How do I publish?</button><p class="lx-p">Open the site and choose Publish.</p><button type="button" data-lx-acc>Can I edit later?</button></div>';
       case "features":

@@ -177,7 +177,6 @@ const {
   renderBusinessSite,
   sanitizeBusinessHours,
 } = require("./site-shell");
-const { loadCraftPrompt } = require("./craft/load-craft");
 const {
   getBusinessStructure,
   getStructurePresetRoles,
@@ -3126,44 +3125,44 @@ const ATMOSPHERE_PROFILES = [
   {
     match: /nail|manicure|pedicure|otter/i,
     atmosphere:
-      "Boutique nail studio - full-bleed client photography with Ken-Burns drift, floating island nav, script brand wordmark, black/white CTAs. Quiet luxury, not template beauty.",
+      "A nail studio. Show the work and the room. Quiet type, one photograph, easy booking. No script logo and no floating nav.",
     voice: "warm calm inviting",
     palette: { bg: "#fafafa", surface: "#ffffff", ink: "#111111", muted: "#6b7280", accent: "#111111" },
-    type: { display: "script handwritten", body: "clean humanist sans" },
+    type: { display: "quiet grotesk", body: "clean humanist sans" },
   },
   {
     match: /spa|massage|wellness|yoga|pilates|beauty|salon|skin|med ?spa|facial/i,
     atmosphere:
-      "Calm boutique wellness space - full-bleed real photography or soft video, floating island nav, distinctive brand type, unhurried luxury.",
+      "A calm wellness space. Soft paper, one photograph of the room, short offers, easy to book.",
     voice: "warm calm reassuring",
     palette: { bg: "#f6f4ef", surface: "#ffffff", ink: "#2f2a24", muted: "#8a8175", accent: "#1a1a1a" },
     type: { display: "elegant serif", body: "clean humanist sans" },
   },
   {
     match: /restaurant|cafe|coffee|bakery|pizza|food|catering|juice|bar|grill|kitchen|diner/i,
-    atmosphere: "Appetizing, welcoming eatery - warm ambient light, honest craft, hometown energy.",
+    atmosphere: "An eatery. The food is the picture. Warm paper, short menu lines, hours easy to find.",
     voice: "warm inviting appetizing",
-    palette: { bg: "#fbf6f0", surface: "#ffffff", ink: "#2a1c14", muted: "#8a7263", accent: "#c1440e" },
+    palette: { bg: "#fbf6f0", surface: "#ffffff", ink: "#2a1c14", muted: "#8a7263", accent: "#1d1d1f" },
     type: { display: "characterful serif", body: "friendly sans" },
   },
   {
     match: /gym|fitness|crossfit|training|martial|boxing|athletic|sport/i,
-    atmosphere: "High-energy performance gym - bold contrast, kinetic motion, disciplined power.",
+    atmosphere: "A training space. Dark page, off-white type, photos of the room, a clear way to join.",
     voice: "bold energetic motivating",
-    palette: { bg: "#0f1115", surface: "#171a21", ink: "#f5f7fa", muted: "#9aa3b2", accent: "#e0fe10" },
+    palette: { bg: "#0f1115", surface: "#171a21", ink: "#f5f7fa", muted: "#9aa3b2", accent: "#f5f7fa" },
     type: { display: "condensed bold sans", body: "clean sans" },
   },
   {
     match: /law|attorney|legal|accounting|finance|financial|advisor|insurance|consult|tax|bank/i,
     atmosphere: "Established, trustworthy professional firm - composed, precise, quietly premium.",
     voice: "confident precise authoritative",
-    palette: { bg: "#f7f8fa", surface: "#ffffff", ink: "#0f1b2d", muted: "#5b6b80", accent: "#1e3a8a" },
+    palette: { bg: "#f7f8fa", surface: "#ffffff", ink: "#1d1d1f", muted: "#5b6b80", accent: "#1d1d1f" },
     type: { display: "refined serif", body: "neutral sans" },
   },
   {
     match: /plumb|electric|hvac|roof|contractor|construction|handyman|landscap|lawn|pest|clean|paint|repair|garage|auto|mechanic|towing|tire/i,
     atmosphere:
-      "Hands-on local trade craft - real job-site photography, charcoal and steel, island nav over a full-bleed hero, black/white CTAs. No orange-pill AI brochure look.",
+      "A local trade. Show the work, the service area, and how to call. No orange pills and no overlay hero.",
     voice: "clear confident dependable",
     palette: { bg: "#f3f4f2", surface: "#ffffff", ink: "#121417", muted: "#5c6570", accent: "#1a1a1a" },
     type: { display: "sturdy grotesk", body: "clean sans" },
@@ -3172,13 +3171,13 @@ const ATMOSPHERE_PROFILES = [
     match: /dental|dentist|ortho|clinic|medical|doctor|health|vet|chiro|therapy|optom|derma|urgent/i,
     atmosphere: "Clean, reassuring care practice - bright, hygienic, gentle and modern.",
     voice: "friendly calm trustworthy",
-    palette: { bg: "#f2f8fb", surface: "#ffffff", ink: "#0d2635", muted: "#5a7488", accent: "#0891b2" },
+    palette: { bg: "#f2f8fb", surface: "#ffffff", ink: "#0d2635", muted: "#5a7488", accent: "#1d1d1f" },
     type: { display: "rounded sans", body: "clean sans" },
   },
   {
     match: /tech|software|saas|studio|agency|design|creative|marketing|media|startup|app|digital/i,
     atmosphere:
-      "Sharp creative studio - confident minimalism, full-bleed media, crisp motion. Avoid purple SaaS chrome.",
+      "A studio. Show the work in a grid. Short lines. No purple chrome and no overlay hero.",
     voice: "sharp modern confident",
     palette: { bg: "#0b0d12", surface: "#14171f", ink: "#f4f6fb", muted: "#98a2b3", accent: "#e8e8e8" },
     type: { display: "modern grotesk", body: "clean sans" },
@@ -3187,14 +3186,14 @@ const ATMOSPHERE_PROFILES = [
     match: /pet|dog|groom|boarding|animal/i,
     atmosphere: "Friendly, caring pet service - playful warmth, soft and approachable.",
     voice: "friendly warm playful",
-    palette: { bg: "#fbf7f1", surface: "#ffffff", ink: "#2c2318", muted: "#8b7c67", accent: "#d97706" },
+    palette: { bg: "#fbf7f1", surface: "#ffffff", ink: "#2c2318", muted: "#8b7c67", accent: "#1d1d1f" },
     type: { display: "rounded sans", body: "friendly sans" },
   },
 ];
 
 const DEFAULT_ATMOSPHERE = {
   atmosphere:
-    "Crafted local business site - full-bleed real photography, floating island nav, distinctive type, black/white CTAs. Conversion-first without looking AI-generated.",
+    "A local business. One real photo, the offer, and a clear way to call. Not a template hero.",
   voice: "clear confident local",
   palette: { bg: "#f7f6f3", surface: "#ffffff", ink: "#141414", muted: "#6b6570", accent: "#1a1a1a" },
   type: { display: "editorial serif", body: "clean humanist sans" },
@@ -3386,26 +3385,14 @@ function sanitizeGeneratedCopy(html) {
 }
 
 function craftAgentSystemPrompt() {
-  const craft = loadCraftPrompt();
   return [
     GENERATION_SYSTEM_PROMPT,
     "",
-    "## Moonrise Special Prompt (required)",
-    "You are the Moonrise website coding agent. Plan, pick one design direction, build from the UI Library at https://trymoonrise.com/ui-library, then polish before you ship.",
-    "UI craft follows unslop (https://github.com/heydamir/unslop by Damir Sokolovsky, CC BY 4.0): audit slop → set a product direction → polish pass by pass for a professional, non-AI look.",
-    "Keep every business fact exact. Do not invent contact details. Prefer Special Prompt spacing, buttons, hover, focus, loading, and empty or error states.",
-    craft || "Use calm surfaces, a 4px spacing grid, one accent, and real button hover/press/focus/loading states.",
-    "",
-    "## Ship bar (hard fail if any miss)",
-    "- Modern, minimal, professional local-business UI. Quiet chrome, one accent, one real visual idea. No purple gradients, glows, glass blobs, emoji chrome, or noisy motion.",
-    "- Business name, phone, address, and hours must appear when provided. Never invent missing contact facts. Never leave placeholders.",
-    "- Hours must be readable business hours only — never Google Maps junk (Copy open hours, Hours might differ, holiday parentheses).",
-    "- Complete document: doctype, html, head with viewport, body, nav, hero, content sections, contact form, footer, closed tags.",
-    "- One shared button system with hover, press, disabled, and a stable loading state. Forms have visible focus rings.",
-    "- Motion is short (about 150–220ms) and always includes prefers-reduced-motion. No stuttering loops, layout thrash, or broken overlays.",
-    "- Components must look finished: aligned columns, reserved image space, visible service photos, no cut-off text, no overlapping controls, no horizontal page scroll.",
-    "- Do not dump unused alternate-layout CSS. One intentional composition only.",
-    "- If you cannot meet this bar, return a simpler complete Special Prompt page rather than a broken fancy one.",
+    "## Ship bar",
+    "Design this business. Do not restyle an old landing page, a preset kit, or the Moonrise marketing site.",
+    "If the page still opens with centered type on a darkened photo, a white pill, and a black footer, it is not done.",
+    "Keep the business name and every provided phone, address, and cleaned hours string exact.",
+    "One button, one radius, real photos in sized frames, no horizontal scroll, a complete closed document.",
   ].join("\n");
 }
 
@@ -3556,8 +3543,8 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
       system: [
         assembleSystem,
         "",
-        "This is stage 2 (Assemble). Build the full page carefully from the kit and locked copy.",
-        "Do not rush. Prefer a finished modern composition over a clever but broken one.",
+        "This is stage 2 (Design). Build a full page for this business from the facts and locked copy.",
+        "Do not assemble a kit. Do not repeat the old overlay hero. Prefer a finished page that could only be this business.",
       ].join("\n"),
       user: assembleUser,
       temperature: 0.3,
@@ -3579,10 +3566,10 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
         system: [
           assembleSystem,
           "",
-          "This is stage 3 (Enhance). You are a senior product designer reviewing the draft.",
+          "This is stage 3 (Enhance). You are designing, not polishing a template.",
           "Return ONLY one complete improved HTML document. No markdown. No commentary.",
-          "Raise spacing, hierarchy, media, and component finish to a ship-ready bar.",
-          "Keep every business fact exact. Prefer polish over novelty.",
+          "If the draft still uses an overlay hero, icon cards, a floating nav, or the same brochure for any trade, redesign those sections.",
+          "Keep every business fact exact. Make the page more specific, not more decorated.",
         ].join("\n"),
         user: [
           "## Draft to enhance",
@@ -3598,7 +3585,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
           "- Contact: cleaned hours; exact phone and address",
           "- Mobile: no horizontal scroll, no overlapping controls, reserved image space",
           "- CSS: remove unused alternate-layout variants you are not applying",
-          "- Overall: looks intentional, modern, minimal, professional",
+          "- Overall: specific to this business, not a generic overlay landing page",
         ].join("\n"),
         temperature: 0.2,
         maxTokens: assembleMaxTokens,
@@ -3626,7 +3613,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
           assembleSystem,
           "",
           "This is stage 4 (Repair). Return ONLY one complete fixed HTML document.",
-          "Fix every listed issue. Prefer a simpler modern Craft layout over a broken fancy one.",
+          "Fix every listed issue. Prefer a simpler designed page over a broken one. Do not fall back to an overlay hero or an icon-card grid.",
         ].join("\n"),
         user: [
           "## Previous draft (rejected)",

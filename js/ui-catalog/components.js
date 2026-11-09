@@ -162,20 +162,61 @@
     card("cursors-hover", "Appear on hover", '<div class="lx-pad"><span class="lx-meta">Hover the pad</span></div>')
   ]));
 
-  function dash(title, main, items, active) {
-    return card("dashboards-" + title.toLowerCase().replace(/\s/g, "-"), title, LX.app(items || ["Home", "Leads", "Sites"], active || "Home", main), { wide: true, stage: "lx-tall" });
+  function navItem(icon, label, on, count) {
+    const badge = count ? '<span class="lx-dash-count">' + count + "</span>" : "";
+    return '<button type="button" data-lx-opt' + (on ? ' class="is-on"' : "") + ">" + ico(icon) + "<span>" + label + "</span>" + badge + "</button>";
   }
+
+  function dashShell() {
+    const area = '<svg class="lx-dash-area" viewBox="0 0 700 170" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="lx-dash-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fb7185"/><stop offset="100%" stop-color="#fb7185" stop-opacity="0"/></linearGradient></defs><path fill="url(#lx-dash-area)" d="M0 108 C70 102 110 112 170 96 S280 70 350 64 S470 86 540 58 S640 46 700 52 V170 H0 Z"/><path fill="none" stroke="#f43f5e" stroke-width="2.5" vector-effect="non-scaling-stroke" d="M0 108 C70 102 110 112 170 96 S280 70 350 64 S470 86 540 58 S640 46 700 52"/></svg>';
+    return '<div class="lx-dash"><aside class="lx-dash-side"><div class="lx-dash-brand"><span>m</span><strong>moonrise.</strong></div><nav class="lx-dash-nav"><p>Workspace</p>' +
+      navItem("home", "Dashboard", true) +
+      navItem("pulse", "Leads") +
+      navItem("file", "Sites") +
+      navItem("mail", "Inbox", false, "12") +
+      '<p>Settings</p>' +
+      navItem("user", "People") +
+      navItem("gear", "Billing") +
+      '</nav><div class="lx-dash-user"><img src="assets/library/client-ada.jpg" alt=""><span><strong>Harbor Coffee</strong><em>Pike Street</em></span></div></aside><section class="lx-dash-main"><h3>Overview</h3><p>Visits · last 7 days</p>' + area + '<div class="lx-dash-days"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></section></div>';
+  }
+
+  function dashBento() {
+    const bars = [8, 10, 12, 9, 14, 16, 18, 15, 20, 22, 19, 24].map(function (h) {
+      return '<i style="height:' + h + 'px"></i>';
+    }).join("");
+    return '<div class="lx-bento-board"><article class="is-share"><p>This week</p><strong>64%</strong><span>Most visits landed on the live site.</span></article><article class="is-growth"><p>Leads</p><strong>+240%</strong><div class="lx-dash-bars">' + bars + "</div></article><article class=\"is-awards\"><strong>12</strong><span>New leads</span></article><article class=\"is-score\"><strong><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m12 3 2.4 5.7 6.2.6-4.7 4 1.4 6.1L12 16.8 6.7 19.4l1.4-6.1-4.7-4 6.2-.6z\"/></svg>4.9</strong><span>Recent reviews</span></article></div>";
+  }
+
+  function billRow(date, id, status) {
+    const tone = status === "Failed" ? "is-bad" : "is-good";
+    return "<tr><td><strong>" + date + "</strong><em>" + id + "</em></td><td>Site plan</td><td>$48.00</td><td><span class=\"lx-bill-status " + tone + "\">" + status + "</span></td><td><button type=\"button\" aria-label=\"Download " + id + "\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 4v11M7.5 11.5 12 16l4.5-4.5M5 19h14\"/></svg></button></td></tr>";
+  }
+
+  function dashBilling() {
+    return '<section class="lx-bill"><p class="lx-bill-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M4 10h16"/></svg>Billing</p><h3>Billing history</h3><p>Invoices for the site plan.</p><div class="lx-bill-scroll"><table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th><th>Download</th></tr></thead><tbody>' +
+      billRow("Jan 1, 2026", "INV-106", "Paid") +
+      billRow("Dec 1, 2025", "INV-105", "Paid") +
+      billRow("Nov 1, 2025", "INV-104", "Paid") +
+      billRow("Oct 1, 2025", "INV-103", "Failed") +
+      billRow("Sep 1, 2025", "INV-102", "Paid") +
+      "</tbody></table></div><button type=\"button\" class=\"lx-bill-more\">View all invoices</button></section>";
+  }
+
+  function dashRevenue() {
+    return '<article class="lx-rev"><header><span class="lx-rev-mark"></span><strong>Total from sites</strong><button type="button" aria-label="More">···</button></header><p class="lx-rev-total">$12,480 <em>USD</em></p><p class="lx-rev-delta"><span>-12.7%</span> down from last month</p><div class="lx-rev-rows"><div><span>Average invoice</span><strong>$48</strong></div><div><span>Open leads</span><strong>14</strong></div></div></article>';
+  }
+
+  function dashBalance() {
+    const chart = '<svg class="lx-bal-chart" viewBox="0 0 700 210" role="img" aria-label="Balance over the last month"><g class="lx-bal-grid"><path d="M48 20 H680 M48 68 H680 M48 116 H680 M48 164 H680"/></g><text x="8" y="24">$600</text><text x="8" y="72">$450</text><text x="8" y="120">$300</text><text x="8" y="184">$150</text><text x="16" y="204">$0</text><path class="lx-bal-guide" d="M390 16 V176"/><path class="lx-bal-line" d="M72 168 C110 150 130 140 156 128 S200 118 236 100 S290 78 330 84 S390 150 390 132 S470 90 520 70 S600 40 640 48 S680 70 688 88"/><circle cx="72" cy="168" r="5"/><circle cx="390" cy="132" r="5"/><circle cx="640" cy="48" r="5"/></svg>';
+    return '<article class="lx-bal"><p>Current balance</p><h3>$2,480.00 <span>+12.7% last 7 days</span></h3><div class="lx-bal-meta"><span>Today <strong>$186</strong> <em>+8%</em></span><span>High <strong>$420</strong></span><span>Low <strong>$90</strong></span><span class="is-down">Change <strong>-0.4%</strong></span></div>' + chart + '<div class="lx-dash-days is-long"><span>Jan 1</span><span>Jan 8</span><span>Jan 15</span><span>Jan 22</span><span>Jan 29</span></div></article>';
+  }
+
   LX.spec("dashboards", [], [
-    dash("KPI row", '<div class="lx-stats"><div class="lx-stat"><strong>128</strong><span>visits</span></div><div class="lx-stat"><strong>14</strong><span>leads</span></div></div>'),
-    dash("Chart and list", bars([30, 55, 40, 80]) + '<div class="lx-row"><span>Harbor</span><span class="lx-meta">4</span></div>'),
-    dash("Sidebar", '<p class="lx-h">Sites</p><div class="lx-row"><span>Harbor</span><span class="lx-badge go">Live</span></div>', ["Sites", "Leads", "Guide"], "Sites"),
-    dash("Activity", '<div class="lx-row"><span>Published</span><span class="lx-meta">9:00</span></div><div class="lx-row"><span>Lead</span><span class="lx-meta">9:14</span></div>'),
-    dash("Billing", '<div class="lx-stat"><strong>$48</strong><span>this month</span></div><div class="lx-row"><span>Plan</span><span>Site</span></div>', ["Plan", "Invoices"], "Plan"),
-    dash("Empty", '<div class="lx-empty"><p class="lx-h">No sites yet</p>' + btn("Start") + "</div>"),
-    dash("Skeleton", '<div class="lx-skel"></div><div class="lx-skel" style="width:70%"></div><div class="lx-skel"></div>', ["Home"], "Home"),
-    dash("Alert", '<div class="lx-alert is-warn"><span class="lx-dot warn"></span><span>Phone missing on Harbor</span></div>'),
-    dash("Two columns", '<div class="lx-cols"><div><p class="lx-kicker">Visits</p><strong class="lx-mono">128</strong></div><div><p class="lx-kicker">Leads</p><strong class="lx-mono">14</strong></div></div>'),
-    card("dashboards-inverse", "Inverse header", '<div class="lx-panel" style="padding:0;overflow:hidden"><div style="background:#161616;color:#fff;padding:10px">Harbor</div><div style="padding:10px"><p class="lx-p">Open at 7</p></div></div>', { wide: true, stage: "lx-tall" })
+    card("dashboards-shell", "Workspace", dashShell(), { wide: true, stage: "lx-dash-stage" }),
+    card("dashboards-bento", "Stat grid", dashBento(), { wide: true, stage: "lx-dash-stage is-dark" }),
+    card("dashboards-billing", "Billing history", dashBilling(), { wide: true, stage: "lx-dash-stage" }),
+    card("dashboards-revenue", "Revenue", dashRevenue(), { wide: true, stage: "lx-dash-stage" }),
+    card("dashboards-balance", "Balance", dashBalance(), { wide: true, stage: "lx-dash-stage" })
   ]);
 
   LX.spec("date-pickers", ["adv-date"], [

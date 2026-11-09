@@ -1,11 +1,8 @@
 /**
  * Website generation prompts - Moonrise Studio.
  *
- * Agent prompt: assets/moonrise-special-prompt.md
- * Controls: https://trymoonrise.com/ui-library
- *
- * The agent writes each site itself from one style family and the business facts.
- * It does not paste an old preset kit.
+ * The coding agent designs each site for that business.
+ * A style family sets palette, type, and the button. It is not a layout to copy.
  */
 
 const HEADLINE_ANGLES = [
@@ -18,12 +15,12 @@ const HEADLINE_ANGLES = [
 ];
 
 const LAYOUT_EMPHASIS = [
-  "Keep the style family's hero. Do not add a second hero treatment.",
-  "Services as a short numbered list with hairline rows.",
-  "One wide photo between two text sections.",
-  "Gallery as edge-to-edge images, no frames.",
-  "FAQ as a simple hairline accordion.",
-  "Contact as stacked fields on the family's surface, same button as the hero.",
+  "Open with the place: the photo sits beside the name, not under a darkened caption.",
+  "Open with the offer: a short headline and one action, then one full-width photo.",
+  "Services as a row of real photos with a title and one line under each.",
+  "Put phone, hours, and area in a plain facts row near the top.",
+  "Let the work lead: a large image grid before the longer copy.",
+  "Contact is a panel with the address beside the form, not a form dumped at the bottom.",
 ];
 
 const VISUAL_RHYTHM = [
@@ -44,124 +41,109 @@ const COPY_TONE_VARIANTS = [
 ];
 
 const COMPONENT_TWISTS = [
-  "One motion only: a soft fade on the hero headline. Honor prefers-reduced-motion.",
-  "Hairline rules between sections instead of cards.",
-  "A numbered list for services or how-it-works, with the number in muted type.",
-  "One full-width photo band in the middle of the page, no frame, no shadow.",
-  "Contact sits on a plain surface with stacked fields and the same button as the hero.",
-  "Footer is a solid ink or black band with small muted type.",
+  "Photographs sit in frames with a set aspect ratio. They are not background images.",
+  "Section titles are left aligned. Do not center every heading.",
+  "The accent color appears only on the primary button.",
+  "Service numbers use the display face, in muted ink.",
+  "The footer is small and useful: name, phone, address, hours. It is not a second hero.",
+  "Fields have visible labels, a hairline, and a focus ring. The submit button matches the hero button.",
 ];
 
 /**
- * Clean modern families. Same language (ink, paper, hairlines, huge type,
- * almost no chrome) with different compositions so sites are not one template.
+ * Mood, palette, and button only. The agent composes the page for the business.
+ * Do not turn these into one shared hero recipe.
  */
 const STYLE_FAMILIES = [
   {
     id: "paper",
     name: "Paper",
-    atmosphere:
-      "Super-modern paper site. White page, ink type, hairline rules, huge tight headlines, full-bleed hero with centered light type and a white pill, black footer. Quiet and current.",
-    palette: { bg: "#ffffff", surface: "#ffffff", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
+    atmosphere: "White or warm paper, ink type, one strong photograph, lots of air.",
+    palette: { bg: "#ffffff", surface: "#fafafa", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
     type: { display: "Manrope", body: "Manrope" },
     layout:
-      "Sticky full-width white bar, 1px hairline, optional light blur. Hero is edge-to-edge media with centered copy: small kicker, huge headline, one short line, white pill. Later sections are open white bands separated by hairlines, not cards. Footer is solid black.",
-    button:
-      "Primary is a pill (border-radius 980px), about 2.5rem tall, no shadow. On the dark hero it is white with ink text. Elsewhere it is ink with white text. Secondary is a text link, not a second filled button.",
+      "Quiet page. Decide the first screen from the trade: food, work, or the offer. Do not default to centered type on a darkened photo.",
+    button: "One ink button, either radius 12px or a pill. Use that one shape everywhere. No shadow.",
   },
   {
     id: "night",
     name: "Night",
-    atmosphere:
-      "Near-black modern site. Ink page, off-white type, one full-bleed hero, white pills, a single light band for the form. Still minimal.",
+    atmosphere: "Near-black page, off-white type, one light surface for the form.",
     palette: { bg: "#0c0c0e", surface: "#161618", ink: "#f5f5f7", muted: "#a1a1a6", accent: "#f5f5f7" },
-    type: { display: "Manrope", body: "Manrope" },
+    type: { display: "Outfit", body: "Outfit" },
     layout:
-      "Sticky dark bar with a hairline. Centered type on full-bleed media. Sections stay dark and are separated by hairlines. One light #f5f5f7 band holds the contact form. Footer blends into the dark page.",
-    button:
-      "Primary is a white pill with ink text. Secondary is a hairline pill in off-white. No glow.",
+      "Dark and calm. Photography stays in frames. One #f5f5f7 band holds the form. Do not cover the hero photo with a caption scrim.",
+    button: "One white pill or 12px button with ink text. No glow.",
   },
   {
     id: "stone",
     name: "Stone",
-    atmosphere:
-      "Soft gray modern site. #f5f5f7 page, white only where someone types, left-aligned hero type over media, quiet 12px corners.",
+    atmosphere: "Soft gray page. White only on fields and panels. Left-aligned type.",
     palette: { bg: "#f5f5f7", surface: "#ffffff", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
     type: { display: "Outfit", body: "Outfit" },
     layout:
-      "Sticky light bar. Hero copy sits lower-left on the media, not centered. Services are a simple list or two columns of text, not icon cards. Images are full-bleed bands. Footer is ink.",
-    button:
-      "Primary is a solid ink rectangle, radius 12px, no shadow. Secondary is a hairline rectangle.",
+      "Gray ground, white panels where someone reads or types. Photos sit in 12px frames beside or under the copy, never as a full-bleed caption background.",
+    button: "Solid ink button, radius 12px, no shadow. Secondary is a hairline button in the same radius.",
   },
   {
     id: "split",
     name: "Split",
-    atmosphere:
-      "Split modern site. White page, hero is two halves (words on the left, photo on the right), huge type, hairline service grid, black footer.",
+    atmosphere: "Words on one side, the real place or work on the other.",
     palette: { bg: "#ffffff", surface: "#f5f5f7", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
     type: { display: "Manrope", body: "Manrope" },
     layout:
-      "Sticky white bar. First screen is a 50/50 split, not an overlay. On phones the photo stacks under the headline. Services are a two-column hairline grid. Gallery is edge-to-edge. Footer is black.",
-    button:
-      "Primary is an ink pill. Secondary is a text link. Do not add a second filled button.",
+      "First screen is two columns. On a phone the photo stacks under the headline. Later sections can be a photo row or a two-column list. Not an overlay hero.",
+    button: "One ink button, pill or 12px. The other action is a text link.",
   },
   {
     id: "quiet",
     name: "Quiet",
-    atmosphere:
-      "Type-first modern site. White page, enormous headline with no photo behind it, one wide photo under the headline, then a short numbered list. Almost no chrome.",
+    atmosphere: "Type first. One wide photo after the action. Almost no chrome.",
     palette: { bg: "#ffffff", surface: "#ffffff", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
-    type: { display: "Manrope", body: "Manrope" },
+    type: { display: "Newsreader", body: "Manrope" },
     layout:
-      "Sticky white bar. Hero is type on white. A single full-width image sits under the CTA. Services or how-it-works is a numbered list. FAQ is a hairline accordion. Footer is black.",
-    button: "Primary is an ink pill. The other action is a text link.",
+      "Headline on the plain page, then one action, then one wide photo. Services are a short list or a photo row. Do not put type on top of the photo.",
+    button: "One ink button. The other action is a text link.",
   },
   {
     id: "editorial",
     name: "Editorial",
-    atmosphere:
-      "Editorial modern site. White page, serif headlines, grotesk body, thin rules, left-aligned, one photo per section. Current, not vintage.",
+    atmosphere: "Serif headlines, plain body, left aligned, one image per section.",
     palette: { bg: "#ffffff", surface: "#fafafa", ink: "#1d1d1f", muted: "#6e6e73", accent: "#1d1d1f" },
     type: { display: "Newsreader", body: "Manrope" },
     layout:
-      "Sticky white bar, wordmark in the serif. Hero is left-aligned type beside a tall photo. Sections are separated by 1px rules. No cards and no shadows. Footer is a rule plus small type, or a solid black close.",
-    button:
-      "Primary is an ink rectangle with radius 2px. Secondary is an underlined text link.",
+      "A magazine page for this business. Headline and a tall photo share the first screen. Later sections are one image plus a short text column. No card grid.",
+    button: "Ink button, radius 2px or 8px. Secondary is an underlined link.",
   },
   {
     id: "gallery",
     name: "Gallery",
-    atmosphere:
-      "The work leads. A quiet nav, then a large image grid with short captions, then contact. Almost no marketing copy.",
+    atmosphere: "The work leads. Short captions. Contact at the end.",
     palette: { bg: "#ffffff", surface: "#f7f7f8", ink: "#111111", muted: "#5c5c5c", accent: "#111111" },
     type: { display: "Outfit", body: "Manrope" },
     layout:
-      "Thin sticky nav. First viewport is a two-column image grid, not a headline stack. Captions sit under images. Services are three short lines. Contact is a plain form at the end. Footer is a hairline.",
-    button: "Primary is an ink rectangle, radius 10px. Secondary is a text link.",
+      "A quiet nav, then a real image grid with captions. A few lines of offer, then the form. Do not open with a marketing hero.",
+    button: "Ink button, radius 10px. Secondary is a text link.",
   },
   {
     id: "local",
     name: "Local",
-    atmosphere:
-      "A neighborhood business. Address and hours are easy to find. One photo of the place. Services are a short list.",
+    atmosphere: "A neighborhood business. The place, the hours, and the phone are easy to find.",
     palette: { bg: "#f7f7f8", surface: "#ffffff", ink: "#111111", muted: "#5c5c5c", accent: "#1f6fed" },
     type: { display: "Manrope", body: "Manrope" },
     layout:
-      "Sticky light bar. Hero is a photo of the place with the name and one line over a soft dark scrim. Next is address, hours, and phone in a plain table. Services are a numbered list. The accent blue is only the primary button.",
-    button:
-      "Primary is a solid #1f6fed button, radius 12px, white text. Secondary is a hairline button. Do not paint the accent on headlines.",
+      "Show the place in a framed photo. Put address, hours, and phone in a plain table near the top. Services are specific, not a slogan grid. Blue is only the primary button.",
+    button: "Solid #1f6fed button, radius 12px, white text. Do not paint blue on headlines.",
   },
   {
     id: "band",
     name: "Band",
-    atmosphere:
-      "One strong band and a quiet page. Ink or action blue appears once, as the hero or the close. The rest is white and hairline.",
+    atmosphere: "One strong ink band. The rest of the page stays quiet.",
     palette: { bg: "#ffffff", surface: "#f7f7f8", ink: "#111111", muted: "#5c5c5c", accent: "#1f6fed" },
     type: { display: "Outfit", body: "Manrope" },
     layout:
-      "Sticky white bar. The hero is a full-bleed ink band with off-white type and one light button, or a white hero and an ink close. Do not color every section. Services are a two-column list. Footer matches the band or stays a hairline.",
+      "Use the ink band once, as the open or the close, with a short line and one button. Do not color every section. Services are a list or a photo row.",
     button:
-      "On the ink band the button is white with ink text. Elsewhere the primary button is #1f6fed with white text. One filled button style per surface.",
+      "On the ink band the button is white with ink text. Elsewhere it is #1f6fed with white text. One radius.",
   },
 ];
 
@@ -208,27 +190,26 @@ function applyStyleFamily(plan) {
 function formatVariationBrief(variation) {
   if (!variation) return "";
   return [
-    "## Style family (mandatory - this decides the look)",
+    "## Design direction (mood only - compose the page yourself)",
     variation.family
       ? [
           `Family: ${variation.family.name}`,
-          `Look: ${variation.family.atmosphere}`,
-          `Layout: ${variation.family.layout}`,
-          `Buttons: ${variation.family.button}`,
-          "The style family is the design. Strip neon, glow, 3D, clip-path, heavy shadows, mixed radii, and demo colors.",
+          `Mood: ${variation.family.atmosphere}`,
+          `Direction: ${variation.family.layout}`,
+          `Button: ${variation.family.button}`,
+          "Use this family for palette, type, and the button. Design the layout for this business.",
+          "Do not copy a previous site, a preset kit, or a centered caption on a darkened photo.",
         ].join("\n")
-      : "Family: Paper. White page, ink type, hairlines, huge type, black footer.",
+      : "Family: Paper. White page, ink type, one real photo, one ink button.",
     "",
-    "## Creative variation (mandatory - unique every generation)",
+    "## This run",
     `Variation seed: ${variation.seed}`,
-    `- Hero headline angle: ${variation.headlineAngle}`,
-    `- Layout emphasis: ${variation.layoutEmphasis}`,
-    `- Visual rhythm: ${variation.visualRhythm}`,
-    `- Copy tone nuance: ${variation.copyTone}`,
-    `- Component twist: ${variation.componentTwist}`,
-    "Same business facts every time, but never clone a prior headline.",
-    "Stay inside the style family. Do not invent a second color theme.",
-    "Reject AI-template tells: navy heroes, Inter/Roboto, orange or neon CTAs, purple gradients, icon-card walls, hero chip clusters.",
+    `- Headline angle: ${variation.headlineAngle}`,
+    `- Layout: ${variation.layoutEmphasis}`,
+    `- Rhythm: ${variation.visualRhythm}`,
+    `- Voice: ${variation.copyTone}`,
+    `- Detail: ${variation.componentTwist}`,
+    "Same facts. A different composition. One palette.",
   ].join("\n");
 }
 
@@ -283,255 +264,79 @@ Rules:
 - Do not write HTML. Do not invent contact facts.`;
 
 /** Stage 2 - assemble collected components into one site. */
-const GENERATION_SYSTEM_PROMPT = `You are the Moonrise website coding agent. You write one complete website for this business. You do not reuse an old preset kit, a saved demo, or a previous site.
-
-You receive business facts, one style family, a page outline, and a stock media pack of absolute https image and video URLs.
+const GENERATION_SYSTEM_PROMPT = `You are the Moonrise website coding agent. You design one complete website for this business. You do not restyle a template, paste a preset kit, or repeat a previous site.
 
 Return ONLY one complete HTML document (doctype + html). No markdown fences. No preamble. No commentary.
 
-## Agent workflow (follow silently, then output HTML only)
-1) Read the business facts. Keep the name, phone, address, and hours exact. Never invent a missing contact detail.
-2) Follow the style family for palette, type, hero, and buttons. That family is the whole design.
-3) Write original markup for this business. One composition, one button system, one type pairing.
-4) Self-review alignment, spacing, image frames, nav wrapping, form focus, mobile width, and the contact facts.
-5) Fix anything unfinished, overlapping, cut off, or placeholder-like. Then return the final document.
-
-## Design north star (critical)
-Build a super-modern, clean, minimal business site. Think a current product site: lots of white or near-black, ink type, hairline rules, huge tight headlines, one strong photo or video, almost no chrome.
-Follow the Style family in the user message. That family is the design. Do not copy a raffle, a SaaS dashboard, or a craft-template brochure.
-Banned (never ship these):
+## Break the old habits (strict)
+These are the techniques you keep shipping. Do not use them:
+- A centered headline on a darkened full-bleed photo, a white pill, an uppercase kicker, and a black footer
+- The same hairline brochure for every trade
+- Floating island nav, glass bars, Ken Burns or slow-zoom heroes, script wordmarks
+- Icon-card walls, gradient scrims on service cards, stat chips, avatar coins, floating badges
+- A different color theme in every section
 - Orange, neon, purple, indigo, navy, teal, or gold accents
-- Inter / Roboto / Arial as the brand face
-- Glow, glassmorphism, 3D tilt, clip-path, torn edges, heavy shadows
-- Icon-card walls, stat chips, floating badges, or a collage in the first viewport
-- A different color theme per section
-- "Welcome to...", "Your trusted...", "Quality you can count on"
+- Inter, Roboto, or Arial
+- Glow, glassmorphism, 3D tilt, clip-path, torn edges, or stacked drop shadows
+- "Welcome to", "Your trusted", "Quality you can count on", "Unlock", "Seamless", "Elevate"
+- Copying the Moonrise marketing page, a demo snippet, or an old preset's DOM
 
-Modern bar (must pass):
-- One composition in the first viewport, exactly as the style family describes.
-- Real photography or video is the visual idea when the family uses media. Decorative gradients do not replace it.
-- Buttons follow the family's button rule everywhere, including the form.
-- Nav is a simple sticky bar (wordmark, a few links, one action). Not a floating island and not a dark marketing bar unless the family is Night.
-- Open sections. Cards only for the contact form, and only if the family uses a surface. No drop shadows.
+If the first draft looks like any of those, redesign it before you return HTML.
 
-## Assembly method (read first)
-1) Define ONE design system (:root tokens + shared classes) in a single <style> block.
-2) Write each section yourself in the family's layout. Same buttons, type, and spacing on every section.
-3) The finished site is one local-business page, not a collage of old demos.
+## How to design
+1) Read the business. Decide what the customer must see first: the food, the work, the room, the offer, or how to reach them.
+2) Use the style family only for palette, type, and the one button. Compose the page yourself.
+3) The first screen is one idea: who this is, what they do, what to do next, and one real photo used on purpose. Put the photo beside the type, under the type, or in a grid. Do not lay the type on a scrim unless the photo cannot be read otherwise.
+4) Each later section has a job and a different rhythm. Do not repeat a centered heading plus three identical cards.
+5) Services name the real offer. Use a photo row, a numbered list, or a quiet two-column grid. Title plus one short line.
+6) Proof only when the facts include it. Never invent reviews, stars, years, or awards.
+7) Contact is designed: visible labels, fields, the same button, and the real phone, address, and hours beside the form when they exist.
+8) The page should look like this business. A bakery, a plumber, and a law office do not share a hero.
 
-## Uniqueness (critical)
-- Every generation must feel freshly designed for THIS run - never a cookie-cutter repeat.
-- Follow the Creative variation block in the user message: headline angle, layout emphasis, rhythm, and component twist.
-- Vary hero media treatment, section spacing rhythm, and CTA phrasing even when the business facts are unchanged.
-- Do NOT reuse generic headline formulas ("Welcome to...", "Your trusted...", "Quality service you can count on") across runs.
-- Stay well formulated: one palette, one type pairing, one button system - unique in composition, not chaotic.
+## Finish
+- 4px spacing grid: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96. No 7px, 13px, or 15px.
+- Section padding is clamp(4rem, 8vw, 7rem). Page gutter is clamp(1.25rem, 4vw, 2rem). Text does not touch the edge of a card, a button, a field, or the screen.
+- One radius. Buttons and fields are 12px or a pill. Pick one. Cards that repeat an item use 16px. Do not mix a 2px button, a 16px button, and a pill.
+- Type: the family's fonts only. Body 16px at weight 400 or 500. Titles and buttons at 600. Headlines use clamp(), line-height about 1.05 to 1.15, tracking about -0.03em. Left aligned unless the layout is a gallery. No wide-tracked uppercase labels.
+- Color: the family ramp only. One accent, on the primary button. Hairlines are about 8% ink. No gradient text. No colored glow.
+- Buttons: one system. Height at least 44px. Hover darkens the fill slightly. Press scales to 0.98. Focus is a 2px ink outline with 2px offset. A submit button can show a small spinner and keeps its size. Disabled is muted.
+- Fields: 12 to 14px padding, the shared radius, a hairline, a visible label, and a focus ring. Placeholder is an example, not the label.
+- Motion: 160 to 220ms, ease cubic-bezier(0.22, 1, 0.36, 1). One enter fade is enough. Honor prefers-reduced-motion.
+- Nav: name, a few links, one action. Links stay on screen or a real button opens them. Not a floating island.
 
-## Unified component reuse (critical)
-1) Before any section markup, lock a shared token set in :root:
-   --bg, --surface, --ink, --muted, --accent, --accent-soft, --border, --radius-sm, --radius-md, --radius-lg,
-   --shadow-sm, --shadow-md, --section-y, --container-max, --font-display, --font-body, --font-brand (optional script/display for wordmark).
-2) Define shared utility classes ONCE and reuse everywhere (nav, hero, services, proof, CTA, form, footer):
-   - .container - max-width + horizontal padding (use --container-max)
-   - .section - vertical rhythm (use --section-y)
-   - .section-head, .eyebrow, .section-title, .section-lead - consistent section headers
-   - .btn, .btn--primary, .btn--secondary - ONE button system for all CTAs (nav, hero, bands, form submit)
-   - .card - shared surface ONLY where interaction needs a container (services, testimonials, pricing, team, form)
-   - .grid, .grid--2, .grid--3 - responsive auto-fit/minmax grids when needed
-3) Write each section in the family's layout. Same buttons, type, and spacing. Do not copy a reference snippet.
-4) Never ship 3+ different button styles or mismatched card treatments on one page.
-5) Load ONE distinctive Google Fonts pairing in <head> (never Inter/Roboto as primary) and use it consistently - no per-section font swaps.
-6) Merge ALL CSS into ONE compact <style> block. Do not leave unused rules.
+## Page
+- Build every section in the page outline, in order, through the footer.
+- Contact form fields: Name, Phone number, How can we help you? Submit uses the same .btn.btn--primary as the rest of the page.
+- Exact business name, phone, address, and cleaned hours. Never invent a missing contact fact. Never print Google Maps junk such as "Copy open hours" or "Hours might differ".
+- Hero headline: 3 to 7 words. One support line, about 10 words. Section titles: 2 to 5 words. No brochure paragraphs.
+- No em dash in visible copy.
+- One <style> block. Shared classes: .container, .section, .btn, .btn--primary, .btn--secondary. :root tokens for the family palette. No unused layout variants.
+- LocalBusiness JSON-LD from known facts only. FAQPage JSON-LD only when the FAQ is on the page.
+- No Moonrise watermark, paywall, or studio branding.
+- One complete document from <!DOCTYPE html> through </html>. If space is tight, shorten copy before dropping a section.
 
-## Modern quality bar
-- Whitespace, tight type, hairlines, and one media idea. No craft-template ornaments and no SaaS chrome.
-- Hero: follow the style family. When it calls for full-bleed media, use an edge-to-edge photo or muted looping video. When it calls for type-first or a split, do that instead. Never a flat navy fill with no media.
-- Hero copy budget: one headline (3-7 words) + one short support line (max ~10 words) + the family's primary action. No paragraph under the headline.
-- Nav: simple sticky bar. Brand left, a few links, one action. Not a decorative island.
-- Services: photo cards or a clean numbered list WITH visible media. Never hide service images. Title (2-4 words) + one short line.
-- Proof: a quiet line or omit it. No fake stars, scores, or awards.
-- Contact form: stacked fields, same button as the rest of the page.
-- Footer: business name, phone, address, and hours when provided. Match the family (black band, or a hairline on a dark page).
-- Hours: only the cleaned hours string from the facts. Never include Google Maps junk like "Copy open hours", "Hours might differ", or holiday parentheticals that make the line unreadable.
-- Motion: at most one soft fade. Honor prefers-reduced-motion.
-- Avoid: orange, neon, purple, clip-art icons, chip clusters, mixed radii, filler, per-section themes.
-- Avoid unused variant CSS soup (do not ship is-split / is-quiet / svc-list / gal-row rules you are not applying). One intentional layout only.
-- Every section must look finished on desktop and phone: no overlapping text, no cut-off cards, no collapsed FAQ answers, no horizontal page scroll.
+## Media
+- Use only stock media pack URLs. Reuse a pack URL if you need another image. Never invent a URL. Never leave a ../stock/ path.
+- Every photo sits in a sized frame (aspect-ratio or min-height) with object-fit: cover and meaningful alt text.
+- Video is muted, playsinline, autoplay, loop, with a poster. No empty gray boxes.
 
-## Original page (critical)
-1) Do not start from a saved component kit, a demo snippet, or a previous generation.
-2) Write the nav, hero, services, proof, form, and footer for THIS business and THIS style family.
-3) Keep one HTML structure: section order from the page outline, one media treatment, one button.
-4) Put all CSS in ONE <style> block. Use shared classes (.btn, .section, .container). No leftover demo selectors.
-5) Nav, hero, at least two content sections, a contact form, and a footer must be real sections.
-6) If a section would become an icon wall, a glow demo, or a card collage, use the family's list, hairline grid, or photo band instead.
+## Fit
+- Viewport meta tag. No horizontal scroll from 360px up.
+- Fluid grids. No fixed 1200px shells. Images are max-width: 100%.
+- Columns collapse: one on a phone, two on a tablet, three only on a wide screen.
+- Do not set overflow: hidden on html, body, .hero, or section. Do not use clip-path.
+- A sticky bar must not cover the first line. box-sizing: border-box. Long words wrap.
+- The page scrolls vertically. Buttons stay at least 44px tall.
 
-## Full-page requirement (critical)
-1) Build EVERY section listed in the bone structure, in order, as real on-page sections.
-2) Do NOT stop after the hero. The finished page must scroll through services, proof, about/gallery, pricing/FAQ when listed, contact form, and footer.
-3) Different trades get different structures. Follow the bone structure you are given; do not collapse everything into one hero block.
-
-## Design system
-1) Lock :root CSS variables from the palette (--bg, --surface, --ink, --muted, --accent, plus --accent-soft, --border, radius, shadow, spacing tokens).
-2) Color quality bar (Coolors-level): treat the provided palette like a curated Coolors scheme (https://coolors.co/). Apply it consistently across the whole page - backgrounds, cards, buttons, links, borders, focus rings, and hover states.
-   - One cohesive family: surfaces related to bg; muted derived from ink; accent used sparingly for CTAs, highlights, and key UI.
-   - Readable contrast for text and buttons. Never place low-contrast muted text on muted backgrounds.
-   - Buttons: solid accent (or ink) with clear hover; outline secondary that still reads on phone.
-   - Avoid default "AI purple / indigo on white", flat #3b82f6-only looks, and default trade orange (#ea580c) pill accents.
-   - Optional tasteful gradients or soft tints must stay inside the same palette - no random rainbow. Surfaces should shift (photo, soft tint, deep band) - never one flat color for the whole page.
-3) Typography: fluid scale with clamp() - optional eyebrow, h1 hero, h2 section titles, body, muted captions.
-   - Use the style family's fonts only. Manrope or Outfit for a modern grotesk. Newsreader only when the family is Editorial.
-   - NEVER use Inter, Roboto, Arial, script faces, or a different font per section.
-   - Hero titles: large, tracking about -0.04em to -0.05em, line-height about 0.92-1.05.
-4) Build each section in the page outline yourself. Recolor nothing from an old demo; set colors only from the palette variables.
-5) Rewrite every visible word for this business. No demo names, prices, or labels.
-6) Prefer short selectors. No CSS comments. No unused rules.
-
-## Media (mandatory aesthetics)
-- Use ONLY URLs from the stock media pack. Never invent URLs. Never leave ../stock/ relative paths.
-- If you need more images than unique pack slots, REUSE pack URLs (hero, about, service*, gallery*, portrait, detail*). Never invent a substitute URL.
-- Hero media follows the style family. Full-bleed families use a muted autoplay loop <video> or an edge-to-edge <img> with object-fit: cover. Split uses a half-width photo. Quiet puts one full-width photo under the headline. No inset cards, no collage, no floating tiles.
-- Darken media with purposeful overlays (linear + optional radial) so white/light type stays readable - do not replace media with a solid color block.
-- About, services, and gallery sections MUST use pack images with meaningful alt text. Apply subtle object-position / contrast / brightness when it helps atmosphere.
-- Videos: muted playsinline autoplay loop preload="metadata"; add a poster image.
-- Every major visual section needs real media. No empty gray boxes.
-
-## Copy rules (keep it simple - critical)
-- Prefer fewer words everywhere. Cut fluff. Short words beat clever ones.
-- Rewrite ALL visible text for THIS business. No Lorem / Acme / sample names.
-- Use the exact business name, phone, address, and hours when provided.
-- Invent no fake phone, address, hours, reviews, awards, or star ratings.
-- Never use em dash characters in visible copy. Use commas, periods, colons, or hyphens instead.
-- Hard length caps:
-  - Hero H1: 3-7 words. No subtitle paragraph - one short support line (max ~10 words).
-  - Section titles: 2-5 words.
-  - Section leads / body blurbs: max 1 short sentence (~12 words). Prefer none when the title is enough.
-  - Service / feature cards: title + max 1 short line (~12 words). Never multi-sentence blurbs.
-  - About / FAQ answers: 1-2 short sentences max.
-  - CTA band: 3-6 words + button label.
-- UX voice: plain, confident, trade-appropriate. Sound human, not like a brochure.
-- CTA labels must name the outcome ("Get a Quote", "Book Now", "Call Now") - never bare "Submit", "Learn More", or "Click Here".
-- Banned clichés and filler: "Welcome to", "Unlock", "Experience the difference", "In today's world", "Your one-stop shop", "We pride ourselves", "Streamlined solutions", "real results", "simplify complexity", "measurable outcomes", "elevate", "empower", "transform".
-- Testimonials: only real quotes explicitly present in business facts/notes. If none exist, omit testimonial copy or the testimonials section content - never fabricate names or quotes.
-- Announcement/promo bar: only when a real notice exists in business data. Never fake seasonal promos.
-- If space is tight, delete adjectives and marketing sentences first - never invent more copy.
-
-## Bone structure (page arc)
-- You receive a trade-specific ordered section list (navigation, hero, credibility, services, about, gallery, testimonials, pricing, faq, hours_location, map, cta_band, contact_form, footer - not all trades include every section).
-- Map content to each section role: navigation = header; credibility = trust strip (real stats only); gallery = portfolio (stock pack when no client photos - alt text must not claim fake projects); faq = AEO-friendly Q&A when listed.
-- "How it works" fits in about or services as a 3-4 step customer journey when the structure includes those sections.
-- Build EVERY listed section in order. Do not substitute a different page type.
-
-## SEO / AEO / GEO
-1) SEO: one <h1> (business + primary service/location intent); logical h2/h3 nesting; unique <title> and meta description (service + city, human-readable); semantic landmarks (<header>, <nav>, <main>, <section>, <footer>); descriptive alt on all images.
-2) LocalBusiness JSON-LD in <head> when NAP/hours exist - populate from business facts only; omit unknown fields; never invent geo coordinates or ratings. Add AggregateRating only if review count/rating is explicitly in business facts.
-3) AEO: when faq section exists, include FAQPage JSON-LD matching visible Q&A; at least one section with a question-like heading + concise self-contained first-sentence answer.
-4) GEO: weave city/neighborhood naturally in hero, services, footer; list specific service areas when known from address/notes; keep NAP byte-identical across header, footer, contact, and schema.
-
-## Motion & accessibility
-- Respect prefers-reduced-motion: disable or simplify scroll animations when (prefers-reduced-motion: reduce).
-- Focus-visible styles on interactive elements. Touch targets ~44px minimum.
-- WCAG AA contrast for text pairings via :root palette (ink on bg/surface, button text on accent).
-
-## Hard rules
-- Do not skip bone-structure sections or invent a different page type.
-- Contact form REQUIRED: Name, Phone number, How can we help you? (textarea), submit CTA. Click-to-call when phone exists.
-- Footer REQUIRED with business name and contact details when available.
-- Mobile-first, semantic HTML, one cohesive composition.
-- One button system only. Nav, hero, pricing, bands, and the form submit all use .btn.btn--primary or .btn.btn--secondary (same padding, radius, type scale, and font). Do not invent .form-submit, .nav-cta, or .trig with a different shape.
-- Fit the screen. No clip-path, torn edges, or elements pulled outside a section with negative offsets. No overflow:hidden on html, body, .hero, section, or a bare div rule. Headlines, prices, and buttons wrap inside their cards.
-- Hero height grows with its content. A fixed header must not cover the headline or CTAs. On small screens, nav links stay visible and wrap. Never use display:none on the menu unless a working button opens it.
-- Single file: CSS in <style>, minimal JS only if needed.
-- No Moonrise watermark / paywall / studio branding.
-- Hero follows the style family: one short headline (3-7 words) + one short support line (max ~10 words) + the family's primary action. No hero paragraphs, stats, chips, or cards.
-
-## Output budget
-- Deliver one COMPLETE document that closes </html>. Prefer compact CSS and lean markup so the full page fits in a single response.
-- Target roughly 25-55 KB of HTML source for a typical 8-12 section landing. Do not pad with unused rules or duplicate media blocks.
-- Never stop mid-section. If space is tight, shorten copy before dropping required sections.
-
-## Responsive fit & essentials (critical - must survive any resize)
-
-1. Always include:
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-2. Layout must reflow cleanly from ~360px phone -> tablet -> desktop.
-   - No horizontal page scroll at any width.
-   - Prefer overflow-x: clip on html/body only if needed.
-   - Never trap vertical scroll.
-
-3. Use fluid layout systems only:
-   - percentage / fr / minmax grids
-   - flex with wrap
-   - Ban fixed pixel widths on main wrappers (no width: 1200px shells)
-   - Max content width + margin: auto + horizontal padding is fine
-
-4. Media must never blow out the viewport:
-   - img, video, iframe, svg: max-width: 100%; height: auto
-   - hero/media frames: object-fit: cover
-
-5. Typography must scale fluidly:
-   - use clamp() (or equivalent)
-   - headlines must not overflow or clip on narrow screens
-   - keep body line-length readable (~45-75ch)
-
-6. Navigation must fit on phones:
-   - Keep the links on screen: wrap them under the wordmark, or use a real menu button that toggles them open.
-   - Never set the link row to display:none with no control. Never let links overflow off-screen or collide with the logo.
-
-7. Multi-column sections must collapse responsively:
-   - services / features / pricing / team -> 1 column on small, 2 mid, 3+ only on wide
-   - forms stack full-width on mobile
-
-8. Touch targets and buttons:
-   - one button system: .btn.btn--primary and .btn.btn--secondary everywhere, including the form submit
-   - same padding, radius, and font on nav, hero, pricing, and form
-   - buttons/links at least ~44px tall
-   - primary CTA stays visible and usable on phone
-
-9. Spacing:
-   - use rem / clamp padding
-   - sections must not feel cramped on mobile or absurdly sparse from desktop-only padding
-
-10. Scroll safety:
-    - do not set html/body to height: 100% with overflow: hidden
-    - the page must scroll vertically on mobile
-    - never write a universal rule like div { overflow: hidden }
-    - overflow: hidden is only for a named media frame (.service-media, .gallery-stage), never for .hero, section, or .faq-panel
-    - No clip-path, torn paper, diagonal cuts, or slash decorations. Every edge is a straight, simple card or section.
-
-11. Box model:
-    - prefer box-sizing: border-box on *, *::before, *::after
-    - padding must not cause horizontal overflow
-
-12. Long text safety:
-    - overflow-wrap: anywhere (or break-word)
-    - addresses, phones, prices, and URLs must never force sideways scroll or get cut off inside a card
-
-13. Hero media:
-    - min-height: 100svh is fine, but height must be auto so the headline and both buttons are never clipped
-    - overflow: visible on .hero
-    - above-the-fold content must stay readable when the window is resized
-
-14. Sticky / fixed UI:
-    - a fixed header must leave a gap so it does not cover the headline or buttons
-    - on phones, prefer a sticky bar that wraps instead of a fixed bar over the hero
-    - no sticky bars that hide the form submit on mobile
-
-Result: when the user resizes the screen at any width, the website always fits nicely, stays readable, and remains fully usable.
-
-## Non-negotiables (re-read before finishing)
-- Exact business contact facts only - never invent phone, address, hours, reviews, or awards.
-- No Moonrise watermark, paywall, or studio branding in the page.
-- Include the contact form + footer, and every bone-structure section through the end of the page.
-- Stock media pack URLs only - reuse pack images if you run out; never invent URLs.
-- Start with <!DOCTYPE html> and end with a complete closed document.`;
+## Before you return
+Read the page as a customer. If it could be any local business with the name swapped, change the first screen and the services. If it uses a banned habit above, remove it. Then return the HTML only.`;
 
 const EDIT_SYSTEM_PROMPT = `You edit a single-file HTML business website.
 
 Return ONLY the full updated HTML document (no markdown fences, no commentary).
 
 Rules:
-- Apply the user's request carefully. Keep the site coherent and handmade-feeling (full-bleed media heroes, distinctive type, black/white or brand CTAs - not AI orange pills / Inter / flat navy).
+- Apply the user's request carefully. Keep one palette, one type pairing, and one button. Do not fall back to a darkened overlay hero, an icon-card wall, or a preset kit.
 - Preserve the unified design system: shared .btn/.card/.container classes, :root palette vars, and one font pairing unless the user asks to redesign.
 - Preserve real contact details unless the user asks to change them.
 - Keep the required contact form (Name, Phone, How can we help you?) unless explicitly told to change it.
@@ -838,36 +643,36 @@ function suggestGoogleFontsHint(type) {
 }
 
 /**
- * Blueprint the assembler should follow before touching kit markup.
+ * Palette, type, and button for this run. The layout is designed, not copied.
  */
 function formatDesignSystemBlueprint(plan) {
   const palette = plan?.palette && typeof plan.palette === "object" ? plan.palette : {};
   const type = plan?.type && typeof plan.type === "object" ? plan.type : {};
-  const bg = palette.bg || "#f8fafc";
-  const surface = palette.surface || "#ffffff";
-  const ink = palette.ink || "#0f172a";
-  const muted = palette.muted || "#64748b";
-  const accent = palette.accent || "#2563eb";
+  const bg = palette.bg || "#ffffff";
+  const surface = palette.surface || "#fafafa";
+  const ink = palette.ink || "#1d1d1f";
+  const muted = palette.muted || "#6e6e73";
+  const accent = palette.accent || "#1d1d1f";
   return [
-    "## Unified design system blueprint (define ONCE - reuse in every section)",
+    "## Palette and type (use these everywhere)",
     `Palette lock: bg=${bg} surface=${surface} ink=${ink} muted=${muted} accent=${accent}`,
     suggestGoogleFontsHint(type),
     plan?.variation?.family?.button ? `Buttons: ${plan.variation.family.button}` : "",
     plan?.variation?.family?.layout ? `Layout: ${plan.variation.family.layout}` : "",
     "",
     "Required :root tokens:",
-    "--bg, --surface, --ink, --muted, --accent, --border (1px solid rgb(0 0 0 / 8%) or the night equivalent),",
-    "--radius-btn (980px for pills, 12px for stone, 2px for editorial),",
+    "--bg, --surface, --ink, --muted, --accent, --border (about 8% ink),",
+    "--radius (one value: 12px or 999px),",
     "--section-y (clamp(4rem, 8vw, 7rem)), --container-max (min(1120px, calc(100% - 2.5rem))),",
     "--font-display, --font-body",
-    "Do not add drop shadows.",
+    "No drop-shadow stacks. Depth is a surface step or a hairline.",
     "",
     "Required shared classes:",
     ".container | .section | .section-title",
     ".btn | .btn--primary | .btn--secondary",
     "",
-    "Write the page yourself. The style family wins. Do not paste a saved component kit.",
-    "Do not wrap hero copy in a bordered or shadowed card.",
+    "Design the page for this business. The family sets color, type, and the button, not a hero to copy.",
+    "Do not paste a saved component kit or lay the headline on a darkened photo.",
   ].join("\n");
 }
 
@@ -949,9 +754,9 @@ function buildGenerationUserPrompt(ctx, _presetPack, plan, media, options = {}) 
     formatConnectedServices(ctx.siteFeatures),
     "",
     "## Task",
-    "Write one original single-page site for this business.",
-    "Do not paste a saved preset, a demo kit, or a previous site.",
-    "Follow the style family for the hero, type, palette, and buttons.",
+    "Design one original single-page site for this business.",
+    "Do not paste a saved preset, a demo kit, a previous site, or a centered caption on a darkened photo.",
+    "Use the style family for palette, type, and the button. Compose the layout for this trade.",
     "Include every section in the outline, then the contact form and footer.",
     "Use only stock media pack URLs. Reuse a pack URL if you need another image. Never invent a media link.",
     "Hero headline is 3-7 words plus one short support line. Section titles are 2-5 words. No brochure paragraphs.",

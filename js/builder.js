@@ -7744,14 +7744,18 @@
     frame.style.width = pageW + "px";
     frame.style.height = secH + "px";
     try {
+      doc.documentElement.style.overflow = "hidden";
+      doc.body.style.overflow = "hidden";
+    } catch (_) {
+      /* ignore */
+    }
+    try {
       frame.contentWindow.scrollTo(0, top);
     } catch (_) {
       /* ignore */
     }
-    const scale = Math.max(box.width / pageW, box.height / secH);
-    const x = (box.width - pageW * scale) / 2;
-    const y = (box.height - secH * scale) / 2;
-    frame.style.transform = "translate(" + x + "px, " + y + "px) scale(" + scale + ")";
+    const scale = box.width / pageW;
+    frame.style.transform = "translate(0px, 0px) scale(" + scale + ")";
   }
 
   function fitFlyerPrints() {
@@ -7986,36 +7990,28 @@
     ctx.fillStyle = "#f4f6f8";
     ctx.fillRect(0, 0, w, h);
 
-    const pagePad = 48;
+    const pagePad = 72;
     const sheetX = pagePad;
     const sheetY = pagePad;
     const sheetW = w - pagePad * 2;
     const sheetH = h - pagePad * 2;
-    const pad = 48;
-    const gap = 36;
-    const leftW = 460;
-    const radius = 44;
+    const pad = 64;
+    const gap = 40;
+    const leftW = 500;
+    const radius = 48;
 
     roundRect(ctx, sheetX, sheetY, sheetW, sheetH, radius);
     ctx.save();
     ctx.clip();
-    ctx.fillStyle = "#e8edf3";
-    ctx.fill();
-    ctx.fillStyle = "rgba(148, 163, 184, 0.42)";
-    for (let x = sheetX + 18; x < sheetX + sheetW; x += 18) {
-      for (let y = sheetY + 18; y < sheetY + sheetH; y += 18) {
-        ctx.beginPath();
-        ctx.arc(x, y, 1.15, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
+    ctx.fillStyle = "#ececee";
+    ctx.fillRect(sheetX, sheetY, sheetW, sheetH);
     ctx.restore();
 
     const leftX = sheetX + pad;
     const leftY = sheetY + pad;
     const leftH = sheetH - pad * 2;
-    const domainH = 88;
-    const ctaH = 84;
+    const domainH = 108;
+    const ctaH = 100;
     const qrOuterH = leftH - domainH - ctaH - gap * 2;
     const cardR = 30;
 
@@ -8024,14 +8020,14 @@
     ctx.fillStyle = "#ffffff";
     ctx.fill();
     ctx.fillStyle = "#0f172a";
-    fillTextFit(ctx, label || name, leftX + leftW / 2, leftY + domainH / 2, leftW - 48, 34, "800");
+    fillTextFit(ctx, label || name, leftX + leftW / 2, leftY + domainH / 2, leftW - 72, 34, "800");
 
     // QR card + inset frame
     const qrY = leftY + domainH + gap;
     roundRect(ctx, leftX, qrY, leftW, qrOuterH, cardR);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
-    const insetPad = 28;
+    const insetPad = 44;
     const insetSize = Math.min(leftW - insetPad * 2, qrOuterH - insetPad * 2);
     const insetX = leftX + (leftW - insetSize) / 2;
     const insetY = qrY + (qrOuterH - insetSize) / 2;
@@ -8040,7 +8036,7 @@
     ctx.fill();
     const qrCanvas = document.createElement("canvas");
     await renderQrToCanvas(qrCanvas, url);
-    const qrDraw = insetSize - 44;
+    const qrDraw = insetSize - 56;
     ctx.drawImage(
       qrCanvas,
       insetX + (insetSize - qrDraw) / 2,
@@ -8052,13 +8048,10 @@
     // CTA card
     const ctaY = qrY + qrOuterH + gap;
     roundRect(ctx, leftX, ctaY, leftW, ctaH, cardR);
-    const ctaGrad = ctx.createLinearGradient(leftX, ctaY, leftX, ctaY + ctaH);
-    ctaGrad.addColorStop(0, "#3b82f6");
-    ctaGrad.addColorStop(1, "#2563eb");
-    ctx.fillStyle = ctaGrad;
+    ctx.fillStyle = "#232427";
     ctx.fill();
     ctx.fillStyle = "#ffffff";
-    fillTextFit(ctx, "Scan to visit the live site", leftX + leftW / 2, ctaY + ctaH / 2, leftW - 40, 24, "700");
+    fillTextFit(ctx, "Scan to visit the live site", leftX + leftW / 2, ctaY + ctaH / 2, leftW - 64, 24, "700");
 
     // Preview card
     const rightX = leftX + leftW + gap;
@@ -8088,21 +8081,17 @@
     ctx.fillStyle = "#64748b";
     fillTextFit(ctx, label || name, rightX + 120 + pillW / 2, rightY + chromeH / 2, pillW - 24, 16, "600");
 
-    const previewPad = 28;
+    const previewPad = 36;
     const previewX = rightX + previewPad;
-    const previewY = rightY + chromeH + 12;
+    const previewY = rightY + chromeH + previewPad;
     const previewW = rightW - previewPad * 2;
-    const previewH = rightH - chromeH - previewPad - 12;
-    roundRect(ctx, previewX, previewY, previewW, previewH, 22);
-    ctx.fillStyle = "#e8edf3";
-    ctx.fill();
+    const previewH = rightH - chromeH - previewPad * 2;
 
-    const gapImg = 14;
-    const innerPad = 16;
-    const ix = previewX + innerPad;
-    const iy = previewY + innerPad;
-    const iw = previewW - innerPad * 2;
-    const ih = previewH - innerPad * 2;
+    const gapImg = 28;
+    const ix = previewX;
+    const iy = previewY;
+    const iw = previewW;
+    const ih = previewH;
     const heroW = Math.round(iw * 0.58);
     const sideW = iw - heroW - gapImg;
     const sideH = (ih - gapImg) / 2;
@@ -8112,7 +8101,7 @@
       [ix + heroW + gapImg, iy + sideH + gapImg, sideW, sideH]
     ];
     slots.forEach((slot, i) => {
-      drawImageContain(ctx, prints[i] || null, slot[0], slot[1], slot[2], slot[3], 16);
+      drawImageContain(ctx, prints[i] || null, slot[0], slot[1], slot[2], slot[3], 22);
     });
 
     ctx.textAlign = "left";
