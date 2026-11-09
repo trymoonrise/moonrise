@@ -146,6 +146,16 @@
   bindPanelToggle("set-notif-toggle", "set-notif-panel");
   bindPanelToggle("set-cal-toggle", "set-cal-panel");
   bindPanelToggle("set-status-toggle", "set-status-panel");
+  bindPanelToggle("set-help-toggle", "set-help-panel");
+
+  const telegramLink = document.getElementById("set-link-telegram");
+  const discordLink = document.getElementById("set-link-discord");
+  const telegramHref =
+    (window.SITE_CONFIG && window.SITE_CONFIG.telegramUrl) || "https://t.me/c/3541685239/1";
+  const discordHref =
+    (window.SITE_CONFIG && window.SITE_CONFIG.discordUrl) || "https://discord.gg/gdbA3gEVY";
+  if (telegramLink) telegramLink.setAttribute("data-external-url", telegramHref);
+  if (discordLink) discordLink.setAttribute("data-external-url", discordHref);
   bindPanelToggle("set-passkeys-toggle", "settings-passkeys");
   bindPanelToggle("set-delete-toggle", "set-delete-panel");
 

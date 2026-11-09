@@ -232,18 +232,18 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261108-preload-sync"></script>
+  <script src="js/auth-gate-head.js?v=20261108-mobile-chrome"></script>
   <title>Settings - Moonrise Studio</title>
   <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261108-chrome-sync">
+  <link rel="stylesheet" href="css/studio.css?v=20261108-mobile-chrome">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 <link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark-chrome">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-close">
+  <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-mobile-chrome">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
 </head>
 <body data-page="settings">
@@ -524,6 +524,47 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
         </div>
       </section>
 
+      <section class="ms-set-group ms-set-mobile-only" id="settings-help">
+        <button type="button" class="ms-set-row" id="set-help-toggle" aria-expanded="false" aria-controls="set-help-panel">
+          <span class="ms-set-row-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 1 1 4.4 2.6c-.8.4-1.5 1-1.5 1.9"/><path d="M12 17h.01"/></svg>
+          </span>
+          <span class="ms-set-row-label">Help</span>
+          <span class="ms-set-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+        </button>
+        <div class="ms-set-panel" id="set-help-panel" hidden>
+          <a class="ms-set-row" href="course"><span class="ms-set-row-label">Course</span></a>
+          <a class="ms-set-row" href="guide"><span class="ms-set-row-label">Creator guide</span></a>
+          <a class="ms-set-row" href="privacy"><span class="ms-set-row-label">Privacy</span></a>
+          <a class="ms-set-row" href="terms"><span class="ms-set-row-label">Terms</span></a>
+          <a class="ms-set-row" href="refund"><span class="ms-set-row-label">Refund</span></a>
+          <a class="ms-set-row" href="contact"><span class="ms-set-row-label">Contact</span></a>
+        </div>
+      </section>
+
+      <section class="ms-set-group ms-set-mobile-only" id="settings-library">
+        <a class="ms-set-row" href="ui-library">
+          <span class="ms-set-row-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          </span>
+          <span class="ms-set-row-label">UI Library</span>
+        </a>
+      </section>
+
+      <section class="ms-set-group ms-set-mobile-only" id="settings-community">
+        <a class="ms-set-row" id="set-link-telegram" href="#" data-external-redirect="true" data-external-url="https://t.me/c/3541685239/1" data-external-label="Telegram">
+          <span class="ms-set-row-label">Telegram</span>
+        </a>
+        <a class="ms-set-row" id="set-link-discord" href="#" data-external-redirect="true" data-external-url="https://discord.gg/gdbA3gEVY" data-external-label="Discord">
+          <span class="ms-set-row-label">Discord</span>
+        </a>
+        <a class="ms-set-row" href="#" data-download-app="true">
+          <span class="ms-set-row-label">Download app</span>
+        </a>
+      </section>
+
       <section class="ms-set-group" id="settings-account">
         <button type="button" class="ms-set-row" id="set-sign-out">
           <span class="ms-set-row-ico" aria-hidden="true">
@@ -558,23 +599,24 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <p class="ms-settings-status is-error" id="set-delete-error" hidden></p>
         </div>
       </section>
+      <p class="ms-settings-updated" id="ms-settings-updated" hidden>Last updated</p>
     </div>
   </div>
 
   <script defer src="js/config.js?v=20261108-no-lf"></script>
-  <script defer src="js/app.js?v=20261108-cal-tab"></script>
+  <script defer src="js/app.js?v=20261108-mobile-chrome"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/handles.js"></script>
   <script defer src="js/supabase-client.js?v=20261107-accent-btn"></script>
   <script defer src="js/auth.js?v=20261108-session-quiet"></script>
   <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
+  <script defer src="js/ui-motion.js?v=20261108-no-donate"></script>
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
   <script defer src="js/push-notifications.js?v=20261108-push"></script>
-  <script defer src="js/settings.js?v=20261108-apikey"></script>
+  <script defer src="js/settings.js?v=20261108-mobile-chrome"></script>
   <script defer src="js/settings-status.js?v=20261108-svc-close"></script>
 </body>
 </html>

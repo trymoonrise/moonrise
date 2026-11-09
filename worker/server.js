@@ -232,7 +232,6 @@ const {
   sanitizeDonorMessage,
   recordOneTimeDonationPayment,
   reconcilePendingDonationPayments,
-  getDonationLeaderboard,
 } = require("./donate-leaderboard");
 const {
   startSecurityCardVerification,
@@ -4925,27 +4924,13 @@ app.get("/donate/config", requireUser, async (req, res) => {
       await reconcilePendingDonationPayments(supabase, stripe, req.user.id);
     }
     const balance = await getBalance(supabase, req.user.id);
-    const leaderboardLimit = Math.min(Math.max(Number(req.query.leaderboard) || 10, 1), 25);
-    const leaderboardEntries = await getDonationLeaderboard(supabase, leaderboardLimit);
     res.json({
       ...publicDonateConfig(balance),
       donorMessageMax: DONOR_MESSAGE_MAX,
-      leaderboardEntries,
     });
   } catch (e) {
     console.error(e);
     respondApiError(res, e, "Could not load donate config");
-  }
-});
-
-app.get("/donate/leaderboard", async (req, res) => {
-  try {
-    const limit = Math.min(Math.max(Number(req.query.limit) || 10, 1), 100);
-    const entries = await getDonationLeaderboard(db(), limit);
-    res.json({ entries });
-  } catch (e) {
-    console.error(e);
-    respondApiError(res, e, "Could not load leaderboard");
   }
 });
 
@@ -4963,7 +4948,7 @@ app.post("/donate/billing-portal", requireUser, checkoutLimiter, async (req, res
 
     const portal = await stripe.billingPortal.sessions.create({
       customer: balance.stripeCustomerId,
-      return_url: `${PUBLIC_APP_URL}/donate.html`,
+      return_url: `${PUBLIC_APP_URL}/dashboard`,
     });
 
     res.json({ url: portal.url });
@@ -5001,8 +4986,8 @@ app.post("/donate-checkout", requireUser, checkoutLimiter, async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: donateOneTimeLineItem(quote),
-      success_url: `${PUBLIC_APP_URL}/donate.html?paid=1&mode=once&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${PUBLIC_APP_URL}/donate.html?canceled=1`,
+      success_url: `${PUBLIC_APP_URL}/dashboard?paid=1&mode=once&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${PUBLIC_APP_URL}/dashboard?canceled=1`,
       customer: balance.stripeCustomerId || undefined,
       customer_email: balance.stripeCustomerId ? undefined : req.user.email || undefined,
       client_reference_id: req.user.id,

@@ -19,8 +19,6 @@
     "guide",
     "help",
     "pricing",
-    "donate",
-    "leaderboard",
     "hosting-billing",
     "creator-contact",
     "404",

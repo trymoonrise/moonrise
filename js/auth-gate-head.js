@@ -61,8 +61,6 @@
     guide: 1,
     help: 1,
     pricing: 1,
-    donate: 1,
-    leaderboard: 1,
     "hosting-billing": 1,
     "creator-contact": 1,
   };
@@ -122,7 +120,7 @@
 
   // Keep these query strings in sync with the <script defer> tags on studio pages,
   // or the browser warns that a preload was unused.
-  ["js/config.js?v=20261108-no-lf", "js/auth.js?v=20261108-clean-urls", "js/app.js?v=20261108-cal-tab"].forEach(function (href) {
+  ["js/config.js?v=20261108-no-lf", "js/auth.js?v=20261108-session-quiet", "js/app.js?v=20261108-mobile-chrome"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -214,8 +212,6 @@ function mountTabBarEarly() {
     clients: 1,
     settings: 1,
     course: 1,
-    donate: 1,
-    leaderboard: 1,
     "admin-console": 1,
     projects: 1,
     pricing: 1,
@@ -244,7 +240,11 @@ function mountTabBarEarly() {
 
   function paint() {
     if (!document.body) return;
-    if (!document.getElementById("ms-menu-toggle")) {
+    var phone = window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+    if (phone) {
+      var earlyMenu = document.getElementById("ms-menu-toggle");
+      if (earlyMenu) earlyMenu.remove();
+    } else if (!document.getElementById("ms-menu-toggle")) {
       var menu = document.createElement("button");
       menu.type = "button";
       menu.id = "ms-menu-toggle";

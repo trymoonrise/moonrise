@@ -3,6 +3,28 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.6.5",
+      "date": "2026-11-08",
+      "title": "Mobile settings",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "On a phone, the menu button is gone, income sits at the top right, and the owner opens Admin Console from a crown at the top left.",
+            "Settings on a phone includes Help, which opens Course, Creator guide, Privacy, Terms, Refund, and Contact.",
+            "UI Library, Telegram, Discord, and Download app are in Settings on a phone.",
+            "Last updated sits under Delete account on a phone."
+          ]
+        },
+        {
+          "heading": "Site",
+          "added": [
+            "The donate page and leaderboard are removed, and those old links open the dashboard."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.4",
       "date": "2026-11-08",
       "title": "Calendar meetings",

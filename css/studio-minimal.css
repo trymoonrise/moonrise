@@ -1699,7 +1699,9 @@ html body[data-page="editor"] .ms-quick-nav {
     min-height: 3.15rem !important;
     margin: 0 !important;
     padding: 0 !important;
-    display: grid !important;
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
     place-items: center !important;
     border-radius: 999px !important;
     border: 1px solid rgb(0 0 0 / 8%) !important;
@@ -1745,6 +1747,57 @@ html body[data-page="editor"] .ms-quick-nav {
     transform: scale(0.92) !important;
   }
 
+  html body .ms-income-float {
+    position: fixed !important;
+    top: max(0.7rem, env(safe-area-inset-top, 0px)) !important;
+    right: max(0.7rem, env(safe-area-inset-right, 0px)) !important;
+    left: auto !important;
+    bottom: auto !important;
+    z-index: 240 !important;
+    margin: 0 !important;
+  }
+
+  html body .ms-owner-crown {
+    position: fixed !important;
+    top: max(0.65rem, env(safe-area-inset-top, 0px)) !important;
+    left: max(0.65rem, env(safe-area-inset-left, 0px)) !important;
+    z-index: 240 !important;
+    display: grid !important;
+    place-items: center !important;
+    width: 3.15rem !important;
+    height: 3.15rem !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    border: 1px solid rgb(0 0 0 / 8%) !important;
+    background: color-mix(in srgb, #ffffff 86%, transparent) !important;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 10px 28px rgba(0, 0, 0, 0.12) !important;
+    backdrop-filter: saturate(1.55) blur(18px) !important;
+    -webkit-backdrop-filter: saturate(1.55) blur(18px) !important;
+    color: #1d1d1f !important;
+    text-decoration: none !important;
+  }
+
+  html body .ms-owner-crown svg {
+    width: 1.35rem !important;
+    height: 1.35rem !important;
+  }
+
+  html[data-ms-mode="dark"] body .ms-owner-crown {
+    background: color-mix(in srgb, #1c1c1e 86%, transparent) !important;
+    border-color: rgb(255 255 255 / 12%) !important;
+    color: #f5f5f0 !important;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 12px 30px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  html body .ms-sidebar-updated {
+    display: none !important;
+  }
+
   /* Clear the floating menu so page titles never sit under it */
   html body:is(
     [data-page="dashboard"],
@@ -1763,6 +1816,26 @@ html body[data-page="editor"] .ms-quick-nav {
   ) #page-body {
     padding-top: calc(env(safe-area-inset-top, 0px) + 3.95rem) !important;
   }
+}
+
+@media (min-width: 901px) {
+  .ms-set-mobile-only,
+  #ms-settings-updated,
+  .ms-owner-crown {
+    display: none !important;
+  }
+}
+
+.ms-settings-updated {
+  margin: 0.35rem 0 0;
+  padding: 0 0.2rem 0.4rem;
+  color: var(--ms-muted, #6e6e73);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+a.ms-set-row {
+  text-decoration: none;
 }
 
 /* —— Forms / rows —— */

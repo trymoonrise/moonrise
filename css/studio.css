@@ -14143,7 +14143,9 @@ body.ms-legal-site {
       visibility 0s linear 0s;
   }
   body:not([data-page="editor"]) .ms-menu-toggle {
-    display: grid !important;
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
     place-items: center;
     transition:
       transform 0.36s cubic-bezier(0.16, 1, 0.3, 1),

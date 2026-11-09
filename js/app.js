@@ -8,13 +8,6 @@
     { id: "builder", href: "builder", label: "Builder", icon: "hammer" },
     { id: "clients", href: "clients", label: "My Clients", icon: "users" },
     { id: "calendar", href: "calendar", label: "Calendar", icon: "calendar" },
-    {
-      id: "donate",
-      href: "donate",
-      label: "Support",
-      icon: "heart",
-      pages: ["donate", "store"],
-    },
   ];
 
   const OWNER_MENU = [
@@ -81,7 +74,6 @@
     users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
     calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
     bag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
-    heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
     external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
     download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>',
     menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="7" x2="19" y2="7"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="17" x2="19" y2="17"/></svg>',
@@ -213,6 +205,7 @@
 
   function removeOwnerNav() {
     document.querySelectorAll('[data-admin="true"]').forEach((el) => el.remove());
+    document.getElementById("ms-owner-crown")?.remove();
   }
 
   function injectOwnerNav(page) {
@@ -229,6 +222,18 @@
       added = true;
     });
     if (added) ensureNavPills({ animate: false });
+    if (window.matchMedia("(max-width: 900px)").matches && shouldIncludeOwnerNav()) {
+      if (!document.getElementById("ms-owner-crown")) {
+        const btn = document.createElement("a");
+        btn.id = "ms-owner-crown";
+        btn.className = "ms-owner-crown";
+        btn.href = "admin-console";
+        btn.setAttribute("aria-label", "Admin Console");
+        btn.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18"/><path d="M4 17 6.2 8.2 10 12.2 12 6l2 6.2 3.8-4 2.2 8.8"/></svg>';
+        document.body.appendChild(btn);
+      }
+    }
   }
 
   function brandLogo() {
@@ -522,8 +527,7 @@
     return "";
   }
 
-  function paintSidebarLastUpdated(iso) {
-    const el = document.getElementById("ms-sidebar-updated");
+  function paintUpdatedLine(el, iso) {
     if (!el) return;
     const rel = formatLastUpdated(iso);
     if (!rel) {
@@ -534,6 +538,11 @@
     el.textContent = "Last updated: " + rel;
     el.title = "GitHub · " + new Date(iso).toLocaleString();
     el.dataset.committedAt = iso;
+  }
+
+  function paintSidebarLastUpdated(iso) {
+    paintUpdatedLine(document.getElementById("ms-sidebar-updated"), iso);
+    paintUpdatedLine(document.getElementById("ms-settings-updated"), iso);
   }
 
   function bootSidebarLastUpdated() {
@@ -876,22 +885,6 @@
       '</div></aside>' +
       '<div class="ms-sidebar-resizer" id="ms-sidebar-resizer" role="separator" aria-orientation="vertical" aria-label="Resize sidebar" tabindex="0"></div>';
 
-    // Mount menu on body (top-left chrome). Never park it in the tab bar.
-    let menuToggle = document.getElementById("ms-menu-toggle");
-    if (!menuToggle) {
-      menuToggle = document.createElement("button");
-      menuToggle.type = "button";
-      menuToggle.id = "ms-menu-toggle";
-      menuToggle.className = "ms-menu-toggle";
-      document.body.appendChild(menuToggle);
-    } else {
-      menuToggle.classList.remove("ms-tab-menu");
-      menuToggle.className = "ms-menu-toggle";
-      if (menuToggle.parentElement !== document.body) document.body.appendChild(menuToggle);
-    }
-    menuToggle.setAttribute("aria-label", "Open menu");
-    menuToggle.innerHTML = ICONS.menu;
-
     ensureQuickNav();
     ensureTabBar(page);
 
@@ -903,8 +896,71 @@
 
     const sidebar = document.getElementById("ms-sidebar");
 
+    function phoneLayout() {
+      return window.matchMedia("(max-width: 900px)").matches;
+    }
+
+    function mountMenuToggle() {
+      if (phoneLayout()) {
+        document.getElementById("ms-menu-toggle")?.remove();
+        document.body.classList.remove("ms-nav-open");
+        return;
+      }
+      let menuToggle = document.getElementById("ms-menu-toggle");
+      if (!menuToggle) {
+        menuToggle = document.createElement("button");
+        menuToggle.type = "button";
+        menuToggle.id = "ms-menu-toggle";
+        document.body.appendChild(menuToggle);
+      } else if (menuToggle.parentElement !== document.body) {
+        document.body.appendChild(menuToggle);
+      }
+      menuToggle.classList.remove("ms-tab-menu");
+      menuToggle.className = "ms-menu-toggle";
+      menuToggle.setAttribute("aria-label", "Open menu");
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.innerHTML = ICONS.menu;
+      menuToggle.onclick = () => {
+        setNavOpen(!document.body.classList.contains("ms-nav-open"));
+      };
+    }
+
+    function placeIncomeTag() {
+      const tag = document.getElementById("ms-user-income");
+      const aside = document.getElementById("ms-sidebar");
+      if (!tag || !aside) return;
+      if (phoneLayout()) {
+        tag.classList.add("ms-income-float");
+        if (tag.parentElement !== document.body) document.body.appendChild(tag);
+        return;
+      }
+      tag.classList.remove("ms-income-float");
+      const anchor = aside.querySelector(".ms-sidebar-legal") || aside.querySelector(".ms-sidebar-foot");
+      if (anchor && tag.parentElement !== aside) aside.insertBefore(tag, anchor);
+    }
+
+    function ensureOwnerCrown() {
+      const show = phoneLayout() && shouldIncludeOwnerNav();
+      let btn = document.getElementById("ms-owner-crown");
+      if (!show) {
+        if (btn) btn.remove();
+        return;
+      }
+      if (btn) return;
+      btn = document.createElement("a");
+      btn.id = "ms-owner-crown";
+      btn.className = "ms-owner-crown";
+      btn.href = "admin-console";
+      btn.setAttribute("aria-label", "Admin Console");
+      btn.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18"/><path d="M4 17 6.2 8.2 10 12.2 12 6l2 6.2 3.8-4 2.2 8.8"/></svg>';
+      document.body.appendChild(btn);
+    }
+
     function setNavOpen(open) {
+      const menuToggle = document.getElementById("ms-menu-toggle");
       document.body.classList.toggle("ms-nav-open", open);
+      if (!menuToggle) return;
       menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
       menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       // Do not set aria-hidden on the toggle - it retains focus on click and Chromium warns.
@@ -914,26 +970,25 @@
       menuToggle.tabIndex = open ? -1 : 0;
     }
 
-    // Belt-and-suspenders: strip aria-hidden if any stale script re-adds it.
-    try {
-      new MutationObserver(() => {
-        if (menuToggle.hasAttribute("aria-hidden")) menuToggle.removeAttribute("aria-hidden");
-      }).observe(menuToggle, { attributes: true, attributeFilter: ["aria-hidden"] });
-    } catch (_) {
-      /* ignore */
+    mountMenuToggle();
+    placeIncomeTag();
+    ensureOwnerCrown();
+    if (!buildShell._chromeBound) {
+      buildShell._chromeBound = true;
+      window.matchMedia("(max-width: 900px)").addEventListener("change", () => {
+        mountMenuToggle();
+        placeIncomeTag();
+        ensureOwnerCrown();
+      });
     }
 
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.onclick = () => {
-      setNavOpen(!document.body.classList.contains("ms-nav-open"));
-    };
-
     document.addEventListener("click", (event) => {
-      if (!window.matchMedia("(max-width: 900px)").matches) return;
+      if (!phoneLayout()) return;
       if (!document.body.classList.contains("ms-nav-open")) return;
       const redirect = document.getElementById("ms-redirect-modal");
       if (redirect && !redirect.hidden && redirect.contains(event.target)) return;
       const finderMenu = document.getElementById("lf-menu-toggle");
+      const menuToggle = document.getElementById("ms-menu-toggle");
       if (
         sidebar?.contains(event.target) ||
         menuToggle?.contains(event.target) ||
@@ -977,7 +1032,7 @@
       if (event.key !== "Escape" || !document.body.classList.contains("ms-nav-open")) return;
       if (document.body.classList.contains("ms-redirect-open")) return;
       setNavOpen(false);
-      menuToggle?.focus();
+      document.getElementById("ms-menu-toggle")?.focus();
     });
 
     paintSidebarFromCache();
@@ -1899,7 +1954,6 @@
     "leads",
     "projects",
     "course",
-    "donate",
     "calendar",
   ];
 
@@ -2182,8 +2236,6 @@
     "clients",
     "settings",
     "course",
-    "donate",
-    "leaderboard",
     "admin-console",
     "projects",
     "calendar",
@@ -2287,8 +2339,6 @@
       onboarding: 1,
       "admin-console": 1,
       course: 1,
-      donate: 1,
-      leaderboard: 1,
       "hosting-billing": 1,
       "creator-contact": 1,
       pricing: 1,

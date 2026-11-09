@@ -301,8 +301,6 @@
     "#page-body > .ms-dash-stack > .ms-card",
     "#page-body > .ms-dash-stack > .ms-dash-posts",
     "#page-body .ms-help-guide > .ms-card",
-    "#page-body .ms-donate-channel > .ms-donate-card",
-    "#page-body .ms-donate-channel .ms-donate-unified-foot",
     "#page-body .ms-store-grid > .ms-store-product",
     "#page-body > .ms-card",
     "#page-body > section:not(.ms-motion-skip)",

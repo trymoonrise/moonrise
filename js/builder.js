@@ -2498,7 +2498,7 @@
         : document.querySelector('.is-mode[data-mode="code"]');
     cycleMvpStar(btn?.querySelector(".ms-mvp-star"));
     window.StudioToast?.error?.(
-      label + " unlocks with MVP+ (Donate) or an active Starter, Pro, or Business plan."
+      label + " unlocks with MVP+ or an active Starter, Pro, or Business plan."
     );
     if (state.mode === "code") {
       state.mode = "preview";
@@ -2508,7 +2508,6 @@
         /* ignore */
       }
     }
-    location.href = "donate";
     return false;
   }
 
@@ -2537,7 +2536,7 @@
     const showLockChrome = mvpAccessResolved && locked;
     const codeBtn = document.querySelector('.is-mode[data-mode="code"]');
     const downloadBtn = document.getElementById("btn-download-html");
-    const lockHint = "Unlock with MVP+ (Donate) or an active Starter, Pro, or Business plan";
+    const lockHint = "Unlock with MVP+ or an active Starter, Pro, or Business plan";
     if (codeBtn) {
       codeBtn.classList.toggle("is-mvp-locked", showLockChrome);
       codeBtn.setAttribute("aria-disabled", showLockChrome ? "true" : "false");

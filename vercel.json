@@ -44,7 +44,7 @@
       ]
     },
     {
-      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|help|guide|donate|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|leaderboard|ui-library|hosting-billing|creator-contact|privacy|terms|refund|404)",
+      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|help|guide|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|ui-library|hosting-billing|creator-contact|privacy|terms|refund|404)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
@@ -79,8 +79,12 @@
   "redirects": [
     { "source": "/apply", "destination": "/login", "permanent": true },
     { "source": "/apply.html", "destination": "/login", "permanent": true },
-    { "source": "/store", "destination": "/donate", "permanent": true },
-    { "source": "/store.html", "destination": "/donate", "permanent": true },
+    { "source": "/store", "destination": "/dashboard", "permanent": true },
+    { "source": "/store.html", "destination": "/dashboard", "permanent": true },
+    { "source": "/donate", "destination": "/dashboard", "permanent": true },
+    { "source": "/donate.html", "destination": "/dashboard", "permanent": true },
+    { "source": "/leaderboard", "destination": "/dashboard", "permanent": true },
+    { "source": "/leaderboard.html", "destination": "/dashboard", "permanent": true },
     { "source": "/pending-payouts", "destination": "/admin-console", "permanent": true },
     { "source": "/pending-payouts.html", "destination": "/admin-console", "permanent": true },
     { "source": "/designer-tips", "destination": "/ui-library", "permanent": true },
@@ -126,7 +130,6 @@
     { "source": "/calendar/bookings", "destination": "/api" },
     { "source": "/public-booking", "destination": "/api" },
     { "source": "/donate/config", "destination": "/api" },
-    { "source": "/donate/leaderboard", "destination": "/api" },
     { "source": "/donate-checkout", "destination": "/api" },
     { "source": "/donate-fulfill", "destination": "/api" },
     { "source": "/donate/billing-portal", "destination": "/api" },
