@@ -1292,6 +1292,45 @@ function assessSiteCompleteness(html, structure, ctx = null) {
     reasons.push("broken faq details");
   }
 
+  const imgTags = raw.match(/<img\b[^>]*>/gi) || [];
+  let brokenImages = 0;
+  for (const tag of imgTags) {
+    const src = tag.match(/\bsrc\s*=\s*(["'])([\s\S]*?)\1/i);
+    const url = src ? src[2].trim() : "";
+    if (
+      !url ||
+      !/^https?:\/\//i.test(url) ||
+      /placeholder\.com|placehold\.co|placehold\.it|picsum\.photos|source\.unsplash\.com|via\.placeholder/i.test(url)
+    ) {
+      brokenImages += 1;
+    }
+  }
+  if (brokenImages) {
+    reasons.push(brokenImages + (brokenImages === 1 ? " broken image" : " broken images"));
+  }
+  const hasPhoto =
+    imgTags.some((tag) => /\bsrc\s*=\s*["']https?:\/\//i.test(tag)) ||
+    /background-image\s*:\s*url\(\s*['"]?https?:\/\//i.test(raw);
+  if (!hasPhoto) reasons.push("missing images");
+  if (
+    /<(?:div|figure|article)\b[^>]*class=["'][^"']*\b(?:media-slot|about-media|photo-frame|media-frame)\b[^"']*["'][^>]*>\s*<\/(?:div|figure|article)>/i.test(
+      raw
+    )
+  ) {
+    reasons.push("empty image containers");
+  }
+  const heroStage = raw.match(/<[^>]*\bhero-stage\b[^>]*>/i);
+  if (heroStage) {
+    const inline = heroStage[0].match(/url\(\s*(['"]?)([^'")]+)/i);
+    const emptyHero = new RegExp(
+      heroStage[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*</",
+      "i"
+    ).test(raw);
+    if ((inline && !/^https?:\/\//i.test(inline[2])) || (emptyHero && !inline && !hasPhoto)) {
+      reasons.push("hero image missing");
+    }
+  }
+
   return {
     ok: reasons.length === 0,
     expected,

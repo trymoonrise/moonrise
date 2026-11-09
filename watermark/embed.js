@@ -50,24 +50,27 @@
 #mr-wm-overlay-root[data-open="1"]{display:block!important;pointer-events:auto}
 .mr-wm-overlay{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;padding:1rem;background:rgba(15,23,42,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease;font-family:var(--mr-font)}
 .mr-wm-overlay.is-open{opacity:1;visibility:visible;pointer-events:auto}
-.mr-wm-panel{width:min(440px,100%);max-height:min(92vh,720px);display:flex;flex-direction:column;overflow:auto;background:#fff;border:1px solid var(--mr-line,#e8edf3);border-radius:16px;box-shadow:0 20px 48px rgba(15,23,42,.22);transform:translateY(12px) scale(.985);opacity:.96;transition:transform .28s cubic-bezier(.22,1,.36,1),opacity .22s ease}
+.mr-wm-panel{width:min(22.5rem,100%);max-height:min(92vh,720px);display:flex;flex-direction:column;overflow:auto;background:#fff;border:0;border-radius:18px;box-shadow:0 16px 48px rgba(0,0,0,.14);transform:translateY(12px) scale(.985);opacity:.96;transition:transform .28s cubic-bezier(.22,1,.36,1),opacity .22s ease}
 .mr-wm-overlay.is-open .mr-wm-panel{transform:none;opacity:1}
-.mr-wm-head{display:flex;align-items:flex-start;gap:.85rem;padding:1.15rem 1.2rem 1rem;border-bottom:1px solid var(--mr-line,#e8edf3);flex-shrink:0}
-.mr-wm-head img{width:40px;height:40px;border-radius:12px;object-fit:cover;flex-shrink:0}
-.mr-wm-head h2{margin:0;font-family:var(--mr-font);font-size:1.15rem;font-weight:700;letter-spacing:-.03em;line-height:1.15;color:var(--mr-ink,#0f172a)}
-.mr-wm-head p{margin:.3rem 0 0;color:var(--mr-muted,#64748b);font-size:.9rem;line-height:1.4}
-.mr-wm-close{appearance:none;margin-left:auto;width:34px;height:34px;border:1px solid var(--mr-line,#e8edf3);border-radius:10px;background:#fff;color:#94a3b8;font-size:1.15rem;line-height:1;cursor:pointer;flex-shrink:0}
-.mr-wm-close:hover{background:#f8fafc;color:#64748b}
-.mr-wm-body{padding:1rem 1rem 1.15rem;display:flex;flex-direction:column;gap:.85rem}
-.mr-wm-pay{appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:3.25rem;border:0;border-radius:14px;background:#3b82f6;color:#fff;font:inherit;font-family:var(--mr-font);font-size:1.02rem;font-weight:650;letter-spacing:-.01em;cursor:pointer}
+.mr-wm-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:1.15rem 1.1rem .15rem;border-bottom:0;flex-shrink:0}
+.mr-wm-head img{display:none}
+.mr-wm-head h2{margin:0;font-family:var(--mr-font);font-size:1.28rem;font-weight:700;letter-spacing:-.04em;line-height:1.15;color:#1d1d1f}
+.mr-wm-head p{display:none}
+.mr-wm-close{appearance:none;margin-left:auto;width:2rem;height:2rem;border:0;border-radius:8px;background:transparent;color:#8e8e93;font-size:1.35rem;line-height:1;cursor:pointer;flex-shrink:0}
+.mr-wm-close:hover{background:#f5f5f7;color:#1d1d1f}
+.mr-wm-body{padding:.7rem 1.1rem 1.15rem;display:flex;flex-direction:column;align-items:stretch;gap:.7rem}
+.mr-wm-pay{appearance:none;display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;align-self:stretch;min-height:2.85rem;margin:0;border:0;border-radius:10px;background:#1d1d1f;color:#fff;font:inherit;font-family:var(--mr-font);font-size:1rem;font-weight:650;letter-spacing:-.02em;text-align:center;cursor:pointer}
+.mr-wm-meet{appearance:none;display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;min-height:2.85rem;margin:0;border:1px solid #e4e4e7;border-radius:10px;background:#fff;color:#1d1d1f;font:inherit;font-family:var(--mr-font);font-size:1rem;font-weight:650;letter-spacing:-.02em;text-align:center;cursor:pointer}
+.mr-wm-meet:hover{background:#f5f5f7}
+.mr-wm-meet[hidden]{display:none!important}
 .mr-wm-pay:disabled{opacity:.55;cursor:not-allowed}
-.mr-wm-note{margin:0;text-align:center;font-size:.78rem;color:#94a3b8;line-height:1.4}
+.mr-wm-note{margin:0;text-align:center;font-size:.82rem;color:#8e8e93;line-height:1.4}
 .mr-wm-error{margin:0;color:#b91c1c;font-size:.85rem;font-weight:600;line-height:1.4}
-.mr-wm-rows{display:flex;flex-direction:column;background:#fff;border:1px solid var(--mr-line,#e8edf3);border-radius:14px;overflow:hidden}
-.mr-wm-row{appearance:none;display:flex;align-items:center;justify-content:space-between;gap:.75rem;width:100%;min-height:52px;padding:.8rem 1rem;border:0;border-top:1px solid var(--mr-line,#e8edf3);background:#fff;color:var(--mr-ink,#0f172a);font:inherit;font-family:var(--mr-font);font-size:.95rem;font-weight:600;letter-spacing:-.01em;text-align:left;text-decoration:none;cursor:pointer;box-sizing:border-box}
+.mr-wm-rows{display:flex;flex-direction:column;background:transparent;border:0;border-radius:0;overflow:hidden}
+.mr-wm-row{appearance:none;display:flex;align-items:center;justify-content:space-between;gap:.75rem;width:100%;min-height:2.55rem;padding:.6rem .15rem;border:0;border-radius:10px;background:transparent;color:#1d1d1f;font:inherit;font-family:var(--mr-font);font-size:.95rem;font-weight:600;letter-spacing:-.02em;text-align:left;text-decoration:none;cursor:pointer;box-sizing:border-box}
 .mr-wm-rows>.mr-wm-row:first-child,.mr-wm-row[hidden]+.mr-wm-row{border-top:0}
 .mr-wm-row[hidden]{display:none!important}
-.mr-wm-row:hover{background:#f8fafc}
+.mr-wm-row:hover{background:#f5f5f7}
 .mr-wm-chevron{color:#94a3b8;font-size:1.15rem;line-height:1;font-weight:500}
 .mr-wm-row.is-open .mr-wm-chevron{transform:rotate(90deg)}
 .mr-wm-row>span:last-child:not(.mr-wm-chevron){color:#64748b;font-size:.8rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
@@ -258,8 +261,8 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       '<button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>' +
       '<p class="mr-wm-error" id="mr-wm-error" hidden></p>' +
       '<p class="mr-wm-note">Hosting renews every month until you cancel.</p>' +
+      '<button type="button" class="mr-wm-meet" id="mr-wm-schedule" hidden>Book a meeting</button>' +
       '<div class="mr-wm-rows">' +
-      '<button type="button" class="mr-wm-row" id="mr-wm-schedule" hidden><span>Schedule a meeting</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
       creatorBtn +
       '<button type="button" class="mr-wm-row" id="mr-wm-contact-hq"><span>Contact Moonrise</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
       '<button type="button" class="mr-wm-row" id="mr-wm-questions" aria-expanded="false" aria-controls="mr-wm-faq"><span>Questions</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
@@ -269,7 +272,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       "</div></div>" +
       '<div class="mr-wm-step" data-step="schedule" hidden id="mr-wm-step-schedule">' +
       '<button type="button" class="mr-wm-back" id="mr-wm-schedule-back">Back</button>' +
-      '<iframe class="mr-wm-frame" id="mr-wm-schedule-frame" title="Schedule a meeting" hidden></iframe>' +
+      '<iframe class="mr-wm-frame" id="mr-wm-schedule-frame" title="Book a meeting" hidden></iframe>' +
       '<a class="mr-wm-open-tab" id="mr-wm-schedule-open" target="_blank" rel="noopener noreferrer">Open in a new tab</a>' +
       "</div>" +
       '<div class="mr-wm-step" data-step="creator" hidden id="mr-wm-step-creator"></div>' +
@@ -479,11 +482,8 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     overlayRoot.innerHTML =
       '<div class="mr-wm-overlay" id="mr-wm-overlay" aria-hidden="true">' +
       '<div class="mr-wm-panel" role="dialog" aria-modal="true" aria-labelledby="mr-wm-title">' +
-      '<header class="mr-wm-head"><img src="' +
-      AVATAR +
-      '" alt="" width="40" height="40" />' +
-      '<div><h2 id="mr-wm-title">Unlock your website</h2>' +
-      '<p id="mr-wm-subtitle">The watermark stays until you pay.</p></div>' +
+      '<header class="mr-wm-head">' +
+      '<h2 id="mr-wm-title">Unlock your website</h2>' +
       '<button type="button" class="mr-wm-close" id="mr-wm-close" aria-label="Close">&times;</button></header>' +
       panelBodyHtml(creatorContact) +
       "</div></div>";

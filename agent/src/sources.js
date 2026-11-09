@@ -18,12 +18,14 @@ function js(value) {
   return JSON.stringify(text(value, 400));
 }
 
-function servicesOf(copy) {
+function servicesOf(copy, media) {
+  const slots = ["service1", "service2", "service3", "gallery1", "gallery2", "detail1"];
   const list = Array.isArray(copy?.services) ? copy.services : [];
   return list
-    .map((item) => ({
+    .map((item, index) => ({
       title: text(item?.title, 80),
       text: text(item?.text, 180),
+      photo: mediaUrl(media, slots[index] || "service1"),
     }))
     .filter((item) => item.title)
     .slice(0, 6);
@@ -50,7 +52,7 @@ function siteSourceFiles(ctx, copy, plan, media) {
   };
   const display = text(plan?.type?.display, 40) || "Manrope";
   const body = text(plan?.type?.body, 40) || display;
-  const services = servicesOf(copy);
+  const services = servicesOf(copy, media);
   const faqs = (Array.isArray(copy?.faqs) ? copy.faqs : [])
     .map((item) => ({ q: text(item?.q, 140), a: text(item?.a, 280) }))
     .filter((item) => item.q && item.a)
@@ -131,6 +133,42 @@ h1, h2 {
   text-decoration: none;
 }
 
+.media, .gallery img {
+  background: #e7e5e4;
+}
+
+.media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border-radius: 1rem;
+}
+
+.card {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.media img, .card img, .gallery img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.gallery img {
+  height: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: 1rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
@@ -162,7 +200,7 @@ h1, h2 {
       contents: `export function Hero() {
   return (
     <section id="hero" aria-label="Introduction">
-      ${hero ? `<img src={${js(hero)}} alt="" />` : ""}
+      ${hero ? `<div className="media"><img src={${js(hero)}} alt="" /></div>` : ""}
       <h1>{${js(headline)}}</h1>
       <a className="btn" href="#contact">{${js(cta)}}</a>
     </section>
@@ -181,7 +219,12 @@ export function Services() {
       <h2>{${js(copy?.servicesTitle || "Services")}}</h2>
       <div className="grid">
         {services.map((service) => (
-          <article key={service.title}>
+          <article className="card" key={service.title}>
+            {service.photo ? (
+              <div className="media">
+                <img src={service.photo} alt="" />
+              </div>
+            ) : null}
             <h3>{service.title}</h3>
             <p>{service.text}</p>
           </article>
@@ -198,7 +241,7 @@ export function Services() {
       contents: `export function About() {
   return (
     <section id="about">
-      ${about ? `<img src={${js(about)}} alt={${js(name)}} />` : ""}
+      ${about ? `<div className="media"><img src={${js(about)}} alt={${js(name)}} /></div>` : ""}
       <h2>{${js(copy?.aboutTitle || "About")}}</h2>
       <p>{${js(copy?.aboutBody || lede)}}</p>
     </section>
@@ -219,11 +262,13 @@ export function Gallery() {
   return (
     <section id="gallery">
       <h2>A closer look</h2>
-      <div className="gallery">
-        {photos.map((src) => (
-          <img key={src} src={src} alt="" />
-        ))}
-      </div>
+      {photos.length ? (
+        <div className="gallery">
+          {photos.map((src) => (
+            <img key={src} src={src} alt="" />
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }

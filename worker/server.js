@@ -249,6 +249,7 @@ const {
   notifyCreatorClientPurchase,
   notifyCreatorSiteVisit,
   notifyCreatorContactMessage,
+  sendPushToUser,
 } = require("./creator-push");
 const calendar = require("./calendar");
 const { recordPendingCreatorPayout } = require("./creator-payouts");
@@ -2578,10 +2579,11 @@ function ensureMobileFriendlyHtml(html) {
 /* Moonrise mobile-fit - one scroll root (html), body must not trap scroll */
 html{max-width:100%!important;overflow-x:hidden!important;overflow-y:scroll!important;height:auto!important;max-height:none!important;-webkit-overflow-scrolling:touch}
 body{max-width:100%!important;overflow-x:hidden!important;overflow-y:visible!important;height:auto!important;max-height:none!important;min-height:100%;position:relative!important}
-img,video,canvas,svg{max-width:100%;height:auto}
+img,video,canvas,svg{max-width:100%}
 iframe{max-width:100%}
 h1,h2,h3,h4,p,li,a,button,.btn,.hero-title,.section-title,.pricing-price,.stat-num{max-width:100%;overflow-wrap:break-word}
-.hero,.hero-stage{height:auto!important;max-height:none!important;min-height:100svh;overflow:visible!important}
+.hero{min-height:100svh;max-height:none;overflow:hidden}
+.hero-stage{width:100%;min-height:100svh;overflow:hidden;background-position:center;background-size:cover}
 .hero-content{max-width:100%;box-sizing:border-box}
 .about-cut,.about-slash{display:none!important}
 .faq-panel>*{min-height:0;overflow:hidden}
@@ -2599,13 +2601,20 @@ body > div, main, .page, .wrapper, .site, .layout, .site-wrap, .app, #app, #root
   .dock::-webkit-scrollbar,header .dock::-webkit-scrollbar{display:none}
   .dock a,header .dock a{white-space:nowrap;flex:0 0 auto}
   .hero,.hero-content,section,.container{max-width:100%;box-sizing:border-box}
-  .hero,.hero-stage{min-height:auto!important;overflow:visible!important}
+  .hero{min-height:70svh;overflow:hidden}
+  .hero-stage{min-height:70svh;overflow:hidden}
   .hero-ctas,.hero-ctas .btn{width:100%;max-width:100%}
   .about-badge{position:static!important}
   .cred-strip,.hero-btns,.cta-btns{gap:.75rem}
 }
 #mr-wm-chip-root,.mr-wm,[data-moonrise-watermark]{z-index:2147483000!important;pointer-events:none}
 .mr-wm-chip,#mr-wm-open{pointer-events:auto!important}
+.about-media,.media-slot,figure:has(> img){position:relative;overflow:hidden;min-height:180px;background:#e7e5e4}
+.about-media,.media-slot{aspect-ratio:4/5}
+body:not(.svc-list):not(.svc-feature) .card:has(> img){position:relative;overflow:hidden;aspect-ratio:3/4;min-height:220px;background:#e7e5e4}
+.card:has(> img) > img,.about-media img,.media-slot img,.hero-stage img,figure:has(> img) > img{display:block;width:100%;max-width:100%;height:100%;object-fit:cover}
+.gallery{display:grid;gap:.75rem}
+.gallery img{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:4/3;min-height:160px;object-fit:cover;background:#e7e5e4}
 `.trim();
 
   const styleTag = `<style data-ms-mobile-fit="1">${css}</style>`;
@@ -3549,6 +3558,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
     "Include the exact business name and every provided phone, address, and cleaned hours string.",
     "Never print Google Maps junk in hours.",
     "Service sections must keep photos visible. No display:none on service images.",
+    "Every photo sits in a sized frame (aspect-ratio or min-height) with object-fit: cover. No empty media boxes, no collapsed hero, no invented or relative image URLs.",
     "No placeholders, no broken tags, no stuttering animation, no overlapping or cut-off UI.",
     "Buttons and fields must feel smooth: hover, press, focus, and a stable submit loading state.",
     "One intentional layout only — do not include unused alternate body.* CSS variants.",
@@ -3603,7 +3613,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
           "",
           "## Enhance checklist (fix every item)",
           "- Hero: clear headline, calm support or CTA, no clutter",
-          "- Services: real photos visible, even spacing, readable cards or rows",
+          "- Services and gallery: real photos inside sized frames, even spacing, nothing collapsed or empty",
           "- FAQ: opens cleanly; form has focus rings and a stable submit state",
           "- Contact: cleaned hours; exact phone and address",
           "- Mobile: no horizontal scroll, no overlapping controls, reserved image space",
@@ -3651,7 +3661,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
           "## Required outcome",
           "Complete <!DOCTYPE html> document with nav, hero, content, contact form, footer.",
           "Exact business details from the facts. Modern, minimal, professional.",
-          "Visible service photos. Clean hours. Smooth buttons and fields.",
+          "Visible service photos in sized frames. Replace broken, empty, or relative images with the stock URLs. Clean hours. Smooth buttons and fields.",
         ].join("\n"),
         temperature: 0.15,
         maxTokens: assembleMaxTokens,
@@ -4426,6 +4436,43 @@ app.post("/push/unsubscribe", requireUser, async (req, res) => {
   }
 });
 
+const pushTestHits = new Map();
+
+function pushTestAllowed(userId) {
+  const now = Date.now();
+  const recent = (pushTestHits.get(userId) || []).filter((at) => now - at < 10 * 60 * 1000);
+  if (recent.length >= 3) {
+    pushTestHits.set(userId, recent);
+    return false;
+  }
+  recent.push(now);
+  pushTestHits.set(userId, recent);
+  return true;
+}
+
+app.post("/push/test", requireUser, async (req, res) => {
+  try {
+    if (!pushTestAllowed(req.user.id)) {
+      return res.json({ ok: true, sent: 0, skipped: true, reason: "rate_limited" });
+    }
+    const result = await sendPushToUser(db(), req.user.id, {
+      title: "Notifications are on",
+      body: "Moonrise can reach this device.",
+      url: "settings.html#settings-notifications",
+      tag: "notifications-on-" + Date.now(),
+    });
+    res.json({
+      ok: !!result.ok,
+      sent: result.sent || 0,
+      skipped: !!result.skipped,
+      reason: result.reason || "",
+    });
+  } catch (e) {
+    console.error("push/test", e);
+    res.status(500).json({ error: clientError(e, "Could not send a test notification") });
+  }
+});
+
 /**
  * Credit billing - plans, top-ups, balance, billing portal.
  */
@@ -5185,6 +5232,7 @@ app.post("/contact-submit", contactSubmitLimiter, async (req, res) => {
       console.warn("contact_leads insert failed:", insertError.message || insertError);
     }
 
+    let mailError = null;
     try {
       await sendContactLeadEmail({
         to,
@@ -5193,10 +5241,8 @@ app.post("/contact-submit", contactSubmitLimiter, async (req, res) => {
         projectId: project.id,
       });
     } catch (mailErr) {
+      mailError = mailErr;
       console.error("contact-submit email failed:", mailErr?.message || mailErr);
-      return res.status(502).json({
-        error: mailErr?.message || "Could not deliver email. Check the notification address and try again.",
-      });
     }
 
     try {
@@ -5206,6 +5252,12 @@ app.post("/contact-submit", contactSubmitLimiter, async (req, res) => {
       });
     } catch (pushErr) {
       console.error("Creator contact-message push failed:", pushErr.message || pushErr);
+    }
+
+    if (mailError) {
+      return res.status(502).json({
+        error: mailError?.message || "Could not deliver email. Check the notification address and try again.",
+      });
     }
 
     res.json({ ok: true });

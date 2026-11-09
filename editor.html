@@ -238,7 +238,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/generation-announce.css?v=20260721-float">
-  <link rel="stylesheet" href="css/studio.css?v=20261108-agent-files">
+  <link rel="stylesheet" href="css/studio.css?v=20261108-agent-dots">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 <link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
@@ -340,6 +340,9 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                   <h3>Moonrise watermark</h3>
                   <p class="ms-muted" id="lb-watermark-summary">Paywall badge on live site</p>
                 </div>
+                <button type="button" class="ms-lb-widget-disclose" aria-expanded="false" aria-controls="lb-watermark-body" aria-label="Show Moonrise watermark details">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
                 <label class="ms-lb-widget-toggle" title="Enable Moonrise watermark">
                   <input type="checkbox" id="lb-watermark-enabled" aria-label="Enable Moonrise watermark">
                   <span class="ms-lb-widget-toggle-track" aria-hidden="true"></span>
@@ -365,6 +368,9 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                   <h3>Contact Form</h3>
                   <p class="ms-muted">Form submissions</p>
                 </div>
+                <button type="button" class="ms-lb-widget-disclose" aria-expanded="false" aria-controls="lb-contact-form-body" aria-label="Show Contact Form details">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
                 <label class="ms-lb-widget-toggle" title="Enable contact form">
                   <input type="checkbox" id="lb-contact-form-enabled" aria-label="Enable contact form">
                   <span class="ms-lb-widget-toggle-track" aria-hidden="true"></span>
@@ -404,6 +410,9 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                   <h3>Custom Domain</h3>
                   <p class="ms-muted" id="lb-custom-domain-summary">Connect your own domain</p>
                 </div>
+                <button type="button" class="ms-lb-widget-disclose" aria-expanded="false" aria-controls="lb-custom-domain-body" aria-label="Show Custom Domain details">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
                 <label class="ms-lb-widget-toggle" title="Enable custom domain">
                   <input type="checkbox" id="lb-custom-domain-enabled" aria-label="Enable custom domain">
                   <span class="ms-lb-widget-toggle-track" aria-hidden="true"></span>
@@ -604,16 +613,9 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                     </div>
                   </div>
                   <div class="ms-lb-agent" id="preview-agent">
-                    <section class="ms-lb-agent-col" aria-label="Agent thinking">
-                      <p class="ms-lb-agent-label">Thinking</p>
-                      <div class="ms-lb-agent-thoughts" id="preview-agent-thoughts">
-                        <p class="ms-lb-agent-thought is-current">Reading the business…</p>
-                      </div>
-                    </section>
-                    <section class="ms-lb-agent-col" aria-label="Files being written">
-                      <p class="ms-lb-agent-label">Files</p>
-                      <div class="ms-lb-agent-files" id="preview-agent-files" role="list"></div>
-                    </section>
+                    <p class="ms-lb-agent-status">Thinking<span class="ms-lb-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+                    <p class="ms-lb-agent-thought is-current" id="preview-agent-thought">Reading the business</p>
+                    <div class="ms-lb-agent-files" id="preview-agent-files" role="list" aria-label="Files being written"></div>
                   </div>
                   <p class="ms-lb-loading-copy" id="preview-loading-copy">Loading project...</p>
                 </div>
@@ -966,6 +968,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/generation-lock.js?v=20260721-one-gen"></script>
   <script defer src="js/site-features.js?v=20260930-seed"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
-  <script defer src="js/builder.js?v=20261108-agent-files"></script>
+  <script defer src="js/builder.js?v=20261108-agent-dots"></script>
 </body>
 </html>

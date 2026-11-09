@@ -51,11 +51,22 @@ function safeSegment(value) {
   return s;
 }
 
+function preferredEventSlug(row) {
+  const chosen = safeSegment(row?.event_slug);
+  if (chosen) return chosen;
+  const types = Array.isArray(row?.event_types) ? row.event_types : [];
+  for (const item of types) {
+    const slug = safeSegment(item?.slug);
+    if (slug) return slug;
+  }
+  return "";
+}
+
 function bookingPageUrl(username, slug, projectId) {
   const user = safeSegment(username);
+  if (!user) return "";
   const event = safeSegment(slug);
-  if (!user || !event) return "";
-  const url = new URL("https://cal.com/" + user + "/" + event);
+  const url = new URL(event ? "https://cal.com/" + user + "/" + event : "https://cal.com/" + user);
   const id = String(projectId || "").trim();
   if (id && UUID_RE.test(id)) url.searchParams.set("metadata[projectId]", id);
   return url.toString();
@@ -804,11 +815,11 @@ function mountRoutes(app, { db, requireUser }) {
       if (!project?.user_id) return res.json({ url: "" });
       const { data: conn, error: connErr } = await supabase
         .from("calendar_connections")
-        .select("username, event_slug")
+        .select("username, event_slug, event_types")
         .eq("user_id", project.user_id)
         .maybeSingle();
       if (connErr) throw connErr;
-      const url = bookingPageUrl(conn?.username, conn?.event_slug, project.id);
+      const url = bookingPageUrl(conn?.username, preferredEventSlug(conn), project.id);
       res.json({ url: isCalBookingUrl(url) ? url : "" });
     } catch (e) {
       console.error("public booking", e?.message || e);

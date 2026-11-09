@@ -479,7 +479,12 @@ function renderBusinessSite(ctx, copy, media) {
       letter-spacing: -0.011em;
     }
     body.is-stone { background: var(--soft); }
-    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    img { display: block; max-width: 100%; height: auto; }
+    .card img, .about-media img, .media-slot img, .hero-stage img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
     a { color: inherit; }
     .wrap { width: min(1120px, calc(100% - 3rem)); margin: 0 auto; }
     .topbar {
@@ -595,8 +600,8 @@ function renderBusinessSite(ctx, copy, media) {
     .grid-2 { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 2.4rem; align-items: center; }
     .about-media { overflow: hidden; border-radius: 1.2rem; aspect-ratio: 4 / 5; }
     .gallery { display: grid; grid-template-columns: 1.4fr 1fr; gap: 0.8rem; }
-    .gallery img { height: 100%; min-height: 220px; border-radius: 1.2rem; }
-    .gallery img:first-child { grid-row: span 2; min-height: 460px; }
+    .gallery img { width: 100%; height: auto; aspect-ratio: 4 / 3; min-height: 220px; object-fit: cover; border-radius: 1.2rem; background: #e7e5e4; }
+    .gallery img:first-child { grid-row: span 2; min-height: 460px; aspect-ratio: 3 / 4; }
     #faq { background: #fff; }
     .faq { border-top: 1px solid var(--line); padding: 0.95rem 0; }
     .faq-q {

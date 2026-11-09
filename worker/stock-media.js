@@ -286,20 +286,140 @@ function rewriteStockPathsInHtml(html, media) {
   return out;
 }
 
-/** Final safety net: replace any leftover relative stock paths in assembled HTML. */
+const DEAD_IMAGE_HOST =
+  /placeholder\.com|via\.placeholder|placehold\.co|placehold\.it|picsum\.photos|source\.unsplash\.com|loremflickr|dummyimage\.com|placeimg\.com|placekitten/i;
+
+function packUrlList(media) {
+  const img = media?.images || {};
+  const urls = [];
+  const push = (url) => {
+    const clean = String(url || "").trim();
+    if (/^https:\/\//i.test(clean) && !urls.includes(clean)) urls.push(clean);
+  };
+  if (Array.isArray(img._all)) img._all.forEach(push);
+  for (const slot of SLOT_KEYS) push(img[slot]);
+  return urls;
+}
+
+function assetKey(url) {
+  const raw = String(url || "").trim();
+  const unsplash = raw.match(/images\.unsplash\.com\/([^?#'"\s]+)/i);
+  if (unsplash) return "u:" + unsplash[1].replace(/\/$/, "");
+  const pexels = raw.match(/images\.pexels\.com\/photos\/(\d+)/i);
+  if (pexels) return "p:" + pexels[1];
+  return "raw:" + raw.split("?")[0];
+}
+
+function looksLikeRaster(url) {
+  const raw = String(url || "");
+  if (/\.(?:woff2?|ttf|otf|eot|css|js|svg)(?:$|[?#])/i.test(raw)) return false;
+  if (/\.(?:png|jpe?g|webp|gif|avif|mp4)(?:$|[?#])/i.test(raw)) return true;
+  if (/images\.unsplash\.com|images\.pexels\.com|stock\/media/i.test(raw)) return true;
+  if (DEAD_IMAGE_HOST.test(raw)) return true;
+  return false;
+}
+
+function isBrokenImageRef(raw, allowed) {
+  const url = String(raw || "")
+    .trim()
+    .replace(/&amp;/g, "&");
+  if (!url || /^(?:#|about:blank|undefined|null|none|javascript:)/i.test(url)) return true;
+  if (/^data:image\//i.test(url)) return false;
+  if (DEAD_IMAGE_HOST.test(url)) return true;
+  if (!/^https?:\/\//i.test(url)) return looksLikeRaster(url) || /stock\/media/i.test(url);
+  if (!allowed || !allowed.size) return false;
+  if (!looksLikeRaster(url) && !/images\.unsplash\.com|images\.pexels\.com/i.test(url)) return false;
+  return !allowed.has(assetKey(url));
+}
+
+function pickPackUrl(state, prefer) {
+  const preferred = String(prefer || "").trim();
+  if (/^https:\/\//i.test(preferred)) return preferred;
+  if (!state.urls.length) return "";
+  const url = state.urls[state.i % state.urls.length];
+  state.i += 1;
+  return url;
+}
+
+function repairImageAttribute(attrs, name, state, allowed) {
+  const re = new RegExp("\\b" + name + "\\s*=\\s*([\"'])([\\s\\S]*?)\\1", "i");
+  const match = attrs.match(re);
+  if (!match) {
+    if (name !== "src") return { attrs, changed: false };
+    const url = pickPackUrl(state);
+    if (!url) return { attrs, changed: false };
+    return { attrs: attrs + ' src="' + url + '"', changed: true };
+  }
+  if (!isBrokenImageRef(match[2], allowed)) return { attrs, changed: false };
+  const url = pickPackUrl(state, name === "poster" ? state.urls[0] : "");
+  if (!url) return { attrs, changed: false };
+  let next = attrs.replace(match[0], name + '="' + url + '"');
+  if (name === "src") next = next.replace(/\s+srcset\s*=\s*(["'])[\s\S]*?\1/i, "");
+  return { attrs: next, changed: true };
+}
+
+/**
+ * Final safety net: swap dead, relative, placeholder, and invented image
+ * URLs for the stock pack, and fill empty photo frames.
+ */
 function ensureStockMediaInHtml(html, media) {
   let out = rewriteStockPathsInHtml(html, media);
-  if (!media?.images?.hero) return out;
+  const urls = packUrlList(media);
+  if (!urls.length) return out;
+  const allowed = new Set(urls.map(assetKey));
+  const state = { urls, i: 1 };
+
+  out = out.replace(/<img\b([^>]*?)\/?>/gi, (full, attrs) => {
+    const repaired = repairImageAttribute(attrs, "src", state, allowed);
+    if (!repaired.changed) return full;
+    const slash = /\/\s*>$/.test(full) ? " />" : ">";
+    return "<img" + repaired.attrs + slash;
+  });
+
+  out = out.replace(/<video\b([^>]*?)>/gi, (full, attrs) => {
+    let next = attrs;
+    const poster = repairImageAttribute(next, "poster", state, allowed);
+    next = poster.attrs;
+    const src = next.match(/\bsrc\s*=\s*(["'])([\s\S]*?)\1/i);
+    const videoUrl = src ? src[2] : "";
+    if (src && /\.mp4(?:$|[?#])/i.test(videoUrl) && (!/^https?:\/\//i.test(videoUrl) || DEAD_IMAGE_HOST.test(videoUrl))) {
+      const video = media?.videos?.hero || urls[0];
+      if (video) next = next.replace(src[0], 'src="' + video + '"');
+    }
+    if (next === attrs) return full;
+    return "<video" + next + ">";
+  });
+
+  out = out.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/gi, (full, _q, inner) => {
+    if (!isBrokenImageRef(inner, allowed)) return full;
+    const url = pickPackUrl(state, /hero/i.test(inner) ? urls[0] : "");
+    if (!url) return full;
+    return "url('" + url + "')";
+  });
+
   out = out.replace(
-    /src=(["'])(?!https?:\/\/)[^"']*\.(?:png|jpe?g|webp|gif|mp4)\1/gi,
-    (match) => {
-      if (/https?:\/\//i.test(match)) return match;
-      if (/\.mp4/i.test(match)) {
-        return `src="${media.videos?.hero || media.images.hero}"`;
+    /<(div|figure|article)\b([^>]*\bclass=(["'])[^"']*\b(?:media-slot|about-media|photo-frame|media-frame|hero-stage|gallery)\b[^"']*\3[^>]*)>\s*<\/\1>/gi,
+    (full, tag, attrs) => {
+      const bg = attrs.match(/background-image\s*:\s*url\(\s*(['"]?)([^'")]+)\1\s*\)/i);
+      if (bg && !isBrokenImageRef(bg[2], allowed)) return full;
+      const url = pickPackUrl(state, /hero-stage/i.test(attrs) ? urls[0] : "");
+      if (!url) return full;
+      if (/hero-stage/i.test(attrs)) {
+        if (bg) {
+          const nextAttrs = attrs.replace(bg[0], "background-image:url('" + url + "')");
+          return "<" + tag + nextAttrs + "></" + tag + ">";
+        }
+        const style = attrs.match(/\sstyle=(["'])([\s\S]*?)\1/i);
+        if (style) {
+          const nextStyle = "background-image:url('" + url + "');" + style[2];
+          return "<" + tag + attrs.replace(style[0], ' style="' + nextStyle + '"') + "></" + tag + ">";
+        }
+        return "<" + tag + attrs + " style=\"background-image:url('" + url + "')\"></" + tag + ">";
       }
-      return `src="${media.images.hero}"`;
+      return "<" + tag + attrs + '><img src="' + url + '" alt=""></' + tag + ">";
     }
   );
+
   return out;
 }
 

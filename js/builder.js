@@ -405,45 +405,42 @@
   }
 
   function resetAgentActivityPanel() {
-    const thoughts = document.getElementById("preview-agent-thoughts");
+    const thought = document.getElementById("preview-agent-thought");
     const files = document.getElementById("preview-agent-files");
-    if (thoughts) {
-      thoughts.replaceChildren();
-      const line = document.createElement("p");
-      line.className = "ms-lb-agent-thought is-current";
-      line.textContent = "Reading the business…";
-      thoughts.appendChild(line);
-    }
+    if (thought) thought.textContent = "Reading the business";
     if (files) files.replaceChildren();
+  }
+
+  function latestAgentFiles(files) {
+    const picked = [];
+    const seen = new Set();
+    for (let i = files.length - 1; i >= 0 && picked.length < 3; i -= 1) {
+      const rel = String(files[i]?.path || "").trim();
+      if (!rel || seen.has(rel)) continue;
+      seen.add(rel);
+      picked.push(rel);
+    }
+    return picked.reverse();
   }
 
   function renderAgentActivity(data) {
     const thoughts = Array.isArray(data?.thoughts) ? data.thoughts : [];
     const files = Array.isArray(data?.files) ? data.files : [];
-    const thoughtRoot = document.getElementById("preview-agent-thoughts");
+    const thoughtEl = document.getElementById("preview-agent-thought");
     const fileRoot = document.getElementById("preview-agent-files");
-    if (thoughtRoot && thoughts.length) {
-      const shown = thoughts.slice(-8);
-      thoughtRoot.replaceChildren();
-      shown.forEach((item, index) => {
-        const line = document.createElement("p");
-        line.className =
-          "ms-lb-agent-thought" + (index === shown.length - 1 ? " is-current" : "");
-        line.textContent = String(item?.text || "");
-        thoughtRoot.appendChild(line);
-      });
-      thoughtRoot.scrollTop = thoughtRoot.scrollHeight;
+    if (thoughtEl && thoughts.length) {
+      const text = String(thoughts[thoughts.length - 1]?.text || "").replace(/[.\u2026\s]+$/, "");
+      if (text) thoughtEl.textContent = text;
     }
-    if (!fileRoot || !files.length) return;
-    files.forEach((file) => {
-      const rel = String(file?.path || "");
-      if (!rel) return;
-      let row = null;
-      fileRoot.querySelectorAll("[data-agent-file]").forEach((el) => {
-        if (el.getAttribute("data-agent-file") === rel) row = el;
-      });
-      if (row) return;
-      row = document.createElement("div");
+    if (!fileRoot) return;
+    const shown = latestAgentFiles(files);
+    const current = Array.from(fileRoot.querySelectorAll("[data-agent-file]")).map((el) =>
+      el.getAttribute("data-agent-file")
+    );
+    if (current.join("\n") === shown.join("\n")) return;
+    fileRoot.replaceChildren();
+    shown.forEach((rel) => {
+      const row = document.createElement("div");
       row.className = "ms-lb-agent-file";
       row.setAttribute("data-agent-file", rel);
       row.setAttribute("role", "listitem");
@@ -452,7 +449,6 @@
       row.appendChild(name);
       fileRoot.appendChild(row);
     });
-    fileRoot.scrollTop = fileRoot.scrollHeight;
   }
 
   function stopAgentActivityPoll() {
@@ -3567,7 +3563,7 @@
       "/* Moonrise mobile-fit - one scroll root (html), body must not trap scroll */",
       "html{max-width:100%!important;overflow-x:hidden!important;overflow-y:scroll!important;height:auto!important;max-height:none!important;-webkit-overflow-scrolling:touch}",
       "body{max-width:100%!important;overflow-x:hidden!important;overflow-y:visible!important;height:auto!important;max-height:none!important;min-height:100%;position:relative!important}",
-      "img,video,canvas,svg{max-width:100%;height:auto}",
+      "img,video,canvas,svg{max-width:100%}",
       "iframe{max-width:100%}",
       ".nav,.dock,nav[class],header .dock,header nav{max-width:100%}",
       "body > div, main, .page, .wrapper, .site, .layout, .site-wrap, .app, #app, #root, #__next{overflow-x:hidden!important;overflow-y:visible!important;max-height:none!important;height:auto!important}",
@@ -3577,10 +3573,17 @@
       ".dock::-webkit-scrollbar,header .dock::-webkit-scrollbar{display:none}",
       ".dock a,header .dock a{white-space:nowrap;flex:0 0 auto}",
       ".hero,.hero-content,section,.container{max-width:100vw;box-sizing:border-box}",
-      ".hero,.hero-stage{min-height:min(100svh,100vh);max-height:none;overflow-x:hidden;overflow-y:visible}",
+      ".hero{min-height:70svh;max-height:none;overflow:hidden}",
+      ".hero-stage{width:100%;min-height:70svh;overflow:hidden;background-position:center;background-size:cover}",
       ".about-badge{right:.75rem!important;bottom:.75rem!important}",
       ".cred-strip,.hero-btns,.cta-btns{gap:.75rem}",
       "}",
+      ".about-media,.media-slot,figure:has(> img){position:relative;overflow:hidden;min-height:180px;background:#e7e5e4}",
+      ".about-media,.media-slot{aspect-ratio:4/5}",
+      "body:not(.svc-list):not(.svc-feature) .card:has(> img){position:relative;overflow:hidden;aspect-ratio:3/4;min-height:220px;background:#e7e5e4}",
+      ".card:has(> img) > img,.about-media img,.media-slot img,.hero-stage img,figure:has(> img) > img{display:block;width:100%;max-width:100%;height:100%;object-fit:cover}",
+      ".gallery{display:grid;gap:.75rem}",
+      ".gallery img{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:4/3;min-height:160px;object-fit:cover;background:#e7e5e4}",
     ].join("");
 
     const styleTag = '<style data-ms-mobile-fit="1">' + css + "</style>";
@@ -8797,20 +8800,64 @@
     body.classList.toggle("is-tools-expanded", anyExpanded);
   }
 
-  function setLbWidgetExpanded(widget, body, checkbox, expanded, { animate = true, onChange } = {}) {
-    if (checkbox) checkbox.checked = !!expanded;
-    if (widget) {
-      if (!animate) widget.classList.add("is-instant");
-      widget.classList.toggle("is-expanded", !!expanded);
-      if (!animate) {
-        window.requestAnimationFrame(() => widget.classList.remove("is-instant"));
-      }
+  function setLbWidgetOpen(widget, body, open, { animate = true } = {}) {
+    if (!widget) return;
+    const next = !!open;
+    if (!animate) widget.classList.add("is-instant");
+    widget.classList.toggle("is-expanded", next);
+    if (!animate) {
+      window.requestAnimationFrame(() => widget.classList.remove("is-instant"));
     }
-    if (body) body.setAttribute("aria-hidden", expanded ? "false" : "true");
-    if (onChange) onChange(!!expanded);
+    if (body) body.setAttribute("aria-hidden", next ? "false" : "true");
+    const btn = widget.querySelector(".ms-lb-widget-disclose");
+    if (btn) {
+      const title = widget.querySelector(".ms-lb-widget-head h3")?.textContent?.trim() || "section";
+      btn.setAttribute("aria-expanded", next ? "true" : "false");
+      btn.setAttribute("aria-label", (next ? "Hide " : "Show ") + title + " details");
+    }
     syncLbToolsPanelLayout();
-    if (expanded && widget) {
+    if (next) {
       window.setTimeout(() => scrollSideControlsToWidget(widget), animate ? 420 : 0);
+    }
+  }
+
+  function bindLbWidgetDisclosures(root) {
+    const scope = root || document.querySelector(".ms-lb-side-controls");
+    if (!scope) return;
+    scope.querySelectorAll(".ms-lb-widget").forEach((widget) => {
+      if (widget.dataset.discloseBound === "1") return;
+      const head = widget.querySelector(".ms-lb-widget-head");
+      const body = widget.querySelector(".ms-lb-widget-body");
+      if (!head || !body) return;
+      widget.dataset.discloseBound = "1";
+      let btn = head.querySelector(".ms-lb-widget-disclose");
+      if (!btn) {
+        btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "ms-lb-widget-disclose";
+        btn.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+        const toggle = head.querySelector(".ms-lb-widget-toggle");
+        if (toggle) head.insertBefore(btn, toggle);
+        else head.appendChild(btn);
+      }
+      if (body.id) btn.setAttribute("aria-controls", body.id);
+      const open = widget.classList.contains("is-expanded");
+      const title = head.querySelector("h3")?.textContent?.trim() || "section";
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.setAttribute("aria-label", (open ? "Hide " : "Show ") + title + " details");
+      head.addEventListener("click", (event) => {
+        if (event.target.closest(".ms-lb-widget-toggle")) return;
+        setLbWidgetOpen(widget, body, !widget.classList.contains("is-expanded"));
+      });
+    });
+  }
+
+  function setLbWidgetExpanded(widget, body, checkbox, expanded, { onChange } = {}) {
+    if (checkbox) checkbox.checked = !!expanded;
+    if (onChange) onChange(!!expanded);
+    if (body && widget && !widget.classList.contains("is-expanded")) {
+      body.setAttribute("aria-hidden", "true");
     }
   }
 
@@ -9158,6 +9205,7 @@
     if (!api || !price || document.getElementById("lb-feature-booking")) return;
     document.getElementById("lb-booking-system-widget")?.remove();
     price.insertAdjacentHTML("beforebegin", api.editorMarkup());
+    bindLbWidgetDisclosures();
     api.FEATURES.forEach((feature) => {
       const widget = document.getElementById("lb-feature-" + feature.id);
       document.getElementById("lb-feature-" + feature.id + "-enabled")?.addEventListener("change", (e) => {
@@ -9431,6 +9479,7 @@
     else widget.setAttribute("hidden", "");
     widget.hidden = !show;
     if (!show) {
+      setLbWidgetOpen(widget, document.getElementById("lb-watermark-body"), false, { animate: false });
       setWatermarkExpanded(false, { animate: false });
       return;
     }
@@ -9990,6 +10039,7 @@
     mountSiteFeatureWidgets();
     bindWatermarkWidget();
     bindCustomDomainWidget();
+    bindLbWidgetDisclosures();
     document.getElementById("lb-set-accent")?.addEventListener("input", (e) => {
       const hex = document.getElementById("lb-set-accent-hex");
       if (hex) hex.value = e.target.value;

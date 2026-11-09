@@ -3,6 +3,39 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.6.3",
+      "date": "2026-11-08",
+      "title": "Alerts and site photos",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The unlock panel is a simpler card, and Book a meeting is its own button."
+          ],
+          "fixes": [
+            "Generated sites keep photo frames from collapsing and replace broken image links."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Editor feature details stay closed until the title or arrow is opened. The switch still turns the feature on or off.",
+            "While a site is building, the status is one line with a moving dot.",
+            "Turning a notification on checks this device and confirms the alert."
+          ],
+          "fixes": []
+        },
+        {
+          "heading": "Worker",
+          "added": [],
+          "fixes": [
+            "A contact message still alerts the creator when the email cannot be delivered.",
+            "A booking link opens from the Cal.com username when no event is selected."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.2",
       "date": "2026-11-08",
       "title": "Month calendar",

@@ -3,7 +3,7 @@
  * Pages and app scripts stay network-first so a bad cached file cannot stick.
  * Other assets refresh in the background.
  */
-const CACHE_NAME = "ms-pwa-v80-studio";
+const CACHE_NAME = "ms-pwa-v81-push";
 const CORE_ASSETS = ["./css/studio.css", "./css/studio-motion.css", "./index.html"];
 
 function isAssetPath(pathname) {
@@ -36,6 +36,10 @@ self.addEventListener("install", (event) => {
       .catch(() => undefined)
   );
   self.skipWaiting();
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -169,21 +173,35 @@ function resolveNotifyUrl(raw) {
   }
 }
 
+function showPushNotification(title, options) {
+  const icon = new URL("assets/MoonriseLogo.png", self.registration.scope).href;
+  const full = {
+    body: options.body,
+    icon,
+    tag: options.tag,
+    data: options.data,
+  };
+  return self.registration.showNotification(title, full).catch(() =>
+    self.registration.showNotification(title, {
+      body: options.body,
+      tag: options.tag,
+      data: options.data,
+    })
+  );
+}
+
 self.addEventListener("push", (event) => {
   const data = pushPayloadFromEvent(event);
   const title = String(data.title || "Moonrise").trim() || "Moonrise";
   const options = {
     body: String(data.body || "You have a new update.").trim(),
-    icon: "./assets/MoonriseLogo.png",
-    badge: "./assets/MoonriseLogo.png",
     tag: String(data.tag || "moonrise").trim() || "moonrise",
-    renotify: true,
     data: {
       url: resolveNotifyUrl(data.url || "clients.html"),
       projectId: data.projectId || null,
     },
   };
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(showPushNotification(title, options));
 });
 
 self.addEventListener("notificationclick", (event) => {

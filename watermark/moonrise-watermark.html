@@ -214,69 +214,60 @@
       pointer-events: auto;
     }
     .mr-wm-panel {
-      width: min(440px, 100%);
+      width: min(22.5rem, 100%);
       max-height: min(92vh, 720px);
       display: flex;
       flex-direction: column;
       overflow: auto;
       background: #fff;
-      border: 1px solid var(--mr-line);
-      border-radius: 16px;
-      box-shadow: 0 20px 48px rgba(15, 23, 42, 0.18);
+      border: 0;
+      border-radius: 18px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.14);
       transform: translateY(10px);
       transition: transform 0.25s ease;
     }
     .mr-wm-overlay.is-open .mr-wm-panel { transform: none; }
     .mr-wm-head {
       display: flex;
-      align-items: flex-start;
-      gap: 0.85rem;
-      padding: 1.15rem 1.2rem 1rem;
-      border-bottom: 1px solid var(--mr-line);
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1.15rem 1.1rem 0.15rem;
+      border-bottom: 0;
       flex-shrink: 0;
     }
-    .mr-wm-head img {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
+    .mr-wm-head img { display: none; }
     .mr-wm-head h2 {
       margin: 0;
       font-family: var(--mr-font);
-      font-size: 1.15rem;
+      font-size: 1.28rem;
       font-weight: 700;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.04em;
       line-height: 1.15;
-      color: var(--mr-ink);
+      color: #1d1d1f;
     }
-    .mr-wm-head p {
-      margin: 0.3rem 0 0;
-      color: var(--mr-muted);
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
+    .mr-wm-head p { display: none; }
     .mr-wm-close {
       appearance: none;
       margin-left: auto;
-      width: 34px;
-      height: 34px;
-      border: 1px solid var(--mr-line);
-      border-radius: 10px;
-      background: #fff;
-      color: #94a3b8;
-      font-size: 1.15rem;
+      width: 2rem;
+      height: 2rem;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #8e8e93;
+      font-size: 1.35rem;
       line-height: 1;
       cursor: pointer;
       flex-shrink: 0;
     }
-    .mr-wm-close:hover { background: #f8fafc; color: #64748b; }
+    .mr-wm-close:hover { background: #f5f5f7; color: #1d1d1f; }
     .mr-wm-body {
-      padding: 1.2rem 1.25rem 1.4rem;
+      padding: 0.7rem 1.1rem 1.15rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      align-items: stretch;
+      gap: 0.7rem;
     }
     .mr-wm-lead {
       margin: 0;
@@ -442,34 +433,42 @@
       font-weight: 500;
       color: var(--mr-muted);
     }
-    .mr-wm-pay {
+    .mr-wm-pay,
+    .mr-wm-meet {
       appearance: none;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 3.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 12px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 42%),
-        linear-gradient(135deg, #60a5fa 0%, #3b82f6 48%, #2563eb 100%);
-      color: #fff;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 2.85rem;
+      margin: 0;
+      border-radius: 10px;
       font: inherit;
       font-family: var(--mr-font);
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
+      font-size: 1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      text-align: center;
+      text-decoration: none;
       cursor: pointer;
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.28) inset,
-        0 -1px 0 rgba(15, 23, 42, 0.12) inset,
-        0 8px 18px rgba(37, 99, 235, 0.28),
-        0 2px 4px rgba(37, 99, 235, 0.18);
     }
-    .mr-wm-pay:hover:not(:disabled) {
-      filter: brightness(1.03);
-      transform: translateY(-0.5px);
+    .mr-wm-pay {
+      border: 0;
+      background: #1d1d1f;
+      color: #fff;
     }
+    .mr-wm-meet {
+      border: 1px solid #e4e4e7;
+      background: #fff;
+      color: #1d1d1f;
+    }
+    .mr-wm-pay:hover:not(:disabled),
+    .mr-wm-meet:hover {
+      filter: none;
+      transform: none;
+    }
+    .mr-wm-meet:hover { background: #f5f5f7; }
     .mr-wm-pay:disabled { opacity: 0.55; cursor: not-allowed; }
     .mr-wm-note {
       margin: 0;
@@ -679,19 +678,15 @@
   <div class="mr-wm-overlay" id="mr-wm-overlay" aria-hidden="true">
     <div class="mr-wm-panel" role="dialog" aria-modal="true" aria-labelledby="mr-wm-title">
       <header class="mr-wm-head">
-        <img src="https://moonrise-studio.vercel.app/assets/MoonriseLogo.png" alt="" width="40" height="40" />
-        <div>
-          <h2 id="mr-wm-title">Unlock your website</h2>
-          <p id="mr-wm-subtitle">The watermark stays until you pay.</p>
-        </div>
+        <h2 id="mr-wm-title">Unlock your website</h2>
         <button type="button" class="mr-wm-close" id="mr-wm-close" aria-label="Close">&times;</button>
       </header>
       <div class="mr-wm-body">
         <button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>
         <p class="mr-wm-error" id="mr-wm-error" hidden></p>
         <p class="mr-wm-note">Hosting renews every month until you cancel.</p>
+        <a class="mr-wm-meet" id="mr-wm-schedule" href="https://cal.com" target="_blank" rel="noopener noreferrer">Book a meeting</a>
         <div class="mr-wm-rows">
-          <a class="mr-wm-row" id="mr-wm-schedule" href="https://cal.com" target="_blank" rel="noopener noreferrer"><span>Schedule a meeting</span><span class="mr-wm-chevron" aria-hidden="true">›</span></a>
           <a class="mr-wm-row" id="mr-wm-contact" href="../contact.html" target="_blank" rel="noopener noreferrer"><span>Contact Moonrise</span><span class="mr-wm-chevron" aria-hidden="true">›</span></a>
           <button type="button" class="mr-wm-row" id="mr-wm-questions" aria-expanded="false" aria-controls="mr-wm-faq"><span>Questions</span><span class="mr-wm-chevron" aria-hidden="true">›</span></button>
         </div>

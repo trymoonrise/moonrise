@@ -142,6 +142,7 @@
     { "source": "/push/vapid-public-key", "destination": "/api" },
     { "source": "/push/subscribe", "destination": "/api" },
     { "source": "/push/unsubscribe", "destination": "/api" },
+    { "source": "/push/test", "destination": "/api" },
     { "source": "/auth/status", "destination": "/api" },
     { "source": "/auth/signin", "destination": "/api" },
     { "source": "/auth/signup", "destination": "/api" },

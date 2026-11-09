@@ -381,7 +381,9 @@
     inputs.forEach((input) => {
       input.disabled = false;
     });
-    setNotifHint("Choose which alerts reach this device.");
+    setNotifHint(
+      "Alerts show on this device. On iPhone, add Moonrise to your Home Screen and open it from the icon."
+    );
   }
 
   fileInput?.addEventListener("change", async () => {

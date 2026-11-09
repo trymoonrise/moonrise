@@ -57,16 +57,51 @@
     return key;
   }
 
+  function iosNeedsHomeScreen() {
+    const ua = navigator.userAgent || "";
+    const ios =
+      /iPhone|iPad|iPod/i.test(ua) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if (!ios) return false;
+    const standalone =
+      window.navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+    return !standalone;
+  }
+
+  function applicationServerKeysMatch(subscription, publicKey) {
+    const existing = subscription?.options?.applicationServerKey;
+    if (!existing) return false;
+    const current = urlBase64ToUint8Array(publicKey);
+    const bytes = new Uint8Array(existing);
+    if (bytes.length !== current.length) return false;
+    for (let i = 0; i < bytes.length; i += 1) {
+      if (bytes[i] !== current[i]) return false;
+    }
+    return true;
+  }
+
   async function readyRegistration() {
     if (!supported()) throw new Error("Push notifications are not supported in this browser.");
+    const swUrl = new URL("/sw.js", window.location.origin).href;
+    let reg;
     try {
-      await navigator.serviceWorker.register("sw.js", { updateViaCache: "none" });
+      reg = await navigator.serviceWorker.register(swUrl, {
+        scope: "/",
+        updateViaCache: "none",
+      });
     } catch (_) {
-      /* ignore - ready may still resolve if already registered */
+      throw new Error("Could not start notifications on this device.");
     }
-    const reg = await navigator.serviceWorker.ready;
-    if (!reg?.pushManager) throw new Error("Push manager is unavailable.");
-    return reg;
+    try {
+      await reg.update();
+    } catch (_) {
+      /* the installed worker can still subscribe */
+    }
+    if (reg.waiting) reg.waiting.postMessage({ type: "SKIP_WAITING" });
+    const ready = await navigator.serviceWorker.ready;
+    if (!ready?.pushManager) throw new Error("Push manager is unavailable.");
+    return ready;
   }
 
   async function currentSubscription() {
@@ -82,15 +117,30 @@
     if (!supported()) {
       throw new Error("This browser does not support push notifications.");
     }
+    if (iosNeedsHomeScreen()) {
+      throw new Error(
+        "On iPhone, add Moonrise to your Home Screen, open it from the icon, then turn notifications on."
+      );
+    }
 
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
-      throw new Error("Notification permission was not granted.");
+      throw new Error(
+        "Notification permission was not granted. Allow notifications for Moonrise in your browser or system settings."
+      );
     }
 
     const publicKey = await fetchVapidPublicKey();
     const reg = await readyRegistration();
     let sub = await reg.pushManager.getSubscription();
+    if (sub && !applicationServerKeysMatch(sub, publicKey)) {
+      try {
+        await sub.unsubscribe();
+      } catch (_) {
+        /* replace it below */
+      }
+      sub = null;
+    }
     if (!sub) {
       sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
@@ -111,7 +161,36 @@
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || "Could not save push subscription.");
-    return { subscription: sub, data };
+    return { subscription: sub, registration: reg, data };
+  }
+
+  async function confirmDelivery(reg) {
+    let sent = 0;
+    try {
+      const headers = await authHeaders();
+      const res = await fetch(workerBase() + "/push/test", {
+        method: "POST",
+        headers,
+        body: "{}",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) sent = Number(data.sent || 0);
+    } catch (_) {
+      sent = 0;
+    }
+    if (sent > 0) return { sent };
+    try {
+      await reg.showNotification("Notifications are on", {
+        body: "Moonrise can reach this device.",
+        tag: "notifications-on",
+        icon: new URL("/assets/MoonriseLogo.png", window.location.origin).href,
+      });
+    } catch (_) {
+      throw new Error(
+        "Notifications are allowed, but this device did not show the alert. Check that notifications are on for your browser."
+      );
+    }
+    return { sent: 0, local: true };
   }
 
   async function unsubscribe() {
@@ -203,8 +282,9 @@
     const profile = await global.StudioAuth?.getProfile?.();
     const next = withAlert(profile?.notification_prefs, key, enabled);
     if (anyAlertEnabled(next)) {
-      await subscribe();
+      const result = await subscribe();
       await savePrefs(next);
+      if (enabled) await confirmDelivery(result.registration);
     } else {
       await savePrefs(next);
       await unsubscribe();
