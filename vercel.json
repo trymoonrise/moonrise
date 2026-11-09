@@ -119,6 +119,7 @@
     { "source": "/webhooks/stripe", "destination": "/api" },
     { "source": "/webhooks/cal/:token", "destination": "/api" },
     { "source": "/calendar/connect", "destination": "/api" },
+    { "source": "/calendar/api-key", "destination": "/api" },
     { "source": "/calendar/callback", "destination": "/api" },
     { "source": "/calendar/connection", "destination": "/api" },
     { "source": "/calendar/event", "destination": "/api" },

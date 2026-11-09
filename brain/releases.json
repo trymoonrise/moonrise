@@ -3,6 +3,22 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.5.9",
+      "date": "2026-11-08",
+      "title": "Cal.com API key",
+      "tag": "v2.5.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.5.9",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Settings can save a Cal.com API key for the calendar."
+          ],
+          "fixes": []
+        }
+      ]
+    },
+    {
       "version": "2.5.8",
       "date": "2026-11-08",
       "title": "Calendar page",

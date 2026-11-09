@@ -446,11 +446,17 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
         </button>
         <div class="ms-set-panel" id="set-cal-panel" hidden>
           <p class="ms-settings-hint ms-muted" id="set-cal-hint">Connect Cal.com so a customer can book you from the watermark.</p>
+          <div class="ms-field" id="set-cal-api-field">
+            <label class="ms-label" for="set-cal-api">API key</label>
+            <input class="ms-input" id="set-cal-api" type="password" autocomplete="new-password" spellcheck="false" autocapitalize="off" placeholder="cal_live_..." maxlength="220" aria-describedby="set-cal-api-hint">
+            <p class="ms-settings-hint ms-muted" id="set-cal-api-hint">From Cal.com: Settings, then Security, then API keys.</p>
+          </div>
           <div class="ms-field" id="set-cal-event-field" hidden>
             <label class="ms-label" for="set-cal-event">Booking page</label>
             <select class="ms-input" id="set-cal-event"></select>
           </div>
           <div class="ms-settings-actions">
+            <button type="button" class="ms-btn" id="set-cal-api-save">Save API key</button>
             <button type="button" class="ms-btn" id="set-cal-connect">Continue with Cal.com</button>
             <button type="button" class="ms-btn" id="set-cal-disconnect" hidden>Disconnect</button>
           </div>
@@ -568,7 +574,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
   <script defer src="js/push-notifications.js?v=20261108-calendar"></script>
-  <script defer src="js/settings.js?v=20261108-calendar"></script>
+  <script defer src="js/settings.js?v=20261108-apikey"></script>
   <script defer src="js/settings-status.js?v=20261108-svc-close"></script>
 </body>
 </html>

@@ -226,11 +226,18 @@ function normalizeBooking(raw, trigger) {
   };
 }
 
+function parseApiKey(raw) {
+  const key = String(raw || "").trim();
+  if (!/^cal_(live_|test_)?[A-Za-z0-9_-]{16,180}$/.test(key)) return "";
+  return key;
+}
+
 function publicConnection(row) {
   if (!row) {
     return {
       connected: false,
       configured: configured(),
+      authKind: "",
       username: "",
       eventSlug: "",
       eventTypes: [],
@@ -241,6 +248,7 @@ function publicConnection(row) {
   return {
     connected: true,
     configured: true,
+    authKind: row.auth_kind === "api_key" ? "api_key" : "oauth",
     username: row.username || "",
     eventSlug: row.event_slug || "",
     eventTypes: types
@@ -258,7 +266,7 @@ async function loadConnection(supabase, userId) {
   const { data, error } = await supabase
     .from("calendar_connections")
     .select(
-      "user_id, cal_user_id, username, event_slug, event_types, access_token, refresh_token, token_expires_at, webhook_id, webhook_secret, webhook_token"
+      "user_id, cal_user_id, username, event_slug, event_types, auth_kind, access_token, refresh_token, token_expires_at, webhook_id, webhook_secret, webhook_token"
     )
     .eq("user_id", userId)
     .maybeSingle();
@@ -267,6 +275,15 @@ async function loadConnection(supabase, userId) {
 }
 
 async function accessTokenFor(supabase, row) {
+  if (row.auth_kind === "api_key") {
+    const key = String(row.access_token || "").trim();
+    if (!parseApiKey(key)) {
+      const err = new Error("Add a Cal.com API key in Settings.");
+      err.status = 401;
+      throw err;
+    }
+    return key;
+  }
   const exp = row.token_expires_at ? new Date(row.token_expires_at).getTime() : 0;
   if (row.access_token && exp > Date.now() + 60 * 1000) return row.access_token;
   if (!row.refresh_token) {
@@ -421,6 +438,74 @@ function sendError(res, e, fallback) {
   res.status(status).json({ error: message });
 }
 
+async function connectAccount(supabase, userId, token, extras) {
+  const profile = await calFetch(token, "/me");
+  const me = profile?.data || {};
+  let types = [];
+  try {
+    const listed = await calFetch(token, "/event-types");
+    types = normalizeEventTypes(listed);
+  } catch (e) {
+    console.error("cal event types", e?.message || e);
+  }
+  if (!types.length && me.username) {
+    try {
+      const listed = await calFetch(
+        token,
+        "/event-types?username=" + encodeURIComponent(String(me.username))
+      );
+      types = normalizeEventTypes(listed);
+    } catch (e) {
+      console.error("cal event types by username", e?.message || e);
+    }
+  }
+  const existing = await loadConnection(supabase, userId);
+  if (existing?.webhook_id && existing.access_token) {
+    try {
+      const oldToken = await accessTokenFor(supabase, existing);
+      await removeRemoteWebhook(oldToken, existing.webhook_id);
+    } catch (e) {
+      console.error("cal replace webhook", e?.message || e);
+    }
+  }
+  const webhookToken = crypto.randomBytes(24).toString("hex");
+  let webhookId = "";
+  let webhookSecret = "";
+  try {
+    const hook = await createRemoteWebhook(token, webhookToken);
+    webhookId = hook.webhookId;
+    webhookSecret = hook.webhookSecret;
+  } catch (e) {
+    console.error("cal webhook create", e?.message || e);
+  }
+  const now = new Date().toISOString();
+  const expiresIn = Number(extras?.expiresIn);
+  const row = {
+    user_id: userId,
+    cal_user_id: me.id != null ? String(me.id) : null,
+    username: safeSegment(me.username) || null,
+    event_slug: types[0]?.slug || null,
+    event_types: types,
+    auth_kind: extras?.authKind === "api_key" ? "api_key" : "oauth",
+    access_token: token,
+    refresh_token: extras?.refreshToken || null,
+    token_expires_at: Number.isFinite(expiresIn) && expiresIn > 0
+      ? new Date(Date.now() + expiresIn * 1000).toISOString()
+      : null,
+    webhook_id: webhookId || null,
+    webhook_secret: webhookSecret || null,
+    webhook_token: webhookToken,
+    updated_at: now,
+  };
+  if (!existing) row.connected_at = now;
+  const { error: saveErr } = await supabase
+    .from("calendar_connections")
+    .upsert(row, { onConflict: "user_id" });
+  if (saveErr) throw saveErr;
+  await syncUpcoming(supabase, userId, token);
+  return loadConnection(supabase, userId);
+}
+
 function mountWebhook(app, express, db) {
   app.post("/webhooks/cal/:token", express.raw({ type: "application/json" }), async (req, res) => {
     const token = String(req.params.token || "").trim();
@@ -509,67 +594,11 @@ function mountRoutes(app, { db, requireUser }) {
         return res.redirect(settingsLocation("failed"));
       }
       const tokens = await exchangeCode(code);
-      const token = tokens.access_token;
-      const profile = await calFetch(token, "/me");
-      const me = profile?.data || {};
-      let types = [];
-      try {
-        const listed = await calFetch(token, "/event-types");
-        types = normalizeEventTypes(listed);
-      } catch (e) {
-        console.error("cal event types", e?.message || e);
-      }
-      if (!types.length && me.username) {
-        try {
-          const listed = await calFetch(
-            token,
-            "/event-types?username=" + encodeURIComponent(String(me.username))
-          );
-          types = normalizeEventTypes(listed);
-        } catch (e) {
-          console.error("cal event types by username", e?.message || e);
-        }
-      }
-      const existing = await loadConnection(supabase, pending.user_id);
-      if (existing?.webhook_id && existing.access_token) {
-        try {
-          const oldToken = await accessTokenFor(supabase, existing);
-          await removeRemoteWebhook(oldToken, existing.webhook_id);
-        } catch (e) {
-          console.error("cal replace webhook", e?.message || e);
-        }
-      }
-      const webhookToken = crypto.randomBytes(24).toString("hex");
-      let webhookId = "";
-      let webhookSecret = "";
-      try {
-        const hook = await createRemoteWebhook(token, webhookToken);
-        webhookId = hook.webhookId;
-        webhookSecret = hook.webhookSecret;
-      } catch (e) {
-        console.error("cal webhook create", e?.message || e);
-      }
-      const now = new Date().toISOString();
-      const row = {
-        user_id: pending.user_id,
-        cal_user_id: me.id != null ? String(me.id) : null,
-        username: safeSegment(me.username) || null,
-        event_slug: types[0]?.slug || null,
-        event_types: types,
-        access_token: token,
-        refresh_token: tokens.refresh_token || null,
-        token_expires_at: new Date(Date.now() + (Number(tokens.expires_in) || 1800) * 1000).toISOString(),
-        webhook_id: webhookId || null,
-        webhook_secret: webhookSecret || null,
-        webhook_token: webhookToken,
-        connected_at: now,
-        updated_at: now,
-      };
-      const { error: saveErr } = await supabase
-        .from("calendar_connections")
-        .upsert(row, { onConflict: "user_id" });
-      if (saveErr) throw saveErr;
-      await syncUpcoming(supabase, pending.user_id, token);
+      await connectAccount(supabase, pending.user_id, tokens.access_token, {
+        authKind: "oauth",
+        refreshToken: tokens.refresh_token || null,
+        expiresIn: Number(tokens.expires_in) || 1800,
+      });
       return res.redirect(settingsLocation("connected"));
     } catch (e) {
       console.error("cal callback", e?.message || e);
@@ -583,6 +612,34 @@ function mountRoutes(app, { db, requireUser }) {
       res.json(publicConnection(row));
     } catch (e) {
       sendError(res, e, "Could not load Calendar");
+    }
+  });
+
+  app.post("/calendar/api-key", requireUser, async (req, res) => {
+    try {
+      const key = parseApiKey(req.body?.apiKey);
+      if (!key) {
+        return res.status(400).json({ error: "Paste a Cal.com API key. It starts with cal_." });
+      }
+      try {
+        const profile = await calFetch(key, "/me");
+        if (!profile?.data) {
+          return res.status(400).json({
+            error: "That API key was rejected. Check it in Cal.com and try again.",
+          });
+        }
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) {
+          return res.status(400).json({
+            error: "That API key was rejected. Check it in Cal.com and try again.",
+          });
+        }
+        throw e;
+      }
+      const row = await connectAccount(db(), req.user.id, key, { authKind: "api_key" });
+      res.json(publicConnection(row));
+    } catch (e) {
+      sendError(res, e, "Could not save the Cal.com API key");
     }
   });
 
@@ -633,6 +690,15 @@ function mountRoutes(app, { db, requireUser }) {
     try {
       const supabase = db();
       const now = new Date().toISOString();
+      const conn = await loadConnection(supabase, req.user.id);
+      if (conn) {
+        try {
+          const token = await accessTokenFor(supabase, conn);
+          await syncUpcoming(supabase, req.user.id, token);
+        } catch (e) {
+          console.error("cal bookings refresh", e?.message || e);
+        }
+      }
       const { data, error } = await supabase
         .from("calendar_bookings")
         .select("id, title, starts_at, ends_at, attendee_name, status, project_id")

@@ -866,14 +866,25 @@
     const disconnect = document.getElementById("set-cal-disconnect");
     const field = document.getElementById("set-cal-event-field");
     const select = document.getElementById("set-cal-event");
+    const apiInput = document.getElementById("set-cal-api");
+    const apiHint = document.getElementById("set-cal-api-hint");
     const connected = !!conn?.connected;
     const username = String(conn?.username || "").trim();
     const types = Array.isArray(conn?.eventTypes) ? conn.eventTypes : [];
+    const apiKey = conn?.authKind === "api_key";
     if (summary) {
-      summary.textContent = connected ? (username ? "@" + username : "Connected") : "Not connected";
+      summary.textContent = connected
+        ? (username ? "@" + username : apiKey ? "API key" : "Connected")
+        : "Not connected";
     }
-    if (connect) connect.hidden = connected;
+    if (connect) connect.hidden = connected || conn?.configured === false;
     if (disconnect) disconnect.hidden = !connected;
+    if (apiInput && document.activeElement !== apiInput) apiInput.value = "";
+    if (apiHint) {
+      apiHint.textContent = apiKey
+        ? "A key is saved. Paste a new one to replace it."
+        : "From Cal.com: Settings, then Security, then API keys.";
+    }
     if (field) field.hidden = !(connected && types.length > 1);
     if (select) {
       select.innerHTML = "";
@@ -889,8 +900,8 @@
     if (!hint) return;
     if (!connected) {
       hint.textContent = conn?.configured === false
-        ? "Cal.com is not set up yet."
-        : "Connect Cal.com so a customer can book you from the watermark.";
+        ? "Paste a Cal.com API key so a customer can book you from the watermark."
+        : "Paste an API key, or continue with Cal.com, so a customer can book you from the watermark.";
       return;
     }
     if (!types.length) {
@@ -938,6 +949,33 @@
     history.replaceState({}, "", location.pathname + (next ? "?" + next : "") + location.hash);
     return flag;
   }
+
+  document.getElementById("set-cal-api-save")?.addEventListener("click", async () => {
+    const btn = document.getElementById("set-cal-api-save");
+    const input = document.getElementById("set-cal-api");
+    const apiKey = String(input?.value || "").trim();
+    setCalError("");
+    if (!apiKey) {
+      setCalError("Paste a Cal.com API key. It starts with cal_.");
+      return;
+    }
+    if (btn) btn.disabled = true;
+    try {
+      const data = await calendarRequest("/calendar/api-key", {
+        method: "POST",
+        body: JSON.stringify({ apiKey }),
+      });
+      if (input) input.value = "";
+      paintCalendar(data);
+      setCalOk("Cal.com API key saved.");
+      window.StudioToast?.success?.("Cal.com API key saved.");
+    } catch (e) {
+      setCalError(e.message || "Could not save the Cal.com API key");
+      window.StudioToast?.error?.(e.message || "Could not save the Cal.com API key");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  });
 
   document.getElementById("set-cal-connect")?.addEventListener("click", async () => {
     const btn = document.getElementById("set-cal-connect");
