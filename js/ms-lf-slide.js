@@ -177,18 +177,12 @@
     const max = gestureMetrics.max;
     const { track, thumb } = gestureMetrics;
 
+    // The label and track are not targets. A press there used to jump the knob.
+    if (!e.target?.closest?.(".ms-lf-slide-thumb")) return false;
+
     const startX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
     const startY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
-    const onThumb = !!e.target.closest?.(".ms-lf-slide-thumb");
-    let originLeft = readX(slide);
-    if (!onThumb) {
-      const rect = track.getBoundingClientRect();
-      const style = global.getComputedStyle(track);
-      const borderL = Number.parseFloat(style.borderLeftWidth) || 0;
-      const raw =
-        startX - rect.left - borderL - gestureMetrics.pad - gestureMetrics.thumbW / 2;
-      originLeft = Math.max(0, Math.min(max, raw));
-    }
+    const originLeft = readX(slide);
     const pointerOriginX = startX;
     let current = Math.max(0, Math.min(max, originLeft));
     let finished = false;

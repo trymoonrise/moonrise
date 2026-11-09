@@ -7698,74 +7698,82 @@
     });
   }
 
-  function fitFlyerPreviewFrame() {
-    const stage = document.getElementById("lb-flyer-preview-stage");
-    const frame = document.getElementById("lb-flyer-preview-frame");
-    if (!stage || !frame || frame.hidden) return;
-    const rect = stage.getBoundingClientRect();
-    if (rect.width < 40 || rect.height < 40) return;
-    const scale = Math.min(rect.width / 1440, rect.height / 900);
-    frame.style.transform = "scale(" + scale + ")";
-    frame.style.width = "1440px";
-    frame.style.height = "900px";
+  function fitFlyerLabel(el) {
+    if (!el) return;
+    el.style.fontSize = "";
+    let size = parseFloat(window.getComputedStyle(el).fontSize) || 16;
+    el.style.fontSize = size + "px";
+    const limit = el.clientWidth;
+    if (!limit) return;
+    while (size > 11 && el.scrollWidth > limit + 1) {
+      size -= 0.5;
+      el.style.fontSize = size + "px";
+    }
   }
 
-  async function populateFlyerPreview(html) {
-    const frame = document.getElementById("lb-flyer-preview-frame");
-    const collage = document.getElementById("lb-flyer-preview-collage");
-    if (!frame || !collage) return;
+  function flyerSectionElements(doc) {
+    if (!doc || !doc.body) return [];
+    const nodes = [...doc.body.querySelectorAll("section, header, main, footer, article")];
+    const blocks = nodes.length ? nodes : [...doc.body.children];
+    const sized = blocks.filter((el) => el.offsetHeight >= 72 && el.offsetWidth >= 140);
+    const outer = sized.filter((el) => !sized.some((other) => other !== el && other.contains(el)));
+    const list = outer.length ? outer : sized;
+    if (!list.length) return [];
+    const hero =
+      list.find((el) => /hero/i.test(String(el.id || "") + " " + String(el.className || ""))) || list[0];
+    const rest = list.filter((el) => el !== hero);
+    const picks = [hero];
+    rest.forEach((el) => {
+      if (picks.length < 3) picks.push(el);
+    });
+    while (picks.length < 3) picks.push(picks[picks.length - 1]);
+    return picks.slice(0, 3);
+  }
 
-    const imageUrls = collectFlyerImageUrls(html, 4);
-    const loaded = (await Promise.all(imageUrls.map(loadFlyerImage))).filter(Boolean);
+  function fitFlyerPrint(frame) {
+    const box = frame.parentElement && frame.parentElement.getBoundingClientRect();
+    const doc = frame.contentDocument;
+    if (!box || box.width < 24 || box.height < 24 || !doc || !doc.body) return;
+    const slot = Number(frame.getAttribute("data-flyer-slot") || 0);
+    const sections = flyerSectionElements(doc);
+    const el = sections[slot] || doc.body;
+    const pageW = 1280;
+    const rect = el.getBoundingClientRect();
+    const secH = Math.max(rect.height, 1);
+    const top = Math.max(rect.top, 0);
+    frame.style.width = pageW + "px";
+    frame.style.height = Math.max(top + secH, doc.body.scrollHeight || 0, 800) + "px";
+    const scale = Math.min(box.width / pageW, box.height / secH);
+    const x = (box.width - pageW * scale) / 2;
+    const y = (box.height - secH * scale) / 2;
+    frame.style.transform = "translate(" + x + "px, " + (y - top * scale) + "px) scale(" + scale + ")";
+  }
 
-    // Prefer a clean image collage so the flyer stays organized and print-matched.
-    if (loaded.length) {
-      frame.hidden = true;
+  function fitFlyerPrints() {
+    document.querySelectorAll(".ms-lb-flyer-print-frame").forEach((frame) => {
+      if (frame.srcdoc) fitFlyerPrint(frame);
+    });
+    fitFlyerLabel(document.getElementById("lb-flyer-domain"));
+    fitFlyerLabel(document.getElementById("lb-flyer-preview-host"));
+  }
+
+  function mountFlyerPrints(html) {
+    const sanitize = window.MsPreviewThumb?.sanitize;
+    const safeHtml = typeof sanitize === "function" ? sanitize(html) : String(html || "");
+    const frames = [...document.querySelectorAll(".ms-lb-flyer-print-frame")];
+    frames.forEach((frame) => {
+      frame.onload = () => {
+        fitFlyerPrint(frame);
+        window.setTimeout(() => fitFlyerPrint(frame), 120);
+      };
       try {
         frame.removeAttribute("srcdoc");
-        frame.src = "about:blank";
+        frame.srcdoc = safeHtml;
       } catch (_) {
         /* ignore */
       }
-      collage.hidden = false;
-      collage.innerHTML = "";
-      loaded.slice(0, 4).forEach((img) => {
-        const node = document.createElement("img");
-        node.src = img.currentSrc || img.src;
-        node.alt = "";
-        collage.appendChild(node);
-      });
-      return loaded;
-    }
-
-    const sanitize = window.MsPreviewThumb?.sanitize;
-    const safeHtml = typeof sanitize === "function" ? sanitize(html) : String(html || "");
-    if (safeHtml.trim()) {
-      try {
-        collage.hidden = true;
-        collage.innerHTML = "";
-        frame.hidden = false;
-        frame.removeAttribute("hidden");
-        frame.srcdoc = safeHtml;
-        requestAnimationFrame(() => {
-          fitFlyerPreviewFrame();
-          window.setTimeout(fitFlyerPreviewFrame, 80);
-        });
-        return loaded;
-      } catch (_) {
-        /* fall through */
-      }
-    }
-
-    frame.hidden = true;
-    collage.hidden = false;
-    collage.innerHTML = "";
-    const empty = document.createElement("div");
-    empty.style.cssText =
-      "grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;color:#64748b;font-weight:700;font-size:0.95rem;padding:1.25rem;text-align:center";
-    empty.textContent = qrBusinessName();
-    collage.appendChild(empty);
-    return loaded;
+    });
+    requestAnimationFrame(fitFlyerPrints);
   }
 
   function closeWebsiteFlyer() {
@@ -7773,15 +7781,14 @@
     if (!modal) return;
     modal.hidden = true;
     document.body.classList.remove("ms-lb-flyer-open");
-    const frame = document.getElementById("lb-flyer-preview-frame");
-    if (frame) {
+    document.querySelectorAll(".ms-lb-flyer-print-frame").forEach((frame) => {
       try {
         frame.removeAttribute("srcdoc");
         frame.src = "about:blank";
       } catch (_) {
         /* ignore */
       }
-    }
+    });
   }
 
   async function openWebsiteFlyer() {
@@ -7820,11 +7827,104 @@
       return;
     }
 
-    await populateFlyerPreview(html);
+    mountFlyerPrints(html);
 
     modal.hidden = false;
     document.body.classList.add("ms-lb-flyer-open");
-    requestAnimationFrame(fitFlyerPreviewFrame);
+    requestAnimationFrame(() => {
+      fitFlyerPrints();
+      window.setTimeout(fitFlyerPrints, 160);
+    });
+  }
+
+  function fillTextFit(ctx, text, x, y, maxWidth, size, weight) {
+    const value = String(text || "");
+    let px = size;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    while (px > 12) {
+      ctx.font = weight + " " + px + "px DM Sans, system-ui, sans-serif";
+      if (ctx.measureText(value).width <= maxWidth) break;
+      px -= 1;
+    }
+    ctx.fillText(value, x, y);
+  }
+
+  function drawImageContain(ctx, img, x, y, w, h, radius) {
+    roundRect(ctx, x, y, w, h, radius || 0);
+    ctx.save();
+    ctx.clip();
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(x, y, w, h);
+    if (img) {
+      const iw = img.naturalWidth || img.width || 1;
+      const ih = img.naturalHeight || img.height || 1;
+      const scale = Math.min(w / iw, h / ih);
+      const dw = iw * scale;
+      const dh = ih * scale;
+      ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+    }
+    ctx.restore();
+  }
+
+  function canvasHasPaint(canvas) {
+    try {
+      const sample = canvas.getContext("2d").getImageData(
+        Math.max(0, Math.floor(canvas.width / 2)),
+        Math.max(0, Math.floor(canvas.height / 2)),
+        1,
+        1
+      ).data;
+      return sample[3] > 8;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  async function rasterizeElement(el) {
+    const w = Math.max(1, Math.ceil(el.offsetWidth));
+    const h = Math.max(1, Math.ceil(Math.min(el.offsetHeight, 1600)));
+    const doc = el.ownerDocument;
+    const styles = [...doc.querySelectorAll("style")].map((node) => node.textContent || "").join("\n");
+    const clone = el.cloneNode(true);
+    clone.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+    const markup =
+      "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"width:" + w + "px;height:" + h + "px;overflow:hidden;margin:0\">" +
+      "<style>" + styles.replace(/<\/style/gi, "<\\/style") + "</style>" +
+      clone.outerHTML +
+      "</div>";
+    const svg =
+      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + w + "\" height=\"" + h + "\">" +
+      "<foreignObject width=\"100%\" height=\"100%\">" + markup + "</foreignObject></svg>";
+    const image = new Image();
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = reject;
+      image.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    });
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    canvas.getContext("2d").drawImage(image, 0, 0, w, h);
+    return canvasHasPaint(canvas) ? canvas : null;
+  }
+
+  async function captureFlyerSlot(frame) {
+    const doc = frame && frame.contentDocument;
+    if (!doc || !doc.body) return null;
+    const slot = Number(frame.getAttribute("data-flyer-slot") || 0);
+    const sections = flyerSectionElements(doc);
+    const el = sections[slot] || sections[0];
+    if (!el) return null;
+    try {
+      const shot = await rasterizeElement(el);
+      if (shot) return shot;
+    } catch (_) {
+      /* fall through to a still from the section */
+    }
+    const photo = el.querySelector("img");
+    if (photo && (photo.naturalWidth || 0) > 8) return photo;
+    return null;
   }
 
   function drawImageCover(ctx, img, x, y, w, h, radius) {
@@ -7864,9 +7964,10 @@
     if (!url) {
       throw new Error("Publish your website first before creating a flyer.");
     }
-    const html = currentPublishHtml();
     const label = flyerSiteLabel(url);
-    const images = (await Promise.all(collectFlyerImageUrls(html, 4).map(loadFlyerImage))).filter(Boolean);
+    const prints = await Promise.all(
+      [...document.querySelectorAll(".ms-lb-flyer-print-frame")].map((frame) => captureFlyerSlot(frame))
+    );
 
     const canvas = document.createElement("canvas");
     const w = 1800;
@@ -7918,10 +8019,7 @@
     ctx.fillStyle = "#ffffff";
     ctx.fill();
     ctx.fillStyle = "#0f172a";
-    ctx.font = "800 36px DM Sans, system-ui, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(label || name, leftX + leftW / 2, leftY + domainH / 2, leftW - 56);
+    fillTextFit(ctx, label || name, leftX + leftW / 2, leftY + domainH / 2, leftW - 48, 34, "800");
 
     // QR card + inset frame
     const qrY = leftY + domainH + gap;
@@ -7955,8 +8053,7 @@
     ctx.fillStyle = ctaGrad;
     ctx.fill();
     ctx.fillStyle = "#ffffff";
-    ctx.font = "700 26px DM Sans, system-ui, sans-serif";
-    ctx.fillText("Scan to visit the live site", leftX + leftW / 2, ctaY + ctaH / 2, leftW - 48);
+    fillTextFit(ctx, "Scan to visit the live site", leftX + leftW / 2, ctaY + ctaH / 2, leftW - 40, 24, "700");
 
     // Preview card
     const rightX = leftX + leftW + gap;
@@ -7984,10 +8081,7 @@
     ctx.fillStyle = "#ffffff";
     ctx.fill();
     ctx.fillStyle = "#64748b";
-    ctx.font = "600 18px DM Sans, system-ui, sans-serif";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    ctx.fillText(label || name, rightX + 136, rightY + chromeH / 2, pillW - 28);
+    fillTextFit(ctx, label || name, rightX + 120 + pillW / 2, rightY + chromeH / 2, pillW - 24, 16, "600");
 
     const previewPad = 28;
     const previewX = rightX + previewPad;
@@ -7998,42 +8092,23 @@
     ctx.fillStyle = "#e8edf3";
     ctx.fill();
 
-    const gapImg = 16;
+    const gapImg = 14;
     const innerPad = 16;
     const ix = previewX + innerPad;
     const iy = previewY + innerPad;
     const iw = previewW - innerPad * 2;
     const ih = previewH - innerPad * 2;
-    if (images.length >= 3) {
-      const leftPanelW = iw * 0.58;
-      const rightPanelW = iw - leftPanelW - gapImg;
-      const topH = ih * 0.58;
-      const bottomH = ih - topH - gapImg;
-      drawImageCover(ctx, images[0], ix, iy, leftPanelW, ih, 18);
-      drawImageCover(ctx, images[1], ix + leftPanelW + gapImg, iy, rightPanelW, topH, 18);
-      drawImageCover(ctx, images[2], ix + leftPanelW + gapImg, iy + topH + gapImg, rightPanelW, bottomH, 18);
-    } else if (images.length === 2) {
-      const half = (iw - gapImg) / 2;
-      drawImageCover(ctx, images[0], ix, iy, half, ih, 18);
-      drawImageCover(ctx, images[1], ix + half + gapImg, iy, half, ih, 18);
-    } else if (images.length === 1) {
-      drawImageCover(ctx, images[0], ix, iy, iw, ih, 18);
-    } else {
-      roundRect(ctx, ix, iy, iw, ih, 18);
-      const wash = ctx.createLinearGradient(ix, iy, ix + iw, iy + ih);
-      wash.addColorStop(0, "#dbeafe");
-      wash.addColorStop(1, "#eff6ff");
-      ctx.fillStyle = wash;
-      ctx.fill();
-      ctx.fillStyle = "#1e3a8a";
-      ctx.font = "800 46px Syne, DM Sans, system-ui, sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(name, ix + iw / 2, iy + ih / 2 - 18, iw - 56);
-      ctx.fillStyle = "#2563eb";
-      ctx.font = "600 24px DM Sans, system-ui, sans-serif";
-      ctx.fillText(label || "Your live website", ix + iw / 2, iy + ih / 2 + 30, iw - 56);
-    }
+    const heroW = Math.round(iw * 0.58);
+    const sideW = iw - heroW - gapImg;
+    const sideH = (ih - gapImg) / 2;
+    const slots = [
+      [ix, iy, heroW, ih],
+      [ix + heroW + gapImg, iy, sideW, sideH],
+      [ix + heroW + gapImg, iy + sideH + gapImg, sideW, sideH]
+    ];
+    slots.forEach((slot, i) => {
+      drawImageContain(ctx, prints[i] || null, slot[0], slot[1], slot[2], slot[3], 16);
+    });
 
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
@@ -8110,7 +8185,7 @@
       void printWebsiteFlyer();
     });
     window.addEventListener("resize", () => {
-      if (!document.getElementById("lb-flyer-modal")?.hidden) fitFlyerPreviewFrame();
+      if (!document.getElementById("lb-flyer-modal")?.hidden) fitFlyerPrints();
     });
   }
 

@@ -271,7 +271,8 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/studio.css?v=20261109-crown">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
   <link rel="stylesheet" href="css/ui-library.css?v=20261108-chevron">
-  <link rel="stylesheet" href="css/home.css?v=20261109-menu-in">
+  <link rel="stylesheet" href="css/ui-library-lab.css?v=20261109-docks">
+  <link rel="stylesheet" href="css/home.css?v=20261109-lib">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-shade">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -599,54 +600,31 @@ document.documentElement.classList.add("ms-boot");
         </div>
       </section>
 
-      <section class="ms-band ms-close" aria-labelledby="close-title">
+      <section class="ms-band ms-lib" id="library" aria-labelledby="library-title">
         <div class="ms-wrap ms-wrap-wide">
-          <h2 id="close-title" class="ms-rise">Three steps.</h2>
-          <div class="ms-pair">
-            <ol class="ms-steps">
-              <li class="ms-rise">
-                <span>1</span>
-                <span class="ms-step-copy">
-                  <strong>Find</strong>
-                  <em>Pick a nearby business with no site.</em>
-                  <span class="ms-step-scene">
-                    <span class="ms-work-mark">N</span>
-                    <span><b>Northside Cafe</b><i>No website</i></span>
-                  </span>
-                </span>
-              </li>
-              <li class="ms-rise">
-                <span>2</span>
-                <span class="ms-step-copy">
-                  <strong>Build</strong>
-                  <em>Make their page in the Builder.</em>
-                  <span class="ms-step-scene ms-step-scene-site">
-                    <b>Northside Cafe</b>
-                    <span></span>
-                    <span class="is-short"></span>
-                    <i>Build site</i>
-                  </span>
-                </span>
-              </li>
-              <li class="ms-rise">
-                <span>3</span>
-                <span class="ms-step-copy">
-                  <strong>Send</strong>
-                  <em>They pay on the link. You keep 90%.</em>
-                  <span class="ms-step-scene ms-step-scene-pay">
-                    <span><i>You keep</i><b>$405</b></span>
-                    <span><i>Of</i><b>$450</b></span>
-                  </span>
-                </span>
-              </li>
-            </ol>
-            <article class="ms-card ms-price-card ms-rise">
-              <p class="ms-card-kicker">Your cut</p>
-              <p class="ms-price">90%</p>
-              <p>When the owner pays to go live.</p>
-              <a class="ms-home-cta" href="login.html">Start earning</a>
-            </article>
+          <h2 id="library-title" class="ms-rise">UI Library</h2>
+          <p class="ms-band-note ms-rise">Patterns the sites are built from.</p>
+          <div class="ms-lib-stage ms-rise">
+            <div class="lx-dock is-3 is-labeled" style="--n:3">
+              <span class="lx-dock-thumb" aria-hidden="true"></span>
+              <button type="button">Sites</button>
+              <button type="button">Leads</button>
+              <button type="button">Guide</button>
+            </div>
+            <div class="ms-lib-actions">
+              <a class="lx-btn" href="ui-library#buttons">Start a site</a>
+              <a class="lx-btn lx-btn-ghost" href="ui-library#heroes">Preview</a>
+            </div>
           </div>
+          <nav class="ms-lib-links ms-rise" aria-label="UI Library">
+            <a href="ui-library#heroes">Heroes</a>
+            <a href="ui-library#buttons">Buttons</a>
+            <a href="ui-library#docks">Docks</a>
+            <a href="ui-library#forms">Forms</a>
+            <a href="ui-library#menus">Menus</a>
+            <a href="ui-library#pricing">Pricing</a>
+          </nav>
+          <a class="ms-home-cta ms-rise" href="ui-library">Open the library</a>
         </div>
       </section>
     </main>

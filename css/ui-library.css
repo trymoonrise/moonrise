@@ -94,6 +94,7 @@ body[data-page="ui-library"] .ms-orders-nav-link {
 
 .dt-craft-card {
   gap: 0;
+  padding: 0.75rem 1rem;
 }
 
 .dt-craft-card .dt-card-head {
@@ -103,7 +104,7 @@ body[data-page="ui-library"] .ms-orders-nav-link {
 }
 
 .dt-craft-card .dt-card-head h3 {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
 }
 
@@ -156,11 +157,12 @@ body[data-page="ui-library"] .ms-orders-nav-link {
 }
 
 .dt-craft-updated {
-  margin: 0.4rem 0 0;
+  margin: 0;
   color: #737373;
   font-size: 0.78rem;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .dt-craft-panel {
@@ -178,10 +180,10 @@ body[data-page="ui-library"] .ms-orders-nav-link {
   overflow: hidden;
 }
 
-.dt-craft-body {
+.dt-craft-clip > .dt-craft-body {
   display: grid;
-  gap: 0.65rem;
-  padding-top: 0.85rem;
+  gap: 0.5rem;
+  padding-top: 0.7rem;
 }
 
 .dt-craft-actions {
@@ -192,8 +194,9 @@ body[data-page="ui-library"] .ms-orders-nav-link {
 }
 
 .dt-craft-actions .dt-btn {
-  min-height: 44px;
-  padding: 0 1.2rem;
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  font-size: 0.82rem;
 }
 
 .dt-craft-card .dt-card-head .dt-btn,
@@ -216,24 +219,16 @@ a.dt-btn {
 }
 
 .dt-craft-note {
-  margin: 8px 0 0;
+  margin: 0;
   color: #5c5c5c;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 400;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
-.dt-craft-note a,
-.dt-craft-file a {
+.dt-craft-note a {
   color: #111111;
   text-underline-offset: 0.12em;
-}
-
-.dt-craft-file {
-  margin: 8px 0 0;
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 0.78rem;
-  line-height: 1.4;
 }
 
 .dt-card-tools {
@@ -293,7 +288,14 @@ a.dt-btn {
     align-items: stretch;
   }
 
+  .dt-craft-updated {
+    order: 2;
+    flex: 1 0 100%;
+    white-space: normal;
+  }
+
   .dt-craft-actions {
+    order: 3;
     width: 100%;
     margin-left: 0;
   }
@@ -303,31 +305,11 @@ a.dt-btn {
   }
 }
 
-.dt-craft-stage {
-  display: grid;
-  gap: 0.55rem;
-  padding: 1rem !important;
-  align-items: stretch !important;
-  justify-items: stretch !important;
-}
-
-.dt-craft-label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 .dt-craft-prompt {
   display: block;
   width: 100%;
-  min-height: 18rem;
-  max-height: 28rem;
+  min-height: 12rem;
+  max-height: 22rem;
   margin: 0;
   padding: 0.95rem 1rem;
   border: 0;

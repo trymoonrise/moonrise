@@ -248,7 +248,7 @@ function formatStructureForPrompt(structure) {
     "Full page arc (build EVERY section below in order; one cohesive scrolling site):",
     ...lines,
     "",
-    "Sections without a matching kit preset: still build them using the same palette, typography, and stock media.",
+    "Build every section in that same palette, typography, and stock media.",
   ].join("\n");
 }
 

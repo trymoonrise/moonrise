@@ -3,6 +3,52 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.7.1",
+      "date": "2026-11-09",
+      "title": "Clean website agent",
+      "tag": "v2.7.1",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.7.1",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The landing page ends with the UI Library instead of the three steps.",
+            "The UI Library prompt card stays one row until you open it.",
+            "Announcements in the UI Library are eight different bars, from an error pill to a downtime notice.",
+            "The UI Library no longer includes the ASCII category.",
+            "The UI Library no longer includes the Backgrounds category.",
+            "Videos in the UI Library start on a black frame and play when you click.",
+            "Borders in the UI Library are corner marks, a traveling stroke, a ring, a dashed drop, a partial arc, a progress edge, and color frames.",
+            "Heroes and calls to action in the UI Library use stock photos and a short ocean video.",
+            "Docks in the UI Library are a tool pill, separate circles, a center mark, a quiet pill, an outline bar, a badge bar, and a labeled switch."
+          ],
+          "fixes": [
+            "The draw-speed line stays on the card edge as it travels around.",
+            "The partial stroke travels around the pill."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "The generating screen is white, with the Moonrise logo and pulsing dots instead of a progress bar.",
+            "The website flyer keeps the address and QR code at their real size, with a print of the hero and two more page prints."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "The website agent writes each site from the style direction and the business facts, and no longer pastes an old preset kit."
+          ]
+        },
+        {
+          "heading": "Finder",
+          "fixes": [
+            "Slide to generate grabs the knob, and the knob is large enough to hold."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.0",
       "date": "2026-11-09",
       "title": "Landing and calendar",

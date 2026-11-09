@@ -185,11 +185,6 @@ const {
 const githubPresets = require("./github-presets");
 const githubImport = require("./github-import");
 
-// Warm GitHub preset manifest cache at startup (non-blocking).
-githubPresets.ensureManifest().catch((e) => {
-  console.warn("Startup preset manifest prefetch failed:", e.message);
-});
-
 const security = require("./security");
 const { mountAuthRoutes } = require("./auth-routes");
 const { deleteUserAccount } = require("./delete-account");
@@ -3535,12 +3530,6 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
     );
   }
 
-  const pack = Array.isArray(presetPack) ? presetPack : [];
-  if (!pack.length) {
-    console.warn("Moonrise agent: empty preset kit, using Craft shell fallback");
-    return await shellFallback();
-  }
-
   const assembleSystem = craftAgentSystemPrompt();
   const qualityLock = [
     "",
@@ -3556,7 +3545,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
   ].join("\n");
 
   const assembleUser =
-    buildGenerationUserPrompt(ctx, pack, shellPlan, stockMedia) +
+    buildGenerationUserPrompt(ctx, null, shellPlan, stockMedia) +
     lockedCopyBlock(copy) +
     qualityLock;
 
@@ -3939,7 +3928,6 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       ...ctx,
       requestId: requestId || null,
       brief: buildBusinessBrief(ctx),
-      presetsDir: WEBSITE_PRESETS_DIR,
       agent: { thoughts: [], files: [] },
     };
 
@@ -3979,62 +3967,11 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       workspaceDir,
     });
 
-    // Manifest must be loaded before kit selection (GitHub cache is empty on cold start).
-    try {
-      await githubPresets.ensureManifest();
-    } catch (e) {
-      console.warn("GitHub preset manifest load failed; using local fallback if available:", e.message);
-    }
-
-    // Fast path (default): pick the component kit + palette locally (instant),
-    // then a single assembly call. Set WEBSITE_PLAN_WITH_LLM=1 to restore the
-    // slower two-call flow where MiniMax also chooses the components.
-    let plan;
-    let ids;
-    let roleById;
-    if (process.env.WEBSITE_PLAN_WITH_LLM === "1") {
-      ({ plan, ids, roleById } = await planAtmosphereAndPicks(ctx));
-      plan.structure = getBusinessStructure(ctx);
-      plan.variation = buildVariationBrief(ctx.variationSeed);
-      applyStyleFamily(plan);
-    } else {
-      plan = buildLocalPlan(ctx);
-      ({ ids, roleById } = selectKitIdsLocally(ctx));
-    }
-    let presetPack = await loadPresetsByIds(ids, roleById);
-    if (!presetPack.length) {
-      console.warn("Kit load returned 0 presets; falling back to category pack", {
-        presetsSource: githubPresets.getPresetSourceMeta(),
-        presetsDir: WEBSITE_PRESETS_DIR,
-        manifestCount: loadPresetManifest().length,
-        ids,
-      });
-      presetPack = await loadWebsitePresetPack(ctx);
-    }
-    if (!presetPack.length) {
-      console.warn("Website Presets kit is empty; the handcrafted page shell will still render", {
-        presetsSource: githubPresets.getPresetSourceMeta(),
-        presetsDir: WEBSITE_PRESETS_DIR,
-        manifestExists: fs.existsSync(path.join(WEBSITE_PRESETS_DIR, "presets", "manifest.json")),
-      });
-    }
-    if (presetPack.length < 6) {
-      console.warn("Website Presets kit is thin:", presetPack.length, {
-        presetsSource: githubPresets.getPresetSourceMeta(),
-        ids,
-      });
-    } else {
-      const src = githubPresets.getPresetSourceMeta();
-      console.log(
-        `Website Presets kit ready: ${presetPack.length} components from ${src.treeUrl || WEBSITE_PRESETS_DIR}`
-      );
-    }
+    const plan = buildLocalPlan(ctx);
     if (jobInsert?.data?.id) {
       Object.assign(jobPrompt, {
-        presetsSource: githubPresets.getPresetSourceMeta(),
         atmosphere: plan?.atmosphere || "",
-        pickIds: ids,
-        kit: presetPack.map((p) => ({ id: p.id, role: p.role, title: p.title })),
+        family: plan?.variation?.family?.id || "",
       });
       await supabase
         .from("generation_jobs")
@@ -4043,7 +3980,7 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
         })
         .eq("id", jobInsert.data.id);
     }
-    const html = await generateWithOpenRouter(ctx, presetPack, plan, activity);
+    const html = await generateWithOpenRouter(ctx, null, plan, activity);
     const ends = new Date(Date.now() + urgencyHours() * 3600 * 1000).toISOString();
 
     let projectId = req.body.projectId || null;
@@ -4107,7 +4044,7 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
       projectId = data.id;
     }
 
-    jobPrompt.presetCount = presetPack.length;
+    jobPrompt.family = plan?.variation?.family?.id || "";
     if (jobInsert?.data?.id) {
       await supabase
         .from("generation_jobs")
@@ -4124,7 +4061,6 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
     res.json({
       projectId,
       html,
-      presetCount: presetPack.length,
       credits: balance,
       creditsUsed: 0,
     });

@@ -238,7 +238,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/generation-announce.css?v=20260721-float">
-  <link rel="stylesheet" href="css/studio.css?v=20261109-crown">
+  <link rel="stylesheet" href="css/studio.css?v=20261109-flyer">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav">
 <link rel="stylesheet" href="css/studio-ui.css?v=20261108-dark">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261108-dark">
@@ -603,17 +603,13 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
             <div class="ms-preview-frame-wrap" id="preview-wrap">
               <div class="ms-lb-loading" id="preview-loading" hidden aria-busy="true" aria-live="polite" aria-label="Moonrise agent building website">
                 <div class="ms-lb-loading-inner">
-                  <div class="ms-lb-agent-top">
-                    <p class="ms-lb-loading-kicker" id="preview-loading-kicker">Moonrise agent</p>
-                    <span class="ms-lb-progress-pct" id="preview-progress-pct">0%</span>
-                  </div>
-                  <div class="ms-lb-progress" id="preview-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                    <div class="ms-lb-progress-track">
-                      <div class="ms-lb-progress-fill" id="preview-progress-fill"></div>
-                    </div>
-                  </div>
+                  <p class="ms-lb-loading-kicker" id="preview-loading-kicker">Moonrise agent</p>
                   <div class="ms-lb-agent" id="preview-agent">
-                    <p class="ms-lb-agent-status">Thinking<span class="ms-lb-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+                    <p class="ms-lb-agent-status">
+                      <img class="ms-lb-agent-logo" src="assets/MoonriseLogo.png" alt="" width="36" height="36" decoding="async">
+                      <span class="ms-lb-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                      <span class="ms-sr-only">Thinking</span>
+                    </p>
                     <p class="ms-lb-agent-thought is-current" id="preview-agent-thought">Reading the business</p>
                     <div class="ms-lb-agent-files" id="preview-agent-files" role="list" aria-label="Files being written"></div>
                   </div>
@@ -937,9 +933,16 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
               <em id="lb-flyer-preview-host">example.com</em>
             </div>
             <div class="ms-lb-flyer-preview-pad">
-              <div class="ms-lb-flyer-preview-stage" id="lb-flyer-preview-stage">
-                <iframe class="ms-lb-flyer-preview-frame" id="lb-flyer-preview-frame" title="Website preview" sandbox="allow-same-origin" tabindex="-1"></iframe>
-                <div class="ms-lb-flyer-preview-collage" id="lb-flyer-preview-collage" hidden></div>
+              <div class="ms-lb-flyer-prints" id="lb-flyer-prints">
+                <div class="ms-lb-flyer-print is-hero">
+                  <iframe class="ms-lb-flyer-print-frame" data-flyer-slot="0" title="Hero" sandbox="allow-same-origin" tabindex="-1"></iframe>
+                </div>
+                <div class="ms-lb-flyer-print">
+                  <iframe class="ms-lb-flyer-print-frame" data-flyer-slot="1" title="Page print" sandbox="allow-same-origin" tabindex="-1"></iframe>
+                </div>
+                <div class="ms-lb-flyer-print">
+                  <iframe class="ms-lb-flyer-print-frame" data-flyer-slot="2" title="Page print" sandbox="allow-same-origin" tabindex="-1"></iframe>
+                </div>
               </div>
             </div>
           </div>
@@ -968,6 +971,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/generation-lock.js?v=20260721-one-gen"></script>
   <script defer src="js/site-features.js?v=20260930-seed"></script>
   <script defer src="js/preview-thumb.js?v=20260924-console"></script>
-  <script defer src="js/builder.js?v=20261108-no-donate"></script>
+  <script defer src="js/builder.js?v=20261109-flyer"></script>
 </body>
 </html>

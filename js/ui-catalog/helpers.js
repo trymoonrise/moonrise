@@ -13,7 +13,30 @@
     image: '<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="9" r="1.2"/><path d="M7.5 16l3-3 2.2 2.2L16.5 11 20 15"/>',
     alert: '<path d="M12 4l8.5 15h-17z"/><path d="M12 10v4M12 16.6v.4"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
-    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>'
+    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    info: '<circle cx="12" cy="12" r="8"/><path d="M12 11v5M12 8h.01"/>',
+    bulb: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.2 11c.5.4.8 1 .8 1.6V17h5v-1.4c0-.6.3-1.2.8-1.6A6 6 0 0 0 12 3z"/>',
+    home: '<path d="M4 11.2 12 4.5l8 6.7V20H4z"/><path d="M10 20v-6h4v6"/>',
+    box: '<path d="M12 3.5 20 8v8l-8 4.5L4 16V8z"/><path d="M12 12.2 20 8M12 12.2 4 8M12 12.2V20.5"/>',
+    gems: '<path d="M8 6.5 10 8.5 8 10.5 6 8.5zM16 6.5 18 8.5 16 10.5 14 8.5zM8 13.5 10 15.5 8 17.5 6 15.5zM16 13.5 18 15.5 16 17.5 14 15.5z"/>',
+    pulse: '<path d="M3 12h4l2.2-5 3.2 10 2.2-5H21"/>',
+    mail: '<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/>',
+    spark: '<path d="M12 3.2 13.6 9 19.2 10.5 13.6 12 12 17.8 10.4 12 4.8 10.5 10.4 9z"/>',
+    toggle: '<rect x="2.5" y="7" width="19" height="10" rx="5"/><circle cx="16.2" cy="12" r="3"/>',
+    dash: '<circle cx="12" cy="12" r="8"/><path d="M8 12h8"/>',
+    pencil: '<path d="M13.2 5.2 18.8 10.8 8 21.5H2.8V16z"/><path d="m11.8 6.6 4.6 4.6"/>',
+    export: '<path d="M9 8H5.5A1.5 1.5 0 0 0 4 9.5v9A1.5 1.5 0 0 0 5.5 20h9a1.5 1.5 0 0 0 1.5-1.5V15"/><path d="M12 12 20 4M14.5 4H20v5.5"/>',
+    list: '<path d="M5 7h14M5 12h14M5 17h10"/>',
+    crop: '<path d="M8 4H5.2A1.2 1.2 0 0 0 4 5.2V8M16 4h2.8A1.2 1.2 0 0 1 20 5.2V8M8 20H5.2A1.2 1.2 0 0 1 4 18.8V16M16 20h2.8a1.2 1.2 0 0 0 1.2-1.2V16"/>',
+    nodes: '<circle cx="6.2" cy="12" r="2.1"/><circle cx="16.2" cy="7" r="2.1"/><circle cx="16.2" cy="17" r="2.1"/><path d="m8.1 11.1 6.2-3M8.1 12.9l6.2 3"/>',
+    funnel: '<path d="M4 5h16l-6.2 7.2V19l-3.6 1.6v-8.4z"/>',
+    folder: '<path d="M3.5 7.2h5.6l1.8 2H20.5V19a1.4 1.4 0 0 1-1.4 1.4H4.9A1.4 1.4 0 0 1 3.5 19z"/>',
+    music: '<path d="M9 17.6V6.2L18 4.2v9.2"/><circle cx="7.2" cy="17.6" r="2.1"/><circle cx="16.2" cy="15.4" r="2.1"/>',
+    gear: '<path d="M12.2 2h-.4a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+    sun: '<circle cx="12" cy="12" r="3.2"/><path d="M12 3.4v2M12 18.6v2M3.4 12h2M18.6 12h2M5.8 5.8l1.4 1.4M16.8 16.8l1.4 1.4M18.2 5.8l-1.4 1.4M7.2 16.8 5.8 18.2"/>',
+    moon: '<path d="M15.8 14.8A6.4 6.4 0 0 1 9.4 5.6 6.3 6.3 0 1 0 15.8 14.8z"/>',
+    bell: '<path d="M6 16.4h12l-1.2-1.8V10a4.8 4.8 0 0 0-9.6 0v4.6z"/><path d="M10 16.6a2 2 0 0 0 4 0"/>',
+    trash: '<path d="M5 7.2h14M9.2 7.1V5h5.6v2.1M7.2 7.2l.8 12.2h8l.8-12.2"/>'
   };
 
   function ico(name, cls) {
@@ -65,10 +88,6 @@
 
   function visual(kind) {
     switch (kind) {
-      case "announce":
-        return '<div class="lx-note"><span class="lx-dot"></span><span>Friday · hours change</span><button type="button" class="lx-textbtn" data-lx-dismiss>Dismiss</button></div>';
-      case "cta":
-        return '<div class="lx-actions">' + btn("Start a site") + btn("View guide", "ghost") + "</div>";
       case "clients":
         return '<div class="lx-logos"><span>Northline</span><span>Harbor</span><span>Cedar</span><span>Field</span></div>';
       case "compare":
@@ -81,8 +100,6 @@
         return '<div class="lx-foot"><strong>moonrise.</strong><span>Guide</span><span>Privacy</span></div>';
       case "gallery":
         return '<div class="lx-tiles"><i></i><i></i><i></i><i></i></div>';
-      case "hero":
-        return '<div class="lx-product"><div class="lx-product-bar"></div><div class="lx-product-line"></div><div class="lx-product-line short"></div><div class="lx-product-block"></div></div>';
       case "price":
         return '<div class="lx-price"><span>$48</span><em>per month</em>' + btn("Choose") + "</div>";
       case "stats":

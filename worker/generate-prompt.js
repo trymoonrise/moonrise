@@ -4,8 +4,8 @@
  * Agent prompt: assets/moonrise-special-prompt.md
  * Controls: https://trymoonrise.com/ui-library
  *
- * Default pipeline: pick one style direction locally, then one assemble call.
- * The page is one design system (.btn, .card, .container, :root tokens), not a collage.
+ * The agent writes each site itself from one style family and the business facts.
+ * It does not paste an old preset kit.
  */
 
 const HEADLINE_ANGLES = [
@@ -215,7 +215,7 @@ function formatVariationBrief(variation) {
           `Look: ${variation.family.atmosphere}`,
           `Layout: ${variation.family.layout}`,
           `Buttons: ${variation.family.button}`,
-          "The style family wins over kit chrome. Strip neon, glow, 3D, clip-path, heavy shadows, mixed radii, and demo colors.",
+          "The style family is the design. Strip neon, glow, 3D, clip-path, heavy shadows, mixed radii, and demo colors.",
         ].join("\n")
       : "Family: Paper. White page, ink type, hairlines, huge type, black footer.",
     "",
@@ -283,21 +283,18 @@ Rules:
 - Do not write HTML. Do not invent contact facts.`;
 
 /** Stage 2 - assemble collected components into one site. */
-const GENERATION_SYSTEM_PROMPT = `You are the Moonrise website coding agent. Work like a careful coding agent: think through the layout, draft deliberately, then self-review before you ship.
+const GENERATION_SYSTEM_PROMPT = `You are the Moonrise website coding agent. You write one complete website for this business. You do not reuse an old preset kit, a saved demo, or a previous site.
 
-You design complete single-page business websites. Controls come from the Moonrise UI Library (https://trymoonrise.com/ui-library and the raw files in https://github.com/trymoonrise/moonrise-special-prompt under ui/). Do not invent a new button, field, card, or nav when a library type already exists. Change colors and labels only.
-
-You receive business facts, one style direction, a trade-specific page structure, optional reference snippets, and a stock media pack of absolute https image and video URLs.
+You receive business facts, one style family, a page outline, and a stock media pack of absolute https image and video URLs.
 
 Return ONLY one complete HTML document (doctype + html). No markdown fences. No preamble. No commentary.
-Take the time needed. Prefer a polished, finished page over a fast incomplete one.
 
 ## Agent workflow (follow silently, then output HTML only)
-1) Read the business facts and locked copy. Note name, phone, address, hours, trade, and city.
-2) Choose ONE composition: hero treatment, section order, type scale, and button system.
-3) Build sections from UI Library patterns that match the chosen direction. Do not dump alternate layout CSS you are not using.
-4) Self-review: alignment, spacing on a 4px grid, image aspect ratios, nav wrapping, form focus, mobile width, and contact facts.
-5) Fix anything that looks unfinished, overlapping, cut off, or placeholder-like. Then return the final document.
+1) Read the business facts. Keep the name, phone, address, and hours exact. Never invent a missing contact detail.
+2) Follow the style family for palette, type, hero, and buttons. That family is the whole design.
+3) Write original markup for this business. One composition, one button system, one type pairing.
+4) Self-review alignment, spacing, image frames, nav wrapping, form focus, mobile width, and the contact facts.
+5) Fix anything unfinished, overlapping, cut off, or placeholder-like. Then return the final document.
 
 ## Design north star (critical)
 Build a super-modern, clean, minimal business site. Think a current product site: lots of white or near-black, ink type, hairline rules, huge tight headlines, one strong photo or video, almost no chrome.
@@ -318,9 +315,9 @@ Modern bar (must pass):
 - Open sections. Cards only for the contact form, and only if the family uses a surface. No drop shadows.
 
 ## Assembly method (read first)
-1) Define ONE unified design system (:root tokens + shared utility classes) in a single <style> block.
-2) Adapt each kit item into its mapped bone-structure section using those shared primitives - same buttons, cards, containers, and type scale on every section.
-3) The finished site must read as ONE intentional local-business product, not a collage of unrelated demo blocks.
+1) Define ONE design system (:root tokens + shared classes) in a single <style> block.
+2) Write each section yourself in the family's layout. Same buttons, type, and spacing on every section.
+3) The finished site is one local-business page, not a collage of old demos.
 
 ## Uniqueness (critical)
 - Every generation must feel freshly designed for THIS run - never a cookie-cutter repeat.
@@ -340,16 +337,16 @@ Modern bar (must pass):
    - .btn, .btn--primary, .btn--secondary - ONE button system for all CTAs (nav, hero, bands, form submit)
    - .card - shared surface ONLY where interaction needs a container (services, testimonials, pricing, team, form)
    - .grid, .grid--2, .grid--3 - responsive auto-fit/minmax grids when needed
-3) When a reference snippet is included, keep its layout skeleton (grid, media placement, content hierarchy) but normalize colors to :root vars and map its buttons and cards to the shared classes above.
+3) Write each section in the family's layout. Same buttons, type, and spacing. Do not copy a reference snippet.
 4) Never ship 3+ different button styles or mismatched card treatments on one page.
 5) Load ONE distinctive Google Fonts pairing in <head> (never Inter/Roboto as primary) and use it consistently - no per-section font swaps.
-6) Merge ALL CSS into ONE compact <style> block. Deduplicate repeated rules from kit snippets.
+6) Merge ALL CSS into ONE compact <style> block. Do not leave unused rules.
 
 ## Modern quality bar
 - Whitespace, tight type, hairlines, and one media idea. No craft-template ornaments and no SaaS chrome.
 - Hero: follow the style family. When it calls for full-bleed media, use an edge-to-edge photo or muted looping video. When it calls for type-first or a split, do that instead. Never a flat navy fill with no media.
 - Hero copy budget: one headline (3-7 words) + one short support line (max ~10 words) + the family's primary action. No paragraph under the headline.
-- Nav: simple sticky bar. Brand left, a few links, one action. Do not import a decorative nav from the kit.
+- Nav: simple sticky bar. Brand left, a few links, one action. Not a decorative island.
 - Services: photo cards or a clean numbered list WITH visible media. Never hide service images. Title (2-4 words) + one short line.
 - Proof: a quiet line or omit it. No fake stars, scores, or awards.
 - Contact form: stacked fields, same button as the rest of the page.
@@ -360,23 +357,13 @@ Modern bar (must pass):
 - Avoid unused variant CSS soup (do not ship is-split / is-quiet / svc-list / gal-row rules you are not applying). One intentional layout only.
 - Every section must look finished on desktop and phone: no overlapping text, no cut-off cards, no collapsed FAQ answers, no horizontal page scroll.
 
-## Website Presets kit rule (critical)
-1) The kit is NOT optional inspiration. When a Kit skeleton draft is provided, START FROM THAT MARKUP. Your page must be an adaptation of those components - never a freestyle rewrite that drops kit structure.
-2) For every kit item, keep that preset's real HTML structure and CSS patterns in the matching bone-structure section.
-3) Keep the preset's content structure: section order, grid or split, media slot, form fields. Restyle it to the style family. Drop the preset's colors, shadows, glow, 3D, clip-path, and button shape. Rewrite ALL demo copy with THIS business's facts (short copy).
-4) Do NOT invent a generic centered-hero + plain stacked sections when kit markup already covers those roles.
-5) Merge kit CSS into ONE <style> block. Port preset selectors into shared classes (.btn, .card, .section-head) instead of leaving orphaned one-off rules.
-6) Sections without a kit preset: still build them using the shared design system (palette, fonts, spacing, stock media) - match the visual language of the kits you did use.
-7) Structure bar: nav, hero, 2+ content blocks, contact form, and footer must be real sections. Visual finish comes from the style family, not from leftover preset chrome.
-8) Use a kit's grid, split, or media slot when it fits the family. If the kit is a card wall, icon row, or effect demo, simplify it into the family's list, hairline grid, or photo band.
-
-## Component adaptation workflow (follow for EVERY kit item)
-1) READ the kit snippet's HTML tree: outer wrapper, grid/flex classes, media slots, heading hierarchy, button markup.
-2) COPY the DOM skeleton into your section (same nesting depth, same grid columns, same media placement).
-3) PORT the kit's CSS: extract border-radius, padding, shadows, typography scale, hover states -> map to :root vars + shared classes.
-4) REPLACE all demo text, names, prices, and placeholder images with business facts + stock media pack URLs.
-5) STRIP demo-only controls (toggles, gallery chrome, preset labels) and STRIP tear decorations: clip-path cuts, diagonal slashes, and anything positioned outside its card. Keep the visual design patterns that stay inside the section.
-6) CROSS-POLLINATE: the button style from hero/cta kits becomes .btn--primary everywhere; card treatment from services kit becomes .card everywhere.
+## Original page (critical)
+1) Do not start from a saved component kit, a demo snippet, or a previous generation.
+2) Write the nav, hero, services, proof, form, and footer for THIS business and THIS style family.
+3) Keep one HTML structure: section order from the page outline, one media treatment, one button.
+4) Put all CSS in ONE <style> block. Use shared classes (.btn, .section, .container). No leftover demo selectors.
+5) Nav, hero, at least two content sections, a contact form, and a footer must be real sections.
+6) If a section would become an icon wall, a glow demo, or a card collage, use the family's list, hairline grid, or photo band instead.
 
 ## Full-page requirement (critical)
 1) Build EVERY section listed in the bone structure, in order, as real on-page sections.
@@ -395,8 +382,8 @@ Modern bar (must pass):
    - Use the style family's fonts only. Manrope or Outfit for a modern grotesk. Newsreader only when the family is Editorial.
    - NEVER use Inter, Roboto, Arial, script faces, or a different font per section.
    - Hero titles: large, tracking about -0.04em to -0.05em, line-height about 0.92-1.05.
-4) Map each bone-structure section to a kit preset by role when available; normalize all adapted presets through the shared utility classes.
-5) Adapt presets: rewrite demo copy with business facts, recolor every hard-coded demo color to palette variables, strip demo chrome/toggles.
+4) Build each section in the page outline yourself. Recolor nothing from an old demo; set colors only from the palette variables.
+5) Rewrite every visible word for this business. No demo names, prices, or labels.
 6) Prefer short selectors. No CSS comments. No unused rules.
 
 ## Media (mandatory aesthetics)
@@ -879,7 +866,7 @@ function formatDesignSystemBlueprint(plan) {
     ".container | .section | .section-title",
     ".btn | .btn--primary | .btn--secondary",
     "",
-    "Kit rule: keep useful grids and media slots; restyle everything to this palette, type, and button. The style family wins.",
+    "Write the page yourself. The style family wins. Do not paste a saved component kit.",
     "Do not wrap hero copy in a bordered or shadowed card.",
   ].join("\n");
 }
@@ -925,23 +912,22 @@ function formatAssemblyMap(structure, presetPack) {
   return lines.join("\n");
 }
 
-function buildGenerationUserPrompt(ctx, presetPack, plan, media, options = {}) {
+function buildGenerationUserPrompt(ctx, _presetPack, plan, media, options = {}) {
   const stock = media || selectStockMedia(ctx);
   const structureBlock = plan?.structure
     ? formatStructureForPrompt(plan.structure)
-    : "(Navigation, Hero, Credibility, Services, About, Testimonials, CTA, Contact form, Footer)";
-  const structure = plan?.structure || null;
-  const sectionCount = plan?.structure?.sections?.length || 10;
+    : "(Navigation, Hero, Services, About, Contact form, Footer)";
+  const sectionCount = plan?.structure?.sections?.length || 8;
   const retryNote = options.retryIncomplete
-    ? "\nIMPORTANT: Your previous draft was incomplete or too generic. Include ALL bone-structure sections through the footer AND visibly adapt the Website Presets kit (nav, hero, cards, form, footer) - do not freestyle plain sections when kits exist."
+    ? "\nThe previous draft was incomplete. Return the full page through the footer. Do not reuse an old template."
     : "";
   const finderBlock = ctx.fromFinder
     ? [
         "",
-        "## Business Finder handoff (critical)",
-        "This site was requested by swiping a lead. Use the exact business name, phone, address, category, hours, and maps link throughout the page.",
+        "## Business Finder handoff",
+        "Use the exact business name, phone, address, category, hours, and maps link.",
         "Do not invent a different company. Do not leave placeholders like [Business Name] or (555).",
-        "Deliver a complete multi-section sales website ready to show the prospect - not a stub or hero-only page.",
+        "Deliver a complete page the owner can look at, not a hero-only stub.",
       ].join("\n")
     : "";
   return [
@@ -949,52 +935,32 @@ function buildGenerationUserPrompt(ctx, presetPack, plan, media, options = {}) {
     buildBusinessBrief(ctx),
     finderBlock,
     "",
-    "## Atmosphere plan",
+    "## Style direction",
     formatPlanForAssembly(plan),
     "",
     plan?.variation ? formatVariationBrief(plan.variation) : "",
     formatDesignSystemBlueprint(plan),
     "",
-    `## Page bone structure (mandatory: all ${sectionCount} sections)`,
+    `## Page outline (all ${sectionCount} sections, in this order)`,
     structureBlock,
-    "",
-    structure ? formatAssemblyMap(structure, presetPack) : "",
-    "",
-    formatKitUsagePlaybook(presetPack),
-    "",
-    formatKitSkeletonDraft(presetPack, structure, stock),
     "",
     formatStockMediaForPrompt(stock),
     "",
     formatConnectedServices(ctx.siteFeatures),
     "",
-    "## Website Presets component kit (reference + CSS to port)",
-    "These kit components are REQUIRED building blocks - not optional reference. Adapt each into its mapped section using the shared design system.",
-    "One cohesive page: same buttons, cards, fonts, and spacing everywhere - composed FROM these presets, not a patchwork of demo styles or generic AI layouts.",
-    "DOM skeletons are in the Kit skeleton draft above. Use the CSS blocks below to port styles into shared classes.",
-    formatPresetPack(presetPack, stock, { cssOnly: true }),
-    "",
     "## Task",
-    `Assemble one complete single-page site with all ${sectionCount} bone-structure sections.`,
-    "Step 1: Start from the Kit skeleton draft above - do not invent a blank page.",
-    "Step 2: Write :root tokens + shared utility classes (.container, .section, .btn, .card, .grid) and merge kit CSS into one <style>.",
-    "Step 3: For each section, keep the mapped kit's HTML skeleton; rewrite copy; recolor to palette; fill stock media.",
-    "Step 4: Cross-pollinate kit styles - hero button -> .btn--primary globally; services card -> .card globally; nav spacing -> all sections.",
-    "Step 5: Hero must include real image or muted looping video from the pack, using the hero kit's media frame.",
-    "Include contact form and footer. Do not use em dashes in visible copy.",
-    "COPY BUDGET (hard): keep it simple. Hero H1 3-7 words + support line max ~10 words (no hero paragraph). Section titles 2-5 words. Card/body blurbs one short line (~12 words) or omit. No brochure fluff, no long marketing sentences.",
+    "Write one original single-page site for this business.",
+    "Do not paste a saved preset, a demo kit, or a previous site.",
+    "Follow the style family for the hero, type, palette, and buttons.",
+    "Include every section in the outline, then the contact form and footer.",
+    "Use only stock media pack URLs. Reuse a pack URL if you need another image. Never invent a media link.",
+    "Hero headline is 3-7 words plus one short support line. Section titles are 2-5 words. No brochure paragraphs.",
+    "One button class for every action, including the form submit.",
+    "The page must fit a phone: no horizontal scroll, wrapping nav, stacked columns.",
     ctx.notes
-      ? "Honor the creator generation instructions in Business facts - they override generic layout/style defaults when specific."
+      ? "Honor the creator notes in the business facts when they name a specific change."
       : "",
-    "Quality bar: professional, modern, premium local-business - generous whitespace, crisp hierarchy, consistent components, sparse copy.",
-    "Kit fidelity bar: the page must look like a designer composed Website Presets - rich cards, polished nav, styled form, cohesive footer - not a bare HTML outline.",
-    "Uniqueness bar: follow the Creative variation block - this page must not look like a generic duplicate of prior sites for the same trade.",
-    "Responsive essentials: viewport meta, no horizontal scroll, fluid grids/images, clamp type, mobile nav that stays visible and wraps, columns stack on small screens, touch-friendly CTAs.",
-    "FIT (hard): one button class for every CTA, including the form submit. No torn edges, clip-path, or decorative slashes. Nothing may be cut off: hero, headlines, prices, and buttons stay inside the screen and wrap. Do not hide the nav on mobile.",
-    "Apply the palette consistently (Coolors-level harmony + contrast) via :root CSS variables across the whole page.",
-    "If you need more images than unique pack slots, reuse pack URLs - never invent media links.",
-    "Keep the document complete and compact so it finishes with </html> in one response.",
-    "Start with <!DOCTYPE html>.",
+    "Start with <!DOCTYPE html> and end with </html>.",
     retryNote,
   ]
     .filter(Boolean)

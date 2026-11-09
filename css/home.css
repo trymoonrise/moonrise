@@ -1415,8 +1415,73 @@ body[data-page="home"] .dt-acc-trigger {
   letter-spacing: -0.02em;
 }
 
-body[data-page="home"] .ms-close h2 {
-  margin-bottom: 0.25rem;
+body[data-page="home"] .ms-lib {
+  --dt-ink: #111111;
+  --dt-muted: #5c5c5c;
+  --dt-quiet: #8a8a8a;
+  --dt-line: #e8e8ed;
+  --dt-action: #1f6fed;
+  --dt-action-soft: #e8f0fe;
+}
+
+body[data-page="home"] .ms-lib .ms-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+body[data-page="home"] .ms-lib-stage {
+  display: grid;
+  justify-items: center;
+  gap: 1.35rem;
+  width: min(100%, 36rem);
+  margin-top: 2rem;
+  padding: 2rem 1.25rem;
+  border-radius: 24px;
+  background: #fff;
+}
+
+body[data-page="home"] .ms-lib-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+body[data-page="home"] .ms-lib-actions .lx-btn {
+  margin-top: 0;
+  text-decoration: none;
+}
+
+body[data-page="home"] .ms-lib-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 1.15rem;
+}
+
+body[data-page="home"] .ms-lib-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  background: #fff;
+  color: #1d1d1f;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+body[data-page="home"] .ms-lib-links a:hover {
+  background: #1d1d1f;
+  color: #fff;
+}
+
+body[data-page="home"] .ms-lib .ms-home-cta {
+  margin-top: 1.5rem;
 }
 
 body[data-page="home"] .ms-steps {

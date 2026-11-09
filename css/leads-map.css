@@ -859,7 +859,7 @@
   background: #232427 !important;
   border: 0 !important;
   box-shadow: none !important;
-  cursor: grab;
+  cursor: default;
   touch-action: pan-y !important;
 }
 
@@ -1565,8 +1565,11 @@ body[data-page="leads"] #ms-hard-refresh,
   }
 
   .ms-lf-map-card {
-    --ms-lf-slide-thumb: 52px;
     border-radius: 14px;
+  }
+
+  .ms-lf-map-card .ms-lf-slide {
+    --ms-lf-slide-thumb: 44px;
   }
 
   .ms-lf-map-card-head {

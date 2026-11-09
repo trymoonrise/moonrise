@@ -3,8 +3,6 @@
 
   const INDEX = [
     { g: "sections", id: "announcements", t: "Announcements" },
-    { g: "sections", id: "ascii", t: "ASCII" },
-    { g: "sections", id: "backgrounds", t: "Backgrounds" },
     { g: "sections", id: "borders", t: "Borders" },
     { g: "sections", id: "cta", t: "Calls to action" },
     { g: "sections", id: "clients", t: "Clients" },
@@ -327,9 +325,26 @@
     });
 
     document.addEventListener("click", function (event) {
+      const player = event.target.closest("[data-lx-player]");
+      if (player) {
+        const video = player.querySelector("video");
+        if (video) {
+          if (video.paused) {
+            const play = video.play();
+            if (play && play.catch) play.catch(function () {});
+            player.classList.add("is-on");
+            player.setAttribute("aria-label", "Pause video");
+          } else {
+            video.pause();
+            player.classList.remove("is-on");
+            player.setAttribute("aria-label", "Play video");
+          }
+        }
+        return;
+      }
       const dismiss = event.target.closest("[data-lx-dismiss]");
       if (dismiss) {
-        const note = dismiss.closest(".lx-note, .lx-alert, .lx-toast, .lx-badge, .lx-pop");
+        const note = dismiss.closest(".lx-ann, .lx-note, .lx-alert, .lx-toast, .lx-badge, .lx-pop");
         if (note) note.remove();
       }
       const opt = event.target.closest("[data-lx-opt]");

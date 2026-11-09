@@ -15,6 +15,7 @@ presets/stock/**/*.mp4
 presets/stock/**/*.webm
 presets/stock/**/*.mov
 **/*.mp4
+!assets/library/*.mp4
 **/*.webm
 **/*.mov
 

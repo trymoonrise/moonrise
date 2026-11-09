@@ -32,9 +32,9 @@
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-catalog">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
-  <link rel="stylesheet" href="css/public-pages.css?v=20261109-toc">
-  <link rel="stylesheet" href="css/ui-library.css?v=20261109-craft2">
-  <link rel="stylesheet" href="css/ui-library-lab.css?v=20261109-docks">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261109-ann">
+  <link rel="stylesheet" href="css/ui-library.css?v=20261109-craft4">
+  <link rel="stylesheet" href="css/ui-library-lab.css?v=20261109-player">
   <script defer src="js/config.js?v=20261106-mono"></script>
   <script defer src="js/site-branding.js?v=20261108-ui-library"></script>
 </head>
@@ -72,30 +72,24 @@
           <p>Paste it into a coding agent, or download the file.</p>
         </header>
         <article class="dt-card dt-card-wide dt-craft-card">
-          <div class="dt-card-top">
-            <div class="dt-card-head">
-              <h3>
-                <button type="button" class="dt-craft-toggle" aria-expanded="false" aria-controls="dt-craft-panel">
-                  Copy into a coding agent
-                  <span class="dt-craft-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
-                </button>
-              </h3>
-              <div class="dt-craft-actions">
-                <button type="button" class="dt-btn dt-btn-primary" data-copy-craft>Copy prompt</button>
-                <a class="dt-btn dt-btn-secondary" href="assets/moonrise-special-prompt.md" download="moonrise-special-prompt.md" data-download-craft>Download</a>
-              </div>
-            </div>
+          <div class="dt-card-head">
+            <h3>
+              <button type="button" class="dt-craft-toggle" aria-expanded="false" aria-controls="dt-craft-panel">
+                Copy into a coding agent
+                <span class="dt-craft-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+              </button>
+            </h3>
             <p class="dt-craft-updated" data-craft-updated hidden>Last updated</p>
+            <div class="dt-craft-actions">
+              <button type="button" class="dt-btn dt-btn-primary" data-copy-craft>Copy prompt</button>
+              <a class="dt-btn dt-btn-secondary" href="assets/moonrise-special-prompt.md" download="moonrise-special-prompt.md" data-download-craft>Download</a>
+            </div>
           </div>
           <div class="dt-craft-panel" id="dt-craft-panel" aria-hidden="true" inert>
             <div class="dt-craft-clip">
               <div class="dt-craft-body">
-              <p class="dt-craft-note">The box is the same text as the file. Each pattern downloads its raw HTML and CSS. Every category and type is also in <a href="https://github.com/trymoonrise/moonrise-special-prompt" target="_blank" rel="noopener noreferrer">moonrise-special-prompt</a> under <code>ui/</code>. UI craft follows <a href="https://github.com/heydamir/unslop" target="_blank" rel="noopener noreferrer">unslop</a> by Damir Sokolovsky (CC BY 4.0).</p>
-              <p class="dt-craft-file"><a href="assets/moonrise-special-prompt.md">assets/moonrise-special-prompt.md</a></p>
-              <div class="dt-stage dt-craft-stage is-live">
-                <label class="dt-craft-label" for="dt-craft-prompt">Moonrise Special Prompt</label>
-                <textarea id="dt-craft-prompt" class="dt-craft-prompt" readonly spellcheck="false" rows="18" aria-label="Moonrise Special Prompt" placeholder="Loading prompt"></textarea>
-              </div>
+                <p class="dt-craft-note">Same text as the file. Patterns download as HTML and CSS. The set is in <a href="https://github.com/trymoonrise/moonrise-special-prompt" target="_blank" rel="noopener noreferrer">moonrise-special-prompt</a> under <code>ui/</code>. Craft follows <a href="https://github.com/heydamir/unslop" target="_blank" rel="noopener noreferrer">unslop</a> by Damir Sokolovsky (CC BY 4.0).</p>
+                <textarea id="dt-craft-prompt" class="dt-craft-prompt" readonly spellcheck="false" rows="12" aria-label="Moonrise Special Prompt" placeholder="Loading prompt"></textarea>
               </div>
             </div>
           </div>
@@ -1301,10 +1295,10 @@
   <div class="dt-toasts" id="dt-toasts" aria-live="polite" aria-atomic="true"></div>
 
   <script defer src="js/ui-library.js?v=20261109-craft"></script>
-  <script defer src="js/ui-catalog/helpers.js?v=20261109-audit"></script>
-  <script defer src="js/ui-catalog/sections.js?v=20261109-docks"></script>
+  <script defer src="js/ui-catalog/helpers.js?v=20261109-docks2"></script>
+  <script defer src="js/ui-catalog/sections.js?v=20261109-player"></script>
   <script defer src="js/ui-catalog/components.js?v=20261109-audit2"></script>
   <script defer src="js/ui-catalog/screens.js?v=20261109-audit"></script>
-  <script defer src="js/ui-catalog/boot.js?v=20261109-docks"></script>
+  <script defer src="js/ui-catalog/boot.js?v=20261109-player"></script>
 </body>
 </html>

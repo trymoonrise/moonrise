@@ -5,15 +5,12 @@
   const ico = LX.ico;
 
   const COPIES = {
-    announcements: { kicker: "Example", title: "Studio hours change Friday", body: "New sites publish at 9:00. Links you already sent stay the same.", action: "Read note", visual: "announce", note: "Posted today" },
-    cta: { kicker: "Example", title: "Publish the Harbor site", body: "One live link, with the hours and the phone on the first screen.", action: "Publish", visual: "cta", note: "Takes a moment" },
     clients: { kicker: "Example marks", title: "Studios on Moonrise", body: "Placeholder names for the pattern. Not a client list.", action: "See layout", visual: "clients", note: "Example" },
     comparisons: { kicker: "Example", title: "Hours, before and after", body: "The same shop, with the week written out.", action: "Compare", visual: "compare", note: "Friday" },
     faqs: { kicker: "Example", title: "Questions from the studio", body: "Short answers under the thing they ask about.", action: "Open", visual: "faq", note: "2 open" },
     features: { kicker: "Example", title: "What the site holds", body: "Publish, leads, and the studio editor. Nothing extra.", action: "Look", visual: "features", note: "Three" },
     footers: { kicker: "Example", title: "Close the page", body: "Name, guide, and the legal links in one quiet row.", action: "Privacy", visual: "footer", note: "moonrise." },
     galleries: { kicker: "Example", title: "Work from the shop", body: "Four frames, one larger. Real photos would sit here.", action: "Open", visual: "gallery", note: "4 frames" },
-    heroes: { kicker: "Harbor Coffee", title: "Coffee on Pike, open at 7", body: "Address, hours, and a way to call. The photo is the shop, not a blob.", action: "Call", visual: "hero", note: "First screen" },
     pricing: { kicker: "Example", title: "One plan for the site", body: "A single price, a short list, and one button.", action: "Choose", visual: "price", note: "$48" },
     stats: { kicker: "Example", title: "This week on the site", body: "Visits and leads, with the comparison written out.", action: "View", visual: "stats", note: "Example figures" },
     team: { kicker: "Example", title: "People at Harbor", body: "Names and roles. Portraits would replace the initials.", action: "Directory", visual: "team", note: "3 people" },
@@ -26,96 +23,191 @@
     LX.spec(id, adopt, LX.layoutCards(id, COPIES[id], n));
   }
 
-  addLayouts("announcements");
-  addLayouts("cta");
+  function ann(id, title, html) {
+    return card("announcements-" + id, title, html, { wide: true, stage: "lx-ann-stage" });
+  }
+
+  LX.spec("announcements", [], [
+    ann("error", "Status pill", '<a class="lx-ann lx-ann-pill is-error" href="#announcements"><span class="lx-ann-chip">Error</span><span>Something went wrong</span><span class="lx-ann-go" aria-hidden="true">→</span></a>'),
+    ann("note", "Feature note", '<div class="lx-ann lx-ann-note"><span class="lx-ann-ico">' + ico("bulb") + '</span><div class="lx-ann-copy"><strong>New: Lead notes</strong><p>A short note now sits on each lead, next to the phone number.</p><a class="lx-ann-link" href="#announcements">Explore features</a></div><button type="button" class="lx-ann-x" data-lx-dismiss aria-label="Dismiss">' + ico("close", "sm") + "</button></div>"),
+    ann("line", "Sentence", '<p class="lx-ann lx-ann-pill is-line"><span>Friday hours move to 9:00.</span><a class="lx-ann-link" href="#announcements">Read more →</a></p>'),
+    ann("warn", "Warning bar", '<div class="lx-ann lx-ann-bar is-warn"><span class="lx-ann-ico">' + ico("alert") + '</span><div class="lx-ann-copy"><strong>Scheduled downtime</strong><p>The studio is offline Sunday from 2:00–4:00.</p></div><button type="button" class="lx-ann-x" data-lx-dismiss aria-label="Dismiss">' + ico("close", "sm") + "</button></div>"),
+    ann("offer", "Offer pill", '<p class="lx-ann lx-ann-pill is-offer"><span class="lx-ann-chip">Early access</span><span>The first month of a new site is included.</span></p>'),
+    ann("update", "Action card", '<div class="lx-ann lx-ann-bar is-update"><span class="lx-ann-ico">' + ico("info") + '</span><div class="lx-ann-copy"><strong>Update available</strong><p>A new studio build is ready. Refresh to pick it up.</p></div><button type="button" class="lx-ann-btn">Refresh</button></div>'),
+    ann("split", "Split links", '<p class="lx-ann lx-ann-pill is-split"><a class="lx-ann-link" href="#announcements">We\u2019re hiring</a><span class="lx-ann-rule" aria-hidden="true"></span><a class="lx-ann-more" href="#announcements">See open roles ›</a></p>'),
+    ann("quiet", "Quiet pill", '<a class="lx-ann lx-ann-pill is-quiet" href="#announcements">New feature added <span aria-hidden="true">↗</span></a>')
+  ]);
+
+  const SHOT_ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>';
+
+  function shot(id, title, o) {
+    const still = o.poster ? '<img class="lx-shot-still" src="' + o.poster + '" alt="">' : "";
+    const media = o.video
+      ? still + '<video class="lx-shot-media" autoplay muted loop playsinline src="' + o.video + '"></video>'
+      : '<img class="lx-shot-media" src="' + o.image + '" alt="">';
+    const kicker = o.kicker ? '<p class="lx-shot-kicker">' + o.kicker + "</p>" : "";
+    const body = o.body ? "<p>" + o.body + "</p>" : "";
+    return card(id, title,
+      '<article class="lx-shot ' + o.layout + '">' + media +
+        '<div class="lx-shot-veil" aria-hidden="true"></div>' +
+        '<div class="lx-shot-copy">' + kicker + "<h3>" + o.heading + "</h3>" + body + (o.actions || "") + "</div></article>",
+      { wide: true, stage: o.stage || "lx-media-stage" });
+  }
+
+  function shotActions(html) {
+    return '<div class="lx-shot-actions">' + html + "</div>";
+  }
+
+  function shotLime(label, round) {
+    if (round) return '<button type="button" class="lx-lime is-round" aria-label="' + label + '">' + SHOT_ARROW + "</button>";
+    return '<button type="button" class="lx-lime">' + label + "</button>";
+  }
+
+  LX.spec("cta", [], [
+    shot("cta-band", "Photo band", {
+      layout: "is-center",
+      stage: "lx-media-stage is-short",
+      image: "assets/library/hero-coast.jpg",
+      heading: "Publish the Harbor site",
+      body: "One live link, with the hours and the phone on the first screen.",
+      actions: shotActions(shotLime("Publish"))
+    }),
+    shot("cta-split", "Split photo", {
+      layout: "is-split",
+      stage: "lx-media-stage is-short",
+      image: "assets/library/cta-counter.jpg",
+      kicker: "Harbor Coffee",
+      heading: "The shop is the picture",
+      body: "Hours and a phone number sit beside the counter, with one next step.",
+      actions: shotActions(shotLime("Publish"))
+    }),
+    shot("cta-duo", "Two actions", {
+      layout: "is-center",
+      stage: "lx-media-stage is-short",
+      image: "assets/library/hero-wind.jpg",
+      heading: "Start a project",
+      body: "A clean-energy site, with the first step written on the photo.",
+      actions: shotActions(shotLime("Start a project") + '<button type="button" class="lx-lime is-ghost">View guide</button>')
+    }),
+    shot("cta-strip", "Photo strip", {
+      layout: "is-strip",
+      stage: "lx-media-stage is-short",
+      image: "assets/library/hero-coffee.jpg",
+      heading: "Coffee on Pike is ready to publish.",
+      actions: shotActions(shotLime("Publish"))
+    })
+  ]);
+
   addLayouts("clients");
   addLayouts("comparisons");
   addLayouts("faqs");
   addLayouts("features");
   addLayouts("footers");
   addLayouts("galleries");
-  addLayouts("heroes");
+
+  LX.spec("heroes", [], [
+    shot("heroes-center", "Centered photo", {
+      layout: "is-center",
+      image: "assets/library/hero-wind.jpg",
+      heading: "Sustainable Solutions for a Better Future",
+      body: "Empowering businesses and communities to thrive in a low-carbon world through tailored clean energy solutions.",
+      actions: shotActions(shotLime("Start a Project") + shotLime("Start a Project", true))
+    }),
+    shot("heroes-split", "Photo and copy", {
+      layout: "is-split",
+      image: "assets/library/hero-coffee.jpg",
+      kicker: "Harbor Coffee",
+      heading: "Coffee on Pike, open at 7",
+      body: "The address, the hours, and a way to call sit next to the shop.",
+      actions: shotActions(shotLime("Call"))
+    }),
+    shot("heroes-video", "Video", {
+      layout: "is-center",
+      video: "assets/library/hero-ocean.mp4",
+      poster: "assets/library/hero-coast.jpg",
+      heading: "Open coast, quiet morning",
+      body: "Waves on the first screen, with one clear next step.",
+      actions: shotActions(shotLime("See the shore") + shotLime("See the shore", true))
+    }),
+    shot("heroes-bottom", "Bottom line", {
+      layout: "is-bottom",
+      image: "assets/library/hero-coast.jpg",
+      kicker: "Harbor",
+      heading: "Hours on the water",
+      body: "The shop opens with the light. Call before you drive down.",
+      actions: shotActions(shotLime("Call"))
+    }),
+    shot("heroes-card", "Card on a photo", {
+      layout: "is-card",
+      image: "assets/library/cta-counter.jpg",
+      kicker: "Harbor Coffee",
+      heading: "Reserve a seat",
+      body: "Walk in at 7, or leave a name and a time.",
+      actions: shotActions(shotLime("Reserve"))
+    })
+  ]);
   addLayouts("pricing");
   addLayouts("stats", ["surfaces-metrics"]);
   addLayouts("team");
   addLayouts("testimonials");
   addLayouts("text", ["surfaces-header", "type-display", "type-meta"]);
 
-  function ascii(art) {
-    return '<pre class="lx-ascii">' + art + "</pre>";
-  }
-
-  LX.spec("ascii", [], [
-    card("ascii-word", "Wordmark", ascii(" __  __ \n|  \\/  |  moonrise\n| |\\/| |\n|_|  |_|")),
-    card("ascii-moon", "Moon", ascii("   _\n .' '.\n(  ·  )\n '._.'")),
-    card("ascii-rule", "Divider", ascii("· · · · · · · · · ·")),
-    card("ascii-loader", "Loader frames", ascii("◐  loading\n◓  loading\n◑  loading"), { play: "lx-live" }),
-    card("ascii-face", "Portrait", ascii("  ____\n /    \\\n|  o o |\n \\ -- /")),
-    card("ascii-frame", "Frame", ascii("+----------+\n|  Harbor  |\n+----------+")),
-    card("ascii-bars", "Bars", ascii("Mon ████\nTue ██████\nWed ███")),
-    card("ascii-clock", "Clock", ascii("  12\n9  ·  3\n  6")),
-    card("ascii-badge", "Badge", ascii("[ LIVE ]")),
-    card("ascii-run", "Marquee", LX.marquee(["NORTHLINE", "HARBOR", "CEDAR", "FIELD"], ""), { play: "lx-live", stage: "lx-clip" })
-  ]);
-
-  function bg(name, cls) {
-    return card("backgrounds-" + name.toLowerCase().replace(/\s/g, "-"), name, '<div class="lx-bg ' + cls + '"></div>');
-  }
-  LX.spec("backgrounds", [], [
-    bg("Flat", "flat"), bg("Grid", "grid"), bg("Dots", "dots"), bg("Grain", "grain lx-shade-grain"),
-    bg("Diagonals", "diag"), bg("Vignette", "vignette"), bg("Inverse", "inverse"),
-    bg("Split", "split"), bg("Rings", "ring"), bg("Paper", "paper")
-  ]);
-
   LX.spec("borders", [], [
-    card("borders-hair", "Hairline", '<div class="lx-edge hair"></div>'),
-    card("borders-dash", "Dashed", '<div class="lx-edge dash"></div>'),
-    card("borders-double", "Double", '<div class="lx-edge double"></div>'),
-    card("borders-ticks", "Corner ticks", '<div class="lx-edge ticks"></div>'),
-    card("borders-draw", "Draw on", '<div class="lx-edge draw"></div>', { play: "lx-live" }),
-    card("borders-focus", "Focus", '<div class="lx-edge focus"></div>'),
-    card("borders-inset", "Inset", '<div class="lx-edge inset"></div>'),
-    card("borders-rule", "Section rule", '<div class="lx-edge rule"></div>'),
-    card("borders-ticket", "Ticket", '<div class="lx-edge ticket"></div>'),
-    card("borders-fade", "Grey to ink", '<div class="lx-edge fade"></div>')
+    card("borders-marks", "Corner marks", '<div class="lx-bracket-card"><div class="lx-read"><span>Visits</span><strong>128</strong></div><div class="lx-read"><span>Leads</span><strong>14</strong></div><div class="lx-read"><span>Sites</span><strong>3</strong></div></div>', { wide: true, stage: "lx-border-stage" }),
+    card("borders-draw", "Draw speeds", '<div class="lx-beams"><div class="lx-beam is-quick"><i class="lx-beam-rotor" aria-hidden="true"></i><span>Short and quick</span></div><div class="lx-beam is-slow"><i class="lx-beam-rotor" aria-hidden="true"></i><span>Long and slow</span></div><div class="lx-beam is-thick"><i class="lx-beam-rotor" aria-hidden="true"></i><span>3px thick</span></div></div>', { wide: true, stage: "lx-border-stage" }),
+    card("borders-ring", "Ring", '<div class="lx-ring"><span class="lx-ring-face">HK</span><span class="lx-ring-check">' + ico("check", "sm") + "</span></div>", { stage: "lx-border-stage" }),
+    card("borders-drop", "Dashed drop", '<div class="lx-drop"><span class="lx-drop-ico" aria-hidden="true"><i></i><i></i><svg class="lx-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V7M8.5 10.5 12 7l3.5 3.5"/></svg></span><strong>Click to upload or drop files</strong><p>PDF, DOC, XLSX, CSV, PNG, or JPG</p><button type="button" class="lx-drop-btn"><svg class="lx-ico sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V7M8.5 10.5 12 7l3.5 3.5"/></svg>Browse files</button></div>', { wide: true, stage: "lx-border-stage" }),
+    card("borders-arc", "Partial stroke", '<p class="lx-arc"><i class="lx-arc-rotor" aria-hidden="true"></i><span>Borders are cool</span></p>', { stage: "lx-border-stage" }),
+    card("borders-progress", "Progress edge", '<div class="lx-progress"><button type="button" class="lx-progress-btn">Submit</button><span class="lx-progress-line"></span></div>', { wide: true, play: "lx-live", stage: "lx-border-stage" }),
+    card("borders-frames", "Color frames", '<div class="lx-frames"><div class="lx-frame is-blue"><i></i><em>NEW</em></div><div class="lx-frame is-red"><i></i><em>NEW</em></div><div class="lx-frame is-gold"><i></i><em>NEW</em></div></div>', { wide: true, stage: "lx-border-stage" })
   ]);
 
-  function dock(title, html, extra) {
-    return card("docks-" + title.toLowerCase().replace(/\s/g, "-"), title, html, extra);
+  function dock(id, title, html, extra) {
+    const o = extra || {};
+    o.stage = o.stage || "lx-dock-stage";
+    return card("docks-" + id, title, html, o);
   }
-  function dockBar(buttons, extraClass) {
-    const n = buttons.length;
-    const count = n > 1 ? " is-" + n : " is-solo";
-    const extra = extraClass ? " " + extraClass : "";
-    return '<div class="lx-dock' + count + extra + '" style="--n:' + n + '"><span class="lx-dock-thumb" aria-hidden="true"></span>' + buttons.join("") + "</div>";
+  function dockBtn(name, label, extra) {
+    return '<button type="button" aria-label="' + label + '"' + (extra || "") + ">" + ico(name) + "</button>";
+  }
+  function dockBar(kind, buttons) {
+    return '<div class="lx-float is-' + kind + '">' + buttons + "</div>";
   }
   LX.spec("docks", ["nav-dock"], [
-    dock("Icons", dockBar(["search", "file", "image", "user"].map(function (n) { return "<button type=\"button\">" + ico(n, "sm") + "</button>"; }))),
-    dock("Labeled", dockBar(["Sites", "Leads", "Guide"].map(function (n, i) { return '<button type="button" class="' + (i === 0 ? "is-on" : "") + '" data-lx-opt>' + n + "</button>"; }), "is-labeled")),
-    dock("Vertical", dockBar([
-      '<button type="button" class="is-on">' + ico("search", "sm") + "</button>",
-      "<button type=\"button\">" + ico("file", "sm") + "</button>",
-      "<button type=\"button\">" + ico("user", "sm") + "</button>"
-    ], "vert")),
-    dock("Badge", dockBar([
-      '<button type="button" class="is-on">' + ico("file", "sm") + '<span class="lx-badge go">3</span></button>',
-      "<button type=\"button\">" + ico("alert", "sm") + "</button>"
-    ])),
-    dock("Inverse", dockBar(["search", "calendar", "user"].map(function (n) { return "<button type=\"button\">" + ico(n, "sm") + "</button>"; }), "is-inverse"), { stage: "lx-on-dark" }),
-    dock("Lift", dockBar([
-      "<button type=\"button\">" + ico("image", "sm") + "</button>",
-      '<button type="button" class="is-on">' + ico("plus", "sm") + "</button>",
-      "<button type=\"button\">" + ico("pin", "sm") + "</button>"
-    ], "is-lift")),
-    dock("Split", dockBar([
-      "<button type=\"button\">" + ico("chevron", "sm") + "</button>",
-      '<button type="button" class="is-on">' + ico("check", "sm") + "</button>"
-    ], "is-split")),
-    dock("Compact", dockBar([
-      "<button type=\"button\">" + ico("search", "sm") + "</button>",
-      "<button type=\"button\">" + ico("plus", "sm") + "</button>"
-    ], "is-compact")),
-    dock("With caption", '<div style="display:grid;justify-items:center;gap:6px">' + dockBar(['<button type="button" class="is-on">' + ico("file", "sm") + "</button>"]) + '<p class="lx-meta">Sites</p></div>')
+    dock("tools", "Tools", dockBar("tools", ["dash", "toggle", "pencil", "export", "list"].map(function (name) {
+      return dockBtn(name, name);
+    }).join("")), { wide: true }),
+    dock("circles", "Circles", dockBar("orbs", ["home", "box", "gems", "pulse", "file", "mail", "spark"].map(function (name) {
+      return dockBtn(name, name);
+    }).join("")), { wide: true }),
+    dock("mark", "Center mark", dockBar("mark", [
+      dockBtn("home", "Home"),
+      dockBtn("image", "Image"),
+      dockBtn("crop", "Frame"),
+      '<button type="button" class="lx-brand" aria-label="moonrise."><span class="lx-brand-tip">moonrise.</span><span class="lx-brand-mark">m</span></button>',
+      dockBtn("nodes", "Share"),
+      dockBtn("close", "Close"),
+      dockBtn("funnel", "Filter")
+    ].join("")), { wide: true }),
+    dock("quiet", "Quiet", dockBar("quiet", ["home", "search", "bell", "user", "gear"].map(function (name) {
+      return dockBtn(name, name);
+    }).join(""))),
+    dock("outline", "Outline", dockBar("line", ["plus", "search", "bell", "user", "sun"].map(function (name) {
+      return dockBtn(name, name);
+    }).join("")), { stage: "lx-dock-stage is-gray" }),
+    dock("badge", "Badge", dockBar("inbox", [
+      dockBtn("home", "Home", ' class="is-on" data-lx-opt'),
+      dockBtn("search", "Search", " data-lx-opt"),
+      dockBtn("folder", "Folder", " data-lx-opt"),
+      '<button type="button" data-lx-opt aria-label="Mail">' + ico("mail") + '<span class="lx-count">3</span></button>',
+      dockBtn("music", "Music", " data-lx-opt"),
+      dockBtn("gear", "Settings", " data-lx-opt"),
+      dockBtn("trash", "Trash", " data-lx-opt")
+    ].join("")), { wide: true }),
+    dock("labels", "Labels", '<div class="lx-float is-modes">' +
+      '<button type="button" data-lx-opt>' + ico("sun") + "Light</button>" +
+      '<button type="button" class="is-on" data-lx-opt>' + ico("moon") + "Dark</button>" +
+      '<button type="button" data-lx-opt>' + ico("gear") + "Settings</button></div>")
   ]);
 
   const GRADS = [["White to stage", "a"], ["Stage to ink", "b"], ["Ink from top", "c"], ["Ink from bottom", "d"], ["Radial ink", "e"], ["Diagonal grey", "f"], ["Soft grey", "g"], ["Left to right", "h"], ["Masked surface", "mask"], ["Four steps", "stripe"]];
@@ -246,14 +338,6 @@
   ]);
 
   LX.spec("videos", ["media-scrub"], [
-    card("videos-poster", "Poster", '<div class="lx-video"><span>Harbor</span></div>'),
-    card("videos-play", "Play", '<div class="lx-video">' + LX.btn("Play", "ghost") + "</div>"),
-    card("videos-controls", "Controls", '<div class="lx-video"><div class="bar"><span></span></div></div>'),
-    card("videos-mute", "Quiet", '<div class="lx-video"><span class="lx-meta" style="color:#fff">Sound off</span><div class="bar"><span></span></div></div>'),
-    card("videos-caption", "Caption", '<div class="lx-video"><span class="lx-badge on-dark">Open at 7</span></div>'),
-    card("videos-wide", "16:9", '<div class="lx-video" style="height:9rem"></div>', { wide: true }),
-    card("videos-tall", "9:16", '<div class="lx-video" style="height:12rem;max-width:7rem;margin:0 auto"></div>'),
-    card("videos-list", "Playlist", '<div class="lx-row"><span>Counter</span><span class="lx-meta">0:12</span></div><div class="lx-row"><span>Street</span><span class="lx-meta">0:08</span></div>'),
-    card("videos-ended", "Ended", '<div class="lx-video"><p class="lx-p" style="color:#ddd">Ended</p>' + LX.btn("Replay", "ghost") + "</div>")
+    card("videos-play", "Click to play", '<figure class="lx-player"><p class="lx-player-cue">Click the video to play</p><i class="lx-player-stem" aria-hidden="true"></i><button type="button" class="lx-player-frame" data-lx-player aria-label="Play video"><video muted loop playsinline preload="metadata" src="assets/library/hero-ocean.mp4"></video><span class="lx-player-title">the coast, in motion</span></button></figure>', { stage: "lx-player-stage" })
   ]);
 })();
