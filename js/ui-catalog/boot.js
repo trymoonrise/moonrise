@@ -1,0 +1,271 @@
+(function () {
+  "use strict";
+
+  const INDEX = [
+    { g: "sections", id: "announcements", t: "Announcements" },
+    { g: "sections", id: "ascii", t: "ASCII" },
+    { g: "sections", id: "backgrounds", t: "Backgrounds" },
+    { g: "sections", id: "borders", t: "Borders" },
+    { g: "sections", id: "cta", t: "Calls to action" },
+    { g: "sections", id: "clients", t: "Clients" },
+    { g: "sections", id: "comparisons", t: "Comparisons" },
+    { g: "sections", id: "docks", t: "Docks" },
+    { g: "sections", id: "faqs", t: "FAQs" },
+    { g: "sections", id: "features", t: "Features" },
+    { g: "sections", id: "footers", t: "Footers" },
+    { g: "sections", id: "galleries", t: "Galleries" },
+    { g: "sections", id: "gradients", t: "Gradients" },
+    { g: "sections", id: "heroes", t: "Heroes" },
+    { g: "sections", id: "hooks", t: "Hooks", alias: "motion" },
+    { g: "sections", id: "images", t: "Images" },
+    { g: "sections", id: "maps", t: "Maps" },
+    { g: "sections", id: "marquees", t: "Marquees" },
+    { g: "sections", id: "nav-menus", t: "Navigation menus", alias: "navigation" },
+    { g: "sections", id: "pricing", t: "Pricing" },
+    { g: "sections", id: "scroll-areas", t: "Scroll areas" },
+    { g: "sections", id: "shaders", t: "Shaders" },
+    { g: "sections", id: "stats", t: "Stats" },
+    { g: "sections", id: "steppers", t: "Steppers" },
+    { g: "sections", id: "team", t: "Team" },
+    { g: "sections", id: "testimonials", t: "Testimonials" },
+    { g: "sections", id: "text", t: "Text", alias: "typography" },
+    { g: "sections", id: "timelines", t: "Timelines" },
+    { g: "sections", id: "videos", t: "Videos" },
+
+    { g: "components", id: "accordions", t: "Accordions", alias: "accordion" },
+    { g: "components", id: "ai-chats", t: "AI chats", alias: "status" },
+    { g: "components", id: "alerts", t: "Alerts", alias: "feedback" },
+    { g: "components", id: "avatars", t: "Avatars" },
+    { g: "components", id: "badges", t: "Badges" },
+    { g: "components", id: "buttons", t: "Buttons" },
+    { g: "components", id: "calendars", t: "Calendars" },
+    { g: "components", id: "cards", t: "Cards" },
+    { g: "components", id: "carousels", t: "Carousels", alias: "media" },
+    { g: "components", id: "charts", t: "Charts", alias: "data" },
+    { g: "components", id: "checkboxes", t: "Checkboxes" },
+    { g: "components", id: "cursors", t: "Cursors" },
+    { g: "components", id: "dashboards", t: "Dashboards" },
+    { g: "components", id: "date-pickers", t: "Date pickers" },
+    { g: "components", id: "dialogs", t: "Dialogs", alias: "system" },
+    { g: "components", id: "dropdowns", t: "Dropdowns" },
+    { g: "components", id: "empty-states", t: "Empty states" },
+    { g: "components", id: "file-trees", t: "File trees" },
+    { g: "components", id: "file-uploads", t: "File uploads" },
+    { g: "components", id: "forms", t: "Forms" },
+    { g: "components", id: "globes", t: "Globes" },
+    { g: "components", id: "bento", t: "Bento" },
+    { g: "components", id: "icons", t: "Icons" },
+    { g: "components", id: "inputs", t: "Inputs", alias: "advanced" },
+    { g: "components", id: "links", t: "Links" },
+    { g: "components", id: "lists", t: "Lists", alias: "surfaces" },
+    { g: "components", id: "menus", t: "Menus" },
+    { g: "components", id: "notifications", t: "Notifications" },
+    { g: "components", id: "numbers", t: "Numbers" },
+    { g: "components", id: "onboarding", t: "Onboarding" },
+    { g: "components", id: "pagination", t: "Pagination" },
+    { g: "components", id: "popovers", t: "Popovers" },
+    { g: "components", id: "profiles", t: "Profiles" },
+    { g: "components", id: "progress", t: "Progress" },
+    { g: "components", id: "radio-groups", t: "Radio groups", alias: "choice" },
+    { g: "components", id: "search-bars", t: "Search bars" },
+    { g: "components", id: "selects", t: "Selects" },
+    { g: "components", id: "sidebars", t: "Sidebars" },
+    { g: "components", id: "sign-in", t: "Sign in" },
+    { g: "components", id: "sign-up", t: "Sign up" },
+    { g: "components", id: "sliders", t: "Sliders" },
+    { g: "components", id: "spinner-loaders", t: "Spinner loaders", alias: "loaders" },
+    { g: "components", id: "tables", t: "Tables" },
+    { g: "components", id: "tabs", t: "Tabs" },
+    { g: "components", id: "tags", t: "Tags" },
+    { g: "components", id: "text-areas", t: "Text areas" },
+    { g: "components", id: "toasts", t: "Toasts" },
+    { g: "components", id: "toggles", t: "Toggles" },
+    { g: "components", id: "tooltips", t: "Tooltips" },
+
+    { g: "screens", id: "authentication", t: "Authentication" },
+    { g: "screens", id: "onboarding-flows", t: "Onboarding flows" },
+    { g: "screens", id: "nav-systems", t: "Navigation systems" },
+    { g: "screens", id: "data-tables", t: "Data tables" },
+    { g: "screens", id: "data-viz", t: "Data visualization" },
+    { g: "screens", id: "file-management", t: "File management" },
+    { g: "screens", id: "search-interfaces", t: "Search interfaces" },
+    { g: "screens", id: "profile-screens", t: "Profile screens" },
+    { g: "screens", id: "settings", t: "Settings" },
+    { g: "screens", id: "notification-center", t: "Notification center" },
+    { g: "screens", id: "form-systems", t: "Form systems" },
+    { g: "screens", id: "loading-states", t: "Loading states" },
+    { g: "screens", t: "Dashboards", link: "dashboards" },
+    { g: "screens", t: "Empty states", link: "empty-states" },
+    { g: "screens", t: "Dialogs", link: "dialogs" }
+  ];
+
+  const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+  const ready = new Set();
+
+  function tocHtml() {
+    const groups = [
+      ["sections", "Sections"],
+      ["components", "Components"],
+      ["screens", "Screens"]
+    ];
+    const pin = '<div class="dt-toc-pin"><a href="#craft">Special Prompt</a><a href="#cookbook">Cookbook</a></div>';
+    const switcher = '<div class="dt-toc-switch" role="tablist" aria-label="Catalog groups">' +
+      '<button type="button" class="is-on" data-toc-group="sections" aria-selected="true">Sections</button>' +
+      '<button type="button" data-toc-group="components" aria-selected="false">Components</button>' +
+      '<button type="button" data-toc-group="screens" aria-selected="false">Screens</button></div>';
+    const body = groups.map(function (group, index) {
+      const links = INDEX.filter(function (item) { return item.g === group[0]; }).map(function (item) {
+        return '<a href="#' + (item.link || item.id) + '">' + item.t + "</a>";
+      }).join("");
+      return '<div class="dt-toc-group' + (index === 0 ? " is-shown" : "") + '" data-group="' + group[0] + '"><p class="dt-toc-label">' + group[1] + "</p>" + links + "</div>";
+    }).join("");
+    return pin + switcher + '<div class="dt-toc-scroll">' + body + "</div>";
+  }
+
+  function shellsHtml() {
+    return INDEX.filter(function (item) { return item.id; }).map(function (item) {
+      const alias = item.alias ? '<span id="' + item.alias + '" class="dt-alias"></span>' : "";
+      return '<section class="dt-section" id="' + item.id + '" data-lx-cat="' + item.id + '">' + alias +
+        '<header class="dt-section-head"><h2>' + item.t + '</h2></header><div class="dt-grid"></div></section>';
+    }).join("");
+  }
+
+  function cardHtml(item) {
+    const play = item.play
+      ? '<button type="button" class="dt-play-ico" data-play="' + item.play + '" aria-label="Play ' + item.title + ' demo">' + PLAY + "</button>"
+      : "";
+    const attrs = item.play ? ' data-demo="' + item.play + '" data-stage-tap="' + item.play + '"' : "";
+    const stage = ["dt-stage", "lx-stretch", item.stage].filter(Boolean).join(" ");
+    return '<article class="dt-card' + (item.wide ? " dt-card-wide" : "") + '" id="' + item.id + '">' +
+      '<div class="dt-card-top"><div class="dt-card-head"><h3>' + item.title + "</h3>" + play + "</div></div>" +
+      '<div class="' + stage + '"' + attrs + ">" + item.html + "</div></article>";
+  }
+
+  function mountSection(section) {
+    if (!section || ready.has(section.id)) return;
+    const spec = window.LX.specs[section.id];
+    const grid = section.querySelector(".dt-grid");
+    if (!grid) return;
+    ready.add(section.id);
+    ((spec && spec.adopt) || []).forEach(function (id) {
+      const node = document.getElementById(id);
+      if (node && node.classList.contains("dt-card")) grid.appendChild(node);
+    });
+    ((spec && spec.cards) || []).forEach(function (item) {
+      if (grid.querySelectorAll(".dt-card").length >= 10) return;
+      if (document.getElementById(item.id)) return;
+      grid.insertAdjacentHTML("beforeend", cardHtml(item));
+    });
+    if (window.dtMountDownloads) window.dtMountDownloads(section);
+  }
+
+  function sectionFor(id) {
+    if (!id) return null;
+    const direct = document.getElementById(id);
+    if (direct) {
+      if (direct.dataset && direct.dataset.lxCat) return direct;
+      const host = direct.closest ? direct.closest("[data-lx-cat]") : null;
+      if (host) return host;
+    }
+    const specs = window.LX.specs;
+    const keys = Object.keys(specs);
+    for (let i = 0; i < keys.length; i += 1) {
+      const adopt = specs[keys[i]].adopt || [];
+      if (adopt.indexOf(id) !== -1) return document.getElementById(keys[i]);
+    }
+    return null;
+  }
+
+  function showGroup(name) {
+    document.querySelectorAll("[data-toc-group]").forEach(function (button) {
+      const on = button.getAttribute("data-toc-group") === name;
+      button.classList.toggle("is-on", on);
+      button.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    document.querySelectorAll(".dt-toc-group").forEach(function (group) {
+      group.classList.toggle("is-shown", group.getAttribute("data-group") === name);
+    });
+  }
+
+  function openHash() {
+    const id = (location.hash || "").replace(/^#/, "");
+    if (!id) return;
+    const all = Array.prototype.slice.call(document.querySelectorAll("[data-lx-cat]"));
+    const target = sectionFor(id);
+    for (let i = 0; i < all.length; i += 1) {
+      mountSection(all[i]);
+      if (all[i] === target) break;
+    }
+    const el = document.getElementById(id);
+    if (el && el.scrollIntoView) el.scrollIntoView();
+  }
+
+  function install() {
+    const toc = document.getElementById("dt-toc");
+    const root = document.getElementById("lx-root");
+    if (!toc || !root || !window.LX) return;
+    if (!toc.querySelector("a")) toc.innerHTML = tocHtml();
+    if (!root.querySelector("[data-lx-cat]")) root.innerHTML = shellsHtml();
+
+    toc.addEventListener("click", function (event) {
+      const button = event.target.closest("[data-toc-group]");
+      if (button) {
+        showGroup(button.getAttribute("data-toc-group"));
+        return;
+      }
+      const link = event.target.closest("a[href^='#']");
+      if (!link) return;
+      const id = link.getAttribute("href").slice(1);
+      const section = document.getElementById(id);
+      if (section && section.dataset.lxCat) mountSection(section);
+      else {
+        const host = sectionFor(id);
+        if (host) mountSection(host);
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      const dismiss = event.target.closest("[data-lx-dismiss]");
+      if (dismiss) {
+        const note = dismiss.closest(".lx-note, .lx-alert, .lx-toast, .lx-badge, .lx-pop");
+        if (note) note.remove();
+      }
+      const opt = event.target.closest("[data-lx-opt]");
+      if (opt && opt.parentElement) {
+        opt.parentElement.querySelectorAll("[data-lx-opt]").forEach(function (node) {
+          node.classList.toggle("is-on", node === opt);
+        });
+      }
+      const acc = event.target.closest("[data-lx-acc]");
+      if (acc) acc.classList.toggle("is-open");
+      const toggle = event.target.closest("[data-lx-toggle]");
+      if (toggle && !toggle.disabled) {
+        toggle.classList.toggle("is-on");
+        toggle.setAttribute("aria-pressed", toggle.classList.contains("is-on") ? "true" : "false");
+      }
+      const check = event.target.closest("[data-lx-check]");
+      if (check && !check.disabled) check.classList.toggle("is-on");
+    });
+
+    const queue = Array.prototype.slice.call(document.querySelectorAll("[data-lx-cat]"));
+    function drain() {
+      let n = 0;
+      while (n < 4 && queue.length) {
+        mountSection(queue.shift());
+        n += 1;
+      }
+      if (!queue.length) return;
+      const schedule = window.requestIdleCallback || function (fn) { window.setTimeout(fn, 16); };
+      schedule(drain, { timeout: 80 });
+    }
+    queue.forEach(function (section) {
+      const box = section.getBoundingClientRect();
+      if (box.top < window.innerHeight + 240) mountSection(section);
+    });
+    openHash();
+    drain();
+    window.addEventListener("hashchange", openHash);
+  }
+
+  install();
+})();

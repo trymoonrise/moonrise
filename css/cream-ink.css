@@ -597,7 +597,7 @@ html:not([data-ms-mode="dark"]) :where(
 }
 
 /* —— Links —— */
-html:not([data-ms-mode="dark"]) a:not(.ms-btn):not(.ms-home-cta-primary):not(.ms-home-cta-secondary):not(.ms-nav-link):not(.ms-home-bloom-nav a):not(.ms-legal-nav a):not(.ms-legal-toc a):not(.ms-orders-nav-link) {
+html:not([data-ms-mode="dark"]) a:not(.ms-btn):not(.ms-home-cta-primary):not(.ms-home-cta-secondary):not(.ms-nav-link):not(.ms-home-bloom-nav a):not(.ms-legal-nav a):not(.ms-legal-toc a):not(.ms-orders-nav-link):not(.lx-link):not(.lx-btn) {
   color: var(--ms-link);
 }
 

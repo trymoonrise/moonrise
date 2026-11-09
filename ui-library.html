@@ -29,11 +29,12 @@
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="document.documentElement.classList.remove('ms-hold')">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261108-docs-slim">
   <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
-  <link rel="stylesheet" href="css/cream-ink.css?v=20261108-docs-slim">
+  <link rel="stylesheet" href="css/cream-ink.css?v=20261108-catalog">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
-  <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
-  <link rel="stylesheet" href="css/ui-library.css?v=20261108-ui-ref">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261108-catalog">
+  <link rel="stylesheet" href="css/ui-library.css?v=20261108-motion3">
+  <link rel="stylesheet" href="css/ui-library-lab.css?v=20261108-catalog2">
   <script defer src="js/config.js?v=20261106-mono"></script>
   <script defer src="js/site-branding.js?v=20261108-ui-library"></script>
 </head>
@@ -60,26 +61,7 @@
       <p class="dt-lead">Tap a demo, or hit play.</p>
     </header>
 
-    <nav class="dt-toc" aria-label="Categories">
-      <a href="#craft">Special Prompt</a>
-      <a href="#loaders">Loaders</a>
-      <a href="#buttons">Buttons</a>
-      <a href="#motion">Motion</a>
-      <a href="#forms">Forms</a>
-      <a href="#menus">Menus</a>
-      <a href="#choice">Choice</a>
-      <a href="#feedback">Feedback</a>
-      <a href="#navigation">Navigation</a>
-      <a href="#surfaces">Surfaces</a>
-      <a href="#typography">Type</a>
-      <a href="#advanced">Inputs</a>
-      <a href="#accordion">Accordion</a>
-      <a href="#status">Status</a>
-      <a href="#media">Media</a>
-      <a href="#data">Data</a>
-      <a href="#system">System</a>
-      <a href="#cookbook">Cookbook</a>
-    </nav>
+    <nav class="dt-toc" id="dt-toc" aria-label="Categories"></nav>
 
     <main class="dt-main">
 
@@ -109,7 +91,9 @@
       </section>
 
       <!-- 1. Loaders -->
-      <section class="dt-section" id="loaders">
+      <div id="lx-root"></div>
+
+      <section class="dt-section dt-legacy" id="legacy-loaders">
         <header class="dt-section-head">
           <h2>Loaders</h2>
           <p>Match the loader to the wait.</p>
@@ -207,7 +191,7 @@
             <div class="dt-stage" data-demo="button-loader">
               <button type="button" class="dt-btn dt-btn-primary dt-btn-morph" data-btn-loader>
                 <span class="dt-btn-morph-label">Save changes</span>
-                <span class="dt-btn-morph-spin" aria-hidden="true"><span class="dt-spinner dt-spinner-sm dt-spinner-on-dark"></span></span>
+                <span class="dt-btn-morph-spin" aria-hidden="true"><svg class="dt-spin-ring" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8" fill="none" stroke="rgb(255 255 255 / 45%)" stroke-width="2.5"/><circle class="dt-spin-arc" cx="12" cy="12" r="8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="18 50"/></svg></span>
                 <span class="dt-btn-morph-done">Saved</span>
               </button>
             </div>
@@ -275,7 +259,7 @@
       </section>
 
       <!-- 2. Buttons -->
-      <section class="dt-section" id="buttons">
+      <section class="dt-section dt-legacy" id="legacy-buttons">
         <header class="dt-section-head">
           <h2>Buttons</h2>
           <p>One primary. Keep the rest quiet.</p>
@@ -354,7 +338,7 @@
             <div class="dt-card-top">
               <div class="dt-card-head">
                 <h3>Loading state</h3>
-                <button type="button" class="dt-play-ico" data-play="button-loader" aria-label="Play loading button demo">
+                <button type="button" class="dt-play-ico" data-play="loading-state" aria-label="Play loading button demo">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
                 </button>
               </div>
@@ -363,7 +347,7 @@
             <div class="dt-stage dt-stage-row">
               <button type="button" class="dt-btn dt-btn-primary dt-btn-morph" data-btn-loader-static>
                 <span class="dt-btn-morph-label">Save changes</span>
-                <span class="dt-btn-morph-spin" aria-hidden="true"><span class="dt-spinner dt-spinner-sm dt-spinner-on-dark"></span></span>
+                <span class="dt-btn-morph-spin" aria-hidden="true"><svg class="dt-spin-ring" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8" fill="none" stroke="rgb(255 255 255 / 45%)" stroke-width="2.5"/><circle class="dt-spin-arc" cx="12" cy="12" r="8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="18 50"/></svg></span>
                 <span class="dt-btn-morph-done">Saved</span>
               </button>
             </div>
@@ -387,9 +371,15 @@
               <h3>Pill vs soft rect</h3>
               <p class="dt-tip"><span class="dt-tip-label">Try</span> Hover both shapes and compare the corners.</p>
             </div>
-            <div class="dt-stage dt-stage-row">
-              <button type="button" class="dt-btn dt-btn-primary">Pill</button>
-              <button type="button" class="dt-btn dt-btn-primary dt-btn-rect">Soft rect</button>
+            <div class="dt-stage dt-stage-row dt-shape-row">
+              <div class="dt-shape">
+                <button type="button" class="dt-btn dt-btn-primary">Publish</button>
+                <span>Pill</span>
+              </div>
+              <div class="dt-shape">
+                <button type="button" class="dt-btn dt-btn-primary dt-btn-rect">Publish</button>
+                <span>Rect</span>
+              </div>
             </div>
           </article>
           <article class="dt-card" id="buttons-group">
@@ -410,7 +400,7 @@
       </section>
 
       <!-- 3. Motion -->
-      <section class="dt-section" id="motion">
+      <section class="dt-section dt-legacy" id="legacy-motion">
         <header class="dt-section-head">
           <h2>Motion</h2>
           <p>Clarify hierarchy — don’t decorate everything.</p>
@@ -459,7 +449,7 @@
               <p class="dt-tip"><span class="dt-tip-label">Try</span> Tap the stage or play to draw the check.</p>
             </div>
             <div class="dt-stage" data-demo="success" data-stage-tap="success">
-              <div class="dt-success" id="dt-success"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg></div>
+              <div class="dt-success" id="dt-success"><svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle class="dt-success-ring" cx="12" cy="12" r="9"/><path class="dt-success-check" d="M7.5 12.4l3 3.1 6-6.4"/></svg></div>
             </div>
           </article>
           <article class="dt-card" id="motion-shake">
@@ -487,11 +477,15 @@
               <p class="dt-tip"><span class="dt-tip-label">Try</span> Tap or play to compare shimmer and three-dot pulse.</p>
             </div>
             <div class="dt-stage dt-stage-split" data-demo="shimmer-pulse" data-stage-tap="shimmer-pulse">
-              <span class="dt-skel dt-skel-block"></span>
-              <div class="dt-pulse-row" aria-hidden="true">
-                <span class="dt-pulse-orb"></span>
-                <span class="dt-pulse-orb"></span>
-                <span class="dt-pulse-orb"></span>
+              <div class="dt-motion-side">
+                <span class="dt-motion-side-label">Shimmer</span>
+                <span class="dt-skel dt-skel-line"></span>
+                <span class="dt-skel dt-skel-line dt-skel-short"></span>
+              </div>
+              <div class="dt-motion-side">
+                <span class="dt-motion-side-label">Pulse</span>
+                <span class="dt-pulse-bar"></span>
+                <span class="dt-pulse-bar dt-pulse-bar-short"></span>
               </div>
             </div>
           </article>
@@ -499,7 +493,7 @@
       </section>
 
       <!-- 4. Forms -->
-      <section class="dt-section" id="forms">
+      <section class="dt-section dt-legacy" id="legacy-forms">
         <header class="dt-section-head">
           <h2>Forms</h2>
           <p>Clear labels and honest validation.</p>
@@ -518,7 +512,11 @@
               <label class="dt-label" for="dt-pass">Password</label>
               <div class="dt-pass-wrap">
                 <input class="dt-field" id="dt-pass" type="password" value="moonrise123" autocomplete="off">
-                <button type="button" class="dt-pass-toggle" data-pass-toggle aria-label="Show password">Show</button>
+                <span class="dt-pass-wipe" aria-hidden="true"></span>
+                <button type="button" class="dt-pass-toggle" data-pass-toggle aria-label="Show password" aria-pressed="false">
+                  <svg class="dt-eye" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg>
+                  <svg class="dt-eye-off" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" hidden><path d="M3 3l18 18"/><path d="M10.6 10.6a2.5 2.5 0 0 0 3.5 3.5"/><path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-3.2 4.2"/><path d="M6.1 6.1C3.8 7.8 2 12 2 12s3.5 6 10 6c1.3 0 2.5-.2 3.6-.7"/></svg>
+                </button>
               </div>
             </div>
           </article>
@@ -580,7 +578,7 @@
       </section>
 
       <!-- 5. Menus -->
-      <section class="dt-section" id="menus">
+      <section class="dt-section dt-legacy" id="legacy-menus">
         <header class="dt-section-head">
           <h2>Menus and overlays</h2>
           <p>Clear open, close, and focus.</p>
@@ -590,11 +588,14 @@
             <div class="dt-card-top"><h3>Native select</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Open the select and pick an option.</p></div>
             <div class="dt-stage is-live">
               <label class="dt-label" for="dt-select">City</label>
-              <select class="dt-select" id="dt-select">
-                <option>Austin</option>
-                <option>Denver</option>
-                <option>Portland</option>
-              </select>
+              <div class="dt-select-wrap">
+                <select class="dt-select" id="dt-select">
+                  <option>Austin</option>
+                  <option>Denver</option>
+                  <option>Portland</option>
+                </select>
+                <svg class="dt-select-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
             </div>
           </article>
           <article class="dt-card" id="menus-dropdown">
@@ -654,7 +655,7 @@
       </section>
 
       <!-- 6. Choice -->
-      <section class="dt-section" id="choice">
+      <section class="dt-section dt-legacy" id="legacy-choice">
         <header class="dt-section-head">
           <h2>Choice patterns</h2>
           <p>Make selected vs unselected obvious.</p>
@@ -704,14 +705,14 @@
           <article class="dt-card" id="choice-like">
             <div class="dt-card-top"><h3>Like toggle</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Tap the heart to like / unlike.</p></div>
             <div class="dt-stage is-live dt-stage-row">
-              <button type="button" class="dt-like" data-like aria-pressed="false" aria-label="Like">♡</button>
+              <button type="button" class="dt-like" data-like aria-pressed="false" aria-label="Like"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path class="dt-like-heart" d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.6-7 9-7 9z"/></svg></button>
             </div>
           </article>
         </div>
       </section>
 
       <!-- 7. Feedback -->
-      <section class="dt-section" id="feedback">
+      <section class="dt-section dt-legacy" id="legacy-feedback">
         <header class="dt-section-head">
           <h2>Feedback</h2>
           <p>Confirm outcomes without taking over.</p>
@@ -756,7 +757,7 @@
       </section>
 
       <!-- 8. Navigation -->
-      <section class="dt-section" id="navigation">
+      <section class="dt-section dt-legacy" id="legacy-navigation">
         <header class="dt-section-head">
           <h2>Navigation</h2>
           <p>Show where they are and what’s next.</p>
@@ -778,10 +779,11 @@
             <div class="dt-card-top"><h3>Stepper</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Use Back / Next to move through steps.</p></div>
             <div class="dt-stage is-live">
               <ol class="dt-stepper" data-stepper>
-                <li class="is-done">Details</li>
-                <li class="is-current">Design</li>
-                <li>Publish</li>
+                <li class="is-done"><span class="dt-step-node" aria-hidden="true"></span><span class="dt-step-name">Details</span></li>
+                <li class="is-current"><span class="dt-step-node" aria-hidden="true"></span><span class="dt-step-name">Design</span></li>
+                <li><span class="dt-step-node" aria-hidden="true"></span><span class="dt-step-name">Publish</span></li>
               </ol>
+              <p class="dt-step-current" data-step-label>Design</p>
               <div class="dt-actions dt-actions-keep">
                 <button type="button" class="dt-play dt-play-ghost" data-play="step-back">Back</button>
                 <button type="button" class="dt-play" data-play="step-next">Next</button>
@@ -826,7 +828,7 @@
       </section>
 
       <!-- 9. Surfaces -->
-      <section class="dt-section" id="surfaces">
+      <section class="dt-section dt-legacy" id="legacy-surfaces">
         <header class="dt-section-head">
           <h2>Content surfaces</h2>
           <p>Structure info without noisy chrome.</p>
@@ -840,24 +842,33 @@
             </div>
           </article>
           <article class="dt-card" id="surfaces-metrics">
-            <div class="dt-card-top"><h3>Metric tiles</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Read each tile’s number and label.</p></div>
-            <div class="dt-stage is-live">
+            <div class="dt-card-top">
+              <div class="dt-card-head">
+                <h3>Metric tiles</h3>
+                <button type="button" class="dt-play-ico" data-play="metrics" aria-label="Play metric tiles demo">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+              </div>
+              <p class="dt-tip"><span class="dt-tip-label">Try</span> Read each tile’s number and label.</p></div>
+            <div class="dt-stage" data-demo="metrics" data-stage-tap="metrics">
               <div class="dt-metrics">
-                <div><strong>24</strong><span>Leads</span></div>
-                <div><strong>$1.2k</strong><span>Earned</span></div>
-                <div><strong>6</strong><span>Live</span></div>
+                <div><strong data-metric="24">24</strong><span>Leads</span></div>
+                <div><strong data-metric="1.2" data-metric-format="money">$1.2k</strong><span>Earned</span></div>
+                <div><strong data-metric="6">6</strong><span>Live</span></div>
               </div>
             </div>
           </article>
           <article class="dt-card" id="surfaces-image">
             <div class="dt-card-top"><h3>Image placeholder</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Notice the reserved media space.</p></div>
-            <div class="dt-stage is-live"><div class="dt-img-ph" aria-hidden="true">Photo</div></div>
+            <div class="dt-stage is-live"><img class="dt-img-ph" alt="Restaurant dining room" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80" width="800" height="450"></div>
           </article>
           <article class="dt-card" id="surfaces-avatars">
             <div class="dt-card-top"><h3>Avatar stack</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Hover the stacked faces.</p></div>
             <div class="dt-stage is-live dt-stage-row">
               <div class="dt-avatars" aria-label="3 people">
-                <span>A</span><span>B</span><span>C</span>
+                <img alt="" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=96&h=96&q=80" width="96" height="96">
+                <img alt="" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=96&h=96&q=80" width="96" height="96">
+                <img alt="" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=96&h=96&q=80" width="96" height="96">
               </div>
             </div>
           </article>
@@ -873,7 +884,7 @@
       </section>
 
       <!-- 10. Typography -->
-      <section class="dt-section" id="typography">
+      <section class="dt-section dt-legacy" id="legacy-typography">
         <header class="dt-section-head">
           <h2>Typography</h2>
           <p>Hierarchy first. One display voice.</p>
@@ -910,7 +921,7 @@
       </section>
 
       <!-- 11. Advanced inputs -->
-      <section class="dt-section" id="advanced">
+      <section class="dt-section dt-legacy" id="legacy-advanced">
         <header class="dt-section-head">
           <h2>Advanced inputs</h2>
           <p>Richer controls for precise values.</p>
@@ -968,7 +979,7 @@
       </section>
 
       <!-- Accordion -->
-      <section class="dt-section" id="accordion">
+      <section class="dt-section dt-legacy" id="legacy-accordion">
         <header class="dt-section-head">
           <h2>Accordion</h2>
           <p>Reveal detail without leaving the page.</p>
@@ -997,7 +1008,7 @@
       </section>
 
       <!-- Status -->
-      <section class="dt-section" id="status">
+      <section class="dt-section dt-legacy" id="legacy-status">
         <header class="dt-section-head">
           <h2>Status</h2>
           <p>Show live state without interrupting.</p>
@@ -1027,7 +1038,7 @@
       </section>
 
       <!-- Media -->
-      <section class="dt-section" id="media">
+      <section class="dt-section dt-legacy" id="legacy-media">
         <header class="dt-section-head">
           <h2>Media</h2>
           <p>Guide attention across slides and playback.</p>
@@ -1043,10 +1054,10 @@
                   <div class="dt-carousel-slide" style="background:#e8e8e8">Slide 3</div>
                 </div>
               </div>
-              <div class="dt-carousel-dots" data-carousel-dots>
-                <button type="button" class="is-active" aria-label="Slide 1"></button>
-                <button type="button" aria-label="Slide 2"></button>
-                <button type="button" aria-label="Slide 3"></button>
+              <div class="dt-carousel-progress" data-carousel-dots>
+                <button type="button" class="is-active" aria-label="Slide 1"><span></span></button>
+                <button type="button" aria-label="Slide 2"><span></span></button>
+                <button type="button" aria-label="Slide 3"><span></span></button>
               </div>
             </div>
           </article>
@@ -1063,15 +1074,23 @@
       </section>
 
       <!-- Data -->
-      <section class="dt-section" id="data">
+      <section class="dt-section dt-legacy" id="legacy-data">
         <header class="dt-section-head">
           <h2>Data</h2>
           <p>Make numbers and history scannable.</p>
         </header>
         <div class="dt-grid">
           <article class="dt-card" id="data-bars">
-            <div class="dt-card-top"><h3>Comparison bars</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Compare the ranked bar values.</p></div>
-            <div class="dt-stage is-live">
+            <div class="dt-card-top">
+              <div class="dt-card-head">
+                <h3>Comparison bars</h3>
+                <button type="button" class="dt-play-ico" data-play="bars" aria-label="Play comparison bars demo">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+              </div>
+              <p class="dt-tip"><span class="dt-tip-label">Try</span> Compare the ranked bar values.</p>
+            </div>
+            <div class="dt-stage" data-demo="bars" data-stage-tap="bars">
               <div class="dt-bars" data-bars>
                 <div class="dt-bar-row" style="--dt-bar:78%"><span>Leads</span><div class="dt-bar-track"><div class="dt-bar-fill"></div></div><span>78</span></div>
                 <div class="dt-bar-row" style="--dt-bar:54%"><span>Sites</span><div class="dt-bar-track"><div class="dt-bar-fill"></div></div><span>54</span></div>
@@ -1080,8 +1099,16 @@
             </div>
           </article>
           <article class="dt-card" id="data-timeline">
-            <div class="dt-card-top"><h3>Timeline</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Follow the timeline steps.</p></div>
-            <div class="dt-stage is-live">
+            <div class="dt-card-top">
+              <div class="dt-card-head">
+                <h3>Timeline</h3>
+                <button type="button" class="dt-play-ico" data-play="timeline" aria-label="Play timeline demo">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+              </div>
+              <p class="dt-tip"><span class="dt-tip-label">Try</span> Follow the timeline steps.</p>
+            </div>
+            <div class="dt-stage" data-demo="timeline" data-stage-tap="timeline">
               <div class="dt-timeline">
                 <div class="dt-tl-item"><span class="dt-tl-dot"></span><div><strong>Published</strong><span>2 hours ago</span></div></div>
                 <div class="dt-tl-item"><span class="dt-tl-dot"></span><div><strong>Client viewed</strong><span>Yesterday</span></div></div>
@@ -1105,7 +1132,7 @@
       </section>
 
       <!-- System -->
-      <section class="dt-section" id="system">
+      <section class="dt-section dt-legacy" id="legacy-system">
         <header class="dt-section-head">
           <h2>System</h2>
           <p>Utility patterns people expect.</p>
@@ -1134,23 +1161,39 @@
           </article>
           <article class="dt-card" id="sys-kbd">
             <div class="dt-card-top"><h3>Keyboard hints</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Notice the shortcut chips.</p></div>
-            <div class="dt-stage is-live dt-stage-row">
-              <span class="dt-kbd">⌘</span><span class="dt-kbd">K</span>
-              <span style="color:#8a8a8a;font-size:0.85rem">Command palette</span>
+            <div class="dt-stage is-live dt-stage-row" data-kbd>
+              <button type="button" class="dt-kbd" data-kbd-key="meta">⌘</button>
+              <button type="button" class="dt-kbd" data-kbd-key="k">K</button>
+              <span class="dt-kbd-label">Command palette</span>
             </div>
           </article>
           <article class="dt-card" id="sys-compare">
-            <div class="dt-card-top"><h3>Skeleton vs content</h3><p class="dt-tip"><span class="dt-tip-label">Try</span> Compare skeleton placeholders to ready content.</p></div>
-            <div class="dt-stage is-live">
+            <div class="dt-card-top">
+              <div class="dt-card-head">
+                <h3>Skeleton vs content</h3>
+                <button type="button" class="dt-play-ico" data-play="skeleton-compare" aria-label="Play skeleton versus content demo">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+              </div>
+              <p class="dt-tip"><span class="dt-tip-label">Try</span> Compare skeleton placeholders to ready content.</p>
+            </div>
+            <div class="dt-stage" data-demo="skeleton-compare" data-stage-tap="skeleton-compare">
               <div class="dt-skeleton-compare">
-                <div>
+                <div class="dt-compare-pane" data-compare-pane>
                   <strong>Loading</strong>
-                  <span class="dt-skel dt-skel-line"></span>
-                  <span class="dt-skel dt-skel-line dt-skel-short" style="margin-top:0.35rem;display:block"></span>
+                  <div class="dt-compare-stack">
+                    <div class="dt-compare-skel">
+                      <span class="dt-skel dt-skel-line"></span>
+                      <span class="dt-skel dt-skel-line dt-skel-short"></span>
+                    </div>
+                    <div class="dt-compare-ready">
+                      <div class="dt-list-row"><strong>River Dental</strong><span>Austin</span></div>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <strong>Ready</strong>
-                  <div class="dt-list-row" style="margin:0"><strong>River Dental</strong><span>Austin</span></div>
+                  <div class="dt-list-row"><strong>River Dental</strong><span>Austin</span></div>
                 </div>
               </div>
             </div>
@@ -1245,6 +1288,11 @@
   </div>
   <div class="dt-toasts" id="dt-toasts" aria-live="polite" aria-atomic="true"></div>
 
-  <script defer src="js/ui-library.js?v=20261108-ui-ref"></script>
+  <script defer src="js/ui-library.js?v=20261108-motion"></script>
+  <script defer src="js/ui-catalog/helpers.js?v=20261108-catalog"></script>
+  <script defer src="js/ui-catalog/sections.js?v=20261108-catalog"></script>
+  <script defer src="js/ui-catalog/components.js?v=20261108-catalog"></script>
+  <script defer src="js/ui-catalog/screens.js?v=20261108-catalog"></script>
+  <script defer src="js/ui-catalog/boot.js?v=20261108-catalog"></script>
 </body>
 </html>

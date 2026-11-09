@@ -308,6 +308,68 @@
       li.classList.toggle("is-current", i === idx);
       li.classList.toggle("is-done", i < idx);
     });
+    const label = $("[data-step-label]");
+    const name = items[idx]?.querySelector(".dt-step-name");
+    if (label && name) label.textContent = name.textContent.trim();
+  }
+
+  function runBars() {
+    const rows = $all("[data-bars] .dt-bar-row");
+    rows.forEach((row) => row.classList.remove("is-on"));
+    void document.body.offsetWidth;
+    rows.forEach((row, i) => {
+      window.setTimeout(() => row.classList.add("is-on"), reduceMotion ? 0 : i * 120);
+    });
+  }
+
+  function runTimeline() {
+    const stage = $('.dt-stage[data-demo="timeline"]');
+    if (!stage) return;
+    stage.classList.remove("is-on");
+    void stage.offsetWidth;
+    stage.classList.add("is-on");
+    window.clearTimeout(stage._dtOff);
+    stage._dtOff = window.setTimeout(() => stage.classList.remove("is-on"), reduceMotion ? 400 : 1600);
+  }
+
+  function runSkeletonCompare() {
+    const pane = $("[data-compare-pane]");
+    if (!pane) return;
+    window.clearTimeout(pane._dtA);
+    window.clearTimeout(pane._dtB);
+    pane.classList.remove("is-ready");
+    pane.classList.add("is-on");
+    pane._dtA = window.setTimeout(() => pane.classList.add("is-ready"), reduceMotion ? 160 : 900);
+    pane._dtB = window.setTimeout(() => {
+      pane.classList.remove("is-ready", "is-on");
+    }, reduceMotion ? 700 : 2200);
+  }
+
+  function runMetrics() {
+    const stage = $('.dt-stage[data-demo="metrics"]');
+    if (!stage) return;
+    stage.classList.remove("is-on");
+    void stage.offsetWidth;
+    stage.classList.add("is-on");
+    $all("[data-metric]", stage).forEach((el) => {
+      const to = Number(el.getAttribute("data-metric")) || 0;
+      const money = el.getAttribute("data-metric-format") === "money";
+      const write = (n) => {
+        el.textContent = money ? "$" + n.toFixed(1) + "k" : String(Math.round(n));
+      };
+      if (reduceMotion) {
+        write(to);
+        return;
+      }
+      const t0 = performance.now();
+      const frame = (now) => {
+        const p = Math.min(1, (now - t0) / 800);
+        const eased = 1 - Math.pow(1 - p, 3);
+        write(to * eased);
+        if (p < 1) window.requestAnimationFrame(frame);
+      };
+      window.requestAnimationFrame(frame);
+    });
   }
 
   /* —— Cookbook search —— */
@@ -342,7 +404,45 @@
     }, reduceMotion ? 400 : 1300);
   }
 
-  function runDemo(kind, playBtn) {
+  function lxStage(playBtn, kind, origin) {
+    if (playBtn) {
+      const stage = playBtn.closest(".dt-card")?.querySelector(".dt-stage");
+      if (stage) return stage;
+    }
+    if (origin) return origin.classList.contains("dt-stage") ? origin : origin.querySelector(".dt-stage");
+    return document.querySelector('.dt-stage[data-demo="' + kind + '"]');
+  }
+
+  function runLxLive(playBtn, kind, origin) {
+    const stage = lxStage(playBtn, kind, origin);
+    if (!stage) return;
+    stage.classList.remove("is-live");
+    void stage.offsetWidth;
+    stage.classList.add("is-live");
+    window.clearTimeout(stage._lxOff);
+    stage._lxOff = window.setTimeout(() => stage.classList.remove("is-live"), reduceMotion ? 280 : 2600);
+  }
+
+  function runLxCount(playBtn, origin) {
+    const stage = lxStage(playBtn, "lx-count", origin);
+    const el = stage && stage.querySelector("[data-count]");
+    if (!el) return;
+    const to = Number(el.getAttribute("data-count")) || 0;
+    if (reduceMotion) {
+      el.textContent = String(to);
+      return;
+    }
+    const t0 = performance.now();
+    function frame(now) {
+      const p = Math.min(1, (now - t0) / 900);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = String(Math.round(to * eased));
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function runDemo(kind, playBtn, origin) {
     if (playBtn) {
       playBtn.classList.add("is-playing");
       window.setTimeout(() => playBtn.classList.remove("is-playing"), 700);
@@ -356,7 +456,17 @@
       pulseStage("skeleton", reduceMotion ? 900 : 2400);
     } else if (kind === "progress") runProgress();
     else if (kind === "pulse") togglePulse();
-    else if (kind === "button-loader") runButtonLoader();
+    else if (kind === "button-loader") {
+      const btn = $("#loaders-button [data-btn-loader]");
+      if (btn) runButtonLoader(btn);
+    } else if (kind === "loading-state") {
+      const btn = $("#buttons-loading [data-btn-loader-static]");
+      if (btn) runButtonLoader(btn);
+    }
+    else if (kind === "bars") runBars();
+    else if (kind === "timeline") runTimeline();
+    else if (kind === "skeleton-compare") runSkeletonCompare();
+    else if (kind === "metrics") runMetrics();
     else if (kind === "fullscreen") runFullscreen();
     else if (kind === "ptr") refreshPtr();
     else if (kind === "infinite-reset") infiniteMain.reset();
@@ -383,6 +493,8 @@
     else if (kind === "cook-search") runCookSearch();
     else if (kind === "cook-submit") runCookSubmit();
     else if (kind === "cook-scroll-reset") infiniteCook.reset();
+    else if (kind === "lx-count") runLxCount(playBtn, origin);
+    else if (kind && String(kind).indexOf("lx-") === 0) runLxLive(playBtn, kind, origin);
   }
 
   /* —— Play buttons + stage taps —— */
@@ -431,8 +543,8 @@
       }
 
       const stage = e.target.closest("[data-stage-tap]");
-      if (stage && !e.target.closest("button, a, input, select, textarea")) {
-        runDemo(stage.getAttribute("data-stage-tap"));
+      if (stage && !e.target.closest("button, a, input, select, textarea, [data-lx-opt], [data-lx-acc]")) {
+        runDemo(stage.getAttribute("data-stage-tap"), null, stage);
       }
     });
   }
@@ -473,10 +585,31 @@
     $("[data-pass-toggle]")?.addEventListener("click", () => {
       const input = $("#dt-pass");
       const btn = $("[data-pass-toggle]");
-      if (!input || !btn) return;
+      const wrap = input?.closest(".dt-pass-wrap");
+      if (!input || !btn || !wrap) return;
       const show = input.type === "password";
-      input.type = show ? "text" : "password";
-      btn.textContent = show ? "Hide" : "Show";
+      const eye = $(".dt-eye", btn);
+      const eyeOff = $(".dt-eye-off", btn);
+      wrap.classList.remove("is-revealing", "is-hiding");
+      void wrap.offsetWidth;
+      if (show) {
+        input.type = "text";
+        wrap.classList.add("is-revealing");
+        btn.setAttribute("aria-label", "Hide password");
+        btn.setAttribute("aria-pressed", "true");
+        if (eye) eye.hidden = true;
+        if (eyeOff) eyeOff.hidden = false;
+      } else {
+        wrap.classList.add("is-hiding");
+        btn.setAttribute("aria-label", "Show password");
+        btn.setAttribute("aria-pressed", "false");
+        if (eye) eye.hidden = false;
+        if (eyeOff) eyeOff.hidden = true;
+        window.setTimeout(() => {
+          input.type = "password";
+          wrap.classList.remove("is-hiding");
+        }, reduceMotion ? 0 : 420);
+      }
     });
 
     $all("[data-switch]").forEach((sw) => {
@@ -558,7 +691,9 @@
       const btn = e.currentTarget;
       const on = btn.getAttribute("aria-pressed") !== "true";
       btn.setAttribute("aria-pressed", on ? "true" : "false");
-      btn.textContent = on ? "♥" : "♡";
+      btn.classList.remove("is-pop");
+      void btn.offsetWidth;
+      btn.classList.add("is-pop");
     });
 
     $all("[data-tabs]").forEach((tabs) => {
@@ -631,13 +766,31 @@
       const slides = $all(".dt-carousel-slide", carousel);
       const dots = dotsWrap ? $all("button", dotsWrap) : [];
       let i = 0;
+      let timer = 0;
+      const duration = reduceMotion ? 4000 : 3200;
       const go = (n) => {
         i = ((n % slides.length) + slides.length) % slides.length;
         if (track) track.style.transform = "translate3d(" + -i * 100 + "%,0,0)";
-        dots.forEach((d, di) => d.classList.toggle("is-active", di === i));
+        slides.forEach((slide, si) => {
+          slide.classList.toggle("is-in", si === i);
+          if (si === i) {
+            slide.style.animation = "none";
+            void slide.offsetWidth;
+            slide.style.animation = "";
+          }
+        });
+        dots.forEach((d, di) => {
+          d.classList.toggle("is-active", di === i);
+          const bar = d.querySelector("span");
+          if (!bar) return;
+          bar.style.animation = "none";
+          void bar.offsetWidth;
+          bar.style.animation = "";
+        });
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => go(i + 1), duration);
       };
       dots.forEach((d, di) => d.addEventListener("click", () => go(di)));
-      window.setInterval(() => go(i + 1), reduceMotion ? 4000 : 3200);
       go(0);
     });
 
@@ -652,8 +805,21 @@
       }, 1000);
     }
 
-    $all("[data-bars] .dt-bar-row").forEach((row) => {
-      row.classList.add("is-on");
+    runBars();
+
+    $all("[data-kbd-key]").forEach((key) => {
+      key.addEventListener("click", () => {
+        key.classList.add("is-down");
+        window.setTimeout(() => key.classList.remove("is-down"), 140);
+      });
+    });
+    document.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+        $all("[data-kbd-key]").forEach((key) => {
+          key.classList.add("is-down");
+          window.setTimeout(() => key.classList.remove("is-down"), 140);
+        });
+      }
     });
 
     $("[data-copy]")?.addEventListener("click", async () => {
@@ -746,8 +912,10 @@
       wrap.addEventListener("click", (e) => {
         const btn = e.target.closest(".dt-date-grid button");
         if (!btn) return;
-        $all(".dt-date-grid button", wrap).forEach((b) => b.classList.remove("is-selected"));
+        $all(".dt-date-grid button", wrap).forEach((b) => b.classList.remove("is-selected", "is-pop"));
         btn.classList.add("is-selected");
+        void btn.offsetWidth;
+        btn.classList.add("is-pop");
       });
     });
 
@@ -995,31 +1163,23 @@
     btn.disabled = true;
     btn.setAttribute("aria-busy", "true");
     try {
-      let stageHtml = "";
+      const stage = card.querySelector(".dt-stage");
+      if (!stage) throw new Error("stage");
+      const stageHtml = stage.outerHTML;
       let extraHtml = "";
-      let css = "";
-      try {
-        const pageHtml = await fetchTextFresh("ui-library.html");
-        css = await fetchTextFresh("css/ui-library.css");
-        const doc = new DOMParser().parseFromString(pageHtml, "text/html");
-        const sourceCard = doc.getElementById(id);
-        const stage = sourceCard?.querySelector(".dt-stage");
-        if (!stage) throw new Error("stage");
-        stageHtml = stage.outerHTML;
-        const extraId = PATTERN_EXTRAS[id];
-        if (extraId) {
-          const node = doc.getElementById(extraId);
-          if (node) {
-            node.removeAttribute("hidden");
-            extraHtml = node.outerHTML;
-          }
+      const extraId = PATTERN_EXTRAS[id];
+      if (extraId) {
+        const node = document.getElementById(extraId);
+        if (node) {
+          const clone = node.cloneNode(true);
+          clone.removeAttribute("hidden");
+          extraHtml = clone.outerHTML;
         }
-      } catch (_) {
-        const stage = card.querySelector(".dt-stage");
-        if (!stage) throw new Error("stage");
-        stageHtml = stage.outerHTML;
-        css = await fetchTextFresh("css/ui-library.css");
       }
+      let css = await fetchTextFresh("css/ui-library.css");
+      try {
+        css += "\n" + await fetchTextFresh("css/ui-library-lab.css");
+      } catch (_) { /* older cards still download without the lab sheet */ }
       const file = patternFile({ id, title, stageHtml, extraHtml, css });
       saveTextFile(file, "moonrise-ui-" + id + ".html", "text/html");
       showToast("Downloaded " + title);
@@ -1031,8 +1191,9 @@
     }
   }
 
-  function mountPatternDownloads() {
-    $all(".dt-card").forEach((card) => {
+  function mountPatternDownloads(root) {
+    const scope = root && root.querySelectorAll ? root : document;
+    $all(".dt-card", scope).forEach((card) => {
       if (card.classList.contains("dt-craft-card")) return;
       if (!$(".dt-stage", card) || card.querySelector("[data-download-ui]")) return;
       const title = card.querySelector("h3")?.textContent?.trim() || "Pattern";
@@ -1062,6 +1223,8 @@
       btn.addEventListener("click", () => downloadPattern(card, btn));
     });
   }
+
+  window.dtMountDownloads = mountPatternDownloads;
 
   document.addEventListener("DOMContentLoaded", () => {
     ensureCraftPrompt().catch(() => {

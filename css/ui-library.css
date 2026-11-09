@@ -12,6 +12,9 @@ body.dt-page {
   --dt-stage: #f7f7f8;
   --dt-danger: #d92d20;
   --dt-ok: #067647;
+  --dt-action: #1f6fed;
+  --dt-action-soft: #e8f0fe;
+  --dt-warn: #9a6700;
   --dt-radius: 18px;
   --dt-radius-sm: 14px;
   --dt-pill: 999px;
@@ -51,7 +54,7 @@ body[data-page="ui-library"] .ms-orders-nav-link {
 }
 
 .dt-shell {
-  width: min(64rem, calc(100% - 1.5rem));
+  width: min(76rem, calc(100% - 1.5rem));
   margin: 0 auto;
   padding: 1.15rem 0 3.5rem;
 }
@@ -338,8 +341,15 @@ body[data-page="ui-library"] .dt-btn-primary {
 }
 
 .dt-page .dt-btn-secondary,
+body[data-page="ui-library"] .dt-btn-secondary {
+  background: #f4f4f5 !important;
+  color: #111111 !important;
+  -webkit-text-fill-color: #111111 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
 .dt-page .dt-play-ghost,
-body[data-page="ui-library"] .dt-btn-secondary,
 body[data-page="ui-library"] .dt-play-ghost {
   background: #ffffff !important;
   color: #111111 !important;
@@ -351,23 +361,33 @@ body[data-page="ui-library"] .dt-play-ghost {
 .dt-page .dt-btn-ghost,
 body[data-page="ui-library"] .dt-btn-ghost {
   background: transparent !important;
-  color: #52525b !important;
-  -webkit-text-fill-color: #52525b !important;
+  color: #3f3f46 !important;
+  -webkit-text-fill-color: #3f3f46 !important;
   border: 0 !important;
-  box-shadow: inset 0 0 0 1px #e4e4e7 !important;
+  box-shadow: none !important;
+  text-decoration: none;
 }
 
 .dt-page .dt-btn-ghost:hover,
-body[data-page="ui-library"] .dt-btn-ghost:hover {
-  background: #f5f5f5 !important;
+body[data-page="ui-library"] .dt-btn-ghost:hover,
+.dt-btn-ghost.is-demo-hover,
+body[data-page="ui-library"] .dt-btn-ghost.is-demo-hover {
+  background: transparent !important;
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
-  box-shadow: inset 0 0 0 1px #bdbdbd !important;
+  box-shadow: none !important;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1.5px;
+  transform: none;
 }
 
 .dt-page .dt-btn-secondary:hover,
-body[data-page="ui-library"] .dt-btn-secondary:hover {
-  background: #f5f5f5 !important;
+body[data-page="ui-library"] .dt-btn-secondary:hover,
+.dt-btn-secondary.is-demo-hover,
+body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
+  background: #e7e7ea !important;
+  transform: none;
 }
 
 .dt-page .dt-btn-danger,
@@ -401,23 +421,95 @@ body[data-page="ui-library"] .dt-btn-primary:active:not(:disabled) {
   box-shadow: 0 6px 16px rgb(0 0 0 / 14%) !important;
 }
 
+.dt-legacy { display: none !important; }
+
+.dt-alias {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.dt-section { position: relative; scroll-margin-top: 9rem; }
+.dt-card { scroll-margin-top: 9rem; }
+
 .dt-toc {
   position: sticky;
   top: 0;
   z-index: 40;
-  display: flex;
-  gap: 0.4rem;
-  overflow-x: auto;
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+  max-width: 100%;
   padding: 0.7rem 0;
   margin: 0 0 1.35rem;
-  background: color-mix(in srgb, #f7f7f8 88%, transparent);
+  background: color-mix(in srgb, #f7f7f8 92%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgb(0 0 0 / 5%);
+}
+
+.dt-toc-pin,
+.dt-toc-switch {
+  display: flex;
+  gap: 0.35rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
   scrollbar-width: none;
 }
 
-.dt-toc::-webkit-scrollbar { display: none; }
+.dt-toc-scroll {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.dt-toc-pin::-webkit-scrollbar,
+.dt-toc-switch::-webkit-scrollbar,
+.dt-toc-group::-webkit-scrollbar { display: none; }
+
+.dt-toc-switch button {
+  appearance: none;
+  flex: 0 0 auto;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #71717a;
+  background: transparent;
+  border-radius: var(--dt-pill);
+  padding: 0.32rem 0.7rem;
+}
+
+.dt-toc-switch button.is-on,
+.dt-toc-switch button[aria-selected="true"] {
+  background: #111111;
+  color: #fff;
+}
+
+.dt-toc-group {
+  display: none;
+  gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.dt-toc-group.is-shown { display: flex; }
+
+.dt-toc-label {
+  display: none;
+  margin: 0.15rem 0.55rem 0.15rem;
+  color: var(--dt-quiet);
+  font-size: 0.72rem;
+  font-weight: 650;
+}
 
 .dt-toc a {
   flex: 0 0 auto;
@@ -473,7 +565,7 @@ body[data-page="ui-library"] .dt-btn-primary:active:not(:disabled) {
   padding: 1.15rem 1.15rem 1.2rem;
   min-width: 0;
   height: auto;
-  align-self: start;
+  align-self: stretch;
   background: #ffffff !important;
   border: 1px solid #ececec !important;
   border-radius: var(--dt-radius);
@@ -568,7 +660,7 @@ body[data-page="ui-library"] .dt-btn-primary:active:not(:disabled) {
   align-items: stretch;
   justify-content: center;
   gap: 0.65rem;
-  min-height: 7.75rem;
+  min-height: 16.75rem;
   padding: 1.35rem 1.15rem;
   background: var(--dt-stage) !important;
   border: 1px solid #ececec !important;
@@ -589,12 +681,8 @@ body[data-page="ui-library"] .dt-btn-primary.is-demo-hover {
   box-shadow: 0 10px 28px rgb(0 0 0 / 22%) !important;
 }
 
-.dt-btn-ghost.is-demo-hover,
-.dt-btn-secondary.is-demo-hover,
-body[data-page="ui-library"] .dt-btn-ghost.is-demo-hover,
-body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
-  background: #f5f5f5 !important;
-  transform: scale(1.04);
+.dt-stage {
+  flex: 1 1 auto;
 }
 
 .dt-stage.is-live::before,
@@ -613,14 +701,14 @@ body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
   align-items: center;
   justify-content: center;
   gap: 0.7rem;
-  min-height: 6.5rem;
+  min-height: 16.75rem;
 }
 
-.dt-stage-tall { min-height: 7.5rem; }
+.dt-stage-tall { min-height: 16.75rem; }
 .dt-stage-form {
   align-items: stretch;
   justify-content: flex-start;
-  min-height: 0;
+  min-height: 16.75rem;
   gap: 0.45rem;
 }
 .dt-stage-split {
@@ -631,18 +719,18 @@ body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
 }
 .dt-stage-phone {
   align-items: center;
-  min-height: 12.5rem;
+  min-height: 16.75rem;
   padding-bottom: 0.95rem;
 }
 .dt-stage-scroll {
-  max-height: 13.5rem;
-  min-height: 11rem;
+  max-height: 16.75rem;
+  min-height: 16.75rem;
   overflow: auto;
   justify-content: flex-start;
   padding-top: 0.85rem;
 }
 .dt-stage-dock {
-  min-height: 8.5rem;
+  min-height: 16.75rem;
   background: #f2f2f7 !important;
   justify-content: center;
   align-items: center;
@@ -666,7 +754,7 @@ body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
 .dt-stage:has(.dt-drop),
 .dt-stage:has(.dt-tags) {
   justify-content: flex-start;
-  min-height: 0;
+  min-height: 16.75rem;
   height: auto;
   padding: 1.15rem;
 }
@@ -677,7 +765,7 @@ body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
 .dt-stage:has(.dt-metrics),
 .dt-stage:has(.dt-chips) {
   justify-content: center;
-  min-height: 0;
+  min-height: 16.75rem;
 }
 
 .dt-play {
@@ -740,10 +828,40 @@ body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
   100% { background-position: -100% 0; }
 }
 
+.dt-motion-side {
+  display: grid;
+  gap: 0.45rem;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.dt-motion-side-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #737373;
+}
+.dt-pulse-bar {
+  display: block;
+  height: 14px;
+  width: 100%;
+  border-radius: 10px;
+  background: #e4e4e7;
+}
+.dt-pulse-bar-short { width: 62%; }
+.dt-stage[data-demo="shimmer-pulse"].is-on .dt-pulse-bar {
+  animation: dt-breathe 1.2s ease-in-out infinite;
+}
+.dt-stage[data-demo="shimmer-pulse"].is-on .dt-pulse-bar:nth-child(3) { animation-delay: 0.15s; }
+@keyframes dt-breathe {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
 .dt-stage[data-demo="skeleton"] {
   gap: 0.65rem;
   padding: 0.9rem;
-  min-height: 0;
+  min-height: 16.75rem;
 }
 
 .dt-skel-card {
@@ -926,7 +1044,15 @@ body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
   box-shadow: inset 0 0 0 1px #e4e4e7;
 }
 .dt-btn-danger { background: var(--dt-danger); color: #fff; }
-.dt-btn-rect { border-radius: 14px; }
+.dt-btn-rect { border-radius: 8px; padding-left: 0.7rem; padding-right: 0.7rem; min-height: 2.35rem; }
+.dt-shape { display: grid; justify-items: center; gap: 0.45rem; }
+.dt-shape > span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #737373;
+}
 .dt-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
@@ -942,62 +1068,46 @@ body[data-page="ui-library"] .dt-btn-secondary.is-demo-hover {
 .dt-btn-press:active { transform: scale(1.06); }
 
 .dt-btn-morph {
-  position: relative;
-  overflow: hidden;
-  min-width: 8.25rem;
-  transition:
-    min-width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.2s ease,
-    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.22s ease;
+  display: inline-grid;
+  grid-template-areas: "stack";
+  place-items: center;
+  min-width: 9.5rem;
+  min-height: 2.35rem;
+  overflow: visible;
+  transition: background 0.2s ease, box-shadow 0.22s ease;
 }
 
-.dt-btn-morph-label {
-  display: inline-grid;
-  place-items: center;
-  transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), filter 0.28s ease;
+.dt-btn-morph-label,
+.dt-btn-morph-spin,
+.dt-btn-morph-done {
+  grid-area: stack;
+  transition: opacity 0.22s ease;
 }
+
+.dt-btn-morph-label { opacity: 1; }
 
 .dt-btn-morph.is-loading .dt-btn-morph-label,
 .dt-btn-morph.is-done .dt-btn-morph-label {
   opacity: 0;
-  transform: translateY(-8px) scale(0.92);
-  filter: blur(2px);
   pointer-events: none;
-  position: absolute;
 }
 
 .dt-btn-morph-spin {
-  position: absolute;
-  inset: 0;
   display: grid;
   place-items: center;
+  width: 20px;
+  height: 20px;
   opacity: 0;
-  transform: scale(0.7);
-  transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
 }
 
-.dt-btn-morph.is-loading .dt-btn-morph-spin {
-  opacity: 1;
-  transform: scale(1);
-}
+.dt-btn-morph.is-loading .dt-btn-morph-spin { opacity: 1; }
 
-.dt-btn-morph-done {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  opacity: 0;
-  transform: translateY(8px) scale(0.92);
-  filter: blur(2px);
-  transition: opacity 0.24s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), filter 0.32s ease;
-}
+.dt-spin-ring { display: block; transform-origin: center; }
+.dt-btn-morph.is-loading .dt-spin-ring { animation: dt-spin 0.75s linear infinite; }
 
-.dt-btn-morph.is-done .dt-btn-morph-done {
-  opacity: 1;
-  transform: none;
-  filter: none;
-}
+.dt-btn-morph-done { opacity: 0; pointer-events: none; }
+.dt-btn-morph.is-done .dt-btn-morph-done { opacity: 1; }
 
 .dt-btn-morph.is-done,
 .dt-page .dt-btn-morph.is-done,
@@ -1008,6 +1118,7 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
 }
 
 .dt-icon-btn {
+  position: relative;
   width: 2.2rem;
   height: 2.2rem;
   display: grid;
@@ -1017,40 +1128,40 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   background: var(--dt-fill);
   color: var(--dt-ink);
   cursor: pointer;
-  transition:
-    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.18s ease,
-    box-shadow 0.22s ease,
-    color 0.18s ease;
+  overflow: hidden;
+  transition: background 0.18s ease, color 0.18s ease;
 }
 
-.dt-icon-btn svg {
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-}
+.dt-icon-btn svg { display: block; }
 
 .dt-icon-btn:hover {
-  transform: scale(1.1);
   background: #111;
   color: #fff;
-  box-shadow: 0 8px 18px rgb(0 0 0 / 14%);
 }
 
-.dt-icon-btn:hover svg {
-  transform: scale(1.08) rotate(-6deg);
+.dt-icon-btn:active { transform: scale(0.94); }
+
+.dt-icon-btn.is-pop { animation: dt-icon-press 0.36s ease; }
+
+.dt-icon-btn.is-pop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgb(255 255 255 / 55%) 0%, transparent 68%);
+  animation: dt-icon-ripple 0.45s ease;
+  pointer-events: none;
 }
 
-.dt-icon-btn:active {
-  transform: scale(1.16);
-}
-
-.dt-icon-btn.is-pop {
-  animation: dt-icon-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes dt-icon-pop {
+@keyframes dt-icon-press {
   0% { transform: scale(1); }
-  40% { transform: scale(1.22); }
+  40% { transform: scale(0.94); }
   100% { transform: scale(1); }
+}
+
+@keyframes dt-icon-ripple {
+  from { opacity: 0.95; transform: scale(0.15); }
+  to { opacity: 0; transform: scale(1.15); }
 }
 
 .dt-danger-flow {
@@ -1234,19 +1345,28 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   transform: scale(1);
   opacity: 1;
 }
-.dt-success.is-on {
-  animation: dt-success-once 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+.dt-success-ring,
+.dt-success-check {
+  stroke-dashoffset: 0;
 }
-@keyframes dt-success-once {
-  from { transform: scale(0.7); opacity: 0.35; }
-  to { transform: scale(1); opacity: 1; }
+.dt-success.is-on .dt-success-ring {
+  stroke-dasharray: 57;
+  stroke-dashoffset: 57;
+  animation: dt-draw 0.45s ease forwards;
 }
+.dt-success.is-on .dt-success-check {
+  stroke-dasharray: 22;
+  stroke-dashoffset: 22;
+  animation: dt-draw 0.32s ease 0.28s forwards;
+}
+@keyframes dt-draw { to { stroke-dashoffset: 0; } }
 
-.dt-field.is-shaking { animation: dt-shake 0.4s ease; }
+.dt-field.is-shaking { animation: dt-shake 0.45s ease; }
 @keyframes dt-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
+  0%, 100% { transform: translateX(0); border-color: var(--dt-line); box-shadow: none; }
+  20% { transform: translateX(-6px); border-color: var(--dt-danger); box-shadow: 0 0 0 3px rgb(217 45 32 / 18%); }
+  45% { transform: translateX(5px); border-color: var(--dt-danger); box-shadow: 0 0 0 3px rgb(217 45 32 / 14%); }
+  70% { transform: translateX(-3px); border-color: var(--dt-danger); box-shadow: 0 0 0 3px rgb(217 45 32 / 10%); }
 }
 
 /* Forms */
@@ -1275,6 +1395,21 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   outline: none;
   border-color: var(--dt-ink);
 }
+.dt-select-wrap { position: relative; width: 100%; }
+.dt-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.2rem;
+  cursor: pointer;
+}
+.dt-select-chevron {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #111;
+}
 .dt-field.is-error { border-color: var(--dt-danger); }
 .dt-field.is-ok { border-color: var(--dt-ok); }
 .dt-field-msg { margin: 0.25rem 0 0.65rem; font-size: 0.78rem; }
@@ -1282,20 +1417,49 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
 .dt-field-msg.is-ok { color: var(--dt-ok); }
 
 .dt-pass-wrap { position: relative; }
-.dt-pass-wrap .dt-field { padding-right: 4rem; }
+.dt-pass-wrap .dt-field { padding-right: 2.6rem; }
+.dt-pass-wipe {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  right: 2.45rem;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: right center;
+  pointer-events: none;
+  border-radius: 11px;
+}
+.dt-pass-wrap.is-revealing .dt-field { animation: dt-pass-clear 0.42s ease; }
+.dt-pass-wrap.is-revealing .dt-pass-wipe { animation: dt-pass-wipe 0.42s ease; }
+.dt-pass-wrap.is-hiding .dt-pass-wipe {
+  transform-origin: left center;
+  animation: dt-pass-wipe 0.42s ease reverse forwards;
+}
+@keyframes dt-pass-wipe {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+@keyframes dt-pass-clear {
+  from { filter: blur(7px); }
+  to { filter: blur(0); }
+}
 .dt-pass-toggle {
   position: absolute;
-  right: 0.45rem;
+  right: 0.3rem;
   top: 50%;
+  width: 1.85rem;
+  height: 1.85rem;
+  display: grid;
+  place-items: center;
   transform: translateY(-50%);
   border: 0;
+  border-radius: 8px;
   background: transparent;
   color: var(--dt-muted);
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 650;
   cursor: pointer;
 }
+.dt-pass-toggle svg[hidden] { display: none; }
 
 .dt-search {
   display: flex;
@@ -1432,20 +1596,38 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
 .dt-tooltip {
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 0.45rem);
-  transform: translateX(-50%);
-  white-space: nowrap;
-  padding: 0.4rem 0.65rem;
-  border-radius: 8px;
-  background: var(--dt-ink);
+  bottom: calc(100% + 0.6rem);
+  transform: translateX(-50%) translateY(4px);
+  width: max-content;
+  max-width: 11rem;
+  white-space: normal;
+  text-align: center;
+  padding: 0.45rem 0.7rem;
+  border-radius: 10px;
+  background: #111111;
   color: #fff;
   font-size: 0.75rem;
+  line-height: 1.35;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease;
+  box-shadow: 0 8px 20px rgb(0 0 0 / 16%);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.dt-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+  background: #111111;
+  transform: translateX(-50%) rotate(45deg);
 }
 .dt-tooltip-wrap:hover .dt-tooltip,
-.dt-tooltip-wrap:focus-within .dt-tooltip { opacity: 1; }
+.dt-tooltip-wrap:focus-within .dt-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
 
 .dt-overlay {
   position: fixed;
@@ -1454,6 +1636,7 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   display: grid;
   place-items: center;
   padding: 1rem;
+  min-height: 100dvh;
   background: rgb(0 0 0 / 35%);
 }
 .dt-overlay[hidden] { display: none !important; }
@@ -1479,11 +1662,17 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
 
 .dt-overlay-sheet {
   align-items: end;
+  justify-content: center;
   place-items: end center;
+  padding: 0;
 }
 .dt-sheet {
-  width: min(24rem, 100%);
-  padding: 0.65rem 0.85rem 1rem;
+  width: 100%;
+  max-width: 32rem;
+  max-height: min(88dvh, 100%);
+  overflow: auto;
+  margin: 0;
+  padding: 0.65rem 0.85rem max(1rem, env(safe-area-inset-bottom));
   border-radius: 20px 20px 0 0;
   background: #fff;
 }
@@ -1618,11 +1807,26 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  font-size: 1.35rem;
   cursor: pointer;
   color: var(--dt-muted);
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+.dt-like-heart {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
 }
 .dt-like[aria-pressed="true"] { color: var(--dt-danger); background: color-mix(in srgb, var(--dt-danger) 10%, #fff); }
+.dt-like[aria-pressed="true"] .dt-like-heart { fill: currentColor; }
+.dt-like.is-pop { animation: dt-like-spring 0.42s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes dt-like-spring {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
 
 /* Feedback */
 .dt-banner {
@@ -1745,37 +1949,74 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
 }
 
 .dt-stepper {
+  position: relative;
   display: flex;
-  gap: 0.55rem;
+  justify-content: space-between;
+  gap: 0.5rem;
   list-style: none;
-  margin: 0 0 1rem;
-  padding: 0;
-  flex-wrap: wrap;
+  margin: 0.35rem 0 0;
+  padding: 0 0.35rem;
+}
+.dt-stepper::before {
+  content: "";
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  top: 0.42rem;
+  height: 2px;
+  background: #e4e4e7;
 }
 .dt-stepper li {
-  flex: 1 1 5.25rem;
-  min-width: 5.25rem;
-  padding: 0.8rem 0.6rem;
-  border-radius: 12px;
-  background: #ffffff;
-  border: 1px solid #e8e8e8;
-  text-align: center;
-  font-size: 0.82rem;
-  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
   color: #737373;
-  line-height: 1.25;
 }
-.dt-stepper li.is-done {
-  color: #111111;
-  border-color: #d4d4d4;
+.dt-step-node {
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  border: 2px solid #d4d4d8;
+  background: #fff;
+  box-sizing: border-box;
 }
-.dt-stepper li.is-current {
+.dt-stepper li.is-done .dt-step-node {
   background: #111111;
   border-color: #111111;
-  color: #fff;
+}
+.dt-stepper li.is-current .dt-step-node {
+  background: #fff;
+  border-color: #111111;
+  box-shadow: 0 0 0 4px var(--dt-stage), 0 0 0 6px #111111;
+}
+.dt-step-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.dt-step-current {
+  margin: 0.85rem 0 0.15rem;
+  text-align: center;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #111111;
 }
 .dt-stage:has(.dt-stepper) .dt-actions {
-  margin-top: 0.15rem;
+  margin-top: 0.35rem;
+  justify-content: center;
 }
 
 .dt-crumbs {
@@ -1860,6 +2101,15 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   text-align: center;
   min-width: 0;
 }
+.dt-stage[data-demo="metrics"].is-on .dt-metrics > div {
+  animation: dt-metric-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.dt-stage[data-demo="metrics"].is-on .dt-metrics > div:nth-child(2) { animation-delay: 0.08s; }
+.dt-stage[data-demo="metrics"].is-on .dt-metrics > div:nth-child(3) { animation-delay: 0.16s; }
+@keyframes dt-metric-rise {
+  from { opacity: 0.35; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
 .dt-metrics strong {
   display: block;
   font-size: 1.25rem;
@@ -1874,30 +2124,26 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   line-height: 1.25;
 }
 .dt-img-ph {
-  display: grid;
-  place-items: center;
-  min-height: 6rem;
+  display: block;
+  width: 100%;
+  height: 8.5rem;
+  object-fit: cover;
   border-radius: 14px;
   background: var(--dt-fill);
-  color: var(--dt-quiet);
-  font-size: 0.82rem;
-  font-weight: 650;
 }
-.dt-avatars { display: flex; }
-.dt-avatars span {
+.dt-avatars { display: flex; align-items: center; }
+.dt-avatars img {
   width: 2.2rem;
   height: 2.2rem;
   margin-left: -0.45rem;
-  display: grid;
-  place-items: center;
   border-radius: 50%;
-  background: var(--dt-ink);
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 700;
+  object-fit: cover;
   border: 2px solid #fff;
+  background: #eee;
+  transition: transform 0.18s ease;
 }
-.dt-avatars span:first-child { margin-left: 0; }
+.dt-avatars img:first-child { margin-left: 0; }
+.dt-avatars img:hover { transform: translateY(-3px); position: relative; z-index: 1; }
 .dt-section-label {
   margin: 0 0 0.35rem;
   font-size: 0.72rem;
@@ -1932,12 +2178,16 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   font-size: 1.05rem;
   letter-spacing: -0.02em;
 }
+body[data-page="ui-library"] a.dt-link,
 .dt-link {
   color: var(--dt-ink);
   font-weight: 700;
-  text-underline-offset: 0.15em;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 0.18em;
 }
-.dt-link:hover { text-decoration-thickness: 2px; }
+body[data-page="ui-library"] a.dt-link:hover,
+.dt-link:hover { text-decoration-thickness: 2px !important; }
 
 /* Advanced */
 .dt-slider {
@@ -1968,29 +2218,55 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   font: inherit;
   font-weight: 650;
   cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 .dt-date-grid button.is-selected {
-  background: var(--dt-ink);
-  color: #fff;
+  background: #111111;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+.dt-date-grid button.is-pop { animation: dt-day-in 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes dt-day-in {
+  from { transform: scale(0.86); }
+  to { transform: scale(1); }
 }
 
 .dt-drop {
+  position: relative;
   display: grid;
   place-items: center;
   gap: 0.25rem;
   min-height: 6.5rem;
   padding: 1rem;
-  border: 1.5px dashed var(--dt-line);
+  border: 0;
   border-radius: 14px;
+  background: #fff;
   text-align: center;
   cursor: pointer;
   color: var(--dt-muted);
   font-size: 0.84rem;
+  overflow: hidden;
+}
+.dt-drop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, #b9b9be 1.15px, transparent 1.3px) left top / 9px 2px repeat-x,
+    radial-gradient(circle, #b9b9be 1.15px, transparent 1.3px) left bottom / 9px 2px repeat-x,
+    radial-gradient(circle, #b9b9be 1.15px, transparent 1.3px) left top / 2px 9px repeat-y,
+    radial-gradient(circle, #b9b9be 1.15px, transparent 1.3px) right top / 2px 9px repeat-y;
 }
 .dt-drop strong { color: var(--dt-ink); font-size: 0.92rem; }
-.dt-drop.is-over {
-  border-color: var(--dt-ink);
-  background: var(--dt-fill);
+.dt-drop.is-over { background: var(--dt-fill); }
+.dt-drop.is-over::before {
+  background:
+    radial-gradient(circle, #111111 1.15px, transparent 1.3px) left top / 9px 2px repeat-x,
+    radial-gradient(circle, #111111 1.15px, transparent 1.3px) left bottom / 9px 2px repeat-x,
+    radial-gradient(circle, #111111 1.15px, transparent 1.3px) left top / 2px 9px repeat-y,
+    radial-gradient(circle, #111111 1.15px, transparent 1.3px) right top / 2px 9px repeat-y;
 }
 
 .dt-tags {
@@ -2070,23 +2346,42 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
 @media (min-width: 960px) {
   .dt-shell {
     display: grid;
-    grid-template-columns: 11rem minmax(0, 1fr);
+    grid-template-columns: 15rem minmax(0, 1fr);
     gap: 1.5rem 1.75rem;
     align-items: start;
   }
   .dt-hero { grid-column: 1 / -1; }
   .dt-toc {
-    flex-direction: column;
-    overflow: visible;
+    display: block;
+    max-height: calc(100vh - 2rem);
+    overflow: auto;
     position: sticky;
     top: 1rem;
-    padding: 0;
+    padding: 0.2rem 0.35rem 0.2rem 0;
     margin: 0;
     border: 0;
     background: transparent;
     backdrop-filter: none;
+    scrollbar-width: thin;
   }
+  .dt-toc-switch { display: none; }
+  .dt-toc-pin {
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    margin-bottom: 0.85rem;
+  }
+  .dt-toc-group {
+    display: flex !important;
+    flex-direction: column;
+    overflow: visible;
+    margin-bottom: 0.85rem;
+  }
+  .dt-toc-label { display: block; }
   .dt-toc a {
+    flex: none;
+    width: 100%;
+    text-align: left;
     background: transparent;
     padding: 0.4rem 0.55rem;
     border-radius: 10px;
@@ -2097,6 +2392,8 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
     color: var(--dt-ink);
   }
   .dt-main { grid-column: 2; }
+  .dt-section,
+  .dt-card { scroll-margin-top: 1rem; }
 }
 
 /* —— Accordion —— */
@@ -2219,25 +2516,38 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   font-weight: 750;
   color: #111;
 }
-.dt-carousel-dots {
+.dt-carousel-slide.is-in { animation: dt-slide-in 0.45s ease; }
+@keyframes dt-slide-in {
+  from { transform: translateY(8px); opacity: 0.55; }
+  to { transform: none; opacity: 1; }
+}
+.dt-carousel-progress {
   display: flex;
-  justify-content: center;
   gap: 0.35rem;
-  margin-top: 0.55rem;
+  margin-top: 0.65rem;
 }
-.dt-carousel-dots button {
-  width: 0.45rem;
-  height: 0.45rem;
+.dt-carousel-progress button {
+  flex: 1 1 0;
+  height: 3px;
   border: 0;
-  border-radius: 999px;
-  background: #d0d0d0;
   padding: 0;
+  border-radius: 999px;
+  background: #e4e4e7;
+  overflow: hidden;
   cursor: pointer;
-  transition: width 0.25s ease, background 0.25s ease;
 }
-.dt-carousel-dots button.is-active {
-  width: 1.1rem;
-  background: #111;
+.dt-carousel-progress button span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: #111111;
+}
+.dt-carousel-progress button.is-active span {
+  animation: dt-carousel-fill 3.2s linear forwards;
+}
+@keyframes dt-carousel-fill {
+  from { width: 0; }
+  to { width: 100%; }
 }
 .dt-scrub {
   width: 100%;
@@ -2305,31 +2615,49 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
 .dt-timeline { display: grid; gap: 0; width: 100%; padding-top: 0.1rem; }
 .dt-tl-item {
   display: grid;
-  grid-template-columns: 1rem minmax(0, 1fr);
+  grid-template-columns: 1.25rem minmax(0, 1fr);
   gap: 0.75rem;
   position: relative;
-  padding-bottom: 1rem;
+  padding-bottom: 1.05rem;
 }
 .dt-tl-item::before {
   content: "";
   position: absolute;
-  left: 0.32rem;
-  top: 0.85rem;
-  bottom: 0;
+  left: calc(0.625rem - 1px);
+  top: 1.3rem;
+  bottom: 0.2rem;
   width: 2px;
-  background: #e8e8e8;
+  background: #e4e4e7;
+  transform-origin: top center;
+  z-index: 0;
 }
-.dt-tl-item:last-child {
-  padding-bottom: 0.15rem;
-}
+.dt-tl-item:last-child { padding-bottom: 0.15rem; }
 .dt-tl-item:last-child::before { display: none; }
 .dt-tl-dot {
-  width: 0.75rem;
-  height: 0.75rem;
-  margin-top: 0.25rem;
+  position: relative;
+  z-index: 1;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin: 0.2rem auto 0;
   border-radius: 50%;
   background: #111;
-  box-shadow: 0 0 0 3px #ffffff;
+  box-shadow: 0 0 0 4px var(--dt-stage);
+}
+.dt-stage[data-demo="timeline"].is-on .dt-tl-item {
+  animation: dt-tl-in 0.45s ease both;
+}
+.dt-stage[data-demo="timeline"].is-on .dt-tl-item:nth-child(2) { animation-delay: 0.12s; }
+.dt-stage[data-demo="timeline"].is-on .dt-tl-item:nth-child(3) { animation-delay: 0.24s; }
+.dt-stage[data-demo="timeline"].is-on .dt-tl-item::before {
+  animation: dt-tl-line 0.4s ease both;
+}
+@keyframes dt-tl-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes dt-tl-line {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
 }
 .dt-tl-item strong {
   display: block;
@@ -2386,6 +2714,7 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   line-height: 1.4;
 }
 .dt-kbd {
+  appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2399,7 +2728,15 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-size: 0.75rem;
   font-weight: 650;
+  color: #111111;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
+.dt-kbd.is-down {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #d0d0d0;
+}
+.dt-kbd-label { color: #8a8a8a; font-size: 0.85rem; }
 .dt-skeleton-compare {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2425,6 +2762,21 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   margin: 0;
   padding: 0.65rem 0.7rem;
 }
+.dt-compare-stack { position: relative; min-height: 3.4rem; }
+.dt-compare-skel {
+  display: grid;
+  gap: 0.45rem;
+  transition: opacity 0.35s ease;
+}
+.dt-compare-ready {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.dt-compare-pane.is-ready .dt-compare-skel { opacity: 0; }
+.dt-compare-pane.is-ready .dt-compare-ready { opacity: 1; }
+.dt-compare-pane.is-on .dt-skel { animation: dt-shimmer 1.35s ease-in-out infinite; }
 
 .dt-star,
 .dt-like,
@@ -2605,8 +2957,15 @@ body[data-page="ui-library"] .dt-star.is-on {
   .dt-typing i,
   .dt-scrub-fill,
   .dt-carousel-track,
+  .dt-carousel-progress button span,
   .dt-pill-thumb,
-  .dt-tabs-underline {
+  .dt-tabs-underline,
+  .dt-spin-ring,
+  .dt-pulse-bar,
+  .dt-success-ring,
+  .dt-success-check,
+  .dt-pass-wipe,
+  .dt-field.is-shaking {
     animation: none !important;
     transition: none !important;
   }

@@ -1,0 +1,239 @@
+(function () {
+  "use strict";
+
+  const PATHS = {
+    search: '<circle cx="11" cy="11" r="6.5"/><path d="M16.5 16.5L21 21"/>',
+    close: '<path d="M6 6l12 12M18 6L6 18"/>',
+    check: '<path d="M5 12.5l4.2 4.2L19 7.2"/>',
+    chevron: '<path d="M9 6l6 6-6 6"/>',
+    user: '<circle cx="12" cy="8" r="3.2"/><path d="M5.2 19.2c1.3-3 3.6-4.4 6.8-4.4s5.5 1.4 6.8 4.4"/>',
+    file: '<path d="M7 3.5h7l5 5V20.5H7z"/><path d="M14 3.5V9h5"/>',
+    calendar: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3.5v3M16 3.5v3M4 10h16"/>',
+    pin: '<path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10z"/><circle cx="12" cy="11" r="1.5"/>',
+    image: '<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="9" r="1.2"/><path d="M7.5 16l3-3 2.2 2.2L16.5 11 20 15"/>',
+    alert: '<path d="M12 4l8.5 15h-17z"/><path d="M12 10v4M12 16.6v.4"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>'
+  };
+
+  function ico(name, cls) {
+    return '<svg class="lx-ico' + (cls ? " " + cls : "") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (PATHS[name] || PATHS.plus) + "</svg>";
+  }
+
+  function btn(label, state) {
+    const cls = ["lx-btn"];
+    if (state === "ghost") cls.push("lx-btn-ghost");
+    if (state === "danger") cls.push("lx-btn-danger");
+    if (state === "focus") cls.push("is-focus");
+    if (state === "hover") cls.push("is-hover");
+    if (state === "loading") cls.push("is-loading");
+    if (state === "disabled") cls.push("is-disabled");
+    if (state === "compact") cls.push("is-compact");
+    const dis = state === "disabled" ? " disabled" : "";
+    const inner = state === "loading" ? '<i class="lx-spin"></i>' : label;
+    return '<button type="button" class="' + cls.join(" ") + '"' + dis + ">" + inner + "</button>";
+  }
+
+  function field(label, state, value, hint) {
+    const cls = ["lx-field"];
+    if (state === "focus") cls.push("is-focus");
+    if (state === "hover") cls.push("is-hover");
+    if (state === "danger" || state === "error") cls.push("is-danger");
+    if (state === "ghost") cls.push("is-ghost");
+    if (state === "disabled") cls.push("is-disabled");
+    if (state === "compact") cls.push("is-compact");
+    const dis = state === "disabled" ? " disabled" : "";
+    const val = value ? ' value="' + value + '"' : "";
+    const spin = state === "loading" ? '<i class="lx-spin is-on" style="position:absolute;right:10px"></i>' : "";
+    const note = hint ? '<p class="lx-hint' + (state === "error" || state === "danger" ? " is-danger" : "") + '">' + hint + "</p>" : "";
+    return '<label class="' + cls.join(" ") + '"><span>' + label + '</span><span class="lx-input-wrap"><input' + dis + val + ' placeholder="Studio name" aria-label="' + label + '">' + spin + "</span>" + note + "</label>";
+  }
+
+  function area(label, state) {
+    const cls = ["lx-field"];
+    if (state === "focus") cls.push("is-focus");
+    if (state === "error") cls.push("is-danger");
+    if (state === "disabled") cls.push("is-disabled");
+    const dis = state === "disabled" ? " disabled" : "";
+    const val = state === "filled" || state === "error" ? "Open Friday at 7." : "";
+    return '<label class="' + cls.join(" ") + '"><span>' + label + '</span><textarea' + dis + ' aria-label="' + label + '">' + val + "</textarea></label>";
+  }
+
+  function visual(kind) {
+    switch (kind) {
+      case "announce":
+        return '<div class="lx-note"><span class="lx-dot"></span><span>Friday · hours change</span><button type="button" class="lx-textbtn" data-lx-dismiss>Dismiss</button></div>';
+      case "cta":
+        return '<div class="lx-actions">' + btn("Start a site") + btn("View guide", "ghost") + "</div>";
+      case "clients":
+        return '<div class="lx-logos"><span>Northline</span><span>Harbor</span><span>Cedar</span><span>Field</span></div>';
+      case "compare":
+        return '<div class="lx-cols"><div><p class="lx-kicker">Before</p><p class="lx-p">No hours listed.</p></div><div class="is-pick"><p class="lx-kicker">After</p><p class="lx-p">Fri 9:00–5:00</p></div></div>';
+      case "faq":
+        return '<div class="lx-acc"><button type="button" class="is-open" data-lx-acc>How do I publish?</button><p class="lx-p">Open the site and choose Publish.</p><button type="button" data-lx-acc>Can I edit later?</button></div>';
+      case "features":
+        return '<ul class="lx-feats"><li>' + ico("check") + "<span><strong>Publish</strong><em>One live link</em></span></li><li>" + ico("check") + "<span><strong>Leads</strong><em>Name and phone</em></span></li><li>" + ico("check") + "<span><strong>Studio</strong><em>Edit in place</em></span></li></ul>";
+      case "footer":
+        return '<div class="lx-foot"><strong>moonrise.</strong><span>Guide</span><span>Privacy</span></div>';
+      case "gallery":
+        return '<div class="lx-tiles"><i></i><i></i><i></i><i></i></div>';
+      case "hero":
+        return '<div class="lx-product"><div class="lx-product-bar"></div><div class="lx-product-line"></div><div class="lx-product-line short"></div><div class="lx-product-block"></div></div>';
+      case "price":
+        return '<div class="lx-price"><span>$48</span><em>per month</em>' + btn("Choose") + "</div>";
+      case "stats":
+        return '<div class="lx-figs"><div><strong>128</strong><span>visits</span></div><div><strong>14</strong><span>leads</span></div></div>';
+      case "team":
+        return '<div class="lx-people"><span>NL</span><span>HK</span><span>CR</span></div>';
+      case "quote":
+        return '<blockquote class="lx-quote">The new site lists our hours and the phone rings more.<cite>Example · Harbor Coffee</cite></blockquote>';
+      default:
+        return '<p class="lx-prose">Harbor Coffee roasts on Pike Street and opens at 7. The site lists the address, the hours, and a way to call.</p>';
+    }
+  }
+
+  function copyBlock(c, hideKicker) {
+    return '<div class="lx-copy">' +
+      (hideKicker ? "" : '<p class="lx-kicker">' + c.kicker + "</p>") +
+      '<h4 class="lx-h">' + c.title + "</h4>" +
+      '<p class="lx-p">' + c.body + "</p>" +
+      (c.action ? btn(c.action) : "") +
+      "</div>";
+  }
+
+  function layoutHtml(key, c) {
+    const vis = visual(c.visual);
+    const text = copyBlock(c, key === "rail");
+    if (key === "split") return '<div class="lx-split">' + text + vis + "</div>";
+    if (key === "reverse") return '<div class="lx-split is-reverse">' + vis + text + "</div>";
+    if (key === "stack") return '<div class="lx-stack">' + text + vis + "</div>";
+    if (key === "band") return '<div class="lx-band">' + text + vis + "</div>";
+    if (key === "narrow") return '<div class="lx-narrow">' + text + "</div>";
+    if (key === "rail") return '<div class="lx-rail"><p class="lx-kicker">' + c.kicker + '</p><div class="lx-rail-main">' + text + vis + "</div></div>";
+    if (key === "bento") return '<div class="lx-bento"><div class="lx-bento-main">' + text + '</div><div class="lx-bento-side">' + vis + '</div><div class="lx-bento-foot"><span>' + (c.note || "Example") + "</span></div></div>";
+    if (key === "strip") return '<div class="lx-strip"><strong>' + c.title + "</strong><span>" + c.body + "</span>" + btn(c.action || "Open") + "</div>";
+    if (key === "inverse") return text;
+    return '<div class="lx-reveal"><div class="lx-rise">' + text + vis + "</div></div>";
+  }
+
+  const LAYOUTS = [
+    ["split", "Text left", true, ""],
+    ["reverse", "Text right", true, ""],
+    ["stack", "Stack", false, ""],
+    ["bento", "Bento", true, ""],
+    ["rail", "Meta rail", true, ""],
+    ["inverse", "Inverse", true, "lx-on-dark"],
+    ["reveal", "Reveal", true, ""],
+    ["band", "Band", true, ""],
+    ["narrow", "Narrow", false, ""],
+    ["strip", "Strip", true, ""]
+  ];
+
+  function layoutCards(id, copy, count) {
+    return LAYOUTS.slice(0, count).map(function (row) {
+      return {
+        id: id + "-" + row[0],
+        title: row[1],
+        wide: row[2],
+        stage: row[3],
+        play: row[0] === "reveal" ? "lx-live" : "",
+        html: layoutHtml(row[0], copy)
+      };
+    });
+  }
+
+  function card(id, title, html, extra) {
+    const o = extra || {};
+    return {
+      id: id,
+      title: title,
+      html: html,
+      wide: !!o.wide,
+      play: o.play || "",
+      stage: o.stage || ""
+    };
+  }
+
+  const STATE_ORDER = ["focus", "error", "loading", "disabled", "ghost", "danger", "filled", "hover", "compact", "rest"];
+  const STATE_TITLE = {
+    focus: "Focus",
+    error: "Hint",
+    loading: "Loading",
+    disabled: "Disabled",
+    ghost: "Ghost",
+    danger: "Danger",
+    filled: "Filled",
+    hover: "Hover",
+    compact: "Compact",
+    rest: "Rest"
+  };
+
+  function states(prefix, render, count) {
+    return STATE_ORDER.slice(0, count).map(function (key) {
+      return card(prefix + "-" + key, STATE_TITLE[key], render(key), {
+        play: key === "loading" ? "lx-live" : ""
+      });
+    });
+  }
+
+  function globe(o) {
+    o = o || {};
+    return '<svg class="lx-globe' + (o.spin ? " is-spin" : "") + '" viewBox="0 0 120 120" aria-hidden="true">' +
+      '<circle cx="60" cy="60" r="46" fill="none" stroke="currentColor"/>' +
+      '<ellipse cx="60" cy="60" rx="46" ry="16" fill="none" stroke="currentColor"/>' +
+      '<ellipse cx="60" cy="60" rx="20" ry="46" fill="none" stroke="currentColor"/>' +
+      '<path d="M14 60h92" fill="none" stroke="currentColor"/>' +
+      (o.dots ? '<g fill="currentColor"><circle cx="40" cy="48" r="1.7"/><circle cx="78" cy="70" r="1.7"/><circle cx="62" cy="36" r="1.7"/></g>' : "") +
+      (o.pin ? '<circle cx="78" cy="42" r="3.2" fill="#1f6fed"/>' : "") +
+      (o.arc ? '<path d="M38 72q22-36 50-8" fill="none" stroke="#1f6fed" stroke-width="1.6"/>' : "") +
+      "</svg>";
+  }
+
+  function marquee(items, cls) {
+    const row = items.map(function (item) { return "<span>" + item + "</span>"; }).join("");
+    return '<div class="lx-marquee ' + (cls || "") + '"><div class="lx-marquee-track">' + row + row + "</div></div>";
+  }
+
+  function app(items, active, main, top) {
+    const side = items.map(function (name) {
+      return '<button type="button" class="' + (name === active ? "is-on" : "") + '" data-lx-opt>' + name + "</button>";
+    }).join("");
+    if (top) return '<div class="lx-app is-top"><div class="lx-top">' + side + '</div><div class="lx-main">' + main + "</div></div>";
+    return '<div class="lx-app"><div class="lx-side">' + side + '</div><div class="lx-main">' + main + "</div></div>";
+  }
+
+  function panel(html, cls) {
+    return '<div class="lx-panel' + (cls ? " " + cls : "") + '">' + html + "</div>";
+  }
+
+  function month(sel, today, disabled) {
+    const heads = "S M T W T F S".split(" ").map(function (d) { return "<span>" + d + "</span>"; }).join("");
+    let cells = "";
+    for (let day = 1; day <= 30; day += 1) {
+      const on = sel === day ? " is-on" : "";
+      const tod = today === day ? " is-today" : "";
+      const off = disabled && disabled.indexOf(day) !== -1;
+      cells += '<button type="button" class="' + on + tod + '"' + (off ? " disabled" : "") + ">" + day + "</button>";
+    }
+    return '<div class="lx-cal"><p class="lx-kicker">November 2026</p><div class="lx-cal-head">' + heads + '</div><div class="lx-cal-grid">' + cells + "</div></div>";
+  }
+
+  window.LX = {
+    specs: {},
+    spec: function (id, adopt, cards) {
+      this.specs[id] = { adopt: adopt || [], cards: cards || [] };
+    },
+    ico: ico,
+    btn: btn,
+    field: field,
+    area: area,
+    layoutCards: layoutCards,
+    card: card,
+    states: states,
+    globe: globe,
+    marquee: marquee,
+    app: app,
+    panel: panel,
+    month: month
+  };
+})();

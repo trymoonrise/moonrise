@@ -3,6 +3,23 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.6.6",
+      "date": "2026-11-09",
+      "title": "UI Library catalog",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The UI Library groups its patterns into Sections, Components, and Screens, with up to ten patterns in each category.",
+            "Links and selected controls in the library stay blue, and the category list no longer scrolls the page sideways."
+          ],
+          "fixes": [
+            "UI Library stages in a row share one height, and the timeline, carousel, loaders, and motion samples animate without the line or spinner clipping."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.5",
       "date": "2026-11-08",
       "title": "Mobile settings",
