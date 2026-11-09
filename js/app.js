@@ -1897,8 +1897,6 @@
     "leads",
     "projects",
     "course",
-    "help",
-    "guide",
     "donate",
   ];
 
@@ -2057,8 +2055,30 @@
     }
   }
 
+  const OUTSIDE_STUDIO = new Set([
+    "index",
+    "home",
+    "login",
+    "orders",
+    "contact",
+    "legal",
+    "report",
+    "download",
+    "ui-library",
+    "guide",
+    "help",
+  ]);
+
   async function boot() {
-    ensureTabBar(document.body?.dataset?.page || "");
+    const surface = document.body?.dataset?.page || "";
+    if (OUTSIDE_STUDIO.has(surface)) {
+      document.getElementById("shell")?.remove();
+      document.getElementById("ms-tabbar")?.remove();
+      document.getElementById("ms-menu-toggle")?.remove();
+      releaseStudioHold();
+      return;
+    }
+    ensureTabBar(surface);
     if (window.__msAuthRedirecting) return;
     // This file runs before auth.js. Wait briefly, then fail to 404 instead of
     // sitting on the moonrise loader for tens of seconds.
@@ -2158,8 +2178,6 @@
     "builder",
     "clients",
     "settings",
-    "guide",
-    "help",
     "course",
     "donate",
     "leaderboard",
@@ -2269,8 +2287,6 @@
       leaderboard: 1,
       "hosting-billing": 1,
       "creator-contact": 1,
-      guide: 1,
-      help: 1,
       pricing: 1,
     };
     return studio[file] ? file : "";

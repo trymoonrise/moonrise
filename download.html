@@ -61,74 +61,41 @@
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
-  <link rel="stylesheet" href="css/download.css?v=20261028-cream-full&_=20261006-ink" onload="document.documentElement.classList.remove('ms-hold')">
+  <link rel="stylesheet" href="css/download.css?v=20261108-simple" onload="document.documentElement.classList.remove('ms-hold')">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
 </head>
 <body data-page="download" class="ms-download-page">
-  <header class="ms-home-nav">
-    <a class="ms-home-brand" href="/">
-      <img src="assets/MoonriseLogo.png" alt="" width="40" height="40">
-      <strong>moonrise.</strong>
+  <a class="ms-dl-skip" href="#main">Skip to content</a>
+  <header class="ms-dl-bar">
+    <a class="ms-dl-brand" href="/" aria-label="Moonrise home">
+      <svg class="ms-dl-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a10 10 0 1 0 9.2 14.2 6.4 6.4 0 0 1-9.2-14.2z"/></svg>
+      <span>moonrise</span>
     </a>
-    <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
-      <i></i><i></i><i></i>
-    </button>
   </header>
-  <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
-    <nav class="ms-home-bloom-nav" aria-label="Primary">
-      <a href="/" style="--nav-i:0">Home</a>
-      <a href="login" style="--nav-i:1">Start earning</a>
-      <a href="/#method" style="--nav-i:2">Learn More</a>
-      <a href="download" style="--nav-i:3">Download app</a>
-      <a href="orders" style="--nav-i:4">Locate my order</a>
-      <a href="ui-library" style="--nav-i:5">UI Library</a>
-      <a href="login" style="--nav-i:6">Sign in</a>
-    </nav>
-  </div>
-  <main class="ms-download-main">
-    <a class="ms-download-back" href="/">Home</a>
+  <main class="ms-download-main" id="main">
+    <h1>Download.</h1>
+    <p class="ms-download-lead">Install Moonrise on your phone or computer. Open it from your home screen.</p>
 
-    <div class="ms-download-card">
-      <div class="ms-download-brand">
-        <img id="download-icon" src="assets/MoonriseLogo.png" alt="" width="56" height="56" decoding="async">
-        <div>
-          <strong id="download-title">Moonrise</strong>
-          <p class="ms-muted">Moonrise Studio</p>
-        </div>
-      </div>
+    <div id="download-install-done" hidden>
+      <p class="ms-download-status">You're using the installed app.</p>
+    </div>
 
-      <h1>Download</h1>
-      <p class="ms-download-lead">
-        Install Moonrise on your phone or computer for faster access.
-      </p>
+    <div id="download-install-panel">
+      <img id="download-install-icon" alt="" width="28" height="28" decoding="async">
+      <p id="download-install-status" class="ms-download-status">Checking this device.</p>
+      <p id="download-install-title" hidden>Moonrise</p>
+      <p id="download-install-instructions" class="ms-download-steps"></p>
+      <button type="button" class="ms-dl-btn" id="download-install-btn" hidden>Install app</button>
+    </div>
 
-      <div class="ms-settings-install-done" id="download-install-done" hidden>
-        <p class="ms-settings-status is-ok">You're using the installed Moonrise app.</p>
-        <p class="ms-muted ms-download-done-note">Open Moonrise from your home screen or apps list anytime.</p>
-      </div>
-
-      <div class="ms-settings-install" id="download-install-panel">
-        <div class="ms-settings-install-preview">
-          <img class="ms-settings-install-icon" id="download-install-icon" src="" alt="" width="56" height="56" decoding="async">
-          <div class="ms-settings-install-copy">
-            <strong id="download-install-title">Moonrise</strong>
-            <span class="ms-muted" id="download-install-status">Checking install options...</span>
-          </div>
-        </div>
-        <p class="ms-settings-install-steps ms-muted" id="download-install-instructions"></p>
-        <button type="button" class="ms-btn ms-download-install-btn" id="download-install-btn" hidden>Install app</button>
-      </div>
-
-      <div class="ms-download-actions">
-        <a class="ms-btn" href="login">Sign in</a>
-        <a class="ms-btn ms-btn-secondary" href="dashboard">Open studio</a>
-      </div>
+    <div class="ms-download-actions">
+      <a class="ms-dl-btn" href="login.html">Sign in</a>
+      <a class="ms-dl-btn ms-dl-btn-quiet" href="dashboard">Open studio</a>
     </div>
   </main>
 
-  <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
   <script defer src="js/download-page.js?v=20260718-download-page"></script>

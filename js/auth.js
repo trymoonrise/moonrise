@@ -17,6 +17,7 @@
     "download",
     "ui-library",
     "guide",
+    "help",
     "pricing",
     "donate",
     "leaderboard",

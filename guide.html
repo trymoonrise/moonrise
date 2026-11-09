@@ -233,8 +233,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <script src="js/auth-gate-head.js?v=20261108-preload-sync"></script>
-  <title>Guide - Moonrise Studio</title>
+  <title>Guide - Moonrise</title>
   <meta name="description" content="Moonrise creator guide: find businesses, build sites, publish, and get paid.">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261108-chrome-sync">
@@ -245,14 +244,19 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
+  <link rel="stylesheet" href="css/docs.css?v=20261108-public">
 </head>
-<body data-page="guide">
-  <div id="shell"></div>
-  <div id="page-body" class="ms-content-page ms-help-guide-page">
+<body data-page="guide" class="ms-public-doc">
+  <header class="ms-doc-bar">
+    <a class="ms-doc-brand" href="/" aria-label="Moonrise home">
+      <svg class="ms-doc-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a10 10 0 1 0 9.2 14.2 6.4 6.4 0 0 1-9.2-14.2z"/></svg>
+      <span>moonrise</span>
+    </a>
+    <a class="ms-doc-cta" href="login.html">Start earning</a>
+  </header>
+  <main class="ms-doc-main" id="page-body">
     <header class="ms-page-head">
-      <div class="ms-page-head-copy">
-        <h1>Guide</h1>
-      </div>
+      <h1 class="ms-doc-title">Guide.</h1>
     </header>
 
     <nav class="ms-help-toc" aria-label="On this page">
@@ -596,18 +600,9 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
         </p>
       </section>
     </div>
-  </div>
+  </main>
 
   <script defer src="js/config.js?v=20261108-no-lf"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
-  <script defer src="js/supabase-client.js?v=20261106-mono"></script>
-  <script defer src="js/auth.js?v=20261108-session-quiet"></script>
-  <script defer src="js/app.js?v=20261108-clean-urls"></script>
-  
-  <script defer src="js/segment-switch.js"></script>
-  <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
-  <script defer src="js/toast.js"></script>
-  <script defer src="js/income.js?v=20260718-income"></script>
 </body>
 </html>

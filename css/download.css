@@ -1,130 +1,179 @@
-/* Download app - public landing page */
+/* Download page. Quiet, same voice as the public home. */
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("../assets/fonts/newsreader-latin.woff2") format("woff2");
+}
 
 body.ms-download-page {
   min-height: 100vh;
   margin: 0;
-  background: #fafafa;
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+}
+
+.ms-dl-skip {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 5;
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+  background: #1d1d1f;
+  color: #fff;
+  text-decoration: none;
+}
+
+.ms-dl-skip:focus {
+  top: 1rem;
+}
+
+.ms-dl-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  width: min(100% - 2.5rem, 80rem);
+  margin: 0 auto;
+  padding: 1.15rem 0;
+}
+
+.ms-dl-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
   color: #1d1d1f;
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.ms-dl-brand:hover {
+  opacity: 0.72;
+}
+
+.ms-dl-mark {
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .ms-download-main {
   box-sizing: border-box;
   min-height: 100vh;
-  padding: max(5.25rem, calc(env(safe-area-inset-top, 0px) + 4.5rem)) 1.15rem 2.5rem;
+  width: min(100% - 2.5rem, 36rem) !important;
+  margin: 0 auto;
+  padding: 7.5rem 0 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-}
-
-.ms-download-back {
-  align-self: flex-start;
-  max-width: 28rem;
-  width: 100%;
-  margin: 0 auto 0.85rem;
-  font-size: 0.88rem;
-  font-weight: 650;
-  color: #6e6e73;
-  text-decoration: none;
-}
-
-.ms-download-back:hover {
-  color: #1d1d1f;
-}
-
-.ms-download-card {
-  width: min(100%, 28rem);
-  padding: 1.35rem 1.25rem 1.4rem;
-  border-radius: 20px;
-  background: #fafafa;
-  border: 1px solid #e8e8ed;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
-}
-
-.ms-download-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  margin-bottom: 1.15rem;
-}
-
-.ms-download-brand img {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  object-fit: cover;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-}
-
-.ms-download-brand strong {
-  display: block;
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #1d1d1f;
-}
-
-.ms-download-brand p {
-  margin: 0.15rem 0 0;
-  font-size: 0.86rem;
-}
-
-.ms-download-card h1 {
-  margin: 0 0 0.45rem;
-  font-size: clamp(1.55rem, 5vw, 1.85rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #1d1d1f;
-}
-
-.ms-download-lead {
-  margin: 0 0 1.15rem;
-  font-size: 0.94rem;
-  line-height: 1.55;
-  color: #6e6e73;
-}
-
-.ms-download-install-btn {
-  width: 100%;
-  justify-content: center;
-}
-
-.ms-download-done-note {
-  margin: 0.35rem 0 0;
-  font-size: 0.88rem;
-}
-
-.ms-download-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.55rem;
-  margin-top: 1.15rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e8e8ed;
-}
-
-body.ms-download-page .ms-settings-install-preview {
-  background: #f4f4f5;
-  border-color: #e8e8ed;
-}
-
-body.ms-download-page .ms-download-install-btn,
-body.ms-download-page .ms-download-actions .ms-btn:not(.ms-btn-secondary) {
-  background: #232427 !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-}
-
-.ms-download-actions .ms-btn {
-  justify-content: center;
   text-align: center;
 }
 
-@media (max-width: 420px) {
-  .ms-download-actions {
-    grid-template-columns: 1fr;
-  }
+body.ms-download-page .ms-download-main h1 {
+  margin: 0 !important;
+  color: #2c2c2e !important;
+  -webkit-text-fill-color: #2c2c2e !important;
+  font-family: "Newsreader", "Iowan Old Style", Palatino, Georgia, serif !important;
+  font-size: clamp(3.15rem, 8vw, 5rem) !important;
+  font-weight: 450 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.02 !important;
+}
+
+body.ms-download-page .ms-download-lead {
+  margin: 1.15rem auto 0 !important;
+  max-width: 24rem;
+  color: #6e6e73 !important;
+  -webkit-text-fill-color: #6e6e73 !important;
+  font-size: 1.0625rem !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.011em;
+  line-height: 1.45 !important;
+}
+
+#download-install-icon,
+#download-install-title {
+  display: none !important;
+}
+
+.ms-download-status,
+.ms-download-steps {
+  margin: 1.75rem 0 0;
+  color: #6e6e73;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.45;
+}
+
+.ms-download-steps:empty {
+  display: none;
+}
+
+.ms-download-steps em {
+  font-style: normal;
+  font-weight: 650;
+  color: #1d1d1f;
+}
+
+.ms-dl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  margin-top: 1.5rem;
+  padding: 0 1.7rem;
+  border: 0;
+  border-radius: 10px;
+  background: #1d1d1f;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ms-dl-btn:hover {
+  background: #2c2c2e;
+}
+
+.ms-dl-btn-quiet {
+  border: 1px solid #d2d2d7;
+  background: #fff;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+}
+
+.ms-dl-btn-quiet:hover {
+  background: #f5f5f7;
+}
+
+.ms-download-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+}
+
+.ms-download-actions .ms-dl-btn {
+  margin-top: 0;
+}
+
+#download-install-btn[hidden],
+#download-install-done[hidden],
+#download-install-panel[hidden] {
+  display: none !important;
 }

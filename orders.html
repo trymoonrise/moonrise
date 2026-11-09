@@ -39,7 +39,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moonrise">
   <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
-  <title>Locate My Order - Moonrise Studio</title>
+  <title>Find your site - Moonrise</title>
   <meta name="description" content="Find your Moonrise website. Browse published sites, open a preview, and complete checkout if a watermark is still present.">
   <link rel="canonical" href="https://trymoonrise.com/orders">
   <meta property="og:type" content="website">
@@ -61,87 +61,57 @@
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-context">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
+  <link rel="stylesheet" href="css/orders.css?v=20261108-simple">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
   <script defer src="js/site-branding.js?v=20260719-seo"></script>
 </head>
 <body data-page="orders" class="ms-orders-page">
-  <div class="ms-orders-field" aria-hidden="true">
-    <div class="ms-orders-wash"></div>
-  </div>
-
-  <header class="ms-orders-nav">
-    <a class="ms-home-brand" href="/">
-      <img src="assets/MoonriseLogo.png" alt="" width="40" height="40">
-      <strong>moonrise.</strong>
+  <header class="ms-ord-bar">
+    <a class="ms-ord-brand" href="/" aria-label="Moonrise home">
+      <svg class="ms-ord-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a10 10 0 1 0 9.2 14.2 6.4 6.4 0 0 1-9.2-14.2z"/></svg>
+      <span>moonrise</span>
     </a>
-    <button type="button" class="ms-home-orb" id="ms-home-orb" aria-label="Open menu" aria-expanded="false" aria-controls="ms-home-bloom">
-      <i></i><i></i><i></i>
-    </button>
+    <a class="ms-ord-cta" href="login.html">Start earning</a>
   </header>
-
-  <div class="ms-home-bloom" id="ms-home-bloom" aria-hidden="true">
-    <nav class="ms-home-bloom-nav" aria-label="Primary">
-      <a href="/" style="--nav-i:0">Home</a>
-      <a href="login" style="--nav-i:1">Start earning</a>
-      <a href="/#method" style="--nav-i:2">Learn More</a>
-      <a href="download" style="--nav-i:3">Download app</a>
-      <a href="orders" style="--nav-i:4" aria-current="page">Locate my order</a>
-      <a href="ui-library" style="--nav-i:5">UI Library</a>
-      <a href="login" style="--nav-i:6">Sign in</a>
-    </nav>
-  </div>
 
   <main class="ms-orders-main">
     <header class="ms-orders-head">
-      <h1>Locate My Order</h1>
-      <p>
-        Find your published Moonrise website by business name. Open the live site,
-        then complete checkout on the watermark if it is still present. After payment,
-        the watermark is removed automatically.
-      </p>
-      <dl class="ms-orders-stats" aria-label="Catalog summary">
-        <div>
-          <dt>Published sites</dt>
-          <dd id="orders-count">-</dd>
-        </div>
-      </dl>
+      <h1>Find your site.</h1>
+      <p>Search by business name. Open the page, then pay on the watermark if it is still there.</p>
+      <p class="ms-ord-count"><span id="orders-count">0</span> published</p>
     </header>
 
-    <section class="ms-orders-toolbar" aria-label="Search and filters">
-      <label class="ms-orders-search">
-        <span class="ms-orders-search-label">Search</span>
-        <span class="ms-orders-search-field">
-          <input
-            type="search"
-            id="orders-search"
-            placeholder="Business name, e.g. Harbor Dental"
-            autocomplete="off"
-            enterkeyhint="search"
-            aria-describedby="orders-search-hint"
-          >
-        </span>
-        <span class="ms-orders-search-hint" id="orders-search-hint">Results update as you type.</span>
-      </label>
+    <label class="ms-ord-search">
+      <span class="ms-ord-search-label">Search</span>
+      <span class="ms-ord-field">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        <input
+          type="search"
+          id="orders-search"
+          placeholder="Business name"
+          autocomplete="off"
+          enterkeyhint="search"
+        >
+      </span>
+    </label>
 
-      <div class="ms-orders-years" id="orders-years" role="group" aria-label="Filter by year" hidden></div>
-    </section>
+    <div class="ms-orders-years" id="orders-years" role="group" aria-label="Filter by year" hidden></div>
 
     <p class="ms-orders-status" id="orders-status" role="status">Loading published sites...</p>
     <div class="ms-orders-grid" id="orders-grid" aria-live="polite"></div>
 
     <footer class="ms-orders-foot">
-      <p>Every site published in Moonrise Studio is listed here automatically.</p>
+      <p>Every published site is listed here.</p>
       <p>
         Need help?
         <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
-        �
+        <span aria-hidden="true">·</span>
         <a href="tel:+14013000957">(401) 300-0957</a>
       </p>
     </footer>
   </main>
 
-  <script defer src="js/home-bloom-nav.js?v=20260719-bloom-nav"></script>
   <script defer src="js/orders.js"></script>
 </body>
 </html>

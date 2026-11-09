@@ -6,8 +6,30 @@
     btn.addEventListener("click", function () {
       var on = btn.getAttribute("aria-checked") !== "true";
       btn.setAttribute("aria-checked", on ? "true" : "false");
-      var piece = root.querySelector('[data-piece="' + btn.getAttribute("data-toggle") + '"]');
+      var key = btn.getAttribute("data-toggle");
+      var piece = root.querySelector('[data-piece="' + key + '"]');
       if (piece) piece.classList.toggle("is-off", !on);
+      var widget = btn.closest("[data-widget]");
+      if (widget) widget.classList.toggle("is-on", on);
+    });
+  });
+
+  root.querySelectorAll("[data-mode]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var mode = btn.getAttribute("data-mode");
+      var group = btn.parentElement;
+      if (group) {
+        group.querySelectorAll("[data-mode]").forEach(function (el) {
+          var active = el === btn;
+          el.classList.toggle("is-active", active);
+          el.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+      }
+      var stage = root.querySelector("[data-editor-stage]");
+      if (!stage) return;
+      stage.querySelectorAll("[data-view]").forEach(function (view) {
+        view.hidden = view.getAttribute("data-view") !== mode;
+      });
     });
   });
 
@@ -42,7 +64,7 @@
 
   var rises = root.querySelectorAll(".ms-rise");
   function reveal() {
-    var edge = window.innerHeight + 24;
+    var edge = window.innerHeight * 0.9;
     rises.forEach(function (el) {
       if (el.classList.contains("is-in")) return;
       if (el.getBoundingClientRect().top < edge) el.classList.add("is-in");
@@ -50,6 +72,7 @@
   }
   reveal();
   window.addEventListener("scroll", reveal, { passive: true });
+  window.addEventListener("resize", reveal);
 
   function whenReady(fn) {
     if (root.classList.contains("is-home-ready")) {

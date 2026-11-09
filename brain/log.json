@@ -3,6 +3,34 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.5.7",
+      "date": "2026-11-08",
+      "title": "Clearer public pages",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The moon mark sits to the left of the name in the top bar.",
+            "The top bar eases away when you scroll down and comes back when you scroll up.",
+            "Start earning in the top bar is a squared button.",
+            "The line under the headline says you find a nearby business, build their site, and keep 90% when they pay.",
+            "How it works fills the screen.",
+            "Your workspace shows the editor switches for preview, contact, and a custom domain.",
+            "Where you work shows a finder map and a client list with what you keep.",
+            "Three steps shows find, build, and send as three cards.",
+            "Sections rise into place as you scroll down the home page.",
+            "The download page uses the same simple layout as the home page.",
+            "Orders is a simple page for finding a published site.",
+            "Legal, help, the guide, report, and contact stay outside the studio and use the same simple layout.",
+            "Question arrows are thin chevrons."
+          ],
+          "fixes": [
+            "Opening help or the guide no longer drops you into the studio."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.5.6",
       "date": "2026-11-08",
       "title": "Prompt and pattern files",

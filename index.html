@@ -270,8 +270,8 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261106-mono">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
-  <link rel="stylesheet" href="css/ui-library.css?v=20261108-home">
-  <link rel="stylesheet" href="css/home.css?v=20261108-story">
+  <link rel="stylesheet" href="css/ui-library.css?v=20261108-chevron">
+  <link rel="stylesheet" href="css/home.css?v=20261108-scroll">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-shade">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -345,7 +345,7 @@ document.documentElement.classList.add("ms-boot");
     <header class="ms-site-bar">
       <div class="ms-nav-row">
         <div class="ms-nav-lead">
-          <a class="ms-home-btn" href="/" aria-label="Moonrise home">moonrise</a>
+          <a class="ms-home-btn" href="/" aria-label="Moonrise home"><svg class="ms-nav-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a10 10 0 1 0 9.2 14.2 6.4 6.4 0 0 1-9.2-14.2z"/></svg><span>moonrise</span></a>
           <nav class="ms-nav-links" aria-label="Main">
             <a href="#how">How it works</a>
             <a href="#faq">FAQ</a>
@@ -375,7 +375,7 @@ document.documentElement.classList.add("ms-boot");
       <div class="ms-hero-lock">
       <section class="ms-home-hero" aria-label="Moonrise">
         <h1>Build websites.<br>Get paid.</h1>
-        <p class="ms-home-hero-lead">A site for a local business.<br>One clear cut when they go live.</p>
+        <p class="ms-home-hero-lead">Find a nearby business and build their site.<br>They pay to go live. You keep 90%.</p>
         <div class="ms-hero-actions">
           <a class="ms-home-cta" href="login.html">Start earning</a>
           <a class="ms-home-cta ms-home-cta-quiet" href="#how">How it works</a>
@@ -431,7 +431,7 @@ document.documentElement.classList.add("ms-boot");
               <p>The owner pays when it goes live. Nothing else on top.</p>
             </article>
           </div>
-          <a class="ms-home-cta ms-how-cta" href="login.html">Start earning</a>
+          <a class="ms-home-cta ms-how-cta ms-rise" href="login.html">Start earning</a>
         </div>
       </section>
       </div>
@@ -442,28 +442,61 @@ document.documentElement.classList.add("ms-boot");
           <p class="ms-band-note ms-rise">Find a business. Build the site. Get paid when they go live.</p>
           <div class="ms-pair">
             <article class="ms-card ms-product ms-rise">
-              <p class="ms-card-kicker">Builder</p>
-              <h3>The site, in one place.</h3>
-              <p>Photos, hours, and a menu. Turn on only what that business needs.</p>
-              <div class="ms-stage-card" aria-label="Site preview">
-                <p class="dt-status-row"><span class="dt-status-dot" aria-hidden="true"></span> Live preview</p>
-                <strong>Northside Cafe</strong>
-                <p data-piece="photos">Photos of the shop</p>
-                <p data-piece="hours">Hours and a map</p>
-                <p data-piece="menu">Menu or services</p>
-              </div>
-              <div class="ms-switch-list">
-                <div class="ms-switch-row">
-                  <span class="dt-switch-label">Photos</span>
-                  <button type="button" class="dt-switch" aria-checked="true" aria-label="Photos" data-toggle="photos"><span class="dt-switch-knob"></span></button>
+              <p class="ms-card-kicker">Editor</p>
+              <h3>The same switches.</h3>
+              <p>Turn a feature on. It opens, and the preview changes with it.</p>
+              <div class="ms-editor">
+                <div class="ms-editor-bar">
+                  <span class="ms-editor-back">Back</span>
+                  <div class="ms-editor-modes" role="group" aria-label="View mode">
+                    <button type="button" class="is-active" data-mode="preview" aria-pressed="true">Preview</button>
+                    <button type="button" data-mode="edit" aria-pressed="false">Edit</button>
+                    <button type="button" data-mode="code" aria-pressed="false">Code</button>
+                  </div>
                 </div>
-                <div class="ms-switch-row">
-                  <span class="dt-switch-label">Hours</span>
-                  <button type="button" class="dt-switch" aria-checked="true" aria-label="Hours" data-toggle="hours"><span class="dt-switch-knob"></span></button>
+                <div class="ms-editor-stage" data-editor-stage>
+                  <div class="ms-editor-view" data-view="preview">
+                    <strong>Northside Cafe</strong>
+                    <p>Coffee on the north side.</p>
+                    <p data-piece="contact">Contact form</p>
+                    <p data-piece="domain" class="is-off">northsidecafe.com</p>
+                  </div>
+                  <div class="ms-editor-view" data-view="edit" hidden>
+                    <label>Business name</label>
+                    <p>Northside Cafe</p>
+                    <label>Phone</label>
+                    <p>(401) 555-0148</p>
+                  </div>
+                  <div class="ms-editor-view" data-view="code" hidden>
+                    <code>&lt;h1&gt;Northside Cafe&lt;/h1&gt;<br>&lt;p&gt;Open today&lt;/p&gt;</code>
+                  </div>
                 </div>
-                <div class="ms-switch-row">
-                  <span class="dt-switch-label">Menu</span>
-                  <button type="button" class="dt-switch" aria-checked="true" aria-label="Menu" data-toggle="menu"><span class="dt-switch-knob"></span></button>
+                <div class="ms-ewidget is-on" data-widget="contact">
+                  <div class="ms-ewidget-head">
+                    <span class="ms-ewidget-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                    <span class="ms-ewidget-copy"><strong>Contact Form</strong><em>Form submissions</em></span>
+                    <button type="button" class="ms-eswitch" aria-checked="true" aria-label="Contact Form" data-toggle="contact"><span></span></button>
+                  </div>
+                  <div class="ms-ewidget-body">
+                    <div class="ms-ewidget-body-inner">
+                      <div class="ms-emode" aria-hidden="true"><span class="is-on">Auto</span><span>Custom</span></div>
+                      <label>Client email</label>
+                      <p>owner@northsidecafe.com</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="ms-ewidget" data-widget="domain">
+                  <div class="ms-ewidget-head">
+                    <span class="ms-ewidget-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span>
+                    <span class="ms-ewidget-copy"><strong>Custom Domain</strong><em>Connect your own domain</em></span>
+                    <button type="button" class="ms-eswitch" aria-checked="false" aria-label="Custom Domain" data-toggle="domain"><span></span></button>
+                  </div>
+                  <div class="ms-ewidget-body">
+                    <div class="ms-ewidget-body-inner">
+                      <label>Domain</label>
+                      <p>northsidecafe.com</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </article>
@@ -491,11 +524,56 @@ document.documentElement.classList.add("ms-boot");
               <p class="ms-card-kicker">Business Finder</p>
               <h3>Shops nearby with no site.</h3>
               <p>Search cafes, clinics, and shops. Claim one, then open it in the Builder.</p>
+              <div class="ms-work">
+                <p class="ms-work-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>Cafes nearby</p>
+                <div class="ms-work-map" aria-hidden="true">
+                  <span class="ms-work-pin"></span>
+                  <span class="ms-work-pin is-hot"></span>
+                  <span class="ms-work-pin"></span>
+                  <span class="ms-work-pin"></span>
+                </div>
+                <ul class="ms-work-list">
+                  <li class="is-picked">
+                    <span class="ms-work-mark">N</span>
+                    <span class="ms-work-copy"><strong>Northside Cafe</strong><em>Cafe</em></span>
+                    <span class="ms-work-tag">No website</span>
+                  </li>
+                  <li>
+                    <span class="ms-work-mark">H</span>
+                    <span class="ms-work-copy"><strong>Harbor Clinic</strong><em>Clinic</em></span>
+                    <span class="ms-work-tag is-quiet">Has a site</span>
+                  </li>
+                  <li>
+                    <span class="ms-work-mark">O</span>
+                    <span class="ms-work-copy"><strong>Oak Gym</strong><em>Gym</em></span>
+                    <span class="ms-work-tag">No website</span>
+                  </li>
+                </ul>
+              </div>
             </article>
             <article class="ms-card ms-cover ms-rise">
               <p class="ms-card-kicker">My Clients</p>
               <h3>After they pay, they stay with you.</h3>
               <p>The watermark comes off. The live site stays in your client list.</p>
+              <div class="ms-work">
+                <p class="ms-work-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>Search clients</p>
+                <ul class="ms-work-list">
+                  <li>
+                    <span class="ms-work-mark">N</span>
+                    <span class="ms-work-copy">
+                      <strong>Northside Cafe</strong>
+                      <span class="ms-work-chips"><span>Paid $450</span><span>Your cut $405</span><span>Live</span></span>
+                    </span>
+                  </li>
+                  <li>
+                    <span class="ms-work-mark">R</span>
+                    <span class="ms-work-copy">
+                      <strong>River Dental</strong>
+                      <span class="ms-work-chips"><span>Paid $600</span><span>Your cut $540</span><span>Live</span></span>
+                    </span>
+                  </li>
+                </ul>
+              </div>
             </article>
           </div>
         </div>
@@ -504,17 +582,17 @@ document.documentElement.classList.add("ms-boot");
       <section class="ms-band ms-band-cool" id="faq" aria-labelledby="faq-title">
         <div class="ms-wrap">
           <h2 id="faq-title" class="ms-rise">Questions.</h2>
-          <div class="dt-accordion ms-rise" data-accordion>
-            <div class="dt-acc-item is-open">
-              <button type="button" class="dt-acc-trigger" aria-expanded="true">What is Moonrise? <span aria-hidden="true">⌄</span></button>
+          <div class="dt-accordion" data-accordion>
+            <div class="dt-acc-item is-open ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="true">What is Moonrise? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
               <div class="dt-acc-panel"><div>A workspace for selling websites to local businesses. You find one that needs a site, build it, and get paid when the owner goes live.</div></div>
             </div>
-            <div class="dt-acc-item">
-              <button type="button" class="dt-acc-trigger" aria-expanded="false">How do I get paid? <span aria-hidden="true">⌄</span></button>
+            <div class="dt-acc-item ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="false">How do I get paid? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
               <div class="dt-acc-panel"><div>Publish the site with a small watermark and send the owner the link. They pay on that page to remove it. You keep 90%.</div></div>
             </div>
-            <div class="dt-acc-item">
-              <button type="button" class="dt-acc-trigger" aria-expanded="false">Do owners need an account? <span aria-hidden="true">⌄</span></button>
+            <div class="dt-acc-item ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="false">Do owners need an account? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
               <div class="dt-acc-panel"><div>No. They open the link and pay there. They never sign in to Moonrise.</div></div>
             </div>
           </div>
@@ -523,15 +601,45 @@ document.documentElement.classList.add("ms-boot");
 
       <section class="ms-band ms-close" aria-labelledby="close-title">
         <div class="ms-wrap ms-wrap-wide">
+          <h2 id="close-title" class="ms-rise">Three steps.</h2>
           <div class="ms-pair">
-            <article class="ms-card ms-rise">
-              <h2 id="close-title">Three steps.</h2>
-              <ol class="ms-steps">
-                <li><span>1</span><span class="ms-step-copy"><strong>Find</strong><em>Pick a nearby business with no site.</em></span></li>
-                <li><span>2</span><span class="ms-step-copy"><strong>Build</strong><em>Make their page in the Builder.</em></span></li>
-                <li><span>3</span><span class="ms-step-copy"><strong>Send</strong><em>They pay on the link. You keep 90%.</em></span></li>
-              </ol>
-            </article>
+            <ol class="ms-steps">
+              <li class="ms-rise">
+                <span>1</span>
+                <span class="ms-step-copy">
+                  <strong>Find</strong>
+                  <em>Pick a nearby business with no site.</em>
+                  <span class="ms-step-scene">
+                    <span class="ms-work-mark">N</span>
+                    <span><b>Northside Cafe</b><i>No website</i></span>
+                  </span>
+                </span>
+              </li>
+              <li class="ms-rise">
+                <span>2</span>
+                <span class="ms-step-copy">
+                  <strong>Build</strong>
+                  <em>Make their page in the Builder.</em>
+                  <span class="ms-step-scene ms-step-scene-site">
+                    <b>Northside Cafe</b>
+                    <span></span>
+                    <span class="is-short"></span>
+                    <i>Build site</i>
+                  </span>
+                </span>
+              </li>
+              <li class="ms-rise">
+                <span>3</span>
+                <span class="ms-step-copy">
+                  <strong>Send</strong>
+                  <em>They pay on the link. You keep 90%.</em>
+                  <span class="ms-step-scene ms-step-scene-pay">
+                    <span><i>You keep</i><b>$405</b></span>
+                    <span><i>Of</i><b>$450</b></span>
+                  </span>
+                </span>
+              </li>
+            </ol>
             <article class="ms-card ms-price-card ms-rise">
               <p class="ms-card-kicker">Your cut</p>
               <p class="ms-price">90%</p>
@@ -543,7 +651,7 @@ document.documentElement.classList.add("ms-boot");
       </section>
     </main>
 
-    <footer class="ms-home-site-footer">
+    <footer class="ms-home-site-footer ms-rise">
       <div class="ms-wrap">
         <strong>moonrise.</strong>
         <nav class="ms-home-foot-links" aria-label="Footer">
@@ -560,8 +668,8 @@ document.documentElement.classList.add("ms-boot");
     </footer>
   </div>
 
-  <script defer src="js/home-menu.js?v=20261108-nav"></script>
-  <script defer src="js/home-stage.js?v=20261108-hero"></script>
+  <script defer src="js/home-menu.js?v=20261108-navease"></script>
+  <script defer src="js/home-stage.js?v=20261108-scroll2"></script>
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
   <script defer src="js/toast.js"></script>
   <script defer>

@@ -1,0 +1,279 @@
+/* Public reading pages. Same quiet voice as the home page, outside the studio. */
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("../assets/fonts/newsreader-latin.woff2") format("woff2");
+}
+
+body.ms-legal-site,
+body.ms-public-doc,
+body.ms-contact-public {
+  min-height: 100vh;
+  margin: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+}
+
+.ms-doc-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100% - 2.5rem, 80rem);
+  margin: 0 auto;
+  padding: 1.15rem 0;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.ms-doc-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-decoration: none !important;
+}
+
+.ms-doc-brand:hover {
+  opacity: 0.72;
+}
+
+.ms-doc-mark {
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.ms-doc-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.4rem;
+  padding: 0 1rem;
+  border-radius: 10px !important;
+  background: #1d1d1f !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none !important;
+}
+
+.ms-doc-cta:hover {
+  background: #2c2c2e !important;
+}
+
+body.ms-legal-site .ms-legal-wrap,
+body.ms-public-doc .ms-doc-main,
+body.ms-public-doc #page-body,
+body.ms-contact-public .ms-contact-main,
+body.ms-contact-public .ms-doc-main {
+  box-sizing: border-box;
+  width: min(100% - 2.5rem, 40rem) !important;
+  max-width: 40rem !important;
+  margin: 0 auto !important;
+  padding: 7.25rem 0 4rem !important;
+}
+
+body.ms-legal-site h1.ms-doc-title,
+body.ms-public-doc h1.ms-doc-title,
+body.ms-contact-public h1.ms-doc-title {
+  margin: 0 !important;
+  color: #2c2c2e !important;
+  -webkit-text-fill-color: #2c2c2e !important;
+  font-family: "Newsreader", "Iowan Old Style", Palatino, Georgia, serif !important;
+  font-size: clamp(3.15rem, 8vw, 4.6rem) !important;
+  font-weight: 450 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.02 !important;
+  text-align: center;
+}
+
+body.ms-legal-site .ms-legal-intro,
+body.ms-public-doc .ms-doc-lead,
+body.ms-contact-public .ms-doc-lead {
+  margin: 1.15rem auto 0 !important;
+  max-width: 28rem;
+  color: #6e6e73 !important;
+  -webkit-text-fill-color: #6e6e73 !important;
+  font-size: 1.0625rem !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.011em !important;
+  line-height: 1.45 !important;
+  text-align: center;
+}
+
+body.ms-legal-site .ms-legal-hero,
+body.ms-public-doc .ms-page-head,
+body.ms-contact-public .ms-page-head {
+  margin: 0 0 1.5rem !important;
+  text-align: center;
+}
+
+body.ms-legal-site .ms-legal-toc,
+body.ms-public-doc .ms-help-toc {
+  justify-content: center;
+  gap: 0.85rem !important;
+  margin: 0 0 1.75rem !important;
+}
+
+body.ms-legal-site .ms-legal-toc a,
+body.ms-public-doc .ms-help-toc a {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  color: #6e6e73 !important;
+  -webkit-text-fill-color: #6e6e73 !important;
+  font-size: 0.95rem !important;
+  font-weight: 560 !important;
+  letter-spacing: -0.015em;
+}
+
+body.ms-legal-site .ms-legal-toc a:hover,
+body.ms-public-doc .ms-help-toc a:hover {
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  background: transparent !important;
+}
+
+body.ms-legal-site .ms-legal-updated {
+  margin: -0.5rem 0 1.25rem !important;
+  color: #8e8e93 !important;
+  -webkit-text-fill-color: #8e8e93 !important;
+  font-size: 0.9rem !important;
+  text-align: center;
+}
+
+body.ms-legal-site .ms-legal-doc,
+body.ms-public-doc .ms-help-guide {
+  display: grid;
+  gap: 0.85rem;
+}
+
+body.ms-legal-site .ms-legal-article,
+body.ms-legal-site .ms-card,
+body.ms-public-doc .ms-doc-block,
+body.ms-public-doc .ms-card,
+body.ms-public-doc .ms-creator-policy-card {
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 18px !important;
+  box-shadow: none !important;
+  color: #1d1d1f !important;
+  padding: 1.15rem 1.2rem !important;
+}
+
+body.ms-legal-site .ms-legal-section-head,
+body.ms-public-doc .ms-doc-title,
+body.ms-legal-site .ms-legal-article h2,
+body.ms-public-doc .ms-doc-block h2 {
+  margin: 0 0 0.55rem !important;
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  font-size: 1.15rem !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.03em !important;
+}
+
+body.ms-legal-site .ms-legal-article h3,
+body.ms-public-doc .ms-doc-block h3 {
+  margin: 1rem 0 0.35rem !important;
+  color: #1d1d1f !important;
+  font-size: 1rem !important;
+  font-weight: 650 !important;
+}
+
+body.ms-legal-site .ms-legal-article p,
+body.ms-legal-site .ms-legal-article li,
+body.ms-public-doc .ms-settings-hint,
+body.ms-public-doc .ms-help-list,
+body.ms-public-doc .ms-help-list li,
+body.ms-public-doc .ms-doc-block p,
+body.ms-public-doc .ms-doc-block li {
+  color: #3a3a3c !important;
+  -webkit-text-fill-color: #3a3a3c !important;
+  font-size: 0.98rem !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+}
+
+body.ms-legal-site .ms-legal-article a,
+body.ms-public-doc .ms-doc-block a,
+body.ms-public-doc .ms-help-list a,
+body.ms-legal-site .ms-legal-foot a,
+.ms-doc-links a {
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+body.ms-legal-site .ms-legal-article a:hover,
+body.ms-public-doc .ms-doc-block a:hover,
+.ms-doc-links a:hover {
+  text-decoration: underline;
+}
+
+.ms-doc-links {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.ms-doc-links a {
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.ms-doc-note {
+  margin: 1.5rem 0 0;
+  color: #6e6e73;
+  text-align: center;
+}
+
+body.ms-legal-site .ms-legal-foot {
+  position: static;
+  display: flex !important;
+  justify-content: center;
+  gap: 1rem;
+  width: min(100% - 2.5rem, 40rem);
+  margin: 0 auto;
+  padding: 0 0 3rem !important;
+  background: transparent !important;
+  border: 0 !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+body.ms-public-doc .ms-btn,
+body.ms-legal-site .ms-btn {
+  border-radius: 10px !important;
+  background: #1d1d1f !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+body.ms-public-doc .ms-help-legal {
+  color: #6e6e73;
+  text-align: center;
+}
