@@ -201,22 +201,50 @@ function normalizeStatus(raw, trigger) {
   return "accepted";
 }
 
+function textField(value) {
+  if (value == null) return "";
+  if (typeof value === "string" || typeof value === "number") return String(value);
+  if (typeof value === "object") return textField(value.value || value.label || "");
+  return "";
+}
+
+function timeValue(value) {
+  if (value == null || value === "") return "";
+  if (typeof value === "string" || typeof value === "number") return value;
+  if (typeof value === "object") {
+    if (value.dateTime) return value.dateTime;
+    if (value.utc) return value.utc;
+    if (value.date && value.time) return String(value.date) + "T" + String(value.time);
+    if (value.date) return value.date;
+  }
+  return "";
+}
+
+function bookingRows(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.data)) return payload.data;
+  if (Array.isArray(payload?.data?.bookings)) return payload.data.bookings;
+  if (Array.isArray(payload?.bookings)) return payload.bookings;
+  return [];
+}
+
 function normalizeBooking(raw, trigger) {
   const src = raw && raw.payload && raw.triggerEvent ? raw.payload : raw || {};
-  const uid = String(src.uid || src.bookingUid || "").trim().slice(0, 200);
-  const startRaw = src.startTime || src.start || src.startsAt || "";
-  const endRaw = src.endTime || src.end || src.endsAt || "";
+  const uid = String(src.uid || src.bookingUid || src.id || "").trim().slice(0, 200);
+  const startRaw = timeValue(src.startTime || src.start || src.startsAt);
+  const endRaw = timeValue(src.endTime || src.end || src.endsAt);
   const start = new Date(startRaw);
   const end = new Date(endRaw);
   const attendees = Array.isArray(src.attendees) ? src.attendees : [];
   const attendee = attendees[0] || {};
+  const responses = src.responses && typeof src.responses === "object" ? src.responses : {};
   const metadata = src.metadata && typeof src.metadata === "object" ? src.metadata : {};
   const projectId = String(metadata.projectId || metadata.project_id || "").trim();
-  const name = String(attendee.name || "").trim();
-  const email = String(attendee.email || "").trim().toLowerCase();
+  const name = textField(attendee.name || responses.name || src.attendeeName).trim();
+  const email = textField(attendee.email || responses.email).trim().toLowerCase();
   return {
     uid,
-    title: String(src.title || src.eventTitle || "Meeting").trim().slice(0, 200) || "Meeting",
+    title: String(src.title || src.eventTitle || src.eventType?.title || "Meeting").trim().slice(0, 200) || "Meeting",
     startsAt: Number.isFinite(start.getTime()) ? start.toISOString() : null,
     endsAt: Number.isFinite(end.getTime()) ? end.toISOString() : null,
     attendeeName: (name || email || "Guest").slice(0, 120),
@@ -224,6 +252,14 @@ function normalizeBooking(raw, trigger) {
     status: normalizeStatus(src.status, trigger),
     projectId: UUID_RE.test(projectId) ? projectId : "",
   };
+}
+
+function boundInstant(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  const time = Date.parse(raw);
+  if (!Number.isFinite(time)) return "";
+  return new Date(time).toISOString();
 }
 
 function parseApiKey(raw) {
@@ -369,19 +405,32 @@ async function upsertBooking(supabase, userId, booking, trigger) {
   return { isNew };
 }
 
-async function syncUpcoming(supabase, userId, token) {
-  let payload;
-  try {
-    payload = await calFetch(token, "/bookings?status=upcoming&take=50");
-  } catch (e) {
+async function listRemoteBookings(token) {
+  const paths = [
+    "/bookings?status=upcoming&take=100",
+    "/bookings?status=past&take=100",
+    "/bookings?take=100",
+  ];
+  const seen = new Set();
+  const rows = [];
+  for (const path of paths) {
     try {
-      payload = await calFetch(token, "/bookings?take=50");
-    } catch (err) {
-      console.error("cal bookings sync", err?.message || err);
-      return;
+      const payload = await calFetch(token, path);
+      for (const row of bookingRows(payload)) {
+        const key = String(row?.uid || row?.bookingUid || row?.id || "");
+        if (key && seen.has(key)) continue;
+        if (key) seen.add(key);
+        rows.push(row);
+      }
+    } catch (e) {
+      console.error("cal bookings sync", e?.status || "", e?.message || e);
     }
   }
-  const rows = Array.isArray(payload?.data) ? payload.data : [];
+  return rows;
+}
+
+async function syncUpcoming(supabase, userId, token) {
+  const rows = await listRemoteBookings(token);
   for (const raw of rows) {
     const booking = normalizeBooking(raw, "BOOKING_CREATED");
     if (booking.status === "cancelled") continue;
@@ -689,7 +738,6 @@ function mountRoutes(app, { db, requireUser }) {
   app.get("/calendar/bookings", requireUser, async (req, res) => {
     try {
       const supabase = db();
-      const now = new Date().toISOString();
       const conn = await loadConnection(supabase, req.user.id);
       if (conn) {
         try {
@@ -699,14 +747,18 @@ function mountRoutes(app, { db, requireUser }) {
           console.error("cal bookings refresh", e?.message || e);
         }
       }
-      const { data, error } = await supabase
+      const from = boundInstant(req.query.from);
+      const to = boundInstant(req.query.to);
+      let query = supabase
         .from("calendar_bookings")
         .select("id, title, starts_at, ends_at, attendee_name, status, project_id")
         .eq("user_id", req.user.id)
-        .gte("starts_at", now)
         .neq("status", "cancelled")
         .order("starts_at", { ascending: true })
-        .limit(50);
+        .limit(200);
+      if (from) query = query.gte("starts_at", from);
+      if (to) query = query.lt("starts_at", to);
+      const { data, error } = await query;
       if (error) throw error;
       const rows = data || [];
       const projectIds = [...new Set(rows.map((row) => row.project_id).filter(Boolean))];
@@ -722,6 +774,7 @@ function mountRoutes(app, { db, requireUser }) {
         }
       }
       res.json({
+        connected: !!conn,
         bookings: rows.map((row) => ({
           id: row.id,
           title: row.title || "Meeting",

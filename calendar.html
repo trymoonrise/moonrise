@@ -245,20 +245,53 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-close">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
+  <link rel="stylesheet" href="css/calendar.css?v=20261108-month">
 </head>
 <body data-page="calendar">
   <div id="shell"></div>
-  <div id="page-body" class="ms-settings-page">
-    <header class="ms-page-head">
-      <div class="ms-page-head-copy">
-        <h1>Calendar</h1>
+  <div id="page-body" class="ms-cal-page">
+    <div class="ms-cal" id="cal-app" hidden>
+      <div class="ms-cal-head">
+        <button type="button" class="ms-cal-month" id="cal-month" aria-expanded="false" aria-controls="cal-picker">
+          <span id="cal-month-label">November 2026</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
       </div>
-    </header>
-    <div class="ms-settings-stack ms-settings-compact">
-      <section class="ms-set-group" id="cal-list">
-        <p class="ms-settings-hint ms-muted" id="cal-empty" hidden>No upcoming meetings. Connect Cal.com in <a href="settings">Settings</a>.</p>
-        <p class="ms-error" id="cal-error" hidden></p>
-      </section>
+      <div class="ms-cal-picker" id="cal-picker" hidden>
+        <div class="ms-cal-year">
+          <button type="button" id="cal-year-prev" aria-label="Previous year">‹</button>
+          <span id="cal-year-label">2026</span>
+          <button type="button" id="cal-year-next" aria-label="Next year">›</button>
+        </div>
+        <div class="ms-cal-months" id="cal-months"></div>
+      </div>
+      <div class="ms-cal-week" aria-hidden="true">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      </div>
+      <div class="ms-cal-grid" id="cal-grid" role="grid" aria-label="Month"></div>
+      <p class="ms-cal-empty" id="cal-day-empty" hidden>No meetings this day</p>
+      <p class="ms-error" id="cal-error" hidden></p>
+    </div>
+
+    <div class="ms-cal-gate" id="cal-gate" hidden role="dialog" aria-modal="true" aria-labelledby="cal-gate-title">
+      <div class="ms-cal-gate-card">
+        <h1 id="cal-gate-title">Connect Cal.com</h1>
+        <p>Paste an API key, or continue with Cal.com. This stays here until the calendar is connected.</p>
+        <label class="ms-cal-label" for="cal-api">API key</label>
+        <input class="ms-cal-input" id="cal-api" type="password" autocomplete="new-password" spellcheck="false" autocapitalize="off" placeholder="cal_live_..." maxlength="220">
+        <div class="ms-cal-gate-actions">
+          <button type="button" class="ms-cal-save" id="cal-api-save">Save API key</button>
+          <button type="button" class="ms-cal-oauth" id="cal-oauth">Continue with Cal.com</button>
+        </div>
+        <p class="ms-error" id="cal-gate-error" hidden></p>
+      </div>
+    </div>
+
+    <div class="ms-cal-band" id="cal-band" aria-hidden="true">
+      <div class="ms-cal-band-card">
+        <p class="ms-cal-band-day" id="cal-band-day"></p>
+        <div id="cal-band-list"></div>
+      </div>
     </div>
   </div>
 
@@ -274,6 +307,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
-  <script defer src="js/calendar.js?v=20261108-calendar"></script>
+  <script defer src="js/calendar.js?v=20261108-month"></script>
 </body>
 </html>

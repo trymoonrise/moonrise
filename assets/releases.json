@@ -3,6 +3,33 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.6.2",
+      "date": "2026-11-08",
+      "title": "Month calendar",
+      "tag": "v2.6.2",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.6.2",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [],
+          "fixes": [
+            "The How it works button keeps dark text on its white background."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Calendar is a month. A day with a meeting slides up from the bottom with the details.",
+            "If Cal.com is not connected, Calendar stays on a connect window until an account or API key is added."
+          ],
+          "fixes": [
+            "A connected Cal.com account shows the month instead of the connect prompt when that month has no meetings.",
+            "Meetings from Cal.com show on the days they happen."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.1",
       "date": "2026-11-08",
       "title": "Build progress and watermark",
