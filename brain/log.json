@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.5.4",
+      "date": "2026-11-08",
+      "title": "Dark payout band",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The payout section is a dark rounded panel that tucks over the bottom of the hero."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.5.3",
       "date": "2026-11-08",
       "title": "Moon opens the home page",
