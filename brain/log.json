@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.6.4",
+      "date": "2026-11-08",
+      "title": "Calendar meetings",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "A meeting opens under the month with the time, length, person, email, site, and status."
+          ],
+          "fixes": [
+            "Choosing a month, or the arrows beside it, updates the calendar right away."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.3",
       "date": "2026-11-08",
       "title": "Alerts and site photos",

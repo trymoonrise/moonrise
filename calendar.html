@@ -245,7 +245,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261108-svc-close">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
-  <link rel="stylesheet" href="css/calendar.css?v=20261108-month">
+  <link rel="stylesheet" href="css/calendar.css?v=20261108-month-detail">
 </head>
 <body data-page="calendar">
   <div id="shell"></div>
@@ -256,6 +256,10 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
           <span id="cal-month-label">November 2026</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </button>
+        <div class="ms-cal-nav">
+          <button type="button" class="ms-cal-shift" id="cal-prev" aria-label="Previous month">‹</button>
+          <button type="button" class="ms-cal-shift" id="cal-next" aria-label="Next month">›</button>
+        </div>
       </div>
       <div class="ms-cal-picker" id="cal-picker" hidden>
         <div class="ms-cal-year">
@@ -268,8 +272,13 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
       <div class="ms-cal-week" aria-hidden="true">
         <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
       </div>
-      <div class="ms-cal-grid" id="cal-grid" role="grid" aria-label="Month"></div>
-      <p class="ms-cal-empty" id="cal-day-empty" hidden>No meetings this day</p>
+      <div class="ms-cal-grid" id="cal-grid" aria-label="Month"></div>
+      <p class="ms-cal-empty" id="cal-day-empty" hidden>No meetings</p>
+      <div class="ms-cal-detail" id="cal-detail" aria-hidden="true">
+        <div class="ms-cal-detail-clip">
+          <div class="ms-cal-detail-card" id="cal-detail-card"></div>
+        </div>
+      </div>
       <p class="ms-error" id="cal-error" hidden></p>
     </div>
 
@@ -287,12 +296,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
       </div>
     </div>
 
-    <div class="ms-cal-band" id="cal-band" aria-hidden="true">
-      <div class="ms-cal-band-card">
-        <p class="ms-cal-band-day" id="cal-band-day"></p>
-        <div id="cal-band-list"></div>
-      </div>
-    </div>
   </div>
 
   <script defer src="js/config.js?v=20261108-no-lf"></script>
@@ -307,6 +310,6 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
-  <script defer src="js/calendar.js?v=20261108-month"></script>
+  <script defer src="js/calendar.js?v=20261108-month-detail"></script>
 </body>
 </html>

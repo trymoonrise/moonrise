@@ -14,9 +14,8 @@
   const errorEl = document.getElementById("cal-error");
   const gateErrorEl = document.getElementById("cal-gate-error");
   const oauthBtn = document.getElementById("cal-oauth");
-  const bandEl = document.getElementById("cal-band");
-  const bandDayEl = document.getElementById("cal-band-day");
-  const bandListEl = document.getElementById("cal-band-list");
+  const detailEl = document.getElementById("cal-detail");
+  const detailCardEl = document.getElementById("cal-detail-card");
 
   const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const now = new Date();
@@ -26,6 +25,7 @@
   let selected = dateKey(now);
   let bookings = [];
   let configured = true;
+  let loadToken = 0;
 
   function workerBase() {
     if (typeof window.resolveWorkerUrl === "function") {
@@ -103,7 +103,7 @@
   function showGate(on) {
     if (gateEl) gateEl.hidden = !on;
     if (appEl) appEl.hidden = !!on;
-    if (on && bandEl) bandEl.classList.remove("is-in");
+    if (on) hideDetail();
   }
 
   function eventsOn(key) {
@@ -117,6 +117,35 @@
     if (monthLabel) monthLabel.textContent = MONTHS[viewMonth] + " " + viewYear;
   }
 
+  function setPicker(open) {
+    if (pickerEl) pickerEl.hidden = !open;
+    monthBtn?.classList.toggle("is-open", !!open);
+    monthBtn?.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) {
+      pickerYear = viewYear;
+      paintPicker();
+    }
+  }
+
+  function goToMonth(year, month) {
+    viewYear = year;
+    viewMonth = month;
+    pickerYear = year;
+    const todayKey = dateKey(now);
+    const prefix = year + "-" + String(month + 1).padStart(2, "0");
+    selected = todayKey.startsWith(prefix) ? todayKey : prefix + "-01";
+    bookings = [];
+    setPicker(false);
+    paintGrid();
+    showDetail();
+    void loadMonth();
+  }
+
+  function shiftMonth(delta) {
+    const next = new Date(viewYear, viewMonth + delta, 1);
+    goToMonth(next.getFullYear(), next.getMonth());
+  }
+
   function paintPicker() {
     if (yearLabel) yearLabel.textContent = String(pickerYear);
     if (!monthsEl) return;
@@ -127,15 +156,9 @@
       btn.textContent = name.slice(0, 3);
       btn.setAttribute("aria-label", name + " " + pickerYear);
       if (pickerYear === viewYear && index === viewMonth) btn.className = "is-on";
-      btn.addEventListener("click", () => {
-        viewYear = pickerYear;
-        viewMonth = index;
-        if (pickerEl) pickerEl.hidden = true;
-        if (monthBtn) monthBtn.setAttribute("aria-expanded", "false");
-        const today = dateKey(now);
-        const prefix = viewYear + "-" + String(viewMonth + 1).padStart(2, "0");
-        selected = today.startsWith(prefix) ? today : prefix + "-01";
-        void loadMonth();
+      btn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        goToMonth(pickerYear, index);
       });
       monthsEl.appendChild(btn);
     });
@@ -156,7 +179,6 @@
       btn.type = "button";
       btn.className = "ms-cal-day";
       btn.textContent = String(day.getDate());
-      btn.setAttribute("role", "gridcell");
       if (day.getMonth() !== viewMonth) btn.classList.add("is-out");
       if (key === selected) btn.classList.add("is-on");
       if (count) btn.classList.add("has-event");
@@ -168,67 +190,128 @@
     }
   }
 
-  function paintBand(key, items) {
-    if (!bandDayEl || !bandListEl) return;
-    bandDayEl.textContent = dayName(key);
-    bandListEl.replaceChildren();
+  function durationLabel(item) {
+    const start = new Date(item.startsAt).getTime();
+    const end = new Date(item.endsAt).getTime();
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) return "";
+    const mins = Math.round((end - start) / 60000);
+    if (mins < 60) return mins + " min";
+    const hours = Math.floor(mins / 60);
+    const rest = mins % 60;
+    if (!rest) return hours + (hours === 1 ? " hour" : " hours");
+    return hours + " hr " + rest + " min";
+  }
+
+  function statusLabel(status) {
+    const value = String(status || "").trim().toLowerCase();
+    if (!value || value === "accepted" || value === "confirmed") return "Confirmed";
+    if (value === "pending") return "Pending";
+    if (value === "cancelled" || value === "canceled") return "Cancelled";
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  function timeRange(item) {
+    const start = clock(item.startsAt);
+    const end = clock(item.endsAt);
+    if (start && end && end !== start) return start + " – " + end;
+    return start;
+  }
+
+  function addDetailRow(parent, label, value) {
+    const text = String(value || "").trim();
+    if (!text) return;
+    const row = document.createElement("p");
+    row.className = "ms-cal-event-row";
+    const name = document.createElement("span");
+    name.textContent = label;
+    const detail = document.createElement("span");
+    detail.textContent = text;
+    row.append(name, detail);
+    parent.appendChild(row);
+  }
+
+  function paintDetail(key, items) {
+    if (!detailCardEl) return;
+    detailCardEl.replaceChildren();
+    const day = document.createElement("p");
+    day.className = "ms-cal-detail-day";
+    day.textContent = dayName(key);
+    detailCardEl.appendChild(day);
     items.forEach((item) => {
-      const row = document.createElement("div");
-      row.className = "ms-cal-event";
-      const title = document.createElement("strong");
+      const block = document.createElement("article");
+      block.className = "ms-cal-event";
+      const title = document.createElement("h2");
       title.textContent = item.title || "Meeting";
-      const when = document.createElement("span");
-      const start = clock(item.startsAt);
-      const end = clock(item.endsAt);
-      when.textContent = end && end !== start ? start + " – " + end : start || "Meeting";
-      const who = document.createElement("span");
-      const name = String(item.attendeeName || "").trim();
-      const site = String(item.businessName || "").trim();
-      who.textContent = [name && name !== "Guest" ? name : "", site].filter(Boolean).join(" · ");
-      row.appendChild(title);
-      row.appendChild(when);
-      if (who.textContent) row.appendChild(who);
-      bandListEl.appendChild(row);
+      block.appendChild(title);
+      const person = String(item.attendeeName || "").trim();
+      addDetailRow(block, "Time", timeRange(item));
+      addDetailRow(block, "Length", durationLabel(item));
+      if (person && person !== "Guest") addDetailRow(block, "With", person);
+      addDetailRow(block, "Email", item.attendeeEmail);
+      addDetailRow(block, "Site", item.businessName);
+      addDetailRow(block, "Status", statusLabel(item.status));
+      detailCardEl.appendChild(block);
     });
   }
 
-  function selectDay(key) {
-    const date = parseKey(key);
-    if (date.getFullYear() !== viewYear || date.getMonth() !== viewMonth) {
-      viewYear = date.getFullYear();
-      viewMonth = date.getMonth();
-      selected = key;
-      void loadMonth();
-      return;
-    }
-    selected = key;
-    paintGrid();
-    const items = eventsOn(key);
+  function hideDetail() {
+    if (!detailEl) return;
+    detailEl.classList.remove("is-in");
+    detailEl.setAttribute("aria-hidden", "true");
+  }
+
+  function showDetail() {
+    const items = eventsOn(selected);
     if (!items.length) {
-      if (bandEl) {
-        bandEl.classList.remove("is-in");
-        bandEl.setAttribute("aria-hidden", "true");
-      }
+      hideDetail();
       if (emptyEl) emptyEl.hidden = false;
       return;
     }
     if (emptyEl) emptyEl.hidden = true;
-    paintBand(key, items);
-    if (!bandEl) return;
-    bandEl.setAttribute("aria-hidden", "false");
-    if (!bandEl.classList.contains("is-in")) {
-      requestAnimationFrame(() => bandEl.classList.add("is-in"));
+    paintDetail(selected, items);
+    if (!detailEl) return;
+    detailEl.setAttribute("aria-hidden", "false");
+    if (!detailEl.classList.contains("is-in")) {
+      requestAnimationFrame(() => detailEl.classList.add("is-in"));
     }
   }
 
-  async function loadMonth() {
-    const range = monthRange(viewYear, viewMonth);
-    const data = await api(
-      "/calendar/bookings?from=" + encodeURIComponent(range.from) + "&to=" + encodeURIComponent(range.to)
-    );
-    bookings = Array.isArray(data.bookings) ? data.bookings : [];
+  function selectDay(key) {
+    const date = parseKey(key);
+    const monthChanged = date.getFullYear() !== viewYear || date.getMonth() !== viewMonth;
+    selected = key;
+    if (monthChanged) {
+      viewYear = date.getFullYear();
+      viewMonth = date.getMonth();
+      pickerYear = viewYear;
+      bookings = [];
+      setPicker(false);
+      paintGrid();
+      showDetail();
+      void loadMonth();
+      return;
+    }
     paintGrid();
-    selectDay(selected);
+    showDetail();
+  }
+
+  async function loadMonth() {
+    const token = ++loadToken;
+    const year = viewYear;
+    const month = viewMonth;
+    try {
+      const range = monthRange(year, month);
+      const data = await api(
+        "/calendar/bookings?from=" + encodeURIComponent(range.from) + "&to=" + encodeURIComponent(range.to)
+      );
+      if (token !== loadToken || year !== viewYear || month !== viewMonth) return;
+      bookings = Array.isArray(data.bookings) ? data.bookings : [];
+      paintGrid();
+      showDetail();
+    } catch (e) {
+      if (token !== loadToken) return;
+      setError(e.message || "Could not load meetings");
+    }
   }
 
   async function refresh() {
@@ -241,26 +324,34 @@
       return;
     }
     showGate(false);
+    paintGrid();
     await loadMonth();
   }
 
-  monthBtn?.addEventListener("click", () => {
-    const open = pickerEl?.hidden !== false;
-    if (pickerEl) pickerEl.hidden = !open;
-    monthBtn.setAttribute("aria-expanded", open ? "true" : "false");
-    if (open) {
-      pickerYear = viewYear;
-      paintPicker();
-    }
+  monthBtn?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    setPicker(pickerEl?.hidden !== false);
   });
 
-  document.getElementById("cal-year-prev")?.addEventListener("click", () => {
+  document.getElementById("cal-prev")?.addEventListener("click", () => shiftMonth(-1));
+  document.getElementById("cal-next")?.addEventListener("click", () => shiftMonth(1));
+
+  document.getElementById("cal-year-prev")?.addEventListener("click", (event) => {
+    event.stopPropagation();
     pickerYear -= 1;
     paintPicker();
   });
-  document.getElementById("cal-year-next")?.addEventListener("click", () => {
+  document.getElementById("cal-year-next")?.addEventListener("click", (event) => {
+    event.stopPropagation();
     pickerYear += 1;
     paintPicker();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!pickerEl || pickerEl.hidden) return;
+    const target = event.target;
+    if (target instanceof Node && (pickerEl.contains(target) || monthBtn?.contains(target))) return;
+    setPicker(false);
   });
 
   document.getElementById("cal-api-save")?.addEventListener("click", async () => {

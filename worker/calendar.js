@@ -762,7 +762,7 @@ function mountRoutes(app, { db, requireUser }) {
       const to = boundInstant(req.query.to);
       let query = supabase
         .from("calendar_bookings")
-        .select("id, title, starts_at, ends_at, attendee_name, status, project_id")
+        .select("id, title, starts_at, ends_at, attendee_name, attendee_email, status, project_id")
         .eq("user_id", req.user.id)
         .neq("status", "cancelled")
         .order("starts_at", { ascending: true })
@@ -792,6 +792,8 @@ function mountRoutes(app, { db, requireUser }) {
           startsAt: row.starts_at,
           endsAt: row.ends_at,
           attendeeName: row.attendee_name || "Guest",
+          attendeeEmail: row.attendee_email || "",
+          status: row.status || "accepted",
           businessName: row.project_id ? names[row.project_id] || "" : "",
         })),
       });
