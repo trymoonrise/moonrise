@@ -3,6 +3,21 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.6.8",
+      "date": "2026-11-09",
+      "title": "Website coding agent",
+      "tag": "v2.6.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.6.8",
+      "sections": [
+        {
+          "heading": "Worker",
+          "added": [
+            "The website coding agent designs from the UI Library and picks a different direction each time, and the old preset folder is gone."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.7",
       "date": "2026-11-09",
       "title": "Special prompt library",

@@ -1,15 +1,13 @@
 {
   "name": "moonrise",
-  "version": "2.6.7",
+  "version": "2.6.8",
   "private": true,
   "description": "Moonrise Studio — find, build, preview, get paid, go live. https://trymoonrise.com",
   "engines": {
     "node": "22.x"
   },
   "scripts": {
-    "vercel-build": "node worker/scripts/sync-craft-prompt.js && node worker/scripts/ensure-website-presets.js && node worker/scripts/sync-last-commit.js",
-    "presets:link": "node worker/scripts/ensure-website-presets.js",
-    "presets:manifest": "node presets/scripts/generate-manifest.js",
+    "vercel-build": "node worker/scripts/sync-craft-prompt.js && node worker/scripts/sync-last-commit.js",
     "notes": "node scripts/render-release-notes.mjs",
     "release:github": "node scripts/publish-github-release.mjs"
   },

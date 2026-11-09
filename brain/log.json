@@ -3,6 +3,28 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.6.8",
+      "date": "2026-11-09",
+      "title": "Website coding agent",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Docks slide the active item on their own, and the icons lift as the pointer moves across them."
+          ],
+          "fixes": [
+            "Labeled dock names sit on one line."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "The website coding agent designs from the UI Library and picks a different direction each time, and the old preset folder is gone."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.6.7",
       "date": "2026-11-09",
       "title": "Special prompt library",

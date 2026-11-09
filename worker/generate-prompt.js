@@ -1,25 +1,11 @@
 /**
  * Website generation prompts - Moonrise Studio.
  *
- * Master prompt reference: docs/WEBSITE-GENERATION-PROMPT.md
+ * Agent prompt: assets/moonrise-special-prompt.md
+ * Controls: https://trymoonrise.com/ui-library
  *
- * Preset kit source (worker): GitHub main branch
- *   https://github.com/trymoonrise/moonrise/tree/main/Website%20Presets/presets
- * Cached in-memory; local folder is fallback only.
- * Default pipeline (fast, single MiniMax call):
- *  - The worker picks the component kit + palette LOCALLY from trade heuristics
- *    (no network / no atmosphere LLM), then does ONE ASSEMBLE call.
- *  - Intentional cost/speed tradeoff: local palette is coherent but less nuanced
- *    than the LLM plan path. Enable WEBSITE_PLAN_WITH_LLM=1 when quality A/B
- *    shows the extra planning round-trip is worth it.
- *
- * Optional two-beat pipeline (WEBSITE_PLAN_WITH_LLM=1):
- *  1) ATMOSPHERE + PICKS  - MiniMax decides the vibe + collects preset IDs (JSON)
- *  2) ASSEMBLE            - adapt only those collected components into one HTML site
- *
- * Presets are the parts bin. Atmosphere is the filter. The assembler normalizes
- * every kit into ONE shared design system (.btn, .card, .container, :root tokens)
- * so output reads as a single professional site - not a collage of demo blocks.
+ * Default pipeline: pick one style direction locally, then one assemble call.
+ * The page is one design system (.btn, .card, .container, :root tokens), not a collage.
  */
 
 const HEADLINE_ANGLES = [
@@ -142,6 +128,41 @@ const STYLE_FAMILIES = [
     button:
       "Primary is an ink rectangle with radius 2px. Secondary is an underlined text link.",
   },
+  {
+    id: "gallery",
+    name: "Gallery",
+    atmosphere:
+      "The work leads. A quiet nav, then a large image grid with short captions, then contact. Almost no marketing copy.",
+    palette: { bg: "#ffffff", surface: "#f7f7f8", ink: "#111111", muted: "#5c5c5c", accent: "#111111" },
+    type: { display: "Outfit", body: "Manrope" },
+    layout:
+      "Thin sticky nav. First viewport is a two-column image grid, not a headline stack. Captions sit under images. Services are three short lines. Contact is a plain form at the end. Footer is a hairline.",
+    button: "Primary is an ink rectangle, radius 10px. Secondary is a text link.",
+  },
+  {
+    id: "local",
+    name: "Local",
+    atmosphere:
+      "A neighborhood business. Address and hours are easy to find. One photo of the place. Services are a short list.",
+    palette: { bg: "#f7f7f8", surface: "#ffffff", ink: "#111111", muted: "#5c5c5c", accent: "#1f6fed" },
+    type: { display: "Manrope", body: "Manrope" },
+    layout:
+      "Sticky light bar. Hero is a photo of the place with the name and one line over a soft dark scrim. Next is address, hours, and phone in a plain table. Services are a numbered list. The accent blue is only the primary button.",
+    button:
+      "Primary is a solid #1f6fed button, radius 12px, white text. Secondary is a hairline button. Do not paint the accent on headlines.",
+  },
+  {
+    id: "band",
+    name: "Band",
+    atmosphere:
+      "One strong band and a quiet page. Ink or action blue appears once, as the hero or the close. The rest is white and hairline.",
+    palette: { bg: "#ffffff", surface: "#f7f7f8", ink: "#111111", muted: "#5c5c5c", accent: "#1f6fed" },
+    type: { display: "Outfit", body: "Manrope" },
+    layout:
+      "Sticky white bar. The hero is a full-bleed ink band with off-white type and one light button, or a white hero and an ink close. Do not color every section. Services are a two-column list. Footer matches the band or stays a hairline.",
+    button:
+      "On the ink band the button is white with ink text. Elsewhere the primary button is #1f6fed with white text. One filled button style per surface.",
+  },
 ];
 
 function hashFromString(input) {
@@ -262,11 +283,11 @@ Rules:
 - Do not write HTML. Do not invent contact facts.`;
 
 /** Stage 2 - assemble collected components into one site. */
-const GENERATION_SYSTEM_PROMPT = `You are the Moonrise website agent. Work like a careful coding agent: think through the layout, draft deliberately, then self-review before you ship.
+const GENERATION_SYSTEM_PROMPT = `You are the Moonrise website coding agent. Work like a careful coding agent: think through the layout, draft deliberately, then self-review before you ship.
 
-You assemble complete handmade-feeling single-page business websites FROM a Website Presets kit.
+You design complete single-page business websites. Controls come from the Moonrise UI Library (https://trymoonrise.com/ui-library and the raw files in https://github.com/trymoonrise/moonrise-special-prompt under ui/). Do not invent a new button, field, card, or nav when a library type already exists. Change colors and labels only.
 
-You receive business facts, an atmosphere/palette plan, a trade-specific page bone structure, Website Preset HTML/CSS components (REQUIRED visual building blocks), and a REQUIRED stock media pack of absolute https image + video URLs.
+You receive business facts, one style direction, a trade-specific page structure, optional reference snippets, and a stock media pack of absolute https image and video URLs.
 
 Return ONLY one complete HTML document (doctype + html). No markdown fences. No preamble. No commentary.
 Take the time needed. Prefer a polished, finished page over a fast incomplete one.
@@ -274,7 +295,7 @@ Take the time needed. Prefer a polished, finished page over a fast incomplete on
 ## Agent workflow (follow silently, then output HTML only)
 1) Read the business facts and locked copy. Note name, phone, address, hours, trade, and city.
 2) Choose ONE composition: hero treatment, section order, type scale, and button system.
-3) Adapt kit presets into that one system. Do not dump alternate layout CSS you are not using.
+3) Build sections from UI Library patterns that match the chosen direction. Do not dump alternate layout CSS you are not using.
 4) Self-review: alignment, spacing on a 4px grid, image aspect ratios, nav wrapping, form focus, mobile width, and contact facts.
 5) Fix anything that looks unfinished, overlapping, cut off, or placeholder-like. Then return the final document.
 
@@ -319,7 +340,7 @@ Modern bar (must pass):
    - .btn, .btn--primary, .btn--secondary - ONE button system for all CTAs (nav, hero, bands, form submit)
    - .card - shared surface ONLY where interaction needs a container (services, testimonials, pricing, team, form)
    - .grid, .grid--2, .grid--3 - responsive auto-fit/minmax grids when needed
-3) When adapting kit presets: keep each preset's layout skeleton (grid, media placement, content hierarchy) but normalize colors to :root vars and map preset buttons/cards to the shared classes above.
+3) When a reference snippet is included, keep its layout skeleton (grid, media placement, content hierarchy) but normalize colors to :root vars and map its buttons and cards to the shared classes above.
 4) Never ship 3+ different button styles or mismatched card treatments on one page.
 5) Load ONE distinctive Google Fonts pairing in <head> (never Inter/Roboto as primary) and use it consistently - no per-section font swaps.
 6) Merge ALL CSS into ONE compact <style> block. Deduplicate repeated rules from kit snippets.
