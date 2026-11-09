@@ -418,8 +418,44 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
                 <span class="ms-switch-track" aria-hidden="true"></span>
               </span>
             </label>
+            <label class="ms-notif-option">
+              <span class="ms-notif-option-copy">
+                <strong>Meetings</strong>
+                <span>When someone books a time with you</span>
+              </span>
+              <span class="ms-switch">
+                <input type="checkbox" id="set-notif-meeting" data-notif-key="meetings" autocomplete="off">
+                <span class="ms-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
           </div>
           <p class="ms-error" id="set-notif-error" hidden></p>
+        </div>
+      </section>
+
+      <section class="ms-set-group" id="settings-calendar">
+        <button type="button" class="ms-set-row" id="set-cal-toggle" aria-expanded="false" aria-controls="set-cal-panel">
+          <span class="ms-set-row-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </span>
+          <span class="ms-set-row-label">Calendar</span>
+          <span class="ms-set-row-value" id="set-cal-summary">Not connected</span>
+          <span class="ms-set-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+        </button>
+        <div class="ms-set-panel" id="set-cal-panel" hidden>
+          <p class="ms-settings-hint ms-muted" id="set-cal-hint">Connect Cal.com so a customer can book you from the watermark.</p>
+          <div class="ms-field" id="set-cal-event-field" hidden>
+            <label class="ms-label" for="set-cal-event">Booking page</label>
+            <select class="ms-input" id="set-cal-event"></select>
+          </div>
+          <div class="ms-settings-actions">
+            <button type="button" class="ms-btn" id="set-cal-connect">Continue with Cal.com</button>
+            <button type="button" class="ms-btn" id="set-cal-disconnect" hidden>Disconnect</button>
+          </div>
+          <p class="ms-error" id="set-cal-error" hidden></p>
+          <p class="ms-settings-status is-ok" id="set-cal-ok" hidden></p>
         </div>
       </section>
 
@@ -520,7 +556,7 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   </div>
 
   <script defer src="js/config.js?v=20261108-no-lf"></script>
-  <script defer src="js/app.js?v=20261108-clean-urls"></script>
+  <script defer src="js/app.js?v=20261108-calendar"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/handles.js"></script>
@@ -531,8 +567,8 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
   <script defer src="js/toast.js"></script>
   <script defer src="js/income.js?v=20260718-income"></script>
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
-  <script defer src="js/push-notifications.js?v=20261108-notifs"></script>
-  <script defer src="js/settings.js?v=20261108-svc-close"></script>
+  <script defer src="js/push-notifications.js?v=20261108-calendar"></script>
+  <script defer src="js/settings.js?v=20261108-calendar"></script>
   <script defer src="js/settings-status.js?v=20261108-svc-close"></script>
 </body>
 </html>

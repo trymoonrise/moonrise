@@ -44,7 +44,7 @@
       ]
     },
     {
-      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|course|help|guide|donate|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|leaderboard|ui-library|hosting-billing|creator-contact|privacy|terms|refund|404)",
+      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|help|guide|donate|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|leaderboard|ui-library|hosting-billing|creator-contact|privacy|terms|refund|404)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
@@ -95,6 +95,7 @@
     { "source": "/studio-last-commit", "destination": "/api" },
     { "source": "/generate", "destination": "/api" },
     { "source": "/generate/status", "destination": "/api" },
+    { "source": "/generate/activity", "destination": "/api" },
     { "source": "/edit", "destination": "/api" },
     { "source": "/checkout", "destination": "/api" },
     { "source": "/public-checkout", "destination": "/api" },
@@ -116,6 +117,13 @@
     { "source": "/contact-submit", "destination": "/api" },
     { "source": "/site-visit", "destination": "/api" },
     { "source": "/webhooks/stripe", "destination": "/api" },
+    { "source": "/webhooks/cal/:token", "destination": "/api" },
+    { "source": "/calendar/connect", "destination": "/api" },
+    { "source": "/calendar/callback", "destination": "/api" },
+    { "source": "/calendar/connection", "destination": "/api" },
+    { "source": "/calendar/event", "destination": "/api" },
+    { "source": "/calendar/bookings", "destination": "/api" },
+    { "source": "/public-booking", "destination": "/api" },
     { "source": "/donate/config", "destination": "/api" },
     { "source": "/donate/leaderboard", "destination": "/api" },
     { "source": "/donate-checkout", "destination": "/api" },

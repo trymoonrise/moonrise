@@ -250,6 +250,7 @@ const {
   notifyCreatorSiteVisit,
   notifyCreatorContactMessage,
 } = require("./creator-push");
+const calendar = require("./calendar");
 const { recordPendingCreatorPayout } = require("./creator-payouts");
 const { sendContactLeadEmail, sendPurchaseInvoiceEmail } = require("./contact-mail");
 const {
@@ -992,6 +993,7 @@ const PUBLIC_PATHS = new Set([
   "/contact-submit",
   "/public-orders",
   "/public-creator-contact",
+  "/public-booking",
 ]);
 app.use((req, res, next) => {
   if (PUBLIC_PATHS.has(req.path)) {
@@ -1907,6 +1909,8 @@ app.post("/webhooks/stripe", express.raw({ type: "application/json" }), async (r
   }
 });
 
+calendar.mountWebhook(app, express, db);
+
 app.use(express.json({ limit: "8mb" }));
 
 async function requireUser(req, res, next) {
@@ -2395,15 +2399,24 @@ const GLOBAL_RATE_SKIP = new Set([
 
 mountAuthRoutes(app, { db, security });
 
+function skipGlobalRateLimit(req) {
+  if (req.method === "OPTIONS") return true;
+  if (GLOBAL_RATE_SKIP.has(req.path)) return true;
+  if (String(req.path || "").startsWith("/webhooks/cal/")) return true;
+  return false;
+}
+
 const globalApiLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 200,
   name: "api-global",
   keyFn: (req) => "global-ip:" + clientIp(req),
-  shouldCount: (req) => req.method !== "OPTIONS" && !GLOBAL_RATE_SKIP.has(req.path),
+  shouldCount: (req) => !skipGlobalRateLimit(req),
 });
 
 app.use(globalApiLimiter);
+
+calendar.mountRoutes(app, { db, requireUser });
 
 const generateLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,

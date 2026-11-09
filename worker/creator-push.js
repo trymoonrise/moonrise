@@ -54,6 +54,28 @@ function prefsAllowContactMessages(prefs) {
   return prefs.contactMessages === true;
 }
 
+function prefsAllowMeetings(prefs) {
+  if (!prefs || typeof prefs !== "object" || Array.isArray(prefs)) return false;
+  return prefs.meetings === true;
+}
+
+function meetingWhen(startsAt) {
+  const date = new Date(startsAt);
+  if (!Number.isFinite(date.getTime())) return "";
+  const zone = String(process.env.SALE_NOTIFY_TIMEZONE || "America/Los_Angeles").trim() || "America/Los_Angeles";
+  try {
+    return date.toLocaleString("en-US", {
+      timeZone: zone,
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch (_) {
+    return "";
+  }
+}
+
 function moneyLabel(cents) {
   const n = Number(cents);
   if (!Number.isFinite(n) || n < 0) return "";
@@ -334,6 +356,49 @@ async function notifyCreatorContactMessage(supabase, { project, name }) {
   return sendPushToUser(supabase, creatorId, payload);
 }
 
+/**
+ * Notify an employee that someone booked a meeting on their Cal.com page.
+ */
+async function notifyCreatorMeeting(supabase, { userId, attendeeName, startsAt, projectId }) {
+  if (!userId) return { ok: false, skipped: true, reason: "missing_owner" };
+
+  const { data: profile, error: profileErr } = await supabase
+    .from("profiles")
+    .select("notification_prefs")
+    .eq("id", userId)
+    .maybeSingle();
+  if (profileErr) throw profileErr;
+  if (!prefsAllowMeetings(profile?.notification_prefs)) {
+    return { ok: false, skipped: true, reason: "prefs_disabled" };
+  }
+
+  let site = "";
+  if (projectId) {
+    const { data: project, error: projectErr } = await supabase
+      .from("projects")
+      .select("business_name")
+      .eq("id", projectId)
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (projectErr) throw projectErr;
+    site = String(project?.business_name || "").trim();
+  }
+
+  const who = String(attendeeName || "").trim() || "Someone";
+  const when = meetingWhen(startsAt);
+  let body = who + " booked a meeting";
+  if (when) body += " for " + when;
+  if (site) body += " about " + site;
+  body += ".";
+
+  return sendPushToUser(supabase, userId, {
+    title: "New meeting",
+    body,
+    url: "calendar.html",
+    tag: "meeting-" + (projectId || userId) + "-" + String(startsAt || ""),
+  });
+}
+
 module.exports = {
   vapidConfigured,
   upsertPushSubscription,
@@ -341,8 +406,10 @@ module.exports = {
   notifyCreatorClientPurchase,
   notifyCreatorSiteVisit,
   notifyCreatorContactMessage,
+  notifyCreatorMeeting,
   sendPushToUser,
   prefsAllowClientPurchases,
   prefsAllowSiteVisits,
   prefsAllowContactMessages,
+  prefsAllowMeetings,
 };

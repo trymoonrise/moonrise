@@ -144,6 +144,7 @@
   bindPanelToggle("set-theme-toggle", "set-theme-panel");
   bindPanelToggle("set-text-toggle", "set-text-panel");
   bindPanelToggle("set-notif-toggle", "set-notif-panel");
+  bindPanelToggle("set-cal-toggle", "set-cal-panel");
   bindPanelToggle("set-status-toggle", "set-status-panel");
   bindPanelToggle("set-passkeys-toggle", "settings-passkeys");
   bindPanelToggle("set-delete-toggle", "set-delete-panel");
@@ -824,12 +825,197 @@
     }
   });
 
+  const CAL_NOTES = {
+    connected: "Cal.com connected.",
+    cancelled: "Cal.com connection was cancelled.",
+    not_approved: "Cal.com has not approved this connection yet.",
+    not_configured: "Cal.com is not set up yet.",
+    failed: "Cal.com could not connect. Try again.",
+  };
+
+  function workerBase() {
+    if (typeof window.resolveWorkerUrl === "function") {
+      const resolved = String(window.resolveWorkerUrl() || "").replace(/\/$/, "");
+      if (resolved) return resolved;
+    }
+    return String(window.SITE_CONFIG?.workerUrl || "").replace(/\/$/, "");
+  }
+
+  function setCalError(msg) {
+    const el = document.getElementById("set-cal-error");
+    const okEl = document.getElementById("set-cal-ok");
+    if (okEl) okEl.hidden = true;
+    if (el) {
+      el.hidden = !msg;
+      el.textContent = msg || "";
+    }
+  }
+
+  function setCalOk(msg) {
+    setCalError("");
+    const el = document.getElementById("set-cal-ok");
+    if (!el) return;
+    el.hidden = !msg;
+    el.textContent = msg || "";
+  }
+
+  function paintCalendar(conn) {
+    const summary = document.getElementById("set-cal-summary");
+    const hint = document.getElementById("set-cal-hint");
+    const connect = document.getElementById("set-cal-connect");
+    const disconnect = document.getElementById("set-cal-disconnect");
+    const field = document.getElementById("set-cal-event-field");
+    const select = document.getElementById("set-cal-event");
+    const connected = !!conn?.connected;
+    const username = String(conn?.username || "").trim();
+    const types = Array.isArray(conn?.eventTypes) ? conn.eventTypes : [];
+    if (summary) {
+      summary.textContent = connected ? (username ? "@" + username : "Connected") : "Not connected";
+    }
+    if (connect) connect.hidden = connected;
+    if (disconnect) disconnect.hidden = !connected;
+    if (field) field.hidden = !(connected && types.length > 1);
+    if (select) {
+      select.innerHTML = "";
+      types.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item.slug;
+        const mins = Number(item.length);
+        opt.textContent = mins ? item.title + " · " + mins + " min" : item.title || item.slug;
+        if (item.slug === conn?.eventSlug) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+    if (!hint) return;
+    if (!connected) {
+      hint.textContent = conn?.configured === false
+        ? "Cal.com is not set up yet."
+        : "Connect Cal.com so a customer can book you from the watermark.";
+      return;
+    }
+    if (!types.length) {
+      hint.textContent = "Cal.com is connected, but this account has no public booking page yet.";
+      return;
+    }
+    const current = types.find((item) => item.slug === conn.eventSlug) || types[0];
+    hint.textContent = types.length > 1
+      ? "Customers book the page you pick here."
+      : "Customers book your " + (current?.title || "Cal.com") + " page from the watermark.";
+  }
+
+  async function calendarRequest(path, options) {
+    const base = workerBase();
+    if (!base) throw new Error("Worker URL is not configured");
+    const session = await window.StudioAuth.getSession();
+    const token = session?.access_token;
+    if (!token) throw new Error("Not signed in");
+    const res = await fetch(base + path, {
+      method: options?.method || "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+        ...(options?.body ? { "Content-Type": "application/json" } : {}),
+      },
+      body: options?.body,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Calendar request failed");
+    return data;
+  }
+
+  async function loadCalendar() {
+    const data = await calendarRequest("/calendar/connection");
+    paintCalendar(data);
+    return data;
+  }
+
+  function consumeCalendarFlag() {
+    const params = new URLSearchParams(location.search);
+    const flag = params.get("calendar") || "";
+    if (!flag) return "";
+    params.delete("calendar");
+    const next = params.toString();
+    history.replaceState({}, "", location.pathname + (next ? "?" + next : "") + location.hash);
+    return flag;
+  }
+
+  document.getElementById("set-cal-connect")?.addEventListener("click", async () => {
+    const btn = document.getElementById("set-cal-connect");
+    setCalError("");
+    if (btn) btn.disabled = true;
+    try {
+      const data = await calendarRequest("/calendar/connect");
+      const dest = new URL(String(data.url || ""));
+      if (dest.protocol !== "https:" || dest.hostname !== "app.cal.com") {
+        throw new Error("Cal.com could not connect. Try again.");
+      }
+      location.href = dest.toString();
+    } catch (e) {
+      setCalError(e.message || "Cal.com could not connect. Try again.");
+      window.StudioToast?.error?.(e.message || "Cal.com could not connect. Try again.");
+      if (btn) btn.disabled = false;
+    }
+  });
+
+  document.getElementById("set-cal-disconnect")?.addEventListener("click", async () => {
+    if (!window.confirm("Disconnect Cal.com? Customers will no longer book you from the watermark.")) return;
+    const btn = document.getElementById("set-cal-disconnect");
+    setCalError("");
+    if (btn) btn.disabled = true;
+    try {
+      const data = await calendarRequest("/calendar/connection", { method: "DELETE" });
+      paintCalendar(data);
+      setCalOk("Cal.com disconnected.");
+    } catch (e) {
+      setCalError(e.message || "Could not disconnect Cal.com");
+      window.StudioToast?.error?.(e.message || "Could not disconnect Cal.com");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  });
+
+  document.getElementById("set-cal-event")?.addEventListener("change", async (event) => {
+    const slug = String(event.target?.value || "");
+    if (!slug) return;
+    setCalError("");
+    try {
+      const data = await calendarRequest("/calendar/event", {
+        method: "POST",
+        body: JSON.stringify({ slug }),
+      });
+      paintCalendar(data);
+      setCalOk("Booking page saved.");
+    } catch (e) {
+      setCalError(e.message || "Could not save the booking page");
+      window.StudioToast?.error?.(e.message || "Could not save the booking page");
+    }
+  });
+
   async function start() {
     if (started) return;
     started = true;
     try {
       await load();
       await refreshPasskeys();
+      const flag = consumeCalendarFlag();
+      try {
+        await loadCalendar();
+      } catch (calErr) {
+        setCalError(calErr.message || "Could not load Calendar");
+      }
+      if (flag) {
+        const toggle = document.getElementById("set-cal-toggle");
+        const panel = document.getElementById("set-cal-panel");
+        setPanelOpen(toggle, panel, true);
+        const note = CAL_NOTES[flag] || CAL_NOTES.failed;
+        if (flag === "connected") {
+          setCalOk(note);
+          window.StudioToast?.success?.(note);
+        } else {
+          setCalError(note);
+          window.StudioToast?.error?.(note);
+        }
+      }
     } catch (e) {
       console.warn(e);
       clearProfileSkeleton();

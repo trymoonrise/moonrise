@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.5.8",
+      "date": "2026-11-08",
+      "title": "Calendar page",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Calendar is a studio page that lists upcoming meetings."
+          ],
+          "fixes": [
+            "Opening Calendar showed a missing page."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.5.7",
       "date": "2026-11-08",
       "title": "Clearer public pages",

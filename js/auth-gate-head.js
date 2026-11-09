@@ -219,6 +219,7 @@ function mountTabBarEarly() {
     "admin-console": 1,
     projects: 1,
     pricing: 1,
+    calendar: 1,
   };
   var activeTabs = { dashboard: 1, builder: 1, clients: 1, settings: 1 };
   if (!pages[stem]) return;

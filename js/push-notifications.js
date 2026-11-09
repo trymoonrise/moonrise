@@ -2,7 +2,7 @@
  * Creator Web Push helpers for Settings → Notifications.
  */
 (function (global) {
-  const ALERT_KEYS = ["clientPurchases", "siteVisits", "contactMessages"];
+  const ALERT_KEYS = ["clientPurchases", "siteVisits", "contactMessages", "meetings"];
   const PREF_KEY = "clientPurchases";
   const LEGACY_PURCHASE = "purchaseAlerts";
 
@@ -145,6 +145,7 @@
       clientPurchases: src.clientPurchases === true || src[LEGACY_PURCHASE] === true,
       siteVisits: src.siteVisits === true,
       contactMessages: src.contactMessages === true,
+      meetings: src.meetings === true,
     };
     return next;
   }
