@@ -666,25 +666,49 @@
       }
     });
 
-    $("[data-copy-craft]")?.addEventListener("click", async () => {
-      const prompt = $("#dt-craft-prompt");
-      const text = String(prompt?.value || "").trim();
-      if (!text) {
-        showToast("Prompt missing");
+    $("[data-copy-craft]")?.addEventListener("click", () => {
+      const btn = $("[data-copy-craft]");
+      const field = $("#dt-craft-prompt");
+      const ready = String(field?.value || "").trim();
+      if (ready && copyWithTextarea(ready)) {
+        showToast("Prompt copied");
         return;
       }
+      if (btn) btn.setAttribute("aria-busy", "true");
+      ensureCraftPrompt()
+        .then((text) => {
+          if (!text) {
+            showToast("Prompt missing");
+            return;
+          }
+          if (field) field.value = text;
+          return copyText(text, field).then(() => showToast("Prompt copied"));
+        })
+        .catch(() => {
+          if (field && String(field.value || "").trim()) {
+            field.focus();
+            field.select();
+            showToast("Prompt selected");
+            return;
+          }
+          showToast("Prompt missing");
+        })
+        .finally(() => btn?.removeAttribute("aria-busy"));
+    });
+
+    $("[data-download-craft]")?.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const link = event.currentTarget;
+      if (link) link.setAttribute("aria-busy", "true");
       try {
-        await navigator.clipboard?.writeText(text);
-        showToast("Special prompt copied");
+        const text = await ensureCraftPrompt();
+        if (!text) throw new Error("missing");
+        saveTextFile(text, "moonrise-special-prompt.md", "text/markdown");
+        showToast("Prompt downloaded");
       } catch (_) {
-        try {
-          prompt.focus();
-          prompt.select();
-          document.execCommand("copy");
-          showToast("Special prompt copied");
-        } catch (_) {
-          showToast("Copy ready");
-        }
+        showToast("Download failed");
+      } finally {
+        link?.removeAttribute("aria-busy");
       }
     });
 
@@ -836,7 +860,215 @@
     });
   }
 
+  const PROMPT_FILE = "assets/moonrise-special-prompt.md";
+  const DOWNLOAD_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v10"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/></svg>';
+  const PATTERN_EXTRAS = {
+    "menus-modal": "dt-modal",
+    "menus-sheet": "dt-sheet",
+  };
+  let craftPromptPromise = null;
+
+  function saveTextFile(text, filename, type) {
+    const blob = new Blob([text], { type: type + ";charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+
+  function copyWithTextarea(text) {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.top = "0";
+    area.style.left = "0";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.focus();
+    area.select();
+    let ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch (_) {
+      ok = false;
+    }
+    area.remove();
+    return ok;
+  }
+
+  async function copyText(text, field) {
+    const legacy = copyWithTextarea(text);
+    try {
+      if (navigator.clipboard?.writeText) {
+        await Promise.race([
+          navigator.clipboard.writeText(text),
+          new Promise((_, reject) => window.setTimeout(() => reject(new Error("timeout")), 500)),
+        ]);
+        return;
+      }
+    } catch (_) {
+      if (legacy) return;
+    }
+    if (legacy) return;
+    if (field) {
+      field.focus();
+      field.select();
+    }
+    throw new Error("copy");
+  }
+
+  async function loadCraftPromptText() {
+    const url = new URL(PROMPT_FILE, window.location.href);
+    url.searchParams.set("dl", String(Date.now()));
+    const res = await fetch(url.href, { cache: "no-store" });
+    if (!res.ok) throw new Error("prompt");
+    const text = String(await res.text()).replace(/^\uFEFF/, "").replace(/\s+$/, "") + "\n";
+    const field = $("#dt-craft-prompt");
+    if (field) field.value = text;
+    return text;
+  }
+
+  function ensureCraftPrompt() {
+    if (!craftPromptPromise) {
+      craftPromptPromise = loadCraftPromptText().catch((err) => {
+        craftPromptPromise = null;
+        throw err;
+      });
+    }
+    return craftPromptPromise;
+  }
+
+  async function fetchTextFresh(relativePath) {
+    const url = new URL(relativePath, window.location.href);
+    url.searchParams.set("dl", String(Date.now()));
+    const res = await fetch(url.href, { cache: "no-store" });
+    if (!res.ok) throw new Error(relativePath);
+    return res.text();
+  }
+
+  function patternFile(opts) {
+    const title = String(opts.title || "Pattern").replace(/--/g, "—");
+    const id = String(opts.id || "pattern").replace(/--/g, "—");
+    const css = String(opts.css || "").replace(/<\/style/gi, "<\\/style");
+    return [
+      "<!DOCTYPE html>",
+      '<html lang="en">',
+      "<head>",
+      '<meta charset="utf-8">',
+      '<meta name="viewport" content="width=device-width, initial-scale=1">',
+      "<title>" + title.replace(/</g, "") + " — Moonrise UI Library</title>",
+      "<style>",
+      css,
+      "body.dt-ref-page{margin:0;min-height:100vh;display:grid;place-items:center;padding:32px 16px;box-sizing:border-box}",
+      ".dt-ref{width:min(28rem,100%)}",
+      ".dt-ref .dt-overlay{position:relative;inset:auto;margin-top:16px;min-height:16rem;border-radius:14px}",
+      ".dt-ref .dt-overlay[hidden]{display:grid!important}",
+      "</style>",
+      "</head>",
+      '<body data-page="ui-library" class="dt-page dt-ref-page">',
+      "<!--",
+      "  Moonrise UI Library — " + title,
+      "  Generated from the live card. This is the current markup and css/ui-library.css.",
+      "  Change colors and labels only. Do not redraw the control.",
+      "  Rules: https://trymoonrise.com/assets/moonrise-special-prompt.md",
+      "  Source: https://trymoonrise.com/ui-library#" + id,
+      "-->",
+      '<div class="dt-ref">',
+      opts.stageHtml,
+      opts.extraHtml || "",
+      "</div>",
+      "</body>",
+      "</html>",
+      "",
+    ].join("\n");
+  }
+
+  async function downloadPattern(card, btn) {
+    const id = card.id || "pattern";
+    const title = card.querySelector("h3")?.textContent?.trim() || "Pattern";
+    btn.disabled = true;
+    btn.setAttribute("aria-busy", "true");
+    try {
+      let stageHtml = "";
+      let extraHtml = "";
+      let css = "";
+      try {
+        const pageHtml = await fetchTextFresh("ui-library.html");
+        css = await fetchTextFresh("css/ui-library.css");
+        const doc = new DOMParser().parseFromString(pageHtml, "text/html");
+        const sourceCard = doc.getElementById(id);
+        const stage = sourceCard?.querySelector(".dt-stage");
+        if (!stage) throw new Error("stage");
+        stageHtml = stage.outerHTML;
+        const extraId = PATTERN_EXTRAS[id];
+        if (extraId) {
+          const node = doc.getElementById(extraId);
+          if (node) {
+            node.removeAttribute("hidden");
+            extraHtml = node.outerHTML;
+          }
+        }
+      } catch (_) {
+        const stage = card.querySelector(".dt-stage");
+        if (!stage) throw new Error("stage");
+        stageHtml = stage.outerHTML;
+        css = await fetchTextFresh("css/ui-library.css");
+      }
+      const file = patternFile({ id, title, stageHtml, extraHtml, css });
+      saveTextFile(file, "moonrise-ui-" + id + ".html", "text/html");
+      showToast("Downloaded " + title);
+    } catch (_) {
+      showToast("Download failed");
+    } finally {
+      btn.disabled = false;
+      btn.removeAttribute("aria-busy");
+    }
+  }
+
+  function mountPatternDownloads() {
+    $all(".dt-card").forEach((card) => {
+      if (card.classList.contains("dt-craft-card")) return;
+      if (!$(".dt-stage", card) || card.querySelector("[data-download-ui]")) return;
+      const title = card.querySelector("h3")?.textContent?.trim() || "Pattern";
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "dt-download-ico";
+      btn.setAttribute("data-download-ui", "");
+      btn.setAttribute("aria-label", "Download " + title);
+      btn.innerHTML = DOWNLOAD_SVG;
+      const head = $(".dt-card-head", card);
+      const top = $(".dt-card-top", card);
+      if (head) {
+        let tools = $(".dt-card-tools", head);
+        if (!tools) {
+          tools = document.createElement("div");
+          tools.className = "dt-card-tools";
+          const play = $(".dt-play-ico", head);
+          if (play) tools.appendChild(play);
+          head.appendChild(tools);
+        }
+        tools.insertBefore(btn, tools.firstChild);
+      } else if (top) {
+        top.appendChild(btn);
+      } else {
+        return;
+      }
+      btn.addEventListener("click", () => downloadPattern(card, btn));
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
+    ensureCraftPrompt().catch(() => {
+      const field = $("#dt-craft-prompt");
+      if (field) field.placeholder = "Prompt file unavailable";
+    });
+    mountPatternDownloads();
     bindToc();
     bindPlay();
     bindControls();

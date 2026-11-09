@@ -1,6 +1,6 @@
 # Moonrise Studio
 # https://trymoonrise.com
-# Last updated: 2026-07-19
+# Last updated: 2026-11-08
 
 > Moonrise Studio helps creators build professional websites for local businesses and earn when clients unlock the live site.
 
@@ -30,6 +30,8 @@ Moonrise Studio (trymoonrise.com) is an AI-powered web platform for selling webs
 - Download app / install: https://trymoonrise.com/download
 - Contact: https://trymoonrise.com/contact
 - UI Library (UI pattern dictionary): https://trymoonrise.com/ui-library
+- Moonrise Special Prompt (paste or download): https://trymoonrise.com/assets/moonrise-special-prompt.md
+- UI Library patterns download from each card as the current HTML and CSS for that design
 - Privacy: https://trymoonrise.com/legal#privacy
 - Terms: https://trymoonrise.com/legal#terms
 

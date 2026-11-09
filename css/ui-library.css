@@ -91,11 +91,127 @@ body[data-page="ui-library"] .ms-orders-nav-link {
 
 .dt-craft-card .dt-card-head {
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.dt-craft-card .dt-card-head .dt-btn {
+.dt-craft-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.dt-craft-actions .dt-btn {
+  min-height: 44px;
+  padding: 0 1.2rem;
+}
+
+.dt-craft-card .dt-card-head .dt-btn,
+a.dt-btn {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.dt-craft-actions .dt-btn:focus-visible {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+}
+
+.dt-craft-actions .dt-btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.dt-craft-note {
+  margin: 8px 0 0;
+  color: #5c5c5c;
+  font-size: 0.88rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.dt-craft-note a,
+.dt-craft-file a {
+  color: #111111;
+  text-underline-offset: 0.12em;
+}
+
+.dt-craft-file {
+  margin: 8px 0 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.dt-card-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+.dt-download-ico {
+  appearance: none;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgb(17 17 17 / 10%);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111111;
+  cursor: pointer;
+  transition: transform 180ms ease, background 150ms ease;
+}
+
+.dt-download-ico svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.dt-download-ico:hover:not(:disabled) {
+  background: #f4f4f5;
+  transform: scale(1.03);
+}
+
+.dt-download-ico:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.dt-download-ico:focus-visible {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+}
+
+.dt-download-ico:disabled,
+.dt-download-ico[aria-busy="true"] {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+}
+
+@media (max-width: 640px) {
+  .dt-craft-card .dt-card-head {
+    align-items: stretch;
+  }
+
+  .dt-craft-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .dt-craft-actions .dt-btn {
+    flex: 1 1 8rem;
+  }
 }
 
 .dt-craft-stage {
@@ -1676,6 +1792,9 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   gap: 0.55rem;
 }
 .dt-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 2.4rem;
   height: 2.4rem;
   border: 0;
@@ -1683,9 +1802,14 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   background: #f3f3f3;
   color: #111111;
   font: inherit;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease;
+}
+.dt-page-btn svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
 }
 .dt-page-btn:active { transform: scale(0.94); }
 .dt-page-btn.is-active { background: #111111; color: #fff; }
@@ -2000,7 +2124,18 @@ body[data-page="ui-library"] .dt-btn-morph.is-done {
   line-height: 1.3;
 }
 .dt-acc-trigger span {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  color: #8e8e93;
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dt-acc-trigger span svg {
+  width: 1.05rem;
+  height: 1.05rem;
 }
 .dt-acc-item.is-open .dt-acc-trigger span { transform: rotate(180deg); }
 .dt-acc-panel {
@@ -2450,6 +2585,13 @@ body[data-page="ui-library"] .dt-star.is-on {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .dt-download-ico,
+  .dt-download-ico:hover,
+  .dt-download-ico:active,
+  .dt-craft-actions .dt-btn-secondary:active {
+    transition: none;
+    transform: none;
+  }
   .dt-spinner,
   .dt-skel,
   .dt-pulse-orb,

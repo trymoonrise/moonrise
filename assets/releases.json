@@ -3,6 +3,28 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.5.6",
+      "date": "2026-11-08",
+      "title": "Prompt and pattern files",
+      "tag": "v2.5.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.5.6",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The special prompt is a file you can copy or download for an agent to paste.",
+            "Each UI Library pattern downloads the HTML and CSS currently on that card."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "The builder reads the same special prompt file the UI Library downloads."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.5.5",
       "date": "2026-11-08",
       "title": "Workspace home",
@@ -19,6 +41,12 @@
             "The moon, the mountain layers, and the three hero facts are gone.",
             "The top bar shows the wordmark, page links, and a Start earning pill, and it slides away while you scroll down.",
             "The rest of the home page explains the workspace: Builder, Business Finder, My Clients, and keeping 90% when the owner pays."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Website generation shows the agent thinking and the files it is writing."
           ]
         }
       ]
