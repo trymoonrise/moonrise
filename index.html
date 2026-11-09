@@ -271,7 +271,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/studio.css?v=20261106-mono">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
   <link rel="stylesheet" href="css/ui-library.css?v=20261108-home">
-  <link rel="stylesheet" href="css/home.css?v=20261108-home">
+  <link rel="stylesheet" href="css/home.css?v=20261108-moon">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-shade">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -363,6 +363,17 @@ document.documentElement.classList.add("ms-boot");
 
     <main id="main">
       <section class="ms-home-hero" aria-label="Moonrise">
+        <div class="ms-moon" aria-hidden="true">
+          <svg class="ms-moon-glyph" viewBox="0 0 80 80">
+            <defs>
+              <mask id="ms-moon-cut">
+                <rect width="80" height="80" fill="#fff"></rect>
+                <circle cx="50" cy="40" r="23" fill="#000"></circle>
+              </mask>
+            </defs>
+            <circle cx="34" cy="40" r="26" fill="currentColor" mask="url(#ms-moon-cut)"></circle>
+          </svg>
+        </div>
         <p class="ms-home-badge"><span class="dt-badge">Now open</span></p>
         <h1>Build websites.<br>Get paid.</h1>
         <p class="ms-home-hero-lead">A site for a local business. One clear cut when they go live.</p>
@@ -523,7 +534,7 @@ document.documentElement.classList.add("ms-boot");
   </div>
 
   <script defer src="js/home-menu.js?v=20261108-minimal"></script>
-  <script defer src="js/home-stage.js?v=20261108-home2"></script>
+  <script defer src="js/home-stage.js?v=20261108-moon"></script>
   <script defer src="js/ui-motion.js?v=20261108-instant-hop"></script>
   <script defer src="js/toast.js"></script>
   <script defer>

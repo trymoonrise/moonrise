@@ -262,6 +262,45 @@ body[data-page="home"] .ms-home-hero {
   padding: 6.5rem var(--ms-gutter) 3.5rem;
   box-sizing: border-box;
   text-align: center;
+  overflow: clip;
+}
+
+body[data-page="home"] .ms-moon {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 40;
+  width: clamp(7.5rem, 22vw, 11rem);
+  aspect-ratio: 1;
+  color: #1d1d1f;
+  pointer-events: none;
+  opacity: 0;
+  transform-origin: 0 0;
+  transform: translate3d(calc(50vw - 50%), 110vh, 0);
+  will-change: transform;
+}
+
+body[data-page="home"] .ms-moon-glyph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 16px 22px rgb(29 29 31 / 8%));
+}
+
+body[data-page="home"] .ms-moon.is-settled {
+  position: absolute;
+  z-index: 2;
+  opacity: 1;
+  will-change: auto;
+}
+
+body[data-page="home"] .ms-moon.is-settled .ms-moon-glyph {
+  animation: ms-moon-float 6.5s ease-in-out 0.4s infinite;
+}
+
+@keyframes ms-moon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 body[data-page="home"] .ms-home-badge {
@@ -644,15 +683,19 @@ body[data-page="home"] .ms-trio .ms-rise:nth-child(3) {
   transition-delay: 0.16s;
 }
 
+body[data-page="home"] .ms-home-hero > :not(.ms-moon) {
+  opacity: 0;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  body[data-page="home"].is-home-ready .ms-home-hero > * {
-    animation: ms-home-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  body[data-page="home"] .ms-home-hero.is-revealed > :not(.ms-moon) {
+    animation: ms-home-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
-  body[data-page="home"].is-home-ready .ms-home-hero > :nth-child(1) { animation-delay: 0.04s; }
-  body[data-page="home"].is-home-ready .ms-home-hero > :nth-child(2) { animation-delay: 0.12s; }
-  body[data-page="home"].is-home-ready .ms-home-hero > :nth-child(3) { animation-delay: 0.2s; }
-  body[data-page="home"].is-home-ready .ms-home-hero > :nth-child(4) { animation-delay: 0.28s; }
-  body[data-page="home"].is-home-ready .ms-home-hero > :nth-child(5) { animation-delay: 0.38s; }
+  body[data-page="home"] .ms-home-hero.is-revealed > h1 { animation-delay: 0.18s; }
+  body[data-page="home"] .ms-home-hero.is-revealed > .ms-home-badge { animation-delay: 0.14s; }
+  body[data-page="home"] .ms-home-hero.is-revealed > .ms-home-hero-lead { animation-delay: 0.22s; }
+  body[data-page="home"] .ms-home-hero.is-revealed > .ms-home-cta { animation-delay: 0.32s; }
+  body[data-page="home"] .ms-home-hero.is-revealed > .ms-facts { animation-delay: 0.42s; }
 }
 
 @keyframes ms-home-rise {
@@ -670,7 +713,6 @@ body[data-page="home"] .ms-trio .ms-rise:nth-child(3) {
     text-align: center;
   }
   body[data-page="home"] .ms-home-hero {
-    min-height: auto;
     padding-top: 6.25rem;
   }
 }
@@ -688,9 +730,15 @@ body[data-page="home"] .ms-trio .ms-rise:nth-child(3) {
     transition: none;
     animation: none;
   }
-  body[data-page="home"] .ms-rise {
+  body[data-page="home"] .ms-rise,
+  body[data-page="home"] .ms-home-hero > :not(.ms-moon) {
     opacity: 1;
     transform: none;
+    animation: none;
+  }
+  body[data-page="home"] .ms-moon,
+  body[data-page="home"] .ms-moon-glyph {
+    animation: none;
   }
 }
 
