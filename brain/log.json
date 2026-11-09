@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.7.2",
+      "date": "2026-11-09",
+      "title": "Flyer prints",
+      "sections": [
+        {
+          "heading": "Studio",
+          "fixes": [
+            "The website flyer fills each print with that section, and the phone layout keeps the QR code beside the visit button."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.1",
       "date": "2026-11-09",
       "title": "Clean website agent",

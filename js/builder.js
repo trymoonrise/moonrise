@@ -7740,13 +7740,18 @@
     const pageW = 1280;
     const rect = el.getBoundingClientRect();
     const secH = Math.max(rect.height, 1);
-    const top = Math.max(rect.top, 0);
+    const top = Math.max(rect.top + (doc.defaultView ? doc.defaultView.scrollY : 0), 0);
     frame.style.width = pageW + "px";
-    frame.style.height = Math.max(top + secH, doc.body.scrollHeight || 0, 800) + "px";
-    const scale = Math.min(box.width / pageW, box.height / secH);
+    frame.style.height = secH + "px";
+    try {
+      frame.contentWindow.scrollTo(0, top);
+    } catch (_) {
+      /* ignore */
+    }
+    const scale = Math.max(box.width / pageW, box.height / secH);
     const x = (box.width - pageW * scale) / 2;
     const y = (box.height - secH * scale) / 2;
-    frame.style.transform = "translate(" + x + "px, " + (y - top * scale) + "px) scale(" + scale + ")";
+    frame.style.transform = "translate(" + x + "px, " + y + "px) scale(" + scale + ")";
   }
 
   function fitFlyerPrints() {

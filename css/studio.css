@@ -20527,8 +20527,9 @@ body.ms-lb-flyer-open {
 .ms-lb-flyer-qr-wrap canvas {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   aspect-ratio: 1;
+  object-fit: contain;
   border-radius: 0.55rem;
   background: #fafafa;
 }
@@ -20724,19 +20725,26 @@ body.ms-lb-flyer-open {
   }
 
   .ms-lb-flyer-qr-wrap {
-    width: 100%;
-    height: auto;
-    padding: 0.65rem;
+    grid-column: 1;
+    grid-row: 2;
+    width: 8.5rem;
+    height: 8.5rem;
+    padding: 0.5rem;
   }
 
   .ms-lb-flyer-qr-frame {
     width: 100%;
-    padding: 0.55rem;
+    height: 100%;
+    aspect-ratio: auto;
+    padding: 0.45rem;
   }
 
   .ms-lb-flyer-cta {
+    grid-column: 2;
+    grid-row: 2;
     align-self: stretch;
-    min-height: 100%;
+    min-height: 0;
+    height: auto;
   }
 
   .ms-lb-flyer-preview {
