@@ -3,6 +3,21 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.7.6",
+      "date": "2026-11-09",
+      "title": "Service checks",
+      "tag": "v2.7.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.7.6",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Settings lists the meetings calendar, map search, map tiles, and location lookup with the other online services."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.5",
       "date": "2026-11-09",
       "title": "Smooth closes",

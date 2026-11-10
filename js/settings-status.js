@@ -14,6 +14,7 @@
     vercel: "assets/Vercel.svg",
     github: "assets/GitHub.svg",
     resend: "assets/Resend.svg",
+    cal: "assets/Cal.png",
   };
 
   const MONO_LOGOS = {
@@ -28,6 +29,9 @@
     push: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>',
     fleet:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>',
+    maps: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.25"/></svg>',
+    tiles: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 20 7.5 12 12 4 7.5"/><polyline points="4 12 12 16.5 20 12"/><polyline points="4 16.5 12 21 20 16.5"/></svg>',
+    geocode: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/></svg>',
   };
 
   const FEEDBACK = {
@@ -82,6 +86,22 @@
     github: {
       about: "The Moonrise source repository on GitHub.",
       usedFor: "Product source of truth, website presets, and ship/release history.",
+    },
+    cal: {
+      about: "Cal.com runs Moonrise meetings and booking pages.",
+      usedFor: "Connecting a calendar, sharing a booking link, and receiving meeting updates.",
+    },
+    maps: {
+      about: "OpenStreetMap search and place data for Business Finder.",
+      usedFor: "Finding businesses on the map and opening their place details.",
+    },
+    tiles: {
+      about: "OpenFreeMap draws the Business Finder map.",
+      usedFor: "Showing the map under the scan, in both light and dark.",
+    },
+    geocode: {
+      about: "BigDataCloud turns a map pin into a city name.",
+      usedFor: "Naming the creator’s current area when Business Finder needs a location.",
     },
     push: {
       about: "Browser push notifications (Web Push / VAPID).",

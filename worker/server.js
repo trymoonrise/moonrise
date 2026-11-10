@@ -1424,6 +1424,154 @@ async function buildStudioStatusReport() {
       { name: "GitHub", logo: "github" }
     ),
     timedProbe(
+      "cal",
+      async (signal) => {
+        const ready = calendar.configured();
+        let reachable = false;
+        try {
+          const res = await fetch("https://api.cal.com/v2", {
+            method: "GET",
+            redirect: "follow",
+            cache: "no-store",
+            signal,
+            headers: {
+              Accept: "application/json",
+              "cal-api-version": "2024-08-13",
+            },
+          });
+          reachable = res.ok || (res.status >= 300 && res.status < 500);
+        } catch (_) {
+          reachable = false;
+        }
+        const status = reachable && ready ? "ok" : reachable || ready ? "degraded" : "down";
+        return {
+          id: "cal",
+          name: "Cal.com",
+          logo: "cal",
+          status,
+          summary:
+            status === "ok"
+              ? "Meetings ready"
+              : reachable
+                ? "Cal.com is up · meetings not configured"
+                : ready
+                  ? "Configured · Cal.com check failed"
+                  : "Cal.com is not configured",
+          details: [
+            statusDetail("Service", "Meetings"),
+            statusDetail("Configured", ready ? "Yes" : "No"),
+            statusDetail("State", reachable ? "Operational" : "Unreachable"),
+          ],
+        };
+      },
+      4500,
+      { name: "Cal.com", logo: "cal" }
+    ),
+    timedProbe(
+      "maps",
+      async (signal) => {
+        const headers = {
+          Accept: "application/json,text/plain",
+          "User-Agent": "moonrise-studio-status",
+        };
+        async function up(url) {
+          try {
+            const res = await fetch(url, {
+              method: "GET",
+              cache: "no-store",
+              redirect: "follow",
+              signal,
+              headers,
+            });
+            return res.ok;
+          } catch (_) {
+            return false;
+          }
+        }
+        const [searchOk, primaryPlaces, backupPlaces] = await Promise.all([
+          up("https://nominatim.openstreetmap.org/status.php"),
+          up("https://overpass-api.de/api/status"),
+          up("https://overpass.kumi.systems/api/status"),
+        ]);
+        const placesOk = primaryPlaces || backupPlaces;
+        const status = searchOk && placesOk ? "ok" : searchOk || placesOk ? "degraded" : "down";
+        return {
+          id: "maps",
+          name: "OpenStreetMap",
+          logo: "maps",
+          status,
+          summary: status === "ok" ? "Map search ready" : status === "degraded" ? "Map search is partly reachable" : "Map search unreachable",
+          details: [
+            statusDetail("Search", searchOk ? "Operational" : "Unreachable"),
+            statusDetail("Places", placesOk ? "Operational" : "Unreachable"),
+          ],
+        };
+      },
+      4500,
+      { name: "OpenStreetMap", logo: "maps" }
+    ),
+    timedProbe(
+      "tiles",
+      async (signal) => {
+        const res = await fetch("https://tiles.openfreemap.org/styles/positron", {
+          method: "GET",
+          cache: "no-store",
+          redirect: "follow",
+          signal,
+          headers: {
+            Accept: "application/json",
+            "User-Agent": "moonrise-studio-status",
+          },
+        });
+        const ok = res.ok;
+        return {
+          id: "tiles",
+          name: "OpenFreeMap",
+          logo: "tiles",
+          status: ok ? "ok" : "degraded",
+          summary: ok ? "Map tiles ready" : "Map tiles check failed",
+          details: [
+            statusDetail("Service", "Finder map"),
+            statusDetail("State", ok ? "Operational" : "Degraded"),
+          ],
+        };
+      },
+      4500,
+      { name: "OpenFreeMap", logo: "tiles" }
+    ),
+    timedProbe(
+      "geocode",
+      async (signal) => {
+        const res = await fetch(
+          "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0&localityLanguage=en",
+          {
+            method: "GET",
+            cache: "no-store",
+            redirect: "follow",
+            signal,
+            headers: {
+              Accept: "application/json",
+              "User-Agent": "moonrise-studio-status",
+            },
+          }
+        );
+        const ok = res.ok;
+        return {
+          id: "geocode",
+          name: "BigDataCloud",
+          logo: "geocode",
+          status: ok ? "ok" : "degraded",
+          summary: ok ? "Location lookup ready" : "Location lookup check failed",
+          details: [
+            statusDetail("Service", "Location lookup"),
+            statusDetail("State", ok ? "Operational" : "Degraded"),
+          ],
+        };
+      },
+      4500,
+      { name: "BigDataCloud", logo: "geocode" }
+    ),
+    timedProbe(
       "push",
       async () => {
         const ready = !!(
@@ -1535,7 +1683,7 @@ async function buildStudioStatusReport() {
     ),
   ]);
 
-  const order = ["app", "worker", "dns", "supabase", "stripe", "ai", "email", "deploy", "github", "push", "fleet"];
+  const order = ["app", "worker", "dns", "supabase", "stripe", "ai", "email", "deploy", "github", "cal", "maps", "tiles", "geocode", "push", "fleet"];
   const byId = Object.fromEntries(probes.map((p) => [p.id, p]));
   const services = order.map((id) => byId[id]).filter(Boolean).map(withStatusCode);
   const worst = services.some((s) => s.status === "down")

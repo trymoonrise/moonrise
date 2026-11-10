@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.7.6",
+      "date": "2026-11-09",
+      "title": "Service checks",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Settings lists the meetings calendar, map search, map tiles, and location lookup with the other online services."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.5",
       "date": "2026-11-09",
       "title": "Smooth closes",
