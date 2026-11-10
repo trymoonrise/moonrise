@@ -585,22 +585,19 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
   display: grid;
   grid-template-rows: 0fr;
   padding: 0;
-  border-top: 0 solid transparent;
-  opacity: 0;
+  border-top: 1px solid transparent;
   overflow: hidden;
   transition:
-    grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.24s ease,
-    border-color 0.24s ease;
+    grid-template-rows 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.38s ease;
 }
 
 .ms-set-panel.is-open {
-  border-top: 1px solid var(--ms-min-border);
+  border-top-color: var(--ms-min-border);
 }
 
 .ms-set-panel.is-expanded {
   grid-template-rows: 1fr;
-  opacity: 1;
 }
 
 .ms-set-panel[hidden] {
@@ -614,9 +611,11 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
 .ms-set-panel-inner {
   overflow: hidden;
   min-height: 0;
-  /* Keep padding while .is-open so close doesn't snap content height mid-collapse. */
-  padding: 0.2rem 1rem 0.95rem;
-  box-sizing: border-box;
+  padding: 0;
+}
+
+.ms-set-panel-pad {
+  padding: 0.35rem 1rem 1.05rem;
 }
 
 .ms-set-panel .ms-field {
@@ -993,8 +992,8 @@ html[data-ms-mode="dark"] .ms-status-logo.is-mono {
   margin: 0;
 }
 
-.ms-status-detail-panel.is-open .ms-set-panel-inner {
-  padding: 0.15rem 0.35rem 0.75rem;
+.ms-status-detail-panel .ms-set-panel-pad {
+  padding: 0.2rem 0.45rem 0.9rem;
 }
 
 .ms-status-detail {
@@ -1108,8 +1107,8 @@ html[data-ms-mode="dark"] .ms-status-logo.is-mono {
   margin: 0;
 }
 
-.ms-status-fleet-panel.is-open .ms-set-panel-inner {
-  padding: 0 0.65rem 0.65rem;
+.ms-status-fleet-panel .ms-set-panel-pad {
+  padding: 0.15rem 0.65rem 0.8rem;
 }
 
 .ms-status-fleet-detail {

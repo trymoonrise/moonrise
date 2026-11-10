@@ -2114,6 +2114,8 @@ body[data-page="dashboard"] {
 .ms-dash-posts-reveal.ms-expand {
   display: grid;
   gap: 0;
+  opacity: 1;
+  transition: grid-template-rows 0.38s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ms-dash-posts-reveal.ms-expand > .ms-expand-inner {

@@ -3,6 +3,29 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.7.5",
+      "date": "2026-11-09",
+      "title": "Smooth closes",
+      "tag": "v2.7.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.7.5",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The special prompt tells any coding agent to skip costume looks, balance headlines, and keep motion short.",
+            "UI Library menus ease open and shut, presses settle at a small scale, and a live status fades instead of pinging."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "fixes": [
+            "Service details in Settings ease shut instead of snapping closed.",
+            "Recent posts on the dashboard ease shut instead of snapping closed."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.4",
       "date": "2026-11-09",
       "title": "Library and prompt",

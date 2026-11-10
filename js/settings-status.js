@@ -337,11 +337,37 @@
   }
 
   function ensurePanelInner(panel) {
-    if (!panel || panel.querySelector(":scope > .ms-set-panel-inner")) return;
-    const inner = document.createElement("div");
-    inner.className = "ms-set-panel-inner";
-    while (panel.firstChild) inner.appendChild(panel.firstChild);
-    panel.appendChild(inner);
+    if (!panel) return;
+    let inner = panel.querySelector(":scope > .ms-set-panel-inner");
+    if (!inner) {
+      inner = document.createElement("div");
+      inner.className = "ms-set-panel-inner";
+      while (panel.firstChild) inner.appendChild(panel.firstChild);
+      panel.appendChild(inner);
+    }
+    if (inner.querySelector(":scope > .ms-set-panel-pad")) return;
+    const pad = document.createElement("div");
+    pad.className = "ms-set-panel-pad";
+    while (inner.firstChild) pad.appendChild(inner.firstChild);
+    inner.appendChild(pad);
+  }
+
+  function clearPanelClose(panel) {
+    if (panel._msCloseTimer) {
+      window.clearTimeout(panel._msCloseTimer);
+      panel._msCloseTimer = 0;
+    }
+    if (panel._msCloseEnd) {
+      panel.removeEventListener("transitionend", panel._msCloseEnd);
+      panel._msCloseEnd = null;
+    }
+  }
+
+  function finishPanelClose(panel) {
+    clearPanelClose(panel);
+    if (panel.classList.contains("is-expanded")) return;
+    panel.classList.remove("is-open", "is-closing");
+    panel.hidden = true;
   }
 
   function setPanelOpen(toggle, panel, open, itemSelector) {
@@ -355,11 +381,7 @@
     toggle.setAttribute("aria-expanded", next ? "true" : "false");
     item.classList.toggle("is-open", next);
     panel.setAttribute("aria-hidden", next ? "false" : "true");
-
-    if (panel._msCloseTimer) {
-      window.clearTimeout(panel._msCloseTimer);
-      panel._msCloseTimer = 0;
-    }
+    clearPanelClose(panel);
 
     if (next) {
       panel.hidden = false;
@@ -377,18 +399,21 @@
       return;
     }
 
-    panel.classList.remove("is-expanded");
-    panel.classList.add("is-closing");
     if (prefersReduceMotion()) {
-      panel.classList.remove("is-open", "is-closing");
+      panel.classList.remove("is-expanded", "is-open", "is-closing");
       panel.hidden = true;
       return;
     }
-    panel._msCloseTimer = window.setTimeout(() => {
-      panel.classList.remove("is-open", "is-closing");
-      panel.hidden = true;
-      panel._msCloseTimer = 0;
-    }, 320);
+
+    panel.classList.remove("is-expanded");
+    panel.classList.add("is-closing");
+    const onEnd = (event) => {
+      if (event.target !== panel || event.propertyName !== "grid-template-rows") return;
+      finishPanelClose(panel);
+    };
+    panel._msCloseEnd = onEnd;
+    panel.addEventListener("transitionend", onEnd);
+    panel._msCloseTimer = window.setTimeout(() => finishPanelClose(panel), 460);
   }
 
   function serviceCode(service) {

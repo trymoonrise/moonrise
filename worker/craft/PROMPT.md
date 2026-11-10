@@ -73,6 +73,21 @@ Remove these wherever they are decoration:
 
 Put richness in one or two real moments: a photograph, the product, a map, or a piece of the actual work. Chrome stays calm.
 
+## Looks to skip
+
+These read as a costume. Do not add them:
+
+- Dithering, ASCII over video, pixel loaders, and disco logos
+- Infinite canvases and decorative flowcharts
+- Renaissance branding, Monet washes, and painted cream scenes
+- Dark gradient heroes and liquid glass
+- Instrument Serif used as a costume, and one italic word in a headline
+- All-caps eyebrows, sparkle icons, and pulsing live dots
+- Three identical icon cards, endless marquees, and squircles
+- Pretext wrapping that breaks a headline into a trick
+
+Paper stays a flat warm ground (`#f3f1ee` or `#f5f5f7`), not a painted scene. A live status may change opacity. It does not ping.
+
 ## Spacing and padding
 
 Use a 4px grid: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96.
@@ -105,8 +120,10 @@ Round controls. Do not mix a 2px button, a 16px button, and a pill on the same s
 - Two weights are enough: 400 or 500 for body, 600 for titles and buttons. Do not set every heading to 800.
 - Sentence case. No wide-tracked uppercase labels.
 - Line length for paragraphs stays near 36rem. Line height for body is about 1.5. Headlines are tighter, about 1.05 to 1.15.
-- Letter spacing on body can be slightly tight (`-0.015em`). Small text does not go negative. Do not italicize for emphasis.
-- Numbers that are data use tabular figures.
+- Letter spacing on body can be slightly tight (`-0.015em`). Small text does not go negative. Do not track small text tighter than the body.
+- Do not italicize a word for style. Italics are for a real title, a citation, or a foreign phrase.
+- Headlines use `text-wrap: balance`. Body uses `text-wrap: pretty`. A single word does not sit alone on the last line.
+- Numbers that are data use tabular figures. Mono is only for code or data, not for labels.
 
 ## Color
 
@@ -124,7 +141,7 @@ Every product gets one button system.
 - Primary, secondary, and ghost. Add danger only where something is destroyed.
 - One primary button per view. A hero has one primary and at most one secondary.
 - Height is at least 44px. Horizontal padding is about 1.15 to 1.35rem. The label does not touch the radius.
-- Hover changes the surface slightly or darkens the fill. Press scales to about 0.98. Disabled is muted, with no hover and no press.
+- Hover changes the surface slightly or darkens the fill. Press scales to 0.97. Disabled is muted, with no hover and no press. Do not tween a control while it is held.
 - A loading button keeps its box size, sets `aria-busy="true"`, and swaps the label for a small spinner.
 - Do not fill every button with the primary color. Links in prose are underlined or clearly colored, not fake buttons.
 - Focus is a 2px ink outline with 2px offset. Never remove focus styles.
@@ -145,7 +162,7 @@ Every product gets one button system.
 
 - Mobile first. Tap targets stay at least 44px. No horizontal page scroll.
 - Align columns. Do not leave an icon with no job.
-- Images and video reserve their space (`aspect-ratio` or a set height) so the page does not jump.
+- Images and video reserve their space (`aspect-ratio` or a set height) so the page does not jump. Padding includes the safe area.
 - A marketing first screen is one composition: a name or eyebrow, one headline, one short line, one action group, one real visual. Not a centered stack of a badge, three buttons, avatar coins, and floating blobs.
 - Long headlines align with the layout, usually left.
 - An app keeps one canvas. Sidebars and top bars use the same padding and type. Tables have row padding, a sticky header only when it helps, and a quiet empty state.
@@ -153,14 +170,28 @@ Every product gets one button system.
 
 ## Motion
 
-Motion is short, smooth, and easy to miss. It never blocks the task.
+Motion is short, smooth, and easy to miss. It never blocks the task. Ease is `cubic-bezier(0.22, 1, 0.36, 1)`.
 
-- Duration is 160 to 280ms. Ease is `cubic-bezier(0.22, 1, 0.36, 1)`.
-- Enter with opacity and a rise of about 8px. Do not bounce.
+- Entrances ease out. Something that moves from one place to another eases in and out.
+- Menus and popovers take 150 to 250ms. They start near scale 0.95 and rise a few pixels from the trigger. The exit is about 20% shorter and returns toward the trigger.
+- List rows stagger by 30ms as the details settle. Do not stagger a whole page.
+- Press scales to 0.97. Do not tween a control while it is held. Do not bounce everyday UI.
+- Overlap the old and new state. Crossfade an icon change. Do not flash a blank frame.
+- A success pulse happens once, then stops. Rubber-band only past a real scroll or drag bound.
+- When the same object moves, keep that element. Do not remount it and pretend it traveled.
 - Hover and press use transform and opacity, or a background change. Do not animate width, height, top, or left.
-- Menus, sheets, and dialogs fade and slide a few pixels. Page changes do not flash.
-- One marquee or dock motion is enough if the UI Library type you chose has it. Do not add looping motion to headlines, cards, and icons.
-- Honor `prefers-reduced-motion`: cut the travel and keep the opacity change, or turn the motion off.
+- Honor `prefers-reduced-motion`: cut the travel and keep the opacity change, or turn the motion off. Animation must be interruptible.
+
+## Type and feedback
+
+- Drop a label that repeats the heading or the button.
+- Show the actual product, place, or work, and make that the largest thing in the view.
+- Group related items with spacing. Align by eye when a grid would leave a hole.
+- Reserve space for images and video so the page does not jump. Respect the safe area on a phone.
+- One quiet accent, in a ramp related to the ink. Do not invent a second hue.
+- An optimistic update is allowed only when the action can roll back.
+- Secondary detail stays closed until someone asks for it.
+- Animate feedback that confirms an action: a saved toast, a submit spinner, a single success mark. Do not decorate idle chrome.
 
 ## What a website should have
 

@@ -898,13 +898,22 @@ html[data-ms-mode="dark"] .ms-settings-card-title {
 }
 
 .ms-dash-card.ms-dash-posts .ms-dash-posts-reveal {
+  padding: 0;
+  gap: 0;
+}
+
+.ms-dash-card.ms-dash-posts .ms-dash-posts-reveal > .ms-expand-inner {
+  padding: 0;
+  min-height: 0;
+}
+
+.ms-dash-card.ms-dash-posts .ms-dash-projects-body {
   padding: 0.95rem 1.25rem 1.2rem;
-  gap: 0.85rem;
+  box-sizing: border-box;
 }
 
 .ms-dash-card.ms-dash-posts .ms-dash-posts-reveal[hidden] {
   display: none !important;
-  padding: 0;
 }
 
 .ms-dash-hero {

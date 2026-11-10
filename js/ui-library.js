@@ -1016,13 +1016,35 @@
   }
 
   /* —— Dropdowns / overlays —— */
+  function setDropdownOpen(menu, trigger, open) {
+    if (!menu || !trigger) return;
+    if (open) {
+      menu.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => menu.classList.add("is-open"));
+      });
+      return;
+    }
+    trigger.setAttribute("aria-expanded", "false");
+    menu.classList.remove("is-open");
+    if (menu.hidden) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finish = () => {
+      if (menu.classList.contains("is-open")) return;
+      menu.hidden = true;
+    };
+    if (reduce) {
+      finish();
+      return;
+    }
+    window.setTimeout(finish, 170);
+  }
+
   function closeDropdowns(except) {
     $all("[data-dropdown]").forEach((dd) => {
       if (dd === except) return;
-      const menu = $(".dt-dropdown-menu", dd);
-      const trigger = $("[aria-expanded]", dd);
-      if (menu) menu.hidden = true;
-      trigger?.setAttribute("aria-expanded", "false");
+      setDropdownOpen($(".dt-dropdown-menu", dd), $("[aria-expanded]", dd), false);
     });
   }
 
@@ -1035,16 +1057,14 @@
         e.stopPropagation();
         const open = menu.hidden;
         closeDropdowns(dd);
-        menu.hidden = !open;
-        trigger.setAttribute("aria-expanded", open ? "true" : "false");
+        setDropdownOpen(menu, trigger, open);
       });
       menu.addEventListener("click", (e) => {
         const item = e.target.closest("[role='option'], [role='menuitem']");
         if (!item) return;
         const label = $("[data-dropdown-label]", dd);
         if (label) label.textContent = item.textContent.trim();
-        menu.hidden = true;
-        trigger.setAttribute("aria-expanded", "false");
+        setDropdownOpen(menu, trigger, false);
       });
     });
     document.addEventListener("click", () => closeDropdowns());
