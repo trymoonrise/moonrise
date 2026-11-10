@@ -61,6 +61,10 @@
 .mr-wm-close:hover{background:#f5f5f7;color:#1d1d1f}
 .mr-wm-body{padding:.7rem 1.1rem 1.15rem;display:flex;flex-direction:column;align-items:stretch;gap:.7rem}
 .mr-wm-blurb{margin:0 0 .15rem;color:#64748b;font-size:.9rem;line-height:1.45;letter-spacing:-.01em}
+.mr-wm-promo{display:grid;gap:.35rem;margin:0}
+.mr-wm-promo label{margin:0;color:#8e8e93;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.mr-wm-promo input{appearance:none;width:100%;box-sizing:border-box;min-height:2.55rem;margin:0;padding:.55rem .8rem;border:1px solid #e5e5ea;border-radius:10px;background:#fff;color:#1d1d1f;font:inherit;font-family:var(--mr-font);font-size:.95rem;font-weight:600;letter-spacing:-.02em}
+.mr-wm-promo input:focus{outline:2px solid #1d1d1f;outline-offset:1px}
 .mr-wm-pay{appearance:none;display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;align-self:stretch;min-height:2.85rem;margin:0;border:0;border-radius:10px;background:#1d1d1f;color:#fff;font:inherit;font-family:var(--mr-font);font-size:1rem;font-weight:650;letter-spacing:-.02em;text-align:center;cursor:pointer}
 .mr-wm-pay:disabled{opacity:.55;cursor:not-allowed}
 .mr-wm-error{margin:0;color:#b91c1c;font-size:.85rem;font-weight:600;line-height:1.4}
@@ -305,6 +309,10 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       '<div class="mr-wm-body" id="mr-wm-body">' +
       '<div class="mr-wm-step is-active" data-step="main">' +
       '<p class="mr-wm-blurb">We prepared a fresh website for your business. This preview still shows the Moonrise watermark\u2014unlock to remove it and publish commercially.</p>' +
+      '<div class="mr-wm-promo">' +
+      '<label for="mr-wm-promo">Promo code</label>' +
+      '<input type="text" id="mr-wm-promo" name="promo" autocomplete="off" spellcheck="false" placeholder="Optional">' +
+      "</div>" +
       '<button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>' +
       '<p class="mr-wm-error" id="mr-wm-error" hidden></p>' +
       '<div class="mr-wm-rows">' +
@@ -544,6 +552,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     const openBtn = document.getElementById("mr-wm-open");
     const closeBtn = document.getElementById("mr-wm-close");
     const payBtn = document.getElementById("mr-wm-pay");
+    const promoInput = document.getElementById("mr-wm-promo");
     const errEl = document.getElementById("mr-wm-error");
 
     if (chipHidden) {
@@ -659,14 +668,15 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
           endpoint = workerUrl + "/checkout";
         }
 
+        const promoCode = String(promoInput?.value || "").trim();
         const res = await fetch(endpoint, {
           method: "POST",
           headers,
-          body: JSON.stringify({ projectId }),
+          body: JSON.stringify({ projectId, promoCode: promoCode || undefined }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(data.error || "Checkout failed");
-        if (data.alreadyPaid && data.url) {
+        if ((data.alreadyPaid || data.testPromo) && data.url) {
           location.href = data.url;
           return;
         }

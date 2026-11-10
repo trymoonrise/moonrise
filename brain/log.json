@@ -3,6 +3,28 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.9.5",
+      "date": "2026-11-09",
+      "title": "Dev promo counts as paid",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Watermark checkout accepts an optional promo code field so the configured test promo can unlock without Stripe."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "Entering the STRIPE_GO_LIVE_TEST_PROMO code at go-live checkout marks the project paid and removes the watermark for testing."
+          ],
+          "fixes": [
+            "Go-live fulfill treats completed $0 and no_payment_required Checkout Sessions as paid after a Stripe promo."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.4",
       "date": "2026-11-09",
       "title": "Landing menu animation restored",

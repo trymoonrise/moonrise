@@ -350,6 +350,8 @@ function isStripeTestMode() {
  * - STRIPE_GO_LIVE_COUPON_ID=coupon_... -> auto-apply that Stripe coupon
  * - otherwise allow promo codes at Checkout (unless STRIPE_GO_LIVE_ALLOW_PROMO=0)
  * Create a 100% off coupon/promo in Stripe Dashboard for free unlock testing.
+ * STRIPE_GO_LIVE_TEST_PROMO is the human-entered code that also counts as paid
+ * for local/testing unlocks (watermark panel or Checkout).
  */
 function goLiveCheckoutPromoOptions() {
   const couponId = String(process.env.STRIPE_GO_LIVE_COUPON_ID || "").trim();
@@ -360,6 +362,45 @@ function goLiveCheckoutPromoOptions() {
     return {};
   }
   return { allow_promotion_codes: true };
+}
+
+function goLiveTestPromoCode() {
+  return String(process.env.STRIPE_GO_LIVE_TEST_PROMO || "").trim();
+}
+
+function matchesGoLiveTestPromo(code) {
+  const expected = goLiveTestPromoCode();
+  if (!expected) return false;
+  return String(code || "").trim().toUpperCase() === expected.toUpperCase();
+}
+
+/** Checkout Session is settled enough to unlock (incl. 100% promos). */
+function isGoLiveCheckoutSettled(session) {
+  if (String(session?.status || "") !== "complete") return false;
+  const pay = String(session?.payment_status || "").toLowerCase();
+  if (pay === "paid" || pay === "no_payment_required") return true;
+  const total = Math.round(Number(session?.amount_total));
+  return Number.isFinite(total) && total === 0;
+}
+
+function buildTestPromoUnlockSession({ projectId, project, userId, buyerEmail }) {
+  const listed = Math.max(0, Math.round(Number(project?.price_cents) || 0));
+  return {
+    id: `cs_test_promo_${String(projectId).replace(/-/g, "").slice(0, 12)}_${Date.now()}`,
+    amount_total: 0,
+    amount_subtotal: listed,
+    total_details: { amount_discount: listed },
+    currency: "usd",
+    status: "complete",
+    payment_status: "paid",
+    customer_email: buyerEmail || undefined,
+    metadata: {
+      type: "go_live",
+      projectId,
+      userId: userId || project?.user_id || "",
+      testPromo: "1",
+    },
+  };
 }
 
 /** Monthly hosting & maintenance billed with every go-live checkout. */
@@ -494,6 +535,15 @@ function stripeId(value) {
 async function hydrateGoLiveCheckoutSession(stripe, session) {
   const id = stripeId(session);
   if (!stripe || !id.startsWith("cs_")) return session;
+  // Local/dev unlock sessions are synthetic — never hit Stripe retrieve.
+  if (
+    session?.metadata?.testPromo === "1" ||
+    session?.metadata?.devUnlock === "1" ||
+    id.startsWith("cs_test_promo_") ||
+    id.startsWith("cs_test_dev_")
+  ) {
+    return session;
+  }
   try {
     return await stripe.checkout.sessions.retrieve(id, {
       expand: ["invoice", "subscription", "subscription.latest_invoice", "customer"],
@@ -4556,8 +4606,6 @@ app.post("/github/import-site", requireUser, generateLimiter, async (req, res) =
 
 app.post("/checkout", requireUser, checkoutLimiter, async (req, res) => {
   try {
-    const stripe = stripeClient();
-    if (!stripe) return sendStripeMissing(res);
     const projectId = req.body.projectId;
     if (!projectId) return res.status(400).json({ error: "projectId required" });
 
@@ -4576,6 +4624,29 @@ app.post("/checkout", requireUser, checkoutLimiter, async (req, res) => {
         url: `${PUBLIC_APP_URL}/editor.html?project_id=${projectId}`,
       });
     }
+
+    const promoCode = String(req.body.promoCode || req.body.promo_code || "").trim();
+    if (matchesGoLiveTestPromo(promoCode)) {
+      const result = await unlockGoLiveAfterPayment(supabase, {
+        projectId,
+        session: buildTestPromoUnlockSession({
+          projectId,
+          project,
+          userId: req.user.id,
+          buyerEmail: req.user.email || "",
+        }),
+        userId: req.user.id,
+      });
+      return res.json({
+        alreadyPaid: true,
+        ok: true,
+        testPromo: true,
+        url: result.url || `${PUBLIC_APP_URL}/editor.html?project_id=${projectId}`,
+      });
+    }
+
+    const stripe = stripeClient();
+    if (!stripe) return sendStripeMissing(res);
 
     const amountCents = resolveGoLiveAmountCents(
       req.body.amountCents,
@@ -5618,8 +5689,6 @@ app.get("/public-orders", async (req, res) => {
  */
 app.post("/public-checkout", publicCheckoutLimiter, async (req, res) => {
   try {
-    const stripe = stripeClient();
-    if (!stripe) return sendStripeMissing(res);
     const projectId = String(req.body.projectId || req.body.project_id || "").trim();
     if (!projectId) return res.status(400).json({ error: "projectId required" });
 
@@ -5636,6 +5705,28 @@ app.post("/public-checkout", publicCheckoutLimiter, async (req, res) => {
     if (!project.watermark_enabled) {
       return res.json({ alreadyPaid: true, url: liveUrl });
     }
+
+    const promoCode = String(req.body.promoCode || req.body.promo_code || "").trim();
+    if (matchesGoLiveTestPromo(promoCode)) {
+      const result = await unlockGoLiveAfterPayment(supabase, {
+        projectId,
+        session: buildTestPromoUnlockSession({
+          projectId,
+          project,
+          userId: project.user_id,
+        }),
+        userId: project.user_id,
+      });
+      return res.json({
+        alreadyPaid: true,
+        ok: true,
+        testPromo: true,
+        url: result.url || liveUrl,
+      });
+    }
+
+    const stripe = stripeClient();
+    if (!stripe) return sendStripeMissing(res);
 
     const amount = resolveGoLiveAmountCents(project.price_cents);
 
@@ -5688,9 +5779,9 @@ app.post("/fulfill-go-live", publicCheckoutLimiter, async (req, res) => {
     }
 
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ["invoice", "subscription", "subscription.latest_invoice", "customer"],
+      expand: ["invoice", "subscription", "subscription.latest_invoice", "customer", "total_details"],
     });
-    if (session.status !== "complete" || session.payment_status === "unpaid") {
+    if (!isGoLiveCheckoutSettled(session)) {
       return res.status(409).json({ error: "Payment is not complete yet" });
     }
 
