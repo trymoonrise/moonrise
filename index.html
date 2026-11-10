@@ -273,7 +273,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/ui-library.css?v=20261108-chevron">
   <link rel="stylesheet" href="css/ui-library-lab.css?v=20261109-docks">
 <link rel="stylesheet" href="css/site-nav.css?v=20261109-menu-lift">
-<link rel="stylesheet" href="css/home.css?v=20261109-income">
+<link rel="stylesheet" href="css/home.css?v=20261109-faq">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-shade">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -323,15 +323,7 @@ document.documentElement.classList.add("ms-boot");
             "name": "How do I get paid?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Publish the site with a small watermark and send the owner the link. They pay on that page to remove it. You keep 90%."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Do owners need an account?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No. They open the link and pay there. They never sign in to Moonrise."
+              "text": "Publish the website, then wait for the customer to pay through the built-in watermark checkout. Do not collect payment outside Moonrise (Cash App, Venmo, PayPal, or other third-party methods) for the same unlock. After they pay on the watermark, Moonrise processes the payment and delivers your earnings through the payout method you set in Settings."
             }
           },
           {
@@ -339,7 +331,7 @@ document.documentElement.classList.add("ms-boot");
             "name": "Do I need design or coding skills?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. Moonrise builds the site for you. You review it in the editor, turn features on or off, and send the link when it looks right."
+              "text": "No. Moonrise builds the site for you with one click. Reviewing it in the editor is optional—you can make minor edits, turn features on or off, and share the preview link when it looks right. You can update the site anytime."
             }
           },
           {
@@ -347,7 +339,7 @@ document.documentElement.classList.add("ms-boot");
             "name": "How does Business Finder work?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Search nearby cafes, clinics, and shops. Claim a business that still needs a site, then open it in the Builder to generate their page."
+              "text": "Business Finder uses open map data from OpenStreetMap and OpenFreeMap to scan your local area for nearby cafes, clinics, shops, and similar businesses. Claim a lead that still needs a website, then generate their site in the Builder."
             }
           },
           {
@@ -363,7 +355,7 @@ document.documentElement.classList.add("ms-boot");
             "name": "Can I connect a custom domain?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. After the site is ready, you can connect the owner’s domain from the editor so the live page uses their own address."
+              "text": "Yes. By default, sites are hosted on Vercel for fast deployment on a free Vercel domain. After the client pays for go-live, we recommend purchasing a custom domain for them. You can also connect a domain they already own. See Docs → Custom domains for provider-specific DNS steps."
             }
           }
         ]
@@ -395,14 +387,9 @@ document.documentElement.classList.add("ms-boot");
             <a href="download" style="--i:2">Download</a>
             <a href="orders" style="--i:3">Orders</a>
             <a href="ui-library" style="--i:4">UI Library</a>
-            <a href="guide" style="--i:5">Guide</a>
-            <a href="help" style="--i:6">Help</a>
-            <a href="contact" style="--i:7">Contact</a>
-            <a href="legal" style="--i:8">Legal</a>
-            <a href="privacy" style="--i:9">Privacy</a>
-            <a href="terms" style="--i:10">Terms</a>
-            <a href="refund" style="--i:11">Refunds</a>
-            <a href="report" style="--i:12">Report</a>
+            <a href="docs" style="--i:5">Docs</a>
+            <a href="contact" style="--i:6">Contact</a>
+            <a href="report" style="--i:7">Report</a>
           </nav>
         </header>
         <h1>Build websites.<br>Get paid.</h1>
@@ -645,25 +632,21 @@ document.documentElement.classList.add("ms-boot");
         <div class="ms-wrap">
           <h2 id="faq-title" class="ms-rise">FAQ</h2>
           <div class="dt-accordion" data-accordion>
-            <div class="dt-acc-item is-open ms-rise">
-              <button type="button" class="dt-acc-trigger" aria-expanded="true">What is Moonrise? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+            <div class="dt-acc-item ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="false">What is Moonrise? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
               <div class="dt-acc-panel"><div>A workspace for selling websites to local businesses. You find one that needs a site, build it, and get paid when the owner goes live.</div></div>
             </div>
             <div class="dt-acc-item ms-rise">
               <button type="button" class="dt-acc-trigger" aria-expanded="false">How do I get paid? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
-              <div class="dt-acc-panel"><div>Publish the site with a small watermark and send the owner the link. They pay on that page to remove it. You keep 90%.</div></div>
-            </div>
-            <div class="dt-acc-item ms-rise">
-              <button type="button" class="dt-acc-trigger" aria-expanded="false">Do owners need an account? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
-              <div class="dt-acc-panel"><div>No. They open the link and pay there. They never sign in to Moonrise.</div></div>
+              <div class="dt-acc-panel"><div>Publish the website, then wait for the customer to pay through the built-in watermark checkout. Do not collect payment outside Moonrise—Cash App, Venmo, PayPal, or other third-party methods—for the same unlock. After they pay on the watermark, Moonrise processes the payment and delivers your earnings through the payout method you set in Settings.</div></div>
             </div>
             <div class="dt-acc-item ms-rise">
               <button type="button" class="dt-acc-trigger" aria-expanded="false">Do I need design or coding skills? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
-              <div class="dt-acc-panel"><div>No. Moonrise builds the site for you. You review it in the editor, turn features on or off, and send the link when it looks right.</div></div>
+              <div class="dt-acc-panel"><div>No. Moonrise builds the site for you with one click. Reviewing it in the editor is optional—you can make minor edits, turn features on or off, and share the preview link when it looks right. You can update the site anytime.</div></div>
             </div>
             <div class="dt-acc-item ms-rise">
               <button type="button" class="dt-acc-trigger" aria-expanded="false">How does Business Finder work? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
-              <div class="dt-acc-panel"><div>Search nearby cafes, clinics, and shops. Claim a business that still needs a site, then open it in the Builder to generate their page.</div></div>
+              <div class="dt-acc-panel"><div>Business Finder uses open map data from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> and <a href="https://openfreemap.org/" target="_blank" rel="noopener noreferrer">OpenFreeMap</a> to scan your local area for nearby cafés, clinics, shops, and similar businesses. Claim a lead that still needs a website, then generate their site in the Builder.</div></div>
             </div>
             <div class="dt-acc-item ms-rise">
               <button type="button" class="dt-acc-trigger" aria-expanded="false">What happens after a client pays? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
@@ -671,7 +654,7 @@ document.documentElement.classList.add("ms-boot");
             </div>
             <div class="dt-acc-item ms-rise">
               <button type="button" class="dt-acc-trigger" aria-expanded="false">Can I connect a custom domain? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
-              <div class="dt-acc-panel"><div>Yes. After the site is ready, you can connect the owner's domain from the editor so the live page uses their own address.</div></div>
+              <div class="dt-acc-panel"><div>Yes. By default, sites are hosted on <a href="https://vercel.com/" target="_blank" rel="noopener noreferrer">Vercel</a> for fast deployment on a free Vercel domain. After the client pays for go-live, we recommend purchasing a custom domain for them. You can also connect a domain they already own. For step-by-step DNS instructions for each provider listed in the editor, see <a href="docs#domains">Connecting Domains</a>.</div></div>
             </div>
           </div>
         </div>
@@ -686,12 +669,10 @@ document.documentElement.classList.add("ms-boot");
           <a href="download">Download</a>
           <a href="orders">Orders</a>
           <a href="ui-library">UI Library</a>
-          <a href="help">Help</a>
+          <a href="docs">Docs</a>
           <a href="contact">Contact</a>
-          <a href="legal">Legal</a>
-          <a href="privacy">Privacy</a>
-          <a href="terms">Terms</a>
-          <a href="refund">Refunds</a>
+          <a href="docs#privacy">Privacy</a>
+          <a href="docs#terms">Terms</a>
         </nav>
         <p class="ms-home-footer-note"><a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a></p>
       </div>

@@ -1592,6 +1592,18 @@ body[data-page="home"] .dt-acc-trigger {
   letter-spacing: -0.02em;
 }
 
+body[data-page="home"] .dt-acc-panel a {
+  color: #1d1d1f;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+body[data-page="home"] .dt-acc-panel a:hover,
+body[data-page="home"] .dt-acc-panel a:focus-visible {
+  opacity: 0.72;
+}
+
 body[data-page="home"] .ms-lib .ms-wrap {
   display: flex;
   flex-direction: column;

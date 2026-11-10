@@ -48,10 +48,10 @@
   ];
 
   const SIDEBAR_LEGAL = [
-    { id: "guide", href: "guide", label: "Guide" },
+    { id: "docs", href: "docs", label: "Docs" },
     { id: "ui-library", href: "ui-library", label: "UI Library" },
-    { id: "privacy", href: "legal#privacy", label: "Privacy", legalHash: "privacy" },
-    { id: "terms", href: "legal#terms", label: "Terms", legalHash: "terms" },
+    { id: "privacy", href: "docs#privacy", label: "Privacy", legalHash: "privacy" },
+    { id: "terms", href: "docs#terms", label: "Terms", legalHash: "terms" },
   ];
 
   const ICONS = {
@@ -580,10 +580,10 @@
       .toLowerCase();
     const links = SIDEBAR_LEGAL.map((item) => {
       let active = "";
-      if (item.id === "guide" && page === "guide") active = " is-active";
-      if (item.legalHash && page === "legal") {
+      if (item.id === "docs" && page === "docs" && !item.legalHash) active = " is-active";
+      if (item.legalHash && (page === "docs" || page === "legal")) {
         const on =
-          hash === item.legalHash || (!hash && item.legalHash === "privacy");
+          hash === item.legalHash || (!hash && item.legalHash === "privacy" && page === "legal");
         if (on) active = " is-active";
       }
       return (
@@ -613,11 +613,12 @@
     nav.querySelectorAll(".ms-sidebar-legal-link").forEach((link) => {
       const href = String(link.getAttribute("href") || "");
       let on = false;
-      if (href.indexOf("guide") !== -1) on = page === "guide";
+      if (href === "docs" || href.endsWith("/docs")) on = page === "docs" && !hash;
       else if (href.indexOf("ui-library") !== -1) on = page === "ui-library";
       else if (href.indexOf("#privacy") !== -1)
-        on = page === "legal" && (hash === "privacy" || !hash);
-      else if (href.indexOf("#terms") !== -1) on = page === "legal" && hash === "terms";
+        on = (page === "docs" || page === "legal") && (hash === "privacy" || (!hash && page === "legal"));
+      else if (href.indexOf("#terms") !== -1)
+        on = (page === "docs" || page === "legal") && hash === "terms";
       link.classList.toggle("is-active", on);
     });
   }
@@ -2149,6 +2150,7 @@
     "report",
     "download",
     "ui-library",
+    "docs",
     "guide",
     "help",
   ]);
@@ -2375,6 +2377,7 @@
       book: 1,
       help: 1,
       guide: 1,
+      docs: 1,
     };
     return studio[file] ? file : "";
   }

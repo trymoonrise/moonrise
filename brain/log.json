@@ -3,6 +3,21 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.9.6",
+      "date": "2026-11-09",
+      "title": "Docs hub and clearer FAQ",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Docs is a single searchable hub for product help, Studio UI walkthroughs with real control demos, services, security, licenses, privacy, terms, and refunds.",
+            "Guide, Help, Connecting Domains, and the legal aliases redirect into Docs anchors so menus and footers can point to one place.",
+            "Landing FAQ starts collapsed, drops the owners-account question, and updates paid, skills, Finder, and custom-domain answers."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.5",
       "date": "2026-11-09",
       "title": "Dev promo counts as paid",

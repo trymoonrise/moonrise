@@ -44,7 +44,7 @@
       ]
     },
     {
-      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|help|guide|book|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|ui-library|hosting-billing|creator-contact|privacy|terms|refund|404)",
+      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|docs|help|guide|connecting-domains|book|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|ui-library|hosting-billing|creator-contact|privacy|terms|refund|404)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]

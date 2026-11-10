@@ -32,8 +32,10 @@ Moonrise Studio (trymoonrise.com) is an AI-powered web platform for selling webs
 - UI Library (UI pattern dictionary): https://trymoonrise.com/ui-library
 - Moonrise Special Prompt (paste or download): https://trymoonrise.com/assets/moonrise-special-prompt.md
 - UI Library patterns download from each card as the current HTML and CSS for that design
-- Privacy: https://trymoonrise.com/legal#privacy
-- Terms: https://trymoonrise.com/legal#terms
+- Docs: https://trymoonrise.com/docs
+- Privacy: https://trymoonrise.com/docs#privacy
+- Terms: https://trymoonrise.com/docs#terms
+- Refunds: https://trymoonrise.com/docs#refunds
 
 ## Support
 

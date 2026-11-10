@@ -9,6 +9,8 @@ Allow: /legal.html
 Allow: /report.html
 Allow: /download.html
 Allow: /ui-library.html
+Allow: /docs.html
+Allow: /docs
 Allow: /assets/
 
 Disallow: /dashboard.html
@@ -22,6 +24,7 @@ Disallow: /leads.html
 Disallow: /pricing.html
 Disallow: /help.html
 Disallow: /guide.html
+Disallow: /connecting-domains.html
 Disallow: /course.html
 Disallow: /donate.html
 Disallow: /leaderboard.html
