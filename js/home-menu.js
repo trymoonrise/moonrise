@@ -11,6 +11,8 @@
   var label = button.querySelector(".ms-menu-label");
   var parkedParent = null;
   var parkedNext = null;
+  var openFrame = 0;
+  var closeTimer = 0;
 
   function currentPath() {
     return String(location.pathname || "/").toLowerCase();
@@ -48,14 +50,51 @@
     parkedNext = null;
   }
 
+  function clearOpenFrame() {
+    if (!openFrame) return;
+    window.cancelAnimationFrame(openFrame);
+    openFrame = 0;
+  }
+
   function setOpen(open) {
+    clearOpenFrame();
+    window.clearTimeout(closeTimer);
     button.setAttribute("aria-expanded", String(open));
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    header.classList.toggle("is-open", open);
-    document.documentElement.classList.toggle("ms-menu-open", open);
     if (label) label.textContent = open ? "Close" : "Menu";
-    parkOverlay(open);
-    if (open) menu.scrollTop = 0;
+
+    if (open) {
+      // Move first while closed, then flip is-open so fade/stagger still runs.
+      parkOverlay(true);
+      header.classList.remove("is-open");
+      document.documentElement.classList.remove("ms-menu-open");
+      void menu.offsetWidth;
+      openFrame = window.requestAnimationFrame(function () {
+        openFrame = window.requestAnimationFrame(function () {
+          openFrame = 0;
+          header.classList.add("is-open");
+          document.documentElement.classList.add("ms-menu-open");
+          menu.scrollTop = 0;
+        });
+      });
+      return;
+    }
+
+    header.classList.remove("is-open");
+    document.documentElement.classList.remove("ms-menu-open");
+    var finished = false;
+    function unpark() {
+      if (finished) return;
+      finished = true;
+      menu.removeEventListener("transitionend", onEnd);
+      parkOverlay(false);
+    }
+    function onEnd(event) {
+      if (event.target !== menu) return;
+      unpark();
+    }
+    menu.addEventListener("transitionend", onEnd);
+    closeTimer = window.setTimeout(unpark, 420);
   }
 
   markCurrent();

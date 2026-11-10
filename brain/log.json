@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.9.4",
+      "date": "2026-11-09",
+      "title": "Landing menu animation restored",
+      "sections": [
+        {
+          "heading": "Site",
+          "fixes": [
+            "The landing Menu overlay fades and staggers its links again after opening."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.3",
       "date": "2026-11-09",
       "title": "Landing income and instant Studio",
