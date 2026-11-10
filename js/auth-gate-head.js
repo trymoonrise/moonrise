@@ -60,6 +60,7 @@
     "ui-library": 1,
     guide: 1,
     help: 1,
+    book: 1,
     pricing: 1,
     "hosting-billing": 1,
     "creator-contact": 1,

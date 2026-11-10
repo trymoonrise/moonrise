@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+html.ms-boot body{visibility:hidden!important}
+#ms-boot{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;align-content:center;gap:1.25rem;background:#ffffff;color:#232427;visibility:visible!important;opacity:1;transition:opacity .22s ease-out,visibility .22s linear}
+html[data-ms-mode=dark] #ms-boot{background:#111111;color:#f5f5f5}
+html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
+#ms-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#ms-boot p{margin:0;font:600 1.4rem/1 system-ui,sans-serif;letter-spacing:-.04em;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) forwards}
+#ms-boot .ms-boot-bar{width:9rem;height:2.75px;border-radius:99px;background:rgba(15,23,42,.1);overflow:hidden;opacity:0;animation:ms-boot-word .32s cubic-bezier(.22,1,.36,1) .04s forwards}
+#ms-boot .ms-boot-bar span{display:block;height:100%;width:100%;border-radius:inherit;background:currentColor;transform:scaleX(0);transform-origin:left center;will-change:transform;transition:transform .2s cubic-bezier(.22,1,.36,1)}
+@keyframes ms-boot-word{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#ms-boot,#ms-boot p,#ms-boot .ms-boot-bar{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}#ms-boot .ms-boot-bar span{transition:none!important}}
+</style>
+<script>
+document.documentElement.classList.add("ms-boot");
+(function(){
+  try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
+  var boot=document.createElement("div");
+  boot.id="ms-boot";
+  boot.innerHTML='<p>moonrise.</p><div class="ms-boot-bar" aria-hidden="true"><span></span></div>';
+  document.documentElement.appendChild(boot);
+  var bar=boot.querySelector(".ms-boot-bar span");
+  var progress=0, done=false, started=performance.now();
+  function setProgress(p){progress=Math.max(0,Math.min(100,p)); if(bar)bar.style.transform="scaleX("+(progress/100)+")";}
+  function finish(){
+    if(done)return; done=true; setProgress(100);
+    document.documentElement.classList.remove("ms-boot");
+    document.documentElement.classList.add("ms-boot-done");
+    boot.classList.add("is-leaving");
+    setTimeout(function(){boot.remove()},240);
+  }
+  function tick(){
+    if(done)return;
+    var t=Math.min(1,(performance.now()-started)/700);
+    setProgress(t*90);
+    if(t>=1){finish();return;}
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  window.addEventListener("load", function(){ setTimeout(finish, 120); }, { once:true });
+})();
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Moonrise">
+  <link rel="apple-touch-icon" href="assets/MoonriseLogo.png">
+  <title>Book a meeting - Moonrise</title>
+  <meta name="description" content="Book a meeting with Moonrise on Cal.com. Appointments land on the Moonrise calendar.">
+  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/studio.css?v=20261109-book">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261108-ink">
+  <link rel="stylesheet" href="css/site-nav.css?v=20261109-line">
+</head>
+<body data-page="book" class="ms-book-page">
+  <div class="ms-book-shell" id="page-body">
+    <header class="ms-book-bar">
+      <a class="ms-book-back" href="help" aria-label="Back to Help">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Help</span>
+      </a>
+      <div class="ms-book-brand">
+        <img src="assets/MoonriseLogo.png" alt="" width="28" height="28" decoding="async" />
+        <div>
+          <strong>Book a meeting</strong>
+          <span>Moonrise · Cal.com</span>
+        </div>
+      </div>
+      <a class="ms-book-open" href="https://cal.com/moonrise" target="_blank" rel="noopener noreferrer">Open Cal.com</a>
+    </header>
+    <div class="ms-book-frame-wrap">
+      <iframe
+        class="ms-book-frame"
+        title="Book a meeting on Cal.com"
+        src="https://cal.com/moonrise/embed"
+        loading="eager"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="camera; microphone; fullscreen; payment; geolocation"
+      ></iframe>
+    </div>
+  </div>
+  <script defer src="js/config.js?v=20261106-mono"></script>
+  <script defer src="js/site-branding.js"></script>
+</body>
+</html>

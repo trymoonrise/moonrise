@@ -239,6 +239,74 @@ function bookingRows(payload) {
   return [];
 }
 
+function pushUrlCandidate(list, value) {
+  if (value == null || value === "") return;
+  if (typeof value === "string" || typeof value === "number") {
+    list.push(String(value).trim());
+    return;
+  }
+  if (typeof value !== "object") return;
+  pushUrlCandidate(list, value.videoCallUrl);
+  pushUrlCandidate(list, value.url);
+  pushUrlCandidate(list, value.uri);
+  pushUrlCandidate(list, value.href);
+  pushUrlCandidate(list, value.link);
+  pushUrlCandidate(list, value.value);
+  pushUrlCandidate(list, value.optionValue);
+  pushUrlCandidate(list, value.meetingUrl);
+  if (Array.isArray(value.entryPoints)) {
+    value.entryPoints.forEach((entry) => pushUrlCandidate(list, entry));
+  }
+}
+
+function extractMeetingUrl(src) {
+  const bag = [];
+  const meta = src?.metadata && typeof src.metadata === "object" ? src.metadata : {};
+  pushUrlCandidate(bag, meta.videoCallUrl);
+  pushUrlCandidate(bag, meta.videoCallUrl?.url);
+  pushUrlCandidate(bag, src?.videoCallUrl);
+  pushUrlCandidate(bag, src?.videoCallData);
+  pushUrlCandidate(bag, src?.meetingUrl);
+  pushUrlCandidate(bag, src?.conferenceData);
+  pushUrlCandidate(bag, src?.location);
+  if (Array.isArray(src?.references)) {
+    src.references.forEach((ref) => pushUrlCandidate(bag, ref));
+  }
+  if (Array.isArray(src?.appsStatus)) {
+    src.appsStatus.forEach((app) => {
+      pushUrlCandidate(bag, app?.success?.url);
+      pushUrlCandidate(bag, app?.success?.meetingUrl);
+      pushUrlCandidate(bag, app);
+    });
+  }
+  const unique = [...new Set(bag.filter(Boolean))];
+  const meet = unique.find((url) => /^https?:\/\/meet\.google\.com\//i.test(url));
+  if (meet) return meet.slice(0, 500);
+  const other = unique.find(
+    (url) =>
+      /^https?:\/\//i.test(url) &&
+      !/(^|\.)cal\.com(\/|$)/i.test(url) &&
+      !/sms\.cal\.com/i.test(url)
+  );
+  return other ? other.slice(0, 500) : "";
+}
+
+function extractAttendeePhone(src, email) {
+  const attendees = Array.isArray(src?.attendees) ? src.attendees : [];
+  const attendee = attendees[0] || {};
+  const responses = src?.responses && typeof src.responses === "object" ? src.responses : {};
+  const direct = textField(
+    attendee.phoneNumber ||
+      attendee.phone ||
+      responses.phone ||
+      responses.smsReminderNumber ||
+      src.attendeePhone
+  ).trim();
+  if (direct) return direct.replace(/[^\d+]/g, "").slice(0, 32);
+  const sms = String(email || "").match(/^(\+?\d{7,15})@sms\.cal\.com$/i);
+  return sms ? sms[1].slice(0, 32) : "";
+}
+
 function normalizeBooking(raw, trigger) {
   const src = raw && raw.payload && raw.triggerEvent ? raw.payload : raw || {};
   const uid = String(src.uid || src.bookingUid || src.id || "").trim().slice(0, 200);
@@ -252,14 +320,19 @@ function normalizeBooking(raw, trigger) {
   const metadata = src.metadata && typeof src.metadata === "object" ? src.metadata : {};
   const projectId = String(metadata.projectId || metadata.project_id || "").trim();
   const name = textField(attendee.name || responses.name || src.attendeeName).trim();
-  const email = textField(attendee.email || responses.email).trim().toLowerCase();
+  let email = textField(attendee.email || responses.email).trim().toLowerCase();
+  const phone = extractAttendeePhone(src, email);
+  // Cal SMS addresses are not useful contact emails in the studio calendar.
+  if (/@sms\.cal\.com$/i.test(email)) email = "";
   return {
     uid,
     title: String(src.title || src.eventTitle || src.eventType?.title || "Meeting").trim().slice(0, 200) || "Meeting",
     startsAt: Number.isFinite(start.getTime()) ? start.toISOString() : null,
     endsAt: Number.isFinite(end.getTime()) ? end.toISOString() : null,
-    attendeeName: (name || email || "Guest").slice(0, 120),
+    attendeeName: (name || email || phone || "Guest").slice(0, 120),
     attendeeEmail: email.slice(0, 200),
+    attendeePhone: phone,
+    meetingUrl: extractMeetingUrl(src),
     status: normalizeStatus(src.status, trigger),
     projectId: UUID_RE.test(projectId) ? projectId : "",
   };
@@ -493,14 +566,21 @@ async function createRemoteWebhook(token, webhookToken) {
   };
 }
 
-function toClientBooking(row, businessName) {
+function toClientBooking(row, businessName, extra) {
+  const more = extra && typeof extra === "object" ? extra : {};
+  const email = String(more.attendeeEmail != null ? more.attendeeEmail : row.attendee_email || "").trim();
+  const phone = String(more.attendeePhone != null ? more.attendeePhone : row.attendee_phone || "").trim();
+  const meetingUrl = String(more.meetingUrl != null ? more.meetingUrl : row.meeting_url || "").trim();
   return {
     id: row.id,
+    providerUid: row.provider_uid || "",
     title: row.title || "Meeting",
     startsAt: row.starts_at,
     endsAt: row.ends_at,
     attendeeName: row.attendee_name || "Guest",
-    attendeeEmail: row.attendee_email || "",
+    attendeeEmail: /@sms\.cal\.com$/i.test(email) ? "" : email,
+    attendeePhone: phone || (String(email).match(/^(\+?\d{7,15})@sms\.cal\.com$/i) || [])[1] || "",
+    meetingUrl: /cal\.com/i.test(meetingUrl) ? "" : meetingUrl,
     status: row.status || "accepted",
     businessName: businessName || "",
   };
@@ -839,10 +919,21 @@ function mountRoutes(app, { db, requireUser }) {
     try {
       const supabase = db();
       const conn = await loadConnection(supabase, req.user.id);
+      const liveByUid = new Map();
       if (conn) {
         try {
           const token = await accessTokenFor(supabase, conn);
           await syncUpcoming(supabase, req.user.id, token);
+          const liveRows = await listRemoteBookings(token);
+          for (const raw of liveRows) {
+            const booking = normalizeBooking(raw, "SYNC");
+            if (!booking.uid) continue;
+            liveByUid.set(booking.uid, {
+              meetingUrl: booking.meetingUrl || "",
+              attendeePhone: booking.attendeePhone || "",
+              attendeeEmail: booking.attendeeEmail || "",
+            });
+          }
         } catch (e) {
           console.error("cal bookings refresh", e?.message || e);
         }
@@ -851,7 +942,9 @@ function mountRoutes(app, { db, requireUser }) {
       const to = boundInstant(req.query.to);
       let query = supabase
         .from("calendar_bookings")
-        .select("id, title, starts_at, ends_at, attendee_name, attendee_email, status, project_id")
+        .select(
+          "id, provider_uid, title, starts_at, ends_at, attendee_name, attendee_email, status, project_id"
+        )
         .eq("user_id", req.user.id)
         .neq("status", "cancelled")
         .order("starts_at", { ascending: true })
@@ -864,7 +957,13 @@ function mountRoutes(app, { db, requireUser }) {
       const names = await businessNamesFor(supabase, rows);
       res.json({
         connected: !!conn,
-        bookings: rows.map((row) => toClientBooking(row, row.project_id ? names[row.project_id] || "" : "")),
+        bookings: rows.map((row) =>
+          toClientBooking(
+            row,
+            row.project_id ? names[row.project_id] || "" : "",
+            liveByUid.get(String(row.provider_uid || "")) || null
+          )
+        ),
       });
     } catch (e) {
       sendError(res, e, "Could not load meetings");

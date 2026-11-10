@@ -266,47 +266,130 @@
     return date.getDate() + " " + MONTHS[date.getMonth()].slice(0, 3);
   }
 
-  function addDetailRow(parent, label, value) {
-    const text = String(value || "").trim();
-    if (!text) return;
-    const row = document.createElement("p");
-    row.className = "ms-cal-event-row";
-    const name = document.createElement("span");
-    name.textContent = label;
-    const detail = document.createElement("span");
-    detail.textContent = text;
-    row.append(name, detail);
-    parent.appendChild(row);
-  }
-
-  function addDetailLink(parent, href) {
-    const url = String(href || "").trim();
-    if (!/^https?:\/\//i.test(url)) return;
-    const row = document.createElement("p");
-    row.className = "ms-cal-event-row";
-    const name = document.createElement("span");
-    name.textContent = "Meeting";
-    const link = document.createElement("a");
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.textContent = "Open link";
-    row.append(name, link);
-    parent.appendChild(row);
-  }
-
-  function contactLine(item) {
+  function contactValue(item) {
     const email = String(item.attendeeEmail || "").trim();
     const phone = String(item.attendeePhone || "").trim();
-    if (email && phone) return email + " · " + phone;
-    return email || phone;
+    if (email && !/@sms\.cal\.com$/i.test(email)) return email;
+    return phone || email.replace(/@sms\.cal\.com$/i, "");
   }
 
-  function whenLine(item) {
-    const time = timeRange(item);
-    const length = durationLabel(item);
-    if (time && length) return time + " · " + length;
-    return time || length;
+  function meetingHref(item) {
+    const url = String(item.meetingUrl || "").trim();
+    if (!/^https?:\/\//i.test(url)) return "";
+    if (/cal\.com/i.test(url)) return "";
+    return url;
+  }
+
+  function meetingLabel(url) {
+    if (/meet\.google\.com/i.test(url)) return "Open Google Meet";
+    if (/zoom\.us/i.test(url)) return "Open Zoom";
+    if (/teams\.microsoft\.com/i.test(url)) return "Open Teams";
+    return "Open meeting";
+  }
+
+  function fieldRow(label, control) {
+    const row = document.createElement("label");
+    row.className = "ms-cal-event-row is-edit";
+    const name = document.createElement("span");
+    name.textContent = label;
+    row.append(name, control);
+    return row;
+  }
+
+  function textInput(value, placeholder) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "ms-cal-inline-input";
+    input.value = value || "";
+    input.placeholder = placeholder || "";
+    return input;
+  }
+
+  function snapshotFromItem(item) {
+    const parts = localParts(item.startsAt);
+    return {
+      date: parts.date,
+      time: parts.time,
+      mins: String(lengthMins(item)),
+      name: String(item.attendeeName || "").trim() === "Guest" ? "" : String(item.attendeeName || "").trim(),
+      contact: contactValue(item),
+      site: String(item.businessName || "").trim(),
+      link: meetingHref(item),
+    };
+  }
+
+  function readInline(block) {
+    const date = String(block.querySelector("[data-field=date]")?.value || "");
+    const time = String(block.querySelector("[data-field=time]")?.value || "");
+    const mins = Number(block.querySelector("[data-field=mins]")?.value) || 30;
+    const name = String(block.querySelector("[data-field=name]")?.value || "").trim();
+    const contact = String(block.querySelector("[data-field=contact]")?.value || "").trim();
+    const site = String(block.querySelector("[data-field=site]")?.value || "").trim();
+    const link = String(block.querySelector("[data-field=link]")?.value || "").trim();
+    const start = new Date(date + "T" + time);
+    if (!date || !time || !Number.isFinite(start.getTime())) return null;
+    const safeMins = Math.min(480, Math.max(5, mins));
+    const end = new Date(start.getTime() + safeMins * 60000);
+    const email = contact.includes("@") ? contact : "";
+    return {
+      startsAt: start.toISOString(),
+      endsAt: end.toISOString(),
+      attendeeName: name,
+      attendeeEmail: email,
+      attendeePhone: email ? "" : contact,
+      businessName: site,
+      meetingUrl: /cal\.com/i.test(link) ? "" : link,
+    };
+  }
+
+  async function saveInlineEvent(item, block, saveBtn) {
+    const fields = readInline(block);
+    if (!fields) {
+      setError("Choose a day and time.");
+      return;
+    }
+    if (saveBtn) saveBtn.disabled = true;
+    setError("");
+    try {
+      if (isLocalEvent(item)) {
+        const items = localEvents();
+        const index = items.findIndex((row) => row.id === item.id);
+        const next = { ...fields, id: item.id, local: true };
+        if (index === -1) items.push(next);
+        else items[index] = next;
+        saveLocal(items);
+      } else {
+        const data = await api("/calendar/bookings/" + encodeURIComponent(item.id), {
+          method: "PATCH",
+          body: JSON.stringify({
+            startsAt: fields.startsAt,
+            endsAt: fields.endsAt,
+            attendeeName: fields.attendeeName,
+            attendeeEmail: fields.attendeeEmail,
+          }),
+        });
+        const booking = data?.booking;
+        if (!booking?.id) throw new Error("Could not save that event");
+        writeExtra(booking.id, {
+          attendeePhone: fields.attendeePhone,
+          businessName: fields.businessName,
+          meetingUrl: fields.meetingUrl,
+        });
+        const index = bookings.findIndex((row) => row.id === booking.id);
+        const merged = {
+          ...booking,
+          attendeePhone: fields.attendeePhone,
+          businessName: fields.businessName,
+          meetingUrl: fields.meetingUrl,
+        };
+        if (index === -1) bookings.push(merged);
+        else bookings[index] = merged;
+      }
+      showSaved(new Date(fields.startsAt));
+    } catch (e) {
+      setError(e.message || "Could not save that event");
+      if (saveBtn) saveBtn.disabled = false;
+    }
   }
 
   function paintDetail(key, items) {
@@ -317,25 +400,77 @@
     day.textContent = shortDay(key);
     detailCardEl.appendChild(day);
     items.forEach((item) => {
+      const snap = snapshotFromItem(item);
       const block = document.createElement("article");
-      block.className = "ms-cal-event";
-      const person = String(item.attendeeName || "").trim();
-      if (person && person !== "Guest") {
-        const title = document.createElement("h2");
-        title.textContent = person;
-        block.appendChild(title);
+      block.className = "ms-cal-event is-editable";
+      block.dataset.eventId = item.id;
+
+      const nameInput = textInput(snap.name, "Name");
+      nameInput.dataset.field = "name";
+      nameInput.classList.add("ms-cal-inline-name");
+      block.appendChild(nameInput);
+
+      const whenWrap = document.createElement("div");
+      whenWrap.className = "ms-cal-inline-when";
+      const dateInput = document.createElement("input");
+      dateInput.type = "date";
+      dateInput.className = "ms-cal-inline-input";
+      dateInput.dataset.field = "date";
+      dateInput.value = snap.date;
+      dateInput.setAttribute("aria-label", "Day");
+      const timeInput = document.createElement("input");
+      timeInput.type = "time";
+      timeInput.className = "ms-cal-inline-input";
+      timeInput.dataset.field = "time";
+      timeInput.value = snap.time;
+      timeInput.setAttribute("aria-label", "Time");
+      const minsInput = document.createElement("input");
+      minsInput.type = "number";
+      minsInput.min = "5";
+      minsInput.max = "480";
+      minsInput.step = "5";
+      minsInput.className = "ms-cal-inline-input ms-cal-inline-mins";
+      minsInput.dataset.field = "mins";
+      minsInput.value = snap.mins;
+      minsInput.setAttribute("aria-label", "Minutes");
+      whenWrap.append(dateInput, timeInput, minsInput);
+      block.appendChild(fieldRow("When", whenWrap));
+
+      const contactInput = textInput(snap.contact, "Email or phone");
+      contactInput.dataset.field = "contact";
+      block.appendChild(fieldRow("Contact", contactInput));
+
+      const siteInput = textInput(snap.site, "Site");
+      siteInput.dataset.field = "site";
+      block.appendChild(fieldRow("Site", siteInput));
+
+      const meetWrap = document.createElement("div");
+      meetWrap.className = "ms-cal-inline-meet";
+      const linkInput = textInput(snap.link, "Google Meet link");
+      linkInput.dataset.field = "link";
+      linkInput.type = "url";
+      meetWrap.appendChild(linkInput);
+      const openMeet = meetingHref(item);
+      if (openMeet) {
+        const open = document.createElement("a");
+        open.href = openMeet;
+        open.target = "_blank";
+        open.rel = "noopener noreferrer";
+        open.className = "ms-cal-meet-open";
+        open.textContent = meetingLabel(openMeet);
+        meetWrap.appendChild(open);
       }
-      addDetailRow(block, "When", whenLine(item));
-      addDetailRow(block, "Contact", contactLine(item));
-      addDetailRow(block, "Site", item.businessName);
-      addDetailLink(block, item.meetingUrl || bookingUrl);
+      block.appendChild(fieldRow("Meeting", meetWrap));
+
       const actions = document.createElement("div");
       actions.className = "ms-cal-event-actions";
-      const editBtn = document.createElement("button");
-      editBtn.type = "button";
-      editBtn.className = "ms-cal-edit";
-      editBtn.textContent = "Edit";
-      editBtn.addEventListener("click", () => openForm(item));
+      const saveBtn = document.createElement("button");
+      saveBtn.type = "button";
+      saveBtn.className = "ms-cal-save";
+      saveBtn.textContent = "Save";
+      saveBtn.addEventListener("click", () => {
+        void saveInlineEvent(item, block, saveBtn);
+      });
       const removeBtn = document.createElement("button");
       removeBtn.type = "button";
       removeBtn.className = "ms-cal-remove";
@@ -352,7 +487,7 @@
         }
         void removeEvent(item, removeBtn);
       });
-      actions.append(editBtn, removeBtn);
+      actions.append(saveBtn, removeBtn);
       block.appendChild(actions);
       detailCardEl.appendChild(block);
     });
@@ -410,7 +545,26 @@
         "/calendar/bookings?from=" + encodeURIComponent(range.from) + "&to=" + encodeURIComponent(range.to)
       );
       if (token !== loadToken || year !== viewYear || month !== viewMonth) return;
-      bookings = Array.isArray(data.bookings) ? data.bookings : [];
+      bookings = (Array.isArray(data.bookings) ? data.bookings : []).map((row) => {
+        const meetingUrl = meetingHref(row);
+        const phone = String(row.attendeePhone || "").trim();
+        const email = String(row.attendeeEmail || "").trim();
+        if (row.id && (meetingUrl || phone || row.businessName)) {
+          const prior = readExtras()[row.id] || {};
+          writeExtra(row.id, {
+            ...prior,
+            meetingUrl: meetingUrl || prior.meetingUrl || "",
+            attendeePhone: phone || prior.attendeePhone || "",
+            businessName: row.businessName || prior.businessName || "",
+          });
+        }
+        return {
+          ...row,
+          attendeeEmail: /@sms\.cal\.com$/i.test(email) ? "" : email,
+          attendeePhone: phone || (email.match(/^(\+?\d{7,15})@sms\.cal\.com$/i) || [])[1] || "",
+          meetingUrl,
+        };
+      });
       paintGrid();
       showDetail();
     } catch (e) {

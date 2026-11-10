@@ -335,6 +335,11 @@ body[data-page="calendar"] .ms-cal-event-actions button:disabled {
   cursor: default;
 }
 
+body[data-page="calendar"] .ms-cal-save {
+  background: #1d1d1f;
+  color: #fff;
+}
+
 body[data-page="calendar"] .ms-cal-remove {
   color: #b42318;
 }
@@ -344,9 +349,13 @@ body[data-page="calendar"] .ms-cal-remove[data-confirm="yes"] {
   color: #fff;
 }
 
-body[data-page="calendar"] .ms-cal-event-row a {
+body[data-page="calendar"] .ms-cal-event-row a,
+body[data-page="calendar"] .ms-cal-meet-open {
   color: #0a84ff;
   text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 650;
+  white-space: nowrap;
 }
 
 body[data-page="calendar"] .ms-cal-event-row {
@@ -366,10 +375,61 @@ body[data-page="calendar"] .ms-cal-event-row span:first-child {
   color: #8e8e93;
 }
 
-body[data-page="calendar"] .ms-cal-event-row span:last-child {
+body[data-page="calendar"] .ms-cal-event-row.is-edit {
+  align-items: center;
+}
+
+body[data-page="calendar"] .ms-cal-inline-name,
+body[data-page="calendar"] .ms-cal-inline-input {
+  width: 100%;
   min-width: 0;
-  text-align: right;
-  overflow-wrap: anywhere;
+  min-height: 2.15rem;
+  padding: 0 0.65rem;
+  border: 0;
+  border-radius: 10px;
+  background: #fff;
+  color: #1d1d1f;
+  font: inherit;
+  font-size: 0.92rem;
+  text-align: left;
+}
+
+body[data-page="calendar"] .ms-cal-inline-name {
+  margin: 0 0 0.2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+body[data-page="calendar"] .ms-cal-inline-when,
+body[data-page="calendar"] .ms-cal-inline-meet {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  min-width: 0;
+  flex: 1;
+}
+
+body[data-page="calendar"] .ms-cal-inline-when .ms-cal-inline-input {
+  width: auto;
+  flex: 1 1 5.5rem;
+}
+
+body[data-page="calendar"] .ms-cal-inline-mins {
+  flex: 0 0 4.2rem;
+  max-width: 4.2rem;
+}
+
+body[data-page="calendar"] .ms-cal-inline-meet .ms-cal-inline-input {
+  flex: 1 1 9rem;
+}
+
+body[data-page="calendar"] .ms-cal-event-row.is-edit > .ms-cal-inline-input,
+body[data-page="calendar"] .ms-cal-event-row.is-edit > .ms-cal-inline-when,
+body[data-page="calendar"] .ms-cal-event-row.is-edit > .ms-cal-inline-meet {
+  flex: 1;
+  text-align: left;
 }
 
 body[data-page="calendar"] .ms-cal-gate {

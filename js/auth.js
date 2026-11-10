@@ -18,6 +18,7 @@
     "ui-library",
     "guide",
     "help",
+    "book",
     "pricing",
     "hosting-billing",
     "creator-contact",

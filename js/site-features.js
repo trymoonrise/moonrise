@@ -43,6 +43,7 @@
       siteTitle: "Book",
       summary: "Appointments on the site",
       emptyMessage: "Turn on a booking service and paste its link.",
+      hint: "Cal.com opens on its own booking page so phones have room. Appointments still land on that Cal.com calendar.",
       note: true,
       providers: [
         provider("cal", "Cal.com", { primary: true, placeholder: "https://cal.com/your-name", kind: "cal" }),
@@ -611,11 +612,10 @@
 
   function providerEmbed(item, value) {
     const href = safeHref(value);
+    // Cal.com opens on its own booking page (new tab). Inline embeds are too
+    // compact on phones; the same Cal.com link still tracks on their calendar.
     if (item.kind === "cal" && href && hostIs(href, /(^|\.)cal\.com$/)) {
-      const url = new URL(href);
-      let path = url.pathname.replace(/\/$/, "");
-      if (!/\/embed$/.test(path)) path += "/embed";
-      return iframe("Book on Cal.com", url.origin + path);
+      return "";
     }
     if (item.kind === "tally" && href && hostIs(href, /(^|\.)tally\.so$/)) {
       const url = new URL(href);
@@ -672,6 +672,7 @@
     if (item.kind === "whatsapp") return "WhatsApp";
     if (item.kind === "tel") return "Call";
     if (item.kind === "email") return "Email";
+    if (item.kind === "cal") return "Book a meeting";
     if (item.kind === "google-map") return "Open in Google Maps";
     if (item.kind === "apple-map") return "Open in Apple Maps";
     if (item.kind === "waze") return "Open in Waze";
@@ -844,7 +845,6 @@
         const value = values.providers[item.id].value;
         if (!providerEmbed(item, value)) return;
         const href = providerHref(item, value);
-        if (item.kind === "cal" && href && hostIs(href, /(^|\.)cal\.com$/)) hosts.add("https://cal.com");
         if (item.kind === "tally" && href && hostIs(href, /(^|\.)tally\.so$/)) hosts.add("https://tally.so");
         if (item.kind === "typeform" && href && hostIs(href, /(^|\.)typeform\.com$/)) hosts.add("https://form.typeform.com");
         if (item.kind === "jotform" && href && hostIs(href, /(^|\.)jotform\.com$/)) hosts.add("https://form.jotform.com");
@@ -942,6 +942,7 @@
       "## Connected services (use these exact destinations)",
       "The creator turned these services on. Point the existing nav, hero, pricing, contact, and footer buttons at the primary URL for that feature.",
       "Keep those as normal links. Do not add a second booking, payment, map, review, or social section, and do not add iframe or embed code.",
+      "For Cal.com booking, use a normal Book a meeting link that opens the Cal.com URL in a new page. Do not iframe Cal.com - mobile embeds are too cramped, and the same Cal.com link still tracks appointments on their calendar.",
       "Publishing inserts one section before the footer. It uses the page :root tokens (--bg, --surface, --ink, --muted, --accent, --border, --radius-md). Leave the footer as a real <footer> element so that section can sit above it.",
       "Do not invent Calendly, Stripe, PayPal, Typeform, or any other tool that is not listed here.",
       "Do not set iframe { height: auto } or overflow: hidden on html, body, or section.",

@@ -276,7 +276,7 @@
     });
   }
 
-  const PAGE_MOTION_SKIP = new Set(["editor", "builder", "home", "onboarding", "login"]);
+  const PAGE_MOTION_SKIP = new Set(["editor", "builder", "home", "onboarding", "login", "book"]);
   const PAGE_MOTION_NO_SHELL = new Set([
     "login",
     "orders",

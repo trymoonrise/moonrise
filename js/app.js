@@ -2358,6 +2358,9 @@
       "creator-contact": 1,
       pricing: 1,
       calendar: 1,
+      book: 1,
+      help: 1,
+      guide: 1,
     };
     return studio[file] ? file : "";
   }

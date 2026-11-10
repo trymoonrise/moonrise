@@ -3,6 +3,33 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.8.6",
+      "date": "2026-11-09",
+      "title": "Calendar inline edit and Google Meet links",
+      "tag": "v2.8.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.8.6",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "Calendar meeting details edit right on the card: name, time, contact, site, and meeting link."
+          ],
+          "fixes": [
+            "Calendar Meeting opens the Google Meet link from Cal.com instead of the cal.com booking page."
+          ]
+        },
+        {
+          "heading": "Site",
+          "added": [
+            "Help Book a meeting opens a full booking page for Cal.com so phones have room, and appointments still land on the Moonrise calendar."
+          ],
+          "fixes": [
+            "Connected Cal.com booking no longer embeds a cramped iframe; Book a meeting opens the Cal.com page while keeping calendar tracking."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.8.5",
       "date": "2026-11-09",
       "title": "Stronger website agent",
