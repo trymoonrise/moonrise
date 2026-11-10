@@ -1,6 +1,6 @@
 # Support
 
-Need help with Moonrise Studio?
+Need help with Moonrise Studio? Start here. This is the hosted product at [trymoonrise.com](https://trymoonrise.com).
 
 ## Contact
 
@@ -10,17 +10,21 @@ Need help with Moonrise Studio?
 
 ## Common topics
 
-- Account access
-- Orders and payments
-- Builder / preview questions
-- Business Finder feedback
-- Billing and plans
+- Signing in or reaching an account
+- Business Finder and a site that will not build
+- A preview link, a watermark, or what the owner sees
+- Checkout, a payout, or a plan
+- Finding an order from the public orders page
+- Billing and receipts
+
+Include the page you were on and what you expected. Leave out passwords and full card numbers.
 
 ## Security
 
-For security reports, see [SECURITY.md](../SECURITY.md).
+For a vulnerability, use [SECURITY.md](../SECURITY.md). Do not open a public issue for it.
 
 ## Policies
 
-- [Privacy Policy](../privacy.html)
-- [Terms of Service](../terms.html)
+- [Privacy Policy](https://trymoonrise.com/privacy)
+- [Terms of Service](https://trymoonrise.com/terms)
+- [Refunds](https://trymoonrise.com/refund)

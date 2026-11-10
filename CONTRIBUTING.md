@@ -2,7 +2,9 @@
 
 Thanks for your interest in Moonrise.
 
-This project is built for freelancers and creators who help local businesses get online. Useful contributions include product feedback, bug reports, and clear ideas that improve the selling and delivery experience.
+Moonrise Studio is the hosted product at [trymoonrise.com](https://trymoonrise.com). This repository explains that product. It is not a download, and it is not meant to be installed or hosted by anyone else.
+
+Useful notes are product feedback, bug reports, and clear ideas that make finding a business, building a site, sharing a preview, or getting paid easier.
 
 ## Ways to help
 
@@ -26,11 +28,11 @@ Good feature requests usually answer:
 - What problem does it solve?
 - What would "done" look like?
 
-## Code and product changes
+## Product changes
 
-Moonrise Studio is an active product. Not every suggestion can be accepted, but thoughtful feedback is welcome.
+Moonrise is an active product. Not every suggestion can be accepted. Thoughtful feedback is welcome.
 
-If you are proposing a change, keep the focus on the user experience and business outcome - not deep implementation details unless asked.
+Describe what a person was trying to do in Studio and what would be better. Do not send setup steps, credentials, or a request to republish the product.
 
 ## Conduct
 

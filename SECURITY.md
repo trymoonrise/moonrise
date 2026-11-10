@@ -74,13 +74,11 @@ Out of scope (examples):
 
 - Social engineering of individual users
 - Reports without a realistic impact
-- Issues that only affect outdated local copies you control
+- Issues that do not affect the live product at trymoonrise.com
 
-## Secrets and local setup
+## Secrets
 
-- Never commit `.env`, `accesstokens.env`, private keys, dumps, or real credentials
-- Use `.env.example` and `worker/.env.example` as templates only
-- Rotate keys if they were ever pasted into chat, screenshots, or public issues
+Do not post passwords, tokens, customer data, or payment details in an issue, a screenshot, or a public report. If a secret was exposed, say so in the private report and we will rotate it.
 
 ## Safe use
 

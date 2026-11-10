@@ -5,208 +5,97 @@
 <h1 align="center">Moonrise Studio</h1>
 
 <p align="center">
-  <strong>Find local businesses. Build the site. Share the preview. Get paid. Go live.</strong>
+  Discover local businesses in your area, build websites with one click, share live previews, and earn money when those websites go live commercially.
 </p>
 
 <p align="center">
-  <a href="https://trymoonrise.com"><img src="https://img.shields.io/badge/Live-TryMoonrise.com-3b82f6?style=for-the-badge" alt="Live site"></a>
-  <a href="mailto:trymoonrise@gmail.com"><img src="https://img.shields.io/badge/Contact-Email-0f172a?style=for-the-badge" alt="Email"></a>
-  <a href="privacy"><img src="https://img.shields.io/badge/Privacy-Policy-64748b?style=for-the-badge" alt="Privacy"></a>
-  <a href="terms"><img src="https://img.shields.io/badge/Terms-of%20Service-64748b?style=for-the-badge" alt="Terms"></a>
+  <a href="https://trymoonrise.com">trymoonrise.com</a>
 </p>
 
-<p align="center">
-  <a href="https://trymoonrise.com"><img src="https://img.shields.io/badge/website-trymoonrise.com-0ea5e9?style=flat-square" alt="Website"></a>
-  <img src="https://img.shields.io/badge/license-Proprietary-64748b?style=flat-square" alt="License">
-  <img src="https://img.shields.io/badge/security-policy-22c55e?style=flat-square" alt="Security">
-  <img src="https://img.shields.io/badge/status-active-22c55e?style=flat-square" alt="Status">
-  <img src="https://img.shields.io/badge/product-Moonrise%20Studio-0ea5e9?style=flat-square" alt="Product">
-  <img src="https://img.shields.io/badge/built%20for-freelancers%20%26%20creators-8b5cf6?style=flat-square" alt="Audience">
-</p>
+Moonrise is a hosted studio for people who sell websites to nearby businesses. A creator finds a shop, clinic, or cafe, builds the site in Studio, and sends a live preview. The owner pays when that site goes live. The creator keeps 90%.
 
----
+Use Moonrise at [trymoonrise.com](https://trymoonrise.com). This repository explains the product. It is not a download, and it is not a project to install or host yourself.
 
-## About this project
+## How it works
 
-**Moonrise Studio** is a workspace for people who sell websites.
+1. **Find.** Business Finder lists nearby businesses and shows which ones still need a site.
+2. **Build.** One action turns that business into a page. The creator can preview it, edit the words, or look at the code.
+3. **Share.** The owner gets a live preview. The preview stays marked until they decide to go live.
+4. **Get paid.** The owner pays to publish. Moonrise pays the creator their share.
+5. **Go live.** The business has its own site, and the order is no longer a preview.
 
-It helps you discover local businesses that need an online presence, create a polished site for them, share a watermarked preview, collect payment, and publish when the order is complete.
+## The platform
 
-The goal is simple: turn website selling into a clear, repeatable flow - find -> build -> present -> get paid -> go live.
+```mermaid
+flowchart TB
+  creator([Creator])
+  owner([Business owner])
 
----
+  subgraph surface [trymoonrise.com]
+    public[Home, guide, orders, and legal]
+    finder[Business Finder]
+    builder[Studio builder]
+    editor[Preview, edit, and code]
+  end
 
-## About me
+  subgraph go [Go live]
+    share[Shared preview]
+    pay[Owner checkout]
+    payout[Creator payout]
+    live[Published website]
+  end
 
-<p align="center">
-  <img src="assets/MoonriseLogo.png" alt="TryMoonrise" width="72" height="72">
-</p>
+  creator --> public
+  public --> finder
+  finder --> builder
+  builder --> editor
+  editor --> share
+  share --> owner
+  owner --> pay
+  pay --> payout
+  pay --> live
+  payout --> creator
+```
 
-Hi - I'm the builder behind **Moonrise** / **TryMoonrise**.
+### Public site
 
-I build tools for freelancers and creators who want to earn by helping local businesses show up online. Moonrise Studio is the product side of that mission: less busywork, clearer client delivery, and a path from preview to payment.
+Anyone can open [trymoonrise.com](https://trymoonrise.com). The home page explains the offer. Sign-in starts a studio. The guide, orders page, and legal pages stay available without an account: help, a way to find an order, privacy, terms, refunds, and a way to report a problem.
 
-| | |
+### Studio
+
+After sign-in, the workspace is one place:
+
+| Part | What it does |
 |---|---|
-| **Brand** | [TryMoonrise.com](https://trymoonrise.com) |
-| **Email** | [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com) |
-| **Phone** | [(401) 300-0957](tel:+14013000957) |
-| **Focus** | Local business websites, freelancers, creators |
+| Dashboard | Shows progress, sales, and recent projects |
+| Business Finder | Searches the area and keeps the businesses worth a site |
+| Builder | Creates a site from the business in one step |
+| Editor | Switches among preview, edit, and code, and turns features on or off |
+| Clients | Keeps the businesses that have paid |
+| Settings | Holds the account, payout details, and studio preferences |
 
-If you're exploring Moonrise, building with it, or want to collaborate - reach out.
+The editor is the same surface the creator uses to present the work. A contact form, a domain, and the other pieces of the page can be turned on, and the preview changes with them.
 
----
+### Preview, payment, and the live site
 
-## Why Moonrise exists
+The preview is a real page the owner can open. It is watermarked so the work can be shared before anyone pays. Checkout is the moment the site becomes a commercial website. Moonrise takes the payment, pays the creator 90%, and publishes the site for the business.
 
-Most local businesses still need a website. Most freelancers still piece the job together across tabs, tools, and messy handoffs.
+Orders can be looked up from the public orders page. Account, billing, and payout questions stay inside Studio.
 
-Moonrise keeps the important parts in one place:
+## Who it is for
 
-1. **Find** businesses that may need a site  
-2. **Build** something presentable quickly  
-3. **Share** a live preview with a watermark  
-4. **Collect** payment when the client is ready  
-5. **Publish** the finished site
+Creators and freelancers who want a clear path from a nearby business to a paid website. The business owner only needs the preview and the checkout. They do not need a studio account to say yes.
 
-You still own the relationship, the pitch, and the pricing. Moonrise provides the workspace.
+## Policies
 
----
+- [Support](SUPPORT.md)
+- [Accessibility](ACCESSIBILITY.md)
+- [Security](SECURITY.md)
+- [Contributing](CONTRIBUTING.md)
+- [Governance](GOVERNANCE.md)
+- [Code of conduct](.github/CODE_OF_CONDUCT.md)
+- [License](LICENSE)
+- [Terms of Service](https://trymoonrise.com/terms)
+- [Privacy Policy](https://trymoonrise.com/privacy)
 
-## Features
-
-| Area | What you get |
-|---|---|
-| **Business Finder** | Search local businesses and spot strong prospects |
-| **Builder** | Create, preview, edit, and prepare sites for clients |
-| **Watermarked preview** | Share work before payment without handing everything over |
-| **Checkout** | Client-friendly payment path to unlock the site |
-| **Publish** | Take paid work live |
-| **Dashboard** | Track goals, sales, commission, and recent projects |
-| **Clients** | Keep paid businesses organized |
-| **Pricing & credits** | Plans and top-ups for Studio access |
-| **Account** | Profile, settings, privacy, and terms |
-
----
-
-## Who it's for
-
-- Freelancers selling websites to local businesses  
-- Creators building a service offer around web presence  
-- Solo operators who want a cleaner find -> build -> sell loop  
-
----
-
-## Product map
-
-| Page | Purpose |
-|---|---|
-| `index.html` | Marketing home |
-| `login.html` | Sign in / get started |
-| `dashboard.html` | Progress and overview |
-| `leads.html` | Business Finder |
-| `builder.html` | Create and manage sites |
-| `clients.html` | Paid clients |
-| `pricing.html` | Plans and billing |
-| `donate.html` | Support / store |
-| `settings.html` | Account |
-| `orders.html` | Locate My Order |
-| `legal.html` | Privacy, terms, refunds |
-
----
-
-## Quick links
-
-- **Website:** [trymoonrise.com](https://trymoonrise.com)  
-- **Support:** [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com)  
-- **Privacy:** [privacy.html](privacy.html)  
-- **Terms:** [terms.html](terms.html)  
-- **Security:** [SECURITY.md](SECURITY.md)  
-- **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md)  
-
----
-
-## Roadmap (high level)
-
-- Stronger lead discovery and ranking  
-- Faster, cleaner client presentation flows  
-- Better project search and organization  
-- More polish around checkout and go-live  
-- Ongoing Studio quality and reliability improvements  
-
-Have an idea? Open an issue or email the team.
-
----
-
-## Support
-
-Need help with an account, order, or Studio question?
-
-- Email: [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com)  
-- Phone: [(401) 300-0957](tel:+14013000957)  
-
-For security concerns, please use the process in [SECURITY.md](SECURITY.md).
-
----
-
-## Run the app
-
-You need Node.js 22.
-
-```bash
-cd moonrise-studio
-npm install
-```
-
-Copy `.env.example` to `.env` and `worker/.env.example` to `worker/.env`. Fill in the placeholders for Supabase, Stripe, and the public app URL. Do not commit those files.
-
-Start the API:
-
-```bash
-node worker/server.js
-```
-
-The example worker env uses port 8787. Serve this folder as a static site on port 3000 so it matches `PUBLIC_APP_URL=http://localhost:3000` in `worker/.env.example`. Sign-in, checkout, and published sites call that API.
-
----
-
-## Database
-
-The studio reaches Supabase over its HTTPS API. Direct Postgres and the pooler are limited to one owner address. They are not open to the whole internet. IPv6 direct connections are not allowed. The HTTPS API, Auth, and Storage are not covered by that list. If a direct connection is refused from a new network, add that address under Database, then Network Restrictions, in the Supabase project.
-
-This project is on the Free plan, so Supabase does not keep daily backups. Once a week, from the allowed address, dump the database and keep the file off this machine:
-
-```bash
-npx supabase db dump --db-url "$SUPABASE_DB_URL" -f moonrise-backup.sql
-```
-
-`SUPABASE_DB_URL` is the session pooler string under Project Settings, then Database. Do not commit the dump or the password.
-
-To restore, run that dump against the same kind of URL:
-
-```bash
-psql "$SUPABASE_DB_URL" -f moonrise-backup.sql
-```
-
-A restore replaces current rows with the dump. Plan for the site to be wrong until it finishes.
-
----
-
-## License
-
-Moonrise Studio is **proprietary**. See [LICENSE](LICENSE).
-
-Third-party fonts, MapLibre, map data, and npm packages keep their own licenses — see [NOTICE](NOTICE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-
-Product terms:
-
-- [Terms of Service](https://trymoonrise.com/terms)  
-- [Privacy Policy](https://trymoonrise.com/privacy)  
-- [Security Policy](SECURITY.md) 
-
----
-
-<p align="center">
-  <img src="assets/MoonriseLogo.png" alt="" width="36" height="36"><br>
-  <sub>Built with care for freelancers, creators, and local businesses.</sub>
-</p>
+Questions: [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com) or [(401) 300-0957](tel:+14013000957).

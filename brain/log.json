@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.8.1",
+      "date": "2026-11-09",
+      "title": "How Moonrise works",
+      "sections": [
+        {
+          "heading": "GitHub",
+          "added": [
+            "The repository About line and README explain how Moonrise works, with a platform diagram and more community pages, and no longer explain how to run the app."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.8.0",
       "date": "2026-11-09",
       "title": "Locked hero",
