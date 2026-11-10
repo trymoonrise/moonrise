@@ -3184,6 +3184,75 @@ input.ms-input:-webkit-autofill:focus {
   padding: calc(14px + env(safe-area-inset-top, 0px)) 1rem 0;
 }
 
+.ms-toast-action-host {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  padding: 0 1rem calc(14px + env(safe-area-inset-bottom, 0px));
+}
+
+.ms-toast-action-host .ms-toast {
+  transform: translateY(120%);
+}
+
+.ms-toast-action-host .ms-toast.is-in {
+  transform: translateY(0);
+}
+
+.ms-toast-action-host .ms-toast.is-out {
+  transform: translateY(110%);
+}
+
+.ms-toast--action .ms-toast-inner {
+  align-items: center;
+  border-color: color-mix(in srgb, var(--ms-border, #d4d4d4) 90%, transparent);
+  box-shadow:
+    0 18px 40px -16px rgba(15, 23, 42, 0.28),
+    0 8px 20px rgba(0, 0, 0, 0.1);
+  color: #1d1d1f;
+}
+
+.ms-toast--action .ms-toast-msg {
+  color: #1d1d1f;
+}
+
+.ms-toast-timer {
+  flex: 0 0 auto;
+  min-width: 2.1rem;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+.ms-toast-action-cancel {
+  appearance: none;
+  flex: 0 0 auto;
+  min-height: 2rem;
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--ms-border, #d4d4d4) 90%, transparent);
+  border-radius: 999px;
+  background: #fff;
+  color: #1d1d1f;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+}
+
+.ms-toast-action-cancel:hover {
+  background: #f5f5f7;
+}
+
 .ms-toast {
   pointer-events: auto;
   width: min(640px, calc(100vw - 2rem));

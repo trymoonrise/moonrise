@@ -810,6 +810,12 @@
     const sb = getClient();
     clearClientSessionMarker();
     try {
+      // Block soft auto-login on the next /login visit until an intentional sign-in.
+      global.localStorage.setItem("ms_auth_skip_autologin", "1");
+    } catch (_) {
+      /* ignore */
+    }
+    try {
       global.MsAuthSecurity?.clearSensitiveClientStorage?.();
     } catch (_) {
       /* ignore */

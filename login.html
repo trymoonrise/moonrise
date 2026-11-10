@@ -65,7 +65,7 @@ setTimeout(function () {
   <link rel="icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="shortcut icon" href="assets/MoonriseLogo.png" type="image/png">
   <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
-  <link rel="stylesheet" href="css/studio.css?v=20261109-crown">
+  <link rel="stylesheet" href="css/studio.css?v=20261109-autologin">
   <link rel="stylesheet" href="css/studio-motion.css?v=20261002-login-bg">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261107-soft-radius">
 <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
@@ -203,11 +203,11 @@ setTimeout(function () {
   <script defer src="js/home-menu.js?v=20261109-nav"></script>
   <script defer src="js/segment-switch.js"></script>
   <script defer src="js/ui-motion.js?v=20261108-no-donate"></script>
-  <script defer src="js/toast.js"></script>
+  <script defer src="js/toast.js?v=20261109-autologin"></script>
   <script defer src="js/handles.js"></script>
   <script defer src="js/auth-security.js?v=20261003-session"></script>
   <script defer src="js/supabase-client.js?v=20261106-mono"></script>
-  <script defer src="js/auth.js?v=20261108-session-quiet"></script>
+  <script defer src="js/auth.js?v=20261109-autologin"></script>
   <script defer>
     (async function () {
       window.StudioAuth?.warmAuthService?.();
@@ -217,6 +217,21 @@ setTimeout(function () {
       }
       const params = new URLSearchParams(location.search);
       const PENDING_KEY = "ms_auth_email_pending";
+      const SKIP_AUTOLOGIN_KEY = "ms_auth_skip_autologin";
+      function isSkipAutologin() {
+        try {
+          return localStorage.getItem(SKIP_AUTOLOGIN_KEY) === "1";
+        } catch (_) {
+          return false;
+        }
+      }
+      function markSkipAutologin() {
+        try {
+          localStorage.setItem(SKIP_AUTOLOGIN_KEY, "1");
+        } catch (_) {
+          /* ignore */
+        }
+      }
       function readLocalPendingId() {
         try {
           return JSON.parse(sessionStorage.getItem(PENDING_KEY) || "")?.id || "";
@@ -240,6 +255,11 @@ setTimeout(function () {
         if (isLocate) {
           location.replace("orders");
           return;
+        }
+        try {
+          localStorage.removeItem(SKIP_AUTOLOGIN_KEY);
+        } catch (_) {
+          /* ignore */
         }
         try {
           // Show the install-app banner on the next authenticated page.
@@ -866,15 +886,35 @@ setTimeout(function () {
           return;
         }
         // Home-screen / installed app: open Studio when already signed in.
-        // A normal browser visit to /login keeps the sign-in form.
+        // Browser: soft auto-login toast when stay-signed-in is on (Cancel or prior
+        // sign-out defuses until the next intentional sign-in).
         if (
           sessionNow
           && !emailConfirmPending
           && params.get("check_email") !== "1"
-          && isInstalledHomeScreen()
         ) {
-          await continueAfterAuth();
-          return;
+          if (isInstalledHomeScreen()) {
+            await continueAfterAuth();
+            return;
+          }
+          if (readAutosaveEnabled() && !isSkipAutologin()) {
+            revealLoginForm();
+            window.StudioToast?.countdown?.({
+              message: "Auto Login detected",
+              seconds: 5,
+              cancelLabel: "Cancel",
+              onDone: function () {
+                void continueAfterAuth().catch(function () {
+                  revealLoginForm();
+                });
+              },
+              onCancel: function () {
+                markSkipAutologin();
+              },
+            });
+            await watchPendingSignIn();
+            return;
+          }
         }
         if (
           params.get("check_email") === "1"

@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.9.2",
+      "date": "2026-11-09",
+      "title": "Cancelable auto-login toast",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "When Auto save is on, the login page shows a bottom Auto Login detected toast with a 5-second timer and a Cancel button before entering Studio."
+          ],
+          "fixes": [
+            "Signing out or canceling the toast blocks soft auto-login until the next intentional sign-in."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.1",
       "date": "2026-11-09",
       "title": "Simpler login passkey",

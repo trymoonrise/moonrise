@@ -1,10 +1,12 @@
 /**
  * Top-of-screen error banner - ease in / ease out.
  * StudioToast.error(msg) · StudioToast.clear()
+ * StudioToast.countdown({ message, seconds, cancelLabel, onDone, onCancel })
  * Also adopts inline .ms-error / dialog error text so all errors share one surface.
  */
 (function (global) {
   const HOST_ID = "ms-toast-host";
+  const ACTION_HOST_ID = "ms-toast-action-host";
   const SHOW_MS = 4200;
   const SHOW_MS_LONG = 10000;
   const LONG_MSG_CHARS = 90;
@@ -13,6 +15,9 @@
   let exitTimer = 0;
   let lastMsg = "";
   let lastAt = 0;
+  let countdownTimer = 0;
+  let countdownTick = 0;
+  let countdownActive = null;
   const seenInline = new WeakMap();
 
   function prefersReducedMotion() {
@@ -71,6 +76,119 @@
       return;
     }
     exitTimer = global.setTimeout(finish, EXIT_MS);
+  }
+
+  function ensureActionHost() {
+    let host = document.getElementById(ACTION_HOST_ID);
+    if (host) return host;
+    host = document.createElement("div");
+    host.id = ACTION_HOST_ID;
+    host.className = "ms-toast-action-host";
+    host.setAttribute("aria-live", "polite");
+    host.innerHTML =
+      '<div class="ms-toast ms-toast--action" id="ms-toast-action" role="status" hidden>' +
+      '<div class="ms-toast-inner">' +
+      '<p class="ms-toast-msg" id="ms-toast-action-msg"></p>' +
+      '<span class="ms-toast-timer" id="ms-toast-action-timer" aria-hidden="true"></span>' +
+      '<button type="button" class="ms-toast-action-cancel" id="ms-toast-action-cancel">Cancel</button>' +
+      "</div></div>";
+    document.body.appendChild(host);
+    return host;
+  }
+
+  function clearCountdownTimers() {
+    global.clearTimeout(countdownTimer);
+    global.clearInterval(countdownTick);
+    countdownTimer = 0;
+    countdownTick = 0;
+  }
+
+  function clearCountdown() {
+    clearCountdownTimers();
+    countdownActive = null;
+    const toast = document.getElementById("ms-toast-action");
+    if (!toast) return;
+    toast.classList.remove("is-in");
+    toast.classList.add("is-out");
+    const finish = function () {
+      toast.hidden = true;
+      toast.classList.remove("is-out", "is-in");
+      const msg = document.getElementById("ms-toast-action-msg");
+      const timer = document.getElementById("ms-toast-action-timer");
+      if (msg) msg.textContent = "";
+      if (timer) timer.textContent = "";
+    };
+    if (prefersReducedMotion()) {
+      finish();
+      return;
+    }
+    global.setTimeout(finish, EXIT_MS);
+  }
+
+  function countdown(opts) {
+    const options = opts && typeof opts === "object" ? opts : {};
+    const message = String(options.message || "Auto Login detected").trim() || "Auto Login detected";
+    const seconds = Math.max(1, Math.min(30, Number(options.seconds) || 5));
+    const cancelLabel = String(options.cancelLabel || "Cancel").trim() || "Cancel";
+    ensureActionHost();
+    const toast = document.getElementById("ms-toast-action");
+    const msgEl = document.getElementById("ms-toast-action-msg");
+    const timerEl = document.getElementById("ms-toast-action-timer");
+    const cancelBtn = document.getElementById("ms-toast-action-cancel");
+    if (!toast || !msgEl || !timerEl || !cancelBtn) return { cancel: function () {} };
+
+    clearCountdownTimers();
+    countdownActive = { cancelled: false, done: false };
+    let remaining = seconds;
+    msgEl.textContent = message;
+    timerEl.textContent = String(remaining) + "s";
+    cancelBtn.textContent = cancelLabel;
+    toast.hidden = false;
+    toast.classList.remove("is-out");
+    void toast.offsetWidth;
+    toast.classList.add("is-in");
+
+    const finishDone = function () {
+      if (!countdownActive || countdownActive.cancelled || countdownActive.done) return;
+      countdownActive.done = true;
+      clearCountdown();
+      try {
+        options.onDone?.();
+      } catch (_) {
+        /* ignore */
+      }
+    };
+
+    const finishCancel = function () {
+      if (!countdownActive || countdownActive.cancelled || countdownActive.done) return;
+      countdownActive.cancelled = true;
+      clearCountdown();
+      try {
+        options.onCancel?.();
+      } catch (_) {
+        /* ignore */
+      }
+    };
+
+    cancelBtn.onclick = function (event) {
+      event.preventDefault();
+      finishCancel();
+    };
+
+    countdownTick = global.setInterval(function () {
+      remaining -= 1;
+      if (remaining <= 0) {
+        timerEl.textContent = "0s";
+        return;
+      }
+      timerEl.textContent = String(remaining) + "s";
+    }, 1000);
+
+    countdownTimer = global.setTimeout(finishDone, seconds * 1000);
+
+    return {
+      cancel: finishCancel,
+    };
   }
 
   function show(kind, msg) {
@@ -195,6 +313,8 @@
     success: success,
     info: info,
     clear: clear,
+    clearCountdown: clearCountdown,
+    countdown: countdown,
     showError: error,
   };
 })(window);
