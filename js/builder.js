@@ -408,50 +408,98 @@
   }
 
   function resetAgentActivityPanel() {
-    const thought = document.getElementById("preview-agent-thought");
-    const files = document.getElementById("preview-agent-files");
-    if (thought) thought.textContent = "Reading the business";
-    if (files) files.replaceChildren();
+    renderAgentActivity({ thoughts: [{ text: "Reading the business" }], files: [] });
   }
 
-  function latestAgentFiles(files) {
-    const picked = [];
-    const seen = new Set();
-    for (let i = files.length - 1; i >= 0 && picked.length < 3; i -= 1) {
-      const rel = String(files[i]?.path || "").trim();
-      if (!rel || seen.has(rel)) continue;
-      seen.add(rel);
-      picked.push(rel);
-    }
-    return picked.reverse();
+  function latestAgentFile(files) {
+    let picked = null;
+    files.forEach((file) => {
+      const rel = String(file?.path || "").trim();
+      if (!rel) return;
+      if (!picked || Number(file.at || 0) >= Number(picked.at || 0)) picked = file;
+    });
+    return picked;
+  }
+
+  function agentPromptText(data, file) {
+    const thoughts = Array.isArray(data?.thoughts) ? data.thoughts : [];
+    const text = String(thoughts[thoughts.length - 1]?.text || "")
+      .replace(/[.\u2026\s]+$/, "")
+      .trim();
+    if (text) return text;
+    const rel = String(file?.path || "").trim();
+    return rel ? "Writing " + rel : "Reading the business";
   }
 
   function renderAgentActivity(data) {
-    const thoughts = Array.isArray(data?.thoughts) ? data.thoughts : [];
     const files = Array.isArray(data?.files) ? data.files : [];
+    const file = latestAgentFile(files);
+    const prompt = agentPromptText(data, file);
     const thoughtEl = document.getElementById("preview-agent-thought");
     const fileRoot = document.getElementById("preview-agent-files");
-    if (thoughtEl && thoughts.length) {
-      const text = String(thoughts[thoughts.length - 1]?.text || "").replace(/[.\u2026\s]+$/, "");
-      if (text) thoughtEl.textContent = text;
-    }
+    if (thoughtEl) thoughtEl.textContent = prompt;
     if (!fileRoot) return;
-    const shown = latestAgentFiles(files);
-    const current = Array.from(fileRoot.querySelectorAll("[data-agent-file]")).map((el) =>
-      el.getAttribute("data-agent-file")
-    );
-    if (current.join("\n") === shown.join("\n")) return;
+    const hunk = Array.isArray(file?.hunk) ? file.hunk.slice(0, 4) : [];
+    const signature = [
+      prompt,
+      file?.path || "",
+      String(file?.added || 0),
+      String(file?.removed || 0),
+      hunk.map((line) => (line.op || "") + (line.n || "") + (line.text || "")).join("\n"),
+    ].join("\u0000");
+    if (fileRoot.getAttribute("data-audit") === signature) return;
+    fileRoot.setAttribute("data-audit", signature);
     fileRoot.replaceChildren();
-    shown.forEach((rel) => {
-      const row = document.createElement("div");
-      row.className = "ms-lb-agent-file";
-      row.setAttribute("data-agent-file", rel);
-      row.setAttribute("role", "listitem");
-      const name = document.createElement("code");
-      name.textContent = rel;
-      row.appendChild(name);
-      fileRoot.appendChild(row);
-    });
+
+    const cmd = document.createElement("p");
+    cmd.className = "ms-lb-term-cmd";
+    cmd.textContent = prompt;
+    fileRoot.appendChild(cmd);
+    if (!file?.path) return;
+
+    const card = document.createElement("div");
+    card.className = "ms-lb-term-file";
+    card.setAttribute("data-agent-file", file.path);
+
+    const head = document.createElement("div");
+    head.className = "ms-lb-term-file-head";
+    const name = document.createElement("span");
+    name.className = "ms-lb-term-path";
+    name.textContent = file.path;
+    const stat = document.createElement("span");
+    stat.className = "ms-lb-term-stat";
+    const added = document.createElement("span");
+    added.className = "ms-lb-term-add";
+    added.textContent = "+" + (Number(file.added) || hunk.length || 0);
+    const removed = document.createElement("span");
+    removed.className = "ms-lb-term-del";
+    removed.textContent = "\u2212" + (Number(file.removed) || 0);
+    stat.append(added, removed);
+    head.append(name, stat);
+    card.appendChild(head);
+
+    if (hunk.length) {
+      const lines = document.createElement("div");
+      lines.className = "ms-lb-term-lines";
+      hunk.forEach((line) => {
+        const row = document.createElement("div");
+        const op = line?.op === "-" ? "-" : "+";
+        row.className = "ms-lb-term-line " + (op === "-" ? "is-del" : "is-add");
+        const num = document.createElement("span");
+        num.className = "ms-lb-term-n";
+        num.textContent = String(line?.n || "");
+        const mark = document.createElement("span");
+        mark.className = "ms-lb-term-op";
+        mark.textContent = op;
+        const text = document.createElement("span");
+        text.className = "ms-lb-term-text";
+        text.textContent = String(line?.text || "");
+        row.append(num, mark, text);
+        lines.appendChild(row);
+      });
+      card.appendChild(lines);
+    }
+    fileRoot.appendChild(card);
   }
 
   function stopAgentActivityPoll() {

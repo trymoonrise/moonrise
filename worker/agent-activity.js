@@ -12,6 +12,43 @@ function clip(value, max) {
   return String(value || "").replace(/\s+/g, " ").trim().slice(0, max || 180);
 }
 
+function clipLine(value) {
+  return String(value || "").replace(/\s+/g, " ").trim().slice(0, 72);
+}
+
+function fileAudit(pathName, contents, memory) {
+  const next = String(contents || "").replace(/\r\n/g, "\n").split("\n");
+  const prev = memory.get(pathName);
+  memory.set(pathName, next);
+  let added = 0;
+  let removed = 0;
+  const hunk = [];
+  if (!prev) {
+    next.forEach((line, index) => {
+      const text = clipLine(line);
+      if (!text) return;
+      added += 1;
+      if (hunk.length < 4) hunk.push({ n: index + 1, op: "+", text });
+    });
+    return { added, removed, hunk };
+  }
+  const limit = Math.max(next.length, prev.length);
+  for (let i = 0; i < limit; i += 1) {
+    if (prev[i] === next[i]) continue;
+    const before = prev[i] == null ? "" : clipLine(prev[i]);
+    const after = next[i] == null ? "" : clipLine(next[i]);
+    if (before) {
+      removed += 1;
+      if (hunk.length < 4) hunk.push({ n: i + 1, op: "-", text: before });
+    }
+    if (after) {
+      added += 1;
+      if (hunk.length < 4) hunk.push({ n: i + 1, op: "+", text: after });
+    }
+  }
+  return { added, removed, hunk };
+}
+
 function ensureAgent(jobPrompt) {
   if (!jobPrompt.agent || typeof jobPrompt.agent !== "object") {
     jobPrompt.agent = { thoughts: [], files: [] };
@@ -22,6 +59,7 @@ function ensureAgent(jobPrompt) {
 }
 
 function createAgentActivity({ supabase, jobId, jobPrompt, workspaceDir }) {
+  const previousContents = new Map();
   let chain = Promise.resolve();
 
   function enqueue(task) {
@@ -70,6 +108,7 @@ function createAgentActivity({ supabase, jobId, jobPrompt, workspaceDir }) {
         }
         if (!pathName) continue;
         const line = clip(file?.thought);
+        const audit = fileAudit(pathName, file?.contents, previousContents);
         await enqueue(async () => {
           const agent = ensureAgent(jobPrompt);
           if (line) {
@@ -79,12 +118,16 @@ function createAgentActivity({ supabase, jobId, jobPrompt, workspaceDir }) {
             }
           }
           const prev = agent.files.find((item) => item.path === pathName);
-          if (prev) {
-            prev.bytes = bytes;
-            prev.at = Date.now();
-          } else {
-            agent.files.push({ path: pathName, bytes, at: Date.now() });
-          }
+          const record = {
+            path: pathName,
+            bytes,
+            added: audit.added,
+            removed: audit.removed,
+            hunk: audit.hunk,
+            at: Date.now(),
+          };
+          if (prev) Object.assign(prev, record);
+          else agent.files.push(record);
           if (agent.files.length > 40) agent.files.splice(0, agent.files.length - 40);
           await persist();
         });

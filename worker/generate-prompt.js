@@ -286,12 +286,13 @@ If the first draft looks like any of those, redesign it before you return HTML.
 ## How to design
 1) Read the business. Decide what the customer must see first: the food, the work, the room, the offer, or how to reach them.
 2) Use the style family only for palette, type, and the one button. Compose the page yourself.
-3) The first screen is one idea: who this is, what they do, what to do next, and one real photo used on purpose. Put the photo beside the type, under the type, or in a grid. Do not lay the type on a scrim unless the photo cannot be read otherwise.
-4) Each later section has a job and a different rhythm. Do not repeat a centered heading plus three identical cards.
-5) Services name the real offer. Use a photo row, a numbered list, or a quiet two-column grid. Title plus one short line.
-6) Proof only when the facts include it. Never invent reviews, stars, years, or awards.
-7) Contact is designed: visible labels, fields, the same button, and the real phone, address, and hours beside the form when they exist.
-8) The page should look like this business. A bakery, a plumber, and a law office do not share a hero.
+3) Modern controls come from the Moonrise UI library at https://trymoonrise.com/ui-library. Use its buttons, forms, menus, navigation, feedback, and surfaces. Adapt them to this business. Do not copy the library page, its logo, or its demo chrome.
+4) The first screen is one idea: who this is, what they do, what to do next, and one real photo used on purpose. Put the photo beside the type, under the type, or in a grid. Do not lay the type on a scrim unless the photo cannot be read otherwise.
+5) Each later section has a job and a different rhythm. Do not repeat a centered heading plus three identical cards.
+6) Services name the real offer. Use a photo row, a numbered list, or a quiet two-column grid. Title plus one short line.
+7) Proof only when the facts include it. Never invent reviews, stars, years, or awards.
+8) Contact is designed: visible labels, fields, the same button, and the real phone, address, and hours beside the form when they exist.
+9) The page should look like this business. A bakery, a plumber, and a law office do not share a hero.
 
 ## Finish
 - 4px spacing grid: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96. No 7px, 13px, or 15px.

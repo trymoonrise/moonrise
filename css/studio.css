@@ -9190,7 +9190,7 @@ body.ms-lb-pane-resizing .ms-lb-pane-resizer::before {
 }
 
 body.ms-lb-generating .ms-lb-loading-inner {
-  width: min(22rem, calc(100% - 2.5rem));
+  width: min(32rem, calc(100% - 2rem));
 }
 
 body.ms-lb-generating .ms-lb-loading-copy {
@@ -9219,8 +9219,25 @@ body.ms-lb-generating .ms-lb-loading-copy {
 
 body.ms-lb-generating .ms-lb-agent {
   display: flex;
-  align-items: center;
-  text-align: center;
+  align-items: stretch;
+  width: 100%;
+  text-align: left;
+}
+
+body.ms-lb-generating .ms-lb-agent-status {
+  align-self: center;
+}
+
+body.ms-lb-generating .ms-lb-agent-thought {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .ms-lb-agent-status {
@@ -9284,6 +9301,94 @@ body.ms-lb-generating .ms-lb-agent {
 
 .ms-lb-agent-files:empty {
   display: none;
+}
+
+body.ms-lb-generating .ms-lb-term {
+  display: block;
+  box-sizing: border-box;
+  padding: 0.85rem 0.85rem 0.75rem;
+  border-radius: 16px;
+  background: #161618;
+  color: #f5f5f7;
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.ms-lb-term-cmd {
+  margin: 0 0 0.7rem;
+  color: #f5f5f7;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.ms-lb-term-cmd::before {
+  content: "> ";
+  color: #8e8e93;
+}
+
+.ms-lb-term-file {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: #101012;
+}
+
+.ms-lb-term-file-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.45rem 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ms-lb-term-path {
+  min-width: 0;
+  overflow: hidden;
+  color: #d2d2d7;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-lb-term-stat {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 0.45rem;
+}
+
+.ms-lb-term-add { color: #30d158; }
+.ms-lb-term-del { color: #ff6961; }
+
+.ms-lb-term-lines {
+  padding: 0.28rem 0;
+}
+
+.ms-lb-term-line {
+  display: grid;
+  grid-template-columns: 1.7rem 0.7rem minmax(0, 1fr);
+  gap: 0.35rem;
+  padding: 0 0.7rem;
+  white-space: nowrap;
+}
+
+.ms-lb-term-line.is-add {
+  color: #30d158;
+  background: rgba(48, 209, 88, 0.08);
+}
+
+.ms-lb-term-line.is-del {
+  color: #ff6961;
+  background: rgba(255, 105, 97, 0.1);
+}
+
+.ms-lb-term-n {
+  color: #6e6e73;
+}
+
+.ms-lb-term-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ms-lb-agent-file {

@@ -3940,6 +3940,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
   };
 
   if (activity) {
+    await activity.thought("Reading the UI library");
     await activity.writeFiles(
       siteSourceFiles(ctx, copy, shellPlan, stockMedia).filter((file) => file.path !== "brief.json")
     );

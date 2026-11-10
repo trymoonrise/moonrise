@@ -3,6 +3,25 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.0.5",
+      "date": "2026-11-10",
+      "title": "Agent shows the file it is changing",
+      "sections": [
+        {
+          "heading": "Studio",
+          "added": [
+            "While a site is building, the agent keeps the Moonrise logo and pulse, and shows one file it is changing."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "Website generation builds modern controls from the UI library."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.0.4",
       "date": "2026-11-10",
       "title": "Docs is easier to scan",
