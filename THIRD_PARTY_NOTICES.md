@@ -1,8 +1,8 @@
 # Third-party notices
 
-Moonrise Studio is proprietary software. The components below are used under
-their own licenses. This file is for attribution and compliance; it does not
-change the [LICENSE](LICENSE) for Moonrise proprietary code.
+Moonrise Studio is released under the [MIT License](LICENSE). The components
+below keep their own licenses. This file is for attribution. It does not
+change the MIT license for Moonrise code.
 
 ## Fonts (SIL Open Font License 1.1)
 

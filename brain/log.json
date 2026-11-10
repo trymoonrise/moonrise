@@ -3,6 +3,26 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.8.4",
+      "date": "2026-11-09",
+      "title": "MIT license",
+      "sections": [
+        {
+          "heading": "GitHub",
+          "added": [
+            "The repository license is MIT."
+          ]
+        },
+        {
+          "heading": "Site",
+          "added": [
+            "The public bar no longer shows Start earning.",
+            "Menu links draw a line underneath when you hover them."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.8.3",
       "date": "2026-11-09",
       "title": "Clearer platform map",
