@@ -3,6 +3,21 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "3.0.6",
+      "date": "2026-11-10",
+      "title": "Public footers show the last repo update",
+      "tag": "v3.0.6",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v3.0.6",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Public page footers say how long ago the Moonrise repo was last updated."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.0.5",
       "date": "2026-11-10",
       "title": "Agent shows the file it is changing",

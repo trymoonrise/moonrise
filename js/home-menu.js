@@ -1,7 +1,131 @@
 /**
  * Full-screen page menu shared by the public Moonrise pages.
+ * The footer line is the latest commit on trymoonrise/moonrise.
  */
 (function () {
+  function formatRepoAgo(iso) {
+    var then = new Date(iso).getTime();
+    if (!Number.isFinite(then)) return "";
+    var sec = Math.max(0, Math.floor((Date.now() - then) / 1000));
+    function unit(n, one, many) {
+      return n + " " + (n === 1 ? one : many);
+    }
+    if (sec < 60) return unit(sec, "second", "seconds");
+    var min = Math.floor(sec / 60);
+    if (min < 60) return unit(min, "minute", "minutes");
+    var hr = Math.floor(min / 60);
+    if (hr < 24) return unit(hr, "hour", "hours");
+    var day = Math.floor(hr / 24);
+    if (day < 7) return unit(day, "day", "days");
+    var week = Math.floor(day / 7);
+    if (week < 5) return unit(week, "week", "weeks");
+    var month = Math.floor(day / 30);
+    if (month < 12) return unit(Math.max(1, month), "month", "months");
+    return unit(Math.max(1, Math.floor(day / 365)), "year", "years");
+  }
+
+  function ensureRepoStyle() {
+    if (document.getElementById("ms-repo-updated-style")) return;
+    var style = document.createElement("style");
+    style.id = "ms-repo-updated-style";
+    style.textContent = [
+      ".ms-repo-updated{margin:0.85rem 0 0;color:#6e6e73;font-size:0.78rem;font-weight:500;line-height:1.4;letter-spacing:-0.01em}",
+      ".ms-repo-updated[hidden]{display:none!important}",
+      ".ms-legal-foot .ms-repo-updated{flex-basis:100%;margin:0.35rem 0 0;text-align:center}",
+      "body>.ms-repo-updated.is-page-foot{margin:0;padding:1.5rem 1.25rem calc(1.35rem + env(safe-area-inset-bottom));text-align:center}",
+      "body.ms-docs-page>.ms-repo-updated.is-page-foot{padding-bottom:calc(5.5rem + env(safe-area-inset-bottom))}",
+    ].join("");
+    document.head.appendChild(style);
+  }
+
+  function ensureRepoUpdated() {
+    var existing = document.querySelector("[data-repo-updated]");
+    if (existing) return existing;
+    var el = document.createElement("p");
+    el.className = "ms-repo-updated";
+    el.setAttribute("data-repo-updated", "");
+    el.hidden = true;
+    el.textContent = "Last updated";
+    var slot =
+      document.querySelector(".ms-home-site-footer .ms-wrap") ||
+      document.querySelector(".ms-orders-foot") ||
+      document.querySelector(".ms-legal-foot") ||
+      document.querySelector(".dt-foot");
+    if (slot) {
+      slot.appendChild(el);
+      return el;
+    }
+    el.classList.add("is-page-foot");
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function paintRepoUpdated(iso) {
+    var el = ensureRepoUpdated();
+    var ago = formatRepoAgo(iso);
+    if (!ago) {
+      el.hidden = true;
+      return;
+    }
+    el.hidden = false;
+    el.textContent = "Last updated " + ago + " ago";
+    el.dataset.committedAt = iso;
+    el.title = "GitHub · trymoonrise/moonrise";
+  }
+
+  function readRepoCommitAt() {
+    return fetch("/studio-last-commit", { cache: "no-store", credentials: "omit" })
+      .then(function (res) {
+        return res.ok ? res.json() : null;
+      })
+      .then(function (data) {
+        if (data && data.committedAt) return String(data.committedAt);
+        return fetch("https://api.github.com/repos/trymoonrise/moonrise/commits?sha=main&per_page=1", {
+          headers: { Accept: "application/vnd.github+json" },
+          cache: "no-store",
+        }).then(function (res) {
+          return res.ok ? res.json() : null;
+        });
+      })
+      .then(function (value) {
+        if (typeof value === "string") return value;
+        var rows = Array.isArray(value) ? value : [];
+        var iso = rows[0] && rows[0].commit && (rows[0].commit.committer || rows[0].commit.author);
+        if (iso && iso.date) return String(iso.date);
+        return fetch("assets/last-commit.json?v=" + Date.now(), { cache: "no-store" }).then(function (res) {
+          return res.ok ? res.json() : null;
+        });
+      })
+      .then(function (value) {
+        if (typeof value === "string") return value;
+        return value && value.committedAt ? String(value.committedAt) : "";
+      })
+      .catch(function () {
+        return "";
+      });
+  }
+
+  function bootRepoUpdated() {
+    ensureRepoStyle();
+    ensureRepoUpdated();
+    var iso = "";
+    function paint() {
+      if (iso) paintRepoUpdated(iso);
+    }
+    function pull() {
+      readRepoCommitAt().then(function (next) {
+        if (!next) return;
+        iso = next;
+        paint();
+      });
+    }
+    pull();
+    window.setInterval(paint, 1000);
+    window.setInterval(pull, 60000);
+  }
+
+  bootRepoUpdated();
+
   var header = document.querySelector(".ms-site-bar");
   var button = document.querySelector(".ms-menu-btn");
   var menu = document.querySelector(".ms-menu-screen");

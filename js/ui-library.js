@@ -1178,93 +1178,6 @@
     return text;
   }
 
-  function formatRepoAgo(iso) {
-    const then = new Date(iso).getTime();
-    if (!Number.isFinite(then)) return "";
-    const sec = Math.max(0, Math.floor((Date.now() - then) / 1000));
-    const unit = (n, one, many) => n + " " + (n === 1 ? one : many);
-    if (sec < 60) return unit(sec, "second", "seconds");
-    const min = Math.floor(sec / 60);
-    if (min < 60) return unit(min, "minute", "minutes");
-    const hr = Math.floor(min / 60);
-    if (hr < 24) return unit(hr, "hour", "hours");
-    const day = Math.floor(hr / 24);
-    if (day < 7) return unit(day, "day", "days");
-    const week = Math.floor(day / 7);
-    if (week < 5) return unit(week, "week", "weeks");
-    const month = Math.floor(day / 30);
-    if (month < 12) return unit(Math.max(1, month), "month", "months");
-    return unit(Math.max(1, Math.floor(day / 365)), "year", "years");
-  }
-
-  function paintRepoUpdated(iso) {
-    const el = $("[data-repo-updated]");
-    if (!el) return;
-    const ago = formatRepoAgo(iso);
-    if (!ago) {
-      el.hidden = true;
-      return;
-    }
-    el.hidden = false;
-    el.textContent = "Last updated " + ago + " ago";
-    el.dataset.committedAt = iso;
-    el.title = "GitHub · trymoonrise/moonrise";
-  }
-
-  async function readRepoCommitAt() {
-    try {
-      const live = await fetch("/studio-last-commit", { cache: "no-store", credentials: "omit" });
-      if (live.ok) {
-        const data = await live.json();
-        if (data && data.committedAt) return String(data.committedAt);
-      }
-    } catch (_) {
-      /* static preview has no worker */
-    }
-    try {
-      const api = await fetch(
-        "https://api.github.com/repos/trymoonrise/moonrise/commits?sha=main&per_page=1",
-        { headers: { Accept: "application/vnd.github+json" }, cache: "no-store" }
-      );
-      if (api.ok) {
-        const rows = await api.json();
-        const iso = rows?.[0]?.commit?.committer?.date || rows?.[0]?.commit?.author?.date || "";
-        if (iso) return String(iso);
-      }
-    } catch (_) {
-      /* rate limit or private */
-    }
-    try {
-      const local = await fetch("assets/last-commit.json?v=" + Date.now(), { cache: "no-store" });
-      if (local.ok) {
-        const data = await local.json();
-        if (data && data.committedAt) return String(data.committedAt);
-      }
-    } catch (_) {
-      /* ignore */
-    }
-    return "";
-  }
-
-  function bootRepoUpdated() {
-    const el = $("[data-repo-updated]");
-    if (!el) return;
-    let iso = "";
-    const paint = () => {
-      if (iso) paintRepoUpdated(iso);
-    };
-    const pull = () => {
-      readRepoCommitAt().then((next) => {
-        if (!next) return;
-        iso = next;
-        paint();
-      });
-    };
-    pull();
-    window.setInterval(paint, 1000);
-    window.setInterval(pull, 60000);
-  }
-
   function loadCraftUpdated() {
     const el = $("[data-craft-updated]");
     if (!el) return;
@@ -1422,7 +1335,6 @@
       if (field) field.placeholder = "Prompt file unavailable";
     });
     loadCraftUpdated();
-    bootRepoUpdated();
     mountPatternDownloads();
     bindToc();
     bindPlay();
