@@ -247,7 +247,8 @@ body.ms-public-doc .ms-doc-block h2 {
 }
 
 body.ms-legal-site .ms-legal-article h3,
-body.ms-public-doc .ms-doc-block h3 {
+body.ms-public-doc .ms-doc-block > h3,
+body.ms-public-doc .ms-doc-block > .ms-settings-hint + h3 {
   margin: 1rem 0 0.35rem !important;
   color: #1d1d1f !important;
   font-size: 1rem !important;
@@ -256,11 +257,13 @@ body.ms-public-doc .ms-doc-block h3 {
 
 body.ms-legal-site .ms-legal-article p,
 body.ms-legal-site .ms-legal-article li,
-body.ms-public-doc .ms-settings-hint,
-body.ms-public-doc .ms-help-list,
-body.ms-public-doc .ms-help-list li,
-body.ms-public-doc .ms-doc-block p,
-body.ms-public-doc .ms-doc-block li {
+body.ms-public-doc .ms-doc-block > .ms-settings-hint,
+body.ms-public-doc .ms-doc-block > .ms-help-list,
+body.ms-public-doc .ms-doc-block > .ms-help-list > li,
+body.ms-public-doc .ms-doc-block > .ms-help-steps > li,
+body.ms-public-doc .ms-doc-block > p,
+body.ms-public-doc .ms-doc-block > ul > li,
+body.ms-public-doc .ms-doc-block > ol > li {
   color: #3a3a3c !important;
   -webkit-text-fill-color: #3a3a3c !important;
   font-size: 0.98rem !important;
@@ -269,7 +272,8 @@ body.ms-public-doc .ms-doc-block li {
 }
 
 body.ms-legal-site .ms-legal-article a,
-body.ms-public-doc .ms-doc-block a,
+body.ms-public-doc .ms-doc-block > p a,
+body.ms-public-doc .ms-doc-block > .ms-settings-hint a,
 body.ms-public-doc .ms-help-list a,
 body.ms-legal-site .ms-legal-foot a,
 .ms-doc-links a {
@@ -280,7 +284,8 @@ body.ms-legal-site .ms-legal-foot a,
 }
 
 body.ms-legal-site .ms-legal-article a:hover,
-body.ms-public-doc .ms-doc-block a:hover,
+body.ms-public-doc .ms-doc-block > p a:hover,
+body.ms-public-doc .ms-doc-block > .ms-settings-hint a:hover,
 .ms-doc-links a:hover {
   text-decoration: underline;
 }
@@ -319,7 +324,7 @@ body.ms-legal-site .ms-legal-foot {
   box-shadow: none !important;
 }
 
-body.ms-public-doc .ms-btn,
+body.ms-public-doc:not(.ms-docs-page) .ms-btn,
 body.ms-legal-site .ms-btn {
   border-radius: 10px !important;
   background: #1d1d1f !important;
@@ -525,7 +530,8 @@ body.ms-docs-page .ms-docs-main .ms-legal-section-head {
   letter-spacing: -0.03em !important;
 }
 
-body.ms-docs-page .ms-docs-main h3 {
+body.ms-docs-page .ms-docs-main .ms-doc-block > h3,
+body.ms-docs-page .ms-docs-main .ms-legal-article > h3 {
   margin: 1rem 0 0.35rem !important;
   font-size: 1rem !important;
   font-weight: 650 !important;
@@ -541,13 +547,19 @@ body.ms-docs-page .ms-docs-main .ms-help-steps > li {
   line-height: 1.55 !important;
 }
 
-body.ms-docs-page .ms-docs-main a {
+body.ms-docs-page .ms-docs-main .ms-doc-block > p a,
+body.ms-docs-page .ms-docs-main .ms-settings-hint a,
+body.ms-docs-page .ms-docs-main .ms-help-list a,
+body.ms-docs-page .ms-docs-main .ms-legal-article > p a {
   color: #1d1d1f !important;
   font-weight: 600;
   text-decoration: none;
 }
 
-body.ms-docs-page .ms-docs-main a:hover {
+body.ms-docs-page .ms-docs-main .ms-doc-block > p a:hover,
+body.ms-docs-page .ms-docs-main .ms-settings-hint a:hover,
+body.ms-docs-page .ms-docs-main .ms-help-list a:hover,
+body.ms-docs-page .ms-docs-main .ms-legal-article > p a:hover {
   text-decoration: underline;
 }
 
@@ -699,37 +711,82 @@ body.ms-docs-page .ms-docs-demo {
 body.ms-docs-page .ms-docs-demo-caption {
   margin: 0 0 0.55rem;
   color: #6e6e73 !important;
+  -webkit-text-fill-color: #6e6e73 !important;
   font-size: 0.78rem !important;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
+/* Isolate demos so public-doc reading colors cannot wash Studio controls. */
 body.ms-docs-page .ms-docs-demo-stage {
+  --ms-bg: #fafafa;
+  --ms-surface: #ffffff;
+  --ms-surface-alt: #f3f3f3;
+  --ms-ink: #1a1a1a;
+  --ms-muted: #6b6b6b;
+  --ms-line: #e5e5e5;
+  --ms-select: #d8d8d8;
+  --ms-select-soft: #eeeeee;
+  --ms-accent: #232427;
+  --ms-accent-bright: #232427;
+  --ms-accent-strong: #000000;
+  --ms-accent-soft: #f3f3f3;
+  --ms-accent-rgb: 35, 36, 39;
+  --ms-link: #1a1a1a;
+  --ms-radius-pill: 999px;
+  --ms-shadow-segment: 0 2px 8px rgba(0, 0, 0, 0.15);
   pointer-events: none;
   user-select: none;
-  padding: 1.1rem 1.15rem;
-  border-radius: 18px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 248, 250, 0.94));
-  border: 1px solid rgba(15, 23, 42, 0.07);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.85) inset,
-    0 14px 28px rgba(15, 23, 42, 0.05);
-  color: #232427;
-  -webkit-text-fill-color: initial;
+  padding: 1rem;
+  border-radius: 16px;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  box-shadow: none;
+  color: var(--ms-ink);
+  font-family: var(--ms-font, "DM Sans", system-ui, sans-serif);
+}
+
+body.ms-docs-page .ms-docs-demo-stage,
+body.ms-docs-page .ms-docs-demo-stage * {
+  -webkit-text-fill-color: unset;
 }
 
 body.ms-docs-page .ms-docs-demo-stage--chrome {
+  padding: 0.85rem;
+  background: #f3f3f3;
+}
+
+body.ms-docs-page .ms-docs-demo-stage .ms-lb-chrome-bar {
+  position: static;
+  display: grid;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+body.ms-docs-page .ms-docs-demo-stage .ms-lb-mode-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem 1rem;
+  gap: 0.55rem;
+}
+
+body.ms-docs-page .ms-docs-demo-stage .ms-lb-viewports {
+  justify-self: start;
 }
 
 body.ms-docs-page .ms-docs-demo-stage .ms-bs-mode-tabs {
   max-width: 28rem;
+}
+
+body.ms-docs-page .ms-docs-demo-stage .ms-lb-side-controls {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 24rem;
 }
 
 body.ms-docs-page .ms-docs-demo-stage .ms-lb-publish-actions {
@@ -740,23 +797,22 @@ body.ms-docs-page .ms-docs-demo-stage .ms-lb-widget {
   max-width: 24rem;
 }
 
-body.ms-docs-page .ms-docs-demo-stage button,
-body.ms-docs-page .ms-docs-demo-stage input,
-body.ms-docs-page .ms-docs-demo-stage label,
-body.ms-docs-page .ms-docs-demo-stage h3,
-body.ms-docs-page .ms-docs-demo-stage p,
-body.ms-docs-page .ms-docs-demo-stage span,
-body.ms-docs-page .ms-docs-demo-stage strong {
-  color: revert !important;
-  font-size: revert !important;
-  line-height: revert !important;
-  -webkit-text-fill-color: revert !important;
-  margin: revert;
+body.ms-docs-page .ms-docs-demo-stage .ms-bs-path {
+  margin-top: 0.85rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+}
+
+body.ms-docs-page .ms-docs-demo-stage .ms-lb-onboard-maps {
+  margin-top: 0.65rem;
 }
 
 body.ms-docs-page .ms-docs-demo-note {
   margin: 0.75rem 0 0 !important;
   color: #6e6e73 !important;
+  -webkit-text-fill-color: #6e6e73 !important;
   font-size: 0.88rem !important;
   line-height: 1.45 !important;
 }

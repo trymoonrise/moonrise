@@ -3,6 +3,24 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.9.8",
+      "date": "2026-11-09",
+      "title": "Docs demos match Studio colors",
+      "tag": "v2.9.8",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.9.8",
+      "sections": [
+        {
+          "heading": "Site",
+          "fixes": [
+            "Docs UI examples use the same Builder and Editor chrome markup and Studio color tokens, without washed-out reading-page overrides."
+          ],
+          "added": [
+            "Builder, Website Price, Contact Owner, and Contact Form demos mirror the live Studio controls more closely, including the Maps link field and policy checkbox."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.7",
       "date": "2026-11-09",
       "title": "Real Docs demos and policy cutover",
