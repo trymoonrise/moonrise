@@ -61,6 +61,7 @@
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
+  <link rel="stylesheet" href="css/site-nav.css?v=20261109-nav">
   <link rel="stylesheet" href="css/download.css?v=20261108-simple" onload="document.documentElement.classList.remove('ms-hold')">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -68,11 +69,32 @@
 </head>
 <body data-page="download" class="ms-download-page">
   <a class="ms-dl-skip" href="#main">Skip to content</a>
-  <header class="ms-dl-bar">
-    <a class="ms-dl-brand" href="/" aria-label="Moonrise home">
-      <svg class="ms-dl-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a10 10 0 1 0 9.2 14.2 6.4 6.4 0 0 1-9.2-14.2z"/></svg>
-      <span>moonrise</span>
-    </a>
+  <header class="ms-site-bar">
+    <div class="ms-nav-row">
+      <a class="ms-home-btn" href="/" aria-label="Moonrise home"><svg class="ms-nav-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a10 10 0 1 0 9.2 14.2 6.4 6.4 0 0 1-9.2-14.2z"/></svg><span>moonrise</span></a>
+      <div class="ms-nav-end">
+        <a class="ms-nav-cta" href="login.html">Start earning</a>
+        <button class="ms-menu-btn" type="button" aria-expanded="false" aria-controls="ms-menu" aria-label="Open menu">
+          <span class="ms-menu-label">Menu</span>
+          <span class="ms-menu-bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <nav class="ms-menu-screen" id="ms-menu" aria-label="Pages">
+      <a href="/" style="--i:0">Home</a>
+      <a href="login.html" style="--i:1">Start earning</a>
+      <a href="download" style="--i:2">Download</a>
+      <a href="orders" style="--i:3">Orders</a>
+      <a href="ui-library" style="--i:4">UI Library</a>
+      <a href="guide" style="--i:5">Guide</a>
+      <a href="help" style="--i:6">Help</a>
+      <a href="contact" style="--i:7">Contact</a>
+      <a href="legal" style="--i:8">Legal</a>
+      <a href="privacy" style="--i:9">Privacy</a>
+      <a href="terms" style="--i:10">Terms</a>
+      <a href="refund" style="--i:11">Refunds</a>
+      <a href="report" style="--i:12">Report</a>
+    </nav>
   </header>
   <main class="ms-download-main" id="main">
     <h1>Download.</h1>
@@ -99,5 +121,6 @@
   <script defer src="js/install-hint.js?v=20260924-perf1"></script>
   <script defer src="js/ui-motion.js?v=20261108-no-donate"></script>
   <script defer src="js/download-page.js?v=20260718-download-page"></script>
+  <script defer src="js/home-menu.js?v=20261109-nav"></script>
 </body>
 </html>

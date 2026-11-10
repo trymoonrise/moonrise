@@ -1,6 +1,5 @@
 /**
- * Full-screen stacking menu for the public home page.
- * Home button and Menu / Close live above the overlay, same pattern as a compact site menu.
+ * Full-screen page menu shared by the public Moonrise pages.
  */
 (function () {
   var header = document.querySelector(".ms-site-bar");
@@ -11,6 +10,22 @@
 
   var label = button.querySelector(".ms-menu-label");
 
+  function currentPath() {
+    return String(location.pathname || "/").toLowerCase();
+  }
+
+  function markCurrent() {
+    var path = currentPath();
+    menu.querySelectorAll("a").forEach(function (link) {
+      var href = String(link.getAttribute("href") || "").toLowerCase().split("#")[0].split("?")[0];
+      var slug = href.replace(/^\//, "").replace(/\.html$/, "");
+      var onHome = path === "/" || /\/index\.html?$/.test(path);
+      var current = slug === "" ? onHome : path === "/" + slug || path.endsWith("/" + slug) || path.endsWith("/" + slug + ".html");
+      if (current) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
   function setOpen(open) {
     button.setAttribute("aria-expanded", String(open));
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
@@ -19,6 +34,8 @@
     if (label) label.textContent = open ? "Close" : "Menu";
     if (open) menu.scrollTop = 0;
   }
+
+  markCurrent();
 
   button.addEventListener("click", function () {
     setOpen(button.getAttribute("aria-expanded") !== "true");
@@ -30,8 +47,8 @@
 
   if (home) {
     home.addEventListener("click", function (event) {
-      var path = location.pathname || "/";
-      var onHome = path === "/" || /\/index\.html?$/i.test(path);
+      var path = currentPath();
+      var onHome = path === "/" || /\/index\.html?$/.test(path);
       if (!onHome) return;
       event.preventDefault();
       setOpen(false);

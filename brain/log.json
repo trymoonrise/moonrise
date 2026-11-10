@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.7.8",
+      "date": "2026-11-09",
+      "title": "Same public menu",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Public pages share one bar, and the menu centers every page, including the UI Library, terms, and refunds."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.7",
       "date": "2026-11-09",
       "title": "Hours ago",
