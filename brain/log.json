@@ -3,6 +3,28 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.0.0",
+      "date": "2026-11-10",
+      "title": "Library header and design review",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The sign-in email field shows you@email.com as a placeholder."
+          ],
+          "fixes": [
+            "The UI Library title and intro sit below the logo and menu."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "Website generation checks the page, then a fresh review can send must-fix design and fact problems back before the site is saved."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.9",
       "date": "2026-11-10",
       "title": "Sign-in works again",

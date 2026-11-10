@@ -248,6 +248,10 @@ html.ms-menu-open body {
   overflow: hidden;
 }
 
+body[data-page="ui-library"] .ms-site-bar {
+  background: #f7f7f8;
+}
+
 body[data-page="ui-library"] .dt-shell {
   padding-top: 5.5rem;
 }

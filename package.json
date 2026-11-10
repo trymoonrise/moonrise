@@ -1,6 +1,6 @@
 {
   "name": "moonrise",
-  "version": "2.9.9",
+  "version": "3.0.0",
   "private": true,
   "description": "Moonrise Studio — find, build, preview, get paid, go live. https://trymoonrise.com",
   "engines": {

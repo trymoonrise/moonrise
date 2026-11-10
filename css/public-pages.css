@@ -701,7 +701,7 @@ body[data-page="guide"] .ms-help-legal {
 /* UI Library — quieter hero, keep demos intact */
 body[data-page="ui-library"] .dt-shell {
   width: min(64rem, calc(100% - 1.5rem)) !important;
-  padding-top: 0.85rem !important;
+  padding-top: 5.5rem !important;
 }
 
 body[data-page="ui-library"] .dt-hero {
