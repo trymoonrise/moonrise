@@ -20,7 +20,7 @@
     "404",
   ]);
   const SUPPORT_EMAIL = "trymoonrise@gmail.com";
-  /** Session / API probes during page boot — keep short so the loader cannot stall. */
+  /** Session / API probes during page boot, keep short so the loader cannot stall. */
   const AUTH_TIMEOUT_MS = 4500;
   const AUTH_RETRY_DELAY_MS = 800;
 
@@ -1158,7 +1158,7 @@
       location.replace("login?next=" + next);
       return null;
     }
-    // Channel hops already painted chrome — freeze-check in the background.
+    // Channel hops already painted chrome, freeze-check in the background.
     if (global.__msTabHop) {
       void getProfile()
         .then(async (profile) => {

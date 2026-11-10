@@ -38,7 +38,7 @@ Describe what a person was trying to do in Studio and what would be better.
 
 Be respectful. No harassment, spam, or bad-faith reports. See [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md).
 
-For security reports, use [SECURITY.md](SECURITY.md) — never post secrets or exploit details in public issues.
+For security reports, use [SECURITY.md](SECURITY.md), never post secrets or exploit details in public issues.
 
 ## Contact
 

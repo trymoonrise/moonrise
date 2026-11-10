@@ -333,8 +333,8 @@
     body.innerHTML = rows
       .map((row) => {
         const key = esc(row.list_key);
-        const paid = formatMoney(row.price_cents) || "—";
-        const cut = formatMoney(creatorCutCents(row)) || "—";
+        const paid = formatMoney(row.price_cents) || "";
+        const cut = formatMoney(creatorCutCents(row)) || "";
         const when = formatDate(row.paid_at);
         const name = row.business_name || "Untitled business";
         return (
@@ -380,8 +380,8 @@
     const web = String(row.website || "").trim();
     const webDisp = siteDisplay(web);
     const webHref = siteUrl(web);
-    const paid = formatMoney(row.price_cents) || "—";
-    const cut = formatMoney(creatorCutCents(row)) || "—";
+    const paid = formatMoney(row.price_cents) || "";
+    const cut = formatMoney(creatorCutCents(row)) || "";
     const sub = phone || email || (isOwnerView && row.creator_handle ? "@" + row.creator_handle : "No contact on file");
 
     const avatar = $("ms-clients-detail-avatar");

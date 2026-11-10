@@ -233,7 +233,7 @@ function formatStockMediaForPrompt(media) {
     `Theme: ${media.label || media.key || "general"}`,
     media.folder ? `Folder: ${media.folder}` : "",
     "Use ONLY these absolute https URLs for images and videos. Never invent URLs. Never keep relative ../stock/ paths.",
-    "These assets were curated for this exact kind of business — keep the theme (spa stays spa, dog grooming stays dogs, etc.).",
+    "These assets were curated for this exact kind of business, keep the theme (spa stays spa, dog grooming stays dogs, etc.).",
     "",
     "Images:",
     `- hero: ${img.hero}`,

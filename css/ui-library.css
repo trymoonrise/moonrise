@@ -1,4 +1,4 @@
-/* UI Library dictionary — scoped .dt-* demos */
+/* UI Library dictionary, scoped .dt-* demos */
 
 /* Kill studio/cream tint bleed on this public page. */
 body[data-page="ui-library"],
@@ -2944,7 +2944,7 @@ body[data-page="ui-library"] a.dt-link:hover,
   .dt-card { scroll-margin-top: 1rem; }
 }
 
-/* —— Accordion —— */
+/*, Accordion, */
 .dt-accordion { display: grid; gap: 0.55rem; width: 100%; }
 .dt-acc-item {
   border: 1px solid #e8e8e8;
@@ -2998,7 +2998,7 @@ body[data-page="ui-library"] a.dt-link:hover,
 }
 .dt-acc-item.is-open .dt-acc-panel > div { padding-bottom: 0.85rem; }
 
-/* —— Status —— */
+/*, Status, */
 .dt-status-row { display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center; }
 .dt-status-dot {
   width: 0.65rem;
@@ -3041,7 +3041,7 @@ body[data-page="ui-library"] a.dt-link:hover,
   letter-spacing: -0.03em;
 }
 
-/* —— Media —— */
+/*, Media, */
 .dt-carousel {
   position: relative;
   overflow: hidden;
@@ -3124,7 +3124,7 @@ body[data-page="ui-library"] a.dt-link:hover,
   font-family: "IBM Plex Mono", ui-monospace, monospace;
 }
 
-/* —— Data —— */
+/*, Data, */
 .dt-bars { display: grid; gap: 0.85rem; width: 100%; padding-top: 0.2rem; }
 .dt-bar-row {
   display: grid;
@@ -3234,7 +3234,7 @@ body[data-page="ui-library"] a.dt-link:hover,
 }
 .dt-table tr:last-child td { border-bottom: 0; }
 
-/* —— System —— */
+/*, System, */
 .dt-copy-row {
   display: flex;
   gap: 0.55rem;
@@ -3334,7 +3334,7 @@ body[data-page="ui-library"] a.dt-link:hover,
   transition: background 0.28s ease, color 0.28s ease, transform 0.2s ease;
 }
 
-/* —— Contrast: never let inherited fill wash out light/dark text —— */
+/*, Contrast: never let inherited fill wash out light/dark text, */
 body[data-page="ui-library"] .dt-motion-tile,
 body[data-page="ui-library"] .dt-btn-primary,
 body[data-page="ui-library"] .dt-btn-danger,

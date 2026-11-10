@@ -442,13 +442,13 @@
         const fields = [
           ["Made by", maker + (site.owner ? " · Owner" : "")],
           ["Buyer", site.buyerEmail || "Email not on file"],
-          ["Phone", site.buyerPhone || "—"],
-          ["Created", when(site.createdAt) || "—"],
-          ["Sold", when(site.soldAt) || (siteSold(site) ? "Yes" : "—")],
-          ["Updated", when(site.updatedAt) || when(site.createdAt) || "—"],
+          ["Phone", site.buyerPhone || ""],
+          ["Created", when(site.createdAt) || ""],
+          ["Sold", when(site.soldAt) || (siteSold(site) ? "Yes" : "")],
+          ["Updated", when(site.updatedAt) || when(site.createdAt) || ""],
           ["Payment", paymentLabel(site)],
-          ["Asking", site.listCents > 0 ? money(site.listCents) : "—"],
-          ["Category", site.category || "—"],
+          ["Asking", site.listCents > 0 ? money(site.listCents) : ""],
+          ["Category", site.category || ""],
           ["Watermark", site.watermark === false ? "Off" : "On"],
           ["Hosting", site.hostingStatus ? hostingLabel(site.hostingStatus) : "Not subscribed"],
           ["Link", href],
@@ -656,16 +656,16 @@
         const renews =
           site.hostingStatus === "canceled"
             ? when(site.hostingEnded) || "Ended"
-            : when(site.hostingRenews) || "—";
+            : when(site.hostingRenews) || "";
         const fields = [
           ["Business owner", site.buyerEmail || "Email not on file"],
-          ["Phone", site.buyerPhone || "—"],
-          ["Address", site.address || "—"],
-          ["Monthly", site.hostingMonthly > 0 ? money(site.hostingMonthly) : "—"],
-          ["Started", when(site.hostingStarted) || "—"],
-          ["Last payment", when(site.hostingLastPaid) || "—"],
+          ["Phone", site.buyerPhone || ""],
+          ["Address", site.address || ""],
+          ["Monthly", site.hostingMonthly > 0 ? money(site.hostingMonthly) : ""],
+          ["Started", when(site.hostingStarted) || ""],
+          ["Last payment", when(site.hostingLastPaid) || ""],
           [site.hostingStatus === "canceled" ? "Ended" : "Renews", renews],
-          ["Collected", payments.length ? payments.length + " · " + money(collectedTotal) : "—"],
+          ["Collected", payments.length ? payments.length + " · " + money(collectedTotal) : ""],
           ["Record", history],
           ["Sold by", maker],
           ["Link", href],
@@ -784,7 +784,7 @@
               esc(site.status || "draft") +
               "</span>" +
               "<span>" +
-              esc(when(site.createdAt) || "—") +
+              esc(when(site.createdAt) || "") +
               "</span>" +
               "<b>" +
               esc(priceLabel) +

@@ -100,7 +100,7 @@ for (const rel of ["docs/WEBSITE-GENERATION-PROMPT.md", "README.md"]) {
   if (fs.existsSync(p)) targets.push(p);
 }
 
-/** Files where many "index.html" strings mean uploaded site files — only touch href/location/abs. */
+/** Files where many "index.html" strings mean uploaded site files, only touch href/location/abs. */
 const navigationOnly = new Set(
   ["builder.js", "projects.js", "site-features.js"].map((n) => path.join(root, "js", n)),
 );

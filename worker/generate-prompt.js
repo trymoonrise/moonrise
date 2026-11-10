@@ -1043,7 +1043,7 @@ function assessSiteCompleteness(html, structure, ctx = null) {
     }
   }
 
-  // Slop / broken-motion bar — never ship these patterns.
+  // Slop / broken-motion bar, never ship these patterns.
   if (/purple|violet|#7c3aed|#8b5cf6|#a855f7|#6366f1/i.test(raw) && /gradient/i.test(raw)) {
     reasons.push("gradient purple slop");
   }

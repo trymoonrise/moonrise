@@ -114,7 +114,7 @@
     card("carousels-peek", "Peek", '<div class="lx-scroll snap"><div class="lx-cell"><div class="lx-ph sm"></div></div><div class="lx-cell"><div class="lx-ph sm"></div></div></div>', { stage: "lx-clip" }),
     card("carousels-thumbs", "Thumbs", '<div class="lx-tiles"><i></i><i></i><i></i><i></i></div>'),
     card("carousels-inverse", "Inverse", '<div class="lx-ph" style="background:#2a2a2a"></div>', { stage: "lx-on-dark" }),
-    card("carousels-count", "Count", '<p class="lx-mono">01 — 04</p>'),
+    card("carousels-count", "Count", '<p class="lx-mono">01, 04</p>'),
     card("carousels-empty", "Empty", '<div class="lx-empty"><p class="lx-h">No slides</p></div>')
   ]);
 

@@ -1313,7 +1313,7 @@ body[data-page="home"] .ms-send:disabled {
   transform: none;
 }
 
-/* Income progress — chart + payouts */
+/* Income progress, chart + payouts */
 body[data-page="home"] .ms-income {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.9fr);

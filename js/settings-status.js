@@ -49,14 +49,14 @@
     },
   };
 
-  /** Plain-language context for each Services row — no secrets, product meaning only. */
+  /** Plain-language context for each Services row, no secrets, product meaning only. */
   const SERVICE_CONTEXT = {
     app: {
       about: "The public Moonrise website creators and clients open in the browser.",
       usedFor: "Marketing pages, login entry, and the Studio shell at trymoonrise.com.",
     },
     worker: {
-      about: "Moonrise’s Studio API — the backend that powers signed-in Studio actions.",
+      about: "Moonrise’s Studio API, the backend that powers signed-in Studio actions.",
       usedFor: "Generate sites, publish, checkout webhooks, Business Finder proxy, and this status board.",
     },
     dns: {
@@ -105,10 +105,10 @@
     },
     push: {
       about: "Browser push notifications (Web Push / VAPID).",
-      usedFor: "Optional alerts in the installed Moonrise app or browser — not required for core Studio.",
+      usedFor: "Optional alerts in the installed Moonrise app or browser, not required for core Studio.",
     },
     fleet: {
-      about: "Published client websites across Moonrise — each business with its live site URL.",
+      about: "Published client websites across Moonrise, each business with its live site URL.",
       usedFor: "Browsing the fleet of published sites, checking preview vs live, and opening a site for more detail.",
     },
   };
@@ -176,9 +176,9 @@
       return "Green waves mean everything is running smoothly." + tip;
     }
     if (overall === "degraded") {
-      return "Yellow waves mean a warning — something needs attention, but Studio can still work." + tip;
+      return "Yellow waves mean a warning, something needs attention, but Studio can still work." + tip;
     }
-    return "Red waves mean an error — one or more services are down." + tip;
+    return "Red waves mean an error, one or more services are down." + tip;
   }
 
   function waveSvg(status) {
@@ -250,7 +250,7 @@
 
   function formatPing(ms) {
     const n = Number(ms);
-    if (!Number.isFinite(n) || n <= 0) return "—";
+    if (!Number.isFinite(n) || n <= 0) return "";
     if (n < 1000) return Math.round(n) + " ms";
     return (n / 1000).toFixed(1) + " s";
   }
@@ -265,7 +265,7 @@
 
   function formatWhen(value) {
     const raw = String(value || "").trim();
-    if (!raw) return "—";
+    if (!raw) return "";
     const d = new Date(raw);
     if (Number.isNaN(d.getTime())) return raw;
     try {
@@ -292,7 +292,7 @@
           const panelId = "set-fleet-panel-" + sid;
           const name = String(site.businessName || "Untitled business");
           const url = String(site.url || "").trim();
-          const host = siteHost(url) || url || "—";
+          const host = siteHost(url) || url || "";
           const kind = site.kind === "preview" ? "Preview" : "Live";
           const aria = name + ", " + host + ", " + kind;
           return (
@@ -335,7 +335,7 @@
                 '" target="_blank" rel="noopener noreferrer">' +
                 escapeHtml(url) +
                 "</a>"
-              : "—") +
+              : "") +
             "</strong></div>" +
             '<div class="ms-status-detail-row"><span>State</span><strong>' +
             escapeHtml(kind) +
@@ -494,7 +494,7 @@
         );
       });
     }
-    lines.push("Note: no secrets — status labels only.");
+    lines.push("Note: no secrets, status labels only.");
     return lines.join("\n");
   }
 
@@ -521,7 +521,7 @@
       );
     });
     lines.push("");
-    lines.push("Note: no secrets — status labels only.");
+    lines.push("Note: no secrets, status labels only.");
     return lines.join("\n");
   }
 
@@ -777,7 +777,7 @@
       lastReport = data;
       loadedOnce = true;
       const statusPanel = document.getElementById("set-status-panel");
-      // Skip DOM rewrites while Services is collapsing — that caused a close glitch.
+      // Skip DOM rewrites while Services is collapsing, that caused a close glitch.
       if (statusPanel?.classList.contains("is-closing")) return;
       renderList(data);
     } catch (err) {
@@ -813,7 +813,7 @@
                 "Code: MR-STATUS-LOAD-ERR",
                 "Status: Error",
                 "Summary: " + errMsg,
-                "Note: no secrets — status labels only.",
+                "Note: no secrets, status labels only.",
               ].join("\n"),
               btn
             );

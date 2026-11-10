@@ -65,7 +65,7 @@ body[data-page="ui-library"] .ms-orders-field {
   display: none !important;
 }
 
-/* —— Sticky top bar —— */
+/*, Sticky top bar, */
 .ms-legal-top,
 .ms-orders-nav {
   background: color-mix(in srgb, #ffffff 92%, transparent) !important;
@@ -131,7 +131,7 @@ body[data-page="ui-library"] .ms-orders-field {
   box-shadow: none !important;
 }
 
-/* —— Page width / padding —— */
+/*, Page width / padding, */
 .ms-legal-wrap,
 .ms-contact-main,
 .ms-download-main,
@@ -209,7 +209,7 @@ body[data-page="course"] .ms-page-head h1 {
   font-size: 0.76rem !important;
 }
 
-/* —— On this page TOC —— */
+/*, On this page TOC, */
 .ms-legal-toc,
 .ms-help-toc {
   position: static;
@@ -251,7 +251,7 @@ body[data-page="course"] .ms-page-head h1 {
   color: #232427 !important;
 }
 
-/* —— Content cards / articles —— */
+/*, Content cards / articles, */
 .ms-legal-doc,
 .ms-help-guide {
   display: grid;
@@ -341,7 +341,7 @@ body[data-page="guide"] .ms-help-guide a:not(.ms-btn):hover {
   text-decoration: underline;
 }
 
-/* —— Footer —— */
+/*, Footer, */
 .ms-legal-foot {
   display: flex !important;
   flex-wrap: wrap;
@@ -367,7 +367,7 @@ body[data-page="guide"] .ms-help-guide a:not(.ms-btn):hover {
   color: #232427 !important;
 }
 
-/* —— Contact / help / download —— */
+/*, Contact / help / download, */
 .ms-help-vcard,
 .ms-download-card,
 .ms-orders-card,
@@ -698,7 +698,7 @@ body[data-page="guide"] .ms-help-legal {
   gap: 0.25rem 0.45rem !important;
 }
 
-/* UI Library — quieter hero, keep demos intact */
+/* UI Library, quieter hero, keep demos intact */
 body[data-page="ui-library"] .dt-shell {
   width: min(64rem, calc(100% - 1.5rem)) !important;
   padding-top: 5.5rem !important;

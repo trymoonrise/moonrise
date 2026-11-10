@@ -82,7 +82,7 @@
       '<span class="ms-gen-announce-spinner" aria-hidden="true"></span>' +
       '<div class="ms-gen-announce-copy">' +
       "<span>Generating your website...</span>" +
-      '<span class="ms-gen-announce-sub">You can leave this page — we keep building.</span>' +
+      '<span class="ms-gen-announce-sub">You can leave this page, we keep building.</span>' +
       "</div>" +
       "</div>" +
       '<span class="ms-sr-only" id="' +
@@ -104,7 +104,7 @@
 
     if (visible && !wasVisible && live) {
       live.textContent =
-        "Your website is being generated. You can leave this page — generation keeps running.";
+        "Your website is being generated. You can leave this page, generation keeps running.";
     }
     if (!visible && live) live.textContent = "";
     wasVisible = visible;

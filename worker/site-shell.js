@@ -72,7 +72,7 @@ function esc(value) {
 function cleanText(value, max) {
   const text = String(value || "")
     .replace(/<[^>]+>/g, " ")
-    .replace(/\u2014/g, " - ")
+    .replace(/\u2014/g, ", ")
     .replace(/\s+/g, " ")
     .trim();
   if (!max || text.length <= max) return text;

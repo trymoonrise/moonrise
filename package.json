@@ -1,8 +1,8 @@
 {
   "name": "moonrise",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "private": true,
-  "description": "Moonrise Studio — find, build, preview, get paid, go live. https://trymoonrise.com",
+  "description": "Moonrise Studio, find, build, preview, get paid, go live. https://trymoonrise.com",
   "engines": {
     "node": "22.x"
   },

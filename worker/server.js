@@ -98,7 +98,7 @@ const CONTACT_FORM_SCRIPT_PATH = path.join(__dirname, "..", "watermark", "contac
  * Override a stage with WEBSITE_*_MODEL. WEBSITE_GENERATION_MODEL overrides
  * the design stages together.
  *
- * Claude 5.5 requires adaptive thinking — do not send reasoning.enabled=false.
+ * Claude 5.5 requires adaptive thinking, do not send reasoning.enabled=false.
  * Use a low effort and exclude the trace so max_tokens stays the page/JSON.
  */
 const WEBSITE_DESIGN_MODEL = "anthropic/claude-opus-5.5";
@@ -555,7 +555,7 @@ function stripeId(value) {
 async function hydrateGoLiveCheckoutSession(stripe, session) {
   const id = stripeId(session);
   if (!stripe || !id.startsWith("cs_")) return session;
-  // Local/dev unlock sessions are synthetic — never hit Stripe retrieve.
+  // Local/dev unlock sessions are synthetic, never hit Stripe retrieve.
   if (
     session?.metadata?.testPromo === "1" ||
     session?.metadata?.devUnlock === "1" ||
@@ -1128,7 +1128,7 @@ app.use(
 );
 
 app.get("/health", async (_req, res) => {
-  // Public probe only — no paths, keys, models, or provider inventory.
+  // Public probe only, no paths, keys, models, or provider inventory.
   res.setHeader("Cache-Control", "no-store");
   res.json({
     ok: true,
@@ -1335,7 +1335,7 @@ async function buildStudioStatusReport() {
             details: [statusDetail("State", "Not configured")],
           };
         }
-        // Reachability only — never call authenticated Stripe APIs or return balances.
+        // Reachability only, never call authenticated Stripe APIs or return balances.
         const res = await fetch("https://stripe.com/", {
           method: "HEAD",
           redirect: "follow",
@@ -2220,7 +2220,7 @@ async function requireUser(req, res, next) {
   }
 }
 
-/** Authenticated studio status board — no secrets, keys, or internal paths. */
+/** Authenticated studio status board, no secrets, keys, or internal paths. */
 app.get("/studio/status", requireUser, async (_req, res) => {
   try {
     res.setHeader("Cache-Control", "no-store");
@@ -3772,7 +3772,7 @@ function closeIncompleteHtml(html) {
 function sanitizeGeneratedCopy(html) {
   return String(html || "").replace(/>([^<]*)</g, (match, text) => {
     if (!text.includes("\u2014")) return match;
-    return `>${text.replace(/\u2014/g, " - ")}<`;
+    return `>${text.replace(/\u2014/g, ", ")}<`;
   });
 }
 
@@ -3905,7 +3905,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
     design: WEBSITE_ASSEMBLE_MODEL,
   });
 
-  // —— Stage 1: Copy (exact facts, strong JSON discipline) ——
+  //, Stage 1: Copy (exact facts, strong JSON discipline), 
   try {
     const result = await openRouterChat({
       model: WEBSITE_COPY_MODEL,
@@ -3956,7 +3956,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
     "Every photo sits in a sized frame (aspect-ratio or min-height) with object-fit: cover. No empty media boxes, no collapsed hero, no invented or relative image URLs.",
     "No placeholders, no broken tags, no stuttering animation, no overlapping or cut-off UI.",
     "Buttons and fields must feel smooth: hover, press, focus, and a stable submit loading state.",
-    "One intentional layout only — do not include unused alternate body.* CSS variants.",
+    "One intentional layout only, do not include unused alternate body.* CSS variants.",
   ].join("\n");
 
   const assembleUser =

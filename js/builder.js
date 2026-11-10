@@ -521,7 +521,7 @@
       if (elapsed > 165000 && !(state.html && String(state.html).trim())) {
         renderGenerateProgress(
           Math.max(genProgressPct, 92),
-          "Still building — you can leave this page"
+          "Still building, you can leave this page"
         );
       }
     }, 180);
@@ -6363,7 +6363,7 @@
       if (Date.now() - (readGenInflight()?.startedAt || Date.now()) > 90000) {
         renderGenerateProgress(
           Math.max(genProgressPct, 88),
-          "Still building — you can leave this page"
+          "Still building, you can leave this page"
         );
       }
       await sleepMs((Number(data.retryAfterSec) || 3) * 1000);
@@ -6665,7 +6665,7 @@
           );
           setStatus("Generation continues in the background. Come back shortly.");
           window.StudioToast?.info?.(
-            "Website generation keeps running. You can leave — open Builder again when it finishes."
+            "Website generation keeps running. You can leave, open Builder again when it finishes."
           );
           return;
         }
@@ -6693,7 +6693,7 @@
         leaveGenerationRunning = true;
         renderGenerateProgress(
           Math.max(genProgressPct, 90),
-          "Still building — open Builder again soon"
+          "Still building, open Builder again soon"
         );
         setStatus(msg);
         window.StudioToast?.info?.(msg);

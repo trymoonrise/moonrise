@@ -1,5 +1,5 @@
 /**
- * Calendar — month of meetings from a connected Cal.com account.
+ * Calendar, month of meetings from a connected Cal.com account.
  */
 (function () {
   const appEl = document.getElementById("cal-app");

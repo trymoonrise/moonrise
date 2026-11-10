@@ -27,7 +27,7 @@ const REPO = process.env.GITHUB_REPO || defaultRepo || "moonrise";
 const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 
 if (!token) {
-  console.error("Missing GITHUB_TOKEN / GH_TOKEN — cannot publish GitHub Releases.");
+  console.error("Missing GITHUB_TOKEN / GH_TOKEN, cannot publish GitHub Releases.");
   process.exit(1);
 }
 

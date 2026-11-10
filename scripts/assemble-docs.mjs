@@ -168,7 +168,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-ink">
-  <link rel="stylesheet" href="css/docs.css?v=20261110-onpage2">
+  <link rel="stylesheet" href="css/docs.css?v=20261110-tocbtn">
   <link rel="stylesheet" href="css/site-nav.css?v=20261109-line">
 </head>
 <body data-page="docs" class="ms-public-doc ms-docs-page" data-docs>
@@ -197,13 +197,18 @@ document.documentElement.classList.add("ms-boot");
   <div class="ms-docs-layout">
     <header class="ms-docs-hero">
       <h1 class="ms-doc-title">Docs.</h1>
-      <p class="ms-doc-lead">Everything about Moonrise—product, features, security, licenses, and policies—in one place.</p>
+      <p class="ms-doc-lead">Everything about Moonrise, product, features, security, licenses, and policies, in one place.</p>
     </header>
     <main class="ms-docs-main" id="main">
 ${product}
     </main>
     <aside class="ms-docs-aside">
-      <nav class="ms-docs-onpage" aria-label="On this page">
+      <button type="button" class="ms-docs-toc-btn" data-docs-toc-toggle aria-expanded="false" aria-controls="ms-docs-onpage">
+        <svg class="ms-docs-toc-btn-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+        <svg class="ms-docs-toc-btn-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        <span class="visually-hidden">On this page</span>
+      </button>
+      <nav class="ms-docs-onpage" id="ms-docs-onpage" aria-label="On this page">
         <h2>On this page</h2>
         <ol class="ms-docs-nav">
             ${nav}
@@ -216,7 +221,7 @@ ${product}
   <script defer src="js/config.js?v=20261106-mono"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/home-menu.js?v=20261109-menu-anim"></script>
-  <script defer src="js/docs.js?v=20261110-onpage"></script>
+  <script defer src="js/docs.js?v=20261110-tocbtn"></script>
 </body>
 </html>
 `;

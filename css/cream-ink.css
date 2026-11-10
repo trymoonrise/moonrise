@@ -1,5 +1,5 @@
 /* Black / white / grey component layer. Load after studio.css / studio-ui.css.
-   Visual only — no layout/JS behavior changes. */
+   Visual only, no layout/JS behavior changes. */
 
 :root {
   --ms-bg: #fafafa;
@@ -40,7 +40,7 @@ html:not([data-ms-mode="dark"]) body[data-page] {
   color: var(--ms-ink);
 }
 
-/* —— Surfaces / cards —— */
+/*, Surfaces / cards, */
 html:not([data-ms-mode="dark"]) :where(
   .card,
   .ms-card,
@@ -91,7 +91,7 @@ html:not([data-ms-mode="dark"]) .ms-dash-progress-card .ms-dash-metric {
   background: transparent !important;
 }
 
-/* —— Typography —— */
+/*, Typography, */
 html:not([data-ms-mode="dark"]) :where(
   h1, h2, h3,
   .ms-page-head h1,
@@ -130,7 +130,7 @@ html:not([data-ms-mode="dark"]) :where(
   color: var(--ms-muted) !important;
 }
 
-/* —— Primary / secondary buttons —— */
+/*, Primary / secondary buttons, */
 html:not([data-ms-mode="dark"]) :where(
   .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost):not(.ms-btn-ghost-danger),
   a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger):not(.ms-btn-ghost),
@@ -248,7 +248,7 @@ html:not([data-ms-mode="dark"]) .ms-btn-danger {
   box-shadow: none !important;
 }
 
-/* —— Forms —— */
+/*, Forms, */
 html:not([data-ms-mode="dark"]) :where(
   input.ms-input,
   .ms-auth-card input.ms-input,
@@ -334,7 +334,7 @@ html:not([data-ms-mode="dark"]) .ms-auth-card input.ms-input {
   padding-bottom: 0.65rem !important;
 }
 
-/* —— Switches —— */
+/*, Switches, */
 html:not([data-ms-mode="dark"]) .ms-switch-track {
   width: 51px;
   height: 29px;
@@ -362,7 +362,7 @@ html:not([data-ms-mode="dark"]) .ms-switch input:checked + .ms-switch-track::aft
   box-shadow: 0 0 0 2px var(--ms-ink) !important;
 }
 
-/* —— Nav / sidebar —— */
+/*, Nav / sidebar, */
 html:not([data-ms-mode="dark"]) .ms-sidebar {
   background: var(--ms-bg) !important;
   border-right: 1px solid var(--ms-line) !important;
@@ -465,7 +465,7 @@ html:not([data-ms-mode="dark"]) .ms-menu-toggle {
   color: var(--ms-ink) !important;
 }
 
-/* —— Tabs / segmented —— */
+/*, Tabs / segmented, */
 html:not([data-ms-mode="dark"]) :where(
   .ms-tabs,
   .ms-segmented,
@@ -524,7 +524,7 @@ html:not([data-ms-mode="dark"]) .ms-profile-tabs .is-active {
   background: transparent !important;
 }
 
-/* —— List rows / hairlines —— */
+/*, List rows / hairlines, */
 html:not([data-ms-mode="dark"]) :where(
   .ms-settings-row,
   .ms-list-row,
@@ -536,7 +536,7 @@ html:not([data-ms-mode="dark"]) :where(
   box-shadow: none !important;
 }
 
-/* —— Search pills —— */
+/*, Search pills, */
 html:not([data-ms-mode="dark"]) :where(
   .ms-search,
   input.ms-search,
@@ -581,7 +581,7 @@ html:not([data-ms-mode="dark"]) :where(
   opacity: 1 !important;
 }
 
-/* —— Banners / tips —— */
+/*, Banners / tips, */
 html:not([data-ms-mode="dark"]) :where(
   .ms-banner,
   .ms-tip,
@@ -596,7 +596,7 @@ html:not([data-ms-mode="dark"]) :where(
   box-shadow: none !important;
 }
 
-/* —— Links —— */
+/*, Links, */
 html:not([data-ms-mode="dark"]) a:not(.ms-btn):not(.ms-home-cta-primary):not(.ms-home-cta-secondary):not(.ms-nav-link):not(.ms-home-bloom-nav a):not(.ms-legal-nav a):not(.ms-legal-toc a):not(.ms-orders-nav-link):not(.lx-link):not(.lx-btn) {
   color: var(--ms-link);
 }
@@ -608,7 +608,7 @@ html:not([data-ms-mode="dark"]) .ms-settings-card a {
   color: var(--ms-link) !important;
 }
 
-/* —— Home polish —— */
+/*, Home polish, */
 body[data-page="home"] .ms-home-title,
 body[data-page="home"] .ms-home-title-accent {
   color: #232427 !important;
@@ -711,7 +711,7 @@ body[data-page="home"] .ms-home-method-card {
   box-shadow: var(--ms-shadow-card) !important;
 }
 
-/* —— Auth —— */
+/*, Auth, */
 html:not([data-ms-mode="dark"]) body[data-page="login"] {
   background: #ffffff !important;
 }
@@ -723,7 +723,7 @@ html:not([data-ms-mode="dark"]) .ms-auth-card {
   box-shadow: var(--ms-shadow-card) !important;
 }
 
-/* —— Chrome odds and ends —— */
+/*, Chrome odds and ends, */
 html:not([data-ms-mode="dark"]) .ms-lb-send {
   background: var(--ms-ink) !important;
   color: #ffffff !important;
@@ -787,7 +787,7 @@ html:not([data-ms-mode="dark"]) :where(.ms-skeleton, .ms-placeholder-block) {
   }
 }
 
-/* —— Finder / map chrome (overrides late leads-map.css) —— */
+/*, Finder / map chrome (overrides late leads-map.css), */
 html:not([data-ms-mode="dark"]) #page-body.ms-lf-page.ms-lf-page--map {
   --lf-btn-bg: var(--ms-accent, #232427) !important;
   --lf-btn-shadow: none !important;
@@ -876,7 +876,7 @@ html:not([data-ms-mode="dark"]) .ms-lf-map-card .ms-lf-slide-label {
   -webkit-text-fill-color: #f4f4f5 !important;
 }
 
-/* —— Flat cream surfaces (no cool washes) —— */
+/*, Flat cream surfaces (no cool washes), */
 html:not([data-ms-mode="dark"]) :where(
   .ms-dash-island-panel,
   .ms-clients-toolbar,

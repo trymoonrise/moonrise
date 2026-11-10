@@ -16,7 +16,7 @@
     return Array.from((root || document).querySelectorAll(sel));
   }
 
-  /* —— TOC active state —— */
+  /*, TOC active state, */
   function showTocGroup(name) {
     if (!name) return;
     $all("[data-toc-group]").forEach((button) => {
@@ -63,7 +63,7 @@
     sections.forEach((s) => io.observe(s));
   }
 
-  /* —— Toast —— */
+  /*, Toast, */
   function showToast(message) {
     const host = $("#dt-toasts");
     if (!host) return;
@@ -79,7 +79,7 @@
     }, 2200);
   }
 
-  /* —— Progress —— */
+  /*, Progress, */
   let progressRaf = 0;
   function runProgress() {
     const fill = $(".dt-stage[data-demo='progress'] .dt-progress-fill");
@@ -116,7 +116,7 @@
     progressRaf = window.requestAnimationFrame(frame);
   }
 
-  /* —— Button loader morph —— */
+  /*, Button loader morph, */
   function runButtonLoader(target) {
     const buttons = target
       ? [target]
@@ -140,7 +140,7 @@
     });
   }
 
-  /* —— Fullscreen boot —— */
+  /*, Fullscreen boot, */
   function runFullscreen() {
     const stage = $('.dt-stage[data-demo="fullscreen"]');
     if (!stage) return;
@@ -201,7 +201,7 @@
     window.setTimeout(() => el.classList.remove("is-demo-hover"), reduceMotion ? 400 : 900);
   }
 
-  /* —— Pull to refresh —— */
+  /*, Pull to refresh, */
   function refreshPtr() {
     const indicator = $(".dt-ptr-indicator");
     const list = $("#dt-ptr-list");
@@ -244,7 +244,7 @@
     });
   }
 
-  /* —— Infinite scroll —— */
+  /*, Infinite scroll, */
   function makeFeedItem(i) {
     const el = document.createElement("div");
     el.className = "dt-list-row";
@@ -293,7 +293,7 @@
   const infiniteMain = setupInfinite("dt-infinite-viewport", "dt-infinite-feed", "dt-infinite-sentinel", 5);
   const infiniteCook = setupInfinite("dt-cook-scroll", "dt-cook-feed", "dt-cook-sentinel", 4);
 
-  /* —— Motion helpers —— */
+  /*, Motion helpers, */
   function replayRise() {
     const panel = $("#dt-rise-panel");
     if (!panel) return;
@@ -323,7 +323,7 @@
     field.classList.add("is-shaking");
   }
 
-  /* —— Stepper —— */
+  /*, Stepper, */
   function step(delta) {
     const items = $all("[data-stepper] li");
     if (!items.length) return;
@@ -398,7 +398,7 @@
     });
   }
 
-  /* —— Cookbook search —— */
+  /*, Cookbook search, */
   function runCookSearch() {
     const out = $("#dt-cook-search-out");
     if (!out) return;
@@ -537,7 +537,7 @@
     else if (kind && String(kind).indexOf("lx-") === 0) runLxLive(playBtn, kind, origin);
   }
 
-  /* —— Play buttons + stage taps —— */
+  /*, Play buttons + stage taps, */
   function bindPlay() {
     document.addEventListener("click", (e) => {
       const play = e.target.closest("[data-play]");
@@ -620,7 +620,7 @@
     $all("[data-underline-track]").forEach(syncUnderline);
   }
 
-  /* —— Generic interactive controls —— */
+  /*, Generic interactive controls, */
   function bindControls() {
     $("[data-pass-toggle]")?.addEventListener("click", () => {
       const input = $("#dt-pass");
@@ -712,8 +712,8 @@
         if (fb) {
           fb.hidden = false;
           fb.textContent = ok
-            ? "Correct — use a spinner when shape is unknown."
-            : "Not quite — spinner fits unknown layout best.";
+            ? "Correct, use a spinner when shape is unknown."
+            : "Not quite, spinner fits unknown layout best.";
         }
       });
     });
@@ -1020,7 +1020,7 @@
     $("[data-cook-submit]")?.addEventListener("click", runCookSubmit);
   }
 
-  /* —— Dropdowns / overlays —— */
+  /*, Dropdowns / overlays, */
   function setDropdownOpen(menu, trigger, open) {
     if (!menu || !trigger) return;
     if (open) {
@@ -1305,8 +1305,8 @@
   }
 
   function patternFile(opts) {
-    const title = String(opts.title || "Pattern").replace(/--/g, "—");
-    const id = String(opts.id || "pattern").replace(/--/g, "—");
+    const title = String(opts.title || "Pattern").replace(/--/g, ", ");
+    const id = String(opts.id || "pattern").replace(/--/g, "-");
     const css = String(opts.css || "").replace(/<\/style/gi, "<\\/style");
     return [
       "<!DOCTYPE html>",
@@ -1314,7 +1314,7 @@
       "<head>",
       '<meta charset="utf-8">',
       '<meta name="viewport" content="width=device-width, initial-scale=1">',
-      "<title>" + title.replace(/</g, "") + " — Moonrise UI Library</title>",
+      "<title>" + title.replace(/</g, "") + ", Moonrise UI Library</title>",
       "<style>",
       css,
       "body.dt-ref-page{margin:0;min-height:100vh;display:grid;place-items:center;padding:32px 16px;box-sizing:border-box}",
@@ -1325,7 +1325,7 @@
       "</head>",
       '<body data-page="ui-library" class="dt-page dt-ref-page">',
       "<!--",
-      "  Moonrise UI Library — " + title,
+      "  Moonrise UI Library, " + title,
       "  Generated from the live card. This is the current markup and css/ui-library.css.",
       "  Change colors and labels only. Do not redraw the control.",
       "  Rules: https://trymoonrise.com/assets/moonrise-special-prompt.md",

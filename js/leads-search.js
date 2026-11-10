@@ -1138,7 +1138,7 @@
           .filter(Boolean)
       );
       let changed = false;
-      // Deleted websites should reappear as new leads — drop stale project claims.
+      // Deleted websites should reappear as new leads, drop stale project claims.
       // Keep editor/finder claims (in-progress builds) until delete releases them.
       Object.keys(claimedMap).forEach((id) => {
         const entry = claimedMap[id];

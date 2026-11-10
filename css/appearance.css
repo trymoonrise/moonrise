@@ -303,7 +303,7 @@ select.ms-select:focus {
   }
 }
 
-/* Dark mode — shell, shared cards, and form controls (monochrome, matches appearance.js) */
+/* Dark mode, shell, shared cards, and form controls (monochrome, matches appearance.js) */
 html[data-ms-mode="dark"] {
   color-scheme: dark;
   --ms-bg: #111111;

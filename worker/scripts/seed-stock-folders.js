@@ -1121,7 +1121,7 @@ function writeFolders() {
         detail: VIDEOS[videoKeys[2]] || VIDEOS.soft,
       },
       notes:
-        "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links.",
+        "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only, do not invent media links.",
     };
     fs.writeFileSync(path.join(dir, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n", "utf8");
     // Lightweight pointer files so the tree is obvious in the IDE.

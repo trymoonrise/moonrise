@@ -45,9 +45,9 @@ for the authoritative text.
 
 Notable services (not redistributed as source in this repo):
 
-- Stripe — payments (https://stripe.com)
-- Supabase — auth and data (https://supabase.com)
-- Vercel — hosting (https://vercel.com)
+- Stripe, payments (https://stripe.com)
+- Supabase, auth and data (https://supabase.com)
+- Vercel, hosting (https://vercel.com)
 
 ## Reporting license issues
 

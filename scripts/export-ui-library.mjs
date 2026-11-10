@@ -155,7 +155,7 @@ function htmlFile(meta, stage, extra) {
     "<head>",
     '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1">',
-    "<title>" + meta.title.replace(/</g, "") + " — " + meta.categoryTitle + " — Moonrise UI</title>",
+    "<title>" + meta.title.replace(/</g, "") + ", " + meta.categoryTitle + ", Moonrise UI</title>",
     '<link rel="stylesheet" href="../../css/ui-library.css">',
     '<link rel="stylesheet" href="../../css/ui-library-lab.css">',
     "<style>",

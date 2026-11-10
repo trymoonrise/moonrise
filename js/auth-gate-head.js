@@ -84,7 +84,7 @@
     var releasePublic = function () {
       if (window.__msReleaseBoot) window.__msReleaseBoot();
     };
-    // Release as soon as the DOM is ready — do not wait for window.load/fonts.
+    // Release as soon as the DOM is ready, do not wait for window.load/fonts.
     if (document.readyState === "interactive" || document.readyState === "complete") {
       releasePublic();
     } else {
@@ -178,11 +178,11 @@
   window.__msReleaseAuthGate = function () {
     document.documentElement.classList.remove("ms-auth-gating");
     document.documentElement.classList.add("ms-auth-ready");
-    // Do not release the moonrise bar here — wait until paintApp marks the shell.
+    // Do not release the moonrise bar here, wait until paintApp marks the shell.
   };
 
   // Absolute escape: shell must paint or we leave this hold screen.
-  // Onboarding has no sidebar shell — soft-release instead of bouncing to 404.
+  // Onboarding has no sidebar shell, soft-release instead of bouncing to 404.
   setTimeout(function () {
     if (window.__msAuthRedirecting) return;
     if (document.body && document.body.dataset.msShellPainted === "1" && !document.getElementById("ms-boot")) return;

@@ -41,5 +41,5 @@
     "ambient": "https://videos.pexels.com/video-files/4763824/4763824-uhd_2560_1440_24fps.mp4",
     "detail": "https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4"
   },
-  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only, do not invent media links."
 }

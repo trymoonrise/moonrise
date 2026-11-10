@@ -135,7 +135,7 @@ html[data-ms-ink="1"][data-ms-mode="dark"] :is(
   color: #f5f5f5 !important;
 }
 
-/* —— Interaction motion (buttons, tabs, rows, toggles, chips) —— */
+/*, Interaction motion (buttons, tabs, rows, toggles, chips), */
 html[data-ms-motion="1"] :is(
   .ms-btn,
   a.ms-btn,

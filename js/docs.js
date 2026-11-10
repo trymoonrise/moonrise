@@ -10,6 +10,30 @@
   var links = Array.prototype.slice.call(root.querySelectorAll(".ms-docs-nav a[href^='#']"));
   var mobileToggle = root.querySelector("[data-docs-mobile-toggle]");
   var sidebar = root.querySelector("[data-docs-sidebar]");
+  var tocToggle = root.querySelector("[data-docs-toc-toggle]");
+  var aside = root.querySelector(".ms-docs-aside");
+
+  function setTocOpen(open) {
+    if (!aside || !tocToggle) return;
+    aside.classList.toggle("is-open", open);
+    tocToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  if (tocToggle) {
+    tocToggle.addEventListener("click", function () {
+      setTocOpen(!aside.classList.contains("is-open"));
+    });
+  }
+
+  document.addEventListener("click", function (event) {
+    if (!aside || !aside.classList.contains("is-open")) return;
+    if (aside.contains(event.target)) return;
+    setTocOpen(false);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") setTocOpen(false);
+  });
   var offset = 96;
 
   function setGroupOpen(group, open) {
@@ -84,12 +108,14 @@
       var group = item.a.closest("[data-docs-group]");
       if (item === current && group && !search?.value) setGroupOpen(group, true);
     });
-    var aside = current.a.closest(".ms-docs-aside");
-    if (aside) {
-      var rail = aside.getBoundingClientRect();
-      var link = current.a.getBoundingClientRect();
-      if (link.top < rail.top || link.bottom > rail.bottom) {
-        aside.scrollTop += link.top - rail.top - (rail.height - link.height) / 2;
+    var railAside = current.a.closest(".ms-docs-aside");
+    var railNav = current.a.closest(".ms-docs-onpage");
+    var rail = railNav && railNav.scrollHeight > railNav.clientHeight + 2 ? railNav : railAside;
+    if (rail) {
+      var railBox = rail.getBoundingClientRect();
+      var linkBox = current.a.getBoundingClientRect();
+      if (linkBox.top < railBox.top || linkBox.bottom > railBox.bottom) {
+        rail.scrollTop += linkBox.top - railBox.top - (railBox.height - linkBox.height) / 2;
       }
     }
   }
@@ -124,6 +150,7 @@
         mobileToggle.setAttribute("aria-expanded", "false");
         mobileToggle.textContent = "Contents";
       }
+      setTocOpen(false);
     });
   });
 

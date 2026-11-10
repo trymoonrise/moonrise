@@ -815,7 +815,7 @@
     ) {
       return;
     }
-    // Editor is a full-bleed workspace with its own Back control — no studio menu/tab chrome.
+    // Editor is a full-bleed workspace with its own Back control, no studio menu/tab chrome.
     if (page === "editor") {
       stripEditorChrome();
       return;

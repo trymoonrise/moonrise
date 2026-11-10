@@ -1,5 +1,5 @@
 /**
- * Compact studio chrome — reference light-app system.
+ * Compact studio chrome, reference light-app system.
  * Off-white canvas, white groups, 52px rows, floating tab pill.
  */
 
@@ -34,7 +34,7 @@ html[data-ms-mode="dark"] {
   --ms-group: #1c1c1e;
 }
 
-/* —— Shell / page —— */
+/*, Shell / page, */
 body[data-page="dashboard"],
 body[data-page="settings"],
 body[data-page="clients"],
@@ -45,7 +45,7 @@ body[data-page="leads"] {
 }
 
 /* Channel pages: pad + center in the panel beside the sidebar.
-   Do not use margin:auto on #page-body — that centers on the full window. */
+   Do not use margin:auto on #page-body, that centers on the full window. */
 #page-body.ms-channel-page,
 #page-body.ms-dash-page,
 #page-body.ms-lf-page,
@@ -152,7 +152,7 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
   line-height: 1.4 !important;
 }
 
-/* —— Sidebar (compact grouped channels) —— */
+/*, Sidebar (compact grouped channels), */
 .ms-sidebar {
   background: var(--ms-canvas) !important;
   border-right: 1px solid var(--ms-min-border) !important;
@@ -198,7 +198,7 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
   border: 0 !important;
   border-radius: var(--ms-min-radius) !important;
   box-shadow: none !important;
-  /* Never shrink or clip channel rows — scroll the sidebar instead */
+  /* Never shrink or clip channel rows, scroll the sidebar instead */
   overflow: visible !important;
   flex: 0 0 auto !important;
   flex-shrink: 0 !important;
@@ -366,7 +366,7 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
   font-weight: 650 !important;
 }
 
-/* —— Cards / stacks —— */
+/*, Cards / stacks, */
 .ms-card,
 .ms-settings-card,
 .ms-dash-card,
@@ -409,7 +409,7 @@ html[data-ms-mode="dark"] a.ms-dash-tool {
   opacity: 0.7;
 }
 
-/* —— Compact settings groups / rows —— */
+/*, Compact settings groups / rows, */
 .ms-settings-compact {
   gap: 0.75rem !important;
   width: 100%;
@@ -1204,7 +1204,7 @@ html[data-ms-mode="dark"] .ms-status-feedback.is-bad {
   }
 }
 
-/* Profile photo — neutral, no accent gradient bleed */
+/* Profile photo, neutral, no accent gradient bleed */
 .ms-set-photo-preview {
   background: var(--ms-min-fill) !important;
   border: 1px solid var(--ms-min-border) !important;
@@ -1341,7 +1341,7 @@ html[data-ms-mode="dark"] .ms-set-row--profile .ms-set-photo-preview {
   margin-top: 0.65rem;
 }
 
-/* —— Dashboard —— */
+/*, Dashboard, */
 .ms-dash-hero {
   gap: 1rem !important;
   margin-bottom: 0.85rem !important;
@@ -1425,7 +1425,7 @@ a.ms-dash-tool {
   border-color: color-mix(in srgb, var(--ms-accent) 22%, transparent) !important;
 }
 
-/* Business Finder: no phone dock — it covers Scan nearby */
+/* Business Finder: no phone dock, it covers Scan nearby */
 body[data-page="leads"] .ms-tabbar,
 html body[data-page="leads"] .ms-tabbar {
   display: none !important;
@@ -1433,7 +1433,7 @@ html body[data-page="leads"] .ms-tabbar {
   pointer-events: none !important;
 }
 
-/* —— Tabs / mobile chrome: floating compact dock —— */
+/*, Tabs / mobile chrome: floating compact dock, */
 @media (max-width: 900px) {
   html .ms-tabbar,
   html body .ms-tabbar,
@@ -1482,7 +1482,7 @@ html body[data-page="leads"] .ms-tabbar {
       visibility 0s linear 0.38s !important;
   }
 
-  /* Sliding active pill — keeps tab switches smooth across hops. */
+  /* Sliding active pill, keeps tab switches smooth across hops. */
   html .ms-tab-pill,
   html body:is([data-page="dashboard"], [data-page="builder"], [data-page="clients"], [data-page="settings"]) .ms-tabbar .ms-tab-pill {
     display: block !important;
@@ -1680,7 +1680,7 @@ html[data-ms-mode="dark"] .ms-tab-pill {
   border-radius: 999px !important;
 }
 
-/* Editor is full-bleed — never show studio menu / phone tab dock. */
+/* Editor is full-bleed, never show studio menu / phone tab dock. */
 html body[data-page="editor"] .ms-menu-toggle,
 html body[data-page="editor"] .ms-menu-toggle:not(.ms-tab-menu),
 html body[data-page="editor"] .ms-tabbar,
@@ -1691,7 +1691,7 @@ html body[data-page="editor"] .ms-quick-nav {
   pointer-events: none !important;
 }
 
-/* Floating top-left menu — frosted circular control */
+/* Floating top-left menu, frosted circular control */
 @media (max-width: 900px) {
   html body:not([data-page="editor"]) .ms-menu-toggle,
   html body:not([data-page="editor"]) .ms-menu-toggle:not(.ms-tab-menu) {
@@ -1860,7 +1860,7 @@ a.ms-set-row {
   text-decoration: none;
 }
 
-/* —— Forms / rows —— */
+/*, Forms / rows, */
 .ms-settings-pref-row,
 .ms-appearance-mode,
 .ms-appearance-block {
@@ -1886,7 +1886,7 @@ select.ms-input {
   border-radius: var(--ms-min-radius-md) !important;
 }
 
-/* —— Buttons —— */
+/*, Buttons, */
 .ms-btn,
 a.ms-btn,
 button.ms-btn,
@@ -1920,7 +1920,7 @@ a.ms-btn-secondary {
   display: none !important;
 }
 
-/* —— Skeleton loading —— */
+/*, Skeleton loading, */
 /* In-studio hops skip the moonrise boot; keep page skeletons snappy. */
 html.ms-boot-done #page-body .ms-skel::after,
 html.ms-boot-done .is-skel-loading .ms-skel::after {

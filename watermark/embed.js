@@ -308,7 +308,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     return (
       '<div class="mr-wm-body" id="mr-wm-body">' +
       '<div class="mr-wm-step is-active" data-step="main">' +
-      '<p class="mr-wm-blurb">We prepared a fresh website for your business. This preview still shows the Moonrise watermark\u2014unlock to remove it and publish commercially.</p>' +
+      '<p class="mr-wm-blurb">We prepared a fresh website for your business. This preview still shows the Moonrise watermark, unlock to remove it and publish commercially.</p>' +
       '<div class="mr-wm-promo">' +
       '<label for="mr-wm-promo">Promo code</label>' +
       '<input type="text" id="mr-wm-promo" name="promo" autocomplete="off" spellcheck="false" placeholder="Optional">' +

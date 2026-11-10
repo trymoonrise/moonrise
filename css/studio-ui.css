@@ -477,7 +477,7 @@ html:not([data-ms-mode="dark"]) a.ms-sidebar-legal-link.is-active {
   color: #232427 !important;
 }
 
-/* Mobile: no top app bar — menu sits in the bottom tab bar after Settings. */
+/* Mobile: no top app bar, menu sits in the bottom tab bar after Settings. */
 @media (max-width: 900px) {
   .ms-quick-nav {
     display: none !important;
@@ -666,7 +666,7 @@ html[data-ms-mode="dark"] .ms-tabbar {
   box-shadow: none !important;
 }
 
-/* Ink on dark mode must invert — colored accents keep their hue. */
+/* Ink on dark mode must invert, colored accents keep their hue. */
 html[data-ms-mode="dark"][data-ms-ink="1"] :is(
   .ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),
   a.ms-btn:not(.ms-btn-secondary):not(.ms-btn-danger),

@@ -261,7 +261,7 @@ function mountAuthRoutes(app, { db, security }) {
   const limit = (opts) => createDistributedRateLimiter(db, opts);
 
   // Shared IP budget for real auth actions only. Do not put /auth/pending or
-  // /auth/status here — email handoff polls every ~2s and would burn this out.
+  // /auth/status here, email handoff polls every ~2s and would burn this out.
   const authIpLimiter = limit({
     windowMs: 15 * 60 * 1000,
     max: 60,
