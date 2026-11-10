@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.9.9",
+      "date": "2026-11-10",
+      "title": "Sign-in works again",
+      "sections": [
+        {
+          "heading": "Worker",
+          "fixes": [
+            "Sign-in works again. The studio API was crashing because the site source module was missing."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.8",
       "date": "2026-11-09",
       "title": "Docs demos match Studio colors",
