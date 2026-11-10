@@ -3368,3 +3368,409 @@ body[data-page="ui-library"] .lx-count {
   .lx-bento-board .is-score { grid-column: auto; grid-row: auto; }
   .lx-bento-board .is-share strong { font-size: 2.4rem; }
 }
+
+/* Scroll effects — mini page scenes inside catalog cards */
+.dt-stage.lx-scene-stage {
+  padding: 0 !important;
+  overflow: visible;
+  align-items: stretch;
+  min-height: 22rem;
+}
+
+.lx-scroll-scene {
+  position: relative;
+  width: 100%;
+  height: min(28rem, 70vh);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: inherit;
+  background: #f7f7f8;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.lx-scene-hint {
+  position: sticky;
+  top: 0.65rem;
+  z-index: 8;
+  width: max-content;
+  margin: 0.65rem auto 0;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(29, 29, 31, 0.82);
+  color: #f5f5f7;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+
+.lx-scroll-scene.is-scrolled .lx-scene-hint {
+  opacity: 0;
+}
+
+.lx-scene-lock {
+  position: relative;
+}
+
+.lx-scene-hero {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: grid;
+  place-items: end start;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #ececef;
+  color: #f5f5f7;
+  isolation: isolate;
+}
+
+.lx-scroll-scene.is-hero-lock .lx-scene-hero,
+.lx-scroll-scene.is-hero-shrink .lx-scene-hero,
+.lx-scroll-scene.is-curtain .lx-scene-hero {
+  height: calc(min(28rem, 70vh));
+  min-height: calc(min(28rem, 70vh));
+}
+
+.lx-scene-hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.lx-scene-hero-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.35rem;
+  width: min(100% - 2rem, 22rem);
+  margin: 0 0 1.35rem 1.15rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 14px;
+  background: rgba(29, 29, 31, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.lx-scene-hero.is-plain {
+  place-items: center;
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+.lx-scene-hero.is-plain .lx-scene-hero-copy {
+  margin: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  color: inherit;
+  text-align: center;
+}
+
+.lx-scene-kicker {
+  margin: 0;
+  color: inherit;
+  opacity: 0.72;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.lx-scene-hero h4,
+.lx-scene-cover h4,
+.lx-scene-curtain h4,
+.lx-scene-rail-main h4 {
+  margin: 0;
+  font-size: clamp(1.15rem, 3vw, 1.55rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.lx-scene-hero p,
+.lx-scene-cover p,
+.lx-scene-curtain p,
+.lx-scene-rail-main p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  opacity: 0.88;
+}
+
+.lx-scene-cover,
+.lx-scene-curtain {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 0.45rem;
+  align-content: center;
+  min-height: calc(min(28rem, 70vh));
+  margin: -1.25rem 0 0;
+  padding: 2rem 1.25rem;
+  border-radius: 1.35rem 1.35rem 0 0;
+  box-sizing: border-box;
+}
+
+.lx-scene-cover.is-dark,
+.lx-scene-curtain {
+  background: #1d1d1f;
+  color: #f5f5f7;
+}
+
+.lx-scene-cover.is-light {
+  background: #ffffff;
+  color: #1d1d1f;
+  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.06);
+}
+
+.lx-scroll-scene.is-hero-shrink .lx-scene-hero {
+  transform-origin: center top;
+  will-change: transform, opacity, filter;
+}
+
+.lx-scroll-scene.is-hero-shrink .lx-scene-hero[data-lx-shrink] {
+  transform: scale(calc(1 - (var(--lx-p, 0) * 0.12)));
+  opacity: calc(1 - (var(--lx-p, 0) * 0.45));
+  filter: blur(calc(var(--lx-p, 0) * 4px));
+}
+
+.lx-scene-scrub,
+.lx-scene-snap,
+.lx-scene-parallax {
+  position: relative;
+  height: 240%;
+}
+
+.lx-scene-scrub-sticky,
+.lx-scene-para-sticky {
+  position: sticky;
+  top: 0;
+  height: calc(min(28rem, 70vh));
+  overflow: hidden;
+}
+
+.lx-scene-scrub-row,
+.lx-scene-snap-row {
+  display: flex;
+  gap: 0.85rem;
+  height: 100%;
+  padding: 2.5rem 1.1rem 1.1rem;
+  box-sizing: border-box;
+  will-change: transform;
+  transform: translate3d(calc(var(--lx-p, 0) * -1 * var(--lx-scrub-span, 0px)), 0, 0);
+}
+
+.lx-scene-panel {
+  flex: 0 0 min(72%, 16rem);
+  display: grid;
+  gap: 0.35rem;
+  align-content: end;
+  padding: 1.1rem;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #1d1d1f;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+.lx-scene-panel span {
+  color: #8e8e93;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.lx-scene-panel strong {
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+}
+
+.lx-scene-panel p {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.lx-scene-slide {
+  flex: 0 0 min(78%, 18rem);
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  min-height: 0;
+}
+
+.lx-scene-slide img {
+  width: 100%;
+  height: 100%;
+  min-height: 14rem;
+  object-fit: cover;
+  border-radius: 16px;
+  background: #ececef;
+}
+
+.lx-scene-slide figcaption {
+  color: #6e6e73;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.lx-scene-stack {
+  display: grid;
+  gap: 0;
+  padding: 1rem 1rem 8rem;
+}
+
+.lx-scene-pin {
+  position: sticky;
+  top: calc(0.85rem + (var(--i, 0) * 0.85rem));
+  z-index: calc(1 + var(--i, 0));
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 4.5rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid #ececef;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+  color: #1d1d1f;
+}
+
+.lx-scene-pin strong {
+  font-size: 1.05rem;
+  letter-spacing: -0.03em;
+}
+
+.lx-scene-pin p {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 0.84rem;
+}
+
+.lx-scene-para-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  will-change: transform;
+  transform: translate3d(0, calc(var(--lx-p, 0) * var(--lx-para, 0) * -48px), 0);
+}
+
+.lx-scene-para-layer.is-back img {
+  width: 118%;
+  height: 118%;
+  object-fit: cover;
+  filter: saturate(0.85);
+}
+
+.lx-scene-para-layer.is-mid span {
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #1d1d1f;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.lx-scene-para-layer.is-fore {
+  align-content: end;
+  justify-items: start;
+  padding: 0 1.15rem 1.35rem;
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+
+.lx-scene-para-layer.is-fore strong {
+  font-size: 1.45rem;
+  letter-spacing: -0.04em;
+}
+
+.lx-scene-rail {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  min-height: 220%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.lx-scene-rail-nav {
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.lx-scene-rail-nav button {
+  appearance: none;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #8e8e93;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  text-align: left;
+  padding: 0.45rem 0.55rem;
+  cursor: pointer;
+}
+
+.lx-scene-rail-nav button.is-on {
+  background: #1d1d1f;
+  color: #f5f5f7;
+}
+
+.lx-scene-rail-main {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.lx-scene-rail-main section {
+  display: grid;
+  gap: 0.35rem;
+  min-height: calc(min(28rem, 70vh) - 2rem);
+  padding: 1.15rem;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #1d1d1f;
+  border: 1px solid #ececef;
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lx-scroll-scene.is-hero-shrink .lx-scene-hero[data-lx-shrink],
+  .lx-scene-scrub-row,
+  .lx-scene-snap-row,
+  .lx-scene-para-layer {
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  .lx-scene-scrub,
+  .lx-scene-snap,
+  .lx-scene-parallax {
+    height: auto;
+  }
+
+  .lx-scene-scrub-sticky,
+  .lx-scene-para-sticky {
+    position: relative;
+    height: auto;
+  }
+
+  .lx-scene-scrub-row,
+  .lx-scene-snap-row {
+    flex-wrap: wrap;
+  }
+}

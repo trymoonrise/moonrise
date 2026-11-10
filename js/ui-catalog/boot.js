@@ -21,6 +21,7 @@
     { g: "sections", id: "nav-menus", t: "Navigation menus", alias: "navigation" },
     { g: "sections", id: "pricing", t: "Pricing" },
     { g: "sections", id: "scroll-areas", t: "Scroll areas" },
+    { g: "sections", id: "scroll-effects", t: "Scroll effects" },
     { g: "sections", id: "shaders", t: "Shaders" },
     { g: "sections", id: "stats", t: "Stats" },
     { g: "sections", id: "steppers", t: "Steppers" },
@@ -173,6 +174,75 @@
     section.querySelectorAll(".lx-dock").forEach(armDock);
     section.querySelectorAll("[data-lx-compare]").forEach(armCompare);
     section.querySelectorAll(".lx-float").forEach(armFloat);
+    section.querySelectorAll("[data-lx-scene]").forEach(armScrollScene);
+  }
+
+  const sceneReduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  function sceneProgress(scene) {
+    const max = scene.scrollHeight - scene.clientHeight;
+    if (max <= 0) return 0;
+    return Math.max(0, Math.min(1, scene.scrollTop / max));
+  }
+
+  function measureScrubSpan(row) {
+    if (!row || !row.parentElement) return 0;
+    return Math.max(0, row.scrollWidth - row.parentElement.clientWidth);
+  }
+
+  function armScrollScene(scene) {
+    if (!scene || scene._lxSceneBound) return;
+    scene._lxSceneBound = true;
+    const kind = scene.getAttribute("data-lx-scene") || "";
+    const scrubHost = scene.querySelector("[data-lx-scrub]");
+    const scrubRow = scene.querySelector("[data-lx-scrub-row]");
+    const shrink = scene.querySelector("[data-lx-shrink]");
+    const paraLayers = scene.querySelectorAll("[data-lx-para]");
+    const railSteps = scene.querySelectorAll("[data-lx-rail-step]");
+    const railPanels = scene.querySelectorAll("[data-lx-rail-panel]");
+
+    function apply() {
+      const p = sceneProgress(scene);
+      scene.style.setProperty("--lx-p", String(p));
+      scene.classList.toggle("is-scrolled", scene.scrollTop > 12);
+
+      if (scrubRow && !sceneReduce) {
+        const span = measureScrubSpan(scrubRow);
+        scene.style.setProperty("--lx-scrub-span", span + "px");
+        scrubRow.style.transform = "translate3d(" + (-p * span) + "px,0,0)";
+      }
+
+      if (shrink && !sceneReduce) {
+        shrink.style.setProperty("--lx-p", String(p));
+      }
+
+      if (paraLayers.length && !sceneReduce) {
+        paraLayers.forEach(function (layer) {
+          const rate = Number(layer.getAttribute("data-lx-para") || "0.5");
+          layer.style.setProperty("--lx-para", String(rate));
+          layer.style.setProperty("--lx-p", String(p));
+        });
+      }
+
+      if (railSteps.length && railPanels.length) {
+        let current = 0;
+        const top = scene.getBoundingClientRect().top + scene.clientHeight * 0.35;
+        railPanels.forEach(function (panel, index) {
+          if (panel.getBoundingClientRect().top <= top) current = index;
+        });
+        railSteps.forEach(function (step, index) {
+          step.classList.toggle("is-on", index === current);
+        });
+      }
+    }
+
+    if (scrubHost && scrubRow) {
+      scrubHost.style.height = sceneReduce ? "auto" : "240%";
+    }
+
+    scene.addEventListener("scroll", apply, { passive: true });
+    window.addEventListener("resize", apply);
+    apply();
   }
 
   function accPanel(btn) {

@@ -372,6 +372,96 @@
     scroller("Hint", "fade", '<p class="lx-meta">Scroll for the rest of the week</p>' + lines)
   ]);
 
+  function scene(kind, inner) {
+    return '<div class="lx-scroll-scene is-' + kind + '" data-lx-scene="' + kind + '">' +
+      '<p class="lx-scene-hint">Scroll inside</p>' + inner + "</div>";
+  }
+
+  function sceneCard(id, title, kind, inner) {
+    return card("scroll-effects-" + id, title, scene(kind, inner), { wide: true, stage: "lx-scene-stage" });
+  }
+
+  LX.spec("scroll-effects", [], [
+    sceneCard("hero-lock", "Hero lock", "hero-lock",
+      '<div class="lx-scene-lock">' +
+        '<section class="lx-scene-hero">' +
+          '<img class="lx-scene-hero-media" src="assets/library/hero-coast.jpg" alt="">' +
+          '<div class="lx-scene-hero-copy"><p class="lx-scene-kicker">Harbor Coffee</p><h4>Build websites.<br>Get paid.</h4><p>Find a shop. Publish the site. Keep the cut.</p></div>' +
+        "</section>" +
+        '<section class="lx-scene-cover is-dark"><p class="lx-scene-kicker">How it works</p><h4>Find it. Build it.<br>Sell it.</h4><p>The next band slides over the locked hero.</p></section>' +
+        '<section class="lx-scene-cover is-light"><p class="lx-scene-kicker">Next</p><h4>Keep scrolling</h4><p>Each panel sits above the sticky frame.</p></section>' +
+      "</div>"),
+    sceneCard("hero-shrink", "Hero shrink", "hero-shrink",
+      '<div class="lx-scene-lock">' +
+        '<section class="lx-scene-hero" data-lx-shrink>' +
+          '<img class="lx-scene-hero-media" src="assets/library/hero-coffee.jpg" alt="">' +
+          '<div class="lx-scene-hero-copy"><p class="lx-scene-kicker">Studio</p><h4>The shop is the picture</h4></div>' +
+        "</section>" +
+        '<section class="lx-scene-cover is-dark"><p class="lx-scene-kicker">After</p><h4>Hours and a phone</h4><p>The hero softens as this panel covers it.</p></section>' +
+        '<section class="lx-scene-cover is-light"><p class="lx-scene-kicker">Done</p><h4>One live link</h4><p>Publish again after an edit.</p></section>' +
+      "</div>"),
+    sceneCard("h-scrub", "Horizontal scrub", "h-scrub",
+      '<div class="lx-scene-scrub" data-lx-scrub>' +
+        '<div class="lx-scene-scrub-sticky">' +
+          '<div class="lx-scene-scrub-row" data-lx-scrub-row>' +
+            '<article class="lx-scene-panel"><span>01</span><strong>Leads</strong><p>Claim a shop nearby.</p></article>' +
+            '<article class="lx-scene-panel"><span>02</span><strong>Build</strong><p>Fill the hours and phone.</p></article>' +
+            '<article class="lx-scene-panel"><span>03</span><strong>Publish</strong><p>Share one live link.</p></article>' +
+            '<article class="lx-scene-panel"><span>04</span><strong>Paid</strong><p>They checkout. You keep 90%.</p></article>' +
+          "</div>" +
+        "</div>" +
+      "</div>"),
+    sceneCard("pin-stack", "Pinned stack", "pin-stack",
+      '<div class="lx-scene-stack">' +
+        '<article class="lx-scene-pin" style="--i:0"><strong>Draft</strong><p>Write the first screen.</p></article>' +
+        '<article class="lx-scene-pin" style="--i:1"><strong>Review</strong><p>Check hours and phone.</p></article>' +
+        '<article class="lx-scene-pin" style="--i:2"><strong>Publish</strong><p>Put the site live.</p></article>' +
+        '<article class="lx-scene-pin" style="--i:3"><strong>Earn</strong><p>Collect when they pay.</p></article>' +
+      "</div>"),
+    sceneCard("snap-gallery", "Snap gallery", "snap-gallery",
+      '<div class="lx-scene-snap" data-lx-scrub>' +
+        '<div class="lx-scene-scrub-sticky">' +
+          '<div class="lx-scene-snap-row" data-lx-scrub-row>' +
+            '<figure class="lx-scene-slide"><img src="assets/library/hero-coast.jpg" alt=""><figcaption>Coast</figcaption></figure>' +
+            '<figure class="lx-scene-slide"><img src="assets/library/hero-coffee.jpg" alt=""><figcaption>Counter</figcaption></figure>' +
+            '<figure class="lx-scene-slide"><img src="assets/library/cta-counter.jpg" alt=""><figcaption>Shop</figcaption></figure>' +
+            '<figure class="lx-scene-slide"><img src="assets/library/hero-wind.jpg" alt=""><figcaption>Wind</figcaption></figure>' +
+          "</div>" +
+        "</div>" +
+      "</div>"),
+    sceneCard("parallax", "Parallax layers", "parallax",
+      '<div class="lx-scene-parallax" data-lx-parallax>' +
+        '<div class="lx-scene-para-sticky">' +
+          '<div class="lx-scene-para-layer is-back" data-lx-para="0.25"><img src="assets/library/hero-wind.jpg" alt=""></div>' +
+          '<div class="lx-scene-para-layer is-mid" data-lx-para="0.55"><span>Harbor</span></div>' +
+          '<div class="lx-scene-para-layer is-fore" data-lx-para="0.9"><strong>Open at 7</strong><p>Layers move at different rates.</p></div>' +
+        "</div>" +
+      "</div>"),
+    sceneCard("curtain", "Curtain reveal", "curtain",
+      '<div class="lx-scene-lock">' +
+        '<section class="lx-scene-hero is-plain">' +
+          '<div class="lx-scene-hero-copy"><p class="lx-scene-kicker">Under</p><h4>The page underneath</h4><p>Hours, phone, and the first screen stay here.</p></div>' +
+        "</section>" +
+        '<section class="lx-scene-curtain"><p class="lx-scene-kicker">Reveal</p><h4>This panel peels up</h4><p>A rounded curtain slides over the quiet page below.</p></section>' +
+        '<section class="lx-scene-cover is-light"><p class="lx-scene-kicker">Then</p><h4>Keep going</h4><p>Another band follows the peel.</p></section>' +
+      "</div>"),
+    sceneCard("progress-rail", "Progress rail", "progress-rail",
+      '<div class="lx-scene-rail" data-lx-rail>' +
+        '<aside class="lx-scene-rail-nav" aria-label="Steps">' +
+          '<button type="button" class="is-on" data-lx-rail-step="0">Site</button>' +
+          '<button type="button" data-lx-rail-step="1">Hours</button>' +
+          '<button type="button" data-lx-rail-step="2">Publish</button>' +
+          '<button type="button" data-lx-rail-step="3">Paid</button>' +
+        "</aside>" +
+        '<div class="lx-scene-rail-main">' +
+          '<section data-lx-rail-panel><h4>Site</h4><p>Name the shop and pick a look.</p></section>' +
+          '<section data-lx-rail-panel><h4>Hours</h4><p>Write when the door is open.</p></section>' +
+          '<section data-lx-rail-panel><h4>Publish</h4><p>Put one link on the street.</p></section>' +
+          '<section data-lx-rail-panel><h4>Paid</h4><p>They checkout. You keep most of it.</p></section>' +
+        "</div>" +
+      "</div>")
+  ]);
+
   const SHADES = [["Grain", "lx-shade lx-shade-grain"], ["Scan", "lx-shade lx-shade-scan"], ["Dither", "lx-shade lx-shade-dither"], ["Crosshatch", "lx-shade lx-shade-hatch"], ["Drift", "lx-shade lx-shade-drift"], ["Line", "lx-shade lx-shade-line"], ["Paper", "lx-shade lx-shade-paper"], ["Wash", "lx-shade lx-shade-wash"], ["Still noise", "lx-shade lx-shade-still"], ["Inverse noise", "lx-shade lx-shade-ink lx-shade-grain"]];
   LX.spec("shaders", ["motion-shimmer-pulse"], SHADES.slice(0, 9).map(function (row, i) {
     const play = row[0] === "Drift" || row[0] === "Line" ? "lx-live" : "";

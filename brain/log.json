@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.1.1",
+      "date": "2026-11-10",
+      "title": "UI Library adds scroll effects",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "UI Library has a Scroll effects section with hero lock, horizontal scrub, pinned stack, and other mini scroll demos."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.1.0",
       "date": "2026-11-10",
       "title": "Home button matches Menu shape",
