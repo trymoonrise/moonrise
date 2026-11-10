@@ -31,30 +31,46 @@ flowchart TB
   creator([Creator])
   owner([Business owner])
 
-  subgraph surface [trymoonrise.com]
-    public[Home, guide, orders, and legal]
+  subgraph site [Public site]
+    home[Home]
+    signin[Sign in]
+    guide[Guide, help, and contact]
+    library[UI Library]
+    orders[Orders]
+    legal[Privacy, terms, and refunds]
+  end
+
+  subgraph work [Studio]
+    dash[Dashboard]
     finder[Business Finder]
-    builder[Studio builder]
-    editor[Preview, edit, and code]
+    build[One-click builder]
+    edit[Preview, edit, and code]
+    clients[Clients]
+    settings[Account and payouts]
   end
 
-  subgraph go [Go live]
-    share[Shared preview]
+  subgraph live [Go live]
+    preview[Watermarked preview]
     pay[Owner checkout]
-    payout[Creator payout]
-    live[Published website]
+    keep[Creator keeps 90 percent]
+    website[Published website]
   end
 
-  creator --> public
-  public --> finder
-  finder --> builder
-  builder --> editor
-  editor --> share
-  share --> owner
+  creator --> home
+  home --> signin
+  signin --> dash
+  dash --> finder
+  finder --> build
+  build --> edit
+  edit --> preview
+  preview --> owner
   owner --> pay
-  pay --> payout
-  pay --> live
-  payout --> creator
+  pay --> keep
+  pay --> website
+  keep --> creator
+  website --> clients
+  orders -.-> pay
+  settings -.-> keep
 ```
 
 ### Public site

@@ -3,6 +3,27 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.8.3",
+      "date": "2026-11-09",
+      "title": "Clearer platform map",
+      "tag": "v2.8.3",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.8.3",
+      "sections": [
+        {
+          "heading": "GitHub",
+          "added": [
+            "The README diagram shows the public site, Studio, and the path from a watermarked preview to a paid live website."
+          ]
+        },
+        {
+          "heading": "Site",
+          "added": [
+            "Each term in the UI Library shows a small picture of the rule."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.8.2",
       "date": "2026-11-09",
       "title": "Plain README",
