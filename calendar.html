@@ -299,11 +299,8 @@ html[data-ms-mode=dark] #ms-boot .ms-boot-bar{background:rgba(245,245,245,.14)}
     <div class="ms-cal-gate" id="cal-gate" hidden role="dialog" aria-modal="true" aria-labelledby="cal-gate-title">
       <div class="ms-cal-gate-card">
         <h1 id="cal-gate-title">Connect Cal.com</h1>
-        <p>Paste an API key, or continue with Cal.com. This stays here until the calendar is connected.</p>
-        <label class="ms-cal-label" for="cal-api">API key</label>
-        <input class="ms-cal-input" id="cal-api" type="password" autocomplete="new-password" spellcheck="false" autocapitalize="off" placeholder="cal_live_..." maxlength="220">
+        <p id="cal-gate-copy">Continue with Cal.com to see your meetings here.</p>
         <div class="ms-cal-gate-actions">
-          <button type="button" class="ms-cal-save" id="cal-api-save">Save API key</button>
           <button type="button" class="ms-cal-oauth" id="cal-oauth">Continue with Cal.com</button>
         </div>
         <p class="ms-error" id="cal-gate-error" hidden></p>

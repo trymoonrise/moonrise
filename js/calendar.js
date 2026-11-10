@@ -577,7 +577,13 @@
     setError("");
     const conn = await api("/calendar/connection");
     configured = conn?.configured !== false;
+    const gateCopy = document.getElementById("cal-gate-copy");
     if (oauthBtn) oauthBtn.hidden = !configured;
+    if (gateCopy) {
+      gateCopy.textContent = configured
+        ? "Continue with Cal.com to see your meetings here."
+        : "Cal.com is not set up yet.";
+    }
     if (!conn?.connected) {
       showGate(true);
       return;
@@ -806,30 +812,6 @@
     const target = event.target;
     if (target instanceof Node && (pickerEl.contains(target) || monthBtn?.contains(target))) return;
     setPicker(false);
-  });
-
-  document.getElementById("cal-api-save")?.addEventListener("click", async () => {
-    const input = document.getElementById("cal-api");
-    const apiKey = String(input?.value || "").trim();
-    const btn = document.getElementById("cal-api-save");
-    setGateError("");
-    if (!apiKey) {
-      setGateError("Paste a Cal.com API key. It starts with cal_.");
-      return;
-    }
-    if (btn) btn.disabled = true;
-    try {
-      await api("/calendar/api-key", {
-        method: "POST",
-        body: JSON.stringify({ apiKey }),
-      });
-      if (input) input.value = "";
-      await refresh();
-    } catch (e) {
-      setGateError(e.message || "Could not save the Cal.com API key");
-    } finally {
-      if (btn) btn.disabled = false;
-    }
   });
 
   oauthBtn?.addEventListener("click", async () => {

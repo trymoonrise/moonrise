@@ -398,7 +398,7 @@ async function accessTokenFor(supabase, row) {
   if (row.auth_kind === "api_key") {
     const key = String(row.access_token || "").trim();
     if (!parseApiKey(key)) {
-      const err = new Error("Add a Cal.com API key in Settings.");
+      const err = new Error("Cal.com connection expired. Connect again.");
       err.status = 401;
       throw err;
     }
@@ -715,7 +715,7 @@ async function connectAccount(supabase, userId, token, extras) {
     username: safeSegment(me.username) || null,
     event_slug: types[0]?.slug || null,
     event_types: types,
-    auth_kind: extras?.authKind === "api_key" ? "api_key" : "oauth",
+    auth_kind: "oauth",
     access_token: token,
     refresh_token: extras?.refreshToken || null,
     token_expires_at: Number.isFinite(expiresIn) && expiresIn > 0
@@ -824,7 +824,6 @@ function mountRoutes(app, { db, requireUser }) {
       }
       const tokens = await exchangeCode(code);
       await connectAccount(supabase, pending.user_id, tokens.access_token, {
-        authKind: "oauth",
         refreshToken: tokens.refresh_token || null,
         expiresIn: Number(tokens.expires_in) || 1800,
       });
@@ -841,34 +840,6 @@ function mountRoutes(app, { db, requireUser }) {
       res.json(publicConnection(row));
     } catch (e) {
       sendError(res, e, "Could not load Calendar");
-    }
-  });
-
-  app.post("/calendar/api-key", requireUser, async (req, res) => {
-    try {
-      const key = parseApiKey(req.body?.apiKey);
-      if (!key) {
-        return res.status(400).json({ error: "Paste a Cal.com API key. It starts with cal_." });
-      }
-      try {
-        const profile = await calFetch(key, "/me");
-        if (!profile?.data) {
-          return res.status(400).json({
-            error: "That API key was rejected. Check it in Cal.com and try again.",
-          });
-        }
-      } catch (e) {
-        if (e.status === 401 || e.status === 403) {
-          return res.status(400).json({
-            error: "That API key was rejected. Check it in Cal.com and try again.",
-          });
-        }
-        throw e;
-      }
-      const row = await connectAccount(db(), req.user.id, key, { authKind: "api_key" });
-      res.json(publicConnection(row));
-    } catch (e) {
-      sendError(res, e, "Could not save the Cal.com API key");
     }
   });
 

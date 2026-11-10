@@ -76,7 +76,10 @@ const CONTACT_FORM_SCRIPT_PATH = path.join(__dirname, "..", "watermark", "contac
  * Design, enhance, repair, and edit use Claude Opus 5.5 so the agent can
  * design a full page. Copy stays on Claude Sonnet 5.5 for exact JSON.
  * Override a stage with WEBSITE_*_MODEL. WEBSITE_GENERATION_MODEL overrides
- * the design stages together. Thinking stays off so max_tokens is the page.
+ * the design stages together.
+ *
+ * Claude 5.5 requires adaptive thinking — do not send reasoning.enabled=false.
+ * Use a low effort and exclude the trace so max_tokens stays the page/JSON.
  */
 const WEBSITE_DESIGN_MODEL = "anthropic/claude-opus-5.5";
 const WEBSITE_COPY_DEFAULT = "anthropic/claude-sonnet-5.5";
@@ -96,15 +99,15 @@ const WEBSITE_ENHANCE_MODEL = String(
 const WEBSITE_REPAIR_MODEL = String(
   process.env.WEBSITE_REPAIR_MODEL || WEBSITE_GENERATION_MODEL
 ).trim();
-/** Assemble output budget. A full designed page needs more than a short shell. */
+/** Assemble output budget. Claude 5.5 shares this with adaptive thinking. */
 const WEBSITE_MAX_OUTPUT_TOKENS = Math.max(
-  8000,
-  Number(process.env.WEBSITE_MAX_OUTPUT_TOKENS || 24000)
+  16000,
+  Number(process.env.WEBSITE_MAX_OUTPUT_TOKENS || 48000)
 );
 /** Edit output budget. */
 const WEBSITE_EDIT_MAX_OUTPUT_TOKENS = Math.max(
-  2000,
-  Number(process.env.WEBSITE_EDIT_MAX_OUTPUT_TOKENS || 5500)
+  4000,
+  Number(process.env.WEBSITE_EDIT_MAX_OUTPUT_TOKENS || 12000)
 );
 /** Max HTML chars sent into an edit prompt (full rewrite still, but capped). */
 const WEBSITE_EDIT_MAX_INPUT_CHARS = Math.max(
@@ -3236,6 +3239,19 @@ function parsePlanJson(raw) {
   return { plan, ids, roleById };
 }
 
+function isClaude55Model(model) {
+  return /claude-(?:opus|sonnet|haiku)-5\.5\b/i.test(String(model || ""));
+}
+
+function normalizeReasoningEffort(effort) {
+  const raw = String(effort || "").trim().toLowerCase();
+  if (!raw || raw === "none" || raw === "off" || raw === "disabled") return "low";
+  if (raw === "xhigh" || raw === "max" || raw === "high" || raw === "medium" || raw === "low") {
+    return raw;
+  }
+  return "low";
+}
+
 async function openRouterChat({
   model,
   system,
@@ -3245,26 +3261,36 @@ async function openRouterChat({
   title,
   prefer,
   expectHtml = false,
-  reasoningEffort = "none",
+  reasoningEffort = "low",
   retried = false,
 }) {
   const key = process.env.OPENROUTER_API_KEY;
   if (!key) throw new Error("Website generation is not configured");
+  const modelName = String(model || WEBSITE_GENERATION_MODEL).trim() || WEBSITE_GENERATION_MODEL;
+  const claude55 = isClaude55Model(modelName);
   const body = {
-    model: model || WEBSITE_GENERATION_MODEL,
+    model: modelName,
     messages: [
       { role: "system", content: system },
       { role: "user", content: user },
     ],
-    temperature: temperature ?? 0.5,
     max_tokens: maxTokens ?? 2000,
   };
-  // Thinking models bill the trace as output and can return finish_reason=length
-  // with an empty page. "none" turns that off so max_tokens is the HTML.
-  if (reasoningEffort === "none") {
+  // Claude 5.5 rejects non-default sampling; older models still take temperature.
+  if (!claude55) {
+    body.temperature = temperature ?? 0.5;
+  }
+  // Claude 5.5 thinking is mandatory. Disable requests 400 and burn a round-trip.
+  // Low effort + exclude keeps the token budget on the page/JSON, not the trace.
+  if (claude55) {
+    body.reasoning = {
+      effort: normalizeReasoningEffort(reasoningEffort),
+      exclude: true,
+    };
+  } else if (reasoningEffort === "none") {
     body.reasoning = { enabled: false };
   } else if (reasoningEffort) {
-    body.reasoning = { effort: reasoningEffort };
+    body.reasoning = { effort: normalizeReasoningEffort(reasoningEffort) };
   }
   // Website agent stages prefer quality providers unless a stage opts into speed/price.
   const sort =
@@ -3284,7 +3310,7 @@ async function openRouterChat({
   const headers = {
     Authorization: `Bearer ${key}`,
     "Content-Type": "application/json",
-    "HTTP-Referer": PUBLIC_APP_URL,
+    "HTTP-Referer": PUBLIC_APP_URL || "https://trymoonrise.com",
     "X-Title": title || "Moonrise Studio",
   };
   const timeoutMs = Math.max(
@@ -3298,8 +3324,16 @@ async function openRouterChat({
     signal: AbortSignal.timeout(timeoutMs),
   });
   let data = await res.json().catch(() => ({}));
-  if (!res.ok && body.reasoning && /reasoning|effort/i.test(String(data?.error?.message || ""))) {
-    delete body.reasoning;
+  if (!res.ok && body.reasoning && /reasoning|effort|temperature|sampling/i.test(String(data?.error?.message || ""))) {
+    if (claude55) {
+      // Fall back to adaptive default (no effort field) if effort/exclude is rejected.
+      delete body.reasoning;
+    } else {
+      delete body.reasoning;
+    }
+    if (body.temperature != null && /temperature|sampling/i.test(String(data?.error?.message || ""))) {
+      delete body.temperature;
+    }
     res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers,
@@ -3334,6 +3368,15 @@ async function openRouterChat({
   const message = choice?.message || {};
   const content = resolveAssistantContent(message, { expectHtml });
   const reasoningTokens = Number(data?.usage?.completion_tokens_details?.reasoning_tokens || 0);
+  console.info("OpenRouter ok", {
+    title: title || "Moonrise Studio",
+    model: data?.model || body.model,
+    finishReason: choice?.finish_reason || "",
+    reasoningTokens,
+    completionTokens: Number(data?.usage?.completion_tokens || 0),
+    promptTokens: Number(data?.usage?.prompt_tokens || 0),
+    contentChars: String(content || "").length,
+  });
   if (!String(message?.content || "").trim()) {
     console.warn("OpenRouter visible content empty", {
       title: title || "Moonrise Studio",
@@ -3542,6 +3585,7 @@ async function planAtmosphereAndPicks(ctx) {
     maxTokens: 600,
     prefer: "price",
     title: "Moonrise Studio Atmosphere",
+    reasoningEffort: "low",
   });
   const raw = rawResult.content;
   try {
@@ -3738,6 +3782,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
       prefer: "quality",
       title: "Moonrise Agent Copy",
       expectHtml: false,
+      reasoningEffort: "low",
     });
     copy = normalizeSiteCopy(parseCopyJson(result.content), ctx, shellPlan);
   } catch (err) {
@@ -3796,6 +3841,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
       prefer: "quality",
       title: "Moonrise Agent Assemble",
       expectHtml: true,
+      reasoningEffort: "low",
     });
     let html = String(assembled.content || "").trim();
     if (!/<html[\s>]/i.test(html) || html.length < 4000) {
@@ -3836,6 +3882,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
         prefer: "quality",
         title: "Moonrise Agent Enhance",
         expectHtml: true,
+        reasoningEffort: "low",
       });
       const next = String(enhanced.content || "").trim();
       if (/<html[\s>]/i.test(next) && next.length > 4000) {
@@ -3880,6 +3927,7 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
           prefer: "quality",
           title: "Moonrise Agent Repair",
           expectHtml: true,
+          reasoningEffort: "low",
         });
         const repairedHtml = String(repaired.content || "").trim();
         if (/<html[\s>]/i.test(repairedHtml) && repairedHtml.length > 4000) {
@@ -6025,10 +6073,11 @@ app.post("/edit", requireUser, editLimiter, async (req, res) => {
       system: EDIT_SYSTEM_PROMPT,
       user: buildEditUserPrompt(instruction, currentHtml, WEBSITE_EDIT_MAX_INPUT_CHARS),
       temperature: 0.25,
-      maxTokens: WEBSITE_EDIT_MAX_OUTPUT_TOKENS,
+      maxTokens: Math.max(WEBSITE_EDIT_MAX_OUTPUT_TOKENS, 12000),
       prefer: "quality",
       expectHtml: true,
       title: "Moonrise Studio Edit",
+      reasoningEffort: "low",
     });
     let html = String(editResult.content || "").trim();
     html = ensurePaletteContrast(stripDemoChrome(html));
