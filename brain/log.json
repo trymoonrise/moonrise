@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.8.0",
+      "date": "2026-11-09",
+      "title": "Locked hero",
+      "sections": [
+        {
+          "heading": "Site",
+          "fixes": [
+            "The landing hero stays put while you scroll, and How it works comes in with rounded corners."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.9",
       "date": "2026-11-09",
       "title": "Design dictionary",
