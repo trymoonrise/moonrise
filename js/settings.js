@@ -151,6 +151,12 @@
     document.getElementById("set-profile-summary")?.classList.remove("is-skel");
   }
 
+  function clearValueSkeleton(el) {
+    if (!el) return;
+    el.classList.remove("ms-skel", "ms-skel-line", "ms-skel-line--sm");
+    el.removeAttribute("aria-hidden");
+  }
+
   function syncThemeSwatchPreview() {
     const preview = document.getElementById("set-theme-swatch-preview");
     if (!preview) return;
@@ -401,6 +407,7 @@
       input.checked = !!prefs[key];
     });
     if (notifSummary) {
+      clearValueSkeleton(notifSummary);
       notifSummary.textContent = window.MoonrisePush?.summaryLabel?.(prefs) || "Off";
     }
 
@@ -906,6 +913,7 @@
     const username = String(conn?.username || "").trim();
     const types = Array.isArray(conn?.eventTypes) ? conn.eventTypes : [];
     if (summary) {
+      clearValueSkeleton(summary);
       summary.textContent = connected
         ? (username ? "@" + username : "Connected")
         : "Not connected";
@@ -1033,14 +1041,15 @@
     if (started) return;
     started = true;
     try {
-      await load();
-      await refreshPasskeys();
       const flag = consumeCalendarFlag();
-      try {
-        await loadCalendar();
-      } catch (calErr) {
+      const calendarReady = loadCalendar().catch((calErr) => {
+        clearValueSkeleton(document.getElementById("set-cal-summary"));
+        const summary = document.getElementById("set-cal-summary");
+        if (summary && !summary.textContent) summary.textContent = "Not connected";
         setCalError(calErr.message || "Could not load Calendar");
-      }
+      });
+      await load();
+      await Promise.all([refreshPasskeys(), calendarReady]);
       if (flag) {
         const toggle = document.getElementById("set-cal-toggle");
         const panel = document.getElementById("set-cal-panel");
@@ -1057,6 +1066,8 @@
     } catch (e) {
       console.warn(e);
       clearProfileSkeleton();
+      clearValueSkeleton(document.getElementById("set-notif-summary"));
+      clearValueSkeleton(document.getElementById("set-cal-summary"));
       setError(friendlyMessage(e, "Could not load settings"));
     }
   }

@@ -29,6 +29,7 @@
   const EXTRA_KEY = "ms_cal_event_extra_v1";
   let configured = true;
   let loadToken = 0;
+  let meetingsLoading = false;
 
   function workerBase() {
     if (typeof window.resolveWorkerUrl === "function") {
@@ -103,8 +104,22 @@
     return data;
   }
 
-  function showGate(on) {
+  function setMeetingsLoading(on) {
+    meetingsLoading = !!on;
+    appEl?.classList.toggle("is-skel-loading", meetingsLoading);
+    if (meetingsLoading) {
+      if (emptyEl) emptyEl.hidden = true;
+      hideDetail();
+      return;
+    }
     window.__msClearChannelSkeleton?.();
+  }
+
+  function showGate(on) {
+    if (on) {
+      setMeetingsLoading(false);
+      window.__msClearChannelSkeleton?.();
+    }
     if (gateEl) gateEl.hidden = !on;
     if (appEl) appEl.hidden = !!on;
     if (on) hideDetail();
@@ -188,6 +203,7 @@
     selected = todayKey.startsWith(prefix) ? todayKey : prefix + "-01";
     bookings = [];
     setPicker(false);
+    setMeetingsLoading(true);
     paintGrid();
     showDetail();
     void loadMonth();
@@ -501,6 +517,11 @@
   }
 
   function showDetail() {
+    if (meetingsLoading) {
+      hideDetail();
+      if (emptyEl) emptyEl.hidden = true;
+      return;
+    }
     const items = eventsOn(selected);
     if (!items.length) {
       hideDetail();
@@ -526,6 +547,7 @@
       pickerYear = viewYear;
       bookings = [];
       setPicker(false);
+      setMeetingsLoading(true);
       paintGrid();
       showDetail();
       void loadMonth();
@@ -539,6 +561,7 @@
     const token = ++loadToken;
     const year = viewYear;
     const month = viewMonth;
+    setMeetingsLoading(true);
     try {
       const range = monthRange(year, month);
       const data = await api(
@@ -565,11 +588,15 @@
           meetingUrl,
         };
       });
+      setMeetingsLoading(false);
       paintGrid();
       showDetail();
     } catch (e) {
       if (token !== loadToken) return;
+      setMeetingsLoading(false);
       setError(e.message || "Could not load meetings");
+      paintGrid();
+      showDetail();
     }
   }
 
@@ -589,6 +616,7 @@
       return;
     }
     bookingUrl = String(conn?.bookingUrl || "");
+    setMeetingsLoading(true);
     showGate(false);
     paintGrid();
     await loadMonth();
@@ -834,6 +862,7 @@
     try {
       await refresh();
     } catch (e) {
+      setMeetingsLoading(false);
       window.__msClearChannelSkeleton?.();
       showGate(false);
       setError(e.message || "Could not load the calendar");

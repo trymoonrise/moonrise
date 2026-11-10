@@ -251,6 +251,7 @@ function mountChannelSkeleton(until) {
     if (!document.body || document.body.dataset.page !== "calendar") return false;
     var app = document.getElementById("cal-app");
     var gate = document.getElementById("cal-gate");
+    if (app && !app.hidden && app.classList.contains("is-skel-loading")) return true;
     return (!app || app.hidden) && (!gate || gate.hidden);
   }
 
@@ -276,6 +277,13 @@ function mountChannelSkeleton(until) {
         attributes: true,
         attributeFilter: ["data-ms-shell-painted"],
       });
+      var app = document.getElementById("cal-app");
+      if (app) {
+        new MutationObserver(maybeClear).observe(app, {
+          attributes: true,
+          attributeFilter: ["class", "hidden"],
+        });
+      }
       maybeClear();
     }
     if (document.body) watchShell();

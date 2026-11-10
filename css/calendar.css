@@ -485,12 +485,66 @@ body[data-page="calendar"] .ms-cal-oauth {
 }
 
 
+body[data-page="calendar"] .ms-cal.is-skel-loading .ms-cal-day {
+  color: transparent;
+  pointer-events: none;
+  background: color-mix(in srgb, #1d1d1f 8%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+body[data-page="calendar"] .ms-cal.is-skel-loading .ms-cal-day::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, #fff 55%, transparent) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: ms-cal-skel 1.15s ease-in-out infinite;
+}
+
+body[data-page="calendar"] .ms-cal.is-skel-loading .ms-cal-day.has-event::after,
+body[data-page="calendar"] .ms-cal.is-skel-loading .ms-cal-empty,
+body[data-page="calendar"] .ms-cal.is-skel-loading .ms-cal-detail {
+  display: none !important;
+}
+
+@keyframes ms-cal-skel {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+html[data-ms-mode="dark"] body[data-page="calendar"] .ms-cal.is-skel-loading .ms-cal-day {
+  background: color-mix(in srgb, #fff 10%, transparent);
+}
+
+html[data-ms-mode="dark"] body[data-page="calendar"] .ms-cal.is-skel-loading .ms-cal-day::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, #fff 16%, transparent) 50%,
+    transparent 100%
+  );
+}
+
 body[data-page="calendar"] .ms-cal[hidden],
 body[data-page="calendar"] .ms-cal-gate[hidden],
 body[data-page="calendar"] .ms-cal-picker[hidden],
 body[data-page="calendar"] .ms-cal-empty[hidden],
 body[data-page="calendar"] #cal-error[hidden] {
   display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="calendar"] .ms-cal.is-skel-loading .ms-cal-day::before {
+    animation: none !important;
+    display: none !important;
+  }
 }
 
 @media (min-width: 901px) {

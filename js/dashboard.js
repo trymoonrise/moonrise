@@ -726,6 +726,8 @@
     const projects = allProjects.slice();
 
     if (countEl) {
+      countEl.classList.remove("ms-skel", "ms-skel-line", "ms-skel-line--sm");
+      countEl.removeAttribute("aria-hidden");
       countEl.textContent =
         projects.length + " " + plural(projects.length, "project", "projects");
     }

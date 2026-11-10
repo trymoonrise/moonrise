@@ -2033,6 +2033,25 @@ html.ms-boot-done #page-body {
   border-radius: var(--ms-min-radius);
 }
 
+.ms-set-row-value.ms-skel {
+  display: inline-block;
+  min-width: 5.5rem;
+  max-width: 7.5rem;
+  height: 0.7rem;
+  margin: 0;
+  vertical-align: middle;
+  border-radius: 6px;
+}
+
+.ms-dash-count-badge.ms-skel,
+.ms-projects-count.ms-skel {
+  display: inline-block;
+  min-width: 5.5rem;
+  height: 0.85rem;
+  border-radius: 999px;
+  color: transparent !important;
+}
+
 .ms-set-row.is-skel .ms-set-row-copy strong,
 .ms-set-row.is-skel .ms-set-row-copy span,
 .ms-set-row.is-skel .ms-set-photo-preview {

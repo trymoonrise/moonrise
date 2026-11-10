@@ -615,6 +615,8 @@
     const services = Array.isArray(report?.services) ? report.services : [];
     const state = report?.overall || "down";
     if (overall) {
+      overall.classList.remove("ms-skel", "ms-skel-line", "ms-skel-line--sm");
+      overall.removeAttribute("aria-hidden");
       overall.textContent = overallLabel(state);
       overall.dataset.state = state;
     }
@@ -754,7 +756,11 @@
     busy = true;
     toggle?.classList.add("is-loading");
     setError("");
-    if (overall && !lastReport) overall.textContent = "Checking…";
+    if (overall && !lastReport && !overall.classList.contains("ms-skel")) {
+      overall.classList.add("ms-skel", "ms-skel-line", "ms-skel-line--sm");
+      overall.setAttribute("aria-hidden", "true");
+      overall.textContent = "";
+    }
     try {
       const session = await window.StudioAuth?.getSession?.();
       if (!session?.access_token) throw new Error("Sign in required");
@@ -778,6 +784,8 @@
       const errMsg = String(err?.message || err || "Could not load status");
       setError(errMsg);
       if (overall) {
+        overall.classList.remove("ms-skel", "ms-skel-line", "ms-skel-line--sm");
+        overall.removeAttribute("aria-hidden");
         overall.textContent = "Error";
         overall.dataset.state = "down";
       }
