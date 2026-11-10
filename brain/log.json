@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.0.1",
+      "date": "2026-11-10",
+      "title": "Simpler phone library menu",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "On a phone, UI Library categories are one Jump to menu."
+          ],
+          "fixes": [
+            "The phone category list stays below the logo and menu, so the section you open stays readable."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.0.0",
       "date": "2026-11-10",
       "title": "Library header and design review",

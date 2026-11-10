@@ -113,6 +113,21 @@
       ["screens", "Screens"],
       ["terms", "Terms"]
     ];
+    const jumpPins = [
+      ["craft", "Special Prompt"],
+      ["cookbook", "Cookbook"]
+    ];
+    const jump = '<label class="dt-toc-jump">Jump to<select aria-label="Jump to a section">' +
+      '<optgroup label="Start">' + jumpPins.map(function (item) {
+        return '<option value="' + item[0] + '">' + item[1] + "</option>";
+      }).join("") + "</optgroup>" +
+      groups.map(function (group) {
+        const opts = INDEX.filter(function (item) { return item.g === group[0]; }).map(function (item) {
+          return '<option value="' + (item.link || item.id) + '">' + item.t + "</option>";
+        }).join("");
+        return '<optgroup label="' + group[1] + '">' + opts + "</optgroup>";
+      }).join("") +
+      "</select></label>";
     const pin = '<div class="dt-toc-pin"><a href="#craft">Special Prompt</a><a href="#cookbook">Cookbook</a></div>';
     const switcher = '<div class="dt-toc-switch" role="tablist" aria-label="Catalog groups">' +
       '<button type="button" class="is-on" data-toc-group="sections" aria-selected="true">Sections</button>' +
@@ -125,7 +140,7 @@
       }).join("");
       return '<div class="dt-toc-group' + (index === 0 ? " is-shown" : "") + '" data-group="' + group[0] + '"><p class="dt-toc-label">' + group[1] + "</p>" + links + "</div>";
     }).join("");
-    return pin + switcher + '<div class="dt-toc-scroll">' + body + "</div>";
+    return jump + pin + switcher + '<div class="dt-toc-scroll">' + body + "</div>";
   }
 
   function shellsHtml() {
@@ -399,6 +414,20 @@
     if (!toc || !root || !window.LX) return;
     if (!toc.querySelector("a")) toc.innerHTML = tocHtml();
     if (!root.querySelector("[data-lx-cat]")) root.innerHTML = shellsHtml();
+
+    const jumpSelect = toc.querySelector(".dt-toc-jump select");
+    if (jumpSelect) {
+      jumpSelect.addEventListener("change", function () {
+        const id = jumpSelect.value;
+        const host = sectionFor(id);
+        if (host) mountSection(host);
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (history.replaceState) history.replaceState(null, "", "#" + id);
+        const reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+        el.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+      });
+    }
 
     toc.addEventListener("click", function (event) {
       const button = event.target.closest("[data-toc-group]");
