@@ -1184,8 +1184,9 @@
         const raw = repo && (repo.pushed_at || repo.updated_at);
         const when = raw ? new Date(raw) : null;
         if (!when || Number.isNaN(when.getTime())) return;
-        const label = when.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-        el.textContent = "Last updated " + label;
+        const hours = Math.max(1, Math.floor((Date.now() - when.getTime()) / 3600000));
+        const unit = hours === 1 ? "Hour" : "Hours";
+        el.textContent = "Last updated: " + hours + " " + unit + " ago";
         el.hidden = false;
       })
       .catch(() => {

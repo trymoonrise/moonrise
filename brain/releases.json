@@ -3,6 +3,21 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.7.7",
+      "date": "2026-11-09",
+      "title": "Hours ago",
+      "tag": "v2.7.7",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.7.7",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The Special Prompt card says how many hours ago it was updated."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.6",
       "date": "2026-11-09",
       "title": "Service checks",
