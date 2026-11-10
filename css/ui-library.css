@@ -2802,6 +2802,11 @@ body[data-page="ui-library"] a.dt-link:hover,
   font-size: 0.84rem;
 }
 .dt-foot a { color: var(--dt-ink); font-weight: 700; }
+.dt-foot-updated {
+  margin: 0.45rem 0 0;
+  color: var(--dt-quiet);
+  font-size: 0.78rem;
+}
 
 .ms-orders-nav-link.is-active {
   font-weight: 750;
