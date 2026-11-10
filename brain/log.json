@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.8.9",
+      "date": "2026-11-09",
+      "title": "Login stays put; home screen opens Studio",
+      "sections": [
+        {
+          "heading": "Site",
+          "fixes": [
+            "Visiting the login page no longer auto-enters Studio when a browser session is already saved."
+          ],
+          "added": [
+            "The installed home-screen app still opens Studio right away when the user is signed in."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.8.8",
       "date": "2026-11-09",
       "title": "Skeleton-first loading",

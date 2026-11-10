@@ -7,8 +7,8 @@ document.documentElement.classList.add("ms-hold");
 window.__msRevealLogin = function () {
   document.documentElement.classList.remove("ms-hold");
 };
-// Stay blank until the session check finishes. A signed-in visit goes
-// straight to the next page and never paints this card.
+// Stay blank until the session check finishes. Installed home-screen apps
+// with a saved session skip this card; a normal browser visit always shows it.
 setTimeout(function () {
   if (document.documentElement.classList.contains("ms-hold")) window.__msRevealLogin();
 }, 2500);
@@ -809,6 +809,22 @@ setTimeout(function () {
         }
       }
 
+      function isInstalledHomeScreen() {
+        try {
+          if (navigator.standalone === true) return true;
+          const mq = window.matchMedia;
+          if (!mq) return false;
+          return (
+            mq("(display-mode: standalone)").matches ||
+            mq("(display-mode: fullscreen)").matches ||
+            mq("(display-mode: minimal-ui)").matches ||
+            mq("(display-mode: window-controls-overlay)").matches
+          );
+        } catch (_) {
+          return false;
+        }
+      }
+
       async function bootstrapAuthSession() {
         await waitForStudioAuth(60);
         const hasAuthCallback =
@@ -854,7 +870,14 @@ setTimeout(function () {
           showEmailVerified(true);
           return;
         }
-        if (sessionNow && !emailConfirmPending && params.get("check_email") !== "1") {
+        // Home-screen / installed app: open Studio when already signed in.
+        // A normal browser visit to /login keeps the sign-in form.
+        if (
+          sessionNow
+          && !emailConfirmPending
+          && params.get("check_email") !== "1"
+          && isInstalledHomeScreen()
+        ) {
           await continueAfterAuth();
           return;
         }

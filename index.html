@@ -193,8 +193,8 @@ document.documentElement.classList.add("ms-boot");
   <script>
     (function () {
       // Home-screen / installed app opens the site root. If a session is saved,
-      // continue to the dashboard before the landing page paints. A normal browser
-      // visit stays on this page, including when an old token is sitting in storage.
+      // continue to Studio before the landing page paints. A normal browser visit
+      // stays here — including /login, which no longer auto-enters Studio.
       var params;
       try {
         params = new URLSearchParams(location.search);
