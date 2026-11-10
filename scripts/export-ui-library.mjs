@@ -40,6 +40,7 @@ function loadSpecs() {
     "js/ui-catalog/sections.js",
     "js/ui-catalog/components.js",
     "js/ui-catalog/screens.js",
+    "js/ui-catalog/terms.js",
   ]) {
     vm.runInContext(read(file), sandbox, { filename: file });
   }

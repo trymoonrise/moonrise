@@ -655,6 +655,32 @@ body[data-page="ui-library"] .dt-toc a.is-active {
   display: none;
 }
 
+.dt-section[data-lx-dict] .dt-section-head p {
+  display: block;
+  margin: 0.35rem 0 0;
+  max-width: 36rem;
+  color: #737373;
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.dt-stage.dt-dict-stage {
+  min-height: 0;
+  justify-content: flex-start;
+  padding: 0.15rem 0.1rem 0.2rem;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.dt-dict {
+  margin: 0;
+  color: #5c5c5c;
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
 .dt-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));

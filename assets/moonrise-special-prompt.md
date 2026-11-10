@@ -230,6 +230,8 @@ Components: accordions, alerts, avatars, badges, buttons, cards, checkboxes, dia
 
 Screens: authentication, onboarding, navigation systems, data tables, and the other full screens in the library.
 
+Terms: a short dictionary for Motion, Type, Layout, Interaction, and Looks to leave out. Read the term before you invent the effect.
+
 Rules for using a type:
 
 - Keep its structure, spacing, radius, and states: rest, hover, press, focus, disabled, loading, empty, error.

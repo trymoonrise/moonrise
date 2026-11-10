@@ -3,6 +3,21 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "2.7.9",
+      "date": "2026-11-09",
+      "title": "Design dictionary",
+      "tag": "v2.7.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v2.7.9",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The UI Library Terms group explains motion, type, layout, interaction, and looks to leave out in a short line each."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.7.8",
       "date": "2026-11-09",
       "title": "Same public menu",

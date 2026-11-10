@@ -94,7 +94,13 @@
     { g: "screens", id: "loading-states", t: "Loading states" },
     { g: "screens", t: "Dashboards", link: "dashboards" },
     { g: "screens", t: "Empty states", link: "empty-states" },
-    { g: "screens", t: "Dialogs", link: "dialogs" }
+    { g: "screens", t: "Dialogs", link: "dialogs" },
+
+    { g: "terms", id: "motion-terms", t: "Motion", blurb: "How movement should feel." },
+    { g: "terms", id: "type-terms", t: "Type", blurb: "How letters sit on the page." },
+    { g: "terms", id: "layout-terms", t: "Layout", blurb: "How space, edges, and color hold a screen." },
+    { g: "terms", id: "interaction-terms", t: "Interaction", blurb: "How a control answers a person." },
+    { g: "terms", id: "looks-terms", t: "Looks to leave out", blurb: "Fashions that make a product look generated." }
   ];
 
   const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
@@ -104,13 +110,15 @@
     const groups = [
       ["sections", "Sections"],
       ["components", "Components"],
-      ["screens", "Screens"]
+      ["screens", "Screens"],
+      ["terms", "Terms"]
     ];
     const pin = '<div class="dt-toc-pin"><a href="#craft">Special Prompt</a><a href="#cookbook">Cookbook</a></div>';
     const switcher = '<div class="dt-toc-switch" role="tablist" aria-label="Catalog groups">' +
       '<button type="button" class="is-on" data-toc-group="sections" aria-selected="true">Sections</button>' +
       '<button type="button" data-toc-group="components" aria-selected="false">Components</button>' +
-      '<button type="button" data-toc-group="screens" aria-selected="false">Screens</button></div>';
+      '<button type="button" data-toc-group="screens" aria-selected="false">Screens</button>' +
+      '<button type="button" data-toc-group="terms" aria-selected="false">Terms</button></div>';
     const body = groups.map(function (group, index) {
       const links = INDEX.filter(function (item) { return item.g === group[0]; }).map(function (item) {
         return '<a href="#' + (item.link || item.id) + '">' + item.t + "</a>";
@@ -123,8 +131,10 @@
   function shellsHtml() {
     return INDEX.filter(function (item) { return item.id; }).map(function (item) {
       const alias = item.alias ? '<span id="' + item.alias + '" class="dt-alias"></span>' : "";
-      return '<section class="dt-section" id="' + item.id + '" data-lx-cat="' + item.id + '">' + alias +
-        '<header class="dt-section-head"><h2>' + item.t + '</h2></header><div class="dt-grid"></div></section>';
+      const dict = item.g === "terms" ? ' data-lx-dict="1"' : "";
+      const blurb = item.blurb ? '<p>' + item.blurb + "</p>" : "";
+      return '<section class="dt-section" id="' + item.id + '" data-lx-cat="' + item.id + '"' + dict + '>' + alias +
+        '<header class="dt-section-head"><h2>' + item.t + "</h2>" + blurb + '</header><div class="dt-grid"></div></section>';
     }).join("");
   }
 
@@ -149,8 +159,9 @@
       const node = document.getElementById(id);
       if (node && node.classList.contains("dt-card")) grid.appendChild(node);
     });
+    const cap = section.dataset.lxDict ? 48 : 10;
     ((spec && spec.cards) || []).forEach(function (item) {
-      if (grid.querySelectorAll(".dt-card").length >= 10) return;
+      if (grid.querySelectorAll(".dt-card").length >= cap) return;
       if (document.getElementById(item.id)) return;
       grid.insertAdjacentHTML("beforeend", cardHtml(item));
     });
