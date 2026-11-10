@@ -590,15 +590,18 @@
     renderGenerateProgress(100, "Website ready");
     syncEmptyState();
     updatePreview();
-    writePreviewDocument(state.html);
-    schedulePreviewRepaint();
+    if (editState.lastWrittenHtml !== state.html) writePreviewDocument(state.html);
     syncPromptActionUi();
     syncRedesignButtonUi();
     await finishGenerateProgress();
-    // Re-assert paint after overlay hides (iframe can miss write while covered).
-    if (state.html) {
+    const paintedDoc = getPreviewDoc();
+    if (
+      state.html &&
+      paintedDoc &&
+      paintedDoc.readyState === "complete" &&
+      !previewDocLooksPainted(paintedDoc)
+    ) {
       writePreviewDocument(state.html);
-      schedulePreviewRepaint();
     }
     syncEmptyState();
     if (opts?.status) setStatus(opts.status);
@@ -3567,6 +3570,7 @@
     dropImageEl: null,
     previewObjectUrl: "",
     previewPainted: false,
+    previewRepaintTries: 0,
     uploadNavDoc: null,
     uploadNavHandler: null,
     previewPagePath: "",
@@ -4075,14 +4079,29 @@
     if (!frame) return;
     frame.classList.remove("is-parked");
     applyPreviewViewportSize();
-    const doc = getPreviewDoc();
-    const ready = !doc || doc.readyState === "complete";
-    const contentMissing = !previewDocLooksPainted(doc);
-    if (editState.lastWrittenHtml !== state.html || (contentMissing && ready)) {
+    if (editState.lastWrittenHtml !== state.html) {
+      editState.previewRepaintTries = 0;
       writePreviewDocument(state.html);
       return;
     }
-    if (!contentMissing) markPreviewPainted(true);
+    const doc = getPreviewDoc();
+    // The preview sandbox often hides the document. A matching srcdoc is already painted.
+    if (!doc || !doc.body) {
+      markPreviewPainted(true);
+      return;
+    }
+    if (doc.readyState !== "complete") return;
+    if (previewDocLooksPainted(doc)) {
+      editState.previewRepaintTries = 0;
+      markPreviewPainted(true);
+      return;
+    }
+    if ((editState.previewRepaintTries || 0) >= 1) {
+      markPreviewPainted(true);
+      return;
+    }
+    editState.previewRepaintTries = (editState.previewRepaintTries || 0) + 1;
+    writePreviewDocument(state.html);
   }
 
   /** Schedule several paints - Finder swipe often finishes before the preview grid has height. */

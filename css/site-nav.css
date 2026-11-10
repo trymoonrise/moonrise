@@ -72,37 +72,10 @@ body[data-page="home"] .ms-site-bar {
 }
 
 .ms-home-btn:focus-visible,
-.ms-nav-cta:focus-visible,
 .ms-menu-btn:focus-visible,
 .ms-menu-screen a:focus-visible {
   outline: 2px solid #1d1d1f;
   outline-offset: 3px;
-}
-
-.ms-nav-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.5rem;
-  padding: 0 1rem;
-  border-radius: 10px;
-  background: #1d1d1f !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  text-decoration: none !important;
-  pointer-events: auto;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.ms-nav-cta:hover {
-  background: #2c2c2e !important;
-}
-
-.ms-nav-cta:active {
-  transform: scale(0.97);
 }
 
 .ms-menu-btn {
@@ -205,6 +178,7 @@ body[data-page="home"] .ms-site-bar {
 }
 
 .ms-menu-screen a {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,6 +205,24 @@ body[data-page="home"] .ms-site-bar {
   opacity: 1;
   transform: none;
   transition-delay: calc(0.05s + (var(--i, 0) * 0.045s));
+}
+
+.ms-menu-screen a::after {
+  content: "";
+  position: absolute;
+  right: 0.75rem;
+  left: 0.75rem;
+  top: calc(50% + 0.58em);
+  height: 0.055em;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ms-menu-screen a:hover::after,
+.ms-menu-screen a:focus-visible::after {
+  transform: scaleX(1);
 }
 
 .ms-menu-screen a:hover,
@@ -262,7 +254,6 @@ body[data-page="hosting-billing"] .ms-hosting-main {
 }
 
 @media (max-width: 420px) {
-  .ms-nav-cta,
   .ms-menu-btn {
     height: 2.35rem;
     padding-inline: 0.7rem;
@@ -274,11 +265,11 @@ body[data-page="hosting-billing"] .ms-hosting-main {
   .ms-site-bar,
   .ms-menu-screen,
   .ms-menu-screen a,
+  .ms-menu-screen a::after,
   .ms-site-bar.is-open .ms-menu-screen a,
   .ms-menu-bars,
   .ms-menu-bars::before,
-  .ms-menu-bars::after,
-  .ms-nav-cta {
+  .ms-menu-bars::after {
     transition: none;
     animation: none;
   }

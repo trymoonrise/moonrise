@@ -9128,12 +9128,15 @@ body.ms-lb-generating .ms-lb-loading-copy {
 
 body.ms-lb-generating .ms-lb-agent {
   display: flex;
+  align-items: center;
+  text-align: center;
 }
 
 .ms-lb-agent-status {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  justify-content: center;
+  gap: 0.7rem;
   margin: 0;
   color: #737373;
 }
@@ -9151,15 +9154,17 @@ body.ms-lb-generating .ms-lb-agent {
 .ms-lb-dots {
   display: inline-flex;
   align-items: center;
-  gap: 0.22rem;
-  height: 0.7rem;
+  justify-content: center;
+  gap: 0.32rem;
+  height: 36px;
 }
 
 .ms-lb-dots i {
-  width: 0.32rem;
-  height: 0.32rem;
+  width: 0.46rem;
+  height: 0.46rem;
   border-radius: 50%;
   background: currentColor;
+  transform-origin: center;
   animation: ms-lb-dot 1.05s ease-in-out infinite;
 }
 
@@ -9173,14 +9178,17 @@ body.ms-lb-generating .ms-lb-agent {
   letter-spacing: -0.01em;
   line-height: 1.4;
   color: #a3a3a3;
+  text-align: center;
 }
 
 .ms-lb-agent-files {
   display: flex;
   flex-direction: column;
+  align-self: stretch;
   gap: 0.35rem;
   width: 100%;
   min-height: 0;
+  text-align: left;
 }
 
 .ms-lb-agent-files:empty {
@@ -9207,8 +9215,8 @@ body.ms-lb-generating .ms-lb-agent {
 @keyframes ms-lb-dot {
   0%,
   70%,
-  100% { opacity: 0.25; transform: translateY(0); }
-  35% { opacity: 1; transform: translateY(-2px); }
+  100% { opacity: 0.28; transform: scale(0.82); }
+  35% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes ms-lb-agent-file-in {

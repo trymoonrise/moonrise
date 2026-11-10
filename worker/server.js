@@ -73,15 +73,19 @@ const WATERMARK_EMBED_PATH = path.join(__dirname, "..", "watermark", "embed.js")
 const CONTACT_FORM_SCRIPT_PATH = path.join(__dirname, "..", "watermark", "contact-form.js");
 /**
  * Website generation models (OpenRouter).
- * Default is Claude Sonnet 5.5 — strong on WebDev / HTML layout quality.
- * Override per stage with WEBSITE_*_MODEL, or set WEBSITE_GENERATION_MODEL for all.
- * Thinking stays off so max_tokens is the HTML page, not a reasoning trace.
+ * Design, enhance, repair, and edit use Claude Opus 5.5 so the agent can
+ * design a full page. Copy stays on Claude Sonnet 5.5 for exact JSON.
+ * Override a stage with WEBSITE_*_MODEL. WEBSITE_GENERATION_MODEL overrides
+ * the design stages together. Thinking stays off so max_tokens is the page.
  */
+const WEBSITE_DESIGN_MODEL = "anthropic/claude-opus-5.5";
+const WEBSITE_COPY_DEFAULT = "anthropic/claude-sonnet-5.5";
+const WEBSITE_MODEL_FALLBACK = "anthropic/claude-sonnet-5.5";
 const WEBSITE_GENERATION_MODEL = String(
-  process.env.WEBSITE_GENERATION_MODEL || "anthropic/claude-sonnet-5.5"
+  process.env.WEBSITE_GENERATION_MODEL || WEBSITE_DESIGN_MODEL
 ).trim();
 const WEBSITE_COPY_MODEL = String(
-  process.env.WEBSITE_COPY_MODEL || WEBSITE_GENERATION_MODEL
+  process.env.WEBSITE_COPY_MODEL || WEBSITE_COPY_DEFAULT
 ).trim();
 const WEBSITE_ASSEMBLE_MODEL = String(
   process.env.WEBSITE_ASSEMBLE_MODEL || WEBSITE_GENERATION_MODEL
@@ -92,10 +96,10 @@ const WEBSITE_ENHANCE_MODEL = String(
 const WEBSITE_REPAIR_MODEL = String(
   process.env.WEBSITE_REPAIR_MODEL || WEBSITE_GENERATION_MODEL
 ).trim();
-/** Assemble output budget (output tokens dominate cost + latency). */
+/** Assemble output budget. A full designed page needs more than a short shell. */
 const WEBSITE_MAX_OUTPUT_TOKENS = Math.max(
   8000,
-  Number(process.env.WEBSITE_MAX_OUTPUT_TOKENS || 16000)
+  Number(process.env.WEBSITE_MAX_OUTPUT_TOKENS || 24000)
 );
 /** Edit output budget. */
 const WEBSITE_EDIT_MAX_OUTPUT_TOKENS = Math.max(
@@ -1472,28 +1476,90 @@ async function buildStudioStatusReport() {
       async (signal) => {
         const headers = {
           Accept: "application/json,text/plain",
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           "User-Agent": "moonrise-studio-status",
         };
-        async function up(url) {
+        const placeProbe = "data=" + encodeURIComponent("[out:json][timeout:5];node(1);out ids;");
+        async function searchUp() {
           try {
-            const res = await fetch(url, {
+            const res = await fetch("https://nominatim.openstreetmap.org/status.php", {
               method: "GET",
               cache: "no-store",
               redirect: "follow",
               signal,
-              headers,
+              headers: { Accept: "text/plain", "User-Agent": headers["User-Agent"] },
             });
             return res.ok;
           } catch (_) {
             return false;
           }
         }
-        const [searchOk, primaryPlaces, backupPlaces] = await Promise.all([
-          up("https://nominatim.openstreetmap.org/status.php"),
-          up("https://overpass-api.de/api/status"),
-          up("https://overpass.kumi.systems/api/status"),
+        function placeUp(url) {
+          const ctrl = new AbortController();
+          const onAbort = () => ctrl.abort();
+          if (signal) {
+            if (signal.aborted) ctrl.abort();
+            else signal.addEventListener("abort", onAbort, { once: true });
+          }
+          const promise = (async () => {
+            try {
+              const res = await fetch(url, {
+                method: "POST",
+                cache: "no-store",
+                redirect: "follow",
+                signal: ctrl.signal,
+                headers,
+                body: placeProbe,
+              });
+              if (!res.ok) return false;
+              const data = await res.json().catch(() => null);
+              const remark = String(data?.remark || "");
+              if (/timed out|runtime error|too many/i.test(remark)) return false;
+              return Array.isArray(data?.elements) && data.elements.length > 0;
+            } catch (_) {
+              return false;
+            } finally {
+              if (signal) signal.removeEventListener("abort", onAbort);
+            }
+          })();
+          return { promise, stop: () => ctrl.abort() };
+        }
+        function firstTrue(checks) {
+          return new Promise((resolve) => {
+            let pending = checks.length;
+            if (!pending) {
+              resolve(false);
+              return;
+            }
+            let done = false;
+            const finish = (ok) => {
+              if (done) return;
+              done = true;
+              checks.forEach((check) => check.stop());
+              resolve(ok);
+            };
+            checks.forEach((check) => {
+              check.promise.then((ok) => {
+                if (done) return;
+                if (ok) {
+                  finish(true);
+                  return;
+                }
+                pending -= 1;
+                if (pending === 0) finish(false);
+              });
+            });
+          });
+        }
+        const placeChecks = [
+          "https://overpass-api.de/api/interpreter",
+          "https://overpass.openstreetmap.fr/api/interpreter",
+          "https://overpass.kumi.systems/api/interpreter",
+        ].map(placeUp);
+        const [searchOk, placesOk] = await Promise.all([
+          searchUp(),
+          firstTrue(placeChecks),
         ]);
-        const placesOk = primaryPlaces || backupPlaces;
         const status = searchOk && placesOk ? "ok" : searchOk || placesOk ? "degraded" : "down";
         return {
           id: "maps",
@@ -3180,6 +3246,7 @@ async function openRouterChat({
   prefer,
   expectHtml = false,
   reasoningEffort = "none",
+  retried = false,
 }) {
   const key = process.env.OPENROUTER_API_KEY;
   if (!key) throw new Error("Website generation is not configured");
@@ -3242,7 +3309,26 @@ async function openRouterChat({
     data = await res.json().catch(() => ({}));
   }
   if (!res.ok) {
-    throw new Error(data?.error?.message || `OpenRouter error ${res.status}`);
+    const message = data?.error?.message || `OpenRouter error ${res.status}`;
+    const missingModel =
+      res.status === 404 ||
+      /no endpoints|not a valid model|model .*not found|does not exist/i.test(message);
+    if (!retried && missingModel && body.model !== WEBSITE_MODEL_FALLBACK) {
+      console.warn("OpenRouter model unavailable, retrying", body.model, "->", WEBSITE_MODEL_FALLBACK);
+      return openRouterChat({
+        model: WEBSITE_MODEL_FALLBACK,
+        system,
+        user,
+        temperature,
+        maxTokens,
+        title,
+        prefer,
+        expectHtml,
+        reasoningEffort,
+        retried: true,
+      });
+    }
+    throw new Error(message);
   }
   const choice = data?.choices?.[0] || {};
   const message = choice?.message || {};
@@ -3605,6 +3691,16 @@ function qualityGate(html, plan, ctx) {
   return assessSiteCompleteness(html, plan?.structure, ctx);
 }
 
+/** A real designed document is worth keeping even when a style note remains. */
+function aiPageIsUsable(html, ctx) {
+  const raw = String(html || "").trim();
+  if (!/<html[\s>]/i.test(raw) || !/<\/html>/i.test(raw)) return false;
+  if (raw.length < 4000) return false;
+  const name = String(ctx?.businessName || "").trim();
+  if (name.length >= 2 && !raw.toLowerCase().includes(name.toLowerCase())) return false;
+  return true;
+}
+
 async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
   const ctx = sanitizeCtxHours(rawCtx);
   const stockMedia = selectStockMedia(ctx);
@@ -3750,54 +3846,67 @@ async function generateWithOpenRouter(rawCtx, presetPack, plan, activity) {
       console.warn("Moonrise agent enhance skipped:", enhanceErr.message);
     }
 
-    // —— Stage 4: Quality gate (+ repair on strong model if needed) ——
+    // —— Stage 4: Quality gate (+ repair on the design model if needed) ——
     let finalized = finalizeGeneratedHtml(html, ctx, stockMedia);
     let check = qualityGate(finalized, shellPlan, ctx);
     if (!check.ok) {
       console.warn("Moonrise agent quality gate failed, repairing once:", check.reasons.join(", "));
-      const repaired = await openRouterChat({
-        model: WEBSITE_REPAIR_MODEL,
-        system: [
-          assembleSystem,
-          "",
-          "This is stage 4 (Repair). Return ONLY one complete fixed HTML document.",
-          "Fix every listed issue. Prefer a simpler designed page over a broken one. Do not fall back to an overlay hero or an icon-card grid.",
-        ].join("\n"),
-        user: [
-          "## Previous draft (rejected)",
-          html.slice(0, 120000),
-          "",
-          "## Rejected because",
-          check.reasons.map((reason) => "- " + reason).join("\n"),
-          "",
-          lockedCopyBlock(copy),
-          qualityLock,
-          "",
-          "## Required outcome",
-          "Complete <!DOCTYPE html> document with nav, hero, content, contact form, footer.",
-          "Exact business details from the facts. Modern, minimal, professional.",
-          "Visible service photos in sized frames. Replace broken, empty, or relative images with the stock URLs. Clean hours. Smooth buttons and fields.",
-        ].join("\n"),
-        temperature: 0.15,
-        maxTokens: assembleMaxTokens,
-        prefer: "quality",
-        title: "Moonrise Agent Repair",
-        expectHtml: true,
-      });
-      html = String(repaired.content || "").trim();
-      finalized = finalizeGeneratedHtml(html, ctx, stockMedia);
-      check = qualityGate(finalized, shellPlan, ctx);
-      if (activity) await activity.savePage(finalized, "Repairing the page");
+      try {
+        const repaired = await openRouterChat({
+          model: WEBSITE_REPAIR_MODEL,
+          system: [
+            assembleSystem,
+            "",
+            "This is stage 4 (Repair). Return ONLY one complete fixed HTML document.",
+            "Fix every listed issue. Prefer a simpler designed page over a broken one. Do not fall back to an overlay hero or an icon-card grid.",
+          ].join("\n"),
+          user: [
+            "## Previous draft (rejected)",
+            html.slice(0, 120000),
+            "",
+            "## Rejected because",
+            check.reasons.map((reason) => "- " + reason).join("\n"),
+            "",
+            lockedCopyBlock(copy),
+            qualityLock,
+            "",
+            "## Required outcome",
+            "Complete <!DOCTYPE html> document with nav, hero, content, contact form, footer.",
+            "Exact business details from the facts. Modern, minimal, professional.",
+            "Visible service photos in sized frames. Replace broken, empty, or relative images with the stock URLs. Clean hours. Smooth buttons and fields.",
+          ].join("\n"),
+          temperature: 0.15,
+          maxTokens: assembleMaxTokens,
+          prefer: "quality",
+          title: "Moonrise Agent Repair",
+          expectHtml: true,
+        });
+        const repairedHtml = String(repaired.content || "").trim();
+        if (/<html[\s>]/i.test(repairedHtml) && repairedHtml.length > 4000) {
+          html = repairedHtml;
+          finalized = finalizeGeneratedHtml(html, ctx, stockMedia);
+          check = qualityGate(finalized, shellPlan, ctx);
+          if (activity) await activity.savePage(finalized, "Repairing the page");
+        }
+      } catch (repairErr) {
+        console.warn("Moonrise agent repair failed, keeping the designed page:", repairErr.message);
+      }
     }
-    if (!check.ok || !/<html[\s>]/i.test(finalized)) {
-      console.warn(
-        "Moonrise agent still failing quality gate, using Craft shell fallback:",
-        check.reasons.join(", ")
-      );
-      return await shellFallback();
+    if (aiPageIsUsable(finalized, ctx)) {
+      if (!check.ok) {
+        console.warn(
+          "Moonrise agent shipped the designed page with notes:",
+          check.reasons.join(", ")
+        );
+      }
+      if (activity) await activity.savePage(finalized, "Checking the finished page");
+      return finalized;
     }
-    if (activity) await activity.savePage(finalized, "Checking the finished page");
-    return finalized;
+    console.warn(
+      "Moonrise agent returned no usable page, using Craft shell fallback:",
+      check.reasons.join(", ")
+    );
+    return await shellFallback();
   } catch (err) {
     console.warn("Moonrise agent assemble failed, using Craft shell fallback:", err.message);
     return await shellFallback();

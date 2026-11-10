@@ -5,7 +5,6 @@
 (function (global) {
   const COMPLETE_RATIO = 0.7;
   const RELEASE_COMMIT_RATIO = 0.55;
-  const DRAG_GAIN = 1.35;
   const END_TOLERANCE_PX = 4;
   const RETURN_MS = 280;
   const COMPLETE_MS = 280;
@@ -184,17 +183,28 @@
     const startX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
     const originLeft = readX(slide);
     const pointerOriginX = startX;
+    const thumbRect = thumb.getBoundingClientRect();
+    const grabVisual = startX - thumbRect.left;
     let current = Math.max(0, Math.min(max, originLeft));
     let finished = false;
     let locked = false;
     let moved = false;
-    let raf = 0;
     let latestX = startX;
     const pointerId = e.pointerId ?? 1;
     const usePointer = e.pointerId != null;
 
-    function draggedX(x) {
-      return originLeft + (x - pointerOriginX) * DRAG_GAIN;
+    function placeAt(clientX) {
+      const live = metrics(slide) || gestureMetrics;
+      const rect = live.track.getBoundingClientRect();
+      let next = current;
+      if (rect.width > 0 && live.trackW > 0) {
+        next = (clientX - grabVisual - rect.left) * (live.trackW / rect.width) - live.pad;
+      }
+      gestureMetrics.max = live.max;
+      gestureMetrics.pad = live.pad;
+      gestureMetrics.trackW = live.trackW;
+      gestureMetrics.thumbW = live.thumbW;
+      current = setX(slide, next, live, { drag: true });
     }
 
     function clientX(ev) {
@@ -230,10 +240,6 @@
     function finish(forceComplete) {
       if (finished) return;
       finished = true;
-      if (raf) {
-        global.cancelAnimationFrame(raf);
-        raf = 0;
-      }
       delete slide.dataset.msLfSlideDragging;
       global.document.body.classList.remove("ms-lf-slide-dragging");
       teardownListeners();
@@ -242,8 +248,8 @@
       current = setX(slide, current, gestureMetrics);
       const shouldComplete =
         forceComplete === true ||
-        (moved && completes(current, max, COMPLETE_RATIO)) ||
-        (moved && completes(current, max, RELEASE_COMMIT_RATIO));
+        (moved && completes(current, gestureMetrics.max, COMPLETE_RATIO)) ||
+        (moved && completes(current, gestureMetrics.max, RELEASE_COMMIT_RATIO));
 
       if (shouldComplete) {
         completeSlide(slide, hooks.onComplete);
@@ -274,19 +280,8 @@
       }
     }
 
-    function applyFrame() {
-      raf = 0;
-      if (finished || !locked) return;
-      const next = draggedX(latestX);
-      current = setX(slide, next, gestureMetrics, { drag: true });
-      if (Math.abs(latestX - pointerOriginX) >= 2) moved = true;
-      if (moved && completes(current, max, COMPLETE_RATIO)) {
-        finish(true);
-      }
-    }
-
     function onMove(ev) {
-      if (finished) return;
+      if (finished || !locked) return;
       if (usePointer && ev.pointerId != null && ev.pointerId !== pointerId) return;
       try {
         ev.preventDefault();
@@ -294,14 +289,18 @@
         /* ignore */
       }
       latestX = clientX(ev);
-      if (!raf) raf = global.requestAnimationFrame(applyFrame);
+      placeAt(latestX);
+      if (Math.abs(latestX - pointerOriginX) >= 2) moved = true;
+      if (moved && completes(current, gestureMetrics.max, COMPLETE_RATIO)) {
+        finish(true);
+      }
     }
 
     function onRelease(ev) {
       if (usePointer && ev?.pointerId != null && ev.pointerId !== pointerId) return;
       if (!locked) return;
       latestX = clientX(ev || {});
-      current = setX(slide, draggedX(latestX), gestureMetrics, { drag: true });
+      placeAt(latestX);
       if (Math.abs(latestX - pointerOriginX) >= 2) moved = true;
       finish(false);
     }
@@ -310,7 +309,7 @@
       if (usePointer && ev?.pointerId != null && ev.pointerId !== pointerId) return;
       if (!locked) return;
       latestX = clientX(ev || {});
-      current = setX(slide, draggedX(latestX), gestureMetrics, { drag: true });
+      placeAt(latestX);
       if (Math.abs(latestX - pointerOriginX) >= 2) moved = true;
       finish(false);
     }

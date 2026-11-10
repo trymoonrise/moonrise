@@ -33,14 +33,173 @@
     });
   });
 
-  var send = root.querySelector("[data-send]");
-  if (send) {
-    send.addEventListener("click", function () {
-      send.textContent = "Sent";
-      send.disabled = true;
-      var status = root.querySelector("[data-pay-status]");
-      if (status) status.textContent = "Link sent";
+  var phone = root.querySelector("[data-finder]");
+  if (phone) {
+    var mapEl = phone.querySelector("[data-finder-map]");
+    var query = phone.querySelector("[data-finder-query]");
+    var places = Array.prototype.slice.call(phone.querySelectorAll("[data-place]"));
+    var markers = [];
+    var map = null;
+    var started = false;
+
+    function hardenMapExpr(expr) {
+      var numeric = {
+        "+": 1, "-": 1, "*": 1, "/": 1, "%": 1, "^": 1,
+        ">": 1, "<": 1, ">=": 1, "<=": 1,
+        step: 1, interpolate: 1, "interpolate-hcl": 1, "interpolate-lab": 1
+      };
+      if (!expr || !expr.length) return expr;
+      if (typeof expr[0] !== "string") return expr.map(hardenMapExpr);
+      var hardened = expr.map(function (part, i) { return i === 0 ? part : hardenMapExpr(part); });
+      function asNumber(part) {
+        if (part && part[0] === "get") return ["coalesce", part, 0];
+        if (part && part[0] === "to-number") return ["coalesce", part, 0];
+        return part;
+      }
+      if (numeric[hardened[0]]) {
+        return hardened.map(function (part, i) { return i === 0 ? part : asNumber(part); });
+      }
+      if ((hardened[0] === "==" || hardened[0] === "!=") && hardened.length === 3) {
+        var aNum = typeof hardened[1] === "number";
+        var bNum = typeof hardened[2] === "number";
+        if (!aNum && !bNum) return hardened;
+        return [hardened[0], bNum ? asNumber(hardened[1]) : hardened[1], aNum ? asNumber(hardened[2]) : hardened[2]];
+      }
+      return hardened;
+    }
+
+    function hardenStyle(style) {
+      if (!style || !style.layers) return style;
+      var next = Object.assign({}, style);
+      next.layers = style.layers.map(function (layer) {
+        if (!layer) return layer;
+        var copy = Object.assign({}, layer);
+        if (copy.filter) copy.filter = hardenMapExpr(copy.filter);
+        ["paint", "layout"].forEach(function (key) {
+          if (!copy[key]) return;
+          var bag = Object.assign({}, copy[key]);
+          Object.keys(bag).forEach(function (name) {
+            if (bag[name] && bag[name].length) bag[name] = hardenMapExpr(bag[name]);
+          });
+          copy[key] = bag;
+        });
+        return copy;
+      });
+      return next;
+    }
+
+    function selectPlace(id, move) {
+      places.forEach(function (btn) {
+        btn.classList.toggle("is-on", btn.getAttribute("data-place") === id);
+      });
+      markers.forEach(function (item) {
+        item.pin.classList.toggle("is-on", item.id === id);
+        if (move && item.id === id && map) {
+          map.easeTo({
+            center: [item.lng, item.lat],
+            zoom: Math.max(map.getZoom(), 14.4),
+            duration: 450
+          });
+        }
+      });
+    }
+
+    function applyFilter() {
+      var q = query ? query.value.trim().toLowerCase() : "";
+      places.forEach(function (btn) {
+        var show = !q || btn.textContent.toLowerCase().indexOf(q) !== -1;
+        btn.parentElement.classList.toggle("is-hidden", !show);
+        markers.forEach(function (item) {
+          if (item.id === btn.getAttribute("data-place")) item.pin.style.display = show ? "" : "none";
+        });
+      });
+    }
+
+    places.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        selectPlace(btn.getAttribute("data-place"), true);
+      });
     });
+    if (query) query.addEventListener("input", applyFilter);
+
+    function startMap() {
+      if (started || !mapEl || !window.maplibregl) return;
+      started = true;
+      map = new window.maplibregl.Map({
+        container: mapEl,
+        style: "https://tiles.openfreemap.org/styles/positron",
+        center: [-71.4125, 41.8265],
+        zoom: 13.6,
+        attributionControl: false,
+        cooperativeGestures: true,
+        transformStyle: function (_previous, next) { return hardenStyle(next); }
+      });
+      map.addControl(new window.maplibregl.AttributionControl({ compact: true }), "bottom-left");
+      map.scrollZoom.disable();
+      map.on("load", function () {
+        places.forEach(function (btn) {
+          var pin = document.createElement("button");
+          pin.type = "button";
+          pin.className = "ms-demo-pin";
+          pin.setAttribute("aria-label", btn.querySelector("strong").textContent);
+          var item = {
+            id: btn.getAttribute("data-place"),
+            lng: Number(btn.getAttribute("data-lng")),
+            lat: Number(btn.getAttribute("data-lat")),
+            pin: pin
+          };
+          pin.addEventListener("click", function () { selectPlace(item.id, true); });
+          new window.maplibregl.Marker({ element: pin, anchor: "bottom" })
+            .setLngLat([item.lng, item.lat])
+            .addTo(map);
+          markers.push(item);
+        });
+        selectPlace("cafe", false);
+        applyFilter();
+        var bounds = new window.maplibregl.LngLatBounds();
+        markers.forEach(function (item) { bounds.extend([item.lng, item.lat]); });
+        map.fitBounds(bounds, { padding: { top: 88, bottom: 188, left: 64, right: 64 }, maxZoom: 14.2, duration: 0 });
+        map.resize();
+      });
+    }
+
+    function loadMap() {
+      if (window.maplibregl) {
+        startMap();
+        return;
+      }
+      if (!document.querySelector("link[data-demo-map]")) {
+        var link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.2/dist/maplibre-gl.css";
+        link.setAttribute("data-demo-map", "1");
+        document.head.appendChild(link);
+      }
+      var existing = document.querySelector("script[data-demo-map]");
+      if (existing) {
+        existing.addEventListener("load", startMap);
+        return;
+      }
+      var script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.2/dist/maplibre-gl.js";
+      script.defer = true;
+      script.setAttribute("data-demo-map", "1");
+      script.addEventListener("load", startMap);
+      document.body.appendChild(script);
+    }
+
+    if ("IntersectionObserver" in window) {
+      var seen = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          seen.disconnect();
+          loadMap();
+        });
+      }, { rootMargin: "240px" });
+      seen.observe(phone);
+    } else {
+      loadMap();
+    }
   }
 
   var acc = root.querySelector("[data-accordion]");

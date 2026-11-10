@@ -3183,54 +3183,61 @@
       const max = lfSlideMax(slide);
       if (max <= 0) return;
 
-      let startLeft = Number.parseFloat(slide.style.getPropertyValue("--lf-slide-x")) || 0;
       const startX = e.clientX;
-      let current = startLeft;
+      const thumbRect = thumb.getBoundingClientRect();
+      const grabVisual = startX - thumbRect.left;
+      let current = Number.parseFloat(slide.style.getPropertyValue("--lf-slide-x")) || 0;
       let finished = false;
-      let raf = 0;
-      let pendingX = startLeft;
+      const pointerId = e.pointerId;
 
       slide.classList.remove("is-returning", "is-completing");
       slide.classList.add("is-dragging");
       try {
-        thumb.setPointerCapture(e.pointerId);
+        thumb.setPointerCapture(pointerId);
       } catch (_) {
         /* ignore */
       }
 
-      const flush = () => {
-        raf = 0;
-        if (finished) return;
-        current = setLfSlideX(slide, pendingX, max);
-      };
+      function placeAt(clientX) {
+        const liveMax = lfSlideMax(slide);
+        const rect = track.getBoundingClientRect();
+        const inner = track.clientWidth || rect.width;
+        let next = current;
+        if (rect.width > 0 && inner > 0) {
+          next = (clientX - grabVisual - rect.left) * (inner / rect.width) - lfSlidePad(track);
+        }
+        current = setLfSlideX(slide, next, liveMax > 0 ? liveMax : max);
+      }
 
       const onMove = (ev) => {
         if (finished) return;
-        pendingX = startLeft + (ev.clientX - startX);
-        if (!raf) raf = window.requestAnimationFrame(flush);
+        if (ev.pointerId != null && ev.pointerId !== pointerId) return;
+        ev.preventDefault();
+        placeAt(ev.clientX);
       };
 
       const onUp = (ev) => {
         if (finished) return;
+        if (ev.pointerId != null && ev.pointerId !== pointerId) return;
         finished = true;
-        if (raf) window.cancelAnimationFrame(raf);
-        thumb.removeEventListener("pointermove", onMove);
-        thumb.removeEventListener("pointerup", onUp);
-        thumb.removeEventListener("pointercancel", onUp);
+        window.removeEventListener("pointermove", onMove, true);
+        window.removeEventListener("pointerup", onUp, true);
+        window.removeEventListener("pointercancel", onUp, true);
         try {
           thumb.releasePointerCapture(ev.pointerId);
         } catch (_) {
           /* ignore */
         }
         slide.classList.remove("is-dragging");
-        current = setLfSlideX(slide, pendingX, max);
-        if (current >= max * 0.78) completeLfSlide(slide);
+        placeAt(ev.clientX);
+        const liveMax = lfSlideMax(slide) || max;
+        if (current >= liveMax * 0.78) completeLfSlide(slide);
         else resetLfSlide(slide, true);
       };
 
-      thumb.addEventListener("pointermove", onMove);
-      thumb.addEventListener("pointerup", onUp);
-      thumb.addEventListener("pointercancel", onUp);
+      window.addEventListener("pointermove", onMove, true);
+      window.addEventListener("pointerup", onUp, true);
+      window.addEventListener("pointercancel", onUp, true);
     });
 
     grid.addEventListener("click", (e) => {

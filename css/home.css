@@ -816,10 +816,18 @@ body[data-page="home"] .ms-editor-bar {
 }
 
 body[data-page="home"] .ms-editor-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
   color: #6e6e73;
   font-size: 0.82rem;
   font-weight: 650;
   letter-spacing: -0.02em;
+}
+
+body[data-page="home"] .ms-editor-back svg {
+  width: 0.95rem;
+  height: 0.95rem;
 }
 
 body[data-page="home"] .ms-editor-modes {
@@ -832,8 +840,11 @@ body[data-page="home"] .ms-editor-modes {
 }
 
 body[data-page="home"] .ms-editor-modes button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
   height: 1.85rem;
-  padding: 0 0.7rem;
+  padding: 0 0.55rem;
   border: 0;
   border-radius: 8px;
   background: transparent;
@@ -843,6 +854,11 @@ body[data-page="home"] .ms-editor-modes button {
   font-weight: 650;
   letter-spacing: -0.02em;
   cursor: pointer;
+}
+
+body[data-page="home"] .ms-editor-modes svg {
+  width: 0.85rem;
+  height: 0.85rem;
 }
 
 body[data-page="home"] .ms-editor-modes button.is-active {
@@ -873,14 +889,174 @@ body[data-page="home"] .ms-editor-view label {
   font-size: 0.88rem;
 }
 
-body[data-page="home"] .ms-editor-view p[data-piece] {
+body[data-page="home"] .ms-editor-page {
+  padding: 0.95rem 0.95rem 1.05rem;
+  border-radius: 12px;
+  background: #fff;
+}
+
+body[data-page="home"] .ms-editor-page strong {
+  font-family: var(--ms-heading);
+  font-size: 1.45rem;
+  font-weight: 560;
+  letter-spacing: -0.03em;
+}
+
+body[data-page="home"] .ms-editor-page [data-piece] {
+  display: block;
+  margin-top: 0.7rem;
   color: #1d1d1f;
-  font-weight: 600;
+  font-size: 0.88rem;
+  font-weight: 650;
   transition: opacity 0.3s ease;
 }
 
-body[data-page="home"] .ms-editor-view p[data-piece].is-off {
+body[data-page="home"] .ms-editor-page [data-piece].is-off {
   opacity: 0.28;
+}
+
+body[data-page="home"] .ms-phone {
+  position: relative;
+  width: min(100%, 18.5rem);
+  height: 32rem;
+  margin: 0.35rem auto 0;
+  overflow: hidden;
+  border: 1px solid #e4e4e7;
+  border-radius: 28px;
+  background: #e7e5e4;
+  box-shadow: 0 16px 40px rgb(0 0 0 / 8%);
+}
+
+body[data-page="home"] .ms-phone-map {
+  position: absolute;
+  inset: 0;
+}
+
+body[data-page="home"] .ms-phone-map .maplibregl-map {
+  width: 100%;
+  height: 100%;
+}
+
+body[data-page="home"] .ms-phone .maplibregl-ctrl-attrib {
+  max-width: 9rem;
+  margin: 0 0 8.6rem 0.35rem;
+  font-size: 9px;
+  background: rgb(255 255 255 / 82%);
+}
+
+body[data-page="home"] .ms-phone-search {
+  position: absolute;
+  z-index: 2;
+  top: 0.7rem;
+  right: 0.7rem;
+  left: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+body[data-page="home"] .ms-phone-search svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  color: #6e6e73;
+}
+
+body[data-page="home"] .ms-phone-search input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #1d1d1f;
+  font: inherit;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+body[data-page="home"] .ms-phone-sheet {
+  position: absolute;
+  z-index: 2;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  left: 0.45rem;
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.4rem;
+  border-radius: 16px;
+  background: rgb(255 255 255 / 94%);
+  list-style: none;
+  box-shadow: 0 10px 28px rgb(0 0 0 / 12%);
+}
+
+body[data-page="home"] .ms-phone-sheet button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: 0.65rem;
+  width: 100%;
+  padding: 0.42rem 0.55rem;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #1d1d1f;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+body[data-page="home"] .ms-phone-sheet button.is-on,
+body[data-page="home"] .ms-phone-sheet button:hover {
+  background: #f3f1ee;
+}
+
+body[data-page="home"] .ms-phone-sheet strong {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 0.86rem;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="home"] .ms-phone-sheet em {
+  grid-column: 1;
+  grid-row: 2;
+  color: #6e6e73;
+  font-size: 0.72rem;
+  font-style: normal;
+}
+
+body[data-page="home"] .ms-phone-sheet span {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  justify-self: end;
+  color: #3a3a3c;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+body[data-page="home"] .ms-phone-sheet li.is-hidden {
+  display: none;
+}
+
+body[data-page="home"] .ms-demo-pin {
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  background: #1d1d1f;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 25%);
+  transform: rotate(-45deg);
+  cursor: pointer;
+}
+
+body[data-page="home"] .ms-demo-pin.is-on {
+  background: #1f6fed;
 }
 
 body[data-page="home"] .ms-editor-view[data-view="edit"] label {
@@ -1143,73 +1319,37 @@ body[data-page="home"] .dt-acc-trigger {
   letter-spacing: -0.02em;
 }
 
-body[data-page="home"] .ms-lib {
-  --dt-ink: #111111;
-  --dt-muted: #5c5c5c;
-  --dt-quiet: #8a8a8a;
-  --dt-line: #e8e8ed;
-  --dt-action: #1f6fed;
-  --dt-action-soft: #e8f0fe;
-}
-
 body[data-page="home"] .ms-lib .ms-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-body[data-page="home"] .ms-lib-stage {
-  display: grid;
-  justify-items: center;
-  gap: 1.35rem;
-  width: min(100%, 36rem);
-  margin-top: 2rem;
-  padding: 2rem 1.25rem;
-  border-radius: 24px;
-  background: #fff;
-}
-
-body[data-page="home"] .ms-lib-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.55rem;
-}
-
-body[data-page="home"] .ms-lib-actions .lx-btn {
-  margin-top: 0;
-  text-decoration: none;
-}
-
 body[data-page="home"] .ms-lib-links {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.45rem;
-  margin-top: 1.15rem;
+  gap: 0.35rem 1.25rem;
+  margin: 1.25rem 0 0;
 }
 
 body[data-page="home"] .ms-lib-links a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.25rem;
-  padding: 0 0.85rem;
-  border-radius: 999px;
-  background: #fff;
-  color: #1d1d1f;
-  font-size: 0.92rem;
+  color: #6e6e73;
+  font-size: 0.98rem;
   font-weight: 600;
   letter-spacing: -0.02em;
   text-decoration: none;
 }
 
-body[data-page="home"] .ms-lib-links a:hover {
-  background: #1d1d1f;
-  color: #fff;
+body[data-page="home"] .ms-lib-links a:hover,
+body[data-page="home"] .ms-lib-links a:focus-visible {
+  color: #1d1d1f;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
 }
 
 body[data-page="home"] .ms-lib .ms-home-cta {
-  margin-top: 1.5rem;
+  margin-top: 1.6rem;
 }
 
 body[data-page="home"] .ms-steps {

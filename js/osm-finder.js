@@ -1,12 +1,13 @@
 /**
  * Free Business Finder search: Nominatim (geocode) + Overpass (OpenStreetMap POIs).
  * Map tiles are loaded separately via MapLibre + OpenFreeMap.
- * Public instances: no API key. Keep queries small and sequential.
+ * Public instances: no API key. Ask them together and use the first answer.
  */
 (function (global) {
   const NOMINATIM = "https://nominatim.openstreetmap.org";
   const OVERPASS_ENDPOINTS = [
     "https://overpass-api.de/api/interpreter",
+    "https://overpass.openstreetmap.fr/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
   ];
   const RESULT_CAP_DEFAULT = 30;
@@ -245,40 +246,69 @@
   }
 
   async function runOverpass(query) {
-    let lastError = "OpenStreetMap search failed.";
-    for (let i = 0; i < OVERPASS_ENDPOINTS.length; i += 1) {
+    const controllers = [];
+    let settled = false;
+    const attempts = OVERPASS_ENDPOINTS.map((url) => new Promise((resolve) => {
       const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
-      const timer = controller ? setTimeout(() => controller.abort(), 28000) : null;
-      try {
-        const res = await fetch(OVERPASS_ENDPOINTS[i], {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "User-Agent": "MoonriseStudio/1.0 (business finder; https://trymoonrise.com)",
-          },
-          body: "data=" + encodeURIComponent(query),
-          signal: controller ? controller.signal : undefined,
+      if (controller) controllers.push(controller);
+      const timer = controller ? setTimeout(() => controller.abort(), 12000) : null;
+      fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "User-Agent": "MoonriseStudio/1.0 (business finder; https://trymoonrise.com)",
+        },
+        body: "data=" + encodeURIComponent(query),
+        signal: controller ? controller.signal : undefined,
+      })
+        .then((res) => res.json().catch(() => ({})).then((data) => ({ res, data })))
+        .then(({ res, data }) => {
+          const remark = String((data && data.remark) || "");
+          if (!res.ok || /timed out|runtime error|too many/i.test(remark)) {
+            resolve({ ok: false, busy: /timed out|too many/i.test(remark) });
+            return;
+          }
+          resolve({ ok: true, elements: Array.isArray(data && data.elements) ? data.elements : [] });
+        })
+        .catch((err) => {
+          resolve({ ok: false, aborted: !!(err && err.name === "AbortError") });
+        })
+        .finally(() => {
+          if (timer) clearTimeout(timer);
         });
-        const data = await res.json().catch(() => ({}));
-        const remark = String(data?.remark || "");
-        if (!res.ok || /timed out|runtime error|too many/i.test(remark)) {
-          lastError = /timed out/i.test(remark)
-            ? "OpenStreetMap search timed out. Try a smaller area or a specific category."
-            : "OpenStreetMap is busy. Try again in a moment.";
-          continue;
-        }
-        return Array.isArray(data?.elements) ? data.elements : [];
-      } catch (err) {
-        const aborted = err?.name === "AbortError";
-        lastError = aborted
-          ? "OpenStreetMap search timed out. Try a smaller area or a specific category."
-          : "OpenStreetMap search is unreachable. Check your connection and try again.";
-      } finally {
-        if (timer) clearTimeout(timer);
-      }
-    }
-    throw new Error(lastError);
+    }));
+
+    return new Promise((resolve, reject) => {
+      let pending = attempts.length;
+      let sawBusy = false;
+      let sawTimeout = false;
+      attempts.forEach((attempt) => {
+        attempt.then((outcome) => {
+          if (settled) return;
+          if (outcome.ok) {
+            settled = true;
+            controllers.forEach((controller) => {
+              try { controller.abort(); } catch (e) { /* the loser can already be closed */ }
+            });
+            resolve(outcome.elements);
+            return;
+          }
+          if (outcome.busy) sawBusy = true;
+          if (outcome.aborted) sawTimeout = true;
+          pending -= 1;
+          if (pending > 0) return;
+          settled = true;
+          if (sawTimeout) {
+            reject(new Error("OpenStreetMap search timed out. Try a smaller area or a specific category."));
+            return;
+          }
+          reject(new Error(sawBusy
+            ? "OpenStreetMap is busy. Try again in a moment."
+            : "OpenStreetMap search is unreachable. Check your connection and try again."));
+        });
+      });
+    });
   }
 
   function tag(el, key) {

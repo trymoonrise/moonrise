@@ -16,7 +16,7 @@ services:
       - key: OPENROUTER_API_KEY
         sync: false
       - key: OPENROUTER_MODEL
-        value: anthropic/claude-sonnet-4.5
+        value: anthropic/claude-opus-5.5
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_PUBLISHABLE_KEY

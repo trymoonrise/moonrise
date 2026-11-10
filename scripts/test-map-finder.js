@@ -71,7 +71,7 @@ async function main() {
   ok("JS searches via OsmFinder", searchJs.includes("searchViaOpenStreetMap") && osmJs.includes("overpass-api.de"));
   ok("JS has map init + markers", searchJs.includes("initLeadMap") && searchJs.includes("syncMapMarkers"));
   const vercelCsp = fs.readFileSync(path.join(ROOT, "vercel.json"), "utf8");
-  ok("CSP allows OpenFreeMap and Overpass", /tiles\.openfreemap\.org/.test(vercelCsp) && /overpass-api\.de/.test(vercelCsp));
+  ok("CSP allows OpenFreeMap and Overpass", /tiles\.openfreemap\.org/.test(vercelCsp) && /overpass-api\.de/.test(vercelCsp) && /overpass\.openstreetmap\.fr/.test(vercelCsp));
   ok("CSP connect-src allows jsDelivr source maps", /connect-src[^;]*cdn\.jsdelivr\.net/.test(vercelCsp));
   ok("JS hardens OpenFreeMap null numeric props", searchJs.includes("hardenOpenFreeMapStyle") && searchJs.includes("transformStyle"));
   ok("config no longer wires LeadFinder", !/leadFinderUrl|resolveLeadFinderUrl/.test(configJs));
@@ -130,27 +130,41 @@ async function main() {
     const query =
       '[out:json][timeout:20];node["name"]["amenity"="cafe"](around:1200,33.5427,-117.7854);out center 5;';
     const body = "data=" + encodeURIComponent(query);
-    const overpass = await fetchText("https://overpass-api.de/api/interpreter", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "Content-Length": Buffer.byteLength(body),
-        Accept: "application/json",
-        "User-Agent": "MoonriseStudio/1.0 (business finder smoke test)",
-      },
-      body,
-      timeout: 25000,
-    });
-    let data = {};
-    try {
-      data = JSON.parse(overpass.body);
-    } catch (_) {}
-    const elements = Array.isArray(data.elements) ? data.elements : [];
-    ok(
-      "Overpass returns named cafes",
-      overpass.status === 200 && elements.some((el) => el.tags && el.tags.name),
-      "status=" + overpass.status + " count=" + elements.length
-    );
+    const endpoints = [
+      "https://overpass-api.de/api/interpreter",
+      "https://overpass.openstreetmap.fr/api/interpreter",
+      "https://overpass.kumi.systems/api/interpreter",
+    ];
+    let detail = "no answer";
+    let found = false;
+    for (const endpoint of endpoints) {
+      try {
+        const overpass = await fetchText(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Content-Length": Buffer.byteLength(body),
+            Accept: "application/json",
+            "User-Agent": "MoonriseStudio/1.0 (business finder smoke test)",
+          },
+          body,
+          timeout: 8000,
+        });
+        let data = {};
+        try {
+          data = JSON.parse(overpass.body);
+        } catch (_) {}
+        const elements = Array.isArray(data.elements) ? data.elements : [];
+        detail = endpoint + " status=" + overpass.status + " count=" + elements.length;
+        if (overpass.status === 200 && elements.some((el) => el.tags && el.tags.name)) {
+          found = true;
+          break;
+        }
+      } catch (err) {
+        detail = endpoint + " " + String(err.message || err);
+      }
+    }
+    ok("Overpass returns named cafes", found, detail);
   } catch (e) {
     ok("Overpass returns named cafes", false, String(e.message || e));
   }
