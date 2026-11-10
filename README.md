@@ -12,9 +12,9 @@
   <a href="https://trymoonrise.com">trymoonrise.com</a>
 </p>
 
-Moonrise is a hosted studio for people who sell websites to nearby businesses. A creator finds a shop, clinic, or cafe, builds the site in Studio, and sends a live preview. The owner pays when that site goes live. The creator keeps 90%.
+Moonrise is a studio for people who sell websites to nearby businesses. A creator finds a shop, clinic, or cafe, builds the site in Studio, and sends a live preview. The owner pays when that site goes live. The creator keeps 90%.
 
-Use Moonrise at [trymoonrise.com](https://trymoonrise.com). This repository explains the product. It is not a download, and it is not a project to install or host yourself.
+Moonrise lives at [trymoonrise.com](https://trymoonrise.com).
 
 ## How it works
 

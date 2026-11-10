@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.8.2",
+      "date": "2026-11-09",
+      "title": "Plain README",
+      "sections": [
+        {
+          "heading": "GitHub",
+          "added": [
+            "The README explains Moonrise as the studio for finding a business, building a site, sharing a preview, and getting paid."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.8.1",
       "date": "2026-11-09",
       "title": "How Moonrise works",

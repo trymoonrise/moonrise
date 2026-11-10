@@ -2,7 +2,7 @@
 
 Thanks for your interest in Moonrise.
 
-Moonrise Studio is the hosted product at [trymoonrise.com](https://trymoonrise.com). This repository explains that product. It is not a download, and it is not meant to be installed or hosted by anyone else.
+Moonrise Studio helps creators find local businesses, build a site, share a preview, and get paid when it goes live. It lives at [trymoonrise.com](https://trymoonrise.com).
 
 Useful notes are product feedback, bug reports, and clear ideas that make finding a business, building a site, sharing a preview, or getting paid easier.
 
@@ -32,7 +32,7 @@ Good feature requests usually answer:
 
 Moonrise is an active product. Not every suggestion can be accepted. Thoughtful feedback is welcome.
 
-Describe what a person was trying to do in Studio and what would be better. Do not send setup steps, credentials, or a request to republish the product.
+Describe what a person was trying to do in Studio and what would be better.
 
 ## Conduct
 

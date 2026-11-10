@@ -1,6 +1,6 @@
 # Support
 
-Need help with Moonrise Studio? Start here. This is the hosted product at [trymoonrise.com](https://trymoonrise.com).
+Need help with Moonrise Studio? Start here. Moonrise lives at [trymoonrise.com](https://trymoonrise.com).
 
 ## Contact
 

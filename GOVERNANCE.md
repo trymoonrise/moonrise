@@ -8,7 +8,7 @@ The people who run Moonrise decide what ships. Notes from creators and from busi
 
 ## What this repository is
 
-These pages explain how Moonrise works and how to reach the team. The product itself is the hosted studio. It is not offered as a download or as a project for someone else to host.
+These pages explain how Moonrise works and how to reach the team. Moonrise is the studio at [trymoonrise.com](https://trymoonrise.com).
 
 ## How changes show up
 
