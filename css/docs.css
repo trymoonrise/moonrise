@@ -743,49 +743,25 @@ body.ms-docs-page code {
 
   body.ms-docs-page .ms-docs-aside {
     position: fixed;
-    right: 1rem;
+    top: auto;
+    right: 50%;
     bottom: max(1rem, env(safe-area-inset-bottom));
+    left: auto;
     z-index: 80;
     display: flex;
     flex-direction: column-reverse;
-    align-items: flex-end;
+    align-items: center;
     width: auto;
     max-height: none;
     margin: 0;
     padding: 0;
     overflow: visible;
     background: transparent;
+    transform: translateX(50%);
   }
 
-  body.ms-docs-page .ms-docs-toc-btn {
-    display: grid;
-    place-items: center;
-    width: 3.25rem;
-    height: 3.25rem;
-    padding: 0;
-    border: 0;
-    border-radius: 999px;
-    background: #1d1d1f;
-    color: #fff;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-    cursor: pointer;
-  }
-
-  body.ms-docs-page .ms-docs-toc-btn svg {
-    width: 1.2rem;
-    height: 1.2rem;
-  }
-
-  body.ms-docs-page .ms-docs-toc-btn-close {
-    display: none;
-  }
-
-  body.ms-docs-page .ms-docs-aside.is-open .ms-docs-toc-btn-open {
-    display: none;
-  }
-
-  body.ms-docs-page .ms-docs-aside.is-open .ms-docs-toc-btn-close {
-    display: block;
+  body.ms-docs-page .ms-docs-toc-btn.ms-float-toc-btn {
+    display: inline-flex;
   }
 
   body.ms-docs-page .ms-docs-onpage {

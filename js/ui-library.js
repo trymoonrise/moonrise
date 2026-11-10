@@ -44,11 +44,6 @@
           if (!link) return;
           links.forEach((l) => l.classList.remove("is-active"));
           link.classList.add("is-active");
-          const jump = $(".dt-toc-jump select");
-          const id = (link.getAttribute("href") || "").slice(1);
-          if (jump && /^[a-z0-9-]+$/i.test(id) && jump.querySelector('option[value="' + id + '"]')) {
-            jump.value = id;
-          }
           const group = link.closest(".dt-toc-group");
           if (group) showTocGroup(group.getAttribute("data-group"));
           const bar = link.parentElement;

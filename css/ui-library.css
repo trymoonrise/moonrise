@@ -2834,52 +2834,122 @@ body[data-page="ui-library"] a.dt-link:hover,
   }
 }
 
-.dt-toc-jump {
+.dt-toc-btn {
   display: none;
+}
+
+.dt-toc-panel {
+  display: contents;
 }
 
 @media (max-width: 959px) {
   body[data-page="ui-library"] .dt-toc {
-    top: 4.85rem;
-    z-index: 40;
-    padding: 0.4rem 0 0.55rem;
-    background: #f7f7f8;
+    position: fixed;
+    top: auto !important;
+    right: 50%;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    left: auto;
+    z-index: 80;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    width: auto;
+    max-width: none;
+    max-height: none;
+    margin: 0 !important;
+    padding: 0;
+    gap: 0 !important;
+    overflow: visible;
+    background: transparent;
+    border: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transform: translateX(50%);
   }
 
-  body[data-page="ui-library"] .dt-toc-pin,
-  body[data-page="ui-library"] .dt-toc-switch,
-  body[data-page="ui-library"] .dt-toc-scroll {
+  body[data-page="ui-library"] .dt-toc-btn.ms-float-toc-btn {
+    display: inline-flex;
+  }
+
+  body[data-page="ui-library"] .dt-toc-panel {
+    display: none;
+  }
+
+  body[data-page="ui-library"] .dt-toc.is-open {
+    width: min(18.5rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 6.5rem);
+  }
+
+  body[data-page="ui-library"] .dt-toc.is-open .dt-toc-panel {
+    display: block;
+    width: 100%;
+    min-height: 0;
+    max-height: calc(100dvh - 10.5rem);
+    margin: 0 0 0.65rem;
+    padding: 0.95rem 1rem;
+    overflow: auto;
+    border: 1px solid #ececef;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  }
+
+  body[data-page="ui-library"] .dt-toc-switch {
     display: none !important;
   }
 
-  body[data-page="ui-library"] .dt-toc-jump {
-    display: grid;
-    gap: 0.28rem;
-    margin: 0;
-    color: #71717a;
-    font-size: 0.75rem;
-    font-weight: 650;
-    letter-spacing: -0.01em;
+  body[data-page="ui-library"] .dt-toc-pin,
+  body[data-page="ui-library"] .dt-toc-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    overflow: visible;
   }
 
-  body[data-page="ui-library"] .dt-toc-jump select {
+  body[data-page="ui-library"] .dt-toc-pin {
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid #ececef;
+  }
+
+  body[data-page="ui-library"] .dt-toc-group {
+    display: flex !important;
+    flex-direction: column;
+    overflow: visible;
+    margin-bottom: 0.75rem;
+  }
+
+  body[data-page="ui-library"] .dt-toc-label {
+    display: block;
+    margin: 0.15rem 0 0.2rem;
+  }
+
+  body[data-page="ui-library"] .dt-toc a,
+  body[data-page="ui-library"] .dt-toc a:hover,
+  body[data-page="ui-library"] .dt-toc a.is-active {
+    flex: none;
     width: 100%;
-    min-height: 2.75rem;
-    margin: 0;
-    padding: 0 0.85rem;
-    border: 1px solid #e4e4e7;
-    border-radius: 12px;
-    background: #ffffff;
-    color: #111111;
-    font: inherit;
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    text-align: left;
+    padding: 0.45rem 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: #6e6e73 !important;
+    -webkit-text-fill-color: #6e6e73 !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="ui-library"] .dt-toc a:hover,
+  body[data-page="ui-library"] .dt-toc a.is-active {
+    color: #1d1d1f !important;
+    -webkit-text-fill-color: #1d1d1f !important;
   }
 
   body[data-page="ui-library"] .dt-section,
   body[data-page="ui-library"] .dt-card {
-    scroll-margin-top: 11rem;
+    scroll-margin-top: 5.25rem;
   }
 }
 
@@ -2904,6 +2974,8 @@ body[data-page="ui-library"] a.dt-link:hover,
     backdrop-filter: none;
     scrollbar-width: thin;
   }
+  .dt-toc-btn { display: none !important; }
+  .dt-toc-panel { display: contents; }
   .dt-toc-switch { display: none; }
   .dt-toc-pin {
     display: flex;

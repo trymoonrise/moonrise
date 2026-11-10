@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.0.8",
+      "date": "2026-11-10",
+      "title": "Docs and UI Library share one TOC button",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "On a phone, Docs and UI Library use the same small black Table of contents button centered at the bottom."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.0.7",
       "date": "2026-11-10",
       "title": "Find your site explains the empty catalog",

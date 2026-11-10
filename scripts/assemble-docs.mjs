@@ -167,8 +167,8 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
-  <link rel="stylesheet" href="css/public-pages.css?v=20261108-ink">
-  <link rel="stylesheet" href="css/docs.css?v=20261110-tocbtn">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261110-floattoc">
+  <link rel="stylesheet" href="css/docs.css?v=20261110-toccenter">
   <link rel="stylesheet" href="css/site-nav.css?v=20261109-line">
 </head>
 <body data-page="docs" class="ms-public-doc ms-docs-page" data-docs>
@@ -203,10 +203,8 @@ document.documentElement.classList.add("ms-boot");
 ${product}
     </main>
     <aside class="ms-docs-aside">
-      <button type="button" class="ms-docs-toc-btn" data-docs-toc-toggle aria-expanded="false" aria-controls="ms-docs-onpage">
-        <svg class="ms-docs-toc-btn-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
-        <svg class="ms-docs-toc-btn-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-        <span class="visually-hidden">On this page</span>
+      <button type="button" class="ms-docs-toc-btn ms-float-toc-btn" data-docs-toc-toggle aria-expanded="false" aria-controls="ms-docs-onpage">
+        Table of contents
       </button>
       <nav class="ms-docs-onpage" id="ms-docs-onpage" aria-label="On this page">
         <h2>On this page</h2>
@@ -221,7 +219,7 @@ ${product}
   <script defer src="js/config.js?v=20261106-mono"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/home-menu.js?v=20261110-updated"></script>
-  <script defer src="js/docs.js?v=20261110-tocbtn"></script>
+  <script defer src="js/docs.js?v=20261110-floattoc"></script>
 </body>
 </html>
 `;
