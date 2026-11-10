@@ -25,6 +25,7 @@
     phoneDisplay: "(401) 300-0957",
     url: "https://trymoonrise.com",
     discordUrl: "https://discord.gg/gdbA3gEVY",
+    avatarUrl: "https://trymoonrise.com/assets/MoonriseLogo.png",
   };
 
   let keydownBound = false;
@@ -59,25 +60,25 @@
 .mr-wm-close{appearance:none;margin-left:auto;width:2rem;height:2rem;border:0;border-radius:8px;background:transparent;color:#8e8e93;font-size:1.35rem;line-height:1;cursor:pointer;flex-shrink:0}
 .mr-wm-close:hover{background:#f5f5f7;color:#1d1d1f}
 .mr-wm-body{padding:.7rem 1.1rem 1.15rem;display:flex;flex-direction:column;align-items:stretch;gap:.7rem}
+.mr-wm-blurb{margin:0 0 .15rem;color:#64748b;font-size:.9rem;line-height:1.45;letter-spacing:-.01em}
 .mr-wm-pay{appearance:none;display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;align-self:stretch;min-height:2.85rem;margin:0;border:0;border-radius:10px;background:#1d1d1f;color:#fff;font:inherit;font-family:var(--mr-font);font-size:1rem;font-weight:650;letter-spacing:-.02em;text-align:center;cursor:pointer}
-.mr-wm-meet{appearance:none;display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;min-height:2.85rem;margin:0;border:1px solid #e4e4e7;border-radius:10px;background:#fff;color:#1d1d1f;font:inherit;font-family:var(--mr-font);font-size:1rem;font-weight:650;letter-spacing:-.02em;text-align:center;cursor:pointer}
-.mr-wm-meet:hover{background:#f5f5f7}
-.mr-wm-meet[hidden]{display:none!important}
 .mr-wm-pay:disabled{opacity:.55;cursor:not-allowed}
-.mr-wm-note{margin:0;text-align:center;font-size:.82rem;color:#8e8e93;line-height:1.4}
 .mr-wm-error{margin:0;color:#b91c1c;font-size:.85rem;font-weight:600;line-height:1.4}
-.mr-wm-rows{display:flex;flex-direction:column;background:transparent;border:0;border-radius:0;overflow:hidden}
+.mr-wm-rows{display:flex;flex-direction:column;background:transparent;border:0;border-radius:0;overflow:hidden;margin-top:.15rem}
 .mr-wm-row{appearance:none;display:flex;align-items:center;justify-content:space-between;gap:.75rem;width:100%;min-height:2.55rem;padding:.6rem .15rem;border:0;border-radius:10px;background:transparent;color:#1d1d1f;font:inherit;font-family:var(--mr-font);font-size:.95rem;font-weight:600;letter-spacing:-.02em;text-align:left;text-decoration:none;cursor:pointer;box-sizing:border-box}
 .mr-wm-rows>.mr-wm-row:first-child,.mr-wm-row[hidden]+.mr-wm-row{border-top:0}
 .mr-wm-row[hidden]{display:none!important}
 .mr-wm-row:hover{background:#f5f5f7}
-.mr-wm-chevron{color:#94a3b8;font-size:1.15rem;line-height:1;font-weight:500}
+.mr-wm-row-main{display:inline-flex;align-items:center;gap:.7rem;min-width:0}
+.mr-wm-row-avatar{width:28px;height:28px;border-radius:999px;object-fit:cover;background:#f1f5f9;flex:0 0 auto;box-shadow:0 0 0 1px rgba(15,23,42,.06)}
+.mr-wm-chevron{color:#94a3b8;font-size:1.15rem;line-height:1;font-weight:500;transition:transform .2s ease}
 .mr-wm-row.is-open .mr-wm-chevron{transform:rotate(90deg)}
 .mr-wm-row>span:last-child:not(.mr-wm-chevron){color:#64748b;font-size:.8rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
 .mr-wm-step[hidden]{display:none!important}
 .mr-wm-back{appearance:none;border:0;background:transparent;color:#64748b;font:inherit;font-family:var(--mr-font);font-size:.85rem;font-weight:600;cursor:pointer;padding:0;text-align:left}
 .mr-wm-back:hover{color:#2563eb}
 .mr-wm-contact{display:grid;gap:.55rem}
+.mr-wm-contact-avatar{width:64px;height:64px;border-radius:18px;object-fit:cover;background:#f1f5f9;box-shadow:0 0 0 1px rgba(15,23,42,.06);margin:.15rem 0 .1rem}
 .mr-wm-contact-name{margin:.15rem 0 0;font-size:1.2rem;font-weight:700;letter-spacing:-.03em;color:var(--mr-ink,#0f172a)}
 .mr-wm-contact-role{margin:0 0 .2rem;color:var(--mr-muted,#64748b);font-size:.85rem}
 .mr-wm-frame{width:100%;height:min(68vh,560px);border:0;border-radius:12px;background:#f8fafc}
@@ -152,6 +153,38 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       .replace(/"/g, "&quot;");
   }
 
+  function safeHttpsUrl(value, fallback) {
+    const raw = String(value || "").trim();
+    if (!raw) return String(fallback || "");
+    try {
+      const url = new URL(raw);
+      if (url.protocol !== "https:") return String(fallback || "");
+      return url.toString();
+    } catch (_) {
+      return String(fallback || "");
+    }
+  }
+
+  function personRowHtml(id, label, avatarUrl, hidden) {
+    const photo = safeHttpsUrl(avatarUrl);
+    const main = photo
+      ? '<span class="mr-wm-row-main"><img class="mr-wm-row-avatar" src="' +
+        escapeHtml(photo) +
+        '" alt="" width="28" height="28" decoding="async" /><span>' +
+        escapeHtml(label) +
+        "</span></span>"
+      : "<span>" + escapeHtml(label) + "</span>";
+    return (
+      '<button type="button" class="mr-wm-row" id="' +
+      escapeHtml(id) +
+      '"' +
+      (hidden ? " hidden" : "") +
+      ">" +
+      main +
+      '<span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>'
+    );
+  }
+
   function buildVcardHtml(contact, _assetsBase, options) {
     const c = contact || {};
     const isHq = c.kind === "hq";
@@ -160,6 +193,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     const email = String(c.email || "").trim();
     const phone = String(c.phone || "").trim();
     const phoneDisplay = escapeHtml(c.phoneDisplay || phone);
+    const photo = safeHttpsUrl(c.avatarUrl, isHq ? AVATAR : "");
     const rows = [];
     if (phone) {
       rows.push(
@@ -196,6 +230,11 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
     return (
       '<div class="mr-wm-contact">' +
       '<button type="button" class="mr-wm-back" data-mr-vcard-back>Back</button>' +
+      (photo
+        ? '<img class="mr-wm-contact-avatar" src="' +
+          escapeHtml(photo) +
+          '" alt="" width="64" height="64" decoding="async" />'
+        : "") +
       '<h3 class="mr-wm-contact-name">' +
       name +
       "</h3>" +
@@ -230,12 +269,12 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       "</p></div></div></details>";
     return [
       wrap(
-        "What is this?",
-        "This is a Moonrise website preview. The watermark stays until you complete checkout - then it comes off and the site stays live."
+        "What am I looking at?",
+        "This is a private preview of the website Moonrise prepared for your business. The watermark stays until checkout is complete."
       ),
       wrap(
-        "What do I get?",
-        "Stripe confirms instantly. The watermark is removed and your site stays published. Hosting renews every month until you cancel."
+        "What happens when I unlock?",
+        "Stripe confirms payment instantly. The watermark is removed and your site remains published for commercial use."
       ),
       wrap(
         "Do I own the website?",
@@ -243,29 +282,36 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       ),
       wrap(
         "Need changes?",
-        "Contact your website creator first for photos, hours, services, and quick edits. Reach Moonrise headquarters for billing, hosting, and platform support."
+        "Contact your website creator first for photos, hours, services, and quick edits. Reach Headquarters for billing, hosting, and platform support."
       ),
     ].join("");
   }
 
-  function panelBodyHtml(creatorContact) {
+  function panelBodyHtml(creatorContact, hqContact) {
     const creatorName = String(creatorContact?.name || "your creator").trim();
     const creatorBtn = creatorContact
-      ? '<button type="button" class="mr-wm-row" id="mr-wm-contact-creator"><span>Contact ' +
-        escapeHtml(creatorName) +
-        '</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>'
+      ? personRowHtml(
+          "mr-wm-contact-creator",
+          "Contact " + creatorName,
+          creatorContact.avatarUrl || ""
+        )
       : "";
+    const hqBtn = personRowHtml(
+      "mr-wm-contact-hq",
+      "Contact Headquarters",
+      (hqContact && hqContact.avatarUrl) || AVATAR
+    );
     return (
       '<div class="mr-wm-body" id="mr-wm-body">' +
       '<div class="mr-wm-step is-active" data-step="main">' +
+      '<p class="mr-wm-blurb">We prepared a fresh website for your business. This preview still shows the Moonrise watermark\u2014unlock to remove it and publish commercially.</p>' +
       '<button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>' +
       '<p class="mr-wm-error" id="mr-wm-error" hidden></p>' +
-      '<p class="mr-wm-note">Hosting renews every month until you cancel.</p>' +
-      '<button type="button" class="mr-wm-meet" id="mr-wm-schedule" hidden>Book a meeting</button>' +
       '<div class="mr-wm-rows">' +
+      '<button type="button" class="mr-wm-row" id="mr-wm-schedule" hidden><span>Book a meeting</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
       creatorBtn +
-      '<button type="button" class="mr-wm-row" id="mr-wm-contact-hq"><span>Contact Moonrise</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
-      '<button type="button" class="mr-wm-row" id="mr-wm-questions" aria-expanded="false" aria-controls="mr-wm-faq"><span>Questions</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
+      hqBtn +
+      '<button type="button" class="mr-wm-row" id="mr-wm-faqs" aria-expanded="false" aria-controls="mr-wm-faq"><span>FAQs</span><span class="mr-wm-chevron" aria-hidden="true">\u203A</span></button>' +
       "</div>" +
       '<div class="mr-wm-faq" id="mr-wm-faq" hidden>' +
       faqHtml() +
@@ -485,7 +531,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       '<header class="mr-wm-head">' +
       '<h2 id="mr-wm-title">Unlock your website</h2>' +
       '<button type="button" class="mr-wm-close" id="mr-wm-close" aria-label="Close">&times;</button></header>' +
-      panelBodyHtml(creatorContact) +
+      panelBodyHtml(creatorContact, hqContact) +
       "</div></div>";
 
     const chipParent = host || document.body;
@@ -530,12 +576,12 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
         step.hidden = !isMain;
         step.classList.toggle("is-active", isMain);
       });
-      const questions = document.getElementById("mr-wm-questions");
+      const faqs = document.getElementById("mr-wm-faqs");
       const faq = document.getElementById("mr-wm-faq");
       if (faq) faq.hidden = true;
-      if (questions) {
-        questions.classList.remove("is-open");
-        questions.setAttribute("aria-expanded", "false");
+      if (faqs) {
+        faqs.classList.remove("is-open");
+        faqs.setAttribute("aria-expanded", "false");
       }
     }
 
@@ -554,19 +600,19 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
       if (e.target === overlay) closePanel();
     });
 
-    const questionsBtn = document.getElementById("mr-wm-questions");
+    const faqsBtn = document.getElementById("mr-wm-faqs");
     const faq = document.getElementById("mr-wm-faq");
-    questionsBtn?.addEventListener("click", () => {
+    faqsBtn?.addEventListener("click", () => {
       if (!faq) return;
       const open = faq.hasAttribute("hidden");
       if (open) {
         faq.hidden = false;
-        questionsBtn.classList.add("is-open");
-        questionsBtn.setAttribute("aria-expanded", "true");
+        faqsBtn.classList.add("is-open");
+        faqsBtn.setAttribute("aria-expanded", "true");
       } else {
         faq.hidden = true;
-        questionsBtn.classList.remove("is-open");
-        questionsBtn.setAttribute("aria-expanded", "false");
+        faqsBtn.classList.remove("is-open");
+        faqsBtn.setAttribute("aria-expanded", "false");
       }
     });
 
@@ -600,7 +646,7 @@ body.mr-wm-open .ms-lb-fs-exit{visibility:hidden!important;pointer-events:none!i
         }
         if (!projectId) {
           showError(
-            "Checkout is ready once this preview is linked to a project. Contact Moonrise or your seller to complete payment."
+            "Checkout is ready once this preview is linked to a project. Contact Headquarters or your creator to complete payment."
           );
           return;
         }

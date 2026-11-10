@@ -3,6 +3,22 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.9.0",
+      "date": "2026-11-09",
+      "title": "Minimal watermark unlock panel",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The watermark panel explains the preview, opens FAQs as a dropdown, shows employee and Headquarters avatars, and uses a simple Book a meeting row."
+          ],
+          "fixes": [
+            "Contact Headquarters replaces Contact Moonrise, and the hosting-renews note is gone from the unlock panel."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.8.9",
       "date": "2026-11-09",
       "title": "Login stays put; home screen opens Studio",

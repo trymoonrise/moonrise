@@ -433,8 +433,14 @@
       font-weight: 500;
       color: var(--mr-muted);
     }
-    .mr-wm-pay,
-    .mr-wm-meet {
+    .mr-wm-blurb {
+      margin: 0 0 0.15rem;
+      color: #64748b;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      letter-spacing: -0.01em;
+    }
+    .mr-wm-pay {
       appearance: none;
       display: flex;
       align-items: center;
@@ -443,7 +449,10 @@
       box-sizing: border-box;
       min-height: 2.85rem;
       margin: 0;
+      border: 0;
       border-radius: 10px;
+      background: #1d1d1f;
+      color: #fff;
       font: inherit;
       font-family: var(--mr-font);
       font-size: 1rem;
@@ -453,37 +462,15 @@
       text-decoration: none;
       cursor: pointer;
     }
-    .mr-wm-pay {
-      border: 0;
-      background: #1d1d1f;
-      color: #fff;
-    }
-    .mr-wm-meet {
-      border: 1px solid #e4e4e7;
-      background: #fff;
-      color: #1d1d1f;
-    }
-    .mr-wm-pay:hover:not(:disabled),
-    .mr-wm-meet:hover {
-      filter: none;
-      transform: none;
-    }
-    .mr-wm-meet:hover { background: #f5f5f7; }
     .mr-wm-pay:disabled { opacity: 0.55; cursor: not-allowed; }
-    .mr-wm-note {
-      margin: 0;
-      text-align: center;
-      font-size: 0.78rem;
-      color: #94a3b8;
-      line-height: 1.4;
-    }
     .mr-wm-rows {
       display: flex;
       flex-direction: column;
-      background: #fff;
-      border: 1px solid var(--mr-line);
-      border-radius: 14px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
       overflow: hidden;
+      margin-top: 0.15rem;
     }
     .mr-wm-row {
       appearance: none;
@@ -492,23 +479,35 @@
       justify-content: space-between;
       gap: 0.75rem;
       width: 100%;
-      min-height: 52px;
-      padding: 0.8rem 1rem;
+      min-height: 2.55rem;
+      padding: 0.6rem 0.15rem;
       border: 0;
-      border-top: 1px solid var(--mr-line);
-      background: #fff;
-      color: var(--mr-ink);
+      border-radius: 10px;
+      background: transparent;
+      color: #1d1d1f;
       font: inherit;
       font-size: 0.95rem;
       font-weight: 600;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
       text-align: left;
       text-decoration: none;
       cursor: pointer;
       box-sizing: border-box;
     }
     .mr-wm-rows > .mr-wm-row:first-child { border-top: 0; }
-    .mr-wm-chevron { color: #94a3b8; font-size: 1.15rem; line-height: 1; }
+    .mr-wm-row:hover { background: #f5f5f7; }
+    .mr-wm-row-main { display: inline-flex; align-items: center; gap: 0.7rem; min-width: 0; }
+    .mr-wm-row-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      object-fit: cover;
+      background: #f1f5f9;
+      flex: 0 0 auto;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06);
+    }
+    .mr-wm-chevron { color: #94a3b8; font-size: 1.15rem; line-height: 1; transition: transform 0.2s ease; }
+    .mr-wm-row.is-open .mr-wm-chevron { transform: rotate(90deg); }
     .mr-wm-faq[hidden] { display: none !important; }
     .mr-wm-help {
       appearance: none;
@@ -682,25 +681,25 @@
         <button type="button" class="mr-wm-close" id="mr-wm-close" aria-label="Close">&times;</button>
       </header>
       <div class="mr-wm-body">
+        <p class="mr-wm-blurb">We prepared a fresh website for your business. This preview still shows the Moonrise watermark—unlock to remove it and publish commercially.</p>
         <button type="button" class="mr-wm-pay" id="mr-wm-pay">Unlock site</button>
         <p class="mr-wm-error" id="mr-wm-error" hidden></p>
-        <p class="mr-wm-note">Hosting renews every month until you cancel.</p>
-        <a class="mr-wm-meet" id="mr-wm-schedule" href="https://cal.com" target="_blank" rel="noopener noreferrer">Book a meeting</a>
         <div class="mr-wm-rows">
-          <a class="mr-wm-row" id="mr-wm-contact" href="../contact.html" target="_blank" rel="noopener noreferrer"><span>Contact Moonrise</span><span class="mr-wm-chevron" aria-hidden="true">›</span></a>
-          <button type="button" class="mr-wm-row" id="mr-wm-questions" aria-expanded="false" aria-controls="mr-wm-faq"><span>Questions</span><span class="mr-wm-chevron" aria-hidden="true">›</span></button>
+          <a class="mr-wm-row" id="mr-wm-schedule" href="https://cal.com" target="_blank" rel="noopener noreferrer"><span>Book a meeting</span><span class="mr-wm-chevron" aria-hidden="true">›</span></a>
+          <a class="mr-wm-row" id="mr-wm-contact" href="../contact.html" target="_blank" rel="noopener noreferrer"><span class="mr-wm-row-main"><img class="mr-wm-row-avatar" src="https://trymoonrise.com/assets/MoonriseLogo.png" alt="" width="28" height="28" decoding="async" /><span>Contact Headquarters</span></span><span class="mr-wm-chevron" aria-hidden="true">›</span></a>
+          <button type="button" class="mr-wm-row" id="mr-wm-faqs" aria-expanded="false" aria-controls="mr-wm-faq"><span>FAQs</span><span class="mr-wm-chevron" aria-hidden="true">›</span></button>
         </div>
         <div class="mr-wm-faq" id="mr-wm-faq" hidden>
             <details>
-              <summary>What is this?</summary>
+              <summary>What am I looking at?</summary>
               <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
-                <p>This is a Moonrise website preview. The watermark stays until you complete checkout - then it comes off and the site stays live.</p>
+                <p>This is a private preview of the website Moonrise prepared for your business. The watermark stays until checkout is complete.</p>
               </div></div>
             </details>
             <details>
-              <summary>What do I get?</summary>
+              <summary>What happens when I unlock?</summary>
               <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
-                <p>Stripe confirms instantly. The watermark is removed and your site stays published with hosting included.</p>
+                <p>Stripe confirms payment instantly. The watermark is removed and your site remains published for commercial use.</p>
               </div></div>
             </details>
             <details>
@@ -712,7 +711,7 @@
             <details>
               <summary>Need changes?</summary>
               <div class="mr-wm-faq-panel"><div class="mr-wm-faq-panel-inner">
-                <p>Message <a href="mailto:trymoonrise@gmail.com">Moonrise</a> for photos, hours, services, colors, redesigns, and more.</p>
+                <p>Contact your website creator first for photos, hours, services, and quick edits. Reach Headquarters for billing, hosting, and platform support.</p>
               </div></div>
             </details>
           </div>
@@ -802,13 +801,14 @@
       }
       bindExclusiveFaq(document.getElementById("mr-wm-faq"));
 
-      const questionsBtn = document.getElementById("mr-wm-questions");
+      const faqsBtn = document.getElementById("mr-wm-faqs");
       const faq = document.getElementById("mr-wm-faq");
-      questionsBtn?.addEventListener("click", () => {
+      faqsBtn?.addEventListener("click", () => {
         if (!faq) return;
         const open = faq.hidden;
         faq.hidden = !open;
-        questionsBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        faqsBtn.classList.toggle("is-open", open);
+        faqsBtn.setAttribute("aria-expanded", open ? "true" : "false");
       });
 
       function showError(msg) {

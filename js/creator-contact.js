@@ -50,6 +50,7 @@
     }
     const phoneDisplay = formatPhoneDisplay(phone);
     if (!email && !phone) return null;
+    const avatarUrl = String(profile?.avatar_url || "").trim();
     return {
       kind: "creator",
       name,
@@ -57,6 +58,7 @@
       email,
       phone,
       phoneDisplay: phoneDisplay || phone,
+      avatarUrl: /^https:\/\//i.test(avatarUrl) ? avatarUrl : "",
     };
   }
 
@@ -70,6 +72,7 @@
     const email = String(stored.email || "").trim();
     const phone = String(stored.phone || "").trim();
     if (!email && !phone) return null;
+    const avatarUrl = String(stored.avatarUrl || stored.avatar_url || "").trim();
     return {
       kind: "creator",
       name: String(stored.name || "Your creator").trim() || "Your creator",
@@ -78,6 +81,7 @@
       phone,
       phoneDisplay:
         String(stored.phoneDisplay || "").trim() || formatPhoneDisplay(phone) || phone,
+      avatarUrl: /^https:\/\//i.test(avatarUrl) ? avatarUrl : "",
     };
   }
 
@@ -105,6 +109,7 @@
     phoneDisplay: "(401) 300-0957",
     url: "https://trymoonrise.com",
     discordUrl: "https://discord.gg/gdbA3gEVY",
+    avatarUrl: "https://trymoonrise.com/assets/MoonriseLogo.png",
   };
 
   global.MoonriseCreatorContact = {

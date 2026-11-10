@@ -6963,7 +6963,7 @@ async function attachCreatorContactSnapshot(supabase, project) {
   if (!project?.user_id) return project;
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("display_name, handle, payout_profile")
+    .select("display_name, handle, avatar_url, payout_profile")
     .eq("id", project.user_id)
     .maybeSingle();
   if (error) throw error;

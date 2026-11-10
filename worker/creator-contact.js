@@ -63,6 +63,7 @@ function buildCreatorContactSnapshot(profile) {
   if (!email && !phone) {
     return null;
   }
+  const avatarUrl = String(profile?.avatar_url || "").trim();
   return {
     kind: "creator",
     name,
@@ -70,13 +71,17 @@ function buildCreatorContactSnapshot(profile) {
     email: email || "",
     phone: phone || "",
     phoneDisplay: phoneDisplay || phone || "",
+    avatarUrl: /^https:\/\//i.test(avatarUrl) ? avatarUrl : "",
   };
 }
 
 function hqContactSnapshot() {
+  const logo = String(process.env.PUBLIC_APP_URL || "https://trymoonrise.com")
+    .replace(/\/$/, "") + "/assets/MoonriseLogo.png";
   return {
     ...HQ_CONTACT,
     phoneDisplay: formatPhoneDisplay(HQ_CONTACT.phone),
+    avatarUrl: logo,
   };
 }
 
@@ -99,6 +104,7 @@ function readStoredCreatorContact(project) {
   const email = String(stored.email || "").trim();
   const phone = String(stored.phone || "").trim();
   if (!email && !phone) return null;
+  const avatarUrl = String(stored.avatarUrl || stored.avatar_url || "").trim();
   return {
     kind: "creator",
     name: String(stored.name || "Your creator").trim() || "Your creator",
@@ -107,6 +113,7 @@ function readStoredCreatorContact(project) {
     phone,
     phoneDisplay:
       String(stored.phoneDisplay || "").trim() || formatPhoneDisplay(phone) || phone,
+    avatarUrl: /^https:\/\//i.test(avatarUrl) ? avatarUrl : "",
   };
 }
 
