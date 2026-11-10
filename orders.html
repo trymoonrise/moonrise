@@ -61,7 +61,7 @@
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-dark-chrome">
-  <link rel="stylesheet" href="css/orders.css?v=20261108-simple">
+  <link rel="stylesheet" href="css/orders.css?v=20261110-guide">
   <link rel="stylesheet" href="css/site-nav.css?v=20261109-line">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -114,6 +114,22 @@
     <div class="ms-orders-years" id="orders-years" role="group" aria-label="Filter by year" hidden></div>
 
     <p class="ms-orders-status" id="orders-status" role="status">Loading published sites...</p>
+    <section class="ms-ord-guide" id="orders-guide" hidden aria-label="How to find a site">
+      <ol>
+        <li>
+          <span class="ms-ord-guide-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg></span>
+          <span class="ms-ord-guide-copy"><strong>Search the name</strong><span>Type the business as it appears on the site.</span></span>
+        </li>
+        <li>
+          <span class="ms-ord-guide-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></span>
+          <span class="ms-ord-guide-copy"><strong>Open the page</strong><span>Preview it while a watermark is on, or visit it when it is live.</span></span>
+        </li>
+        <li>
+          <span class="ms-ord-guide-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg></span>
+          <span class="ms-ord-guide-copy"><strong>Pay on the watermark</strong><span>The owner pays on that page. The watermark comes off.</span></span>
+        </li>
+      </ol>
+    </section>
     <div class="ms-orders-grid" id="orders-grid" aria-live="polite"></div>
 
     <footer class="ms-orders-foot">
@@ -127,7 +143,7 @@
     </footer>
   </main>
 
-  <script defer src="js/orders.js"></script>
+  <script defer src="js/orders.js?v=20261110-guide"></script>
   <script defer src="js/home-menu.js?v=20261110-updated"></script>
 </body>
 </html>

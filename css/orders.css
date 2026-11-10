@@ -229,6 +229,70 @@ body.ms-orders-page .ms-ord-field input {
   -webkit-text-fill-color: #6e6e73 !important;
 }
 
+.ms-ord-guide {
+  margin-top: 1.25rem;
+  padding: 0.35rem 0.2rem 0.2rem;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.ms-ord-guide[hidden] {
+  display: none !important;
+}
+
+.ms-ord-guide ol {
+  list-style: none;
+  margin: 0;
+  padding: 0.35rem;
+}
+
+.ms-ord-guide li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.85rem 0.8rem;
+}
+
+.ms-ord-guide li + li {
+  border-top: 1px solid #f0f0f2;
+}
+
+.ms-ord-guide-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 12px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+.ms-ord-guide-icon svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.ms-ord-guide-copy {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+  padding-top: 0.15rem;
+}
+
+.ms-ord-guide-copy strong {
+  color: #1d1d1f;
+  font-size: 0.98rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.ms-ord-guide-copy span {
+  color: #6e6e73;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
 .ms-orders-grid {
   display: grid;
   grid-template-columns: 1fr;

@@ -202,6 +202,12 @@
         .join("");
   }
 
+  function setGuide(show) {
+    const guide = document.getElementById("orders-guide");
+    if (!guide) return;
+    guide.hidden = !show;
+  }
+
   function render(orders, statusEl, gridEl, query) {
     const countEl = document.getElementById("orders-count");
     if (countEl) countEl.textContent = String(orders.length);
@@ -214,8 +220,10 @@
           ".</span>"
         : "<strong>No published websites yet</strong><span>Sites appear here automatically after they are published in Moonrise Studio.</span>";
       gridEl.innerHTML = "";
+      setGuide(!query);
       return;
     }
+    setGuide(false);
     statusEl.hidden = true;
     statusEl.textContent = "";
     gridEl.innerHTML = orders.map(cardHtml).join("");
@@ -233,6 +241,7 @@
 
     async function load(q) {
       latestQuery = String(q || "").trim();
+      setGuide(false);
       statusEl.hidden = false;
       statusEl.textContent = "Loading published sites...";
       try {
@@ -251,6 +260,7 @@
           "<strong>Could not load catalog</strong><span>" +
           escapeHtml(e.message || "Please try again shortly.") +
           "</span>";
+        setGuide(false);
         gridEl.innerHTML = "";
         const countEl = document.getElementById("orders-count");
         if (countEl) countEl.textContent = "-";
