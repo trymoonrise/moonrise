@@ -77,8 +77,14 @@ body[data-page="home"] .ms-site-bar {
 .ms-nav-mark {
   display: block;
   flex: none;
-  width: 1.35rem;
-  height: 1.35rem;
+  box-sizing: border-box;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+  border: 1px solid #ececef;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1d1d1f;
 }
 
 .ms-home-btn:focus-visible,
