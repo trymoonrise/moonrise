@@ -233,6 +233,69 @@
   window.addEventListener("scroll", reveal, { passive: true });
   window.addEventListener("resize", reveal);
 
+  (function incomeDemo() {
+    var panel = root.querySelector("[data-income]");
+    if (!panel) return;
+    var totalEl = panel.querySelector("[data-income-total]");
+    var goalLabel = panel.querySelector("[data-income-goal-label]");
+    var track = panel.querySelector("[data-income-track]");
+    var fill = panel.querySelector("[data-income-fill]");
+    var target = 1215;
+    var goal = 2000;
+    var started = false;
+    var reduce = false;
+    try {
+      reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch (e) {}
+
+    function money(n) {
+      return "$" + Math.round(n).toLocaleString("en-US");
+    }
+
+    function setProgress(value) {
+      var pct = Math.max(0, Math.min(100, (value / goal) * 100));
+      if (totalEl) totalEl.textContent = money(value);
+      if (goalLabel) goalLabel.textContent = money(value) + " / " + money(goal);
+      if (fill) fill.style.width = pct + "%";
+      if (track) track.setAttribute("aria-valuenow", String(Math.round(value)));
+    }
+
+    function play() {
+      if (started) return;
+      started = true;
+      panel.classList.add("is-live");
+      if (reduce) {
+        setProgress(target);
+        return;
+      }
+      var start = null;
+      var duration = 1300;
+      function tick(ts) {
+        if (start == null) start = ts;
+        var t = Math.min(1, (ts - start) / duration);
+        var eased = 1 - Math.pow(1 - t, 3);
+        setProgress(target * eased);
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function maybePlay() {
+      if (panel.classList.contains("is-in") || panel.getBoundingClientRect().top < window.innerHeight * 0.86) {
+        play();
+      }
+    }
+
+    maybePlay();
+    window.addEventListener(
+      "scroll",
+      function () {
+        maybePlay();
+      },
+      { passive: true }
+    );
+  })();
+
   function whenReady(fn) {
     if (root.classList.contains("is-home-ready")) {
       fn();

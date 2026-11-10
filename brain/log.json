@@ -3,6 +3,32 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.9.3",
+      "date": "2026-11-09",
+      "title": "Landing income and instant Studio",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "The landing page locks the nav to the hero, restores the editor widget collapse panels, and replaces Where you work with an animated Your income chart.",
+            "FAQ is renamed, gains four more platform questions, and sits under UI Library."
+          ],
+          "fixes": [
+            "Opening the landing menu overlays the full screen again instead of getting clipped by the sticky hero."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "Channel and tab clicks paint instantly with a content skeleton while the next page loads."
+          ],
+          "fixes": [
+            "Studio no longer waits on a button press delay before changing channels, and hop pages unlock cached data sooner."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.2",
       "date": "2026-11-09",
       "title": "Cancelable auto-login toast",
@@ -18,6 +44,7 @@
         }
       ]
     },
+
     {
       "version": "2.9.1",
       "date": "2026-11-09",

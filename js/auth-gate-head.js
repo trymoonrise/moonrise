@@ -127,7 +127,7 @@
 
   // Keep these query strings in sync with the <script defer> tags on studio pages,
   // or the browser warns that a preload was unused.
-  ["js/config.js?v=20261108-no-lf", "js/auth.js?v=20261108-session-quiet", "js/app.js?v=20261109-crown"].forEach(function (href) {
+  ["js/config.js?v=20261108-no-lf", "js/auth.js?v=20261108-session-quiet", "js/app.js?v=20261109-instant"].forEach(function (href) {
     var preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -218,22 +218,25 @@ function mountChannelSkeleton(until) {
   if (document.getElementById("ms-channel-skel")) return;
   document.documentElement.classList.add("ms-channel-loading");
   document.documentElement.setAttribute("aria-busy", "true");
-  var style = document.createElement("style");
-  style.id = "ms-channel-skel-style";
-  style.textContent =
-    "#ms-channel-skel{position:fixed;z-index:30;inset:0;display:grid;align-content:start;gap:.7rem;margin:0;padding:1.35rem 1.25rem 6rem;background:#fafafa;pointer-events:none}" +
-    "html[data-ms-mode=dark] #ms-channel-skel{background:#111}" +
-    "#ms-channel-skel i{display:block;height:.75rem;border-radius:8px;background:rgba(0,0,0,.08);position:relative;overflow:hidden}" +
-    "html[data-ms-mode=dark] #ms-channel-skel i{background:rgba(255,255,255,.1)}" +
-    "#ms-channel-skel i:nth-child(1){width:32%;height:.55rem}" +
-    "#ms-channel-skel i:nth-child(2){width:48%;height:1.35rem;margin:0 0 .35rem}" +
-    "#ms-channel-skel i:nth-child(3),#ms-channel-skel i:nth-child(4){height:4.4rem;border-radius:16px}" +
-    "#ms-channel-skel i:nth-child(5){width:72%}" +
-    "#ms-channel-skel i::after{content:\"\";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);transform:translateX(-100%);animation:ms-ch-skel 1.05s ease-in-out infinite}" +
-    "html[data-ms-mode=dark] #ms-channel-skel i::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)}" +
-    "@keyframes ms-ch-skel{to{transform:translateX(100%)}}" +
-    "@media(prefers-reduced-motion:reduce){#ms-channel-skel i::after{animation:none;display:none}}";
-  document.head.appendChild(style);
+  if (!document.getElementById("ms-channel-skel-style")) {
+    var style = document.createElement("style");
+    style.id = "ms-channel-skel-style";
+    style.textContent =
+      "#ms-channel-skel{position:fixed;z-index:30;top:0;right:0;bottom:0;left:var(--ms-sidebar-w,0px);display:grid;align-content:start;gap:.7rem;margin:0;padding:1.35rem 1.25rem 6rem;background:#fafafa;pointer-events:none}" +
+      "@media(max-width:900px){#ms-channel-skel{left:0;bottom:var(--ms-tabbar-h,4.75rem);padding-bottom:1.25rem}}" +
+      "html[data-ms-mode=dark] #ms-channel-skel{background:#111}" +
+      "#ms-channel-skel i{display:block;height:.75rem;border-radius:8px;background:rgba(0,0,0,.08);position:relative;overflow:hidden}" +
+      "html[data-ms-mode=dark] #ms-channel-skel i{background:rgba(255,255,255,.1)}" +
+      "#ms-channel-skel i:nth-child(1){width:32%;height:.55rem}" +
+      "#ms-channel-skel i:nth-child(2){width:48%;height:1.35rem;margin:0 0 .35rem}" +
+      "#ms-channel-skel i:nth-child(3),#ms-channel-skel i:nth-child(4){height:4.4rem;border-radius:16px}" +
+      "#ms-channel-skel i:nth-child(5){width:72%}" +
+      "#ms-channel-skel i::after{content:\"\";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);transform:translateX(-100%);animation:ms-ch-skel 1.05s ease-in-out infinite}" +
+      "html[data-ms-mode=dark] #ms-channel-skel i::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)}" +
+      "@keyframes ms-ch-skel{to{transform:translateX(100%)}}" +
+      "@media(prefers-reduced-motion:reduce){#ms-channel-skel i::after{animation:none;display:none}}";
+    document.head.appendChild(style);
+  }
   var skel = document.createElement("div");
   skel.id = "ms-channel-skel";
   skel.setAttribute("aria-hidden", "true");
@@ -247,20 +250,34 @@ function mountChannelSkeleton(until) {
     if (el) el.remove();
   };
 
+  function pageHasOwnSkeleton() {
+    return !!document.querySelector(
+      ".is-skel-loading, .ms-skel-block:not([hidden]), [data-ms-skel]:not([hidden])"
+    );
+  }
+
   function channelStillLoading() {
-    if (!document.body || document.body.dataset.page !== "calendar") return false;
-    var app = document.getElementById("cal-app");
-    var gate = document.getElementById("cal-gate");
-    if (app && !app.hidden && app.classList.contains("is-skel-loading")) return true;
-    return (!app || app.hidden) && (!gate || gate.hidden);
+    if (!document.body) return true;
+    if (document.body.dataset.page === "calendar") {
+      var app = document.getElementById("cal-app");
+      var gate = document.getElementById("cal-gate");
+      if (app && !app.hidden && app.classList.contains("is-skel-loading")) return true;
+      if ((!app || app.hidden) && (!gate || gate.hidden)) return true;
+    }
+    return false;
   }
 
   function maybeClear() {
     if (channelStillLoading()) return;
-    if (typeof window.__msClearChannelSkeleton === "function") window.__msClearChannelSkeleton();
+    // Once the destination page brought its own skeletons, drop the hop overlay
+    // so those paint. Otherwise wait until auth has fired a first paint pass.
+    if (pageHasOwnSkeleton() || document.body?.dataset?.msAuthFired === "1") {
+      if (typeof window.__msClearChannelSkeleton === "function") window.__msClearChannelSkeleton();
+    }
   }
 
-  if (until === "dom") {
+  if (until === "dom" || until === "leave") {
+    if (until === "leave") return;
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", function () {
         if (typeof window.__msClearChannelSkeleton === "function") window.__msClearChannelSkeleton();
@@ -270,12 +287,13 @@ function mountChannelSkeleton(until) {
     }
   } else {
     document.addEventListener("ms:shell-ready", maybeClear);
+    document.addEventListener("ms:auth-ready", maybeClear);
     function watchShell() {
       if (!document.body || watchShell.armed) return;
       watchShell.armed = true;
       new MutationObserver(maybeClear).observe(document.body, {
         attributes: true,
-        attributeFilter: ["data-ms-shell-painted"],
+        attributeFilter: ["data-ms-shell-painted", "data-ms-auth-fired"],
       });
       var app = document.getElementById("cal-app");
       if (app) {
@@ -324,6 +342,24 @@ function bindInstantChannelNav() {
     return link;
   }
 
+  function paintActiveNow(link) {
+    try {
+      var root = link.closest(".ms-sidebar, #ms-tabbar, .ms-tabbar");
+      if (!root) return;
+      root.querySelectorAll("a.ms-nav-link, a.ms-tab").forEach(function (el) {
+        el.classList.remove("is-active");
+        el.removeAttribute("aria-current");
+      });
+      link.classList.add("is-active");
+      link.setAttribute("aria-current", "page");
+      if (link.classList.contains("ms-tab") && window.StudioShell?.syncTabPill) {
+        window.StudioShell.syncTabPill(root, link, { animate: false });
+      } else if (window.StudioShell?.syncNavPillForLink) {
+        window.StudioShell.syncNavPillForLink(link, { animate: false });
+      }
+    } catch (err) {}
+  }
+
   document.addEventListener(
     "pointerdown",
     function (event) {
@@ -343,6 +379,10 @@ function bindInstantChannelNav() {
       if (url.pathname === location.pathname && url.search === location.search) return;
       leaving = true;
       window.__msChannelLeaving = 1;
+      paintActiveNow(link);
+      try {
+        mountChannelSkeleton("leave");
+      } catch (err) {}
       try {
         var from = (document.body && document.body.dataset.page) || "";
         sessionStorage.setItem("ms_studio_booted", "1");
@@ -350,6 +390,16 @@ function bindInstantChannelNav() {
           "ms_tab_switch",
           JSON.stringify({ from: from, to: file, t: Date.now() })
         );
+      } catch (err) {}
+      // Prefetch first so the next document can win the race, then hop.
+      try {
+        if (typeof fetch === "function") {
+          fetch(url.pathname + url.search, {
+            credentials: "same-origin",
+            priority: "high",
+            headers: { Purpose: "prefetch" },
+          }).catch(function () {});
+        }
       } catch (err) {}
       location.assign(url.pathname + url.search + url.hash);
     },

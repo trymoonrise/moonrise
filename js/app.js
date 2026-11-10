@@ -2017,6 +2017,7 @@
         script.type = "speculationrules";
         script.textContent = JSON.stringify({
           prefetch: [{ source: "list", urls, eagerness: "immediate" }],
+          prerender: [{ source: "list", urls: urls.slice(0, 3), eagerness: "moderate" }],
         });
         document.head.appendChild(script);
       } catch (_) {
@@ -2024,6 +2025,17 @@
       }
     };
     run();
+    document.addEventListener(
+      "pointerover",
+      (event) => {
+        const link = event.target?.closest?.(
+          ".ms-sidebar a.ms-nav-link[href], #ms-tabbar a.ms-tab[href], .ms-tabbar a.ms-tab[href]"
+        );
+        if (!link) return;
+        warmStudioUrl(link.getAttribute("href") || link.href);
+      },
+      true
+    );
   }
 
   function paintApp(opts) {
@@ -2120,7 +2132,7 @@
     try {
       const session = await window.StudioAuth.requireAuth();
       if (!session) return;
-      fireAuthReady();
+      if (document.body?.dataset?.msAuthFired !== "1") fireAuthReady();
       await finishSession(session);
     } catch (e) {
       console.warn(e);
@@ -2166,10 +2178,12 @@
       return;
     }
 
-    // Instant channel hop: paint chrome now, confirm the session in the background.
+    // Instant channel hop: paint chrome + unlock page data immediately, then
+    // confirm the session in the background.
     const page = document.body?.dataset?.page || "";
     if (window.__msTabHop && hasStudioSessionHint() && page !== "admin-console") {
       paintApp({ deferAuthEvent: true });
+      setTimeout(fireAuthReady, 0);
       void confirmHopSession();
       return;
     }
@@ -2577,6 +2591,10 @@
       });
     });
   }
+
+  window.StudioShell = Object.assign(window.StudioShell || {}, {
+    syncTabPill,
+  });
 
   function ensureInstallHintScript() {
     if (window.__msInstallHintBooted) return;

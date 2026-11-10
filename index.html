@@ -272,8 +272,8 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="window.__msReleaseBoot&&window.__msReleaseBoot()">
   <link rel="stylesheet" href="css/ui-library.css?v=20261108-chevron">
   <link rel="stylesheet" href="css/ui-library-lab.css?v=20261109-docks">
-  <link rel="stylesheet" href="css/site-nav.css?v=20261109-line">
-  <link rel="stylesheet" href="css/home.css?v=20261109-finder2">
+<link rel="stylesheet" href="css/site-nav.css?v=20261109-menu-lift">
+<link rel="stylesheet" href="css/home.css?v=20261109-income">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-shade">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -333,6 +333,38 @@ document.documentElement.classList.add("ms-boot");
               "@type": "Answer",
               "text": "No. They open the link and pay there. They never sign in to Moonrise."
             }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need design or coding skills?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Moonrise builds the site for you. You review it in the editor, turn features on or off, and send the link when it looks right."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does Business Finder work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Search nearby cafes, clinics, and shops. Claim a business that still needs a site, then open it in the Builder to generate their page."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens after a client pays?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The watermark comes off, the site stays live, and that business moves into your client list so you can keep working with them."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I connect a custom domain?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. After the site is ready, you can connect the owner’s domain from the editor so the live page uses their own address."
+            }
           }
         ]
       }
@@ -344,36 +376,35 @@ document.documentElement.classList.add("ms-boot");
   <a class="ms-skip" href="#main">Skip to content</a>
 
   <div class="ms-home-shell">
-    <header class="ms-site-bar">
-      <div class="ms-nav-row">
-        <a class="ms-home-btn" href="/" aria-label="Moonrise home"><svg class="ms-nav-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a10 10 0 1 0 9.2 14.2 6.4 6.4 0 0 1-9.2-14.2z"/></svg><span>moonrise</span></a>
-        <div class="ms-nav-end">
-          <button class="ms-menu-btn" type="button" aria-expanded="false" aria-controls="ms-menu" aria-label="Open menu">
-            <span class="ms-menu-label">Menu</span>
-            <span class="ms-menu-bars" aria-hidden="true"></span>
-          </button>
-        </div>
-      </div>
-      <nav class="ms-menu-screen" id="ms-menu" aria-label="Pages">
-        <a href="/" style="--i:0">Home</a>
-        <a href="login.html" style="--i:1">Start earning</a>
-        <a href="download" style="--i:2">Download</a>
-        <a href="orders" style="--i:3">Orders</a>
-        <a href="ui-library" style="--i:4">UI Library</a>
-        <a href="guide" style="--i:5">Guide</a>
-        <a href="help" style="--i:6">Help</a>
-        <a href="contact" style="--i:7">Contact</a>
-        <a href="legal" style="--i:8">Legal</a>
-        <a href="privacy" style="--i:9">Privacy</a>
-        <a href="terms" style="--i:10">Terms</a>
-        <a href="refund" style="--i:11">Refunds</a>
-        <a href="report" style="--i:12">Report</a>
-      </nav>
-    </header>
-
     <main id="main">
       <div class="ms-hero-lock">
       <section class="ms-home-hero" aria-label="Moonrise">
+        <header class="ms-site-bar">
+          <div class="ms-nav-row">
+            <a class="ms-home-btn" href="/" aria-label="Moonrise home"><svg class="ms-nav-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a10 10 0 1 0 9.2 14.2 6.4 6.4 0 0 1-9.2-14.2z"/></svg><span>moonrise</span></a>
+            <div class="ms-nav-end">
+              <button class="ms-menu-btn" type="button" aria-expanded="false" aria-controls="ms-menu" aria-label="Open menu">
+                <span class="ms-menu-label">Menu</span>
+                <span class="ms-menu-bars" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+          <nav class="ms-menu-screen" id="ms-menu" aria-label="Pages">
+            <a href="/" style="--i:0">Home</a>
+            <a href="login.html" style="--i:1">Start earning</a>
+            <a href="download" style="--i:2">Download</a>
+            <a href="orders" style="--i:3">Orders</a>
+            <a href="ui-library" style="--i:4">UI Library</a>
+            <a href="guide" style="--i:5">Guide</a>
+            <a href="help" style="--i:6">Help</a>
+            <a href="contact" style="--i:7">Contact</a>
+            <a href="legal" style="--i:8">Legal</a>
+            <a href="privacy" style="--i:9">Privacy</a>
+            <a href="terms" style="--i:10">Terms</a>
+            <a href="refund" style="--i:11">Refunds</a>
+            <a href="report" style="--i:12">Report</a>
+          </nav>
+        </header>
         <h1>Build websites.<br>Get paid.</h1>
         <p class="ms-home-hero-lead">Find a nearby business and build their site.<br>They pay to go live. You keep 90%.</p>
         <div class="ms-hero-actions">
@@ -479,12 +510,25 @@ document.documentElement.classList.add("ms-boot");
                     <span class="ms-ewidget-copy"><strong>Contact Form</strong><em>Form submissions</em></span>
                     <button type="button" class="ms-eswitch" aria-checked="true" aria-label="Contact Form" data-toggle="contact"><span></span></button>
                   </div>
+                  <div class="ms-ewidget-body">
+                    <div class="ms-ewidget-body-inner">
+                      <div class="ms-emode" aria-hidden="true"><span class="is-on">Auto</span><span>Custom</span></div>
+                      <label>Client email</label>
+                      <p>owner@northsidecafe.com</p>
+                    </div>
+                  </div>
                 </div>
                 <div class="ms-ewidget" data-widget="domain">
                   <div class="ms-ewidget-head">
                     <span class="ms-ewidget-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span>
                     <span class="ms-ewidget-copy"><strong>Custom Domain</strong><em>Connect your own domain</em></span>
                     <button type="button" class="ms-eswitch" aria-checked="false" aria-label="Custom Domain" data-toggle="domain"><span></span></button>
+                  </div>
+                  <div class="ms-ewidget-body">
+                    <div class="ms-ewidget-body-inner">
+                      <label>Domain</label>
+                      <p>northsidecafe.com</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -510,85 +554,73 @@ document.documentElement.classList.add("ms-boot");
         </div>
       </section>
 
-      <section class="ms-band" aria-labelledby="cover-title">
+      <section class="ms-band ms-income-band" id="income" aria-labelledby="income-title">
         <div class="ms-wrap ms-wrap-wide">
-          <h2 id="cover-title" class="ms-rise">Where you work.</h2>
-          <div class="ms-pair">
-            <article class="ms-card ms-cover ms-rise">
-              <p class="ms-card-kicker">Business Finder</p>
-              <h3>Shops nearby with no site.</h3>
-              <p>Search cafes, clinics, and shops. Claim one, then open it in the Builder.</p>
-              <div class="ms-work">
-                <p class="ms-work-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>Cafes nearby</p>
-                <div class="ms-work-map" aria-hidden="true">
-                  <span class="ms-work-pin"></span>
-                  <span class="ms-work-pin is-hot"></span>
-                  <span class="ms-work-pin"></span>
-                  <span class="ms-work-pin"></span>
+          <h2 id="income-title" class="ms-rise">Your income.</h2>
+          <p class="ms-band-note ms-rise">Every live site pays you 90%. Watch the month build.</p>
+          <div class="ms-income ms-rise" data-income>
+            <div class="ms-income-main">
+              <div class="ms-income-top">
+                <div>
+                  <p class="ms-income-kicker">This month</p>
+                  <p class="ms-income-total"><span data-income-total>$0</span></p>
                 </div>
-                <ul class="ms-work-list">
-                  <li class="is-picked">
-                    <span class="ms-work-mark">N</span>
-                    <span class="ms-work-copy"><strong>Northside Cafe</strong><em>Cafe</em></span>
-                    <span class="ms-work-tag">No website</span>
-                  </li>
-                  <li>
-                    <span class="ms-work-mark">H</span>
-                    <span class="ms-work-copy"><strong>Harbor Clinic</strong><em>Clinic</em></span>
-                    <span class="ms-work-tag is-quiet">Has a site</span>
-                  </li>
-                  <li>
-                    <span class="ms-work-mark">O</span>
-                    <span class="ms-work-copy"><strong>Oak Gym</strong><em>Gym</em></span>
-                    <span class="ms-work-tag">No website</span>
-                  </li>
-                </ul>
+                <div class="ms-income-split" aria-label="Payout split">
+                  <span><strong>90%</strong> you keep</span>
+                  <span><strong>10%</strong> Moonrise</span>
+                </div>
               </div>
-            </article>
-            <article class="ms-card ms-cover ms-rise">
-              <p class="ms-card-kicker">My Clients</p>
-              <h3>After they pay, they stay with you.</h3>
-              <p>The watermark comes off. The live site stays in your client list.</p>
-              <div class="ms-work">
-                <p class="ms-work-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>Search clients</p>
-                <ul class="ms-work-list">
-                  <li>
-                    <span class="ms-work-mark">N</span>
-                    <span class="ms-work-copy">
-                      <strong>Northside Cafe</strong>
-                      <span class="ms-work-chips"><span>Paid $450</span><span>Your cut $405</span><span>Live</span></span>
-                    </span>
-                  </li>
-                  <li>
-                    <span class="ms-work-mark">R</span>
-                    <span class="ms-work-copy">
-                      <strong>River Dental</strong>
-                      <span class="ms-work-chips"><span>Paid $600</span><span>Your cut $540</span><span>Live</span></span>
-                    </span>
-                  </li>
-                </ul>
+              <div class="ms-income-chart" aria-hidden="true">
+                <svg class="ms-income-svg" viewBox="0 0 640 220" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="ms-income-fill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#1d1d1f" stop-opacity="0.18"/>
+                      <stop offset="100%" stop-color="#1d1d1f" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path class="ms-income-area" data-income-area d="M0 188 C 70 176, 110 168, 160 150 S 250 120, 320 108 S 430 96, 480 72 S 580 48, 640 36 L 640 220 L 0 220 Z"/>
+                  <path class="ms-income-line" data-income-line d="M0 188 C 70 176, 110 168, 160 150 S 250 120, 320 108 S 430 96, 480 72 S 580 48, 640 36" fill="none" stroke="#1d1d1f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="ms-income-bars" data-income-bars>
+                  <span style="--h:28%"><i></i><em>W1</em></span>
+                  <span style="--h:42%"><i></i><em>W2</em></span>
+                  <span style="--h:58%"><i></i><em>W3</em></span>
+                  <span style="--h:74%"><i></i><em>W4</em></span>
+                  <span style="--h:91%"><i></i><em>Now</em></span>
+                </div>
               </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="ms-band ms-band-cool" id="faq" aria-labelledby="faq-title">
-        <div class="ms-wrap">
-          <h2 id="faq-title" class="ms-rise">Questions.</h2>
-          <div class="dt-accordion" data-accordion>
-            <div class="dt-acc-item is-open ms-rise">
-              <button type="button" class="dt-acc-trigger" aria-expanded="true">What is Moonrise? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
-              <div class="dt-acc-panel"><div>A workspace for selling websites to local businesses. You find one that needs a site, build it, and get paid when the owner goes live.</div></div>
+              <div class="ms-income-goal">
+                <div class="ms-income-goal-meta">
+                  <span>Month goal</span>
+                  <span data-income-goal-label>$0 / $2,000</span>
+                </div>
+                <div class="ms-income-track" role="progressbar" aria-valuemin="0" aria-valuemax="2000" aria-valuenow="0" data-income-track>
+                  <span data-income-fill></span>
+                </div>
+              </div>
             </div>
-            <div class="dt-acc-item ms-rise">
-              <button type="button" class="dt-acc-trigger" aria-expanded="false">How do I get paid? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
-              <div class="dt-acc-panel"><div>Publish the site with a small watermark and send the owner the link. They pay on that page to remove it. You keep 90%.</div></div>
-            </div>
-            <div class="dt-acc-item ms-rise">
-              <button type="button" class="dt-acc-trigger" aria-expanded="false">Do owners need an account? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
-              <div class="dt-acc-panel"><div>No. They open the link and pay there. They never sign in to Moonrise.</div></div>
-            </div>
+            <aside class="ms-income-side">
+              <p class="ms-income-kicker">Recent payouts</p>
+              <ul class="ms-income-list">
+                <li>
+                  <span class="ms-income-mark">N</span>
+                  <span class="ms-income-copy"><strong>Northside Cafe</strong><em>Live site</em></span>
+                  <span class="ms-income-cut">+$405</span>
+                </li>
+                <li>
+                  <span class="ms-income-mark">R</span>
+                  <span class="ms-income-copy"><strong>River Dental</strong><em>Live site</em></span>
+                  <span class="ms-income-cut">+$540</span>
+                </li>
+                <li>
+                  <span class="ms-income-mark">O</span>
+                  <span class="ms-income-copy"><strong>Oak Gym</strong><em>Live site</em></span>
+                  <span class="ms-income-cut">+$270</span>
+                </li>
+              </ul>
+              <p class="ms-income-note">Owners pay on the watermark link. Your cut lands when the site goes live.</p>
+              <a class="ms-home-cta ms-income-cta" href="login.html">Start earning</a>
+            </aside>
           </div>
         </div>
       </section>
@@ -606,6 +638,42 @@ document.documentElement.classList.add("ms-boot");
             <a href="ui-library#pricing">Pricing</a>
           </nav>
           <a class="ms-home-cta ms-rise" href="ui-library">Open the library</a>
+        </div>
+      </section>
+
+      <section class="ms-band ms-band-cool" id="faq" aria-labelledby="faq-title">
+        <div class="ms-wrap">
+          <h2 id="faq-title" class="ms-rise">FAQ</h2>
+          <div class="dt-accordion" data-accordion>
+            <div class="dt-acc-item is-open ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="true">What is Moonrise? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+              <div class="dt-acc-panel"><div>A workspace for selling websites to local businesses. You find one that needs a site, build it, and get paid when the owner goes live.</div></div>
+            </div>
+            <div class="dt-acc-item ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="false">How do I get paid? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+              <div class="dt-acc-panel"><div>Publish the site with a small watermark and send the owner the link. They pay on that page to remove it. You keep 90%.</div></div>
+            </div>
+            <div class="dt-acc-item ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="false">Do owners need an account? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+              <div class="dt-acc-panel"><div>No. They open the link and pay there. They never sign in to Moonrise.</div></div>
+            </div>
+            <div class="dt-acc-item ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="false">Do I need design or coding skills? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+              <div class="dt-acc-panel"><div>No. Moonrise builds the site for you. You review it in the editor, turn features on or off, and send the link when it looks right.</div></div>
+            </div>
+            <div class="dt-acc-item ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="false">How does Business Finder work? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+              <div class="dt-acc-panel"><div>Search nearby cafes, clinics, and shops. Claim a business that still needs a site, then open it in the Builder to generate their page.</div></div>
+            </div>
+            <div class="dt-acc-item ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="false">What happens after a client pays? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+              <div class="dt-acc-panel"><div>The watermark comes off, the site stays live, and that business moves into your client list so you can keep working with them.</div></div>
+            </div>
+            <div class="dt-acc-item ms-rise">
+              <button type="button" class="dt-acc-trigger" aria-expanded="false">Can I connect a custom domain? <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+              <div class="dt-acc-panel"><div>Yes. After the site is ready, you can connect the owner's domain from the editor so the live page uses their own address.</div></div>
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -630,8 +698,8 @@ document.documentElement.classList.add("ms-boot");
     </footer>
   </div>
 
-  <script defer src="js/home-menu.js?v=20261109-nav"></script>
-  <script defer src="js/home-stage.js?v=20261109-finder3"></script>
+  <script defer src="js/home-menu.js?v=20261109-menu-lift"></script>
+  <script defer src="js/home-stage.js?v=20261109-income"></script>
   <script defer src="js/ui-motion.js?v=20261108-no-donate"></script>
   <script defer src="js/toast.js"></script>
   <script defer>

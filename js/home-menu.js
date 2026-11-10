@@ -9,6 +9,8 @@
   if (!header || !button || !menu) return;
 
   var label = button.querySelector(".ms-menu-label");
+  var parkedParent = null;
+  var parkedNext = null;
 
   function currentPath() {
     return String(location.pathname || "/").toLowerCase();
@@ -26,12 +28,33 @@
     });
   }
 
+  // Sticky / transformed ancestors trap position:fixed and clip the overlay.
+  // Park the bar on body while open so the menu covers the viewport.
+  function parkOverlay(open) {
+    if (open) {
+      if (header.parentElement === document.body) return;
+      parkedParent = header.parentElement;
+      parkedNext = header.nextSibling;
+      document.body.appendChild(header);
+      return;
+    }
+    if (!parkedParent) return;
+    if (parkedNext && parkedNext.parentNode === parkedParent) {
+      parkedParent.insertBefore(header, parkedNext);
+    } else {
+      parkedParent.appendChild(header);
+    }
+    parkedParent = null;
+    parkedNext = null;
+  }
+
   function setOpen(open) {
     button.setAttribute("aria-expanded", String(open));
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     header.classList.toggle("is-open", open);
     document.documentElement.classList.toggle("ms-menu-open", open);
     if (label) label.textContent = open ? "Close" : "Menu";
+    parkOverlay(open);
     if (open) menu.scrollTop = 0;
   }
 

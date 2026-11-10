@@ -67,41 +67,13 @@
     }
   }
 
-  function shouldDelayNav(btn, e) {
-    if (!btn || btn.tagName !== "A") return false;
-    if (prefersReducedMotion()) return false;
-    if (e.defaultPrevented || e.button !== 0) return false;
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return false;
-    if (btn.target && btn.target !== "_self") return false;
-    if (btn.hasAttribute("download")) return false;
-    const href = btn.getAttribute("href");
-    if (!href || href.charAt(0) === "#") return false;
-    try {
-      const url = new URL(btn.href, global.location.href);
-      if (url.origin !== global.location.origin) return false;
-      if (
-        url.pathname === global.location.pathname &&
-        url.search === global.location.search &&
-        url.hash
-      ) {
-        return false;
-      }
-    } catch (_) {
-      return false;
-    }
-    return true;
+  function shouldDelayNav() {
+    // Studio clicks must navigate on the same frame - never hold the hop for press motion.
+    return false;
   }
 
-  function onClick(e) {
-    const btn = e.target?.closest?.(SELECTOR);
-    if (!shouldDelayNav(btn, e)) return;
-    e.preventDefault();
-    if (!btn.classList.contains(PRESS_CLASS)) playPress(btn);
-    const href = btn.href;
-    global.clearTimeout(btn._msNavTimer);
-    btn._msNavTimer = global.setTimeout(function () {
-      global.location.assign(href);
-    }, 220);
+  function onClick() {
+    /* Navigation is instant; press feedback runs on pointerdown. */
   }
 
   function waitMs(ms) {
@@ -392,7 +364,6 @@
     if (!link || link.tagName !== "A") return false;
     if (link.classList.contains("is-soon") || link.classList.contains("is-active")) return false;
     if (link.hasAttribute("data-external-redirect")) return false;
-    if (prefersReducedMotion()) return false;
     if (e.defaultPrevented || e.button !== 0) return false;
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return false;
     if (link.target && link.target !== "_self") return false;
@@ -416,14 +387,27 @@
 
   function leaveToChannel(link) {
     if (!link) return;
-    document.querySelectorAll(".ms-sidebar .ms-nav-link.is-active").forEach(function (el) {
+    document.querySelectorAll(".ms-sidebar .ms-nav-link.is-active, #ms-tabbar .ms-tab.is-active").forEach(function (el) {
       el.classList.remove("is-active");
       el.removeAttribute("aria-current");
     });
     link.classList.add("is-active");
     link.setAttribute("aria-current", "page");
     global.StudioShell?.syncNavPillForLink?.(link, { animate: false });
+    if (link.classList.contains("ms-tab")) {
+      const bar = link.closest("#ms-tabbar, .ms-tabbar");
+      global.StudioShell?.syncTabPill?.(bar, link, { animate: false });
+    }
     document.body.classList.remove("ms-nav-open");
+    try {
+      if (typeof global.mountChannelSkeleton === "function") {
+        global.mountChannelSkeleton("leave");
+      } else if (typeof mountChannelSkeleton === "function") {
+        mountChannelSkeleton("leave");
+      }
+    } catch (_) {
+      /* ignore */
+    }
     try {
       sessionStorage.removeItem(CHANNEL_HOP_KEY);
       sessionStorage.setItem("ms_studio_booted", "1");

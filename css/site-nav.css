@@ -9,13 +9,23 @@
   pointer-events: none;
 }
 
+/* Landing: sit on the sticky hero so scroll never peels the bar away. */
 body[data-page="home"] .ms-site-bar {
   position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
 }
 
 .ms-site-bar.is-open {
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
   background: #f5f5f7;
+  pointer-events: auto;
 }
 
 .ms-nav-row {
@@ -150,6 +160,7 @@ body[data-page="home"] .ms-site-bar {
   position: fixed;
   inset: 0;
   z-index: 1;
+  /* Stays under the nav row; full-viewport once the bar is parked on body. */
   display: flex;
   flex-direction: column;
   align-items: center;
