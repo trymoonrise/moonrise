@@ -4217,15 +4217,37 @@ input.ms-input:-webkit-autofill:focus {
   text-decoration: underline;
 }
 
-.ms-auth-passkey {
-  margin-top: 0.15rem;
+.ms-auth-passkey-wrap {
+  margin: 0.75rem 0 0;
+  text-align: center;
 }
 
-.ms-auth-passkey-hint {
-  margin: 0.55rem 0 0;
-  font-size: 0.8rem;
-  line-height: 1.35;
-  text-align: center;
+.ms-auth-passkey {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  margin: 0;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--ms-border, #d4d4d4) 90%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: #232427;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+}
+
+.ms-auth-passkey:hover {
+  background: color-mix(in srgb, var(--ms-ink, #232427) 5%, transparent);
+}
+
+.ms-auth-passkey:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .ms-auth-or {

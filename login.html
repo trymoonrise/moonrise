@@ -189,14 +189,9 @@ setTimeout(function () {
         <button type="button" class="ms-auth-forgot" id="resend-confirm-link">Resend confirmation email</button>
       </p>
       <button class="ms-btn" type="submit" id="auth-submit" style="width:100%">Continue with Email</button>
-      <div id="passkey-wrap">
-        <p class="ms-auth-or"><span>or</span></p>
-        <button type="button" class="ms-btn ms-btn-secondary" id="auth-passkey" style="width:100%">Sign in with a passkey</button>
-        <p class="ms-muted ms-auth-passkey-hint">Optional. Use a passkey you saved in Settings, or keep using the email link.</p>
+      <div id="passkey-wrap" class="ms-auth-passkey-wrap">
+        <button type="button" class="ms-auth-passkey" id="auth-passkey">Sign in with a passkey</button>
       </div>
-      <p class="ms-auth-home-wrap">
-        <a class="ms-auth-home" href="/">Back to home</a>
-      </p>
       <p class="ms-error" id="auth-error" hidden></p>
       <p class="ms-muted" id="auth-hint" style="margin-top:0.75rem;font-size:0.85rem"></p>
       <p class="ms-auth-back-wrap" id="back-wrap" hidden>

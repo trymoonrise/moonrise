@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.9.1",
+      "date": "2026-11-09",
+      "title": "Simpler login passkey",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Login uses a small Sign in with a passkey button and drops the or divider, passkey hint, and Back to home link."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.0",
       "date": "2026-11-09",
       "title": "Minimal watermark unlock panel",
