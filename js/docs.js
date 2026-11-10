@@ -84,6 +84,14 @@
       var group = item.a.closest("[data-docs-group]");
       if (item === current && group && !search?.value) setGroupOpen(group, true);
     });
+    var aside = current.a.closest(".ms-docs-aside");
+    if (aside) {
+      var rail = aside.getBoundingClientRect();
+      var link = current.a.getBoundingClientRect();
+      if (link.top < rail.top || link.bottom > rail.bottom) {
+        aside.scrollTop += link.top - rail.top - (rail.height - link.height) / 2;
+      }
+    }
   }
 
   function scrollToHash(hash, replace) {

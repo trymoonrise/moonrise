@@ -75,69 +75,46 @@ product = product
   .replace("__TERMS__", terms)
   .replace("__REFUNDS__", refunds);
 
-const chevron =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+const sections = [
+  ["#getting-started", "Getting started"],
+  ["#what-is-moonrise", "What is Moonrise"],
+  ["#how-it-works", "How Moonrise works"],
+  ["#golden-rules", "Golden rules"],
+  ["#get-paid", "How you get paid"],
+  ["#finder", "Business Finder"],
+  ["#ui", "Studio overview"],
+  ["#builder-modes", "Builder modes"],
+  ["#builder-editor", "Builder & Editor"],
+  ["#website-price", "Website Price"],
+  ["#contact-owner", "Contact Owner"],
+  ["#editor-tools", "Editor tools"],
+  ["#publish", "Publish & watermark"],
+  ["#features", "Site features"],
+  ["#contact-form", "Contact form"],
+  ["#domains", "Custom domains"],
+  ["#booking", "Booking"],
+  ["#payments-widget", "Payment methods"],
+  ["#quotes", "Quotes"],
+  ["#maps", "Maps"],
+  ["#reviews", "Reviews"],
+  ["#socials", "Socials"],
+  ["#messaging", "Messaging"],
+  ["#ordering", "Ordering"],
+  ["#newsletter", "Newsletter"],
+  ["#subprocessors", "Subprocessors"],
+  ["#security", "Security"],
+  ["#licenses", "Licenses"],
+  ["#policies", "Policies"],
+  ["#privacy", "Privacy"],
+  ["#terms", "Terms"],
+  ["#refunds", "Refunds"],
+  ["#tips", "Tips"],
+  ["#support", "Help and support"],
+];
 
-function group(title, links) {
-  const items = links
-    .map(([href, label]) => `<a href="${href}">${label}</a>`)
-    .join("\n            ");
-  return `<div class="ms-docs-group is-open" data-docs-group>
-          <button type="button" class="ms-docs-group-toggle" data-docs-group-toggle aria-expanded="true">${title} ${chevron}</button>
-          <div class="ms-docs-group-links">
-            ${items}
-          </div>
-        </div>`;
-}
-
-const nav = [
-  group("Getting started", [
-    ["#getting-started", "Getting started"],
-    ["#what-is-moonrise", "What is Moonrise"],
-    ["#how-it-works", "How Moonrise works"],
-    ["#golden-rules", "Golden rules"],
-    ["#get-paid", "How you get paid"],
-    ["#finder", "Business Finder"],
-  ]),
-  group("User interface", [
-    ["#ui", "Studio overview"],
-    ["#builder-modes", "Builder modes"],
-    ["#builder-editor", "Builder & Editor"],
-    ["#website-price", "Website Price"],
-    ["#contact-owner", "Contact Owner"],
-    ["#editor-tools", "Editor tools"],
-    ["#publish", "Publish & watermark"],
-  ]),
-  group("Site features", [
-    ["#features", "Overview"],
-    ["#contact-form", "Contact form"],
-    ["#domains", "Custom domains"],
-    ["#booking", "Booking"],
-    ["#payments-widget", "Payment methods"],
-    ["#quotes", "Quotes"],
-    ["#maps", "Maps"],
-    ["#reviews", "Reviews"],
-    ["#socials", "Socials"],
-    ["#messaging", "Messaging"],
-    ["#ordering", "Ordering"],
-    ["#newsletter", "Newsletter"],
-  ]),
-  group("Platform", [
-    ["#services", "Services used"],
-    ["#security", "Security"],
-    ["#licenses", "Licenses"],
-  ]),
-  group("Policies", [
-    ["#policies", "Overview"],
-    ["#privacy", "Privacy"],
-    ["#terms", "Terms"],
-    ["#refunds", "Refunds"],
-  ]),
-  group("Help", [
-    ["#tips", "Tips"],
-    ["#support", "Help and support"],
-  ]),
-].join("\n        ");
+const nav = sections
+  .map(([href, label]) => `<li><a href="${href}">${label}</a></li>`)
+  .join("\n            ");
 
 const html = `<!DOCTYPE html>
 <html lang="en">
@@ -191,7 +168,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-ink">
-  <link rel="stylesheet" href="css/docs.css?v=20261110-docs-match">
+  <link rel="stylesheet" href="css/docs.css?v=20261110-onpage2">
   <link rel="stylesheet" href="css/site-nav.css?v=20261109-line">
 </head>
 <body data-page="docs" class="ms-public-doc ms-docs-page" data-docs>
@@ -218,31 +195,28 @@ document.documentElement.classList.add("ms-boot");
   </header>
 
   <div class="ms-docs-layout">
-    <aside class="ms-docs-sidebar" data-docs-sidebar>
-      <button type="button" class="ms-docs-mobile-toggle" data-docs-mobile-toggle aria-expanded="false">Contents</button>
-      <div class="ms-docs-sidebar-panel">
-        <label class="visually-hidden" for="ms-docs-search">Search docs</label>
-        <input class="ms-docs-search" id="ms-docs-search" data-docs-search type="search" placeholder="Search…" autocomplete="off">
-        <nav class="ms-docs-nav" aria-label="Documentation">
-        ${nav}
-        </nav>
-      </div>
-    </aside>
-
+    <header class="ms-docs-hero">
+      <h1 class="ms-doc-title">Docs.</h1>
+      <p class="ms-doc-lead">Everything about Moonrise—product, features, security, licenses, and policies—in one place.</p>
+    </header>
     <main class="ms-docs-main" id="main">
-      <header class="ms-docs-hero">
-        <h1 class="ms-doc-title">Docs.</h1>
-        <p class="ms-doc-lead">Everything about Moonrise—product, features, security, licenses, and policies—in one place.</p>
-      </header>
 ${product}
     </main>
+    <aside class="ms-docs-aside">
+      <nav class="ms-docs-onpage" aria-label="On this page">
+        <h2>On this page</h2>
+        <ol class="ms-docs-nav">
+            ${nav}
+        </ol>
+      </nav>
+    </aside>
   </div>
 
   <style>.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
   <script defer src="js/config.js?v=20261106-mono"></script>
   <script defer src="js/site-branding.js"></script>
   <script defer src="js/home-menu.js?v=20261109-menu-anim"></script>
-  <script defer src="js/docs.js?v=20261109-docs-hub"></script>
+  <script defer src="js/docs.js?v=20261110-onpage"></script>
 </body>
 </html>
 `;

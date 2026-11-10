@@ -3,6 +3,20 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.0.3",
+      "date": "2026-11-10",
+      "title": "Docs lists subprocessors in one simple page",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Docs has one Subprocessors section, with each company's logo and a Visit button to its site.",
+            "Docs reads as plain text, with an On this page list instead of the old contents panel."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.0.2",
       "date": "2026-11-10",
       "title": "Library footer shows the last repo update",
