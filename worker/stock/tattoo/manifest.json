@@ -1,0 +1,41 @@
+{
+  "key": "tattoo",
+  "label": "tattoo / piercing studio",
+  "match": "/tattoo|piercing|ink studio|body art/i",
+  "folder": "worker/stock/tattoo",
+  "images": [
+    "photo-1568515387631-8b650bbcdb90",
+    "photo-1590245611993-05bd5d7e06e0",
+    "photo-1611501275019-9b5cda602e36",
+    "photo-1549366021-9f761d450615",
+    "pexels-1416530",
+    "pexels-1416533",
+    "pexels-2195287",
+    "pexels-1319459",
+    "pexels-897262",
+    "photo-1503951914875-452162b0f3f1"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1568515387631-8b650bbcdb90?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1590245611993-05bd5d7e06e0?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1611501275019-9b5cda602e36?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/1416530/pexels-photo-1416530.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1416533/pexels-photo-1416533.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/2195287/pexels-photo-2195287.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1319459/pexels-photo-1319459.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/897262/pexels-photo-897262.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "ambient",
+    "people",
+    "city"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

@@ -1,0 +1,45 @@
+{
+  "key": "photography",
+  "label": "photography / creative studio",
+  "match": "/photograph|photo studio|wedding photo|portrait studio|videograph/i",
+  "folder": "worker/stock/photography",
+  "images": [
+    "photo-1452587925148-ce544e77e70d",
+    "photo-1516035069371-29a1b244cc32",
+    "photo-1492691527719-9d1e07e534b4",
+    "photo-1471341971476-ae15ff5dd4ea",
+    "photo-1554048612-b6a482bc67e5",
+    "photo-1606983340126-99ab4feaa64a",
+    "photo-1542038784456-1ea8e935640e",
+    "photo-1502920917128-1aa69837af2e",
+    "pexels-274973",
+    "pexels-167832",
+    "pexels-1983037",
+    "pexels-3602258"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1471341971476-ae15ff5dd4ea?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1502920917128-1aa69837af2e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/274973/pexels-photo-274973.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/167832/pexels-photo-167832.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1983037/pexels-photo-1983037.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3602258/pexels-photo-3602258.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "people",
+    "city",
+    "soft"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

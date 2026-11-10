@@ -1,0 +1,45 @@
+{
+  "key": "roofing",
+  "label": "roofing / gutters / exterior",
+  "match": "/roof|gutter|shingle|exterior|siding/i",
+  "folder": "worker/stock/roofing",
+  "images": [
+    "photo-1541888946425-d81bb19240f5",
+    "photo-1503387762-592deb58ef4e",
+    "photo-1589939705387-ba8829e0ac0b",
+    "photo-1504307651254-35680f356dfd",
+    "photo-1562259949-e8e72308cbe0",
+    "photo-1600585154340-be6161a56a0c",
+    "photo-1600596542815-ffad4c1539a9",
+    "photo-1570129477492-45c003edd2be",
+    "pexels-2219024",
+    "pexels-209296",
+    "pexels-259588",
+    "photo-1512917772120-2f13304f0931"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1589939705387-ba8829e0ac0b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1562259949-e8e72308cbe0?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/209296/pexels-photo-209296.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1512917772120-2f13304f0931?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "construction",
+    "city",
+    "ambient"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3209829/3209829-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

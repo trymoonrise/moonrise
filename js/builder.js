@@ -158,6 +158,7 @@
 
   /** Active /generate AbortController so sidebar cancel can stop the request. */
   let generateAbort = null;
+  let generateCancelRequested = false;
   let generateInFlight = false;
   let generateBootStarted = false;
   const GEN_INFLIGHT_KEY = "ms_generate_inflight_v1";
@@ -516,17 +517,12 @@
       const target = Math.floor(5 + eased * (cap - 5));
       if (target > genProgressPct) renderGenerateProgress(target);
 
-      // Hard stop so the bar never sits at 92% forever.
+      // Keep waiting - generation continues on the server if you leave.
       if (elapsed > 165000 && !(state.html && String(state.html).trim())) {
-        try {
-          generateAbort?.abort();
-        } catch (_) {
-          /* ignore */
-        }
-        failGenerateProgress("Generation timed out. Please try again.");
-        generateInFlight = false;
-        generateAbort = null;
-        syncBuilderChannelGenerating();
+        renderGenerateProgress(
+          Math.max(genProgressPct, 92),
+          "Still building — you can leave this page"
+        );
       }
     }, 180);
     syncEmptyState();
@@ -650,12 +646,14 @@
 
   function cancelActiveGeneration() {
     if (!generateAbort) return false;
+    generateCancelRequested = true;
     try {
       generateAbort.abort();
     } catch (_) {
       /* ignore */
     }
     generateAbort = null;
+    clearGenInflight();
     return true;
   }
 
@@ -6334,14 +6332,27 @@
     const deadline = Date.now() + GEN_INFLIGHT_MAX_MS;
     while (Date.now() < deadline) {
       if (signal?.aborted) {
-        const err = new Error("Generation cancelled.");
+        const err = new Error(
+          generateCancelRequested
+            ? "Generation cancelled."
+            : "Generation is still running in the background."
+        );
         err.name = "AbortError";
+        err.code = generateCancelRequested ? "generation_cancelled" : "generation_detached";
         throw err;
       }
-      const res = await fetch(
-        base + "/generate/status?requestId=" + encodeURIComponent(requestId),
-        { headers, signal }
-      );
+      let res;
+      try {
+        res = await fetch(
+          base + "/generate/status?requestId=" + encodeURIComponent(requestId),
+          { headers, signal }
+        );
+      } catch (e) {
+        if (e?.name === "AbortError") throw e;
+        // Transient network blip - keep polling; server job is durable.
+        await sleepMs(3000);
+        continue;
+      }
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.html) return data;
       if (res.status === 404) break;
@@ -6349,10 +6360,16 @@
         throw new Error(data.error || "Generation failed");
       }
       renderAgentActivity(data);
+      if (Date.now() - (readGenInflight()?.startedAt || Date.now()) > 90000) {
+        renderGenerateProgress(
+          Math.max(genProgressPct, 88),
+          "Still building — you can leave this page"
+        );
+      }
       await sleepMs((Number(data.retryAfterSec) || 3) * 1000);
     }
     throw new Error(
-      "Generation is still running. Keep this tab open - it should finish shortly."
+      "Generation is still running in the background. Open Builder again shortly to see the finished site."
     );
   }
 
@@ -6547,9 +6564,12 @@
       return;
     }
 
+    generateCancelRequested = false;
     generateAbort = new AbortController();
     const signal = generateAbort.signal;
-    const GENERATE_TIMEOUT_MS = 160000;
+    // Client waits up to the same window as the server job. Leaving the page does not
+    // cancel the worker - only explicit cancel or this long deadline stops polling.
+    const GENERATE_TIMEOUT_MS = GEN_INFLIGHT_MAX_MS;
     const generateTimer = window.setTimeout(() => {
       try {
         generateAbort.abort();
@@ -6566,6 +6586,7 @@
     updateOnboardContinue();
     const generatedHtmlKeep = { html: "" };
     let generationSucceeded = false;
+    let leaveGenerationRunning = false;
     try {
       let base = workerUrl();
       if (!base) throw new Error("Worker URL is not configured.");
@@ -6635,9 +6656,25 @@
       }
     } catch (e) {
       if (e?.name === "AbortError") {
-        const msg = fromFinderFlow
-          ? "Generation timed out or was cancelled. Please try again."
-          : "Generation cancelled.";
+        if (e?.code === "generation_detached" || (!generateCancelRequested && readGenInflight()?.requestId)) {
+          // Page hide / navigation aborted the poll - server job keeps running.
+          leaveGenerationRunning = true;
+          renderGenerateProgress(
+            Math.max(genProgressPct, 90),
+            "Still building in the background…"
+          );
+          setStatus("Generation continues in the background. Come back shortly.");
+          window.StudioToast?.info?.(
+            "Website generation keeps running. You can leave — open Builder again when it finishes."
+          );
+          return;
+        }
+        clearGenInflight();
+        const msg = generateCancelRequested
+          ? "Generation cancelled."
+          : fromFinderFlow
+            ? "Generation timed out or was cancelled. Please try again."
+            : "Generation cancelled.";
         failGenerateProgress(msg);
         setStatus("");
         const status = document.getElementById("builder-status");
@@ -6652,6 +6689,17 @@
       if (e?.code === "generation_in_progress") {
         clearGenInflight();
         msg = generationBlockedMessage();
+      } else if (/still running in the background/i.test(msg)) {
+        leaveGenerationRunning = true;
+        renderGenerateProgress(
+          Math.max(genProgressPct, 90),
+          "Still building — open Builder again soon"
+        );
+        setStatus(msg);
+        window.StudioToast?.info?.(msg);
+        return;
+      } else {
+        clearGenInflight();
       }
       if (/failed to fetch|networkerror|load failed|network request failed/i.test(msg)) {
         msg = workerUnreachableMessage(workerUrl(), msg);
@@ -6684,10 +6732,15 @@
         }
         generateAbort = null;
         syncBuilderChannelGenerating();
+      } else if (leaveGenerationRunning) {
+        // Keep lock + progress cue; do not clear AbortController until cancel.
+        generateAbort = null;
+        syncBuilderChannelGenerating({ cancellable: false });
       } else {
         generateAbort = null;
         syncBuilderChannelGenerating();
       }
+      generateCancelRequested = false;
       updateOnboardContinue();
       syncEmptyState();
     }
@@ -10775,6 +10828,77 @@
     void generate({ fromFinder: true });
   }
 
+  /** Resume a durable server job after leaving Builder / Finder mid-generate. */
+  async function resumeStoredGenerationIfNeeded() {
+    if (generateInFlight || generateBootStarted) return false;
+    const inflight = readGenInflight();
+    if (!inflight?.requestId || inflight.redesign) return false;
+
+    // Prefer finishing an already-done job without starting a new one.
+    try {
+      const base = workerUrl();
+      if (!base) return false;
+      const headers = await authHeaders();
+      const activeRes = await fetch(base + "/generate/active", {
+        headers,
+        cache: "no-store",
+      });
+      const active = await activeRes.json().catch(() => ({}));
+      if (activeRes.ok && !active.active) {
+        const statusRes = await fetch(
+          base + "/generate/status?requestId=" + encodeURIComponent(inflight.requestId),
+          { headers, cache: "no-store" }
+        );
+        const statusData = await statusRes.json().catch(() => ({}));
+        if (statusRes.ok && statusData.html) {
+          generateBootStarted = true;
+          beginFinderGenerateUi();
+          generateInFlight = true;
+          try {
+            if (statusData.credits) {
+              state.totalCredits = Number(statusData.credits.totalCredits) || 0;
+              document.dispatchEvent(
+                new CustomEvent("ms:credits-changed", { detail: statusData.credits })
+              );
+            }
+            state.projectId = statusData.projectId || state.projectId;
+            const html = ensureMobileFriendlyHtml(statusData.html || "");
+            history.replaceState({}, "", editorPageUrl({ project_id: state.projectId }));
+            await revealGeneratedSite(html, {
+              status: "Generated. Watermark is on until payment.",
+            });
+            clearGenInflight();
+            void loadProject(state.projectId).catch(() => {});
+          } finally {
+            generateInFlight = false;
+            syncBuilderChannelGenerating();
+          }
+          return true;
+        }
+        // No active server job and no finished payload - drop the stale lock.
+        clearGenInflight();
+        return false;
+      }
+      if (activeRes.ok && active.active && active.requestId) {
+        writeGenInflight({
+          ...inflight,
+          requestId: String(active.requestId),
+          startedAt: inflight.startedAt || Date.now(),
+        });
+      }
+    } catch (_) {
+      /* fall through to resume generate() */
+    }
+
+    generateBootStarted = true;
+    if (inflight.leadId) state.leadId = inflight.leadId;
+    if (inflight.projectId) state.projectId = inflight.projectId;
+    state.fromFinder = true;
+    beginFinderGenerateUi();
+    void generate({ fromFinder: true, resume: true });
+    return true;
+  }
+
   async function bootBuilderForm() {
     bindOnboard();
     setBuilderMode("google");
@@ -10868,8 +10992,8 @@
     // Wipe blank editor visits on leave / bfcache restore. Never wipe while
     // opening a project_id or Finder swipe handoff (tab switches would blank the editor).
     window.addEventListener("pagehide", () => {
-      // Don't wipe in-flight generation - mobile browsers fire pagehide on tab switch.
-      if (generateAbort) return;
+      // Don't wipe durable / in-flight generation - mobile fires pagehide on tab switch.
+      if (generateAbort || readGenInflight()?.requestId) return;
       if (state.mode === "edit" && state.projectId) {
         flushEditHtmlToState();
       }
@@ -10887,11 +11011,15 @@
         !hasOpenProject() &&
         !hasFinderHandoff() &&
         !hasFreshLeadIntake() &&
-        !generateAbort
+        !generateAbort &&
+        !readGenInflight()?.requestId
       ) {
         clearBuilderForNextVisit();
         setBuilderPhase("workspace");
         updatePreview();
+      }
+      if (e.persisted && readGenInflight()?.requestId) {
+        void resumeStoredGenerationIfNeeded();
       }
     });
     const projectId = params().get("project_id");
@@ -10899,11 +11027,15 @@
     // URL-first: always paint the editor workspace.
     if (projectId || finderHandoff) setBuilderPhase("workspace");
     // Fresh blank visits only - never clear before Finder intake (wipes pick + flags).
-    if (!projectId && !finderHandoff) clearBuilderForNextVisit();
+    if (!projectId && !finderHandoff && !readGenInflight()?.requestId) {
+      clearBuilderForNextVisit();
+    }
     const fromFinder = intakeFromQuery();
     hydrateIntakeFromBuilderHandoff();
+    const inflightEarly = readGenInflight();
+    if (!state.leadId && inflightEarly?.leadId) state.leadId = inflightEarly.leadId;
     // Finder -> Editor: claim this lead so it stays hidden in Business Finder.
-    if (state.fromFinder && state.leadId) {
+    if ((state.fromFinder || inflightEarly?.leadId) && state.leadId) {
       try {
         const key = "ms_lf_claimed_v1";
         const raw = JSON.parse(localStorage.getItem(key) || "{}");
@@ -10921,6 +11053,10 @@
       } catch (_) {
         /* ignore */
       }
+    }
+    // Returning after slide-to-generate + leave: pick up the durable server job.
+    if (!projectId && (await resumeStoredGenerationIfNeeded())) {
+      return;
     }
     const skipSetup =
       !projectId &&
@@ -10974,19 +11110,24 @@
         updateEmptyCopy(fromFinder);
         updatePreview();
         schedulePreviewRepaint();
-        // Empty project (failed/aborted generate) - start generation instead of blank parked iframe.
+        // Empty project - resume durable job if any, otherwise generate.
         if (!(state.html && String(state.html).trim())) {
           const biz =
             businessValue("businessName") ||
             state.project?.business_name ||
             String(params().get("name") || "").trim();
-          if (biz) {
+          if (await resumeStoredGenerationIfNeeded()) {
+            /* resumed */
+          } else if (biz) {
             if (!businessValue("businessName")) setBusinessValue("businessName", biz);
             state.fromFinder = true;
             startFinderGenerateOnce();
           } else {
             setError("This project has no website yet. Use Builder to add business details, then generate.");
           }
+        } else {
+          // Site already exists - drop a leftover keep-building lock.
+          clearGenInflight();
         }
       } catch (e) {
         setBuilderPhase("workspace");

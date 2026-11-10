@@ -1,0 +1,45 @@
+{
+  "key": "hotel",
+  "label": "hotel / inn / lodging",
+  "match": "/hotel|motel|inn|lodging|bed.?and.?breakfast|bnb|guest house/i",
+  "folder": "worker/stock/hotel",
+  "images": [
+    "photo-1566073771259-6a8506099945",
+    "photo-1551882547-ff40c63fe5fa",
+    "photo-1582719478250-c89cae4dc85b",
+    "photo-1611892440504-42a792e24d32",
+    "photo-1590490360182-c33d57733427",
+    "photo-1445019980597-93fa8acb246c",
+    "pexels-258154",
+    "pexels-271624",
+    "pexels-261102",
+    "pexels-164595",
+    "photo-1578683010236-d716f9a3f461",
+    "photo-1564013799919-ab600027ffc6"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "soft",
+    "city",
+    "ambient"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

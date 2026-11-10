@@ -132,17 +132,16 @@ async function resolveExistingGeneration(supabase, userId, requestId, getBalance
     if (byId?.status === "done") {
       return { action: "return", payload: await buildDonePayload(supabase, byId, getBalance, userId) };
     }
+    if (byId?.status === "failed") {
+      return { action: "error", error: byId.error || "Generation failed" };
+    }
+    // Never hold the HTTP request open for an in-flight job - clients poll /generate/status.
     if (isActiveJob(byId)) {
-      const waited = await waitForGenerationJob(supabase, byId.id, getBalance, userId, ACTIVE_JOB_MS);
-      if (waited.ok) return { action: "return", payload: waited.payload };
-      if (waited.inProgress) {
-        return {
-          action: "poll",
-          jobId: byId.id,
-          requestId: rid,
-        };
-      }
-      if (waited.error) return { action: "error", error: waited.error };
+      return {
+        action: "poll",
+        jobId: byId.id,
+        requestId: rid,
+      };
     }
   }
 
@@ -150,16 +149,11 @@ async function resolveExistingGeneration(supabase, userId, requestId, getBalance
   if (active) {
     const activeRid = String(active.prompt?.requestId || "").trim();
     if (rid && activeRid && rid === activeRid) {
-      const waited = await waitForGenerationJob(supabase, active.id, getBalance, userId, ACTIVE_JOB_MS);
-      if (waited.ok) return { action: "return", payload: waited.payload };
-      if (waited.inProgress) {
-        return {
-          action: "poll",
-          jobId: active.id,
-          requestId: activeRid,
-        };
-      }
-      if (waited.error) return { action: "error", error: waited.error };
+      return {
+        action: "poll",
+        jobId: active.id,
+        requestId: activeRid,
+      };
     }
     return {
       action: "blocked",

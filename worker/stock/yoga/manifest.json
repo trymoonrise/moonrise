@@ -1,0 +1,45 @@
+{
+  "key": "yoga",
+  "label": "yoga / pilates / mindful movement",
+  "match": "/yoga|pilates|meditation|mindful|stretch studio/i",
+  "folder": "worker/stock/yoga",
+  "images": [
+    "photo-1544367567-0f2fcb009e0b",
+    "photo-1506126613408-eca07a6958b0",
+    "photo-1599901860904-17e6ed7083a0",
+    "photo-1575052814086-f385e2e2ad1b",
+    "photo-1545205597-3d9d02c29597",
+    "photo-1552196563-55cd4e45efb3",
+    "photo-1518611012118-696072aa579a",
+    "photo-1540555700478-4be289fbecef",
+    "pexels-3822622",
+    "pexels-3823039",
+    "pexels-4056723",
+    "pexels-3822906"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1506126613408-eca07a6958b0?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3823039/pexels-photo-3823039.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4056723/pexels-photo-4056723.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3822906/pexels-photo-3822906.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "yoga",
+    "soft",
+    "nature"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/4056453/4056453-hd_1920_1080_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

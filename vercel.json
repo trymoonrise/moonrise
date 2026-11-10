@@ -44,7 +44,7 @@
       ]
     },
     {
-      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|docs|help|guide|connecting-domains|book|login|orders|download|contact|legal|report|pricing|onboarding|admin-console|ui-library|hosting-billing|creator-contact|privacy|terms|refund|404)",
+      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|docs|book|login|orders|download|contact|report|pricing|onboarding|admin-console|ui-library|hosting-billing|creator-contact|404)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
@@ -88,7 +88,21 @@
     { "source": "/pending-payouts", "destination": "/admin-console", "permanent": true },
     { "source": "/pending-payouts.html", "destination": "/admin-console", "permanent": true },
     { "source": "/designer-tips", "destination": "/ui-library", "permanent": true },
-    { "source": "/designer-tips.html", "destination": "/ui-library", "permanent": true }
+    { "source": "/designer-tips.html", "destination": "/ui-library", "permanent": true },
+    { "source": "/privacy", "destination": "/docs#privacy", "permanent": true },
+    { "source": "/privacy.html", "destination": "/docs#privacy", "permanent": true },
+    { "source": "/terms", "destination": "/docs#terms", "permanent": true },
+    { "source": "/terms.html", "destination": "/docs#terms", "permanent": true },
+    { "source": "/refund", "destination": "/docs#refunds", "permanent": true },
+    { "source": "/refund.html", "destination": "/docs#refunds", "permanent": true },
+    { "source": "/legal", "destination": "/docs#privacy", "permanent": true },
+    { "source": "/legal.html", "destination": "/docs#privacy", "permanent": true },
+    { "source": "/guide", "destination": "/docs", "permanent": true },
+    { "source": "/guide.html", "destination": "/docs", "permanent": true },
+    { "source": "/help", "destination": "/docs", "permanent": true },
+    { "source": "/help.html", "destination": "/docs", "permanent": true },
+    { "source": "/connecting-domains", "destination": "/docs#domains", "permanent": true },
+    { "source": "/connecting-domains.html", "destination": "/docs#domains", "permanent": true }
   ],
   "rewrites": [
     { "source": "/doc/:path*", "destination": "/assets/:path*" },
@@ -100,6 +114,7 @@
     { "source": "/generate", "destination": "/api" },
     { "source": "/generate/status", "destination": "/api" },
     { "source": "/generate/activity", "destination": "/api" },
+    { "source": "/generate/active", "destination": "/api" },
     { "source": "/edit", "destination": "/api" },
     { "source": "/checkout", "destination": "/api" },
     { "source": "/public-checkout", "destination": "/api" },

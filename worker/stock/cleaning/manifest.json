@@ -1,0 +1,45 @@
+{
+  "key": "cleaning",
+  "label": "cleaning / janitorial / maid service",
+  "match": "/clean|janitor|maid|housekeep|pressure wash|carpet clean|office clean|window clean/i",
+  "folder": "worker/stock/cleaning",
+  "images": [
+    "photo-1563453392212-326f5e854473",
+    "photo-1527515637462-cff94eecc1ac",
+    "photo-1628177142898-93e36e4e3a50",
+    "photo-1581578731548-c64695cc6952",
+    "photo-1556912173-46c336c7fd55",
+    "photo-1484154218962-a197022b5858",
+    "photo-1600585152220-90363fe7e115",
+    "photo-1493809842364-78817add7ffb",
+    "pexels-4239091",
+    "pexels-4239037",
+    "pexels-4108715",
+    "pexels-6195273"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/4239091/pexels-photo-4239091.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4239037/pexels-photo-4239037.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4108715/pexels-photo-4108715.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6195273/pexels-photo-6195273.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "cleaning",
+    "soft",
+    "ambient"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

@@ -3,9 +3,8 @@
  * Uses known-good public CDN URLs (Unsplash + Pexels) - no live scrape mid-generate.
  * Pick by business category so aesthetics match the trade.
  *
- * Library: stock-media-library.js (400+ assets across 30 trade packs)
- * Rebuild: node scripts/build-stock-library.js --verify
- * Expand:  node scripts/expand-stock-library.js
+ * Library: stock-media-library.js (compiled from worker/stock/<business>/)
+ * Rebuild: node worker/scripts/seed-stock-folders.js
  */
 
 const library = require("./stock-media-library");
@@ -69,6 +68,15 @@ function buildPackImages(pack) {
 }
 
 function buildPackVideos(pack) {
+  const fromManifest =
+    pack.videoUrls && typeof pack.videoUrls === "object" ? pack.videoUrls : null;
+  if (fromManifest?.hero || fromManifest?.ambient) {
+    return {
+      hero: fromManifest.hero || fromManifest.ambient || VID.city,
+      ambient: fromManifest.ambient || fromManifest.hero || VID.ambient,
+      detail: fromManifest.detail || fromManifest.ambient || VID.soft,
+    };
+  }
   const keys = Array.isArray(pack.videos) ? pack.videos : ["city", "ambient"];
   const videos = {
     hero: VID[keys[0]] || VID.city || VID.ambient,
@@ -83,6 +91,7 @@ const PACKS = {};
 for (const [key, pack] of Object.entries(library.PACKS || {})) {
   PACKS[key] = {
     label: pack.label,
+    folder: pack.folder || `worker/stock/${key}`,
     images: buildPackImages(pack),
     videos: buildPackVideos(pack),
   };
@@ -142,6 +151,14 @@ const PRIORITY_MATCHERS = [
     key: "medical",
     re: /board\s*(?:&|and)\s*care|assisted living|home health|home care|caregiver|senior care|memory care|residential care|skilled nursing/i,
   },
+  {
+    key: "doggrooming",
+    re: /dog\s*groom|pet\s*groom|grooming\s*salon|mobile\s*groom|pet\s*spa|dog\s*wash/i,
+  },
+  {
+    key: "medspa",
+    re: /med\s*spa|medical\s*spa|botox|filler|aesthet|laser\s*hair/i,
+  },
 ];
 
 function scrubCategoryHay(value) {
@@ -191,6 +208,7 @@ function selectStockMedia(ctx) {
   return {
     key,
     label: pack.label,
+    folder: pack.folder || `worker/stock/${key}`,
     images: rotatePackImages(pack.images, seed),
     videos: { ...pack.videos },
   };
@@ -213,7 +231,9 @@ function formatStockMediaForPrompt(media) {
   const lines = [
     `## Stock media pack (REQUIRED - use these exact URLs)`,
     `Theme: ${media.label || media.key || "general"}`,
+    media.folder ? `Folder: ${media.folder}` : "",
     "Use ONLY these absolute https URLs for images and videos. Never invent URLs. Never keep relative ../stock/ paths.",
+    "These assets were curated for this exact kind of business — keep the theme (spa stays spa, dog grooming stays dogs, etc.).",
     "",
     "Images:",
     `- hero: ${img.hero}`,

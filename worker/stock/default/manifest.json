@@ -1,0 +1,49 @@
+{
+  "key": "default",
+  "label": "local business / general",
+  "match": "/.*/",
+  "folder": "worker/stock/default",
+  "images": [
+    "photo-1497366811353-6870744d04b2",
+    "photo-1497215728101-856f4ea42174",
+    "photo-1521737711867-e3b97375f902",
+    "photo-1600880292203-757bb62b4baf",
+    "photo-1560518883-ce09059eeffa",
+    "photo-1600585154340-be6161a56a0c",
+    "photo-1507003211169-0a1dd7228f2d",
+    "photo-1494790108377-be9c29b29330",
+    "photo-1469474968028-56623f02e42e",
+    "photo-1441974231531-c6227db76b6e",
+    "pexels-3184291",
+    "pexels-3182812",
+    "pexels-3747463",
+    "pexels-380769"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3747463/pexels-photo-3747463.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "city",
+    "ambient",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

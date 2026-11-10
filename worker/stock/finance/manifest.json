@@ -1,0 +1,45 @@
+{
+  "key": "finance",
+  "label": "accounting / finance / insurance",
+  "match": "/account|finance|financial|insurance|tax|bookkeep|advisor|cpa|wealth/i",
+  "folder": "worker/stock/finance",
+  "images": [
+    "photo-1554224155-6726b3ff858f",
+    "photo-1460925895917-afdab827c52f",
+    "photo-1551288049-bebda4e38f71",
+    "photo-1579621970563-ebec7560ff3e",
+    "photo-1563986768609-322da13575f3",
+    "photo-1556761175-b413da4baf72",
+    "photo-1611974789855-9c2a0a7236a3",
+    "photo-1590283603385-17ffb3a7f81f",
+    "pexels-590022",
+    "pexels-6801648",
+    "pexels-6863183",
+    "pexels-4386370"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1590283603385-17ffb3a7f81f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "office",
+    "city",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

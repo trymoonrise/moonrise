@@ -1,0 +1,45 @@
+{
+  "key": "legal",
+  "label": "law / attorney / legal",
+  "match": "/law|attorney|legal|lawyer|paralegal|litigation|notary/i",
+  "folder": "worker/stock/legal",
+  "images": [
+    "photo-1589829545856-d10d557cf95f",
+    "photo-1450101499163-c8848c66ca85",
+    "photo-1505664194779-8beaceb93744",
+    "photo-1521791136064-7986c2920216",
+    "photo-1454165804606-c3d57bc86b40",
+    "photo-1497366216548-37526070297c",
+    "photo-1486406146926-c627a92ad1ab",
+    "photo-1556761175-5973dc0f32e7",
+    "pexels-5668473",
+    "pexels-6077326",
+    "pexels-5668858",
+    "pexels-5669619"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6077326/pexels-photo-6077326.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/5669619/pexels-photo-5669619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "office",
+    "city",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

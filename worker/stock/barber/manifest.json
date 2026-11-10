@@ -1,0 +1,49 @@
+{
+  "key": "barber",
+  "label": "barbershop / men's cuts / fades",
+  "match": "/barber|fade|men'?s cut|clipper|barbershop|beard trim|shave shop/i",
+  "folder": "worker/stock/barber",
+  "images": [
+    "photo-1503951914875-452162b0f3f1",
+    "photo-1621605815971-fbc98d665033",
+    "photo-1599351431202-1e0f0137899a",
+    "photo-1585747860715-2ba37e788b70",
+    "photo-1622286342621-4bd786c2447c",
+    "photo-1493256338651-d82f87cc8093",
+    "photo-1605497788044-47f0c47b5f7f",
+    "photo-1562322140-8baeececf3df",
+    "photo-1517832606299-7ae9b720a186",
+    "photo-1633681926022-84c23e8cb2d6",
+    "photo-1522337360788-8b57ee1e0d60",
+    "photo-1507003211169-0a1dd7228f2d",
+    "pexels-897262",
+    "pexels-1319460"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1493256338651-d82f87cc8093?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1605497788044-47f0c47b5f7f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1517832606299-7ae9b720a186?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1522337360788-8b57ee1e0d60?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/897262/pexels-photo-897262.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1319460/pexels-photo-1319460.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "barber",
+    "people",
+    "ambient"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

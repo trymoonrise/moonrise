@@ -3,6 +3,35 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "2.9.7",
+      "date": "2026-11-09",
+      "title": "Real Docs demos and policy cutover",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Docs demos use the same Builder and Editor controls as Studio instead of lookalike placeholders.",
+            "Docs gets a modern shell with a frosted sidebar, softer page atmosphere, and clearer article cards.",
+            "Privacy, Terms, Refunds, Legal, Guide, Help, and Connecting Domains pages are removed; those URLs permanently redirect into Docs."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "The Studio account menu Help item opens Docs.",
+            "Generation keeps running after you leave the page, and the announce bar says you can navigate away."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "Generate continues after the HTTP response on Vercel Fluid Compute so long builds stay durable.",
+            "Stock media seeding can fill local category folders from the library manifests."
+          ]
+        }
+      ]
+    },
+    {
       "version": "2.9.6",
       "date": "2026-11-09",
       "title": "Docs hub and clearer FAQ",

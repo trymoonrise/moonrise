@@ -1,6 +1,6 @@
 {
   "name": "moonrise",
-  "version": "2.9.6",
+  "version": "2.9.7",
   "private": true,
   "description": "Moonrise Studio — find, build, preview, get paid, go live. https://trymoonrise.com",
   "engines": {
@@ -9,10 +9,12 @@
   "scripts": {
     "vercel-build": "node worker/scripts/sync-craft-prompt.js && node worker/scripts/sync-last-commit.js",
     "notes": "node scripts/render-release-notes.mjs",
-    "release:github": "node scripts/publish-github-release.mjs"
+    "release:github": "node scripts/publish-github-release.mjs",
+    "stock:seed": "node worker/scripts/seed-stock-folders.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
+    "@vercel/functions": "^3.3.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.22.2",

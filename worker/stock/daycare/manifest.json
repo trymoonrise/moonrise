@@ -1,0 +1,45 @@
+{
+  "key": "daycare",
+  "label": "daycare / childcare / kids",
+  "match": "/daycare|childcare|preschool|kids|children|nanny|after ?school/i",
+  "folder": "worker/stock/daycare",
+  "images": [
+    "photo-1503454537195-1dcabb73ffb9",
+    "photo-1587654780291-39c9404d745b",
+    "photo-1588072432836-e10032774350",
+    "photo-1516627145497-ae6968895b74",
+    "photo-1476703993599-0035a21b17a9",
+    "photo-1596464716127-f2a82984de30",
+    "photo-1503676260728-1c00da094a0b",
+    "photo-1509062522246-3755977927d7",
+    "pexels-3662667",
+    "pexels-3662846",
+    "pexels-8613089",
+    "pexels-3662850"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1587654780291-39c9404d745b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/3662667/pexels-photo-3662667.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3662846/pexels-photo-3662846.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3662850/pexels-photo-3662850.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "people",
+    "soft",
+    "nature"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

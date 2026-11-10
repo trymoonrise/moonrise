@@ -1,0 +1,43 @@
+{
+  "key": "pool",
+  "label": "pool service / spa pools",
+  "match": "/pool (?:service|clean|repair)|swimming pool|hot tub service|pool maintenance/i",
+  "folder": "worker/stock/pool",
+  "images": [
+    "photo-1576013551627-0cc20b96c2a7",
+    "photo-1572331160307-795b9e87ce78",
+    "photo-1562778612-e1e0cda9915c",
+    "photo-1540541338287-41700207dee6",
+    "photo-1519046904884-53103b34b206",
+    "photo-1507525428034-b723cf961d3e",
+    "photo-1473496169904-658ba7c44d8a",
+    "pexels-261327",
+    "pexels-189296",
+    "pexels-261394",
+    "photo-1439066615861-d1af74d74000"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1572331160307-795b9e87ce78?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1562778612-e1e0cda9915c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/261327/pexels-photo-261327.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/261394/pexels-photo-261394.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "ocean",
+    "nature",
+    "soft"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

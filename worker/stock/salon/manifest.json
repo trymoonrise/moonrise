@@ -1,0 +1,49 @@
+{
+  "key": "salon",
+  "label": "hair salon / beauty / blowouts",
+  "match": "/hair salon|beauty salon|hairstylist|blowout|colorist|hairdresser/i",
+  "folder": "worker/stock/salon",
+  "images": [
+    "photo-1560066984-138dadb4c035",
+    "photo-1522337360788-8b57ee1e0d60",
+    "photo-1516975080664-ed2fc6a32937",
+    "photo-1487412947147-5cebf100ffc2",
+    "photo-1522335789203-aabd1fc54bc9",
+    "photo-1522337094846-8a818192de1f",
+    "photo-1633681926022-84c23e8cb2d6",
+    "photo-1595476108010-b4d1f102b1b1",
+    "photo-1562322140-8baeececf3df",
+    "photo-1522337660859-02fbefca4702",
+    "photo-1595475038784-bbe439ff41e6",
+    "photo-1616394584738-fc6e612e71b9",
+    "pexels-3993449",
+    "pexels-3993324"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1522337360788-8b57ee1e0d60?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1522337094846-8a818192de1f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1595475038784-bbe439ff41e6?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3993324/pexels-photo-3993324.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "salon",
+    "soft",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

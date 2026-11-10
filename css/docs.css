@@ -336,19 +336,22 @@ body.ms-public-doc .ms-help-legal {
 body.ms-docs-page {
   min-height: 100vh;
   margin: 0;
-  background: #f5f5f7 !important;
+  background:
+    radial-gradient(120% 80% at 0% -10%, rgba(191, 211, 227, 0.35), transparent 55%),
+    radial-gradient(90% 70% at 100% 0%, rgba(255, 255, 255, 0.9), transparent 50%),
+    linear-gradient(180deg, #f7f7f8 0%, #efeff2 100%) !important;
   color: #1d1d1f !important;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body.ms-docs-page .ms-docs-layout {
   box-sizing: border-box;
-  width: min(100% - 2rem, 72rem);
+  width: min(100% - 2rem, 74rem);
   margin: 0 auto;
-  padding: 5.75rem 0 4rem;
+  padding: 5.75rem 0 4.5rem;
   display: grid;
-  grid-template-columns: minmax(14rem, 17rem) minmax(0, 1fr);
-  gap: 1.75rem 2rem;
+  grid-template-columns: minmax(15rem, 17.5rem) minmax(0, 1fr);
+  gap: 1.5rem 2.25rem;
   align-items: start;
 }
 
@@ -357,7 +360,12 @@ body.ms-docs-page .ms-docs-sidebar {
   top: 4.75rem;
   max-height: calc(100vh - 5.5rem);
   overflow: auto;
-  padding: 0.15rem 0.15rem 1rem 0;
+  padding: 0.85rem 0.85rem 1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+  backdrop-filter: blur(14px);
 }
 
 body.ms-docs-page .ms-docs-mobile-toggle {
@@ -380,18 +388,20 @@ body.ms-docs-page .ms-docs-search {
   width: 100%;
   box-sizing: border-box;
   margin: 0 0 0.85rem;
-  padding: 0.65rem 0.8rem;
-  border: 1px solid #e5e5ea;
-  border-radius: 12px;
-  background: #fff;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
   color: #1d1d1f;
   font: inherit;
   font-size: 0.92rem;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
 }
 
 body.ms-docs-page .ms-docs-search:focus {
-  outline: 2px solid #1d1d1f;
+  outline: 2px solid rgba(35, 36, 39, 0.55);
   outline-offset: 1px;
+  border-color: transparent;
 }
 
 body.ms-docs-page .ms-docs-nav {
@@ -497,12 +507,13 @@ body.ms-docs-page .ms-docs-hero .ms-doc-lead {
 body.ms-docs-page .ms-docs-main .ms-doc-block,
 body.ms-docs-page .ms-docs-main .ms-legal-article {
   scroll-margin-top: 5.25rem;
-  background: #fff !important;
-  border: 0 !important;
-  border-radius: 18px !important;
-  box-shadow: none !important;
-  padding: 1.15rem 1.2rem !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(15, 23, 42, 0.05) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.035) !important;
+  padding: 1.25rem 1.3rem !important;
   color: #1d1d1f !important;
+  backdrop-filter: blur(8px);
 }
 
 body.ms-docs-page .ms-docs-main h2.ms-doc-title,
@@ -520,10 +531,11 @@ body.ms-docs-page .ms-docs-main h3 {
   font-weight: 650 !important;
 }
 
-body.ms-docs-page .ms-docs-main p,
-body.ms-docs-page .ms-docs-main li,
-body.ms-docs-page .ms-settings-hint,
-body.ms-docs-page .ms-help-list li {
+body.ms-docs-page .ms-docs-main .ms-doc-block > p,
+body.ms-docs-page .ms-docs-main .ms-legal-article > p,
+body.ms-docs-page .ms-docs-main .ms-settings-hint,
+body.ms-docs-page .ms-docs-main .ms-help-list > li,
+body.ms-docs-page .ms-docs-main .ms-help-steps > li {
   color: #3a3a3c !important;
   font-size: 0.98rem !important;
   line-height: 1.55 !important;
@@ -651,15 +663,15 @@ body.ms-docs-page code {
     position: static;
     max-height: none;
     overflow: visible;
-    padding: 0;
+    padding: 0.85rem;
   }
 
   body.ms-docs-page .ms-docs-sidebar-panel {
     display: none;
-    margin-bottom: 0.5rem;
-    padding: 0.85rem;
-    border-radius: 16px;
-    background: #fff;
+    margin-bottom: 0.15rem;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
   }
 
   body.ms-docs-page .ms-docs-sidebar.is-mobile-open .ms-docs-sidebar-panel {
@@ -677,9 +689,9 @@ body.ms-docs-page code {
   }
 }
 
-/* Docs UI demos — read-only product chrome */
+/* Docs UI demos — real Studio chrome, read-only stage */
 body.ms-docs-page .ms-docs-demo {
-  margin: 1rem 0 1.15rem;
+  margin: 1.05rem 0 1.2rem;
   padding: 0;
   border: 0;
 }
@@ -687,124 +699,59 @@ body.ms-docs-page .ms-docs-demo {
 body.ms-docs-page .ms-docs-demo-caption {
   margin: 0 0 0.55rem;
   color: #6e6e73 !important;
-  font-size: 0.82rem !important;
-  font-weight: 650;
-  letter-spacing: 0.02em;
+  font-size: 0.78rem !important;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-body.ms-docs-page .ms-docs-demo-frame {
+body.ms-docs-page .ms-docs-demo-stage {
   pointer-events: none;
   user-select: none;
-  padding: 1rem 1.05rem;
-  border-radius: 16px;
-  background: #fff;
-  border: 1px solid #e8e8ed;
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+  padding: 1.1rem 1.15rem;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 248, 250, 0.94));
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 14px 28px rgba(15, 23, 42, 0.05);
+  color: #232427;
+  -webkit-text-fill-color: initial;
 }
 
-body.ms-docs-page .ms-docs-demo-frame--builder .ms-bs-mode-tabs {
+body.ms-docs-page .ms-docs-demo-stage--chrome {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
-  margin: 0 0 0.85rem;
-}
-
-body.ms-docs-page .ms-docs-demo-frame--builder .ms-bs-mode-tab {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.2rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  background: #f5f5f7;
-  color: #6e6e73;
-  font-size: 0.88rem;
-  font-weight: 650;
-  letter-spacing: -0.02em;
-}
-
-body.ms-docs-page .ms-docs-demo-frame--builder .ms-bs-mode-tab.is-active {
-  background: #1d1d1f;
-  color: #fff;
-}
-
-body.ms-docs-page .ms-docs-demo-card {
-  display: grid;
-  gap: 0.35rem;
-  padding: 0.85rem 0.95rem;
-  border-radius: 12px;
-  background: #f5f5f7;
-}
-
-body.ms-docs-page .ms-docs-demo-card strong {
-  font-size: 0.98rem;
-  letter-spacing: -0.02em;
-}
-
-body.ms-docs-page .ms-docs-demo-card p {
-  margin: 0 !important;
-  color: #6e6e73 !important;
-  font-size: 0.9rem !important;
-  line-height: 1.45 !important;
-}
-
-body.ms-docs-page .ms-docs-demo-frame--chrome {
-  display: grid;
-  gap: 0.75rem;
-}
-
-body.ms-docs-page .ms-docs-demo-modes,
-body.ms-docs-page .ms-docs-demo-icons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-body.ms-docs-page .ms-docs-demo-mode {
-  min-height: 2.1rem;
-  padding: 0.3rem 0.8rem;
-  border-radius: 10px;
-  background: #f5f5f7;
-  color: #6e6e73;
-  font-size: 0.88rem;
-  font-weight: 650;
-}
-
-body.ms-docs-page .ms-docs-demo-mode.is-active {
-  background: #1d1d1f;
-  color: #fff;
-}
-
-body.ms-docs-page .ms-docs-demo-icons span {
-  min-height: 2rem;
-  padding: 0.28rem 0.65rem;
-  border-radius: 9px;
-  border: 1px solid #e5e5ea;
-  color: #3a3a3c;
-  font-size: 0.78rem;
-  font-weight: 650;
-}
-
-body.ms-docs-page .ms-docs-demo-price .ms-lb-price-main {
-  display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem 1rem;
 }
 
-body.ms-docs-page .ms-docs-demo-price .ms-lb-price-label {
-  font-size: 0.95rem;
-  font-weight: 650;
-  letter-spacing: -0.02em;
+body.ms-docs-page .ms-docs-demo-stage .ms-bs-mode-tabs {
+  max-width: 28rem;
 }
 
-body.ms-docs-page .ms-docs-demo-price-value {
-  display: inline-block;
-  min-width: 3.5rem;
-  font-size: 1.35rem;
-  font-weight: 650;
-  letter-spacing: -0.03em;
+body.ms-docs-page .ms-docs-demo-stage .ms-lb-publish-actions {
+  max-width: 22rem;
+}
+
+body.ms-docs-page .ms-docs-demo-stage .ms-lb-widget {
+  max-width: 24rem;
+}
+
+body.ms-docs-page .ms-docs-demo-stage button,
+body.ms-docs-page .ms-docs-demo-stage input,
+body.ms-docs-page .ms-docs-demo-stage label,
+body.ms-docs-page .ms-docs-demo-stage h3,
+body.ms-docs-page .ms-docs-demo-stage p,
+body.ms-docs-page .ms-docs-demo-stage span,
+body.ms-docs-page .ms-docs-demo-stage strong {
+  color: revert !important;
+  font-size: revert !important;
+  line-height: revert !important;
+  -webkit-text-fill-color: revert !important;
+  margin: revert;
 }
 
 body.ms-docs-page .ms-docs-demo-note {
@@ -812,124 +759,4 @@ body.ms-docs-page .ms-docs-demo-note {
   color: #6e6e73 !important;
   font-size: 0.88rem !important;
   line-height: 1.45 !important;
-}
-
-body.ms-docs-page .ms-docs-demo-frame--actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-body.ms-docs-page .ms-docs-demo-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.35rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 12px;
-  background: #f5f5f7;
-  color: #1d1d1f;
-  font-size: 0.9rem;
-  font-weight: 650;
-  letter-spacing: -0.02em;
-}
-
-body.ms-docs-page .ms-docs-demo-pill--primary {
-  background: #1d1d1f;
-  color: #fff;
-}
-
-body.ms-docs-page .ms-docs-demo-pill--quiet {
-  color: #6e6e73;
-}
-
-body.ms-docs-page .ms-docs-demo-pill--danger {
-  color: #b42318;
-  background: #fef3f2;
-}
-
-body.ms-docs-page .ms-docs-demo-widget {
-  display: grid;
-  gap: 0.75rem;
-}
-
-body.ms-docs-page .ms-docs-demo-widget-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-body.ms-docs-page .ms-docs-demo-widget-head strong {
-  display: block;
-  font-size: 0.98rem;
-  letter-spacing: -0.02em;
-}
-
-body.ms-docs-page .ms-docs-demo-widget-head p {
-  margin: 0.15rem 0 0 !important;
-  color: #6e6e73 !important;
-  font-size: 0.85rem !important;
-}
-
-body.ms-docs-page .ms-docs-demo-toggle {
-  width: 2.6rem;
-  height: 1.45rem;
-  border-radius: 999px;
-  background: #d1d1d6;
-  position: relative;
-  flex: none;
-}
-
-body.ms-docs-page .ms-docs-demo-toggle::after {
-  content: "";
-  position: absolute;
-  top: 0.15rem;
-  left: 0.15rem;
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-}
-
-body.ms-docs-page .ms-docs-demo-toggle.is-on {
-  background: #1d1d1f;
-}
-
-body.ms-docs-page .ms-docs-demo-toggle.is-on::after {
-  left: auto;
-  right: 0.15rem;
-}
-
-body.ms-docs-page .ms-docs-demo-widget-body {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-body.ms-docs-page .ms-docs-demo-chip {
-  min-height: 2rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: 9px;
-  background: #f5f5f7;
-  color: #6e6e73;
-  font-size: 0.85rem;
-  font-weight: 650;
-}
-
-body.ms-docs-page .ms-docs-demo-chip.is-active {
-  background: #1d1d1f;
-  color: #fff;
-}
-
-body.ms-docs-page .ms-docs-demo-btn {
-  margin-left: auto;
-  min-height: 2rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 9px;
-  background: #1d1d1f;
-  color: #fff;
-  font-size: 0.85rem;
-  font-weight: 650;
 }

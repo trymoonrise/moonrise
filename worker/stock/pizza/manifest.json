@@ -1,0 +1,45 @@
+{
+  "key": "pizza",
+  "label": "pizza / italian / casual food",
+  "match": "/pizza|italian|pizzaria|slice|calzone/i",
+  "folder": "worker/stock/pizza",
+  "images": [
+    "photo-1513104890138-7c749659a591",
+    "photo-1574071318508-1cdbab80d002",
+    "photo-1593560708920-61dd98c46a4e",
+    "photo-1571997478779-2adcbbe9ab2f",
+    "photo-1604382354936-07c5d9983bd3",
+    "photo-1588315029754-2dd089d39a1a",
+    "photo-1628840042765-356cda07504e",
+    "photo-1565299624946-b28f40a0ae38",
+    "pexels-905847",
+    "pexels-2147491",
+    "pexels-1653877",
+    "pexels-1566837"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/905847/pexels-photo-905847.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1653877/pexels-photo-1653877.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "kitchen",
+    "restaurant",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

@@ -1,0 +1,45 @@
+{
+  "key": "fitness",
+  "label": "gym / fitness / training",
+  "match": "/gym|fitness|crossfit|personal train|workout|athletic|weightlifting|boxing/i",
+  "folder": "worker/stock/fitness",
+  "images": [
+    "photo-1534438327276-14e5300c3a48",
+    "photo-1517836357463-d25dfeac3438",
+    "photo-1571019614242-c5c5dee9f50b",
+    "photo-1540497077202-7c8a3999166f",
+    "photo-1518611012118-696072aa579a",
+    "photo-1576678927484-cc907957088c",
+    "photo-1571019613454-1cb2f99b2d8b",
+    "photo-1583454110551-21f2fa2afe61",
+    "photo-1517963879433-6ad2b056d712",
+    "photo-1541534741688-6078c6bfb5c5",
+    "pexels-841130",
+    "pexels-416778"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/416778/pexels-photo-416778.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "workout",
+    "city",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/2098989/2098989-hd_1920_1080_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

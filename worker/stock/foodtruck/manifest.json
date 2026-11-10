@@ -1,0 +1,45 @@
+{
+  "key": "foodtruck",
+  "label": "food truck / street food",
+  "match": "/food ?truck|street food|mobile kitchen|taco truck/i",
+  "folder": "worker/stock/foodtruck",
+  "images": [
+    "photo-1565123409695-7b5ef63a2bbf",
+    "photo-1565299585323-38d6b0865b47",
+    "photo-1504674900247-0877df9cc836",
+    "photo-1565299624946-b28f40a0ae38",
+    "photo-1544025162-d76694265947",
+    "photo-1555939594-58d7cb561ad1",
+    "pexels-1651166",
+    "pexels-1651165",
+    "pexels-2092898",
+    "pexels-2338407",
+    "photo-1552566626-52f8b828add9",
+    "photo-1513104890138-7c749659a591"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1565123409695-7b5ef63a2bbf?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/1651166/pexels-photo-1651166.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1651165/pexels-photo-1651165.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/2092898/pexels-photo-2092898.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/2338407/pexels-photo-2338407.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "kitchen",
+    "city",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

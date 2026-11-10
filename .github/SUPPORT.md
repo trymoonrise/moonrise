@@ -25,6 +25,6 @@ For a vulnerability, use [SECURITY.md](../SECURITY.md). Do not open a public iss
 
 ## Policies
 
-- [Privacy Policy](https://trymoonrise.com/privacy)
-- [Terms of Service](https://trymoonrise.com/terms)
-- [Refunds](https://trymoonrise.com/refund)
+- [Privacy Policy](https://trymoonrise.com/docs#privacy)
+- [Terms of Service](https://trymoonrise.com/docs#terms)
+- [Refunds](https://trymoonrise.com/docs#refunds)

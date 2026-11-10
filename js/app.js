@@ -23,7 +23,7 @@
   const ACCOUNT = [
     { id: "settings", href: "settings", label: "Settings", icon: "gear" },
     { id: "course", href: "course", label: "Course", icon: "grad" },
-    { id: "help", href: "help", label: "Help", icon: "help" },
+    { id: "help", href: "docs", label: "Docs", icon: "help" },
     {
       id: "telegram",
       href: (window.SITE_CONFIG && window.SITE_CONFIG.telegramUrl) || "https://t.me/c/3541685239/1",
@@ -2146,13 +2146,10 @@
     "login",
     "orders",
     "contact",
-    "legal",
     "report",
     "download",
     "ui-library",
     "docs",
-    "guide",
-    "help",
   ]);
 
   async function boot() {
@@ -2228,7 +2225,7 @@
     }
     if (document.querySelector('script[src*="generation-announce.js"]')) return;
     const s = document.createElement("script");
-    s.src = "js/generation-announce.js?v=20260721-float";
+    s.src = "js/generation-announce.js?v=20261110-durable";
     s.defer = true;
     document.head.appendChild(s);
   }
@@ -2375,8 +2372,6 @@
       pricing: 1,
       calendar: 1,
       book: 1,
-      help: 1,
-      guide: 1,
       docs: 1,
     };
     return studio[file] ? file : "";

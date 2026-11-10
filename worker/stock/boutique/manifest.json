@@ -1,0 +1,45 @@
+{
+  "key": "boutique",
+  "label": "boutique / retail / clothing",
+  "match": "/boutique|clothing|apparel|fashion|retail shop|gift shop|thrift/i",
+  "folder": "worker/stock/boutique",
+  "images": [
+    "photo-1441986300917-64674bd600d8",
+    "photo-1445205170230-053b83016050",
+    "photo-1483985988355-763728e1935b",
+    "photo-1490481651871-ab68de25d43d",
+    "photo-1469334031218-e382a71b716b",
+    "photo-1558171813-4c088753af8f",
+    "pexels-994523",
+    "pexels-135620",
+    "pexels-1884581",
+    "pexels-1488463",
+    "photo-1472851294608-062f824d29cc",
+    "photo-1555529771-835f59fc5efe"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1558171813-4c088753af8f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/135620/pexels-photo-135620.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1884581/pexels-photo-1884581.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1488463/pexels-photo-1488463.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1555529771-835f59fc5efe?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "people",
+    "soft",
+    "city"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

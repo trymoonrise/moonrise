@@ -1,0 +1,45 @@
+{
+  "key": "plumbing",
+  "label": "plumbing / pipes / water heaters",
+  "match": "/plumb|pipe|drain|water heater|faucet|toilet|sewer|clog/i",
+  "folder": "worker/stock/plumbing",
+  "images": [
+    "photo-1621905251189-08b45d6a269e",
+    "photo-1584622650111-993a426fbf0a",
+    "photo-1607472586893-edb57bdc0e39",
+    "photo-1558618666-fcd25c85cd64",
+    "photo-1504148455328-c376907d081c",
+    "photo-1581092160562-40aa08e78837",
+    "photo-1621905252507-b35492cc74b4",
+    "photo-1581092795360-fd1ca04f0952",
+    "photo-1556911220-bff31c812dba",
+    "photo-1504328348525-c112f609b9c0",
+    "pexels-1249611",
+    "pexels-162553"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504328348525-c112f609b9c0?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/162553/pexels-photo-162553.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "construction",
+    "ambient",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3209829/3209829-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

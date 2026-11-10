@@ -1,0 +1,45 @@
+{
+  "key": "pestcontrol",
+  "label": "pest control / exterminator",
+  "match": "/pest|exterminat|termite|rodent|bug control|mosquito/i",
+  "folder": "worker/stock/pestcontrol",
+  "images": [
+    "photo-1581578731548-c64695cc6952",
+    "photo-1504148455328-c376907d081c",
+    "photo-1558618666-fcd25c85cd64",
+    "photo-1621905251189-08b45d6a269e",
+    "photo-1607472586893-edb57bdc0e39",
+    "photo-1560518883-ce09059eeffa",
+    "photo-1600585154340-be6161a56a0c",
+    "photo-1570129477492-45c003edd2be",
+    "pexels-209251",
+    "pexels-2219024",
+    "pexels-1249611",
+    "photo-1504328348525-c112f609b9c0"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/209251/pexels-photo-209251.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1504328348525-c112f609b9c0?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "construction",
+    "ambient",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3209829/3209829-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

@@ -1,0 +1,45 @@
+{
+  "key": "medspa",
+  "label": "med spa / aesthetics / injectables",
+  "match": "/med ?spa|medical spa|botox|filler|aesthet|laser hair|skincare clinic/i",
+  "folder": "worker/stock/medspa",
+  "images": [
+    "photo-1570172619644-dfd03ed5d881",
+    "photo-1515377905703-c4788e51af15",
+    "photo-1540555700478-4be289fbecef",
+    "photo-1616394584738-fc6e612e71b9",
+    "photo-1556228578-0d85b1a4d571",
+    "photo-1522335789203-aabd1fc54bc9",
+    "photo-1487412947147-5cebf100ffc2",
+    "photo-1579684385127-1ef15d508118",
+    "pexels-3738349",
+    "pexels-3738355",
+    "pexels-3764013",
+    "pexels-3997991"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/3738349/pexels-photo-3738349.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3738355/pexels-photo-3738355.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3764013/pexels-photo-3764013.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3997991/pexels-photo-3997991.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "spa",
+    "soft",
+    "medical"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/3045163/3045163-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

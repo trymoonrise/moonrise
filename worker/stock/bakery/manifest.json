@@ -1,0 +1,45 @@
+{
+  "key": "bakery",
+  "label": "bakery / pastry / bread",
+  "match": "/bakery|pastry|baker|croissant|sourdough|donut shop|cake shop/i",
+  "folder": "worker/stock/bakery",
+  "images": [
+    "photo-1509440159596-0249088772ff",
+    "photo-1578985545062-69928b1d9587",
+    "photo-1517433670267-08bbd4be890f",
+    "photo-1495147466023-ac5c588e2e94",
+    "photo-1485808191679-5f86510681a2",
+    "photo-1559925393-8be0ec4767c8",
+    "photo-1509042239860-f550ce710b93",
+    "photo-1495474472287-4d71bcdd2085",
+    "pexels-1070850",
+    "pexels-1775043",
+    "pexels-205961",
+    "pexels-291528"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1517433670267-08bbd4be890f?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1495147466023-ac5c588e2e94?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/1070850/pexels-photo-1070850.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/205961/pexels-photo-205961.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "bakery",
+    "coffee",
+    "kitchen"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/4763824/4763824-uhd_2560_1440_24fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/4763824/4763824-uhd_2560_1440_24fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

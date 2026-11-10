@@ -1,0 +1,45 @@
+{
+  "key": "agency",
+  "label": "marketing / design / tech agency",
+  "match": "/agency|marketing|design studio|branding|digital|saas|software|startup|web design|seo/i",
+  "folder": "worker/stock/agency",
+  "images": [
+    "photo-1497366811353-6870744d04b2",
+    "photo-1497215728101-856f4ea42174",
+    "photo-1521737711867-e3b97375f902",
+    "photo-1552664730-d307ca884978",
+    "photo-1600880292203-757bb62b4baf",
+    "photo-1517245386807-bb43f82c33c4",
+    "photo-1553877522-43269d4ea984",
+    "photo-1531482615713-2afd69097998",
+    "pexels-3184291",
+    "pexels-3182812",
+    "pexels-3184465",
+    "pexels-3861969"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "office",
+    "city",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

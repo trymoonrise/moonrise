@@ -191,7 +191,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-ink">
-  <link rel="stylesheet" href="css/docs.css?v=20261109-docs-hub">
+  <link rel="stylesheet" href="css/docs.css?v=20261110-docs-real">
   <link rel="stylesheet" href="css/site-nav.css?v=20261109-line">
 </head>
 <body data-page="docs" class="ms-public-doc ms-docs-page" data-docs>

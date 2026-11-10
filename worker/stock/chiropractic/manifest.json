@@ -1,0 +1,45 @@
+{
+  "key": "chiropractic",
+  "label": "chiropractic / spine care",
+  "match": "/chiro|chiropractic|spinal|adjustment/i",
+  "folder": "worker/stock/chiropractic",
+  "images": [
+    "photo-1576091160399-112ba8d25d1d",
+    "photo-1576091160550-2173dba07efd",
+    "photo-1551076805-e1869033fa41",
+    "photo-1516574187841-cb9cc2ca948b",
+    "photo-1579684385127-1ef15d508118",
+    "photo-1544367567-0f2fcb009e0b",
+    "photo-1506126613408-eca07a6958b0",
+    "pexels-3823207",
+    "pexels-4506109",
+    "pexels-4506105",
+    "pexels-3771118",
+    "photo-1559839734-2b71ea197ec2"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1576091160550-2173dba07efd?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1551076805-e1869033fa41?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1506126613408-eca07a6958b0?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/3823207/pexels-photo-3823207.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4506105/pexels-photo-4506105.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3771118/pexels-photo-3771118.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "medical",
+    "soft",
+    "yoga"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3045163/3045163-hd_1920_1080_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/4056453/4056453-hd_1920_1080_30fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

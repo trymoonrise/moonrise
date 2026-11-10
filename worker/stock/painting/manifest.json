@@ -1,0 +1,45 @@
+{
+  "key": "painting",
+  "label": "painting / interior finish",
+  "match": "/paint|painter|drywall|wallpaper|interior finish/i",
+  "folder": "worker/stock/painting",
+  "images": [
+    "photo-1562259949-e8e72308cbe0",
+    "photo-1589939705387-ba8829e0ac0b",
+    "photo-1556911220-bff31c812dba",
+    "photo-1484154218962-a197022b5858",
+    "photo-1556912173-46c336c7fd55",
+    "photo-1600566752355-35792bedcfea",
+    "photo-1600585152220-90363fe7e115",
+    "photo-1504148455328-c376907d081c",
+    "pexels-6474471",
+    "pexels-6474475",
+    "pexels-1571460",
+    "photo-1563453392212-326f5e854473"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1562259949-e8e72308cbe0?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1589939705387-ba8829e0ac0b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/6474471/pexels-photo-6474471.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6474475/pexels-photo-6474475.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "construction",
+    "soft",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3209829/3209829-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

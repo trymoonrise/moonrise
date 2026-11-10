@@ -1,0 +1,45 @@
+{
+  "key": "hvac",
+  "label": "HVAC / heating / air conditioning",
+  "match": "/hvac|heating|air ?condition|furnace|ac unit|duct|thermostat|heat pump/i",
+  "folder": "worker/stock/hvac",
+  "images": [
+    "photo-1581094794329-c8112a89af12",
+    "photo-1504307651254-35680f356dfd",
+    "photo-1581092160562-40aa08e78837",
+    "photo-1621905251189-08b45d6a269e",
+    "photo-1558618666-fcd25c85cd64",
+    "photo-1565043589251-bf9bf5a55c0b",
+    "photo-1541888946425-d81bb19240f5",
+    "photo-1503387762-592deb58ef4e",
+    "pexels-585419",
+    "pexels-1249611",
+    "pexels-209251",
+    "photo-1607400201889-565b1ee75f8c"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1565043589251-bf9bf5a55c0b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/585419/pexels-photo-585419.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/209251/pexels-photo-209251.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1607400201889-565b1ee75f8c?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "construction",
+    "ambient",
+    "city"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3209829/3209829-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

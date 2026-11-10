@@ -1,0 +1,45 @@
+{
+  "key": "construction",
+  "label": "construction / contracting / remodeling",
+  "match": "/construct|contractor|remodel|builder|renovat|framing|carpentry|general contract|handyman/i",
+  "folder": "worker/stock/construction",
+  "images": [
+    "photo-1504307651254-35680f356dfd",
+    "photo-1541888946425-d81bb19240f5",
+    "photo-1503387762-592deb58ef4e",
+    "photo-1581094794329-c8112a89af12",
+    "photo-1589939705387-ba8829e0ac0b",
+    "photo-1562259949-e8e72308cbe0",
+    "photo-1607400201889-565b1ee75f8c",
+    "photo-1504148455328-c376907d081c",
+    "pexels-2219024",
+    "pexels-1216589",
+    "pexels-159306",
+    "pexels-209251"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1589939705387-ba8829e0ac0b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1562259949-e8e72308cbe0?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1607400201889-565b1ee75f8c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/159306/pexels-photo-159306.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/209251/pexels-photo-209251.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "construction",
+    "city",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3209829/3209829-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

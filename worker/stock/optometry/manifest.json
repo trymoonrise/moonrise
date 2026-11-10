@@ -1,0 +1,45 @@
+{
+  "key": "optometry",
+  "label": "optometry / eye care / glasses",
+  "match": "/optom|eye care|optometrist|vision|eyeglasses|ophthalm/i",
+  "folder": "worker/stock/optometry",
+  "images": [
+    "photo-1574258495973-f010dfbb5041",
+    "photo-1591076482161-42ce6da69f67",
+    "photo-1577803645773-f96470509666",
+    "photo-1509695507497-903c140aa78b",
+    "photo-1579684385127-1ef15d508118",
+    "photo-1559839734-2b71ea197ec2",
+    "pexels-947885",
+    "pexels-3762800",
+    "pexels-57690",
+    "pexels-279906",
+    "photo-1516549655169-df83a0774514",
+    "photo-1576091160399-112ba8d25d1d"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1574258495973-f010dfbb5041?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1591076482161-42ce6da69f67?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1509695507497-903c140aa78b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/947885/pexels-photo-947885.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3762800/pexels-photo-3762800.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/57690/pexels-photo-57690.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/279906/pexels-photo-279906.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "soft",
+    "medical",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3045163/3045163-hd_1920_1080_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

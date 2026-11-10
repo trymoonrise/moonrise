@@ -1,0 +1,49 @@
+{
+  "key": "spa",
+  "label": "spa / massage / wellness",
+  "match": "/\\bspa\\b|massage|wellness|facial|aromatherapy|sauna|hot stone|relaxation/i",
+  "folder": "worker/stock/spa",
+  "images": [
+    "photo-1540555700478-4be289fbecef",
+    "photo-1556228578-0d85b1a4d571",
+    "photo-1600334129128-685c5582fd35",
+    "photo-1544161515-4ab6ce6db874",
+    "photo-1515377905703-c4788e51af15",
+    "photo-1570172619644-dfd03ed5d881",
+    "photo-1540553016722-983e48a2cd10",
+    "photo-1519823551278-64ac92734fb1",
+    "photo-1596178065887-1198b6148b2b",
+    "photo-1507652313519-d4e9174996dd",
+    "photo-1515378791036-0648a3ef77b2",
+    "photo-1578683010236-d716f9a3f461",
+    "pexels-3757942",
+    "pexels-3865676"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1540553016722-983e48a2cd10?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/3757942/pexels-photo-3757942.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3865676/pexels-photo-3865676.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "spa",
+    "massage",
+    "soft"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/9335816/9335816-hd_1920_1080_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

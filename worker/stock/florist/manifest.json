@@ -1,0 +1,45 @@
+{
+  "key": "florist",
+  "label": "florist / flowers / arrangements",
+  "match": "/florist|flower shop|bouquet|floral design|wedding flower/i",
+  "folder": "worker/stock/florist",
+  "images": [
+    "photo-1490750967868-88aa4486c946",
+    "photo-1468327768560-75b778cbb551",
+    "photo-1455659817273-f96807779a8a",
+    "photo-1563241527-3004b7be0ffd",
+    "photo-1485955900006-10f4d324d411",
+    "photo-1470058869958-2a77ade41c02",
+    "photo-1466781783364-36c95514d2c8",
+    "photo-1501004318641-b39e6451bec6",
+    "pexels-931177",
+    "pexels-931158",
+    "pexels-56866",
+    "pexels-1408221"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1468327768560-75b778cbb551?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1455659817273-f96807779a8a?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1470058869958-2a77ade41c02?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1466781783364-36c95514d2c8?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/931177/pexels-photo-931177.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/931158/pexels-photo-931158.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/56866/pexels-photo-56866.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1408221/pexels-photo-1408221.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "floral",
+    "nature",
+    "soft"
+  ],
+  "videoUrls": {
+    "hero": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    "ambient": "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

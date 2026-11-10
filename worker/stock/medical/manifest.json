@@ -1,0 +1,45 @@
+{
+  "key": "medical",
+  "label": "medical / clinic / healthcare",
+  "match": "/clinic|medical|doctor|health|urgent care|pediatric|family medicine/i",
+  "folder": "worker/stock/medical",
+  "images": [
+    "photo-1631217868264-e5b90bb7e133",
+    "photo-1579684385127-1ef15d508118",
+    "photo-1516549655169-df83a0774514",
+    "photo-1666214280557-f1b5022eb634",
+    "photo-1559839734-2b71ea197ec2",
+    "photo-1582750433449-648ed127bb54",
+    "photo-1576091160399-112ba8d25d1d",
+    "photo-1584820927498-cfe50432d146",
+    "photo-1576091160550-2173dba07efd",
+    "photo-1551076805-e1869033fa41",
+    "pexels-40568",
+    "pexels-263402"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1584820927498-cfe50432d146?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1576091160550-2173dba07efd?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1551076805-e1869033fa41?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/40568/pexels-photo-40568.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "medical",
+    "soft",
+    "people"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3045163/3045163-hd_1920_1080_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

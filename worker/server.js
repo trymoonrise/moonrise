@@ -50,6 +50,25 @@ const cors = require("cors");
 const Stripe = require("stripe");
 const { createClient } = require("@supabase/supabase-js");
 const { formatApiError, respondApiError, sendStripeMissing, clientError, isProduction } = require("./api-errors");
+
+/** Keep work alive after the HTTP response on Vercel Fluid Compute. */
+function continueAfterResponse(work) {
+  const promise = Promise.resolve()
+    .then(() => work())
+    .catch((err) => {
+      console.error("continueAfterResponse", err);
+    });
+  try {
+    const { waitUntil } = require("@vercel/functions");
+    if (typeof waitUntil === "function") {
+      waitUntil(promise);
+      return promise;
+    }
+  } catch (_) {
+    /* local / older runtimes */
+  }
+  return promise;
+}
 const { resolveAssistantContent, hasHtmlDocumentStart } = require("./openrouter-message");
 const { applyToHtml: applySiteFeatureBlocks, readConfig: readSiteFeatureConfig, hasActiveServices } = require("../js/site-features");
 
@@ -4301,114 +4320,128 @@ app.post("/generate", requireUser, generateLimiter, async (req, res) => {
     if (!activeJobId) {
       return res.status(500).json({ error: "Could not start generation job" });
     }
-    workspaceDir = createWorkspace(activeJobId);
-    const activity = createAgentActivity({
-      supabase,
-      jobId: activeJobId,
-      jobPrompt,
-      workspaceDir,
-    });
 
-    const plan = buildLocalPlan(ctx);
-    if (jobInsert?.data?.id) {
-      Object.assign(jobPrompt, {
-        atmosphere: plan?.atmosphere || "",
-        family: plan?.variation?.family?.id || "",
-      });
-      await supabase
-        .from("generation_jobs")
-        .update({
-          prompt: jobPrompt,
-        })
-        .eq("id", jobInsert.data.id);
-    }
-    const html = await generateWithOpenRouter(ctx, null, plan, activity);
-    const ends = new Date(Date.now() + urgencyHours() * 3600 * 1000).toISOString();
-
-    let projectId = req.body.projectId || null;
+    const userId = req.user.id;
+    const bodyProjectId = req.body.projectId || null;
     const isRedesign =
       req.body.redesign === true ||
       req.body.redesign === "1" ||
       /REDESIGN:/i.test(String(ctx.notes || ""));
-    if (projectId) {
-      const { data: existing } = await supabase
-        .from("projects")
-        .select("id,user_id,watermark_enabled,status,business_context")
-        .eq("id", projectId)
-        .maybeSingle();
-      if (!existing || existing.user_id !== req.user.id) {
-        return res.status(403).json({ error: "Project not found" });
-      }
-      const nextContext = withDefaultContactFormContext(
-        {
-          ...(existing.business_context && typeof existing.business_context === "object"
-            ? existing.business_context
-            : {}),
-          ...ctx,
-          redesignedAt: isRedesign ? new Date().toISOString() : undefined,
-        },
-        existing.business_context
-      );
-      const patch = {
-          business_name: ctx.businessName,
-          lead_id: ctx.leadId,
-          template_id: ctx.templateId,
-          html,
-          urgency_ends_at: ends,
-        business_context: nextContext,
-      };
-      // Full redesign keeps payment / publish state; first generate on a project still
-      // starts watermarked in preview.
-      if (!isRedesign) {
-        patch.status = "preview";
-        patch.watermark_enabled = true;
-      }
-      const { error } = await supabase.from("projects").update(patch).eq("id", projectId);
-      if (error) throw error;
-    } else {
-      const nextContext = withDefaultContactFormContext(ctx);
-      const { data, error } = await supabase
-        .from("projects")
-        .insert({
-          user_id: req.user.id,
-          business_name: ctx.businessName,
-          lead_id: ctx.leadId,
-          template_id: ctx.templateId,
-          html,
-          status: "preview",
-          watermark_enabled: true,
-          urgency_ends_at: ends,
-          business_context: nextContext,
-        })
-        .select("id")
-        .single();
-      if (error) throw error;
-      projectId = data.id;
-    }
 
-    jobPrompt.family = plan?.variation?.family?.id || "";
-    if (jobInsert?.data?.id) {
-      await supabase
-        .from("generation_jobs")
-        .update({
-          status: "done",
-          project_id: projectId,
-          result_html: html.slice(0, 200000),
-          prompt: jobPrompt,
-        })
-        .eq("id", jobInsert.data.id);
-    }
+    // Ack immediately so leaving Builder / Finder cannot cancel the AI job.
+    res.status(202).json({
+      inProgress: true,
+      jobId: activeJobId,
+      requestId: requestId || null,
+      retryAfterSec: 3,
+      message: "Generation started.",
+    });
 
-    const balance = await getBalance(supabase, req.user.id);
-    res.json({
-      projectId,
-      html,
-      credits: balance,
-      creditsUsed: 0,
+    continueAfterResponse(async () => {
+      let bgWorkspace = null;
+      try {
+        bgWorkspace = createWorkspace(activeJobId);
+        const activity = createAgentActivity({
+          supabase,
+          jobId: activeJobId,
+          jobPrompt,
+          workspaceDir: bgWorkspace,
+        });
+
+        const plan = buildLocalPlan(ctx);
+        Object.assign(jobPrompt, {
+          atmosphere: plan?.atmosphere || "",
+          family: plan?.variation?.family?.id || "",
+        });
+        await supabase
+          .from("generation_jobs")
+          .update({
+            prompt: jobPrompt,
+          })
+          .eq("id", activeJobId);
+
+        const html = await generateWithOpenRouter(ctx, null, plan, activity);
+        const ends = new Date(Date.now() + urgencyHours() * 3600 * 1000).toISOString();
+
+        let projectId = bodyProjectId;
+        if (projectId) {
+          const { data: existing } = await supabase
+            .from("projects")
+            .select("id,user_id,watermark_enabled,status,business_context")
+            .eq("id", projectId)
+            .maybeSingle();
+          if (!existing || existing.user_id !== userId) {
+            throw Object.assign(new Error("Project not found"), { status: 403 });
+          }
+          const nextContext = withDefaultContactFormContext(
+            {
+              ...(existing.business_context && typeof existing.business_context === "object"
+                ? existing.business_context
+                : {}),
+              ...ctx,
+              redesignedAt: isRedesign ? new Date().toISOString() : undefined,
+            },
+            existing.business_context
+          );
+          const patch = {
+            business_name: ctx.businessName,
+            lead_id: ctx.leadId,
+            template_id: ctx.templateId,
+            html,
+            urgency_ends_at: ends,
+            business_context: nextContext,
+          };
+          // Full redesign keeps payment / publish state; first generate on a project still
+          // starts watermarked in preview.
+          if (!isRedesign) {
+            patch.status = "preview";
+            patch.watermark_enabled = true;
+          }
+          const { error } = await supabase.from("projects").update(patch).eq("id", projectId);
+          if (error) throw error;
+        } else {
+          const nextContext = withDefaultContactFormContext(ctx);
+          const { data, error } = await supabase
+            .from("projects")
+            .insert({
+              user_id: userId,
+              business_name: ctx.businessName,
+              lead_id: ctx.leadId,
+              template_id: ctx.templateId,
+              html,
+              status: "preview",
+              watermark_enabled: true,
+              urgency_ends_at: ends,
+              business_context: nextContext,
+            })
+            .select("id")
+            .single();
+          if (error) throw error;
+          projectId = data.id;
+        }
+
+        jobPrompt.family = plan?.variation?.family?.id || "";
+        await supabase
+          .from("generation_jobs")
+          .update({
+            status: "done",
+            project_id: projectId,
+            result_html: html.slice(0, 200000),
+            prompt: jobPrompt,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", activeJobId);
+      } catch (e) {
+        console.error("background generate", e);
+        await failGenerationJob(supabase, activeJobId, e.message || "Generate failed");
+      } finally {
+        removeWorkspace(bgWorkspace);
+      }
     });
   } catch (e) {
     console.error(e);
     await failGenerationJob(supabase, activeJobId, e.message || "Generate failed");
+    if (res.headersSent) return;
     const status = e.status || 500;
     const formatted = formatApiError(e, "Generate failed");
     res.status(status).json({

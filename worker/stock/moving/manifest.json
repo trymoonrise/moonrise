@@ -1,0 +1,45 @@
+{
+  "key": "moving",
+  "label": "moving / storage / hauling",
+  "match": "/moving|movers|storage|hauling|relocation|pack.?and.?ship|junk removal/i",
+  "folder": "worker/stock/moving",
+  "images": [
+    "photo-1600518464441-9154a4dea21b",
+    "photo-1600880292089-90a7e086ee0c",
+    "photo-1600585154340-be6161a56a0c",
+    "photo-1560518883-ce09059eeffa",
+    "photo-1504307651254-35680f356dfd",
+    "photo-1607400201889-565b1ee75f8c",
+    "pexels-4246120",
+    "pexels-4246200",
+    "pexels-4246068",
+    "pexels-5025512",
+    "photo-1600566753190-17f0baa2a6c3",
+    "photo-1570129477492-45c003edd2be"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1600518464441-9154a4dea21b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1607400201889-565b1ee75f8c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/4246120/pexels-photo-4246120.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4246200/pexels-photo-4246200.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4246068/pexels-photo-4246068.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/5025512/pexels-photo-5025512.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1600&q=80"
+  ],
+  "videos": [
+    "city",
+    "people",
+    "ambient"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/855281/855281-hd_1920_1080_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}

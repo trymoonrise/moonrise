@@ -111,7 +111,7 @@ Creators and freelancers who want a clear path from a nearby business to a paid 
 - [Governance](GOVERNANCE.md)
 - [Code of conduct](.github/CODE_OF_CONDUCT.md)
 - [License](LICENSE) (MIT)
-- [Terms of Service](https://trymoonrise.com/terms)
-- [Privacy Policy](https://trymoonrise.com/privacy)
+- [Terms of Service](https://trymoonrise.com/docs#terms)
+- [Privacy Policy](https://trymoonrise.com/docs#privacy)
 
 Questions: [trymoonrise@gmail.com](mailto:trymoonrise@gmail.com) or [(401) 300-0957](tel:+14013000957).

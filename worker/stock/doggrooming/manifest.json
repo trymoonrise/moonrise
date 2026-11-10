@@ -1,0 +1,45 @@
+{
+  "key": "doggrooming",
+  "label": "dog grooming / pet salon",
+  "match": "/dog groom|pet groom|grooming salon|mobile groom|pet spa|dog wash/i",
+  "folder": "worker/stock/doggrooming",
+  "images": [
+    "photo-1548199973-03cce0bbc87b",
+    "photo-1516734212186-a967f81ad0d7",
+    "photo-1601758228041-f3b2795255f1",
+    "photo-1583511655857-d19b40a7a54e",
+    "photo-1537151608828-ea2b11777ee8",
+    "photo-1587300003388-59208cc962cb",
+    "photo-1544568100-847a948585b9",
+    "photo-1543466835-00a7907e9de1",
+    "photo-1583337130417-3346a1be7dee",
+    "photo-1598133894008-61f7fdb8cc3a",
+    "pexels-1108099",
+    "pexels-1805164"
+  ],
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1805164/pexels-photo-1805164.jpeg?auto=compress&cs=tinysrgb&w=1600"
+  ],
+  "videos": [
+    "doggroom",
+    "pets",
+    "nature"
+  ],
+  "videoUrls": {
+    "hero": "https://videos.pexels.com/video-files/6131724/6131724-uhd_3840_2160_25fps.mp4",
+    "ambient": "https://videos.pexels.com/video-files/6131724/6131724-uhd_3840_2160_25fps.mp4",
+    "detail": "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4"
+  },
+  "notes": "Curated CDN catalog for the Moonrise generate agent. Prefer these URLs only — do not invent media links."
+}
