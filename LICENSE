@@ -1,21 +1,40 @@
-MIT License
+Moonrise Studio License
 
 Copyright (c) 2024-2026 Moonrise Studio
+Product site: https://trymoonrise.com
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Moonrise is a private commercial product operated by Moonrise Studio. This
+repository and related downloads are provided so people can view, learn from,
+download, customize, and showcase Moonrise-related code and sites.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Permission is granted, free of charge, to download, copy, modify, and use the
+Software and associated documentation for personal, educational, portfolio,
+demo, and showcase purposes, subject to the following conditions:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. Credit. You must give clear, visible credit to Moonrise (trymoonrise.com)
+   in every copy, derivative, showcase, portfolio piece, demo, publication, or
+   redistribution. At minimum, include:
+
+   Built with Moonrise — https://trymoonrise.com
+
+   Credit must remain present and reasonably noticeable. Removing, hiding, or
+   obscuring Moonrise credit is not allowed.
+
+2. No open-source grant. This license is not an open-source, MIT, Apache, GPL,
+   or similar public license. Moonrise retains all ownership and proprietary
+   rights not expressly granted above.
+
+3. No rebrand as your platform. You may not present the Software as your own
+   competing platform product, remove Moonrise branding from the live Service,
+   or claim ownership of Moonrise Studio, trymoonrise.com, or related marks.
+
+4. Third-party components. Fonts, libraries, and other third-party materials
+   keep their own licenses. See THIRD_PARTY_NOTICES.md.
+
+5. No warranty. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN
+   NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+   DAMAGES, OR OTHER LIABILITY ARISING FROM USE OF THE SOFTWARE.
+
+Contact: trymoonrise@gmail.com

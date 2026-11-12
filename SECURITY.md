@@ -45,15 +45,15 @@ If personal account data is leaked or we confirm unauthorized access to producti
 
 **What can identify a creator**
 
-We try to minimize what would identify a Moonrise creator if there is a data breach. Moonrise never asks for a password, a government-issued ID, a driver's license, a passport, photo or face recognition, a Social Security number, or similar identity documents, so those are not records we hold. Full payment card numbers are not stored. If account data were exposed, these records can still be linked to that creator:
+Moonrise does not claim that account data can never be breached. No product is breach-proof. We use commercially reasonable protections and try to minimize what would identify a Moonrise creator if data were exposed. Moonrise never asks for a Moonrise account password, a government-issued ID, a driver's license, a passport, photo or face recognition, a Social Security number, or similar identity documents, so those are not records we hold. Full payment card numbers are not stored. For payouts, we only store the method and the public username, handle, email, or phone entered for Cash App, Venmo, PayPal, Zelle, or another method — not passwords or login credentials for those apps. If account data were exposed, these records can still be linked to that creator:
 
 - Account email, username, display name, profile photo, and account id
 - Phone number and country, if one was added
-- Session records and sign-in security events that can be tied to an email address or IP address. A passkey, if the creator adds one, can be linked to the account. Moonrise does not ask for or store a password.
+- Session records and sign-in security events that can be tied to an email address or IP address. A passkey, if the creator adds one, can be linked to the account. Moonrise does not ask for or store a Moonrise account password.
 - Short-lived email sign-in links, while they are still valid
 - Notification preferences, when the account was created or updated, and whether the account is frozen
 - Contact email and phone saved for clients, including when those details are copied onto a published site
-- Payout method and the handle, email, or phone entered for Cash App, Venmo, PayPal, Zelle, or another method, plus earnings and payout amounts and status
+- Payout method and the username, handle, email, or phone entered for Cash App, Venmo, PayPal, Zelle, or another method (not passwords or app login credentials), plus earnings and payout amounts and status
 - Card brand, last four digits, expiration, and a card fingerprint if a security card was verified
 - Credit plan, credit balance, credit history, Stripe customer and subscription identifiers, donation or support status, and Store purchases
 - Saved projects: business name, address, phone, map link, notes, category, website price, site HTML and files, publish URL, and watermark status
@@ -86,7 +86,7 @@ We try to minimize what would identify a Moonrise creator if there is a data bre
 - Secrets stay in server env (`.env` is gitignored); public anon keys only in the browser
 - Production `/health` does not expose filesystem paths or verbose internals
 - Product fonts are self-hosted (`assets/fonts/`, `css/fonts.css`); no Google Fonts or third-party font CDN requests
-- Open-source Studio code is published under the repo licenses; creators remain independent users, not Moonrise employees
+- Studio source may be downloaded and showcased under the Moonrise Studio License with required credit to Moonrise (trymoonrise.com); creators remain independent users, not Moonrise employees
 
 ## Scope
 

@@ -110,7 +110,7 @@ Creators and freelancers who want a clear path from a nearby business to a paid 
 - [Contributing](CONTRIBUTING.md)
 - [Governance](GOVERNANCE.md)
 - [Code of conduct](.github/CODE_OF_CONDUCT.md)
-- [License](LICENSE) (MIT)
+- [License](LICENSE) (Moonrise Studio License — credit Moonrise / trymoonrise.com)
 - [Terms of Service](https://trymoonrise.com/docs#terms)
 - [Privacy Policy](https://trymoonrise.com/docs#privacy)
 

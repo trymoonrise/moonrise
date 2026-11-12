@@ -3,6 +3,30 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.1.5",
+      "date": "2026-11-11",
+      "title": "Private product license, docs search, and honest security",
+      "sections": [
+        {
+          "heading": "Website",
+          "added": [
+            "Docs include a sticky full-text search bar with flexible matching across sections and the table of contents.",
+            "Home FAQ describes Moonrise as a private commercial product; downloads and showcases must credit Moonrise (trymoonrise.com).",
+            "Footer Last updated links to the Moonrise GitHub repository.",
+            "GitHub Releases use a simpler Website and Security layout with file links and flattened notes."
+          ]
+        },
+        {
+          "heading": "Security",
+          "added": [
+            "Moonrise Studio License replaces MIT: private commercial product with required credit to Moonrise (trymoonrise.com) for downloads and showcases.",
+            "Privacy and Security state Moonrise does not claim account data can never be breached.",
+            "Privacy and Security clarify payout settings store usernames, handles, email, or phone only \u2014 not passwords or payout-app login credentials."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.1.4",
       "date": "2026-11-11",
       "title": "Release notes and privacy sharing clarified",
@@ -13,7 +37,7 @@
             "Changelog source of truth is now root `log.json` (formerly `brain/log.json`).",
             "GitHub Releases use a clearer title format and professional section headings.",
             "Privacy Policy states Moonrise does not sell or broadly share personal data, and that routine third-party processing is limited to subprocessors.",
-            "Docs Subprocessors section asks creators to review each provider’s own privacy policy."
+            "Docs Subprocessors section asks creators to review each provider\u2019s own privacy policy."
           ]
         },
         {
@@ -416,7 +440,6 @@
         }
       ]
     },
-
     {
       "version": "2.9.1",
       "date": "2026-11-09",
@@ -1285,7 +1308,7 @@
         {
           "heading": "Site",
           "added": [
-            "Designer Tips play controls use the black primary fill so they match the page’s main actions."
+            "Designer Tips play controls use the black primary fill so they match the page\u2019s main actions."
           ]
         }
       ]
@@ -1881,7 +1904,7 @@
         {
           "heading": "Studio",
           "added": [
-            "Settings → Appearance offers fourteen theme colors plus a custom picker again."
+            "Settings \u2192 Appearance offers fourteen theme colors plus a custom picker again."
           ],
           "fixes": []
         }
@@ -2004,7 +2027,7 @@
           "added": [
             "Home uses the simple moonrise loading bar instead of a logo splash.",
             "Landing hero is just the headline, supporting line, and Start earning / Learn More CTAs.",
-            "Version numbers use base-10 rollup: patch 0–9, then minor; minor 0–9, then major (1.0.9 → 1.1.0 → … → 2.0.0).",
+            "Version numbers use base-10 rollup: patch 0\u20139, then minor; minor 0\u20139, then major (1.0.9 \u2192 1.1.0 \u2192 \u2026 \u2192 2.0.0).",
             "Historical release notes and GitHub Releases are remapped from the old 1.0.N patch line onto the new scheme."
           ],
           "fixes": [

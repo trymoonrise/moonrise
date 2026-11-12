@@ -387,24 +387,139 @@ body.ms-docs-page .ms-docs-mobile-toggle {
   cursor: pointer;
 }
 
+body.ms-docs-page .ms-docs-search-wrap {
+  position: sticky;
+  top: 4.6rem;
+  z-index: 40;
+  margin: 1.35rem 0 0;
+  padding: 0.35rem 0 0.15rem;
+  background: linear-gradient(180deg, #fff 70%, rgba(255, 255, 255, 0));
+}
+
+body.ms-docs-page .ms-docs-search-wrap.is-stuck {
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+body.ms-docs-page .ms-docs-search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: min(100%, 36rem);
+}
+
+body.ms-docs-page .ms-docs-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  color: #6e6e73;
+  pointer-events: none;
+}
+
 body.ms-docs-page .ms-docs-search {
   width: 100%;
   box-sizing: border-box;
-  margin: 0 0 0.85rem;
-  padding: 0.7rem 0.85rem;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  margin: 0;
+  padding: 0.82rem 5.5rem 0.82rem 2.45rem;
+  border: 1px solid rgba(15, 23, 42, 0.1);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.96);
   color: #1d1d1f;
   font: inherit;
-  font-size: 0.92rem;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  font-size: 0.98rem;
+  letter-spacing: -0.015em;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+body.ms-docs-page .ms-docs-search::placeholder {
+  color: #8e8e93;
 }
 
 body.ms-docs-page .ms-docs-search:focus {
   outline: 2px solid rgba(35, 36, 39, 0.55);
   outline-offset: 1px;
   border-color: transparent;
+}
+
+body.ms-docs-page .ms-docs-search-kbd {
+  position: absolute;
+  right: 0.75rem;
+  min-width: 1.35rem;
+  padding: 0.12rem 0.35rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 6px;
+  background: #f5f5f7;
+  color: #6e6e73;
+  font: 600 0.72rem/1.2 "DM Sans", system-ui, sans-serif;
+  letter-spacing: 0.02em;
+  text-align: center;
+  pointer-events: none;
+}
+
+body.ms-docs-page .ms-docs-search-wrap.is-active .ms-docs-search-kbd {
+  display: none;
+}
+
+body.ms-docs-page .ms-docs-search-clear {
+  position: absolute;
+  right: 0.55rem;
+  margin: 0;
+  padding: 0.35rem 0.55rem;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(29, 29, 31, 0.06);
+  color: #1d1d1f;
+  font: 600 0.78rem/1 "DM Sans", system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+}
+
+body.ms-docs-page .ms-docs-search-clear:hover,
+body.ms-docs-page .ms-docs-search-clear:focus-visible {
+  background: rgba(29, 29, 31, 0.1);
+}
+
+body.ms-docs-page .ms-docs-search-status {
+  min-height: 1.1rem;
+  margin: 0.45rem 0 0;
+  color: #6e6e73;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+body.ms-docs-page .ms-docs-search-empty {
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  background: #fafafa;
+  color: #6e6e73;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+body.ms-docs-page.is-docs-searching .ms-docs-main .ms-doc-block.is-docs-miss,
+body.ms-docs-page.is-docs-searching .ms-docs-main .ms-legal-article.is-docs-miss,
+body.ms-docs-page.is-docs-searching .ms-docs-main section.is-docs-miss {
+  display: none !important;
+}
+
+body.ms-docs-page.is-docs-searching .ms-docs-main .ms-doc-block.is-docs-hit,
+body.ms-docs-page.is-docs-searching .ms-docs-main .ms-legal-article.is-docs-hit {
+  outline: 1px solid rgba(15, 23, 42, 0.06);
+  outline-offset: 0.65rem;
+  border-radius: 8px;
+}
+
+body.ms-docs-page .ms-docs-nav a.is-filtered-out,
+body.ms-docs-page .ms-docs-nav a[hidden] {
+  display: none !important;
 }
 
 body.ms-docs-page .ms-docs-nav {
@@ -729,6 +844,19 @@ body.ms-docs-page code {
   body.ms-docs-page .ms-docs-layout {
     grid-template-columns: 1fr;
     padding-top: 5.5rem;
+  }
+
+  body.ms-docs-page .ms-docs-search-wrap {
+    top: 4.1rem;
+    width: 100%;
+  }
+
+  body.ms-docs-page .ms-docs-search-field {
+    width: 100%;
+  }
+
+  body.ms-docs-page .ms-docs-search-kbd {
+    display: none;
   }
 
   body.ms-docs-page .ms-docs-hero,

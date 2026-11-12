@@ -3,6 +3,32 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "3.1.5",
+      "date": "2026-11-11",
+      "title": "Private product license, docs search, and honest security",
+      "tag": "v3.1.5",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v3.1.5",
+      "sections": [
+        {
+          "heading": "Website",
+          "added": [
+            "Docs include a sticky full-text search bar with flexible matching across sections and the table of contents.",
+            "Home FAQ describes Moonrise as a private commercial product; downloads and showcases must credit Moonrise (trymoonrise.com).",
+            "Footer Last updated links to the Moonrise GitHub repository.",
+            "GitHub Releases use a simpler Website and Security layout with file links and flattened notes."
+          ]
+        },
+        {
+          "heading": "Security",
+          "added": [
+            "Moonrise Studio License replaces MIT: private commercial product with required credit to Moonrise (trymoonrise.com) for downloads and showcases.",
+            "Privacy and Security state Moonrise does not claim account data can never be breached.",
+            "Privacy and Security clarify payout settings store usernames, handles, email, or phone only — not passwords or payout-app login credentials."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.1.4",
       "date": "2026-11-11",
       "title": "Release notes and privacy sharing clarified",

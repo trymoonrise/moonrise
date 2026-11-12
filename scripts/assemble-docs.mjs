@@ -168,7 +168,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
   <link rel="stylesheet" href="css/public-pages.css?v=20261110-floattoc">
-  <link rel="stylesheet" href="css/docs.css?v=20261110-toccenter">
+  <link rel="stylesheet" href="css/docs.css?v=20261111-docsearch">
   <link rel="stylesheet" href="css/site-nav.css?v=20261110-homechip">
 </head>
 <body data-page="docs" class="ms-public-doc ms-docs-page" data-docs>
@@ -198,9 +198,20 @@ document.documentElement.classList.add("ms-boot");
     <header class="ms-docs-hero">
       <h1 class="ms-doc-title">Docs.</h1>
       <p class="ms-doc-lead">Everything about Moonrise, product, features, security, licenses, and policies, in one place.</p>
+      <form class="ms-docs-search-wrap" role="search" data-docs-search-form action="#" method="get">
+        <label class="visually-hidden" for="ms-docs-search">Search docs</label>
+        <div class="ms-docs-search-field">
+          <svg class="ms-docs-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+          <input class="ms-docs-search" id="ms-docs-search" type="search" name="q" data-docs-search placeholder="Search docs" autocomplete="off" spellcheck="false" enterkeyhint="search">
+          <kbd class="ms-docs-search-kbd" data-docs-search-kbd>/</kbd>
+          <button type="button" class="ms-docs-search-clear" data-docs-search-clear hidden aria-label="Clear search">Clear</button>
+        </div>
+        <p class="ms-docs-search-status" data-docs-search-status aria-live="polite"></p>
+      </form>
     </header>
     <main class="ms-docs-main" id="main">
 ${product}
+      <p class="ms-docs-search-empty" data-docs-search-empty hidden>No matching sections. Try fewer words, a synonym, or clear the search.</p>
     </main>
     <aside class="ms-docs-aside">
       <button type="button" class="ms-docs-toc-btn ms-float-toc-btn" data-docs-toc-toggle aria-expanded="false" aria-controls="ms-docs-onpage">
@@ -218,8 +229,8 @@ ${product}
   <style>.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
   <script defer src="js/config.js?v=20261106-mono"></script>
   <script defer src="js/site-branding.js"></script>
-  <script defer src="js/home-menu.js?v=20261110-updated"></script>
-  <script defer src="js/docs.js?v=20261110-floattoc"></script>
+  <script defer src="js/home-menu.js?v=20261111-repolink"></script>
+  <script defer src="js/docs.js?v=20261111-docsearch"></script>
 </body>
 </html>
 `;

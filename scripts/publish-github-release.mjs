@@ -34,6 +34,58 @@ if (!token) {
 const releasesDoc = JSON.parse(fs.readFileSync(path.join(root, "brain", "releases.json"), "utf8"));
 const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 
+const SECTION_DISPLAY = {
+  Site: { heading: "Website", file: "index.html" },
+  Website: { heading: "Website", file: "index.html" },
+  Studio: { heading: "Studio", file: "dashboard.html" },
+  Finder: { heading: "Finder", file: "leads.html" },
+  Worker: { heading: "Worker", file: "worker/" },
+  Leadfinder: { heading: "Leadfinder", file: "api/" },
+  Security: { heading: "Security", file: "SECURITY.md" },
+};
+
+function sectionMeta(heading) {
+  const key = String(heading || "").trim();
+  return (
+    SECTION_DISPLAY[key] || {
+      heading: key || "Changes",
+      file: "log.json",
+    }
+  );
+}
+
+function formatReleaseBody(update) {
+  const tag = update.tag || `v${update.version}`;
+  const blobBase = `https://github.com/${OWNER}/${REPO}/blob/${tag}`;
+  const lines = [`## ${update.title}`, "", `Release date: ${update.date}`, ""];
+
+  for (const section of update.sections || []) {
+    const notes = [...(section.added || []), ...(section.fixes || [])];
+    if (!notes.length) continue;
+    const meta = sectionMeta(section.heading);
+    const filePath = meta.file;
+    const fileLabel = filePath.replace(/\/$/, "") || filePath;
+    lines.push(`### ${meta.heading}`, "");
+    lines.push(`[${fileLabel}](${blobBase}/${filePath}) — modified`, "");
+    for (const note of notes) lines.push(`- ${note}`);
+    lines.push("");
+  }
+
+  lines.push("---", "", "Source: `log.json`", "");
+  return lines.join("\n");
+}
+
+function compareSemver(a, b) {
+  const pa = String(a).split(".").map((n) => parseInt(n, 10) || 0);
+  const pb = String(b).split(".").map((n) => parseInt(n, 10) || 0);
+  const len = Math.max(pa.length, pb.length);
+  for (let i = 0; i < len; i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d) return d;
+  }
+  return 0;
+}
+
 const args = process.argv.slice(2);
 const all = args.includes("--all");
 const versionArgIdx = args.indexOf("--version");
@@ -129,41 +181,6 @@ async function publishOne(update, makeLatest = false) {
   }
   const release = await created.json();
   return { tag, action: makeLatest ? "created-latest" : "created", url: release.html_url };
-}
-
-function compareSemver(a, b) {
-  const pa = String(a).split(".").map((n) => parseInt(n, 10) || 0);
-  const pb = String(b).split(".").map((n) => parseInt(n, 10) || 0);
-  const len = Math.max(pa.length, pb.length);
-  for (let i = 0; i < len; i++) {
-    const d = (pa[i] || 0) - (pb[i] || 0);
-    if (d) return d;
-  }
-  return 0;
-}
-
-function formatReleaseBody(update) {
-  const lines = [
-    `## ${update.title}`,
-    "",
-    `**Release date:** ${update.date}`,
-    "",
-  ];
-  for (const section of update.sections || []) {
-    lines.push(`### ${section.heading}`, "");
-    if (section.added?.length) {
-      lines.push("#### New");
-      for (const note of section.added) lines.push(`- ${note}`);
-      lines.push("");
-    }
-    if (section.fixes?.length) {
-      lines.push("#### Fixed");
-      for (const note of section.fixes) lines.push(`- ${note}`);
-      lines.push("");
-    }
-  }
-  lines.push("---", "", "Source: `log.json`", "");
-  return lines.join("\n");
 }
 
 async function api(method, apiPath, body) {

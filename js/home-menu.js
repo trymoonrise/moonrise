@@ -29,7 +29,8 @@
     var style = document.createElement("style");
     style.id = "ms-repo-updated-style";
     style.textContent = [
-      ".ms-repo-updated{margin:0.85rem 0 0;color:#6e6e73;font-size:0.78rem;font-weight:500;line-height:1.4;letter-spacing:-0.01em}",
+      ".ms-repo-updated{margin:0.85rem 0 0;color:#6e6e73;font-size:0.78rem;font-weight:500;line-height:1.4;letter-spacing:-0.01em;text-decoration:none}",
+      ".ms-repo-updated:hover,.ms-repo-updated:focus-visible{color:#1d1d1f;text-decoration:underline}",
       ".ms-repo-updated[hidden]{display:none!important}",
       ".ms-legal-foot .ms-repo-updated{flex-basis:100%;margin:0.35rem 0 0;text-align:center}",
       "body>.ms-repo-updated.is-page-foot{margin:0;padding:1.5rem 1.25rem calc(1.35rem + env(safe-area-inset-bottom));text-align:center}",
@@ -38,12 +39,37 @@
     document.head.appendChild(style);
   }
 
+  var REPO_URL = "https://github.com/trymoonrise/moonrise";
+
+  function asRepoLink(el) {
+    if (el && el.tagName === "A") {
+      el.href = REPO_URL;
+      el.target = "_blank";
+      el.rel = "noopener noreferrer";
+      return el;
+    }
+    var link = document.createElement("a");
+    link.className = (el && el.className) || "ms-repo-updated";
+    link.setAttribute("data-repo-updated", "");
+    link.href = REPO_URL;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.hidden = el ? el.hidden : true;
+    link.textContent = (el && el.textContent) || "Last updated";
+    if (el && el.classList.contains("is-page-foot")) link.classList.add("is-page-foot");
+    if (el && el.parentNode) el.parentNode.replaceChild(link, el);
+    return link;
+  }
+
   function ensureRepoUpdated() {
     var existing = document.querySelector("[data-repo-updated]");
-    if (existing) return existing;
-    var el = document.createElement("p");
+    if (existing) return asRepoLink(existing);
+    var el = document.createElement("a");
     el.className = "ms-repo-updated";
     el.setAttribute("data-repo-updated", "");
+    el.href = REPO_URL;
+    el.target = "_blank";
+    el.rel = "noopener noreferrer";
     el.hidden = true;
     el.textContent = "Last updated";
     var slot =
@@ -70,7 +96,7 @@
     el.hidden = false;
     el.textContent = "Last updated " + ago + " ago";
     el.dataset.committedAt = iso;
-    el.title = "GitHub · trymoonrise/moonrise";
+    el.title = "Open trymoonrise/moonrise on GitHub";
   }
 
   function readRepoCommitAt() {

@@ -14,7 +14,7 @@ Before you finish, audit the current version. Every change a person would notice
 
 Check these product areas:
 
-- **Site** — public pages on trymoonrise.com (home, login, orders, download, legal)
+- **Website** — public pages on trymoonrise.com (home, login, orders, download, legal). Prefer this over the older `Site` heading.
 - **Studio** — dashboard, builder, editor, leads, settings, projects
 - **Finder** — Business Finder, lead claims, Maps scan
 - **Worker** — API worker, auth, Stripe, publish, email
@@ -24,7 +24,7 @@ Check these product areas:
 Add a heading only when none of those fit.
 
 ```json
-{ "heading": "Site", "added": ["Home uses the simple moonrise loading bar instead of a logo splash."], "fixes": ["Deleting a website makes that business a fresh lead again."] }
+{ "heading": "Website", "added": ["Home uses the simple moonrise loading bar instead of a logo splash."], "fixes": ["Deleting a website makes that business a fresh lead again."] }
 ```
 
 - If that version has no entry, add one with today's date as `YYYY-MM-DD` and a short title.

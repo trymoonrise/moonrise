@@ -14,15 +14,18 @@
 <section class="ms-doc-block" id="what-is-moonrise">
   <h2 class="ms-doc-title">What is Moonrise?</h2>
   <p class="ms-settings-hint">
-    Moonrise Studio is an open-source, AI-powered software platform that helps creators build professional websites for
-    local businesses and earn when those businesses go live. You find a business that needs a site, generate a polished
-    preview, customize it, publish it with a Moonrise watermark, and share the live link. The business owner pays on the
-    watermark checkout. When they pay, the watermark is removed automatically and you earn your creator share.
+    Moonrise Studio is a private commercial product: an AI-powered software platform that helps creators build
+    professional websites for local businesses and earn when those businesses go live. You find a business that needs a
+    site, generate a polished preview, customize it, publish it with a Moonrise watermark, and share the live link. The
+    business owner pays on the watermark checkout. When they pay, the watermark is removed automatically and you earn
+    your creator share.
   </p>
   <ul class="ms-help-list">
-    <li><strong>Open-source platform</strong>, Moonrise Studio source is public on
+    <li><strong>Private business, open downloads</strong>, Moonrise is not an open-source project. You are free to view,
+      download, customize, and showcase code from
       <a href="https://github.com/trymoonrise/moonrise" target="_blank" rel="noopener noreferrer">GitHub</a>
-      under the licenses listed in Docs. The live product is software tools, not a staffing or employment service.</li>
+      or the product. If you do, you must always credit Moonrise (<a href="https://trymoonrise.com">trymoonrise.com</a>).
+      See Licenses in Docs.</li>
     <li><strong>Creators / sellers</strong>, independent users who find local businesses, build sites, and earn when owners unlock. Creators are not Moonrise employees or agents.</li>
     <li><strong>Business owners</strong>, open the live preview link and pay on the watermark. They usually do not need a creator account to pay.</li>
     <li><strong>Platform responsibility</strong>, Moonrise is not responsible for what creators say, sell, publish, collect, or promise. Creators own their sales and client relationships.</li>
@@ -586,16 +589,19 @@
   <p class="ms-settings-hint">
     Moonrise uses commercially reasonable administrative, technical, and organizational measures designed to protect
     information against unauthorized access, loss, misuse, or alteration. No method of transmission or storage is
-    completely secure. You use the Service at your own risk and are responsible for protecting credentials and devices.
+    completely secure. Moonrise does not claim that data can never be breached. You use the Service at your own risk and
+    are responsible for protecting credentials and devices.
   </p>
   <ul class="ms-help-list">
-    <li>Moonrise is an open-source platform. Creators are independent users. Moonrise is not responsible for creator sales, websites, outreach, or client disputes.</li>
+    <li>Moonrise is a private commercial platform. Creators are independent users. Moonrise is not responsible for creator sales, websites, outreach, or client disputes.</li>
+    <li>Downloaded or showcased Moonrise code and sites must credit Moonrise (<a href="https://trymoonrise.com">trymoonrise.com</a>).</li>
     <li>Fonts are self-hosted from Moonrise. We do not load Google Fonts or other third-party font CDNs, so those providers do not receive IP addresses from Moonrise font requests.</li>
     <li>Map UI may load MapLibre and OpenFreeMap / OpenStreetMap-derived tiles; those providers can receive technical data such as IP address when maps are shown.</li>
     <li>Production uses HTTPS with HSTS, plus security headers (CSP, frame protections, and related browser policies).</li>
     <li>Studio API routes use CORS allowlisting, auth lockouts, and per-route rate limits. Authenticated routes require a valid Supabase Bearer token.</li>
     <li>Stripe webhooks are verified with a signing secret. Secrets stay in host environment variables, not in client code.</li>
-    <li>Sign in with an email link. A passkey is optional. Moonrise does not ask for a password, a government ID, photo or face recognition, or a Social Security number.</li>
+    <li>Sign in with an email link. A passkey is optional. Moonrise does not ask for a Moonrise account password, a government ID, photo or face recognition, or a Social Security number.</li>
+    <li>Payout settings store only the method and the username, handle, email, or phone you enter for Cash App, Venmo, PayPal, Zelle, or similar — not passwords or login credentials for those apps.</li>
     <li>Go-live card data is handled by Stripe, not stored in full by Moonrise.</li>
     <li>If there is a data breach, we try to minimize what would identify a Moonrise creator. The records that can still be linked to you are listed in <a href="#privacy">Privacy</a>.</li>
     <li>Report vulnerabilities privately via GitHub Security advisories or <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>, do not open a public issue for sensitive reports.</li>
@@ -606,13 +612,15 @@
 <section class="ms-doc-block" id="licenses">
   <h2 class="ms-doc-title">Licenses</h2>
   <p class="ms-settings-hint">
-    Moonrise Studio source is released under the MIT License. Third-party components keep their own licenses.
-    This section mirrors the GitHub License / notices for the
+    Moonrise is a private commercial product. Source and downloads are available under the Moonrise Studio License,
+    which requires credit to Moonrise (<a href="https://trymoonrise.com">trymoonrise.com</a>) whenever you download,
+    reuse, modify, or showcase the code or derived sites. Third-party components keep their own licenses. This section
+    mirrors the notices for the
     <a href="https://github.com/trymoonrise/moonrise" target="_blank" rel="noopener noreferrer">trymoonrise/moonrise</a> repository.
   </p>
   <h3>NOTICE</h3>
   <pre class="ms-docs-pre">__NOTICE__</pre>
-  <h3>MIT License</h3>
+  <h3>Moonrise Studio License</h3>
   <pre class="ms-docs-pre">__LICENSE__</pre>
   <h3>Third-party notices</h3>
   <div class="ms-settings-hint">__THIRD_PARTY__</div>
