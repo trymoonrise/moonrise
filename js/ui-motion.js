@@ -255,7 +255,6 @@
     "contact",
     "terms",
     "privacy",
-    "pricing",
     "apply",
   ]);
   const PAGE_MOTION_SELECTORS = [

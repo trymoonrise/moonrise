@@ -59,9 +59,7 @@ const DONATE_DEFAULT_DOLLARS = Math.min(
 );
 
 const DONATE_BENEFITS = [
-  "View code and download HTML in Builder",
-  "Lifetime MVP+ after one donation of any amount",
-  "Support Moonrise - keep generation free for everyone",
+  "Support Moonrise and keep building free for everyone",
 ];
 
 function topupCatalog() {
@@ -145,7 +143,7 @@ async function getBalance(supabase, userId) {
     planId: data?.plan_id || null,
     planStatus,
     hasActiveSubscription,
-    codeAccess: hasActiveSubscription,
+    codeAccess: true,
     paidPlan: hasActiveSubscription,
     mvpPlus,
     periodEnd: data?.period_end || null,
@@ -227,9 +225,8 @@ function donateSubscriptionLineItem(quote) {
       price_data: {
         currency: "usd",
         product_data: {
-          name: "Moonrise MVP+ Support",
-          description:
-            "Monthly support. One paid donation keeps MVP+ for life.",
+          name: "Moonrise support",
+          description: "Optional support. Building, code, and download stay free.",
         },
         unit_amount: cents,
         recurring: { interval: "month" },

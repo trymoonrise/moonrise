@@ -61,7 +61,6 @@
     guide: 1,
     help: 1,
     book: 1,
-    pricing: 1,
     "hosting-billing": 1,
     "creator-contact": 1,
   };
@@ -324,7 +323,6 @@ function bindInstantChannelNav() {
     onboarding: 1,
     "admin-console": 1,
     course: 1,
-    pricing: 1,
     calendar: 1,
     help: 1,
     guide: 1,
@@ -429,7 +427,6 @@ function mountTabBarEarly() {
     course: 1,
     "admin-console": 1,
     projects: 1,
-    pricing: 1,
     calendar: 1,
   };
   var activeTabs = { dashboard: 1, builder: 1, clients: 1, calendar: 1, settings: 1 };

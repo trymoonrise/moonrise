@@ -4175,22 +4175,6 @@
       } catch (_) {
         /* ignore */
       }
-      lfMap.addControl(
-        new maplibregl.AttributionControl({ compact: false }),
-        "bottom-right"
-      );
-      const hoistMapAttribution = () => {
-        const attrib = el.querySelector(".maplibregl-ctrl-attrib");
-        const overlays = document.querySelector("#lf-map-stage > .ms-lf-map-overlays");
-        if (!attrib || !overlays || attrib.closest(".ms-lf-map-overlays")) return;
-        let host = overlays.querySelector(".ms-lf-map-attrib-host");
-        if (!host) {
-          host = document.createElement("div");
-          host.className = "ms-lf-map-attrib-host";
-          overlays.appendChild(host);
-        }
-        host.appendChild(attrib);
-      };
       const noteUserNav = (ev) => {
         if (ev && ev.originalEvent) mapUserNavigated = true;
       };
@@ -4202,8 +4186,6 @@
           "bottom-right"
         );
       }
-      lfMap.on("load", hoistMapAttribution);
-      hoistMapAttribution();
       let revealed = false;
       const revealMap = () => {
         if (revealed) return;

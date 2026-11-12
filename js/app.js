@@ -2267,7 +2267,6 @@
     "admin-console",
     "projects",
     "calendar",
-    "pricing",
   ];
   const TAB_BAR_ACTIVE = ["dashboard", "builder", "clients", "calendar", "settings"];
   const TAB_SWITCH_KEY = "ms_tab_switch";
@@ -2369,7 +2368,6 @@
       course: 1,
       "hosting-billing": 1,
       "creator-contact": 1,
-      pricing: 1,
       calendar: 1,
       book: 1,
       docs: 1,

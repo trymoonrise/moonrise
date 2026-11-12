@@ -89,7 +89,7 @@ document.documentElement.classList.add("ms-boot");
     build it in Studio, publish a watermarked preview, and earn when the owner pays on that page to go live.
   </p>
   <ul class="ms-help-list">
-    <li><strong>Free to build</strong>, create, preview, redesign, and publish watermarked sites without charging the owner up front.</li>
+    <li><strong>Free to build</strong>, Moonrise has no creator pricing page, subscription, or credit plan. Create, preview, edit, view code, download HTML, redesign, and publish watermarked sites without paying Moonrise.</li>
     <li><strong>They pay on the watermark</strong>, the live site stays watermarked until the owner completes Moonrise checkout.</li>
     <li><strong>You keep 90%</strong>, Moonrise keeps 10% of each go-live payment (before processor fees and adjustments under the Terms).</li>
   </ul>
@@ -201,6 +201,7 @@ document.documentElement.classList.add("ms-boot");
     <li><a href="editor"><strong>Editor</strong></a>, polish copy, toggle features, set Website Price, publish, and connect domains.</li>
     <li><a href="projects"><strong>Projects</strong></a>, every site you have generated or imported.</li>
     <li><a href="clients"><strong>My Clients</strong></a>, paid go-live businesses after watermark checkout.</li>
+    <li><a href="calendar"><strong>Calendar</strong></a>, connect Cal.com and see your bookings.</li>
     <li><a href="settings"><strong>Settings</strong></a>, profile, security, payout method, and account controls.</li>
     <li><a href="course"><strong>Course</strong></a>, creator walkthrough video and onboarding help.</li>
     <li><a href="ui-library"><strong>UI Library</strong></a>, interactive patterns used in generated sites.</li>
@@ -300,7 +301,7 @@ document.documentElement.classList.add("ms-boot");
   </figure>
   <ul class="ms-help-list">
     <li><strong>Generate</strong> builds a full site from business details. Wait for the progress UI until the preview appears.</li>
-    <li><strong>Preview</strong>, see the live layout. <strong>Edit</strong>, click sections to change text and media on the page. <strong>Code</strong>, view or edit HTML (may require MVP+ or an active Starter, Pro, or Business plan).</li>
+    <li><strong>Preview</strong>, see the live layout. <strong>Edit</strong>, click sections to change text and media on the page. <strong>Code</strong>, view or edit HTML, and download the file. Code and download are free.</li>
     <li><strong>Redesign</strong> creates a fresh visual direction on an existing project.</li>
     <li><strong>Device previews</strong>, check desktop, tablet, and phone before you share.</li>
   </ul>
@@ -378,11 +379,11 @@ document.documentElement.classList.add("ms-boot");
 <section class="ms-doc-block" id="editor-tools">
   <h2 class="ms-doc-title">Editor tools</h2>
   <ul class="ms-help-list">
-    <li><strong>Download HTML</strong>, export the current site HTML (plan gate may apply, same as View Code).</li>
+    <li><strong>Download HTML</strong>, export the current site HTML. This is free.</li>
     <li><strong>QR Code</strong>, open the QR business-card modal to copy the live link or download the QR image (publish first for a public URL).</li>
     <li><strong>Flyer</strong>, printable website flyer with a scan-to-visit QR; print or download from the flyer modal.</li>
     <li><strong>Edit website manually</strong>, switch to Edit mode, click sections on the page, change copy/media, then Done.</li>
-    <li><strong>View code</strong>, switch to Code mode to inspect or edit HTML when your plan unlocks it.</li>
+    <li><strong>View code</strong>, switch to Code mode to inspect or edit HTML. This is free.</li>
     <li><strong>Unpublish</strong>, takes the public link offline until you publish again (confirm in the dialog).</li>
     <li><strong>Delete project</strong>, permanently removes the site, preview, and publish record. This cannot be undone.</li>
   </ul>
@@ -665,8 +666,9 @@ document.documentElement.classList.add("ms-boot");
     <li>Production uses HTTPS with HSTS, plus security headers (CSP, frame protections, and related browser policies).</li>
     <li>Studio API routes use CORS allowlisting, auth lockouts, and per-route rate limits. Authenticated routes require a valid Supabase Bearer token.</li>
     <li>Stripe webhooks are verified with a signing secret. Secrets stay in host environment variables, not in client code.</li>
-    <li>Sign in with email-link or passkey where available. Keep recovery email access.</li>
+    <li>Sign in with an email link. A passkey is optional. Moonrise does not ask for a password, a government ID, photo or face recognition, or a Social Security number.</li>
     <li>Go-live card data is handled by Stripe, not stored in full by Moonrise.</li>
+    <li>If there is a data breach, we try to minimize what would identify a Moonrise creator. The records that can still be linked to you are listed in <a href="#privacy">Privacy</a>.</li>
     <li>Report vulnerabilities privately via GitHub Security advisories or <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>, do not open a public issue for sensitive reports.</li>
     <li>Full policy: <a href="https://github.com/trymoonrise/moonrise/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">SECURITY.md</a>.</li>
   </ul>
@@ -783,13 +785,13 @@ If you believe attribution is missing or incorrect, email
 
 <section id="privacy" class="ms-legal-article" aria-labelledby="privacy-heading">
         <h2 class="ms-legal-section-head" id="privacy-heading">Privacy Policy</h2>
-        <p class="ms-legal-updated">Last updated: September 24, 2026</p>
+        <p class="ms-legal-updated">Last updated: November 11, 2026</p>
 <h2>1. Introduction</h2>
         <p>
           This Privacy Policy explains how Moonrise Studio (&ldquo;Moonrise,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo;
           or &ldquo;our&rdquo;) collects, uses, stores, shares, and protects information when you use Moonrise Studio,
           including trymoonrise.com, related apps, dashboards, Business Finder, Builder and Editor, published websites we
-          host or process, watermark checkout, payouts, donations, MVP+ features, and related support channels
+          host or process, watermark checkout, payouts, donations, and related support channels
           (collectively, the &ldquo;Service&rdquo;).
         </p>
         <p>
@@ -819,9 +821,12 @@ If you believe attribution is missing or incorrect, email
         <h2>3. Categories of information we collect</h2>
         <h3>3.1 Account and profile information</h3>
         <p>
-          When you register or update Settings, we may collect display name, handle, email address, password or passkey
-          credentials, profile photo, communication preferences, session preferences (such as remember-me), and other
-          details you choose to store in your profile.
+          When you register or update Settings, we may collect display name, handle, email address, an optional passkey,
+          profile photo, communication preferences, session preferences (such as remember-me), and other
+          details you choose to store in your profile. Moonrise never asks for a password, a government-issued ID, a
+          driver&rsquo;s license, a passport, photo or face recognition, a Social Security number, or similar identity
+          documents. A profile photo is not an ID scan or face recognition. Sign-in uses an email link. A passkey is
+          optional. The one-time Employee ID used to create an account is a signup code, not a government ID.
         </p>
         <h3>3.2 Workspace and project information</h3>
         <p>
@@ -858,7 +863,7 @@ If you believe attribution is missing or incorrect, email
         <h3>3.7 Creator payout and earnings information</h3>
         <p>
           We may store revenue-share records, Dashboard income figures, payout method details you provide (for example,
-          Cash App, Venmo, PayPal, or other methods you enter), MVP+ or donation status, Store purchases, and related
+          Cash App, Venmo, PayPal, or other methods you enter), donation status, Store purchases, and related
           transaction identifiers.
         </p>
         <h3>3.8 Creator contact shown on watermarked sites</h3>
@@ -899,10 +904,10 @@ If you believe attribution is missing or incorrect, email
         <p>We use information to:</p>
         <ul>
           <li>Provide, maintain, personalize, and improve the Service.</li>
-          <li>Create and authenticate accounts (including password and passkey flows).</li>
+          <li>Create and authenticate accounts with an email link and, if you choose, a passkey.</li>
           <li>Generate, edit, save, preview, publish, and unpublish websites.</li>
           <li>Inject and remove watermarks and redeploy sites after successful payment.</li>
-          <li>Process payments, donations, subscriptions, Store purchases, and creator revenue share.</li>
+          <li>Process watermark checkout payments and creator revenue share.</li>
           <li>Deliver contact-form submissions when that feature is enabled.</li>
           <li>Connect or verify custom domains when you request that feature.</li>
           <li>Provide customer support and respond to inquiries.</li>
@@ -984,6 +989,34 @@ If you believe attribution is missing or incorrect, email
           <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> promptly. To the fullest extent permitted by
           law, Moonrise is not liable for unauthorized access resulting from your failure to protect credentials or devices.
         </p>
+        <p>
+          We try to minimize what would identify a Moonrise creator if there is a data breach. Moonrise never asks for a
+          password, a government-issued ID, a driver&rsquo;s license, a passport, photo or face recognition, a Social
+          Security number, or similar identity documents, so those are not records we hold. We do not store full payment
+          card numbers. If account data were exposed, these are the records that can be linked to you:
+        </p>
+        <ul>
+          <li>Account email, username, display name, profile photo, and account id.</li>
+          <li>Phone number and country, if you added one.</li>
+          <li>Session records and sign-in security events that can be tied to an email address or IP address. A passkey, if you add one, can be linked to the account. Moonrise does not ask for or store a password.</li>
+          <li>Short-lived email sign-in links, while they are still valid.</li>
+          <li>Notification preferences, when the account was created or updated, and whether the account is frozen.</li>
+          <li>The contact email and phone you save for clients, including when those details are copied onto a published site.</li>
+          <li>Payout method and the handle, email, or phone you enter for Cash App, Venmo, PayPal, Zelle, or another method, plus earnings and payout amounts and status.</li>
+          <li>Card brand, last four digits, expiration, and a card fingerprint if you verify a security card. Full card numbers stay with Stripe.</li>
+          <li>Credit plan, credit balance, credit history, Stripe customer and subscription identifiers, donation or support status, and Store purchases.</li>
+          <li>Projects you save: business name, address, phone, map link, notes, category, website price, site HTML and files, publish URL, and watermark status.</li>
+          <li>Generation prompts, generated site HTML, and error messages from those jobs.</li>
+          <li>Contact-form settings and form submissions on your projects, including a sender&rsquo;s name, phone, and message, and the notification email or endpoint you configured.</li>
+          <li>Custom domain hostname and DNS or verification status, if you connect a domain.</li>
+          <li>Clients you add by hand: business name, phone, website, price, and notes.</li>
+          <li>GitHub username and GitHub account id, plus the access token, if you connect GitHub.</li>
+          <li>Calendar username and connected account id, access tokens, and synced bookings (title, time, guest name, email, phone, and meeting link), if you connect a calendar.</li>
+          <li>Browser push subscription and the browser used for it, if you turn notifications on.</li>
+          <li>IP address, device and browser type, approximate location from network data, pages used, and timestamps in logs tied to your account.</li>
+          <li>Payments on your projects: amount, status, and Stripe payment identifiers. Those records also connect you to the business that paid.</li>
+          <li>An employee signup redemption, if one was used on the account.</li>
+        </ul>
         <p>
           If we confirm a breach of personal account data, we email affected account holders at the address on the account
           from <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>. We watch for issues through production
@@ -1091,8 +1124,8 @@ If you believe attribution is missing or incorrect, email
           These Terms of Service (&ldquo;Terms&rdquo;) are a binding agreement between you and Moonrise Studio
           (&ldquo;Moonrise,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;). They govern your access to and use of
           Moonrise Studio, including trymoonrise.com, related domains, mobile or desktop apps, dashboards, Business Finder,
-          Builder and Editor tools, published websites, watermark checkout, payment and payout features, donations and
-          MVP+ perks, help materials, and any other products or services we offer (collectively, the &ldquo;Service&rdquo;).
+          Builder and Editor tools, published websites, watermark checkout, payment and payout features, donations,
+          help materials, and any other products or services we offer (collectively, the &ldquo;Service&rdquo;).
         </p>
         <p>
           By creating an account, signing in, browsing authenticated areas, generating or editing a website, publishing
@@ -1160,13 +1193,13 @@ If you believe attribution is missing or incorrect, email
         <p>
           You must be an adult (18 years or older, or the age of majority where you live, if higher) and legally able to
           enter a binding contract to use the Service. You agree to provide accurate, current, and complete registration
-          and profile information, and to keep it updated. You are responsible for safeguarding passwords, passkeys,
-          session tokens, and devices used to access your account, and for all activity under your account except where a
+          and profile information, and to keep it updated. You are responsible for safeguarding access to your email, any
+          passkey you add, session tokens, and devices used to access your account, and for all activity under your account except where a
           court finds the activity was caused solely by our gross negligence or willful misconduct.
         </p>
         <p>
           Notify us promptly at <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> if you suspect
-          unauthorized access. We may refuse registration, require identity or payment verification, limit features,
+          unauthorized access. We may refuse registration, limit features,
           freeze payouts, or terminate accounts when reasonably necessary to protect the Service, users, third parties,
           or Moonrise.
         </p>
@@ -1281,15 +1314,15 @@ If you believe attribution is missing or incorrect, email
         </p>
 
         <h2>13. Payments, fees, and creator revenue share</h2>
-        <h3>13.1 Creator subscriptions, credits, donations, and MVP+</h3>
+        <h3>13.1 Creator use is free</h3>
         <p>
-          Certain features may require payment, including optional subscriptions, credit plans, top-ups, donations, MVP+
-          perks, Store items, or other fees described at purchase time. Prices and billing terms may change. By submitting
-          a payment, you authorize charges through our payment processor (currently Stripe) under its terms.
+          Moonrise is free for creators. We do not sell a creator subscription, credit plan, or top-up, and there is no
+          pricing page. Building, previewing, editing, viewing code, downloading HTML, and publishing watermarked sites
+          do not require a Moonrise plan.
         </p>
         <h3>13.2 Website Price and watermark checkout</h3>
         <p>
-          Building, previewing, and publishing watermarked sites is free for creators unless we state otherwise.
+          Building, previewing, editing, viewing code, downloading HTML, and publishing watermarked sites is free for creators.
           Creators set a &ldquo;Website Price&rdquo; (or equivalent) shown to the business owner before or at publish.
           The business owner pays that go-live amount through the Moonrise watermark checkout on the live website.
         </p>
@@ -1314,8 +1347,8 @@ If you believe attribution is missing or incorrect, email
         </p>
         <h3>13.4 Hosting and recurring charges</h3>
         <p>
-          Go-live checkout may include recurring hosting or related charges described at checkout. Optional creator tools
-          (credits, donations, MVP+) are separate from the owner&rsquo;s watermark payment unless clearly stated otherwise.
+          Go-live checkout may include recurring hosting or related charges described at checkout. Creator use of Moonrise
+          is free and is separate from the owner&rsquo;s watermark payment.
         </p>
         <h3>13.5 Delays, offsets, chargebacks, and taxes</h3>
         <p>
@@ -1488,7 +1521,6 @@ If you believe attribution is missing or incorrect, email
     <li><strong>Owner cannot pay?</strong> Confirm they opened the live published URL and Website Price is set.</li>
     <li><strong>Contact form not emailing?</strong> Toggle on, Auto mode with a valid email, Save &amp; apply, update the live site.</li>
     <li><strong>Domain still pending?</strong> Remove conflicting records, add Moonrise DNS, wait, then Check status. See <a href="#domains">Custom domains</a>.</li>
-    <li><strong>Code / Download HTML locked?</strong> Unlock with MVP+ or an active Starter, Pro, or Business plan.</li>
     <li><strong>QR or flyer empty?</strong> Publish first so there is a public URL to encode.</li>
     <li><strong>Contact Owner does nothing?</strong> Add the business phone on the project or in Settings → Contact.</li>
   </ul>

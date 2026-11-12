@@ -1,8 +1,7 @@
 /**
- * Canonical MVP+ membership perks - keep in sync with worker/credits.js DONATE_BENEFITS.
+ * Support copy - keep in sync with worker/credits.js DONATE_BENEFITS.
+ * View Code and Download HTML are free and are not listed here.
  */
 window.MVP_PLUS_BENEFITS = [
-  "View code and download HTML in Builder",
-  "Lifetime MVP+ after one donation of any amount",
-  "Support Moonrise - keep generation free for everyone",
+  "Support Moonrise and keep building free for everyone",
 ];

@@ -44,7 +44,7 @@
       ]
     },
     {
-      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|docs|book|login|orders|download|contact|report|pricing|onboarding|admin-console|ui-library|hosting-billing|creator-contact|404)",
+      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|docs|book|login|orders|download|contact|report|onboarding|admin-console|ui-library|hosting-billing|creator-contact|404)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
@@ -81,6 +81,8 @@
     { "source": "/apply.html", "destination": "/login", "permanent": true },
     { "source": "/store", "destination": "/dashboard", "permanent": true },
     { "source": "/store.html", "destination": "/dashboard", "permanent": true },
+    { "source": "/pricing", "destination": "/dashboard", "permanent": true },
+    { "source": "/pricing.html", "destination": "/dashboard", "permanent": true },
     { "source": "/donate", "destination": "/dashboard", "permanent": true },
     { "source": "/donate.html", "destination": "/dashboard", "permanent": true },
     { "source": "/leaderboard", "destination": "/dashboard", "permanent": true },

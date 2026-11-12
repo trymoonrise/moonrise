@@ -4904,12 +4904,12 @@ app.post("/credits/plan-checkout", requireUser, checkoutLimiter, async (req, res
     const supabase = db();
     const existing = await getBalance(supabase, req.user.id);
     if (existing.planStatus === "active" && existing.planId === plan.id) {
-      return res.json({ alreadyActive: true, url: `${PUBLIC_APP_URL}/pricing.html` });
+      return res.json({ alreadyActive: true, url: `${PUBLIC_APP_URL}/dashboard` });
     }
     if (existing.planStatus === "active" && existing.stripeCustomerId) {
       const portal = await stripe.billingPortal.sessions.create({
         customer: existing.stripeCustomerId,
-        return_url: `${PUBLIC_APP_URL}/pricing.html`,
+        return_url: `${PUBLIC_APP_URL}/dashboard`,
       });
       return res.json({ manageExisting: true, url: portal.url });
     }
@@ -4917,8 +4917,8 @@ app.post("/credits/plan-checkout", requireUser, checkoutLimiter, async (req, res
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: planLineItem(plan, stripe),
-      success_url: `${PUBLIC_APP_URL}/pricing.html?sub=1&plan=${plan.id}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${PUBLIC_APP_URL}/pricing.html?sub=canceled`,
+      success_url: `${PUBLIC_APP_URL}/dashboard?sub=1&plan=${plan.id}&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${PUBLIC_APP_URL}/dashboard?sub=canceled`,
       customer: existing.stripeCustomerId || undefined,
       customer_email: existing.stripeCustomerId ? undefined : req.user.email || undefined,
       client_reference_id: req.user.id,
@@ -5010,8 +5010,8 @@ app.post("/credits/topup-checkout", requireUser, checkoutLimiter, async (req, re
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: customTopupLineItem(quote),
-      success_url: `${PUBLIC_APP_URL}/pricing.html?topup=1&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${PUBLIC_APP_URL}/pricing.html?topup=canceled`,
+      success_url: `${PUBLIC_APP_URL}/dashboard?topup=1&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${PUBLIC_APP_URL}/dashboard?topup=canceled`,
       customer: existing.stripeCustomerId || undefined,
       customer_email: existing.stripeCustomerId ? undefined : req.user.email || undefined,
       metadata: {
@@ -5055,7 +5055,7 @@ app.post("/credits/billing-portal", requireUser, checkoutLimiter, async (req, re
 
     const portal = await stripe.billingPortal.sessions.create({
       customer: balance.stripeCustomerId,
-      return_url: `${PUBLIC_APP_URL}/pricing.html`,
+      return_url: `${PUBLIC_APP_URL}/dashboard`,
     });
 
     res.json({ url: portal.url });
@@ -5471,8 +5471,8 @@ app.post("/mvp-checkout", requireUser, checkoutLimiter, async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: planLineItem(plan, stripe),
-      success_url: `${PUBLIC_APP_URL}/pricing.html?sub=1&plan=starter&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${PUBLIC_APP_URL}/pricing.html?sub=canceled`,
+      success_url: `${PUBLIC_APP_URL}/dashboard?sub=1&plan=starter&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${PUBLIC_APP_URL}/dashboard?sub=canceled`,
       customer: existing.stripeCustomerId || undefined,
       customer_email: existing.stripeCustomerId ? undefined : req.user.email || undefined,
       client_reference_id: req.user.id,

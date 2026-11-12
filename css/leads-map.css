@@ -1207,19 +1207,9 @@
 }
 
 .ms-lf-map .maplibregl-ctrl-attrib,
-.ms-lf-map-attrib-host .maplibregl-ctrl-attrib {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  font-size: 10px;
-  line-height: 1.35;
-  max-width: min(72vw, 22rem);
-  margin: 0;
-  padding: 0.22rem 0.45rem;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.94);
-  color: var(--lf-ink, #232427);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+.ms-lf-map-attrib-host,
+.ms-lf-map .maplibregl-ctrl-attrib-button {
+  display: none !important;
 }
 
 .ms-lf-map .maplibregl-ctrl-attrib a,

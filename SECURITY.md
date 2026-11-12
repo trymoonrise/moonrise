@@ -43,6 +43,31 @@ If personal account data is leaked or we confirm unauthorized access to producti
 
 - What happened, what data categories were involved (as far as we know), what we are doing, and what the person can do (for example reset sessions or contact support)
 
+**What can identify a creator**
+
+We try to minimize what would identify a Moonrise creator if there is a data breach. Moonrise never asks for a password, a government-issued ID, a driver's license, a passport, photo or face recognition, a Social Security number, or similar identity documents, so those are not records we hold. Full payment card numbers are not stored. If account data were exposed, these records can still be linked to that creator:
+
+- Account email, username, display name, profile photo, and account id
+- Phone number and country, if one was added
+- Session records and sign-in security events that can be tied to an email address or IP address. A passkey, if the creator adds one, can be linked to the account. Moonrise does not ask for or store a password.
+- Short-lived email sign-in links, while they are still valid
+- Notification preferences, when the account was created or updated, and whether the account is frozen
+- Contact email and phone saved for clients, including when those details are copied onto a published site
+- Payout method and the handle, email, or phone entered for Cash App, Venmo, PayPal, Zelle, or another method, plus earnings and payout amounts and status
+- Card brand, last four digits, expiration, and a card fingerprint if a security card was verified
+- Credit plan, credit balance, credit history, Stripe customer and subscription identifiers, donation or support status, and Store purchases
+- Saved projects: business name, address, phone, map link, notes, category, website price, site HTML and files, publish URL, and watermark status
+- Generation prompts, generated site HTML, and error messages from those jobs
+- Contact-form settings and form submissions on that creator's projects, including a sender's name, phone, and message, and the notification email or endpoint
+- Custom domain hostname and DNS or verification status, if a domain was connected
+- Clients added by hand: business name, phone, website, price, and notes
+- GitHub username and GitHub account id, plus the access token, if GitHub was connected
+- Calendar username and connected account id, access tokens, and synced bookings (title, time, guest name, email, phone, and meeting link), if a calendar was connected
+- Browser push subscription and the browser used for it, if notifications were turned on
+- IP address, device and browser type, approximate location from network data, pages used, and timestamps in logs tied to the account
+- Payments on that creator's projects: amount, status, and Stripe payment identifiers
+- An employee signup redemption, if one was used on the account
+
 **Timing**
 
 - We aim to begin investigation within 24 hours of a credible signal

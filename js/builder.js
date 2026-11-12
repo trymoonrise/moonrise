@@ -2622,135 +2622,22 @@
     return hasActiveSubscription();
   }
 
-  function hasMvpPlus() {
-    return !!(state.mvpPlus || hasActiveSubscription());
-  }
-
-  /** View Code / Download - MVP+ subscription or active paid plan. */
-  function canAccessCodeTools() {
-    return hasMvpPlus();
-  }
-
-  const MVP_STAR_TONES = 6;
-  /** Avoid a one-second star flash before credits/profile resolve entitlement. */
-  let mvpAccessResolved = false;
-
-  function cycleMvpStar(star) {
-    if (!star) return;
-    const next = (Number(star.dataset.tone || 0) + 1) % MVP_STAR_TONES;
-    star.dataset.tone = String(next);
-    star.classList.remove("is-flash");
-    void star.offsetWidth;
-    star.classList.add("is-flash");
-  }
-
-  function ensureMvpStar(btn, locked) {
-    if (!btn) return;
-    let star = btn.querySelector(".ms-mvp-star");
-    if (!locked) {
-      star?.remove();
-      return;
-    }
-    if (!star) {
-      star = document.createElement("span");
-      star.className = "ms-mvp-star";
-      star.dataset.tone = "0";
-      star.setAttribute("role", "button");
-      star.setAttribute("tabindex", "0");
-      star.setAttribute("aria-label", "Premium feature");
-      star.title = "Premium - click the star to shift colors";
-      star.innerHTML = '<span class="ms-mvp-star-glyph" aria-hidden="true"></span>';
-      star.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        cycleMvpStar(star);
-      });
-      star.addEventListener("keydown", (e) => {
-        if (e.key !== "Enter" && e.key !== " ") return;
-        e.preventDefault();
-        e.stopPropagation();
-        cycleMvpStar(star);
-      });
-      btn.appendChild(star);
-    }
-  }
-
-  /** Gate Code / Download - MVP+ or active paid plan. */
-  function denyPaidPlan(feature) {
-    const label = feature === "download" ? "Download HTML" : "View Code";
-    const btn =
-      feature === "download"
-        ? document.getElementById("btn-download-html")
-        : document.querySelector('.is-mode[data-mode="code"]');
-    cycleMvpStar(btn?.querySelector(".ms-mvp-star"));
-    window.StudioToast?.error?.(
-      label + " unlocks with MVP+ or an active Starter, Pro, or Business plan."
-    );
-    if (state.mode === "code") {
-      state.mode = "preview";
-      try {
-        updatePreview();
-      } catch (_) {
-        /* ignore */
-      }
-    }
-    return false;
-  }
-
-  function requirePaidPlan(feature) {
-    if (canAccessCodeTools()) return true;
-    return denyPaidPlan(feature);
-  }
-
-  async function requirePaidPlanAsync(feature) {
-    if (canAccessCodeTools()) return true;
-    // Credits often load after first paint - refresh once before denying.
-    await syncCreditsFromWorker();
-    if (canAccessCodeTools()) return true;
-    return denyPaidPlan(feature);
-  }
-
-  /** @deprecated alias */
-  function requireMvpPlus(feature) {
-    return requirePaidPlan(feature);
-  }
-
-  function syncMvpAccessUi(opts) {
-    if (opts && opts.resolved) mvpAccessResolved = true;
-    const locked = !canAccessCodeTools();
-    // Keep buttons usable until we know; only show the star once entitlement is known.
-    const showLockChrome = mvpAccessResolved && locked;
+  function syncMvpAccessUi() {
     const codeBtn = document.querySelector('.is-mode[data-mode="code"]');
     const downloadBtn = document.getElementById("btn-download-html");
-    const lockHint = "Unlock with MVP+ or an active Starter, Pro, or Business plan";
     if (codeBtn) {
-      codeBtn.classList.toggle("is-mvp-locked", showLockChrome);
-      codeBtn.setAttribute("aria-disabled", showLockChrome ? "true" : "false");
-      codeBtn.title = showLockChrome ? lockHint : "Code";
-      codeBtn.setAttribute(
-        "aria-label",
-        showLockChrome ? "View Code (MVP+ or plan required)" : "Code"
-      );
-      ensureMvpStar(codeBtn, showLockChrome);
+      codeBtn.classList.remove("is-mvp-locked");
+      codeBtn.removeAttribute("aria-disabled");
+      codeBtn.title = "Code";
+      codeBtn.setAttribute("aria-label", "Code");
+      codeBtn.querySelector(".ms-mvp-star")?.remove();
     }
     if (downloadBtn) {
-      downloadBtn.classList.toggle("is-mvp-locked", showLockChrome);
-      downloadBtn.setAttribute("aria-disabled", showLockChrome ? "true" : "false");
-      downloadBtn.title = showLockChrome ? lockHint : "Download HTML";
-      downloadBtn.setAttribute(
-        "aria-label",
-        showLockChrome ? "Download HTML (MVP+ or plan required)" : "Download HTML"
-      );
-      ensureMvpStar(downloadBtn, showLockChrome);
-    }
-    // Never leave a locked user stuck in code mode.
-    if (mvpAccessResolved && locked && state.mode === "code") {
-      state.mode = "preview";
-      try {
-        updatePreview();
-      } catch (_) {
-        /* ignore */
-      }
+      downloadBtn.classList.remove("is-mvp-locked");
+      downloadBtn.removeAttribute("aria-disabled");
+      downloadBtn.title = "Download HTML";
+      downloadBtn.setAttribute("aria-label", "Download HTML");
+      downloadBtn.querySelector(".ms-mvp-star")?.remove();
     }
   }
 
@@ -2767,15 +2654,7 @@
     if (data.totalCredits != null) {
       state.totalCredits = Number(data.totalCredits) || 0;
     }
-    syncMvpAccessUi({ resolved: true });
-    if (state.mode === "code" && !canAccessCodeTools()) {
-      state.mode = "preview";
-      try {
-        updatePreview();
-      } catch (_) {
-        /* ignore */
-      }
-    }
+    syncMvpAccessUi();
   }
 
   async function syncCreditsFromWorker() {
@@ -2815,7 +2694,7 @@
       state.mvpPlus = true;
     }
     return syncCreditsFromWorker().finally(() => {
-      syncMvpAccessUi({ resolved: true });
+      syncMvpAccessUi();
     });
   }
 
@@ -5681,10 +5560,6 @@
   }
 
   function updatePreview() {
-    // Hard gate: never render the code editor without an active subscription.
-    if (state.mode === "code" && !canAccessCodeTools()) {
-      state.mode = "preview";
-    }
     const frame = document.getElementById("preview-frame");
     const editor = document.getElementById("code-editor");
     const wrap = document.getElementById("preview-wrap");
@@ -7283,7 +7158,6 @@
   }
 
   async function downloadHtml() {
-    if (!(await requirePaidPlanAsync("download"))) return;
     if (!state.html || !state.html.trim()) {
       setError("Nothing to download yet - generate a site first.");
       return;
@@ -10713,35 +10587,8 @@
       setError("");
       void generate({ fromFinder: !!state.fromFinder || hasFreshLeadIntake() });
     });
-    // Capture-phase: block Code / Download before any other handler runs.
-    document.addEventListener(
-      "click",
-      (e) => {
-        const codeBtn = e.target.closest?.('.is-mode[data-mode="code"]');
-        if (codeBtn) {
-          if (!canAccessCodeTools()) {
-            e.preventDefault();
-            e.stopPropagation();
-            void requirePaidPlanAsync("code");
-          }
-          return;
-        }
-        const downloadBtn = e.target.closest?.("#btn-download-html");
-        if (downloadBtn) {
-          if (!canAccessCodeTools()) {
-            e.preventDefault();
-            e.stopPropagation();
-            void requirePaidPlanAsync("download");
-          }
-        }
-      },
-      true
-    );
     document.querySelectorAll(".is-mode").forEach((btn) => {
       btn.addEventListener("click", async () => {
-        if (btn.dataset.mode === "code") {
-          if (!(await requirePaidPlanAsync("code"))) return;
-        }
         if (state.mode === "code") {
           state.html = document.getElementById("code-editor")?.value || state.html;
         } else if (state.mode === "edit") {
@@ -10837,7 +10684,6 @@
       syncPriceUi({ animate: true });
     }
     document.getElementById("code-editor")?.addEventListener("input", () => {
-      if (!canAccessCodeTools()) return;
       state.html = document.getElementById("code-editor").value;
       syncPublishLiveUi();
     });

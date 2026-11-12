@@ -3,6 +3,47 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.1.2",
+      "date": "2026-11-11",
+      "title": "Home workspace tries Finder and Editor",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Docs describe free code and download, Calendar, and sign-in that does not ask for a password or identity documents.",
+            "Moonrise is free for creators, and the pricing page is gone.",
+            "The home build step sits on a white panel, matching the live generation screen.",
+            "The home build terminal is white and writes the site one line at a time.",
+            "The home workspace switches between an interactive Finder and Editor, with filters, dropdowns, and publish.",
+            "The home Finder puts Scan nearby and All in a bottom dock like Business Finder.",
+            "The home Editor shows an Add a section label above the feature toggles.",
+            "The home workspace fits on phones without clipping the map sheet or editor bar.",
+            "The home build step shows a cursor sliding to generate, then a greyed Generating control.",
+            "The home build step says one button turns a business into a functional website.",
+            "The home build slider sits in the center of its card, with the label centered on the bar.",
+            "The home build cursor sits a little lower and slightly larger on the slider.",
+            "The home map and Business Finder no longer show the OpenFreeMap credit line."
+          ],
+          "fixes": [
+            "Home Editor feature rows open their details when you tap the row or chevron."
+          ]
+        },
+        {
+          "heading": "Studio",
+          "added": [
+            "View Code and Download HTML are free for every creator."
+          ]
+        },
+        {
+          "heading": "Security",
+          "added": [
+            "The privacy policy lists the account records a data breach could link to a Moonrise creator.",
+            "The privacy policy says Moonrise does not ask for a password, government ID, photo recognition, or a Social Security number."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.1.1",
       "date": "2026-11-10",
       "title": "UI Library adds scroll effects",

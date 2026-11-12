@@ -5,7 +5,7 @@
     build it in Studio, publish a watermarked preview, and earn when the owner pays on that page to go live.
   </p>
   <ul class="ms-help-list">
-    <li><strong>Free to build</strong>, create, preview, redesign, and publish watermarked sites without charging the owner up front.</li>
+    <li><strong>Free to build</strong>, Moonrise has no creator pricing page, subscription, or credit plan. Create, preview, edit, view code, download HTML, redesign, and publish watermarked sites without paying Moonrise.</li>
     <li><strong>They pay on the watermark</strong>, the live site stays watermarked until the owner completes Moonrise checkout.</li>
     <li><strong>You keep 90%</strong>, Moonrise keeps 10% of each go-live payment (before processor fees and adjustments under the Terms).</li>
   </ul>
@@ -117,6 +117,7 @@
     <li><a href="editor"><strong>Editor</strong></a>, polish copy, toggle features, set Website Price, publish, and connect domains.</li>
     <li><a href="projects"><strong>Projects</strong></a>, every site you have generated or imported.</li>
     <li><a href="clients"><strong>My Clients</strong></a>, paid go-live businesses after watermark checkout.</li>
+    <li><a href="calendar"><strong>Calendar</strong></a>, connect Cal.com and see your bookings.</li>
     <li><a href="settings"><strong>Settings</strong></a>, profile, security, payout method, and account controls.</li>
     <li><a href="course"><strong>Course</strong></a>, creator walkthrough video and onboarding help.</li>
     <li><a href="ui-library"><strong>UI Library</strong></a>, interactive patterns used in generated sites.</li>
@@ -216,7 +217,7 @@
   </figure>
   <ul class="ms-help-list">
     <li><strong>Generate</strong> builds a full site from business details. Wait for the progress UI until the preview appears.</li>
-    <li><strong>Preview</strong>, see the live layout. <strong>Edit</strong>, click sections to change text and media on the page. <strong>Code</strong>, view or edit HTML (may require MVP+ or an active Starter, Pro, or Business plan).</li>
+    <li><strong>Preview</strong>, see the live layout. <strong>Edit</strong>, click sections to change text and media on the page. <strong>Code</strong>, view or edit HTML, and download the file. Code and download are free.</li>
     <li><strong>Redesign</strong> creates a fresh visual direction on an existing project.</li>
     <li><strong>Device previews</strong>, check desktop, tablet, and phone before you share.</li>
   </ul>
@@ -294,11 +295,11 @@
 <section class="ms-doc-block" id="editor-tools">
   <h2 class="ms-doc-title">Editor tools</h2>
   <ul class="ms-help-list">
-    <li><strong>Download HTML</strong>, export the current site HTML (plan gate may apply, same as View Code).</li>
+    <li><strong>Download HTML</strong>, export the current site HTML. This is free.</li>
     <li><strong>QR Code</strong>, open the QR business-card modal to copy the live link or download the QR image (publish first for a public URL).</li>
     <li><strong>Flyer</strong>, printable website flyer with a scan-to-visit QR; print or download from the flyer modal.</li>
     <li><strong>Edit website manually</strong>, switch to Edit mode, click sections on the page, change copy/media, then Done.</li>
-    <li><strong>View code</strong>, switch to Code mode to inspect or edit HTML when your plan unlocks it.</li>
+    <li><strong>View code</strong>, switch to Code mode to inspect or edit HTML. This is free.</li>
     <li><strong>Unpublish</strong>, takes the public link offline until you publish again (confirm in the dialog).</li>
     <li><strong>Delete project</strong>, permanently removes the site, preview, and publish record. This cannot be undone.</li>
   </ul>
@@ -581,8 +582,9 @@
     <li>Production uses HTTPS with HSTS, plus security headers (CSP, frame protections, and related browser policies).</li>
     <li>Studio API routes use CORS allowlisting, auth lockouts, and per-route rate limits. Authenticated routes require a valid Supabase Bearer token.</li>
     <li>Stripe webhooks are verified with a signing secret. Secrets stay in host environment variables, not in client code.</li>
-    <li>Sign in with email-link or passkey where available. Keep recovery email access.</li>
+    <li>Sign in with an email link. A passkey is optional. Moonrise does not ask for a password, a government ID, photo or face recognition, or a Social Security number.</li>
     <li>Go-live card data is handled by Stripe, not stored in full by Moonrise.</li>
+    <li>If there is a data breach, we try to minimize what would identify a Moonrise creator. The records that can still be linked to you are listed in <a href="#privacy">Privacy</a>.</li>
     <li>Report vulnerabilities privately via GitHub Security advisories or <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>, do not open a public issue for sensitive reports.</li>
     <li>Full policy: <a href="https://github.com/trymoonrise/moonrise/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">SECURITY.md</a>.</li>
   </ul>
@@ -627,7 +629,6 @@ __REFUNDS__
     <li><strong>Owner cannot pay?</strong> Confirm they opened the live published URL and Website Price is set.</li>
     <li><strong>Contact form not emailing?</strong> Toggle on, Auto mode with a valid email, Save &amp; apply, update the live site.</li>
     <li><strong>Domain still pending?</strong> Remove conflicting records, add Moonrise DNS, wait, then Check status. See <a href="#domains">Custom domains</a>.</li>
-    <li><strong>Code / Download HTML locked?</strong> Unlock with MVP+ or an active Starter, Pro, or Business plan.</li>
     <li><strong>QR or flyer empty?</strong> Publish first so there is a public URL to encode.</li>
     <li><strong>Contact Owner does nothing?</strong> Add the business phone on the project or in Settings → Contact.</li>
   </ul>

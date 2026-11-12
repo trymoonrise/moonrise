@@ -14,7 +14,6 @@
     "ui-library",
     "docs",
     "book",
-    "pricing",
     "hosting-billing",
     "creator-contact",
     "404",

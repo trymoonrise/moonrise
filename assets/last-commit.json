@@ -1,6 +1,1 @@
-{
-  "repo": "trymoonrise/moonrise",
-  "sha": "05f4e49b79d244954adc42191342c94a17384b0c",
-  "committedAt": "2026-09-24T08:19:48-07:00",
-  "message": "Restore Finder asset paths, re-enable long cache for versioned static files, and ship perf1 build reload."
-}
+{"committedAt":"2026-11-10T20:58:15Z","message":"Ship v3.1.1: UI Library adds scroll effects.","repo":"trymoonrise/moonrise","sha":"524921579d408942538c40ee3ed67f4c1e3d301f"}

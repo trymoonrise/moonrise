@@ -273,7 +273,7 @@ document.documentElement.classList.add("ms-boot");
   <link rel="stylesheet" href="css/ui-library.css?v=20261108-chevron">
   <link rel="stylesheet" href="css/ui-library-lab.css?v=20261109-docks">
 <link rel="stylesheet" href="css/site-nav.css?v=20261110-homechip">
-<link rel="stylesheet" href="css/home.css?v=20261109-faq">
+<link rel="stylesheet" href="css/home.css?v=20261111-addsec">
   <link rel="stylesheet" href="css/public-pages.css?v=20261108-shade">
   <meta name="color-scheme" content="light">
   <script defer src="js/config.js?v=20261106-mono"></script>
@@ -409,39 +409,90 @@ document.documentElement.classList.add("ms-boot");
       <section class="ms-band" id="how" aria-labelledby="how-title">
         <div class="ms-wrap ms-wrap-wide">
           <p class="ms-how-badge ms-rise"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8.9 1.2a1 1 0 0 0-1.8 0l-.3 1.1a4.8 4.8 0 0 0-1.2.7L4.5 2.5a1 1 0 0 0-1.3 1.3l.5 1.1a4.8 4.8 0 0 0-.7 1.2L1.9 6.4a1 1 0 0 0 0 1.8l1.1.3c.1.4.3.8.7 1.2l-.5 1.1a1 1 0 0 0 1.3 1.3l1.1-.5c.4.3.8.5 1.2.7l.3 1.1a1 1 0 0 0 1.8 0l.3-1.1c.4-.1.8-.4 1.2-.7l1.1.5a1 1 0 0 0 1.3-1.3l-.5-1.1c.3-.4.5-.8.7-1.2l1.1-.3a1 1 0 0 0 0-1.8l-1.1-.3a4.8 4.8 0 0 0-.7-1.2l.5-1.1a1 1 0 0 0-1.3-1.3l-1.1.5a4.8 4.8 0 0 0-1.2-.7l-.3-1.1ZM8 10.1A2.1 2.1 0 1 1 8 5.9a2.1 2.1 0 0 1 0 4.2Z"/></svg> How it works</p>
-          <h2 id="how-title" class="ms-rise">Find it. Build it.<br>Sell it.</h2>
+          <h2 id="how-title" class="ms-rise">Find it. Build it. Sell it.</h2>
           <div class="ms-trio">
             <article class="ms-card ms-how-card ms-rise">
               <div class="ms-how-preview" aria-hidden="true">
-                <div class="ms-how-find">
-                  <p class="ms-how-search">Shops near you</p>
-                  <p class="ms-how-shop is-picked"><span class="ms-how-pin"></span><span><strong>Northside Cafe</strong><em>No website yet</em></span></p>
-                  <p class="ms-how-shop"><span class="ms-how-pin"></span><span><strong>Harbor Clinic</strong><em>Has a site</em></span></p>
+                <div class="ms-how-find" data-how-find>
+                  <div class="ms-how-map">
+                    <p class="ms-how-search"><span data-how-type>barbershop</span><i class="ms-how-caret" aria-hidden="true"></i></p>
+                    <span class="ms-how-map-pin is-hot" data-how-pin></span>
+                    <span class="ms-how-map-pin" data-how-pin></span>
+                    <span class="ms-how-map-pin" data-how-pin></span>
+                    <p class="ms-how-scan">Scan nearby</p>
+                  </div>
                 </div>
               </div>
               <p class="ms-how-step">01</p>
               <h3>Find a business</h3>
-              <p>Pick a cafe, clinic, or shop nearby that still needs a site.</p>
+              <p>Search or scan nearby for a cafe, clinic, or shop that still needs a site.</p>
             </article>
             <article class="ms-card ms-how-card ms-rise">
               <div class="ms-how-preview" aria-hidden="true">
-                <div class="ms-how-site">
-                  <span class="ms-how-dots" aria-hidden="true"></span>
-                  <strong>Northside Cafe</strong>
-                  <span class="ms-how-line"></span>
-                  <span class="ms-how-line is-short"></span>
-                  <span class="ms-how-one">Build site</span>
+                <div class="ms-how-gen">
+                  <div class="ms-how-slide">
+                    <div class="ms-how-slide-track">
+                      <span class="ms-how-slide-label">
+                        <span class="is-idle">Slide to generate</span>
+                        <span class="is-busy">Generating</span>
+                      </span>
+                      <span class="ms-how-slide-thumb">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 12-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-2.5L16 7.84"/><path d="m12 9 4.5-4.5a2.12 2.12 0 0 1 3 3L15 12"/></svg>
+                      </span>
+                    </div>
+                    <span class="ms-how-cursor" aria-hidden="true">
+                      <svg viewBox="0 0 18 22">
+                        <path fill="#fff" stroke="#1d1d1f" stroke-width="1.3" stroke-linejoin="round" d="M2 1.4 2 16.2 6.5 12.2 10.1 20.2 12.7 19 9.1 11.2 15.4 11 Z"/>
+                      </svg>
+                    </span>
+                  </div>
                 </div>
               </div>
               <p class="ms-how-step">02</p>
               <h3>Build the site</h3>
-              <p>One button turns that business into a page you can send.</p>
+              <p>One button turns that business into a functional website.</p>
             </article>
             <article class="ms-card ms-how-card ms-rise">
               <div class="ms-how-preview" aria-hidden="true">
-                <div class="ms-how-sale">
-                  <p class="ms-how-live"><span>Live</span><strong>Northside Cafe</strong></p>
-                  <p class="ms-how-cut"><span>You keep</span><strong>90%</strong></p>
+                <div class="ms-how-sale" data-how-sale>
+                  <div class="ms-how-dash-top">
+                    <div>
+                      <p class="ms-how-dash-kicker">This month</p>
+                      <p class="ms-how-dash-total"><span data-how-earn>$0</span></p>
+                    </div>
+                    <div class="ms-how-dash-split">
+                      <span><strong>90%</strong> you keep</span>
+                      <span><strong>10%</strong> Moonrise</span>
+                    </div>
+                  </div>
+                  <div class="ms-how-dash-chart" data-how-chart>
+                    <svg class="ms-how-dash-svg" viewBox="0 0 640 220" preserveAspectRatio="none" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="ms-how-dash-fill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stop-color="#1d1d1f" stop-opacity="0.18"/>
+                          <stop offset="100%" stop-color="#1d1d1f" stop-opacity="0"/>
+                        </linearGradient>
+                      </defs>
+                      <path class="ms-how-dash-area" d="M0 188 C 70 176, 110 168, 160 150 S 250 120, 320 108 S 430 96, 480 72 S 580 48, 640 36 L 640 220 L 0 220 Z"/>
+                      <path class="ms-how-dash-line" d="M0 188 C 70 176, 110 168, 160 150 S 250 120, 320 108 S 430 96, 480 72 S 580 48, 640 36" fill="none" stroke="#1d1d1f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="ms-how-dash-bars">
+                      <span style="--h:28%"><i></i><em>W1</em></span>
+                      <span style="--h:42%"><i></i><em>W2</em></span>
+                      <span style="--h:58%"><i></i><em>W3</em></span>
+                      <span style="--h:74%"><i></i><em>W4</em></span>
+                      <span style="--h:91%"><i></i><em>Now</em></span>
+                    </div>
+                  </div>
+                  <div class="ms-how-dash-goal">
+                    <div class="ms-how-dash-goal-meta">
+                      <span>Month goal</span>
+                      <span data-how-goal-label>$0 / $4,000</span>
+                    </div>
+                    <div class="ms-how-dash-track">
+                      <span data-how-goal-fill></span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <p class="ms-how-step">03</p>
@@ -454,160 +505,153 @@ document.documentElement.classList.add("ms-boot");
       </section>
       </div>
 
-      <section class="ms-band ms-band-warm" aria-labelledby="flow-title">
+      <section class="ms-band ms-band-warm" id="workspace" aria-labelledby="flow-title">
         <div class="ms-wrap ms-wrap-wide">
-          <h2 id="flow-title" class="ms-rise">Your workspace.</h2>
-          <p class="ms-band-note ms-rise">Find a business. Build the site. Get paid when they go live.</p>
-          <div class="ms-pair">
-            <article class="ms-card ms-product ms-rise">
-              <p class="ms-card-kicker">Editor</p>
-              <h3>The same switches.</h3>
-              <p>Turn a feature on. The preview changes with it.</p>
-              <div class="ms-editor">
-                <div class="ms-editor-bar">
-                  <span class="ms-editor-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back</span>
-                  <div class="ms-editor-modes" role="group" aria-label="View mode">
-                    <button type="button" class="is-active" data-mode="preview" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Preview</button>
-                    <button type="button" data-mode="edit" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Edit</button>
-                    <button type="button" data-mode="code" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Code</button>
-                  </div>
-                </div>
-                <div class="ms-editor-stage" data-editor-stage>
-                  <div class="ms-editor-view" data-view="preview">
-                    <div class="ms-editor-page">
-                      <strong>Northside Cafe</strong>
-                      <p>Coffee on the north side.</p>
-                      <span data-piece="contact">Send a message</span>
-                      <span data-piece="domain" class="is-off">northsidecafe.com</span>
+          <h2 id="flow-title" class="ms-rise">Try the workspace.</h2>
+          <p class="ms-band-note ms-rise">Switch between Finder and Editor. Both respond.</p>
+          <div class="ms-ws ms-rise" data-workspace-sim data-ws-page="finder">
+            <div class="ms-ws-switch" role="tablist" aria-label="Workspace pages">
+              <button type="button" role="tab" id="ws-tab-finder" data-ws-tab="finder" aria-selected="true" aria-controls="ws-panel-finder">Finder</button>
+              <button type="button" role="tab" id="ws-tab-editor" data-ws-tab="editor" aria-selected="false" aria-controls="ws-panel-editor">Editor</button>
+            </div>
+            <div class="ms-ws-frame">
+              <div class="ms-ws-page is-on" id="ws-panel-finder" role="tabpanel" data-ws-panel="finder" aria-labelledby="ws-tab-finder">
+                <div class="ms-phone ms-finder" data-finder>
+                  <div class="ms-phone-map" data-finder-map role="application" aria-label="Example map of nearby shops"></div>
+                  <div class="ms-finder-top">
+                    <div class="ms-finder-pill" data-finder-pill>
+                      <button type="button" class="ms-finder-chip" data-finder-search aria-label="Search for a business">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+                      </button>
+                      <label class="ms-finder-query">
+                        <span data-finder-count>2 Businesses</span>
+                        <input type="search" data-finder-query placeholder="Search for a business" aria-label="Search for a business">
+                      </label>
+                      <button type="button" class="ms-finder-chip" data-finder-filter aria-expanded="false" aria-controls="ws-filter" aria-label="Filter businesses">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6.2 7.4V19l-3.6 1.6v-8.2L4 5z"/></svg>
+                      </button>
+                      <button type="button" class="ms-finder-chip" data-finder-locate aria-label="Center map">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4.5 19.5 12 15.5 19.5 19.5 12 2z"/></svg>
+                      </button>
+                    </div>
+                    <div class="ms-finder-filter" id="ws-filter" data-finder-filter-menu hidden>
+                      <p>Website</p>
+                      <button type="button" data-website-filter="all" aria-pressed="false">All businesses</button>
+                      <button type="button" data-website-filter="without" class="is-on" aria-pressed="true">No website</button>
+                      <button type="button" data-website-filter="with" aria-pressed="false">Has a site</button>
                     </div>
                   </div>
-                  <div class="ms-editor-view" data-view="edit" hidden>
-                    <label>Business name</label>
-                    <p>Northside Cafe</p>
-                    <label>Line</label>
-                    <p>Coffee on the north side.</p>
+                  <div class="ms-finder-sheet" data-finder-sheet>
+                    <div class="ms-finder-handle" aria-hidden="true"></div>
+                    <ul class="ms-phone-sheet" data-finder-list>
+                      <li><button type="button" data-place="cafe" data-website="without" data-lng="-71.4128" data-lat="41.8268" data-sim-place-name="Northside Cafe" data-sim-place-line="Coffee on the north side." class="is-on"><strong>Northside Cafe</strong><em>Cafe</em><span>No website</span></button></li>
+                      <li><button type="button" data-place="clinic" data-website="with" data-lng="-71.4062" data-lat="41.8214" data-sim-place-name="Harbor Clinic" data-sim-place-line="Care close to the water."><strong>Harbor Clinic</strong><em>Clinic</em><span>Has a site</span></button></li>
+                      <li><button type="button" data-place="gym" data-website="without" data-lng="-71.4186" data-lat="41.8312" data-sim-place-name="Oak Gym" data-sim-place-line="Strength on Oak Street."><strong>Oak Gym</strong><em>Gym</em><span>No website</span></button></li>
+                    </ul>
                   </div>
-                  <div class="ms-editor-view" data-view="code" hidden>
-                    <code>&lt;h1&gt;Northside Cafe&lt;/h1&gt;<br>&lt;p&gt;Coffee on the north side.&lt;/p&gt;</code>
-                  </div>
-                </div>
-                <div class="ms-ewidget is-on" data-widget="contact">
-                  <div class="ms-ewidget-head">
-                    <span class="ms-ewidget-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
-                    <span class="ms-ewidget-copy"><strong>Contact Form</strong><em>Form submissions</em></span>
-                    <button type="button" class="ms-eswitch" aria-checked="true" aria-label="Contact Form" data-toggle="contact"><span></span></button>
-                  </div>
-                  <div class="ms-ewidget-body">
-                    <div class="ms-ewidget-body-inner">
-                      <div class="ms-emode" aria-hidden="true"><span class="is-on">Auto</span><span>Custom</span></div>
-                      <label>Client email</label>
-                      <p>owner@northsidecafe.com</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="ms-ewidget" data-widget="domain">
-                  <div class="ms-ewidget-head">
-                    <span class="ms-ewidget-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span>
-                    <span class="ms-ewidget-copy"><strong>Custom Domain</strong><em>Connect your own domain</em></span>
-                    <button type="button" class="ms-eswitch" aria-checked="false" aria-label="Custom Domain" data-toggle="domain"><span></span></button>
-                  </div>
-                  <div class="ms-ewidget-body">
-                    <div class="ms-ewidget-body-inner">
-                      <label>Domain</label>
-                      <p>northsidecafe.com</p>
+                  <div class="ms-finder-actions">
+                    <div class="ms-finder-actions-tray">
+                      <button type="button" class="ms-finder-scan" data-finder-scan>Scan nearby</button>
+                      <button type="button" class="ms-finder-all" data-finder-all aria-label="Scan all businesses" title="All">All</button>
                     </div>
                   </div>
                 </div>
               </div>
-            </article>
-            <article class="ms-card ms-product ms-rise">
-              <p class="ms-card-kicker">Business Finder</p>
-              <h3>Shops on the map.</h3>
-              <p>A sample of the finder on a phone. Tap a pin. This one stays on Providence.</p>
-              <div class="ms-phone" data-finder>
-                <div class="ms-phone-map" data-finder-map role="application" aria-label="Example map of nearby shops"></div>
-                <label class="ms-phone-search">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
-                  <input type="search" data-finder-query placeholder="Cafes, clinics, shops" aria-label="Filter the example shops">
-                </label>
-                <ul class="ms-phone-sheet" data-finder-list>
-                  <li><button type="button" data-place="cafe" data-lng="-71.4128" data-lat="41.8268"><strong>Northside Cafe</strong><em>Cafe</em><span>No website</span></button></li>
-                  <li><button type="button" data-place="clinic" data-lng="-71.4062" data-lat="41.8214"><strong>Harbor Clinic</strong><em>Clinic</em><span>Has a site</span></button></li>
-                  <li><button type="button" data-place="gym" data-lng="-71.4186" data-lat="41.8312"><strong>Oak Gym</strong><em>Gym</em><span>No website</span></button></li>
-                </ul>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="ms-band ms-income-band" id="income" aria-labelledby="income-title">
-        <div class="ms-wrap ms-wrap-wide">
-          <h2 id="income-title" class="ms-rise">Your income.</h2>
-          <p class="ms-band-note ms-rise">Every live site pays you 90%. Watch the month build.</p>
-          <div class="ms-income ms-rise" data-income>
-            <div class="ms-income-main">
-              <div class="ms-income-top">
-                <div>
-                  <p class="ms-income-kicker">This month</p>
-                  <p class="ms-income-total"><span data-income-total>$0</span></p>
-                </div>
-                <div class="ms-income-split" aria-label="Payout split">
-                  <span><strong>90%</strong> you keep</span>
-                  <span><strong>10%</strong> Moonrise</span>
-                </div>
-              </div>
-              <div class="ms-income-chart" aria-hidden="true">
-                <svg class="ms-income-svg" viewBox="0 0 640 220" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="ms-income-fill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="#1d1d1f" stop-opacity="0.18"/>
-                      <stop offset="100%" stop-color="#1d1d1f" stop-opacity="0"/>
-                    </linearGradient>
-                  </defs>
-                  <path class="ms-income-area" data-income-area d="M0 188 C 70 176, 110 168, 160 150 S 250 120, 320 108 S 430 96, 480 72 S 580 48, 640 36 L 640 220 L 0 220 Z"/>
-                  <path class="ms-income-line" data-income-line d="M0 188 C 70 176, 110 168, 160 150 S 250 120, 320 108 S 430 96, 480 72 S 580 48, 640 36" fill="none" stroke="#1d1d1f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div class="ms-income-bars" data-income-bars>
-                  <span style="--h:28%"><i></i><em>W1</em></span>
-                  <span style="--h:42%"><i></i><em>W2</em></span>
-                  <span style="--h:58%"><i></i><em>W3</em></span>
-                  <span style="--h:74%"><i></i><em>W4</em></span>
-                  <span style="--h:91%"><i></i><em>Now</em></span>
-                </div>
-              </div>
-              <div class="ms-income-goal">
-                <div class="ms-income-goal-meta">
-                  <span>Month goal</span>
-                  <span data-income-goal-label>$0 / $2,000</span>
-                </div>
-                <div class="ms-income-track" role="progressbar" aria-valuemin="0" aria-valuemax="2000" aria-valuenow="0" data-income-track>
-                  <span data-income-fill></span>
+              <div class="ms-ws-page" id="ws-panel-editor" role="tabpanel" data-ws-panel="editor" hidden aria-labelledby="ws-tab-editor">
+                <div class="ms-editor" data-sim-editor>
+                  <div class="ms-ed-bar">
+                    <button type="button" class="ms-ed-back" data-ws-back>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                      Back
+                    </button>
+                    <div class="ms-ed-modes" role="group" aria-label="View mode">
+                      <button type="button" class="is-on" data-mode="preview" aria-pressed="true">Preview</button>
+                      <button type="button" data-mode="edit" aria-pressed="false">Edit</button>
+                      <button type="button" data-mode="code" aria-pressed="false">Code</button>
+                    </div>
+                    <button type="button" class="ms-ed-publish" data-sim-publish>Publish</button>
+                  </div>
+                  <p class="ms-ed-url" data-sim-url hidden>northsidecafe.moonrise.site</p>
+                  <div class="ms-ed-stage">
+                    <div class="ms-editor-page" data-view="preview">
+                      <strong data-sim-name>Northside Cafe</strong>
+                      <p data-sim-line>Coffee on the north side.</p>
+                      <span data-piece="hours" class="is-off">Open daily 7a–4p</span>
+                      <button type="button" class="ms-sim-cta" data-piece="contact">Send a message</button>
+                      <span data-piece="domain" class="is-off" data-sim-domain>northsidecafe.com</span>
+                    </div>
+                    <div data-view="edit" hidden>
+                      <label class="ms-ed-field" for="ws-sim-name">Business name
+                        <input id="ws-sim-name" type="text" data-sim-input="name" value="Northside Cafe" autocomplete="off" spellcheck="false">
+                      </label>
+                      <label class="ms-ed-field" for="ws-sim-line">Line
+                        <input id="ws-sim-line" type="text" data-sim-input="line" value="Coffee on the north side." autocomplete="off">
+                      </label>
+                    </div>
+                    <pre class="ms-ed-code" data-view="code" hidden><code data-sim-code></code></pre>
+                  </div>
+                  <p class="ms-ed-add">Add a section</p>
+                  <div class="ms-ewidget is-on" data-widget="contact">
+                    <div class="ms-ewidget-head">
+                      <span class="ms-ewidget-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                      <span class="ms-ewidget-copy"><strong>Contact Form</strong><em>Form submissions</em></span>
+                      <button type="button" class="ms-edrop" data-disclose aria-expanded="false" aria-label="Show Contact Form details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+                      <button type="button" class="ms-eswitch" aria-checked="true" aria-label="Contact Form" data-toggle="contact"><span></span></button>
+                    </div>
+                    <div class="ms-ewidget-body" hidden>
+                      <div class="ms-emode" role="group" aria-label="Contact mode">
+                        <button type="button" class="is-on" data-emode="auto" aria-pressed="true">Auto</button>
+                        <button type="button" data-emode="custom" aria-pressed="false">Custom</button>
+                      </div>
+                      <label class="ms-ed-field" for="ws-sim-email" data-field="auto">Client email
+                        <input id="ws-sim-email" type="email" data-sim-input="email" value="owner@northsidecafe.com" autocomplete="off" spellcheck="false">
+                      </label>
+                      <label class="ms-ed-field" for="ws-sim-endpoint" data-field="custom" hidden>Form endpoint
+                        <input id="ws-sim-endpoint" type="url" data-sim-input="endpoint" placeholder="https://formspree.io/f/..." autocomplete="off" spellcheck="false">
+                      </label>
+                    </div>
+                  </div>
+                  <div class="ms-ewidget" data-widget="hours">
+                    <div class="ms-ewidget-head">
+                      <span class="ms-ewidget-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+                      <span class="ms-ewidget-copy"><strong>Hours</strong><em>Show when you’re open</em></span>
+                      <button type="button" class="ms-edrop" data-disclose aria-expanded="false" aria-label="Show Hours details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+                      <button type="button" class="ms-eswitch" aria-checked="false" aria-label="Hours" data-toggle="hours"><span></span></button>
+                    </div>
+                    <div class="ms-ewidget-body" hidden>
+                      <label class="ms-ed-field" for="ws-sim-hours">Hours line
+                        <input id="ws-sim-hours" type="text" data-sim-input="hours" value="Open daily 7a–4p" autocomplete="off">
+                      </label>
+                    </div>
+                  </div>
+                  <div class="ms-ewidget" data-widget="domain">
+                    <div class="ms-ewidget-head">
+                      <span class="ms-ewidget-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span>
+                      <span class="ms-ewidget-copy"><strong>Custom Domain</strong><em data-sim-provider-label>Connect your own domain</em></span>
+                      <button type="button" class="ms-edrop" data-disclose aria-expanded="false" aria-label="Show Custom Domain details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+                      <button type="button" class="ms-eswitch" aria-checked="false" aria-label="Custom Domain" data-toggle="domain"><span></span></button>
+                    </div>
+                    <div class="ms-ewidget-body" hidden>
+                      <div class="ms-provider">
+                        <button type="button" class="ms-provider-trigger" data-provider-trigger aria-haspopup="listbox" aria-expanded="false">
+                          <span data-provider-value>Select where your domain is managed</span>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <ul class="ms-provider-menu" data-provider-menu role="listbox" hidden>
+                          <li role="option"><button type="button" data-provider="Squarespace">Squarespace</button></li>
+                          <li role="option"><button type="button" data-provider="GoDaddy">GoDaddy</button></li>
+                          <li role="option"><button type="button" data-provider="Namecheap">Namecheap</button></li>
+                          <li role="option"><button type="button" data-provider="Cloudflare">Cloudflare</button></li>
+                        </ul>
+                      </div>
+                      <label class="ms-ed-field" for="ws-sim-domain">Domain
+                        <input id="ws-sim-domain" type="text" data-sim-input="domain" value="northsidecafe.com" autocomplete="off" spellcheck="false">
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <aside class="ms-income-side">
-              <p class="ms-income-kicker">Recent payouts</p>
-              <ul class="ms-income-list">
-                <li>
-                  <span class="ms-income-mark">N</span>
-                  <span class="ms-income-copy"><strong>Northside Cafe</strong><em>Live site</em></span>
-                  <span class="ms-income-cut">+$405</span>
-                </li>
-                <li>
-                  <span class="ms-income-mark">R</span>
-                  <span class="ms-income-copy"><strong>River Dental</strong><em>Live site</em></span>
-                  <span class="ms-income-cut">+$540</span>
-                </li>
-                <li>
-                  <span class="ms-income-mark">O</span>
-                  <span class="ms-income-copy"><strong>Oak Gym</strong><em>Live site</em></span>
-                  <span class="ms-income-cut">+$270</span>
-                </li>
-              </ul>
-              <p class="ms-income-note">Owners pay on the watermark link. Your cut lands when the site goes live.</p>
-              <a class="ms-home-cta ms-income-cta" href="login.html">Start earning</a>
-            </aside>
           </div>
         </div>
       </section>
@@ -661,7 +705,7 @@ document.documentElement.classList.add("ms-boot");
       </section>
     </main>
 
-    <footer class="ms-home-site-footer ms-rise">
+    <footer class="ms-home-site-footer">
       <div class="ms-wrap">
         <strong>moonrise.</strong>
         <nav class="ms-home-foot-links" aria-label="Footer">
@@ -675,12 +719,13 @@ document.documentElement.classList.add("ms-boot");
           <a href="docs#terms">Terms</a>
         </nav>
         <p class="ms-home-footer-note"><a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a></p>
+        <p class="ms-repo-updated" data-repo-updated hidden>Last updated</p>
       </div>
     </footer>
   </div>
 
-  <script defer src="js/home-menu.js?v=20261110-updated"></script>
-  <script defer src="js/home-stage.js?v=20261109-income"></script>
+  <script defer src="js/home-menu.js?v=20261111-footupdate"></script>
+  <script defer src="js/home-stage.js?v=20261111-wsmobile"></script>
   <script defer src="js/ui-motion.js?v=20261108-no-donate"></script>
   <script defer src="js/toast.js"></script>
   <script defer>
