@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.1.7",
+      "date": "2026-11-11",
+      "title": "UI Library ring border uses a photo",
+      "sections": [
+        {
+          "heading": "Website",
+          "added": [
+            "UI Library Borders Ring demo shows a photo inside the ring instead of initials."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.1.6",
       "date": "2026-11-11",
       "title": "Release notes use code-style file labels",
