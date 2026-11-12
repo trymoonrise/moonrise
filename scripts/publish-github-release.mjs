@@ -34,36 +34,163 @@ if (!token) {
 const releasesDoc = JSON.parse(fs.readFileSync(path.join(root, "brain", "releases.json"), "utf8"));
 const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 
-const SECTION_DISPLAY = {
-  Site: { heading: "Website", file: "index.html" },
-  Website: { heading: "Website", file: "index.html" },
-  Studio: { heading: "Studio", file: "dashboard.html" },
-  Finder: { heading: "Finder", file: "leads.html" },
-  Worker: { heading: "Worker", file: "worker/" },
-  Leadfinder: { heading: "Leadfinder", file: "api/" },
-  Security: { heading: "Security", file: "SECURITY.md" },
+const SECTION_HEADING = {
+  Site: "Website",
+  Website: "Website",
+  Studio: "Studio",
+  Finder: "Finder",
+  Worker: "Worker",
+  Leadfinder: "Leadfinder",
+  Security: "Security",
 };
 
-function sectionMeta(heading) {
+const META_FILES = new Set([
+  "package.json",
+  "package-lock.json",
+  "log.json",
+  "brain/releases.json",
+  "assets/releases.json",
+]);
+
+function sectionHeading(heading) {
   const key = String(heading || "").trim();
-  return (
-    SECTION_DISPLAY[key] || {
-      heading: key || "Changes",
-      file: "log.json",
-    }
-  );
+  return SECTION_HEADING[key] || key || "Changes";
 }
 
-function formatReleaseBody(update) {
-  const lines = [`## ${update.title}`, "", `Release date: ${update.date}`, ""];
+function normalizePath(file) {
+  return String(file || "").replace(/\\/g, "/").replace(/^\.\//, "");
+}
 
-  for (const section of update.sections || []) {
+function isMetaPath(file) {
+  const f = normalizePath(file);
+  if (!f || META_FILES.has(f)) return true;
+  if (f.startsWith(".cursor/")) return true;
+  return false;
+}
+
+function bucketForFile(file) {
+  const f = normalizePath(file);
+  if (
+    /^(SECURITY\.md|LICENSE|NOTICE|THIRD_PARTY_NOTICES\.md)$/i.test(f) ||
+    /docs-legal|privacy|terms|refunds/i.test(f) ||
+    /^SECURITY\.md$/i.test(f)
+  ) {
+    return "Security";
+  }
+  if (f.startsWith("worker/") || f.startsWith("api/")) return "Worker";
+  if (/leadfinder/i.test(f)) return "Leadfinder";
+  if (/(^|\/)(leads\.html|finder)/i.test(f)) return "Finder";
+  if (
+    /(dashboard|editor|settings|builder|studio|onboarding|projects|clients)\.html/i.test(f) ||
+    /(^|\/)js\/app\.js|(^|\/)css\/studio/i.test(f)
+  ) {
+    return "Studio";
+  }
+  return "Website";
+}
+
+function gitSafe(cmd) {
+  const safe = root.replace(/\\/g, "/");
+  return execSync(`git -c safe.directory=${safe} ${cmd}`, {
+    cwd: root,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "ignore"],
+  }).trim();
+}
+
+function filesFromGitOutput(out) {
+  return [
+    ...new Set(
+      String(out || "")
+        .split(/\r?\n/)
+        .map(normalizePath)
+        .filter((f) => f && !isMetaPath(f))
+    ),
+  ];
+}
+
+function changedFilesForVersionLocal(version) {
+  const tag = `v${version}`;
+  try {
+    gitSafe("fetch moonrise --tags --force");
+  } catch {
+    try {
+      gitSafe("fetch --tags --force");
+    } catch {
+      /* offline or no remote */
+    }
+  }
+  const tries = [
+    `show --name-only --pretty=format: ${tag}`,
+    `diff-tree --no-commit-id --name-only -r ${tag}^{commit}`,
+    `log -1 --name-only --pretty=format: -S "\\"version\\": \\"${version}\\"" -- package.json`,
+  ];
+  for (const cmd of tries) {
+    try {
+      const files = filesFromGitOutput(gitSafe(cmd));
+      if (files.length) return files;
+    } catch {
+      /* try next */
+    }
+  }
+  return [];
+}
+
+async function changedFilesForVersionRemote(version) {
+  const tag = `v${version}`;
+  const ref = await api("GET", `/repos/${OWNER}/${REPO}/git/ref/tags/${tag}`);
+  if (!ref.ok) return [];
+  const refJson = await ref.json();
+  let sha = refJson.object?.sha;
+  if (refJson.object?.type === "tag") {
+    const annotated = await api("GET", `/repos/${OWNER}/${REPO}/git/tags/${sha}`);
+    if (annotated.ok) {
+      const tagJson = await annotated.json();
+      sha = tagJson.object?.sha || sha;
+    }
+  }
+  if (!sha) return [];
+  const commit = await api("GET", `/repos/${OWNER}/${REPO}/commits/${sha}`);
+  if (!commit.ok) return [];
+  const commitJson = await commit.json();
+  return filesFromGitOutput((commitJson.files || []).map((f) => f.filename).join("\n"));
+}
+
+async function changedFilesForVersion(version) {
+  const local = changedFilesForVersionLocal(version);
+  if (local.length) return local;
+  try {
+    return await changedFilesForVersionRemote(version);
+  } catch {
+    return [];
+  }
+}
+
+function filesForSection(heading, allFiles) {
+  const bucket = sectionHeading(heading);
+  const matched = allFiles.filter((f) => bucketForFile(f) === bucket);
+  if (matched.length) return matched;
+  // Single-section releases: show every product file from the commit.
+  if (allFiles.length) return allFiles;
+  return [];
+}
+
+async function formatReleaseBody(update) {
+  const lines = [`## ${update.title}`, "", `Release date: ${update.date}`, ""];
+  const changed = await changedFilesForVersion(update.version);
+  const sections = update.sections || [];
+  const onlyOneSection = sections.filter((s) => (s.added?.length || 0) + (s.fixes?.length || 0) > 0).length === 1;
+
+  for (const section of sections) {
     const notes = [...(section.added || []), ...(section.fixes || [])];
     if (!notes.length) continue;
-    const meta = sectionMeta(section.heading);
-    const fileLabel = String(meta.file || "log.json").replace(/\/$/, "") || "log.json";
-    lines.push(`### ${meta.heading}`, "");
-    lines.push(`\`${fileLabel}\` (modified)`, "");
+    const heading = sectionHeading(section.heading);
+    const files = onlyOneSection ? changed : filesForSection(section.heading, changed);
+    lines.push(`### ${heading}`, "");
+    if (files.length) {
+      for (const file of files) lines.push(`\`${file}\` (modified)`);
+      lines.push("");
+    }
     for (const note of notes) lines.push(`- ${note}`);
     lines.push("");
   }
@@ -136,7 +263,7 @@ if (results.some((r) => r.action === "error")) process.exit(1);
 async function publishOne(update, makeLatest = false) {
   const tag = update.tag || `v${update.version}`;
   const name = `${releasesDoc.product || "Moonrise"} v${update.version}`;
-  const body = formatReleaseBody(update);
+  const body = await formatReleaseBody(update);
   const targetCommitish = resolveTarget(process.env.GITHUB_RELEASE_TARGET || "main");
   const latestFlag = makeLatest ? "true" : "false";
 

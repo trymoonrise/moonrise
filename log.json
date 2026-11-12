@@ -3,6 +3,19 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.1.8",
+      "date": "2026-11-11",
+      "title": "Releases list the files that actually changed",
+      "sections": [
+        {
+          "heading": "Website",
+          "added": [
+            "GitHub Releases list the real product files changed in that version instead of a fixed placeholder like index.html."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.1.7",
       "date": "2026-11-11",
       "title": "UI Library ring border uses a photo",
