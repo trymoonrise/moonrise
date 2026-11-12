@@ -3,14 +3,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const logPath = path.join(root, "brain", "log.json");
+const logPath = path.join(root, "log.json");
 const brainOut = path.join(root, "brain", "releases.json");
 const docOut = path.join(root, "assets", "releases.json");
 
 const log = JSON.parse(fs.readFileSync(logPath, "utf8"));
 const repo = String(log.repo || "trymoonrise/moonrise");
 const product = String(log.product || "Moonrise");
-if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) throw new Error("brain/log.json needs a repo owner/name.");
+if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) throw new Error("log.json needs a repo owner/name.");
 
 for (const update of log.updates) checkUpdate(update);
 

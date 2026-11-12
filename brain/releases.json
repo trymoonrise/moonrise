@@ -3,25 +3,49 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "3.1.4",
+      "date": "2026-11-11",
+      "title": "Release notes and privacy sharing clarified",
+      "tag": "v3.1.4",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v3.1.4",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Changelog source of truth is now root `log.json` (formerly `brain/log.json`).",
+            "GitHub Releases use a clearer title format and professional section headings.",
+            "Privacy Policy states Moonrise does not sell or broadly share personal data, and that routine third-party processing is limited to subprocessors.",
+            "Docs Subprocessors section asks creators to review each provider’s own privacy policy."
+          ]
+        },
+        {
+          "heading": "Security",
+          "added": [
+            "Privacy Policy directs users to review subprocessor policies for payments, maps, AI generation, hosting, and similar features."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.1.3",
       "date": "2026-11-11",
-      "title": "Legal frames Moonrise as an open platform",
+      "title": "Open platform terms and self-hosted fonts",
       "tag": "v3.1.3",
       "url": "https://github.com/trymoonrise/moonrise/releases/tag/v3.1.3",
       "sections": [
         {
           "heading": "Site",
           "added": [
-            "Docs and the home FAQ describe Moonrise as an open-source platform where creators are independent users.",
-            "Product fonts cache is refreshed and still loads only from Moonrise, not a third-party font CDN."
+            "Documentation and the home FAQ describe Moonrise as an open-source platform for independent creators.",
+            "Product fonts continue to load from Moonrise only; the font cache bust was refreshed."
           ]
         },
         {
           "heading": "Security",
           "added": [
-            "Terms and Privacy say the agreement is with the Moonrise platform, not any individual person.",
-            "Terms and Privacy state Moonrise is not responsible for anything creators or other users do.",
-            "Privacy explains self-hosted fonts and that map or payment providers may still receive technical data when those features run.",
+            "Terms and Privacy clarify that the agreement is with the Moonrise platform entity, not any individual.",
+            "Terms and Privacy state that Moonrise is not responsible for actions taken by creators or other users.",
+            "Privacy discloses self-hosted fonts and that map or payment providers may receive technical data when those features run.",
             "SECURITY.md notes self-hosted fonts and that creators are not Moonrise employees."
           ]
         }
@@ -30,42 +54,42 @@
     {
       "version": "3.1.2",
       "date": "2026-11-11",
-      "title": "Home workspace tries Finder and Editor",
+      "title": "Home workspace Finder and Editor preview",
       "tag": "v3.1.2",
       "url": "https://github.com/trymoonrise/moonrise/releases/tag/v3.1.2",
       "sections": [
         {
           "heading": "Site",
           "added": [
-            "Docs describe free code and download, Calendar, and sign-in that does not ask for a password or identity documents.",
-            "Moonrise is free for creators, and the pricing page is gone.",
-            "The home build step sits on a white panel, matching the live generation screen.",
-            "The home build terminal is white and writes the site one line at a time.",
-            "The home workspace switches between an interactive Finder and Editor, with filters, dropdowns, and publish.",
-            "The home Finder puts Scan nearby and All in a bottom dock like Business Finder.",
-            "The home Editor shows an Add a section label above the feature toggles.",
-            "The home workspace fits on phones without clipping the map sheet or editor bar.",
-            "The home build step shows a cursor sliding to generate, then a greyed Generating control.",
-            "The home build step says one button turns a business into a functional website.",
-            "The home build slider sits in the center of its card, with the label centered on the bar.",
-            "The home build cursor sits a little lower and slightly larger on the slider.",
-            "The home map and Business Finder no longer show the OpenFreeMap credit line."
+            "Documentation covers free code download, Calendar, and passwordless sign-in without identity documents.",
+            "Creator pricing has been removed; Moonrise remains free for creators.",
+            "The home Build preview uses a white panel that matches the live generation interface.",
+            "The home Build terminal uses a white theme and streams generation output line by line.",
+            "The home workspace preview switches between interactive Finder and Editor modes, including filters, disclosure panels, and publish.",
+            "The home Finder places Scan nearby and All in a bottom dock consistent with Business Finder.",
+            "The home Editor shows an Add a section label above feature toggles.",
+            "The home workspace layout fits mobile viewports without clipping the map sheet or editor bar.",
+            "The home Build step animates a cursor sliding to Generate, then shows a disabled Generating state.",
+            "The home Build copy states that one control turns a business into a functional website.",
+            "The home Build slider and label are centered in the card.",
+            "The home Build cursor is slightly larger and positioned lower on the slider.",
+            "OpenFreeMap attribution is no longer shown on the home map or Business Finder."
           ],
           "fixes": [
-            "Home Editor feature rows open their details when you tap the row or chevron."
+            "Home Editor feature rows expand when the row or chevron is selected."
           ]
         },
         {
           "heading": "Studio",
           "added": [
-            "View Code and Download HTML are free for every creator."
+            "View Code and Download HTML are available at no charge for every creator."
           ]
         },
         {
           "heading": "Security",
           "added": [
-            "The privacy policy lists the account records a data breach could link to a Moonrise creator.",
-            "The privacy policy says Moonrise does not ask for a password, government ID, photo recognition, or a Social Security number."
+            "Privacy Policy lists account records that a data breach could associate with a Moonrise creator.",
+            "Privacy Policy states that Moonrise does not request a password, government ID, biometric recognition, or a Social Security number."
           ]
         }
       ]

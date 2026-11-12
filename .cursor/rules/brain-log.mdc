@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Brain log
 
-`brain/log.json` is the source for commit messages and release notes for **Moonrise** (trymoonrise.com). The current version is `package.json` `version`. A commit, update, or deploy raises that version everywhere listed in the commit-and-deploy rule before it ships. This commit's notes belong to the new version, not the one that already shipped.
+`log.json` is the source for commit messages and release notes for **Moonrise** (trymoonrise.com). The current version is `package.json` `version`. A commit, update, or deploy raises that version everywhere listed in the commit-and-deploy rule before it ships. This commit's notes belong to the new version, not the one that already shipped.
 
 Before you finish, audit the current version. Every change a person would notice, and every fix that belongs in a commit, gets one sentence. Put that sentence in exactly one list:
 

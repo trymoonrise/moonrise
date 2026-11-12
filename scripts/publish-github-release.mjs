@@ -1,5 +1,5 @@
 /**
- * Publish GitHub Releases from brain/releases.json.
+ * Publish GitHub Releases from brain/releases.json (rendered from log.json).
  *
  * Usage:
  *   node scripts/publish-github-release.mjs
@@ -20,7 +20,7 @@ loadEnv(vaultEnv);
 loadEnv(path.join(root, ".env"));
 loadEnv(path.join(root, "worker", ".env"));
 
-const log = JSON.parse(fs.readFileSync(path.join(root, "brain", "log.json"), "utf8"));
+const log = JSON.parse(fs.readFileSync(path.join(root, "log.json"), "utf8"));
 const [defaultOwner, defaultRepo] = String(log.repo || "trymoonrise/moonrise").split("/");
 const OWNER = process.env.GITHUB_OWNER || defaultOwner || "trymoonrise";
 const REPO = process.env.GITHUB_REPO || defaultRepo || "moonrise";
@@ -86,7 +86,7 @@ if (results.some((r) => r.action === "error")) process.exit(1);
 
 async function publishOne(update, makeLatest = false) {
   const tag = update.tag || `v${update.version}`;
-  const name = `${releasesDoc.product || "Moonrise"} ${update.version}: ${update.title}`;
+  const name = `${releasesDoc.product || "Moonrise"} v${update.version}`;
   const body = formatReleaseBody(update);
   const targetCommitish = resolveTarget(process.env.GITHUB_RELEASE_TARGET || "main");
   const latestFlag = makeLatest ? "true" : "false";
@@ -143,21 +143,26 @@ function compareSemver(a, b) {
 }
 
 function formatReleaseBody(update) {
-  const lines = [`## ${update.title}`, "", `_Shipped ${update.date}_`, ""];
+  const lines = [
+    `## ${update.title}`,
+    "",
+    `**Release date:** ${update.date}`,
+    "",
+  ];
   for (const section of update.sections || []) {
     lines.push(`### ${section.heading}`, "");
     if (section.added?.length) {
-      lines.push("**Added**");
+      lines.push("#### New");
       for (const note of section.added) lines.push(`- ${note}`);
       lines.push("");
     }
     if (section.fixes?.length) {
-      lines.push("**Fixes**");
+      lines.push("#### Fixed");
       for (const note of section.fixes) lines.push(`- ${note}`);
       lines.push("");
     }
   }
-  lines.push("---", "", "_Notes from `brain/log.json`._", "");
+  lines.push("---", "", "Source: `log.json`", "");
   return lines.join("\n");
 }
 

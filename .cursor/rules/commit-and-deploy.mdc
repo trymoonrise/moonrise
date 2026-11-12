@@ -14,9 +14,9 @@ Prefer working directory `D:\MasterVault\Moonrise` (or `E:\…` when that drive 
 Versions use base-10 rollup: `MAJOR.MINOR.PATCH` where patch is 0–9 and minor is 0–9. If the user did not name the next version, raise patch by 1. When patch would become 10, set patch to 0 and raise minor by 1. When minor would become 10, set minor to 0 and raise major by 1. Examples: `1.0.9` → `1.1.0`; `1.1.5` → `1.1.6`; `1.1.9` → `1.2.0`; `1.9.9` → `2.0.0`. Write that same number in every place below before you commit or deploy:
 
 - `package.json` `version` (and lockfile root when present)
-- `brain/log.json`: this commit's notes go on a **new top entry** for that version, dated today. Leave shipped versions as they are. If the top entry is still the shipped version, add the new entry and move the unreleased notes into it. Run `npm run notes` so `brain/releases.json` and `assets/releases.json` match.
+- `log.json`: this commit's notes go on a **new top entry** for that version, dated today. Leave shipped versions as they are. If the top entry is still the shipped version, add the new entry and move the unreleased notes into it. Run `npm run notes` so `brain/releases.json` and `assets/releases.json` match.
 
-1. Raise the version. Add unlogged changes to the new `brain/log.json` entry under `added` or `fixes` (headings from the brain-log rule), then run `npm run notes`.
+1. Raise the version. Add unlogged changes to the new `log.json` entry under `added` or `fixes` (headings from the brain-log rule), then run `npm run notes`.
 2. Smoke-check public or studio surfaces when UI changed.
 3. Commit source, brain log, and rendered release notes together from `D:\MasterVault\Moonrise`. Never commit `accesstokens.env`, `.env`, or secrets. Prefer `D:\MasterVault\Moonrise`. If git reports dubious ownership, pass `-c safe.directory=D:/MasterVault/Moonrise` on the command. Do not change git config.
 4. Commit message from the new version title + `added`/`fixes` (concise, why-focused). Follow git safety rules.
