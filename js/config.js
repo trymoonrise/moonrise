@@ -8,11 +8,14 @@ window.SITE_CONFIG = {
   siteUrl: "https://trymoonrise.com",
   locale: "en_US",
   supportEmail: "trymoonrise@gmail.com",
+  /** Public support phone, same number as the contact page. */
+  supportPhone: "(401) 300-0957",
+  supportPhoneTel: "+14013000957",
   /** Default social / link preview description (Discord, iMessage, Twitter, etc.). */
   siteDescription:
-    "Moonrise is an AI-powered platform that lets you create professional websites with 1 click for local business owners, creators, and more! It's designed to make website creation fast, simple, effortless, and get paid.",
+    "Moonrise helps creators build websites for local businesses and earn when the owner pays to go live. Free to build and preview.",
   seoKeywords:
-    "AI website builder, sell websites, local business websites, website creator income, Moonrise Studio, trymoonrise, build websites get paid",
+    "AI website builder, sell websites, local business websites, website creator income, Moonrise Studio, trymoonrise, GEO, SEO, AEO, local SEO, installable web app",
   seoFaq: [
     {
       q: "What is Moonrise Studio?",
@@ -34,12 +37,19 @@ window.SITE_CONFIG = {
       q: "Who is Moonrise for?",
       a: "Moonrise is for creators, freelancers, and side hustlers who want to sell websites to local shops, cafes, salons, and other small businesses without coding.",
     },
+    {
+      q: "Are Moonrise sites built for search and AI answers?",
+      a: "Yes. Generated sites include meta tags, Open Graph, LocalBusiness structured data, and a facts file for answer engines, using only the business name, phone, address, and hours that were provided.",
+    },
   ],
   /** Brand assets - relative paths work on Vercel and after custom-domain DNS is pointed here. */
   assetCdnUrl: "assets/",
   brandLogoUrl: "assets/MoonriseLogo.png",
   /** Social / link preview image (Discord, iMessage, Twitter, etc.). */
   embedImageUrl: "https://trymoonrise.com/assets/embed.png",
+  ogImageWidth: "1200",
+  ogImageHeight: "630",
+  githubUrl: "https://github.com/trymoonrise/moonrise",
   /** Default profile picture when a user has not uploaded one. */
   defaultAvatarUrl: "assets/profilepicture.jpg?v=20261006-blue",
   docBaseUrl: "assets/",

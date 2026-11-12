@@ -578,7 +578,7 @@
       }
 
       const stage = e.target.closest("[data-stage-tap]");
-      if (stage && !e.target.closest("button, a, input, select, textarea, [data-lx-opt], [data-lx-acc]")) {
+      if (stage && !e.target.closest("button, a, input, select, textarea, [data-lx-opt], [data-lx-acc], [data-lx-faq]")) {
         runDemo(stage.getAttribute("data-stage-tap"), null, stage);
       }
     });

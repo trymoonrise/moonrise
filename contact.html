@@ -5,7 +5,7 @@
 <script>document.documentElement.classList.add("ms-hold");document.addEventListener("DOMContentLoaded",function(){if(!document.getElementById("shell"))document.documentElement.classList.remove("ms-hold")});setTimeout(function(){document.documentElement.classList.remove("ms-hold")},4000);</script>
   <script>
     (function () {
-      var BUILD = "20261106-mono";
+      var BUILD = "20261111-contact";
       try {
         var prev = localStorage.getItem("ms_asset_build");
         localStorage.setItem("ms_asset_build", BUILD);
@@ -52,6 +52,12 @@
   <meta name="twitter:title" content="Contact - Moonrise">
   <meta name="twitter:description" content="Contact Moonrise Studio by email or phone. Get support for website orders, creator accounts, and go-live checkout.">
   <meta name="twitter:image" content="https://trymoonrise.com/assets/embed.png">
+  <meta name="twitter:image:alt" content="Moonrise Studio">
+  <meta property="og:image:alt" content="Moonrise Studio">
+  <meta property="og:image:width" content="400">
+  <meta property="og:image:height" content="200">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="alternate" href="https://trymoonrise.com/llms.txt" type="text/plain" title="Facts for answer engines">
   <link rel="stylesheet" href="css/fonts.css?v=20261111-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261109-crown">
   <link rel="stylesheet" href="css/studio-motion.css?v=20260924-static-nav" onload="document.documentElement.classList.remove('ms-hold')">
@@ -60,11 +66,11 @@
   <link rel="stylesheet" href="css/cream-ink.css?v=20261108-icon-borderless">
   <link rel="stylesheet" href="css/cream-motion.css?v=20261107-soft-radius">
   <link rel="stylesheet" href="css/studio-minimal.css?v=20261109-crown">
-  <link rel="stylesheet" href="css/public-pages.css?v=20261108-ink">
-  <link rel="stylesheet" href="css/docs.css?v=20261108-ink">
+  <link rel="stylesheet" href="css/public-pages.css?v=20261111-contact">
+  <link rel="stylesheet" href="css/docs.css?v=20261111-contact">
   <link rel="stylesheet" href="css/site-nav.css?v=20261110-homechip">
   <script defer src="js/config.js?v=20261106-mono"></script>
-  <script defer src="js/site-branding.js?v=20260719-seo"></script>
+  <script defer src="js/site-branding.js?v=20261111-discover"></script>
 </head>
 <body data-page="contact" class="ms-contact-public">
   <header class="ms-site-bar">
@@ -82,27 +88,130 @@
       <a href="login.html" style="--i:1">Start earning</a>
       <a href="download" style="--i:2">Download</a>
       <a href="orders" style="--i:3">Orders</a>
-      <a href="ui-library" style="--i:4">UI Library</a>
+      <a href="guides" style="--i:4">Guides</a>
       <a href="docs" style="--i:5">Docs</a>
       <a href="contact" style="--i:6">Contact</a>
       <a href="report" style="--i:7">Report</a>
     </nav>
   </header>
 
-  <main class="ms-doc-main">
+  <main class="ms-doc-main ms-contact-page">
     <h1 class="ms-doc-title">Contact.</h1>
-    <p class="ms-doc-lead">Phone, email, or the community.</p>
-    <ul class="ms-doc-links">
-      <li><a href="tel:+14013000957">(401) 300-0957</a></li>
-      <li><a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a></li>
-      <li><a href="https://discord.gg/gdbA3gEVY" target="_blank" rel="noopener noreferrer">Discord</a></li>
-      <li><a href="https://www.instagram.com/trymoonrise/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-      <li><a href="docs#support">Help</a></li>
-    </ul>
+    <p class="ms-doc-lead">Phone, email, or the community. Pick a channel and we’ll get back to you.</p>
+
+    <p class="ms-contact-meta">
+      <span class="ms-contact-chip">Usually within 1 business day</span>
+      <span class="ms-contact-chip is-quiet">US Eastern</span>
+    </p>
+
+    <div class="ms-contact-grid" role="list">
+      <a class="ms-contact-card" href="tel:+14013000957" role="listitem">
+        <span class="ms-contact-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1.4 1.4 0 0 1 1.4-.35 8.5 8.5 0 0 0 2.7.43 1.4 1.4 0 0 1 1.4 1.4V20a1.4 1.4 0 0 1-1.4 1.4A17.4 17.4 0 0 1 2.6 5.4 1.4 1.4 0 0 1 4 4h3.3A1.4 1.4 0 0 1 8.7 5.4a8.5 8.5 0 0 0 .43 2.7 1.4 1.4 0 0 1-.35 1.4z"/></svg>
+        </span>
+        <span class="ms-contact-copy">
+          <span class="ms-contact-label">Phone</span>
+          <strong>(401) 300-0957</strong>
+          <span class="ms-contact-hint">Call or text</span>
+        </span>
+      </a>
+
+      <a class="ms-contact-card" href="mailto:trymoonrise@gmail.com" role="listitem">
+        <span class="ms-contact-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+        </span>
+        <span class="ms-contact-copy">
+          <span class="ms-contact-label">Email</span>
+          <strong>trymoonrise@gmail.com</strong>
+          <span class="ms-contact-hint">Best for account help</span>
+        </span>
+      </a>
+
+      <a class="ms-contact-card" href="https://discord.gg/gdbA3gEVY" target="_blank" rel="noopener noreferrer" role="listitem">
+        <span class="ms-contact-logo is-brand" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.27 5.33A16.5 16.5 0 0 0 15.1 4.2a.08.08 0 0 0-.08.04c-.18.31-.37.72-.51 1.04a15.2 15.2 0 0 0-4.56 0 10.3 10.3 0 0 0-.52-1.04.08.08 0 0 0-.08-.04 16.4 16.4 0 0 0-4.18 1.13.07.07 0 0 0-.03.03C2.44 9.15 1.7 12.88 2.06 16.56a.09.09 0 0 0 .03.06 16.6 16.6 0 0 0 5 2.5.08.08 0 0 0 .09-.03c.39-.52.73-1.08 1.03-1.66a.08.08 0 0 0-.04-.11 10.9 10.9 0 0 1-1.56-.74.08.08 0 0 1 0-.13c.1-.08.21-.16.31-.24a.08.08 0 0 1 .08-.01c3.28 1.5 6.83 1.5 10.07 0a.08.08 0 0 1 .08.01c.1.08.21.16.31.24a.08.08 0 0 1 0 .13 10.3 10.3 0 0 1-1.56.74.08.08 0 0 0-.04.11c.3.58.65 1.14 1.03 1.66a.08.08 0 0 0 .09.03 16.5 16.5 0 0 0 5-2.5.08.08 0 0 0 .03-.06c.43-4.25-.72-7.94-3.05-11.2a.06.06 0 0 0-.03-.03zM9.1 14.52c-.99 0-1.8-.9-1.8-2.01s.8-2.01 1.8-2.01 1.81.9 1.8 2.01-.8 2.01-1.8 2.01zm5.8 0c-.99 0-1.8-.9-1.8-2.01s.8-2.01 1.8-2.01 1.81.9 1.8 2.01-.81 2.01-1.8 2.01z"/></svg>
+        </span>
+        <span class="ms-contact-copy">
+          <span class="ms-contact-label">Discord</span>
+          <strong>Join the server</strong>
+          <span class="ms-contact-hint">Chat with creators</span>
+        </span>
+      </a>
+
+      <a class="ms-contact-card" href="https://www.instagram.com/trymoonrise/" target="_blank" rel="noopener noreferrer" role="listitem">
+        <span class="ms-contact-logo is-brand" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="0.9" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="ms-contact-copy">
+          <span class="ms-contact-label">Instagram</span>
+          <strong>@trymoonrise</strong>
+          <span class="ms-contact-hint">Updates and examples</span>
+        </span>
+      </a>
+
+      <a class="ms-contact-card" href="docs#support" role="listitem">
+        <span class="ms-contact-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9.6 9.4a2.4 2.4 0 0 1 4.7.8c0 1.6-2.35 2.2-2.35 3.4M12 16.6h.01"/></svg>
+        </span>
+        <span class="ms-contact-copy">
+          <span class="ms-contact-label">Help</span>
+          <strong>Support docs</strong>
+          <span class="ms-contact-hint">Guides and answers</span>
+        </span>
+      </a>
+
+      <a class="ms-contact-card" href="report" role="listitem">
+        <span class="ms-contact-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 20.5 19h-17z"/><path d="M12 10v4M12 16.6v.4"/></svg>
+        </span>
+        <span class="ms-contact-copy">
+          <span class="ms-contact-label">Report</span>
+          <strong>Flag an issue</strong>
+          <span class="ms-contact-hint">Abuse or broken sites</span>
+        </span>
+      </a>
+    </div>
+
+    <section class="ms-contact-panel" aria-labelledby="contact-topics">
+      <div class="ms-contact-panel-head">
+        <h2 id="contact-topics">What we can help with</h2>
+        <p>Short topics so you know where to start.</p>
+      </div>
+      <ul class="ms-contact-topics">
+        <li>
+          <span class="ms-contact-topic-mark" aria-hidden="true">01</span>
+          <div>
+            <strong>Creator accounts</strong>
+            <p>Login, payouts, and studio access.</p>
+          </div>
+        </li>
+        <li>
+          <span class="ms-contact-topic-mark" aria-hidden="true">02</span>
+          <div>
+            <strong>Orders and go-live</strong>
+            <p>Watermark checkout and receipt questions.</p>
+          </div>
+        </li>
+        <li>
+          <span class="ms-contact-topic-mark" aria-hidden="true">03</span>
+          <div>
+            <strong>Published sites</strong>
+            <p>Domains, forms, and ownership disputes.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="ms-contact-links" aria-label="More links">
+      <a href="docs">Docs</a>
+      <a href="guides">Guides</a>
+      <a href="orders">Orders</a>
+      <a href="download">Download</a>
+    </section>
   </main>
 
   <script defer src="js/config.js?v=20261106-mono"></script>
-  <script defer src="js/site-branding.js?v=20260719-seo"></script>
+  <script defer src="js/site-branding.js?v=20261111-discover"></script>
   <script defer src="js/home-menu.js?v=20261110-updated"></script>
 </body>
 </html>

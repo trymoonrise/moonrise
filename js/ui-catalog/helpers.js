@@ -89,21 +89,30 @@
   function visual(kind) {
     switch (kind) {
       case "faq":
-        return '<div class="lx-acc"><button type="button" class="is-open" data-lx-acc>How do I publish?</button><p class="lx-p">Open the site and choose Publish.</p><button type="button" data-lx-acc>Can I edit later?</button></div>';
+        return '<div class="lx-faq is-cards is-mini" data-lx-faq="one"><div class="lx-faq-item is-open"><button type="button" class="lx-faq-q" aria-expanded="true">How do I publish?<span class="lx-faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="lx-faq-panel"><div>Open the site and choose Publish.</div></div></div><div class="lx-faq-item"><button type="button" class="lx-faq-q" aria-expanded="false">Can I edit later?<span class="lx-faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="lx-faq-panel"><div>Yes. Publish again when the hours change.</div></div></div></div>';
       case "features":
-        return '<ul class="lx-feats"><li>' + ico("check") + "<span><strong>Publish</strong><em>One live link</em></span></li><li>" + ico("check") + "<span><strong>Leads</strong><em>Name and phone</em></span></li><li>" + ico("check") + "<span><strong>Studio</strong><em>Edit in place</em></span></li></ul>";
+        return '<div class="lx-feat-mini"><article>' + ico("pulse", "sm") + "<strong>Publish</strong><em>One live link</em></article><article>" + ico("pin", "sm") + "<strong>Finder</strong><em>Map leads</em></article><article>" + ico("spark", "sm") + "<strong>Studio</strong><em>Edit in place</em></article></div>";
       case "footer":
-        return '<div class="lx-foot"><strong>moonrise.</strong><span>Guide</span><span>Privacy</span></div>';
+        return '<footer class="lx-site-foot is-mini"><strong>moonrise.</strong><nav><a href="docs">Docs</a><a href="docs#privacy">Privacy</a><a href="docs#terms">Terms</a></nav></footer>';
       case "gallery":
-        return '<div class="lx-tiles"><i></i><i></i><i></i><i></i></div>';
+        return '<div class="lx-gal is-mini">' +
+          '<figure><img src="assets/library/hero-coast.jpg" alt=""></figure>' +
+          '<figure><img src="assets/library/hero-coffee.jpg" alt=""></figure>' +
+          '<figure><img src="assets/library/cta-counter.jpg" alt=""></figure>' +
+          '<figure><img src="assets/library/hero-wind.jpg" alt=""></figure>' +
+          "</div>";
       case "price":
         return '<div class="lx-price"><span>$48</span><em>per month</em>' + btn("Choose") + "</div>";
       case "stats":
         return '<div class="lx-figs"><div><strong>128</strong><span>visits</span></div><div><strong>14</strong><span>leads</span></div></div>';
       case "team":
-        return '<div class="lx-people"><span>NL</span><span>HK</span><span>CR</span></div>';
+        return '<div class="lx-people">' +
+          '<span class="lx-avatar"><img src="assets/library/client-nora.jpg" alt=""></span>' +
+          '<span class="lx-avatar"><img src="assets/library/client-miles.jpg" alt=""></span>' +
+          '<span class="lx-avatar"><img src="assets/library/client-ada.jpg" alt=""></span>' +
+          "</div>";
       case "quote":
-        return '<blockquote class="lx-quote">The new site lists our hours and the phone rings more.<cite>Example · Harbor Coffee</cite></blockquote>';
+        return '<figure class="lx-quote-card is-mini"><span class="lx-avatar"><img src="assets/library/client-nora.jpg" alt=""></span><blockquote>The new site lists our hours and the phone rings more.</blockquote><cite>Nora · Harbor Coffee</cite></figure>';
       default:
         return '<p class="lx-prose">Harbor Coffee roasts on Pike Street and opens at 7. The site lists the address, the hours, and a way to call.</p>';
     }

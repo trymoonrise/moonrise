@@ -191,9 +191,15 @@ const {
   applyStyleFamily,
   selectStockMedia,
   ensureStockMediaInHtml,
+  ensureDiscoveryOptimizationHtml,
   ensurePaletteContrast,
   assessSiteCompleteness,
 } = require("./generate-prompt");
+const {
+  ensureDiscoverabilityHtml,
+  factsFromProject,
+  discoverabilityDeployFiles,
+} = require("./site-discoverability");
 const { catalogStats } = require("./stock-media");
 const {
   COPY_SYSTEM_PROMPT,
@@ -3785,6 +3791,7 @@ function craftAgentSystemPrompt() {
     "If the page still opens with centered type on a darkened photo, a white pill, and a black footer, it is not done.",
     "Keep the business name and every provided phone, address, and cleaned hours string exact.",
     "One button, one radius, real photos in sized frames, no horizontal scroll, a complete closed document.",
+    "Ship discovery markup for client exposure: title, meta description, Open Graph, Twitter cards, LocalBusiness JSON-LD, FAQPage when FAQs exist, meaningful image alt text. Never invent reviews or social profiles.",
     "",
     "## Tools",
     "The document does not go in the chat message. It goes in write_page.",
@@ -3805,6 +3812,7 @@ const PAGE_REVIEW_SYSTEM = [
   "- The first screen is centered type on a darkened photo.",
   "- The page invents reviews, star ratings, years in business, awards, or stats that are not in the brief.",
   "Do not fail the page for wording taste, spacing, or font choice.",
+  "SHOULD notes may mention weak discovery (vague title/meta, weak FAQ answers for AEO, missing city/NAP for GEO/SEO, thin share cards) but those do not block.",
   "Return only lines in this shape:",
   "MUST: <what is wrong and what the visitor sees> | <fix>",
   "SHOULD: <a note that does not block>",
@@ -3866,6 +3874,11 @@ function finalizeGeneratedHtml(html, ctx, stockMedia) {
     }
   }
   out = ensureContactFormHtml(out, ctx);
+  try {
+    out = ensureDiscoveryOptimizationHtml(out, ctx);
+  } catch (_) {
+    /* keep html */
+  }
   return out;
 }
 
@@ -6233,6 +6246,9 @@ app.post("/edit", requireUser, editLimiter, async (req, res) => {
       return res.status(502).json({ error: "Model did not return usable HTML" });
     }
 
+    const editFacts = factsFromProject(project, { liveUrl: publicProjectUrl(project) });
+    html = ensureDiscoveryOptimizationHtml(html, editFacts);
+
     const { error: upErr } = await supabase
       .from("projects")
       .update({
@@ -6408,7 +6424,7 @@ function injectSiteVisitBeacon(html, project) {
   return src + tag;
 }
 
-function preparePublishedHtml(project) {
+function preparePublishedHtml(project, options = {}) {
   let html = ensureMobileFriendlyHtml(
     stripRuntimeEmbedsFromStoredHtml(project.html || "<!doctype html><title>Site</title>")
   );
@@ -6420,6 +6436,8 @@ function preparePublishedHtml(project) {
         : "",
   });
   html = applySiteFeatureBlocks(html, readSiteFeatureConfig(project.business_context));
+  // Re-apply discovery with the live URL so canonical / OG / JSON-LD match publish.
+  html = ensureDiscoverabilityHtml(html, factsFromProject(project, options));
   if (isWatermarkActive(project)) {
     html = injectWatermarkEmbed(html, project);
   }
@@ -7157,16 +7175,20 @@ function rewriteUploadHtmlPaths(html, ctx) {
 }
 
 /** Multi-page upload sites store sibling HTML in business_context.siteFiles. */
-function buildVercelPublishFiles(project) {
+function buildVercelPublishFiles(project, options = {}) {
   const ctx =
     project.business_context && typeof project.business_context === "object"
       ? project.business_context
       : {};
+  const publishOpts = options && typeof options === "object" ? options : {};
   const entryPath = sanitizeDeployHtmlPath(ctx.uploadEntry || "index.html") || "index.html";
-  const mainPrepared = preparePublishedHtml({
-    ...project,
-    html: rewriteUploadHtmlPaths(project.html || "", ctx),
-  });
+  const mainPrepared = preparePublishedHtml(
+    {
+      ...project,
+      html: rewriteUploadHtmlPaths(project.html || "", ctx),
+    },
+    publishOpts
+  );
   const filesByPath = new Map();
 
   const siteFiles = ctx.siteFiles && typeof ctx.siteFiles === "object" ? ctx.siteFiles : null;
@@ -7189,10 +7211,13 @@ function buildVercelPublishFiles(project) {
       if (!pageHtml.trim()) continue;
       filesByPath.set(
         path,
-        preparePublishedHtml({
-          ...project,
-          html: rewriteUploadHtmlPaths(pageHtml, ctx),
-        })
+        preparePublishedHtml(
+          {
+            ...project,
+            html: rewriteUploadHtmlPaths(pageHtml, ctx),
+          },
+          publishOpts
+        )
       );
     }
   }
@@ -7203,11 +7228,12 @@ function buildVercelPublishFiles(project) {
     filesByPath.set(entryPath, mainPrepared);
   }
 
-  return [...filesByPath.entries()].map(([file, pageHtml]) => ({
+  const htmlFiles = [...filesByPath.entries()].map(([file, pageHtml]) => ({
     file,
     data: Buffer.from(pageHtml).toString("base64"),
     encoding: "base64",
   }));
+  return htmlFiles.concat(discoverabilityDeployFiles(project, publishOpts));
 }
 
 async function deployProjectToVercel(supabase, project) {
@@ -7246,7 +7272,10 @@ async function deployProjectToVercel(supabase, project) {
   const preferredSlug = buildVercelProjectSlug(project);
   const { slug, vercelProject } = await ensureVercelProjectForMoonrise(clientScope, project, preferredSlug);
 
-  const files = buildVercelPublishFiles(project);
+  const predictedLive =
+    publicProjectUrl(project) ||
+    (slug ? `https://${String(slug).replace(/\.vercel\.app$/i, "")}.vercel.app` : "");
+  const files = buildVercelPublishFiles(project, { liveUrl: predictedLive });
 
     const deployRes = await fetch("https://api.vercel.com/v13/deployments", {
       method: "POST",

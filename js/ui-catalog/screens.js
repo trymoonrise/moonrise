@@ -4,6 +4,19 @@
   const card = LX.card.bind(LX);
   const btn = LX.btn;
   const ico = LX.ico;
+  const IMG = {
+    coast: "assets/library/hero-coast.jpg",
+    coffee: "assets/library/hero-coffee.jpg",
+    counter: "assets/library/cta-counter.jpg",
+    nora: "assets/library/client-nora.jpg",
+    miles: "assets/library/client-miles.jpg"
+  };
+  function pic(src, cls) {
+    return '<div class="lx-ph' + (cls ? " " + cls : "") + '"><img src="' + src + '" alt="" loading="lazy"></div>';
+  }
+  function avatar(src, cls) {
+    return '<span class="lx-avatar' + (cls ? " " + cls : "") + '"><img src="' + src + '" alt="" loading="lazy"></span>';
+  }
 
   function screen(id, title, html, extra) {
     const o = extra || {};
@@ -23,7 +36,7 @@
     screen("auth-out", "Signed out", gate("Signed out", '<p class="lx-p">Sign in to open the studio.</p>' + btn("Sign in"))),
     screen("auth-two", "Two-factor", gate("Code", '<div class="lx-codes"><i class="is-on">2</i><i class="is-on">0</i><i></i><i></i><i></i><i></i></div><label class="lx-row">' + '<button type="button" class="lx-check" data-lx-check aria-label="Trust"></button><span>Trust this browser</span></label>')),
     screen("auth-locked", "Locked", gate("Account locked", '<div class="lx-alert is-warn"><span class="lx-dot warn"></span><span>Try again in 15 minutes</span></div>')),
-    screen("auth-pick", "Pick an account", gate("Choose account", '<button type="button" class="lx-row is-on" data-lx-opt style="width:100%;border:0;background:var(--dt-action-soft)"><span class="lx-avatar sm">HK</span><span>Harbor</span></button><button type="button" class="lx-row" data-lx-opt style="width:100%;border:0;background:transparent"><span class="lx-avatar sm">NL</span><span>Northline</span></button>'))
+    screen("auth-pick", "Pick an account", gate("Choose account", '<button type="button" class="lx-row is-on" data-lx-opt style="width:100%;border:0;background:var(--dt-action-soft)">' + avatar(IMG.nora, "sm") + "<span>Harbor</span></button><button type=\"button\" class=\"lx-row\" data-lx-opt style=\"width:100%;border:0;background:transparent\">" + avatar(IMG.miles, "sm") + "<span>Northline</span></button>"))
   ]);
 
   const FLOW = [
@@ -32,7 +45,7 @@
     ["Hours", "When are you open?", LX.field("Friday", "", "7–5")],
     ["Phone", "How do people call?", LX.field("Phone", "focus", "206")],
     ["Address", "Where are you?", LX.field("Street", "", "Pike Street")],
-    ["Photo", "Add a photo of the place", '<div class="lx-ph sm"></div>'],
+    ["Photo", "Add a photo of the place", pic(IMG.coffee, "sm")],
     ["Leads", "Where should leads go?", LX.field("Email", "focus", "ada@harbor.test")],
     ["Review", "Check the draft", '<div class="lx-row"><span>Name</span><span>Harbor</span></div><div class="lx-row"><span>Hours</span><span>Fri 7–5</span></div>'],
     ["Publish", "Send the live link", '<p class="lx-p">The link stays the same if you publish again.</p>' + btn("Publish")],
@@ -93,7 +106,7 @@
     screen("files-crumbs", "Path", '<p class="lx-meta">Sites / Harbor / photos</p>' + '<div class="lx-row"><span>counter.jpg</span></div>'),
     screen("files-empty", "Empty", '<div class="lx-empty"><p class="lx-h">No files</p>' + btn("Upload", "ghost") + "</div>"),
     screen("files-quota", "Space", '<div class="lx-bar"><span style="width:35%"></span></div><p class="lx-meta">35 MB of 100 MB</p>'),
-    screen("files-preview", "Preview", '<div class="lx-cols"><div class="lx-ph tall"></div><div><p class="lx-h">counter.jpg</p><p class="lx-meta">240 KB</p></div></div>'),
+    screen("files-preview", "Preview", '<div class="lx-cols">' + pic(IMG.counter, "tall") + '<div><p class="lx-h">counter.jpg</p><p class="lx-meta">240 KB</p></div></div>'),
     screen("files-trash", "Trash", '<div class="lx-dialog"><strong>Delete counter.jpg?</strong><p class="lx-p">This removes the photo from the site.</p><div class="lx-actions">' + btn("Cancel", "ghost") + btn("Delete", "danger") + "</div></div>")
   ]);
 
@@ -166,7 +179,7 @@
   ]);
 
   LX.spec("loading-states", ["loaders-ptr", "loaders-infinite", "sys-compare"], [
-    screen("load-page", "Page", '<div class="lx-skel" style="height:14px;width:40%"></div><div class="lx-skel"></div><div class="lx-skel" style="width:70%"></div><div class="lx-ph sm"></div>'),
+    screen("load-page", "Page", '<div class="lx-skel" style="height:14px;width:40%"></div><div class="lx-skel"></div><div class="lx-skel" style="width:70%"></div>' + pic(IMG.coast, "sm")),
     screen("load-section", "Section", '<div class="lx-tile"><div class="lx-skel"></div><div class="lx-skel" style="width:50%;margin-top:8px"></div></div>'),
     screen("load-inline", "Inline", '<div class="lx-row"><span>Leads</span><i class="lx-spin is-on"></i></div>'),
     screen("load-table", "Table", '<div class="lx-skel"></div><div class="lx-skel"></div><div class="lx-skel"></div>'),

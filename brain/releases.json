@@ -3,6 +3,41 @@
   "repo": "trymoonrise/moonrise",
   "updates": [
     {
+      "version": "3.1.9",
+      "date": "2026-11-11",
+      "title": "Client discovery packaging and UI Library media",
+      "tag": "v3.1.9",
+      "url": "https://github.com/trymoonrise/moonrise/releases/tag/v3.1.9",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Contact uses clean logo cards for email, Discord, X, and related links.",
+            "Public Guides cover how Moonrise works, selling locally, install, and search/AI discovery.",
+            "llms-full.txt and .well-known/ai.txt point answer engines to citeable product facts.",
+            "Sitemap, robots, and the install manifest now include Guides and stronger discovery metadata.",
+            "Public pages share answer-engine facts, social preview tags, and an install manifest, and Docs stays available to search.",
+            "UI Library FAQs use modern landing-style accordion variants.",
+            "UI Library Features use media-split, icon-grid, and dark bento layouts that feature real content.",
+            "UI Library scroll scenes show phone, iPad, and laptop devices with 3D parallax.",
+            "UI Library Footers link real pages and sources instead of placeholder shells.",
+            "UI Library Galleries are image-only with stock photos.",
+            "UI Library Gradients apply colorful fills to buttons.",
+            "UI Library Images, Videos, Team, and Testimonials use stock media instead of empty placeholders.",
+            "UI Library Dashed drop uses a larger, clearer dotted frame."
+          ]
+        },
+        {
+          "heading": "Worker",
+          "added": [
+            "The coding agent optimizes client sites for SEO, GEO, AEO, LLMO, ASO, and Social SEO without inventing reviews or social profiles.",
+            "Generated and edited sites backfill title, meta description, Open Graph, Twitter cards, LocalBusiness JSON-LD, FAQPage JSON-LD, and image alt text from known facts.",
+            "Published client sites rewrite canonical and social tags to the live URL and ship robots.txt, sitemap.xml, and llms.txt from known facts."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.1.8",
       "date": "2026-11-11",
       "title": "Releases list the files that actually changed",

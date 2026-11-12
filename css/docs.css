@@ -92,6 +92,11 @@ body.ms-contact-public .ms-doc-main {
   padding: 7.25rem 0 4rem !important;
 }
 
+body.ms-contact-public .ms-doc-main.ms-contact-page {
+  width: min(100% - 2.5rem, 46rem) !important;
+  max-width: 46rem !important;
+}
+
 body.ms-legal-site h1.ms-doc-title,
 body.ms-public-doc h1.ms-doc-title,
 body.ms-contact-public h1.ms-doc-title {
@@ -1278,4 +1283,235 @@ body.ms-docs-page .ms-docs-sub-visit:hover {
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
   text-decoration: none;
+}
+
+/* Contact page — clean channel cards */
+.ms-contact-page {
+  text-align: center;
+}
+
+.ms-contact-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.35rem 0 0;
+}
+
+.ms-contact-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.85rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid rgb(0 0 0 / 6%);
+  color: #3a3a3c;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ms-contact-chip.is-quiet {
+  background: transparent;
+  color: #6e6e73;
+}
+
+.ms-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.75rem 0 0;
+  text-align: left;
+}
+
+.ms-contact-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: center;
+  min-height: 5.4rem;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid rgb(0 0 0 / 5%);
+  box-shadow: 0 10px 28px rgb(15 23 42 / 4%);
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  text-decoration: none !important;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.ms-contact-card:hover,
+.ms-contact-card:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgb(0 0 0 / 10%);
+  box-shadow: 0 14px 32px rgb(15 23 42 / 8%);
+  outline: none;
+}
+
+.ms-contact-logo {
+  display: grid;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 14px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  flex: none;
+}
+
+.ms-contact-logo svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.ms-contact-logo.is-brand svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.ms-contact-copy {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.ms-contact-label {
+  color: #6e6e73;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ms-contact-card strong {
+  color: #1d1d1f;
+  font-size: 0.98rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.ms-contact-hint {
+  color: #6e6e73;
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
+}
+
+.ms-contact-panel {
+  margin: 2rem 0 0;
+  padding: 1.15rem 1.15rem 1.05rem;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid rgb(0 0 0 / 5%);
+  text-align: left;
+}
+
+.ms-contact-panel-head {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.95rem;
+}
+
+.ms-contact-panel-head h2 {
+  margin: 0;
+  color: #1d1d1f;
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.ms-contact-panel-head p {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.ms-contact-topics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.ms-contact-topics li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.75rem 0.8rem;
+  border-radius: 14px;
+  background: #f5f5f7;
+}
+
+.ms-contact-topic-mark {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 2rem;
+  border-radius: 10px;
+  background: #1d1d1f;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.ms-contact-topics strong {
+  display: block;
+  color: #1d1d1f;
+  font-size: 0.92rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.ms-contact-topics p {
+  margin: 0.15rem 0 0;
+  color: #6e6e73;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.ms-contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  margin: 1.65rem 0 0;
+}
+
+.ms-contact-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.35rem;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid rgb(0 0 0 / 6%);
+  color: #1d1d1f !important;
+  -webkit-text-fill-color: #1d1d1f !important;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none !important;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.ms-contact-links a:hover,
+.ms-contact-links a:focus-visible {
+  background: #1d1d1f;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .ms-contact-grid {
+    grid-template-columns: 1fr;
+  }
 }

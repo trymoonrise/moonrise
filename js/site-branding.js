@@ -10,6 +10,7 @@
   const embedPath = String(cfg.embedImageUrl || "assets/embed.png").trim();
   const locale = String(cfg.locale || "en_US").trim();
   const supportEmail = String(cfg.supportEmail || "trymoonrise@gmail.com").trim();
+  const supportPhone = String(cfg.supportPhoneTel || "+14013000957").trim();
 
   const PUBLIC_PAGES = {
     "": 1,
@@ -20,11 +21,12 @@
     "privacy": 1,
     "terms": 1,
     "download": 1,
+    "docs": 1,
     "legal": 1,
     "refund": 1,
     "report": 1,
     "ui-library": 1,
-    "404": 1,
+    "guides": 1,
   };
 
   function absoluteUrl(pathOrUrl) {
@@ -37,6 +39,12 @@
     return base + path;
   }
 
+  function currentPath() {
+    if (typeof location === "undefined") return "/";
+    const path = String(location.pathname || "/").replace(/\/+$/, "") || "/";
+    return path;
+  }
+
   function currentFile() {
     if (typeof location === "undefined") return "/";
     return location.pathname.split("/").pop() || "/";
@@ -44,13 +52,17 @@
 
   function canonicalUrl() {
     if (typeof location === "undefined") return siteUrl + "/";
-    const file = currentFile();
-    if (file === "/" || file === "") return siteUrl + "/";
-    return siteUrl + "/" + file;
+    const path = currentPath();
+    if (path === "/" || path === "") return siteUrl + "/";
+    return siteUrl + path.replace(/\.html$/i, "");
   }
 
   function isPublicPage() {
-    return !!PUBLIC_PAGES[currentFile()];
+    const path = currentPath();
+    if (path === "/" || path === "") return true;
+    if (/^\/guides(\/|$)/i.test(path)) return true;
+    const file = currentFile().replace(/\.html$/i, "");
+    return !!PUBLIC_PAGES[file];
   }
 
   const pageTitle = String(document.title || siteName).trim();
@@ -67,7 +79,13 @@
 
   function upsertLink(rel, href, extra) {
     if (!href) return;
-    let el = document.querySelector('link[rel="' + rel + '"]');
+    const title = extra && extra.title != null ? String(extra.title) : "";
+    let el = null;
+    if (rel === "alternate" && title) {
+      el = document.querySelector('link[rel="alternate"][title="' + title.replace(/"/g, '\\"') + '"]');
+    } else {
+      el = document.querySelector('link[rel="' + rel + '"]');
+    }
     if (!el) {
       el = document.createElement("link");
       el.rel = rel;
@@ -108,20 +126,38 @@
   upsertLink("shortcut icon", logoUrl, { type: "image/png" });
   upsertLink("apple-touch-icon", logoUrl);
   upsertLink("canonical", canonical);
+  upsertLink("manifest", "manifest.json");
+  if (isPublicPage()) {
+    upsertLink("alternate", siteUrl + "/llms.txt", {
+      type: "text/plain",
+      title: "Facts for answer engines",
+    });
+  }
+
+  const robotDirectives = isPublicPage()
+    ? "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    : "noindex, nofollow";
 
   upsertMeta("name", "description", pageDesc);
   if (keywords) upsertMeta("name", "keywords", keywords);
   upsertMeta("name", "author", siteName);
-  upsertMeta("name", "robots", isPublicPage() ? "index,follow,max-image-preview:large" : "noindex,nofollow");
-  upsertMeta("name", "googlebot", isPublicPage() ? "index,follow" : "noindex,nofollow");
+  upsertMeta("name", "robots", robotDirectives);
+  upsertMeta("name", "googlebot", robotDirectives);
   upsertMeta("name", "theme-color", "#fbfbfd");
+  upsertMeta("name", "apple-mobile-web-app-title", "Moonrise");
+  upsertMeta("name", "application-name", siteName);
 
   upsertMeta("property", "og:type", "website");
   upsertMeta("property", "og:site_name", siteName);
   upsertMeta("property", "og:title", pageTitle);
   upsertMeta("property", "og:description", pageDesc);
+  const ogWidth = String(cfg.ogImageWidth || "1200");
+  const ogHeight = String(cfg.ogImageHeight || "630");
   upsertMeta("property", "og:image", embedUrl);
-  upsertMeta("property", "og:image:alt", siteName + " - Build websites. Get paid.");
+  upsertMeta("property", "og:image:alt", siteName);
+  upsertMeta("property", "og:image:width", ogWidth);
+  upsertMeta("property", "og:image:height", ogHeight);
+  upsertMeta("property", "og:image:type", "image/png");
   upsertMeta("property", "og:url", canonical);
   upsertMeta("property", "og:locale", locale);
 
@@ -129,28 +165,56 @@
   upsertMeta("name", "twitter:title", pageTitle);
   upsertMeta("name", "twitter:description", pageDesc);
   upsertMeta("name", "twitter:image", embedUrl);
+  upsertMeta("name", "twitter:image:alt", siteName);
   if (cfg.twitterSite) upsertMeta("name", "twitter:site", String(cfg.twitterSite));
 
   if (isPublicPage()) {
     upsertLink("sitemap", siteUrl + "/sitemap.xml", { type: "application/xml", title: "Sitemap" });
+    upsertLink("alternate", siteUrl + "/llms-full.txt", {
+      type: "text/plain",
+      title: "Extended facts for answer engines",
+    });
   }
 
-  const sameAs = [cfg.discordUrl, cfg.telegramUrl].filter(Boolean).map(String);
+  const sameAs = [cfg.discordUrl, cfg.githubUrl, cfg.twitterUrl]
+    .map(function (url) {
+      const value = String(url || "").trim();
+      if (!/^https?:\/\//i.test(value)) return "";
+      if (/t\.me\/c\//i.test(value)) return "";
+      return value;
+    })
+    .filter(Boolean);
   const organization = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": siteUrl + "/#organization",
     name: siteName,
     url: siteUrl + "/",
-    logo: logoUrl,
+    logo: { "@type": "ImageObject", url: logoUrl },
     email: supportEmail,
+    telephone: supportPhone,
     description: String(cfg.siteDescription || pageDesc).trim(),
     sameAs: sameAs.length ? sameAs : undefined,
+    areaServed: "US",
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: supportEmail,
+      telephone: supportPhone,
+      url: siteUrl + "/contact",
+      availableLanguage: "English",
+    },
   };
 
+  const pageType =
+    page === "contact"
+      ? "ContactPage"
+      : page === "guides" || /^\/guides(\/|$)/i.test(currentPath())
+        ? "Article"
+        : "WebPage";
   const webPage = {
     "@context": "https://schema.org",
-    "@type": page === "contact" ? "ContactPage" : "WebPage",
+    "@type": pageType,
     "@id": canonical + "#webpage",
     url: canonical,
     name: pageTitle,
@@ -158,11 +222,41 @@
     isPartOf: { "@id": siteUrl + "/#website" },
     about: { "@id": siteUrl + "/#organization" },
     inLanguage: "en-US",
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", ".ms-doc-lead", ".ms-guide-answer", "main"],
+    },
   };
 
+  const isHome = page === "home" || currentFile() === "/" || currentFile() === "";
   const graph = [organization, webPage];
 
-  if (page === "home" || currentFile() === "/" || currentFile() === "") {
+  if (isPublicPage()) {
+    const crumbs = [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl + "/" },
+    ];
+    const path = currentPath();
+    if (/^\/guides(\/|$)/i.test(path)) {
+      crumbs.push({
+        "@type": "ListItem",
+        position: 2,
+        name: "Guides",
+        item: siteUrl + "/guides",
+      });
+      if (path !== "/guides") {
+        const crumbName = pageTitle.replace(/\s+[-–]\s+Moonrise.*$/i, "").trim() || pageTitle;
+        crumbs.push({ "@type": "ListItem", position: 3, name: crumbName, item: canonical });
+      }
+    } else if (!isHome) {
+      const crumbName = pageTitle.replace(/\s+[-–]\s+Moonrise.*$/i, "").trim() || pageTitle;
+      crumbs.push({ "@type": "ListItem", position: 2, name: crumbName, item: canonical });
+    }
+    graph.push({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "@id": canonical + "#breadcrumbs",
+      itemListElement: crumbs,
+    });
     graph.push({
       "@context": "https://schema.org",
       "@type": "WebSite",
@@ -173,7 +267,9 @@
       publisher: { "@id": siteUrl + "/#organization" },
       inLanguage: "en-US",
     });
+  }
 
+  if (isHome || page === "download") {
     graph.push({
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
@@ -188,12 +284,15 @@
         description: "Free to build and preview websites. Clients pay when they unlock the live site.",
       },
       description:
-        "AI-powered website builder for creators who sell sites to local businesses. Find leads, build fast, and earn when clients go live.",
+        "Website builder for creators who sell sites to local businesses. Find leads, build a preview, and earn when clients go live.",
       url: siteUrl + "/",
       image: embedUrl,
+      installUrl: siteUrl + "/download",
       publisher: { "@id": siteUrl + "/#organization" },
     });
+  }
 
+  if (isHome) {
     const faqItems = Array.isArray(cfg.seoFaq) ? cfg.seoFaq : [];
     if (faqItems.length) {
       graph.push({
@@ -212,6 +311,49 @@
         }),
       });
     }
+  }
+
+  if (page === "docs") {
+    graph.push({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "@id": siteUrl + "/docs#howto",
+      name: "How Moonrise works",
+      description:
+        "Find a local business, build a site, publish a watermarked preview, and get paid when the owner goes live.",
+      step: [
+        {
+          "@type": "HowToStep",
+          position: 1,
+          name: "Find",
+          text: "Open Business Finder or paste a Maps link in Builder. Prefer active, under-served businesses.",
+        },
+        {
+          "@type": "HowToStep",
+          position: 2,
+          name: "Generate",
+          text: "Slide to generate in Finder, or fill details in Builder. Wait until the preview appears. Generation is free for creators.",
+        },
+        {
+          "@type": "HowToStep",
+          position: 3,
+          name: "Polish and price",
+          text: "Open the project in Editor. Fix copy and media. Set Website Price before you publish.",
+        },
+        {
+          "@type": "HowToStep",
+          position: 4,
+          name: "Publish and share",
+          text: "Publish the watermarked live site and send the owner that URL.",
+        },
+        {
+          "@type": "HowToStep",
+          position: 5,
+          name: "Get paid",
+          text: "When they pay on the watermark, Moonrise removes it, redeploys a clean site, and credits your share.",
+        },
+      ],
+    });
   }
 
   injectJsonLd("ms-jsonld-graph", { "@context": "https://schema.org", "@graph": graph });

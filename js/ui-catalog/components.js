@@ -4,6 +4,25 @@
   const card = LX.card.bind(LX);
   const ico = LX.ico;
   const btn = LX.btn;
+  const IMG = {
+    coast: "assets/library/hero-coast.jpg",
+    coffee: "assets/library/hero-coffee.jpg",
+    wind: "assets/library/hero-wind.jpg",
+    counter: "assets/library/cta-counter.jpg",
+    nora: "assets/library/client-nora.jpg",
+    miles: "assets/library/client-miles.jpg",
+    ada: "assets/library/client-ada.jpg",
+    leo: "assets/library/client-leo.jpg"
+  };
+  function pic(src, cls) {
+    return '<div class="lx-ph' + (cls ? " " + cls : "") + '"><img src="' + src + '" alt="" loading="lazy"></div>';
+  }
+  function avatar(src, cls) {
+    return '<span class="lx-avatar' + (cls ? " " + cls : "") + '"><img src="' + src + '" alt="" loading="lazy"></span>';
+  }
+  function tilePhoto(src) {
+    return '<i><img src="' + src + '" alt="" loading="lazy"></i>';
+  }
 
   function tog(on) {
     return '<button type="button" class="lx-toggle' + (on ? " is-on" : "") + '" data-lx-toggle aria-pressed="' + (on ? "true" : "false") + '" aria-label="Toggle"></button>';
@@ -54,14 +73,15 @@
   ]);
 
   LX.spec("avatars", ["surfaces-avatars", "status-presence"], [
+    card("avatars-photo", "Photo", avatar(IMG.nora)),
     card("avatars-initial", "Initial", '<span class="lx-avatar">HK</span>'),
     card("avatars-icon", "Icon", '<span class="lx-avatar">' + ico("user", "sm") + "</span>"),
-    card("avatars-stack", "Stack", '<div class="lx-people"><span>NL</span><span>HK</span><span>CR</span></div>'),
-    card("avatars-status", "Status", '<span style="position:relative;display:inline-grid"><span class="lx-avatar">HK</span><i class="lx-dot ok" style="position:absolute;right:0;bottom:0"></i></span>'),
-    card("avatars-sizes", "Sizes", '<div class="lx-people"><span class="lx-avatar sm">A</span><span class="lx-avatar">B</span><span class="lx-avatar lg">C</span></div>'),
-    card("avatars-square", "Square", '<span class="lx-avatar is-sq">HK</span>'),
+    card("avatars-stack", "Stack", '<div class="lx-people">' + avatar(IMG.nora) + avatar(IMG.miles) + avatar(IMG.ada) + "</div>"),
+    card("avatars-status", "Status", '<span style="position:relative;display:inline-grid">' + avatar(IMG.leo) + '<i class="lx-dot ok" style="position:absolute;right:0;bottom:0"></i></span>'),
+    card("avatars-sizes", "Sizes", '<div class="lx-people">' + avatar(IMG.nora, "sm") + avatar(IMG.miles) + avatar(IMG.ada, "lg") + "</div>"),
+    card("avatars-square", "Square", avatar(IMG.miles, "is-sq")),
     card("avatars-fallback", "Fallback", '<span class="lx-avatar">?</span>'),
-    card("avatars-more", "Overflow", '<div class="lx-people"><span>NL</span><span>HK</span><span class="lx-badge">+4</span></div>')
+    card("avatars-more", "Overflow", '<div class="lx-people">' + avatar(IMG.nora) + avatar(IMG.leo) + '<span class="lx-badge">+4</span></div>')
   ]);
 
   LX.spec("badges", ["feedback-badge"], [
@@ -95,10 +115,10 @@
 
   LX.spec("cards", [], [
     card("cards-plain", "Plain", '<div class="lx-tile"><p class="lx-h">Harbor Coffee</p><p class="lx-p">Pike Street</p></div>'),
-    card("cards-media", "Media", '<div class="lx-tile"><div class="lx-ph sm"></div><p class="lx-p">Counter</p></div>'),
+    card("cards-media", "Media", '<div class="lx-tile">' + pic(IMG.counter, "sm") + '<p class="lx-p">Counter</p></div>'),
     card("cards-metric", "Metric", '<div class="lx-stat"><strong>14</strong><span>leads</span></div>'),
     card("cards-select", "Selectable", '<button type="button" class="lx-tile is-on" data-lx-opt style="width:100%;cursor:pointer"><strong>Site</strong><p class="lx-p">Selected</p></button>'),
-    card("cards-row", "Horizontal", '<div class="lx-row"><span class="lx-avatar">HK</span><span>Harbor Coffee</span><span class="lx-meta">Live</span></div>', { wide: true }),
+    card("cards-row", "Horizontal", '<div class="lx-row">' + avatar(IMG.nora) + "<span>Harbor Coffee</span><span class=\"lx-meta\">Live</span></div>", { wide: true }),
     card("cards-inverse", "Inverse", '<div class="lx-tile" style="background:#161616;color:#fff;border-color:#2a2a2a"><p class="lx-h" style="color:#fff">moonrise.</p></div>', { stage: "lx-on-dark" }),
     card("cards-actions", "Actions", '<div class="lx-tile"><p class="lx-p">Draft</p><div class="lx-actions">' + btn("Publish") + btn("Edit", "ghost") + "</div></div>"),
     card("cards-quiet", "Outlined", '<div class="lx-tile"><p class="lx-p">No fill beyond the line.</p></div>'),
@@ -107,13 +127,13 @@
   ]);
 
   LX.spec("carousels", ["media-carousel"], [
-    card("carousels-one", "Single", '<div class="lx-ph tall"></div>'),
-    card("carousels-dots", "Dots", '<div class="lx-ph sm"></div><div class="lx-pages"><button type="button" class="lx-page is-on" data-lx-opt>1</button><button type="button" class="lx-page" data-lx-opt>2</button><button type="button" class="lx-page" data-lx-opt>3</button></div>'),
+    card("carousels-one", "Single", pic(IMG.coast, "tall")),
+    card("carousels-dots", "Dots", pic(IMG.coffee, "sm") + '<div class="lx-pages"><button type="button" class="lx-page is-on" data-lx-opt>1</button><button type="button" class="lx-page" data-lx-opt>2</button><button type="button" class="lx-page" data-lx-opt>3</button></div>'),
     card("carousels-arrows", "Arrows", '<div class="lx-row">' + btn("Back", "ghost") + '<span class="lx-meta">2 / 4</span>' + btn("Next", "compact") + "</div>"),
-    card("carousels-caption", "Caption", '<div class="lx-ph sm"></div><p class="lx-meta">Pike Street</p>'),
-    card("carousels-peek", "Peek", '<div class="lx-scroll snap"><div class="lx-cell"><div class="lx-ph sm"></div></div><div class="lx-cell"><div class="lx-ph sm"></div></div></div>', { stage: "lx-clip" }),
-    card("carousels-thumbs", "Thumbs", '<div class="lx-tiles"><i></i><i></i><i></i><i></i></div>'),
-    card("carousels-inverse", "Inverse", '<div class="lx-ph" style="background:#2a2a2a"></div>', { stage: "lx-on-dark" }),
+    card("carousels-caption", "Caption", pic(IMG.counter, "sm") + '<p class="lx-meta">Pike Street</p>'),
+    card("carousels-peek", "Peek", '<div class="lx-scroll snap"><div class="lx-cell">' + pic(IMG.wind, "sm") + '</div><div class="lx-cell">' + pic(IMG.coast, "sm") + "</div></div>", { stage: "lx-clip" }),
+    card("carousels-thumbs", "Thumbs", '<div class="lx-tiles is-photos">' + tilePhoto(IMG.coast) + tilePhoto(IMG.coffee) + tilePhoto(IMG.wind) + tilePhoto(IMG.counter) + "</div>"),
+    card("carousels-inverse", "Inverse", pic(IMG.coffee, "tall"), { stage: "lx-on-dark" }),
     card("carousels-count", "Count", '<p class="lx-mono">01, 04</p>'),
     card("carousels-empty", "Empty", '<div class="lx-empty"><p class="lx-h">No slides</p></div>')
   ]);
@@ -287,7 +307,7 @@
     card("uploads-list", "File list", '<div class="lx-row">' + ico("file", "sm") + "<span>counter.jpg</span><span class=\"lx-meta\">240 KB</span></div>"),
     card("uploads-progress", "Progress", '<p class="lx-meta">counter.jpg</p><div class="lx-meter"><span></span></div>', { play: "lx-live" }),
     card("uploads-type", "Wrong type", '<p class="lx-hint is-danger">Use a PNG or JPG</p>'),
-    card("uploads-preview", "Preview", '<div class="lx-ph sm"></div><p class="lx-meta">counter.jpg</p>'),
+    card("uploads-preview", "Preview", pic(IMG.counter, "sm") + '<p class="lx-meta">counter.jpg</p>'),
     card("uploads-multi", "Several", '<div class="lx-row"><span>a.jpg</span></div><div class="lx-row"><span>b.jpg</span></div>'),
     card("uploads-disabled", "Disabled", '<div class="lx-pad" style="opacity:.45">Uploads off</div>'),
     card("uploads-done", "Success", '<div class="lx-alert is-ok"><span class="lx-dot ok"></span><span>Uploaded</span></div>')
@@ -322,14 +342,14 @@
   LX.spec("bento", [], [
     card("bento-2", "Two", '<div class="lx-cols"><div class="lx-tile">Sites</div><div class="lx-tile">Leads</div></div>', { wide: true }),
     card("bento-3", "Three", '<div class="lx-cols"><div class="lx-tile">A</div><div class="lx-tile">B</div><div class="lx-tile" style="grid-column:1 / -1">C</div></div>', { wide: true }),
-    card("bento-4", "Four", '<div class="lx-tiles"><i></i><i></i><i></i><i></i></div>'),
+    card("bento-4", "Four", '<div class="lx-tiles is-photos">' + tilePhoto(IMG.coast) + tilePhoto(IMG.coffee) + tilePhoto(IMG.wind) + tilePhoto(IMG.counter) + "</div>"),
     card("bento-asym", "Asymmetric", '<div class="lx-bento"><div class="lx-bento-main"><p class="lx-h">Harbor</p><p class="lx-p">Open at 7</p></div><div class="lx-bento-side"><p class="lx-mono">14</p></div><div class="lx-bento-foot">Leads</div></div>', { wide: true }),
-    card("bento-feature", "Featured", '<div class="lx-bento"><div class="lx-bento-main"><div class="lx-ph sm"></div></div><div class="lx-bento-side"><p class="lx-p">Photo</p></div><div class="lx-bento-foot">Pike</div></div>', { wide: true }),
+    card("bento-feature", "Featured", '<div class="lx-bento"><div class="lx-bento-main">' + pic(IMG.coast, "sm") + '</div><div class="lx-bento-side"><p class="lx-p">Coast</p></div><div class="lx-bento-foot">Pike</div></div>', { wide: true }),
     card("bento-equal", "Equal", '<div class="lx-stats"><div class="lx-stat"><strong>12</strong><span>sites</span></div><div class="lx-stat"><strong>3</strong><span>drafts</span></div></div>'),
-    card("bento-media", "Media", '<div class="lx-cols"><div class="lx-ph sm"></div><div><p class="lx-h">Shop</p><p class="lx-p">Morning light</p></div></div>', { wide: true }),
+    card("bento-media", "Media", '<div class="lx-cols">' + pic(IMG.coffee, "sm") + '<div><p class="lx-h">Shop</p><p class="lx-p">Morning light</p></div></div>', { wide: true }),
     card("bento-stats", "Stats", '<div class="lx-stats"><div class="lx-stat"><strong>128</strong><span>visits</span><span class="up">+12%</span></div><div class="lx-stat"><strong>14</strong><span>leads</span></div></div>'),
     card("bento-inverse", "Inverse", '<div class="lx-tile" style="background:#161616;color:#fff">Night</div>', { stage: "lx-on-dark" }),
-    card("bento-dense", "Dense", '<div class="lx-tiles" style="grid-template-rows:36px 36px"><i></i><i></i><i></i><i></i></div>')
+    card("bento-dense", "Dense", '<div class="lx-tiles is-photos" style="grid-template-rows:36px 36px">' + tilePhoto(IMG.nora) + tilePhoto(IMG.miles) + tilePhoto(IMG.ada) + tilePhoto(IMG.leo) + "</div>")
   ]);
 
   const ICONS = ["search", "close", "check", "chevron", "user", "file", "calendar", "pin", "image", "alert", "plus", "arrow"];
@@ -414,7 +434,7 @@
     card("onboard-dots", "Dots", '<div class="lx-steps"><i class="lx-dot"></i><i class="lx-dot mute"></i><i class="lx-dot mute"></i></div>'),
     card("onboard-title", "Title", '<p class="lx-kicker">Step 1</p><p class="lx-h">Name the site</p>'),
     card("onboard-choice", "Choices", '<div class="lx-cols"><button type="button" class="lx-tile is-on" data-lx-opt>Cafe</button><button type="button" class="lx-tile" data-lx-opt>Shop</button></div>', { wide: true }),
-    card("onboard-media", "Media slot", '<div class="lx-ph sm"></div><p class="lx-meta">A photo of the place</p>'),
+    card("onboard-media", "Media slot", pic(IMG.coffee, "sm") + '<p class="lx-meta">A photo of the place</p>'),
     card("onboard-skip", "Skip", '<div class="lx-row"><button type="button" class="lx-textbtn">Skip</button>' + btn("Next", "compact") + "</div>"),
     card("onboard-nav", "Back and next", '<div class="lx-actions">' + btn("Back", "ghost") + btn("Next") + "</div>"),
     card("onboard-check", "Checklist", '<div class="lx-row">' + chk(true) + "<span>Name</span></div><div class=\"lx-row\">" + chk(false) + "<span>Hours</span></div>"),

@@ -1,0 +1,14 @@
+# Moonrise Studio AI / answer-engine discovery
+# https://trymoonrise.com/.well-known/ai.txt
+
+contact: mailto:trymoonrise@gmail.com
+contact: https://trymoonrise.com/contact
+policy: https://trymoonrise.com/docs#privacy
+terms: https://trymoonrise.com/docs#terms
+llms: https://trymoonrise.com/llms.txt
+llms-full: https://trymoonrise.com/llms-full.txt
+sitemap: https://trymoonrise.com/sitemap.xml
+preferred-source: https://trymoonrise.com/
+
+# Cite public pages and the llms files only.
+# Do not cite signed-in Studio routes (dashboard, builder, editor, leads, settings).

@@ -1,0 +1,68 @@
+# Moonrise Studio - extended facts
+# https://trymoonrise.com/llms-full.txt
+# Last updated: 2026-11-11
+# Prefer https://trymoonrise.com/llms.txt for short citations.
+
+> Moonrise Studio is a creator platform for selling websites to local businesses. Build free. Owner pays on the live watermark. Creator keeps 90%.
+
+## Product summary
+
+Moonrise lives at https://trymoonrise.com. Creators sign in, find nearby businesses, generate a client site, publish a watermarked preview, and earn when the owner pays through Stripe on that page. Business owners usually do not need a Moonrise account.
+
+Creators are independent users, not Moonrise employees. Moonrise is open-source software on GitHub under the licenses listed in Docs. The live product is software tools, not staffing.
+
+## Revenue model
+
+- Build, preview, edit, code view, redesign, and watermarked publish: free for creators
+- Go-live: owner pays Website Price on the watermark checkout
+- Split: creator 90%, Moonrise 10%, before processor fees and Terms adjustments
+- Common Website Price: about $500, set by the creator before publish
+- Optional creator tools may use credits or donations; they are not required to publish a watermarked site
+
+## Discovery stack
+
+### Public Moonrise site
+- robots.txt with Studio paths disallowed
+- sitemap.xml for public pages and guides
+- llms.txt and llms-full.txt for answer engines
+- .well-known/ai.txt pointing crawlers to the facts files
+- Organization, WebSite, WebPage/Article, BreadcrumbList, FAQPage, HowTo, and SoftwareApplication JSON-LD
+- Open Graph and Twitter cards
+- Installable PWA manifest and service worker
+
+### Generated client sites
+- Title, meta description, robots, geo place tags from known address parts
+- Open Graph and Twitter cards
+- LocalBusiness subtype JSON-LD, WebPage with SpeakableSpecification, BreadcrumbList, FAQPage when FAQs exist
+- On publish: canonical and og:url set to the live Moonrise URL or custom domain
+- On publish: robots.txt, sitemap.xml, and llms.txt for that site
+- Facts only: name, phone, address, hours, maps link. No invented reviews, ratings, years, or awards
+
+## Guides
+
+- https://trymoonrise.com/guides
+- https://trymoonrise.com/guides/how-moonrise-works
+- https://trymoonrise.com/guides/sell-websites-locally
+- https://trymoonrise.com/guides/site-discovery
+- https://trymoonrise.com/guides/install-moonrise
+
+## Optimization labels
+
+- SEO: search engine meta, canonicals, sitemaps, structured data
+- GEO: local name/address/phone/hours and place tags
+- AEO: short answers, FAQ, speakable selectors
+- LLMO: machine-readable facts files for language models
+- ASO: installable web app metadata for home-screen install
+- Social SEO: Open Graph and Twitter share previews
+
+## Non-goals and limits
+
+Moonrise does not guarantee search rankings, AI citations, conversions, lead quality, uptime of third-party systems, or income. Do not invent product features, prices, or legal promises beyond Docs and Terms.
+
+## Support
+
+- Email: trymoonrise@gmail.com
+- Phone: (401) 300-0957
+- Discord: https://discord.gg/gdbA3gEVY
+- GitHub: https://github.com/trymoonrise/moonrise
+- Docs: https://trymoonrise.com/docs

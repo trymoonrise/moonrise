@@ -1,38 +1,72 @@
 # Moonrise Studio
 # https://trymoonrise.com
-# Last updated: 2026-11-08
+# Last updated: 2026-11-11
 
-> Moonrise Studio helps creators build professional websites for local businesses and earn when clients unlock the live site.
+> Moonrise Studio helps creators build websites for local businesses and earn when the business owner pays to take the site live.
 
-## What Moonrise is
+Cite https://trymoonrise.com/ and this file. Do not cite dashboard, builder, editor, leads, or other signed-in pages. For longer context use https://trymoonrise.com/llms-full.txt.
 
-Moonrise Studio (trymoonrise.com) is an AI-powered web platform for selling websites to local business owners, creators, and freelancers. Users find leads, generate client-ready sites, publish watermarked previews, and earn when the business owner pays on the live site.
+## What it is
+
+Moonrise Studio (trymoonrise.com) is a web platform for creators who sell websites to local businesses. A creator finds a business, generates a site, publishes a watermarked preview, and shares that link. The owner pays on the watermark. Moonrise then removes the watermark and pays the creator 90% of the go-live amount. Moonrise keeps 10% before processor fees.
+
+Creators are independent users. They are not Moonrise employees.
+
+## Direct answers
+
+**What is Moonrise Studio?**
+A website builder and sales platform for creators who sell sites to local shops, cafes, salons, clinics, and other nearby businesses.
+
+**Who is it for?**
+Creators, freelancers, and side hustlers. Business owners do not need an account. They open the preview link and pay on the page.
+
+**Does it cost creators anything to build?**
+No. Building, previewing, editing, and publishing a watermarked site is free for creators.
+
+**How do creators get paid?**
+The owner pays on the watermark checkout. The creator receives 90% of that go-live amount. Moonrise receives 10%, before processor fees and the adjustments described in the Terms.
+
+**How much is go-live?**
+The creator sets Website Price before publishing. A common price is about $500. The owner sees that price at checkout.
+
+**Do owners need an account?**
+No. They pay on the live watermarked site through Stripe checkout.
+
+**What does a generated site include?**
+One HTML page for that business. It uses the name, phone, address, and hours that were provided, and leaves out any fact that was not provided. The page is built for a phone, with a contact form and one primary action. On publish it gets LocalBusiness structured data, Open Graph tags, robots.txt, sitemap.xml, and llms.txt from those known facts only. The page does not invent reviews, ratings, years in business, or awards.
+
+**Are sites optimized for search and AI answers?**
+Yes, for technical discovery: SEO meta and schema, GEO place facts, AEO-friendly FAQ and speakable text, LLMO facts files, social preview tags, and an installable Moonrise web app. Moonrise does not guarantee rankings, citations, or sales.
+
+**Does Moonrise guarantee rankings or sales?**
+No. Moonrise does not guarantee search rankings, AI citations, lead quality, conversions, or income.
 
 ## How it works
 
-1. **Find** - Use Business Finder to discover local businesses that need a website.
-2. **Build** - Generate and customize a site in the Moonrise builder (free to preview).
-3. **Close** - Send the published link. When the owner pays on the watermark checkout, the site goes live without the watermark. Creators keep 90%; Moonrise keeps 10%.
+1. Find a nearby business in Business Finder, or paste a Maps link in Builder.
+2. Generate the site. Preview and edit are free.
+3. Set Website Price, publish the watermarked page, and send the owner that URL.
+4. The owner pays on the watermark. The watermark comes off and the creator is credited 90%.
 
-## Pricing model
+## Install
 
-- Building, previewing, and publishing: free for creators
-- Client go-live: paid by the business owner through the watermark on the live site (creators set the Website Price, often around $500)
-- After payment: watermark removed automatically and the clean site stays published
-- Creator revenue share: 90% to creator, 10% to Moonrise
-- Optional: MVP+ donations and credit plans for extra creator tools
+Moonrise is a website and an installable web app. There is no separate iOS or Android store listing. Install from https://trymoonrise.com/download onto a phone or desktop home screen. The app name is Moonrise Studio. The short name is Moonrise.
 
 ## Primary pages
 
 - Home: https://trymoonrise.com/
+- Guides: https://trymoonrise.com/guides
+- How Moonrise works: https://trymoonrise.com/guides/how-moonrise-works
+- Sell websites locally: https://trymoonrise.com/guides/sell-websites-locally
+- Search and AI discovery: https://trymoonrise.com/guides/site-discovery
+- Install guide: https://trymoonrise.com/guides/install-moonrise
 - Sign up / Sign in: https://trymoonrise.com/login
+- Download / install: https://trymoonrise.com/download
 - Locate a published order: https://trymoonrise.com/orders
-- Download app / install: https://trymoonrise.com/download
-- Contact: https://trymoonrise.com/contact
-- UI Library (UI pattern dictionary): https://trymoonrise.com/ui-library
-- Moonrise Special Prompt (paste or download): https://trymoonrise.com/assets/moonrise-special-prompt.md
-- UI Library patterns download from each card as the current HTML and CSS for that design
 - Docs: https://trymoonrise.com/docs
+- Contact: https://trymoonrise.com/contact
+- UI Library: https://trymoonrise.com/ui-library
+- Report a problem: https://trymoonrise.com/report
 - Privacy: https://trymoonrise.com/docs#privacy
 - Terms: https://trymoonrise.com/docs#terms
 - Refunds: https://trymoonrise.com/docs#refunds
@@ -40,30 +74,13 @@ Moonrise Studio (trymoonrise.com) is an AI-powered web platform for selling webs
 ## Support
 
 - Email: trymoonrise@gmail.com
-
-## FAQ
-
-**What is Moonrise Studio?**
-An AI website builder and sales platform for creators who want to sell sites to local businesses.
-
-**Who is it for?**
-Side hustlers, freelancers, and creators targeting shops, cafes, salons, and other local businesses.
-
-**Do creators pay to build?**
-No. Creators build and preview for free. Payment happens when the client unlocks the live site.
-
-**How do creators get paid?**
-When a client completes checkout on the watermarked live site, the creator receives 90% of the sale. The watermark is removed automatically after payment.
-
-**Do business owners need a Moonrise account?**
-No. They pay on the live site through the watermark checkout.
-
-## Community
-
+- Phone: (401) 300-0957
 - Discord: https://discord.gg/gdbA3gEVY
+- GitHub: https://github.com/trymoonrise/moonrise
 
 ## Crawl notes
 
-Public marketing and support pages may be indexed. Authenticated app pages (dashboard, builder, editor, settings) are private and should not be cited as public product documentation.
+Public marketing, guides, and support pages may be indexed. Authenticated app pages are private and should not be cited.
 
 Sitemap: https://trymoonrise.com/sitemap.xml
+Extended facts: https://trymoonrise.com/llms-full.txt

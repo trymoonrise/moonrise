@@ -5,16 +5,30 @@
   const ico = LX.ico;
 
   const COPIES = {
-    faqs: { kicker: "Example", title: "Questions from the studio", body: "Short answers under the thing they ask about.", action: "Open", visual: "faq", note: "2 open" },
-    features: { kicker: "Example", title: "What the site holds", body: "Publish, leads, and the studio editor. Nothing extra.", action: "Look", visual: "features", note: "Three" },
-    footers: { kicker: "Example", title: "Close the page", body: "Name, guide, and the legal links in one quiet row.", action: "Privacy", visual: "footer", note: "moonrise." },
-    galleries: { kicker: "Example", title: "Work from the shop", body: "Four frames, one larger. Real photos would sit here.", action: "Open", visual: "gallery", note: "4 frames" },
     pricing: { kicker: "Example", title: "One plan for the site", body: "A single price, a short list, and one button.", action: "Choose", visual: "price", note: "$48" },
     stats: { kicker: "Example", title: "This week on the site", body: "Visits and leads, with the comparison written out.", action: "View", visual: "stats", note: "Example figures" },
-    team: { kicker: "Example", title: "People at Harbor", body: "Names and roles. Portraits would replace the initials.", action: "Directory", visual: "team", note: "3 people" },
-    testimonials: { kicker: "Example", title: "A note from the owner", body: "One quote, one name, one shop. Marked as an example.", action: "Read", visual: "quote", note: "Harbor" },
     text: { kicker: "Example", title: "About the shop", body: "A short paragraph in the shop’s own words.", action: "Continue", visual: "text", note: "Reading" }
   };
+
+  const IMG = {
+    coast: "assets/library/hero-coast.jpg",
+    coffee: "assets/library/hero-coffee.jpg",
+    wind: "assets/library/hero-wind.jpg",
+    counter: "assets/library/cta-counter.jpg",
+    nora: "assets/library/client-nora.jpg",
+    miles: "assets/library/client-miles.jpg",
+    ada: "assets/library/client-ada.jpg",
+    leo: "assets/library/client-leo.jpg",
+    ocean: "assets/library/hero-ocean.mp4"
+  };
+
+  function pic(src, cls) {
+    return '<div class="lx-ph' + (cls ? " " + cls : "") + '"><img src="' + src + '" alt="" loading="lazy"></div>';
+  }
+
+  function avatar(src, cls) {
+    return '<span class="lx-avatar' + (cls ? " " + cls : "") + '"><img src="' + src + '" alt="" loading="lazy"></span>';
+  }
 
   function addLayouts(id, adopt) {
     const n = 10 - (adopt ? adopt.length : 0);
@@ -180,10 +194,344 @@
     card("comparisons-coast", "Photo slider", comparePhoto("assets/library/hero-coast.jpg"), { wide: true, stage: "lx-compare-stage" }),
     card("comparisons-shop", "Shop slider", comparePhoto("assets/library/hero-coffee.jpg"), { wide: true, stage: "lx-compare-stage" })
   ]);
-  addLayouts("faqs");
-  addLayouts("features");
-  addLayouts("footers");
-  addLayouts("galleries");
+  const FAQ_CHEV = '<span class="lx-faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>';
+  const FAQ_PLUS = '<span class="lx-faq-ico is-plus" aria-hidden="true"></span>';
+
+  function faqItem(q, a, open, icon) {
+    return '<div class="lx-faq-item' + (open ? " is-open" : "") + '">' +
+      '<button type="button" class="lx-faq-q" aria-expanded="' + (open ? "true" : "false") + '">' + q + (icon || FAQ_CHEV) + "</button>" +
+      '<div class="lx-faq-panel"><div>' + a + "</div></div></div>";
+  }
+
+  function faqList(cls, items, mode) {
+    return '<div class="lx-faq ' + cls + '" data-lx-faq="' + (mode || "one") + '">' +
+      items.map(function (row) {
+        return faqItem(row[0], row[1], !!row[2], row[3]);
+      }).join("") +
+      "</div>";
+  }
+
+  const FAQ_SAMPLE = [
+    ["How do I publish?", "Open the site and choose Publish. The live link stays the same when you publish again."],
+    ["Can I edit later?", "Yes. Change the hours or the phone, then publish again. The watermark stays until checkout.", true],
+    ["Where do leads go?", "New contact form submissions show up under Leads with the name and phone."]
+  ];
+
+  function faq(id, title, html, stage) {
+    return card("faqs-" + id, title, html, { wide: true, stage: stage || "lx-faq-stage" });
+  }
+
+  LX.spec("faqs", [], [
+    faq("landing", "Landing cards", faqList("is-cards", FAQ_SAMPLE)),
+    faq("hairline", "Hairline list", faqList("is-hairline", FAQ_SAMPLE)),
+    faq("plus", "Plus and minus", faqList("is-plus", FAQ_SAMPLE.map(function (row) {
+      return [row[0], row[1], row[2], FAQ_PLUS];
+    }))),
+    faq("soft", "Soft cards", faqList("is-soft", FAQ_SAMPLE)),
+    faq("split", "Split intro",
+      '<div class="lx-faq-split"><div class="lx-faq-intro"><p class="lx-faq-kicker">FAQ</p><h3>Questions from the studio</h3><p>Short answers under the thing people ask about most.</p></div>' +
+      faqList("is-hairline", FAQ_SAMPLE) + "</div>"),
+    faq("cols", "Two columns", faqList("is-cards is-cols", [
+      ["How do I publish?", "Open the site and choose Publish.", true],
+      ["Can I edit later?", "Yes. Publish again when the hours change."],
+      ["Where do leads go?", "They land in Leads with a name and phone."],
+      ["Is there a watermark?", "Yes, until the shop owner pays to go live."]
+    ])),
+    faq("numbered", "Numbered", faqList("is-numbered", [
+      ["<em>01</em> How do I publish?", "Open the site and choose Publish.", true],
+      ["<em>02</em> Can I edit later?", "Yes. Change copy, then publish again."],
+      ["<em>03</em> Where do leads go?", "Contact form replies show under Leads."]
+    ])),
+    faq("grouped", "Grouped",
+      '<div class="lx-faq is-hairline is-grouped" data-lx-faq="one">' +
+        '<p class="lx-faq-group">Publishing</p>' +
+        faqItem("How do I publish?", "Open the site and choose Publish.", true) +
+        faqItem("Can I edit later?", "Yes. Publish again when something changes.") +
+        '<p class="lx-faq-group">Leads</p>' +
+        faqItem("Where do leads go?", "They appear under Leads with the name and phone.") +
+      "</div>"),
+    faq("compact", "Compact", faqList("is-compact", FAQ_SAMPLE)),
+    faq("dark", "Inverse", faqList("is-dark", FAQ_SAMPLE), "lx-faq-stage lx-on-dark")
+  ]);
+
+  function feat(id, title, html, stage) {
+    return card("features-" + id, title, html, { wide: true, stage: stage || "lx-feat-stage" });
+  }
+
+  function featIcon(name) {
+    return '<span class="lx-feat-ico" aria-hidden="true">' + ico(name) + "</span>";
+  }
+
+  function featCell(icon, title, body) {
+    return '<article class="lx-feat-cell">' + featIcon(icon) + "<strong>" + title + "</strong><p>" + body + "</p></article>";
+  }
+
+  function bentoVisual(kind) {
+    if (kind === "insight") {
+      return '<div class="lx-bento-viz is-insight" aria-hidden="true"><i></i><i></i><span class="lx-bento-glass"></span></div>';
+    }
+    if (kind === "analysis") {
+      return '<div class="lx-bento-viz is-analysis" aria-hidden="true"><i></i><span class="lx-bento-glass"></span></div>';
+    }
+    if (kind === "speed") {
+      return '<div class="lx-bento-viz is-speed" aria-hidden="true"><span class="lx-bento-hq"><i></i>Headquarter</span><span class="lx-bento-globe"></span></div>';
+    }
+    if (kind === "source") {
+      return '<div class="lx-bento-viz is-source" aria-hidden="true"><span class="is-a">A</span><span class="is-ok">' + ico("check", "sm") + '</span><span class="is-b">B</span></div>';
+    }
+    return '<div class="lx-bento-viz is-ai" aria-hidden="true"><span class="lx-bento-phone">AI</span><span class="lx-bento-bot"></span></div>';
+  }
+
+  function bentoCard(kind, label, title, body, wide) {
+    return '<article class="lx-bento-card' + (wide ? " is-wide" : "") + '">' + bentoVisual(kind) +
+      '<div class="lx-bento-copy"><span>' + label + "</span><strong>" + title + "</strong><p>" + body + "</p></div></article>";
+  }
+
+  LX.spec("features", [], [
+    feat("split", "Media split",
+      '<section class="lx-feat-split">' +
+        '<figure class="lx-feat-media"><img src="assets/library/hero-coffee.jpg" alt=""><span class="lx-feat-media-tag">Live preview</span></figure>' +
+        '<div class="lx-feat-copy"><span class="lx-feat-pill">Platform</span><h3>This is the start of something new</h3>' +
+        "<p>Find a local shop that needs a site, publish it with Moonrise, and get paid when the owner goes live. Hours, phone, and leads sit on the first screen.</p></div></section>"),
+    feat("grid", "Icon grid",
+      '<section class="lx-feat-grid-wrap"><header class="lx-feat-head"><h3>Power. Speed. Control.</h3><p>Everything you need to find a lead, publish a site, and keep it current.</p></header>' +
+        '<div class="lx-feat-grid">' +
+          featCell("pulse", "Faaast", "One-click publish keeps the same live link when you update.") +
+          featCell("gems", "Powerful", "Builder, editor, and Business Finder share one studio.") +
+          featCell("nodes", "Security", "Checkout and payouts stay on Moonrise, not side deals.") +
+          featCell("pencil", "Customization", "Turn hours, forms, and pages on or off in the editor.") +
+          featCell("gear", "Control", "Claims, clients, and payouts live in one clear queue.") +
+          featCell("spark", "Built for AI", "Generate a site from a lead, then refine what matters.") +
+        "</div></section>"),
+    feat("bento", "Dark bento",
+      '<section class="lx-feat-bento"><header class="lx-feat-bento-head"><h3>Studio</h3><p>Know more about your leads than they do.</p></header>' +
+        '<div class="lx-bento-grid">' +
+          bentoCard("insight", "Insight", "Get perfect clarity", "See which shops still need a site before you claim them.", true) +
+          bentoCard("analysis", "Analysis", "Undercut your competitors", "Scan the map for cafés and clinics that never went online.", true) +
+          bentoCard("speed", "Speed", "Built for power users", "Claim a lead, generate the site, and send the preview the same day.") +
+          bentoCard("source", "Source", "Get the furthest reach", "Open map data finds nearby businesses you can actually sell to.") +
+          bentoCard("ai", "Limitless", "Sell globally", "Keep working with clients after go-live from one studio.") +
+        "</div></section>",
+      "lx-feat-stage is-dark"),
+    feat("shots", "Photo trio",
+      '<section class="lx-feat-shots">' +
+        '<article><img src="assets/library/hero-coast.jpg" alt=""><div><span>Finder</span><strong>Map the neighborhood</strong><p>Claim shops that still need a website.</p></div></article>' +
+        '<article><img src="assets/library/cta-counter.jpg" alt=""><div><span>Publish</span><strong>One live link</strong><p>Hours and phone stay on the first screen.</p></div></article>' +
+        '<article><img src="assets/library/hero-wind.jpg" alt=""><div><span>Leads</span><strong>Calls come in</strong><p>Contact form replies land with a name and phone.</p></div></article>' +
+      "</section>"),
+    feat("rail", "Feature rail",
+      '<section class="lx-feat-rail">' +
+        '<div class="lx-feat-rail-copy"><span class="lx-feat-pill is-soft">What you get</span><h3>A site that sells itself</h3><p>Moonrise puts the shop on a live link, then pays you when the owner unlocks it.</p>' +
+          '<ul><li>' + ico("check", "sm") + "<span>Publish once, update anytime</span></li>" +
+          "<li>" + ico("check", "sm") + "<span>Watermark checkout for go-live</span></li>" +
+          "<li>" + ico("check", "sm") + "<span>Leads with name and phone</span></li></ul></div>" +
+        '<aside class="lx-feat-rail-card" aria-hidden="true">' +
+          '<div class="lx-feat-preview"><span class="lx-feat-preview-bar"></span><strong>Harbor Coffee</strong><em>Open · 7:00–4:00</em><p>Pike Street · Call now</p><button type="button">View site</button></div>' +
+        "</aside></section>"),
+    feat("stack", "Stacked highlights",
+      '<section class="lx-feat-stack">' +
+        '<article class="is-on"><span class="lx-feat-pill">Publish</span><h3>Same link, fresh hours</h3><p>Edit the page, hit publish, and the live site updates without a new URL.</p></article>' +
+        "<article><span class=\"lx-feat-pill is-soft\">Finder</span><h3>Leads on the map</h3><p>Scan nearby cafés and clinics, claim one, then generate their site.</p></article>" +
+        '<article><span class="lx-feat-pill is-soft">Payouts</span><h3>Paid when they go live</h3><p>The owner pays through the watermark; your earnings follow the payout you set.</p></article>' +
+      "</section>")
+  ]);
+
+  function foot(id, title, html, stage) {
+    return card("footers-" + id, title, html, { wide: true, stage: stage || "lx-foot-stage" });
+  }
+
+  function footCol(label, links) {
+    return '<div class="lx-site-foot-col"><p>' + label + "</p><ul>" +
+      links.map(function (row) {
+        return '<li><a href="' + row[1] + '">' + row[0] + "</a></li>";
+      }).join("") +
+      "</ul></div>";
+  }
+
+  LX.spec("footers", [], [
+    foot("simple", "Site bar",
+      '<footer class="lx-site-foot is-simple">' +
+        "<strong>moonrise.</strong>" +
+        '<nav aria-label="Footer">' +
+          '<a href="login.html">Start</a><a href="download">Download</a><a href="orders">Orders</a>' +
+          '<a href="ui-library">UI Library</a><a href="docs">Docs</a><a href="contact">Contact</a>' +
+          '<a href="docs#privacy">Privacy</a><a href="docs#terms">Terms</a>' +
+        "</nav>" +
+        '<p class="lx-site-foot-note"><a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a></p>' +
+      "</footer>"),
+    foot("columns", "Link columns",
+      '<footer class="lx-site-foot is-columns">' +
+        '<div class="lx-site-foot-brand"><strong>moonrise.</strong><p>Find a local shop, publish a site, and get paid when they go live.</p></div>' +
+        '<div class="lx-site-foot-grid">' +
+          footCol("Product", [["Start", "login.html"], ["Download", "download"], ["Orders", "orders"], ["UI Library", "ui-library"]]) +
+          footCol("Resources", [["Docs", "docs"], ["Contact", "contact"], ["FAQ", "index.html#faq"], ["Business Finder", "leads.html"]]) +
+          footCol("Sources", [["OpenStreetMap", "https://www.openstreetmap.org/"], ["OpenFreeMap", "https://openfreemap.org/"], ["Vercel", "https://vercel.com/"], ["GitHub", "https://github.com/trymoonrise/moonrise"]]) +
+          footCol("Legal", [["Privacy", "docs#privacy"], ["Terms", "docs#terms"], ["Security", "docs#security"], ["License", "docs#license"]]) +
+        "</div>" +
+        '<div class="lx-site-foot-bar"><span>© 2026 Moonrise</span><span>trymoonrise.com</span></div>' +
+      "</footer>"),
+    foot("mega", "Mega footer",
+      '<footer class="lx-site-foot is-mega">' +
+        '<div class="lx-site-foot-top">' +
+          '<div class="lx-site-foot-brand"><strong>moonrise.</strong><p>Private commercial studio for selling websites to local businesses.</p>' +
+            '<a class="lx-site-foot-mail" href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a></div>' +
+          '<div class="lx-site-foot-grid">' +
+            footCol("Pages", [["Home", "index.html"], ["Start", "login.html"], ["Docs", "docs"], ["Contact", "contact"]]) +
+            footCol("Studio", [["Leads", "leads.html"], ["Orders", "orders"], ["Download", "download"], ["UI Library", "ui-library"]]) +
+            footCol("Sources", [["OpenStreetMap", "https://www.openstreetmap.org/"], ["OpenFreeMap", "https://openfreemap.org/"], ["Vercel", "https://vercel.com/"]]) +
+          "</div>" +
+        "</div>" +
+        '<div class="lx-site-foot-bar">' +
+          '<span>© 2026 Moonrise · Always credit Moonrise when you showcase the code.</span>' +
+          '<nav><a href="docs#privacy">Privacy</a><a href="docs#terms">Terms</a><a href="docs#security">Security</a></nav>' +
+        "</div>" +
+      "</footer>"),
+    foot("sources", "Sources strip",
+      '<footer class="lx-site-foot is-sources">' +
+        '<div class="lx-site-foot-brand"><strong>moonrise.</strong><p>Built with public map data and hosting you can trust.</p></div>' +
+        '<ul class="lx-site-foot-sources">' +
+          '<li><span>Maps</span><a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a></li>' +
+          '<li><span>Tiles</span><a href="https://openfreemap.org/" target="_blank" rel="noopener noreferrer">OpenFreeMap</a></li>' +
+          '<li><span>Host</span><a href="https://vercel.com/" target="_blank" rel="noopener noreferrer">Vercel</a></li>' +
+          '<li><span>Code</span><a href="https://github.com/trymoonrise/moonrise" target="_blank" rel="noopener noreferrer">GitHub</a></li>' +
+        "</ul>" +
+        '<div class="lx-site-foot-bar"><nav><a href="docs">Docs</a><a href="docs#privacy">Privacy</a><a href="docs#terms">Terms</a></nav><span>© 2026 Moonrise</span></div>' +
+      "</footer>"),
+    foot("newsletter", "Newsletter",
+      '<footer class="lx-site-foot is-news">' +
+        '<div class="lx-site-foot-news">' +
+          "<div><strong>Stay in the loop</strong><p>Product notes and studio updates. No spam.</p></div>" +
+          '<div class="lx-site-foot-form">' +
+            '<label class="lx-vh" for="lx-foot-email">Email</label>' +
+            '<input id="lx-foot-email" type="email" placeholder="you@shop.com" autocomplete="email">' +
+            '<button type="button">Subscribe</button>' +
+          "</div>" +
+        "</div>" +
+        '<div class="lx-site-foot-grid is-3">' +
+          footCol("Product", [["Start", "login.html"], ["Download", "download"], ["Orders", "orders"]]) +
+          footCol("Help", [["Docs", "docs"], ["FAQ", "index.html#faq"], ["Contact", "contact"]]) +
+          footCol("Legal", [["Privacy", "docs#privacy"], ["Terms", "docs#terms"], ["Security", "docs#security"]]) +
+        "</div>" +
+        '<div class="lx-site-foot-bar"><span>moonrise.</span><span>© 2026</span></div>' +
+      "</footer>"),
+    foot("shop", "Local shop",
+      '<footer class="lx-site-foot is-shop">' +
+        '<div class="lx-site-foot-top">' +
+          '<div class="lx-site-foot-brand"><strong>Harbor Coffee</strong><p>Pike Street · Open 7:00–4:00 · Call before you drive down.</p></div>' +
+          '<div class="lx-site-foot-grid is-3">' +
+            footCol("Visit", [["Hours", "#hours"], ["Menu", "#menu"], ["Directions", "#map"]]) +
+            footCol("Contact", [["Call", "tel:+12065550100"], ["Email", "mailto:hello@harbor.example"], ["Instagram", "#"]]) +
+            footCol("Site", [["Privacy", "#privacy"], ["Accessibility", "#a11y"], ["Made with Moonrise", "https://trymoonrise.com"]]) +
+          "</div>" +
+        "</div>" +
+        '<div class="lx-site-foot-bar"><span>© 2026 Harbor Coffee</span><span>Site by Moonrise</span></div>' +
+      "</footer>"),
+    foot("minimal", "Minimal legal",
+      '<footer class="lx-site-foot is-minimal">' +
+        '<div><strong>moonrise.</strong><span>Find shops. Publish sites. Get paid.</span></div>' +
+        '<nav aria-label="Legal"><a href="docs#privacy">Privacy</a><a href="docs#terms">Terms</a><a href="docs#security">Security</a><a href="contact">Contact</a></nav>' +
+      "</footer>"),
+    foot("dark", "Inverse",
+      '<footer class="lx-site-foot is-columns is-dark">' +
+        '<div class="lx-site-foot-brand"><strong>moonrise.</strong><p>Pages, sources, and legal links in one quiet close.</p></div>' +
+        '<div class="lx-site-foot-grid">' +
+          footCol("Pages", [["Home", "index.html"], ["Docs", "docs"], ["UI Library", "ui-library"], ["Contact", "contact"]]) +
+          footCol("Sources", [["OpenStreetMap", "https://www.openstreetmap.org/"], ["OpenFreeMap", "https://openfreemap.org/"], ["Vercel", "https://vercel.com/"], ["GitHub", "https://github.com/trymoonrise/moonrise"]]) +
+          footCol("Legal", [["Privacy", "docs#privacy"], ["Terms", "docs#terms"], ["License", "docs#license"]]) +
+        "</div>" +
+        '<div class="lx-site-foot-bar"><span>© 2026 Moonrise</span><a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a></div>' +
+      "</footer>",
+      "lx-foot-stage is-dark")
+  ]);
+
+  const GALLERY_IMGS = [
+    "assets/library/hero-coast.jpg",
+    "assets/library/hero-coffee.jpg",
+    "assets/library/hero-wind.jpg",
+    "assets/library/cta-counter.jpg",
+    "assets/library/client-nora.jpg",
+    "assets/library/client-miles.jpg",
+    "assets/library/client-ada.jpg",
+    "assets/library/client-leo.jpg"
+  ];
+
+  function galImg(src, cls) {
+    return '<figure class="' + (cls || "") + '"><img src="' + src + '" alt="" loading="lazy"></figure>';
+  }
+
+  function gal(id, title, html) {
+    return card("galleries-" + id, title, html, { wide: true, stage: "lx-gal-stage" });
+  }
+
+  LX.spec("galleries", [], [
+    gal("bento", "Bento",
+      '<div class="lx-gal is-bento">' +
+        galImg(GALLERY_IMGS[0], "is-hero") +
+        galImg(GALLERY_IMGS[1]) +
+        galImg(GALLERY_IMGS[2]) +
+        galImg(GALLERY_IMGS[3]) +
+        galImg(GALLERY_IMGS[4]) +
+      "</div>"),
+    gal("grid", "Even grid",
+      '<div class="lx-gal is-grid">' +
+        GALLERY_IMGS.slice(0, 6).map(function (src) { return galImg(src); }).join("") +
+      "</div>"),
+    gal("masonry", "Masonry",
+      '<div class="lx-gal is-masonry">' +
+        galImg(GALLERY_IMGS[0], "is-tall") +
+        galImg(GALLERY_IMGS[5]) +
+        galImg(GALLERY_IMGS[1], "is-tall") +
+        galImg(GALLERY_IMGS[6]) +
+        galImg(GALLERY_IMGS[2]) +
+        galImg(GALLERY_IMGS[7], "is-tall") +
+      "</div>"),
+    gal("strip", "Film strip",
+      '<div class="lx-gal is-strip">' +
+        GALLERY_IMGS.slice(0, 5).map(function (src) { return galImg(src); }).join("") +
+      "</div>"),
+    gal("editorial", "Editorial",
+      '<div class="lx-gal is-editorial">' +
+        galImg(GALLERY_IMGS[2], "is-main") +
+        galImg(GALLERY_IMGS[0], "is-side") +
+        galImg(GALLERY_IMGS[3], "is-side") +
+      "</div>"),
+    gal("overlap", "Overlap",
+      '<div class="lx-gal is-overlap">' +
+        galImg(GALLERY_IMGS[1], "is-back") +
+        galImg(GALLERY_IMGS[4], "is-mid") +
+        galImg(GALLERY_IMGS[0], "is-front") +
+      "</div>"),
+    gal("faces", "Portrait row",
+      '<div class="lx-gal is-faces">' +
+        galImg(GALLERY_IMGS[4]) +
+        galImg(GALLERY_IMGS[5]) +
+        galImg(GALLERY_IMGS[6]) +
+        galImg(GALLERY_IMGS[7]) +
+      "</div>"),
+    gal("spread", "Wide spread",
+      '<div class="lx-gal is-spread">' +
+        galImg(GALLERY_IMGS[0]) +
+        galImg(GALLERY_IMGS[2]) +
+      "</div>"),
+    gal("stairs", "Stair steps",
+      '<div class="lx-gal is-stairs">' +
+        galImg(GALLERY_IMGS[3]) +
+        galImg(GALLERY_IMGS[1]) +
+        galImg(GALLERY_IMGS[2]) +
+        galImg(GALLERY_IMGS[0]) +
+      "</div>"),
+    gal("mosaic", "Dense mosaic",
+      '<div class="lx-gal is-mosaic">' +
+        galImg(GALLERY_IMGS[0], "is-lg") +
+        galImg(GALLERY_IMGS[4]) +
+        galImg(GALLERY_IMGS[5]) +
+        galImg(GALLERY_IMGS[1], "is-wide") +
+        galImg(GALLERY_IMGS[6]) +
+        galImg(GALLERY_IMGS[7]) +
+        galImg(GALLERY_IMGS[2]) +
+        galImg(GALLERY_IMGS[3], "is-wide") +
+      "</div>")
+  ]);
 
   LX.spec("heroes", [], [
     shot("heroes-center", "Centered photo", {
@@ -228,17 +576,65 @@
   ]);
   addLayouts("pricing");
   addLayouts("stats", ["surfaces-metrics"]);
-  addLayouts("team");
-  addLayouts("testimonials");
+
+  function teamCard(id, title, html, wide) {
+    return card("team-" + id, title, html, { wide: !!wide, stage: "lx-team-stage" });
+  }
+
+  LX.spec("team", [], [
+    teamCard("row", "Portrait row",
+      '<div class="lx-team-row">' +
+        '<figure>' + avatar(IMG.nora, "lg") + "<figcaption><strong>Nora Lee</strong><span>Owner</span></figcaption></figure>" +
+        '<figure>' + avatar(IMG.miles, "lg") + "<figcaption><strong>Miles Park</strong><span>Barista</span></figcaption></figure>" +
+        '<figure>' + avatar(IMG.ada, "lg") + "<figcaption><strong>Ada Kim</strong><span>Roaster</span></figcaption></figure>" +
+      "</div>", true),
+    teamCard("cards", "People cards",
+      '<div class="lx-team-cards">' +
+        '<article><img src="' + IMG.leo + '" alt=""><div><strong>Leo Hart</strong><span>Manager</span></div></article>' +
+        '<article><img src="' + IMG.nora + '" alt=""><div><strong>Nora Lee</strong><span>Owner</span></div></article>' +
+        '<article><img src="' + IMG.miles + '" alt=""><div><strong>Miles Park</strong><span>Barista</span></div></article>' +
+      "</div>", true),
+    teamCard("stack", "Avatar stack",
+      '<div class="lx-people">' + avatar(IMG.nora) + avatar(IMG.miles) + avatar(IMG.ada) + avatar(IMG.leo) + '<span class="lx-badge">+2</span></div>'),
+    teamCard("split", "Featured person",
+      '<div class="lx-team-split"><img src="' + IMG.ada + '" alt=""><div><strong>Ada Kim</strong><p>Roasts on Pike Street and keeps Friday hours honest.</p></div></div>', true),
+    teamCard("grid", "Directory",
+      '<div class="lx-team-grid">' +
+        [IMG.nora, IMG.miles, IMG.ada, IMG.leo].map(function (src, i) {
+          const names = ["Nora", "Miles", "Ada", "Leo"];
+          return '<figure><img src="' + src + '" alt=""><figcaption>' + names[i] + "</figcaption></figure>";
+        }).join("") +
+      "</div>", true)
+  ]);
+
+  function quoteCard(id, title, html, wide) {
+    return card("testimonials-" + id, title, html, { wide: !!wide, stage: "lx-quote-stage" });
+  }
+
+  LX.spec("testimonials", [], [
+    quoteCard("portrait", "With portrait",
+      '<figure class="lx-quote-card">' + avatar(IMG.nora, "lg") +
+        '<blockquote>The new site lists our hours and the phone rings more.</blockquote>' +
+        "<cite>Nora Lee · Harbor Coffee</cite></figure>"),
+    quoteCard("photo", "Photo quote",
+      '<figure class="lx-quote-photo"><img src="' + IMG.coffee + '" alt=""><figcaption><blockquote>Publish once. Update anytime.</blockquote><cite>Miles Park</cite></figcaption></figure>', true),
+    quoteCard("stack", "Stack",
+      '<div class="lx-quote-stack">' +
+        '<article>' + avatar(IMG.ada) + "<blockquote>Leads land with a name and phone.</blockquote><cite>Ada Kim</cite></article>" +
+        '<article>' + avatar(IMG.leo) + "<blockquote>Business Finder found our next client.</blockquote><cite>Leo Hart</cite></article>" +
+      "</div>", true),
+    quoteCard("wide", "Wide band",
+      '<figure class="lx-quote-wide"><img src="' + IMG.coast + '" alt=""><blockquote>Find a shop. Publish the site. Keep the cut.</blockquote><cite>Harbor · example</cite></figure>', true)
+  ]);
+
   addLayouts("text", ["surfaces-header", "type-display", "type-meta"]);
 
   LX.spec("borders", [], [
     card("borders-marks", "Corner marks", '<div class="lx-bracket-card"><div class="lx-read"><span>Visits</span><strong>128</strong></div><div class="lx-read"><span>Leads</span><strong>14</strong></div><div class="lx-read"><span>Sites</span><strong>3</strong></div></div>', { wide: true, stage: "lx-border-stage" }),
     card("borders-draw", "Draw speeds", '<div class="lx-beams"><div class="lx-beam is-quick"><i class="lx-beam-rotor" aria-hidden="true"></i><span>Short and quick</span></div><div class="lx-beam is-slow"><i class="lx-beam-rotor" aria-hidden="true"></i><span>Long and slow</span></div><div class="lx-beam is-thick"><i class="lx-beam-rotor" aria-hidden="true"></i><span>3px thick</span></div></div>', { wide: true, stage: "lx-border-stage" }),
     card("borders-ring", "Ring", '<div class="lx-ring"><span class="lx-ring-face"><img src="assets/library/client-nora.jpg" alt=""></span><span class="lx-ring-check">' + ico("check", "sm") + "</span></div>", { stage: "lx-border-stage" }),
-    card("borders-drop", "Dashed drop", '<div class="lx-drop"><span class="lx-drop-ico" aria-hidden="true"><i></i><i></i><svg class="lx-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V7M8.5 10.5 12 7l3.5 3.5"/></svg></span><strong>Click to upload or drop files</strong><p>PDF, DOC, XLSX, CSV, PNG, or JPG</p><button type="button" class="lx-drop-btn"><svg class="lx-ico sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V7M8.5 10.5 12 7l3.5 3.5"/></svg>Browse files</button></div>', { wide: true, stage: "lx-border-stage" }),
+    card("borders-drop", "Dashed drop", '<div class="lx-drop" role="button" tabindex="0"><svg class="lx-drop-frame" viewBox="0 0 448 240" preserveAspectRatio="none" aria-hidden="true"><rect x="6" y="6" width="436" height="228" rx="30" ry="30" fill="none" pathLength="100"/></svg><span class="lx-drop-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V8"/><path d="m8.5 11.5 3.5-3.5 3.5 3.5"/><path d="M5 16.5V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1.5"/></svg></span><strong>Drop files here</strong><p>or browse from your device</p><span class="lx-drop-types">PDF · DOC · XLSX · CSV · PNG · JPG</span><button type="button" class="lx-drop-btn">Browse files</button></div>', { wide: true, stage: "lx-border-stage" }),
     card("borders-arc", "Partial stroke", '<p class="lx-arc"><i class="lx-arc-rotor" aria-hidden="true"></i><span>Borders are cool</span></p>', { stage: "lx-border-stage" }),
-    card("borders-progress", "Progress edge", '<div class="lx-progress"><button type="button" class="lx-progress-btn">Submit</button><span class="lx-progress-line"></span></div>', { wide: true, play: "lx-live", stage: "lx-border-stage" }),
     card("borders-frames", "Color frames", '<div class="lx-frames"><div class="lx-frame is-blue"><img src="assets/library/hero-coast.jpg" alt=""><em>NEW</em></div><div class="lx-frame is-red"><img src="assets/library/hero-coffee.jpg" alt=""><em>NEW</em></div><div class="lx-frame is-gold"><img src="assets/library/hero-wind.jpg" alt=""><em>NEW</em></div></div>', { wide: true, stage: "lx-border-stage" })
   ]);
 
@@ -287,9 +683,28 @@
       '<button type="button" data-lx-opt>' + ico("gear") + "Settings</button></div>")
   ]);
 
-  const GRADS = [["White to stage", "a"], ["Stage to ink", "b"], ["Ink from top", "c"], ["Ink from bottom", "d"], ["Radial ink", "e"], ["Diagonal grey", "f"], ["Soft grey", "g"], ["Left to right", "h"], ["Masked surface", "mask"], ["Four steps", "stripe"]];
+  const GRADS = [
+    ["Sunrise", "sunrise", "Get started"],
+    ["Ocean", "ocean", "Open studio"],
+    ["Forest", "forest", "Claim lead"],
+    ["Ember", "ember", "Go live"],
+    ["Orchid", "orchid", "Invite"],
+    ["Citrus", "citrus", "Publish"],
+    ["Midnight", "midnight", "Continue"],
+    ["Aurora", "aurora", "Explore"],
+    ["Rose gold", "rosegold", "Upgrade"],
+    ["Steel", "steel", "Download"]
+  ];
   LX.spec("gradients", [], GRADS.map(function (row) {
-    return card("gradients-" + row[1], row[0], '<div class="lx-grad ' + row[1] + '"></div>');
+    return card(
+      "gradients-" + row[1],
+      row[0],
+      '<div class="lx-grad-card">' +
+        '<div class="lx-grad-swatch is-' + row[1] + '" aria-hidden="true"></div>' +
+        '<button type="button" class="lx-grad-btn is-' + row[1] + '">' + row[2] + "</button>" +
+      "</div>",
+      { stage: "lx-grad-stage" }
+    );
   }));
 
   LX.spec("hooks", ["motion-rise", "motion-press", "motion-stagger"], [
@@ -303,15 +718,16 @@
   ]);
 
   LX.spec("images", ["surfaces-image"], [
-    card("images-frame", "Frame", '<div class="lx-ph tall"></div><p class="lx-meta">Pike Street · example</p>'),
-    card("images-caption", "Caption", '<div class="lx-ph sm"></div><p class="lx-p">The counter, morning.</p>'),
-    card("images-round", "Rounded", '<div class="lx-ph sm" style="border-radius:18px"></div>'),
-    card("images-duo", "Duo", '<div class="lx-cols"><div class="lx-ph sm"></div><div class="lx-ph sm"></div></div>', { wide: true }),
-    card("images-bleed", "Full width", '<div class="lx-ph" style="height:8rem;border-radius:0;margin:-1.35rem -1.15rem"></div>', { wide: true }),
-    card("images-credit", "Credit", '<div class="lx-ph sm"></div><p class="lx-meta">Photo · example</p>'),
+    card("images-frame", "Frame", pic(IMG.coast, "tall") + '<p class="lx-meta">Pike Street · example</p>'),
+    card("images-caption", "Caption", pic(IMG.counter, "sm") + '<p class="lx-p">The counter, morning.</p>'),
+    card("images-round", "Rounded", pic(IMG.coffee, "sm round")),
+    card("images-duo", "Duo", '<div class="lx-cols">' + pic(IMG.wind, "sm") + pic(IMG.coast, "sm") + "</div>", { wide: true }),
+    card("images-bleed", "Full width", pic(IMG.coffee, "bleed"), { wide: true }),
+    card("images-credit", "Credit", pic(IMG.wind, "sm") + '<p class="lx-meta">Photo · Harbor</p>'),
     card("images-fallback", "Fallback", '<div class="lx-empty"><span class="lx-avatar">?</span><p class="lx-p">Image unavailable</p></div>'),
-    card("images-crop", "Crop", '<span class="lx-avatar lg">HK</span>'),
-    card("images-zoom", "Selected", '<div class="lx-ph sm" style="box-shadow:0 0 0 2px var(--dt-action)"></div>')
+    card("images-crop", "Crop", avatar(IMG.nora, "lg")),
+    card("images-zoom", "Selected", pic(IMG.counter, "sm selected")),
+    card("images-trio", "Trio", '<div class="lx-img-trio">' + pic(IMG.coast) + pic(IMG.coffee) + pic(IMG.wind) + "</div>", { wide: true })
   ]);
 
   function mapCard(id, title, inner, extra) {
@@ -459,8 +875,91 @@
           '<section data-lx-rail-panel><h4>Publish</h4><p>Put one link on the street.</p></section>' +
           '<section data-lx-rail-panel><h4>Paid</h4><p>They checkout. You keep most of it.</p></section>' +
         "</div>" +
-      "</div>")
+      "</div>"),
+    sceneCard("phone-spin", "Phone rotate", "device-phone", deviceScene("phone",
+      "assets/library/hero-coffee.jpg", "Harbor Coffee", "Open at 7 · Pike Street")),
+    sceneCard("ipad-spin", "iPad rotate", "device-ipad", deviceScene("ipad",
+      "assets/library/hero-coast.jpg", "Business Finder", "Claim a shop on the map")),
+    sceneCard("laptop-spin", "Laptop rotate", "device-laptop", deviceScene("laptop",
+      "assets/library/hero-wind.jpg", "Moonrise Studio", "Publish once. Update anytime."))
   ]);
+
+  function deviceScreen(src, title, line) {
+    return '<div class="lx-device-screen">' +
+      '<img src="' + src + '" alt="" data-lx-depth="0.55">' +
+      '<div class="lx-device-ui" data-lx-depth="0.92"><span></span><strong>' + title + "</strong><p>" + line + "</p></div>" +
+      "</div>";
+  }
+
+  function deviceSpace() {
+    return '<div class="lx-device-space" aria-hidden="true">' +
+      '<i class="lx-device-orb is-a" data-lx-depth="0.18"></i>' +
+      '<i class="lx-device-orb is-b" data-lx-depth="0.42"></i>' +
+      '<i class="lx-device-orb is-c" data-lx-depth="0.68"></i>' +
+      '<i class="lx-device-plane is-back" data-lx-depth="0.12"></i>' +
+      '<i class="lx-device-plane is-mid" data-lx-depth="0.3"></i>' +
+      "</div>";
+  }
+
+  function deviceScene(kind, src, title, line) {
+    if (kind === "phone") {
+      return '<div class="lx-scene-device" data-lx-device>' +
+        '<div class="lx-scene-device-sticky">' +
+          deviceSpace() +
+          '<div class="lx-device is-phone" data-lx-device-spin>' +
+            '<i class="lx-device-shadow" data-lx-depth="0.22" aria-hidden="true"></i>' +
+            '<i class="lx-device-btn is-silent" aria-hidden="true"></i>' +
+            '<i class="lx-device-btn is-vol-up" aria-hidden="true"></i>' +
+            '<i class="lx-device-btn is-vol-down" aria-hidden="true"></i>' +
+            '<i class="lx-device-btn is-power" aria-hidden="true"></i>' +
+            '<div class="lx-device-shell">' +
+              '<span class="lx-device-island" aria-hidden="true"></span>' +
+              deviceScreen(src, title, line) +
+              '<span class="lx-device-home" aria-hidden="true"></span>' +
+            "</div>" +
+            '<span class="lx-device-glare" data-lx-depth="0.75" aria-hidden="true"></span>' +
+          "</div>" +
+          '<p class="lx-device-caption">Scroll for 3D parallax</p>' +
+        "</div></div>";
+    }
+    if (kind === "ipad") {
+      return '<div class="lx-scene-device" data-lx-device>' +
+        '<div class="lx-scene-device-sticky">' +
+          deviceSpace() +
+          '<div class="lx-device is-ipad" data-lx-device-spin>' +
+            '<i class="lx-device-shadow" data-lx-depth="0.22" aria-hidden="true"></i>' +
+            '<i class="lx-device-btn is-power" aria-hidden="true"></i>' +
+            '<div class="lx-device-shell">' +
+              '<span class="lx-device-cam" aria-hidden="true"></span>' +
+              deviceScreen(src, title, line) +
+              '<span class="lx-device-home" aria-hidden="true"></span>' +
+            "</div>" +
+            '<span class="lx-device-glare" data-lx-depth="0.75" aria-hidden="true"></span>' +
+          "</div>" +
+          '<p class="lx-device-caption">Scroll for 3D parallax</p>' +
+        "</div></div>";
+    }
+    return '<div class="lx-scene-device" data-lx-device>' +
+      '<div class="lx-scene-device-sticky">' +
+        deviceSpace() +
+        '<div class="lx-device is-laptop" data-lx-device-spin>' +
+          '<i class="lx-device-shadow is-wide" data-lx-depth="0.2" aria-hidden="true"></i>' +
+          '<div class="lx-device-lid" data-lx-depth="0.35">' +
+            '<div class="lx-device-shell">' +
+              '<span class="lx-device-cam" aria-hidden="true"></span>' +
+              deviceScreen(src, title, line) +
+            "</div>" +
+            '<span class="lx-device-glare" data-lx-depth="0.8" aria-hidden="true"></span>' +
+          "</div>" +
+          '<div class="lx-device-hinge" aria-hidden="true"></div>' +
+          '<div class="lx-device-base" data-lx-depth="0.15" aria-hidden="true">' +
+            '<div class="lx-device-keys"></div>' +
+            '<div class="lx-device-track"></div>' +
+          "</div>" +
+        "</div>" +
+        '<p class="lx-device-caption">Scroll for 3D parallax</p>' +
+      "</div></div>";
+  }
 
   const SHADES = [["Grain", "lx-shade lx-shade-grain"], ["Scan", "lx-shade lx-shade-scan"], ["Dither", "lx-shade lx-shade-dither"], ["Crosshatch", "lx-shade lx-shade-hatch"], ["Drift", "lx-shade lx-shade-drift"], ["Line", "lx-shade lx-shade-line"], ["Paper", "lx-shade lx-shade-paper"], ["Wash", "lx-shade lx-shade-wash"], ["Still noise", "lx-shade lx-shade-still"], ["Inverse noise", "lx-shade lx-shade-ink lx-shade-grain"]];
   LX.spec("shaders", ["motion-shimmer-pulse"], SHADES.slice(0, 9).map(function (row, i) {
@@ -504,7 +1003,20 @@
     card("timelines-play", "Reveal", '<div class="lx-reveal"><div class="lx-rise"><div class="lx-time"><div><span>1</span><span>Write</span></div><div><span>2</span><span>Publish</span></div></div></div></div>', { play: "lx-live" })
   ]);
 
+  function videoCard(id, title, html, stage) {
+    return card("videos-" + id, title, html, { wide: true, stage: stage || "lx-player-stage" });
+  }
+
   LX.spec("videos", ["media-scrub"], [
-    card("videos-play", "Click to play", '<figure class="lx-player"><p class="lx-player-cue">Click the video to play</p><i class="lx-player-stem" aria-hidden="true"></i><button type="button" class="lx-player-frame" data-lx-player aria-label="Play video"><video muted loop playsinline preload="metadata" src="assets/library/hero-ocean.mp4"></video><span class="lx-player-title">the coast, in motion</span></button></figure>', { stage: "lx-player-stage" })
+    videoCard("play", "Click to play",
+      '<figure class="lx-player"><p class="lx-player-cue">Click the video to play</p><i class="lx-player-stem" aria-hidden="true"></i><button type="button" class="lx-player-frame" data-lx-player aria-label="Play video"><video muted loop playsinline preload="metadata" poster="' + IMG.coast + '" src="' + IMG.ocean + '"></video><span class="lx-player-title">the coast, in motion</span></button></figure>'),
+    videoCard("auto", "Autoplay loop",
+      '<figure class="lx-vid is-frame"><video autoplay muted loop playsinline preload="metadata" poster="' + IMG.coast + '" src="' + IMG.ocean + '"></video></figure>'),
+    videoCard("cover", "Cover still",
+      '<figure class="lx-vid is-cover"><button type="button" class="lx-vid-hit" data-lx-player aria-label="Play video"><video muted loop playsinline preload="metadata" poster="' + IMG.coast + '" src="' + IMG.ocean + '"></video><span class="lx-vid-mark" aria-hidden="true"></span></button></figure>'),
+    videoCard("split", "Video and still",
+      '<div class="lx-vid-split"><figure class="lx-vid is-frame"><video autoplay muted loop playsinline preload="metadata" poster="' + IMG.coast + '" src="' + IMG.ocean + '"></video></figure>' + pic(IMG.coffee, "tall") + "</div>"),
+    videoCard("poster", "Poster card",
+      '<figure class="lx-vid is-poster"><img src="' + IMG.wind + '" alt=""><span class="lx-vid-badge">Film</span></figure>')
   ]);
 })();

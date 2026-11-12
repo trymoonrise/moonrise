@@ -200,10 +200,15 @@
     const paraLayers = scene.querySelectorAll("[data-lx-para]");
     const railSteps = scene.querySelectorAll("[data-lx-rail-step]");
     const railPanels = scene.querySelectorAll("[data-lx-rail-panel]");
+    const deviceHost = scene.querySelector("[data-lx-device]");
+    const deviceSticky = scene.querySelector(".lx-scene-device-sticky");
+    const deviceSpins = scene.querySelectorAll("[data-lx-device-spin]");
+    const depthLayers = scene.querySelectorAll("[data-lx-depth]");
 
     function apply() {
       const p = sceneProgress(scene);
-      scene.style.setProperty("--lx-p", String(p));
+      const pUse = sceneReduce ? 0.5 : p;
+      scene.style.setProperty("--lx-p", String(pUse));
       scene.classList.toggle("is-scrolled", scene.scrollTop > 12);
 
       if (scrubRow && !sceneReduce) {
@@ -224,6 +229,27 @@
         });
       }
 
+      if (deviceSticky) {
+        deviceSticky.style.setProperty("--lx-p", String(pUse));
+        deviceSticky.style.setProperty("--lx-shift", String(pUse - 0.5));
+      }
+
+      if (deviceSpins.length) {
+        deviceSpins.forEach(function (device) {
+          device.style.setProperty("--lx-p", String(pUse));
+          device.style.setProperty("--lx-shift", String(pUse - 0.5));
+        });
+      }
+
+      if (depthLayers.length) {
+        depthLayers.forEach(function (layer) {
+          const depth = Number(layer.getAttribute("data-lx-depth") || "0.5");
+          layer.style.setProperty("--lx-depth", String(depth));
+          layer.style.setProperty("--lx-p", String(pUse));
+          layer.style.setProperty("--lx-shift", String(pUse - 0.5));
+        });
+      }
+
       if (railSteps.length && railPanels.length) {
         let current = 0;
         const top = scene.getBoundingClientRect().top + scene.clientHeight * 0.35;
@@ -238,6 +264,10 @@
 
     if (scrubHost && scrubRow) {
       scrubHost.style.height = sceneReduce ? "auto" : "240%";
+    }
+
+    if (deviceHost) {
+      deviceHost.style.height = sceneReduce ? "auto" : "300%";
     }
 
     scene.addEventListener("scroll", apply, { passive: true });
@@ -563,6 +593,25 @@
         acc.classList.toggle("is-open");
         const panel = accPanel(acc);
         if (panel) panel.hidden = !acc.classList.contains("is-open");
+      }
+      const faqQ = event.target.closest("[data-lx-faq] .lx-faq-q");
+      if (faqQ) {
+        const root = faqQ.closest("[data-lx-faq]");
+        const item = faqQ.closest(".lx-faq-item");
+        if (root && item) {
+          const multi = root.getAttribute("data-lx-faq") === "multi";
+          const open = !item.classList.contains("is-open");
+          if (!multi) {
+            root.querySelectorAll(".lx-faq-item.is-open").forEach(function (it) {
+              if (it === item) return;
+              it.classList.remove("is-open");
+              const t = it.querySelector(".lx-faq-q");
+              if (t) t.setAttribute("aria-expanded", "false");
+            });
+          }
+          item.classList.toggle("is-open", open);
+          faqQ.setAttribute("aria-expanded", open ? "true" : "false");
+        }
       }
       const act = event.target.closest("[data-lx-act]");
       if (act && !act.disabled) {

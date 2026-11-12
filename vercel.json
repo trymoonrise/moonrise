@@ -40,13 +40,21 @@
     {
       "source": "/",
       "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Link", "value": "<https://trymoonrise.com/llms.txt>; rel=\"describedby\"; type=\"text/plain\"" }
+      ]
+    },
+    {
+      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|docs|book|login|orders|download|contact|report|onboarding|admin-console|ui-library|hosting-billing|creator-contact|404|guides)",
+      "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
     },
     {
-      "source": "/(dashboard|builder|editor|leads|clients|projects|settings|calendar|course|docs|book|login|orders|download|contact|report|onboarding|admin-console|ui-library|hosting-billing|creator-contact|404)",
+      "source": "/guides/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Link", "value": "<https://trymoonrise.com/llms.txt>; rel=\"describedby\"; type=\"text/plain\"" }
       ]
     },
     {
@@ -69,6 +77,50 @@
       ]
     },
 
+    {
+      "source": "/llms.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "X-Robots-Tag", "value": "index, follow" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/llms-full.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "X-Robots-Tag", "value": "index, follow" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/.well-known/ai.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "X-Robots-Tag", "value": "index, follow" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/(login|orders|download|docs|contact|ui-library|report|guides)",
+      "headers": [
+        { "key": "Link", "value": "<https://trymoonrise.com/llms.txt>; rel=\"describedby\"; type=\"text/plain\"" }
+      ]
+    },
     {
       "source": "/(.*\\.(?:css|js|png|jpg|jpeg|webp|gif|svg|ico|woff2))",
       "headers": [

@@ -1,7 +1,7 @@
 {
-  "name": "Moonrise",
+  "name": "Moonrise Studio",
   "short_name": "Moonrise",
-  "description": "AI landing page builder for local businesses.",
+  "description": "Build websites for local businesses and get paid when the owner goes live. Free to preview. Installable on phone and desktop.",
   "id": "/",
   "start_url": "./?launch=app",
   "scope": "/",
@@ -11,9 +11,11 @@
   "orientation": "any",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["business", "productivity"],
-  "background_color": "#f1f5f9",
-  "theme_color": "#0f172a",
+  "categories": ["business", "productivity", "utilities"],
+  "background_color": "#ffffff",
+  "theme_color": "#fbfbfd",
+  "prefer_related_applications": false,
+  "iarc_rating_id": "",
   "icons": [
     {
       "src": "assets/MoonriseLogo.png",
@@ -26,6 +28,41 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/embed.png",
+      "sizes": "400x200",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Moonrise Studio"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Sign in",
+      "short_name": "Sign in",
+      "url": "/login",
+      "description": "Open Moonrise Studio"
+    },
+    {
+      "name": "Guides",
+      "short_name": "Guides",
+      "url": "/guides",
+      "description": "How Moonrise works and how to sell"
+    },
+    {
+      "name": "Docs",
+      "short_name": "Docs",
+      "url": "/docs",
+      "description": "How Moonrise works"
+    },
+    {
+      "name": "Install",
+      "short_name": "Install",
+      "url": "/download",
+      "description": "Add Moonrise to your home screen"
     }
   ]
 }

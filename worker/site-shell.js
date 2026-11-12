@@ -44,6 +44,8 @@ Rules:
 - Never write Uncategorized, Category not listed, or any placeholder category label.
 - If the trade is missing, invent three concrete, friendly service names from the business name without inventing phone, address, awards, or prices.
 - No "Welcome to", "Your trusted", or "Quality you can count on".
+- Lede and aboutBody should name who / what / where in plain language so search and AI answers can quote them.
+- FAQ questions as customers ask them. Lead each answer with the direct fact in the first sentence.
 - Palette must stay readable: one neutral ramp (bg, surface, ink, muted) and one accent used sparingly. Prefer calm local-business colors. No neon, purple gradients, or glow.
 - Keep every string short enough to fit a designed layout.`;
 
@@ -449,12 +451,36 @@ function renderBusinessSite(ctx, copy, media) {
     .filter(Boolean)
     .join("");
 
+  const city = String(address || "").split(",")[1] ? String(address).split(",")[1].trim() : "";
+  const categoryLabel = usableCategory(ctx);
+  const pageTitle = esc([name, city].filter(Boolean).join(" · "));
+  const pageDesc = esc(
+    String(
+      copy.lede ||
+        cleanText(ctx?.description, 160) ||
+        `${name} - local ${categoryLabel || "business"}. Phone, hours, and how to get in touch.`
+    ).slice(0, 160)
+  );
+  const shareImage = String(hero || gallery[0] || "").trim();
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>${esc(name)}</title>
+  <title>${pageTitle}</title>
+  <meta name="description" content="${pageDesc}">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#111111">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${pageTitle}">
+  <meta property="og:description" content="${pageDesc}">
+  <meta property="og:locale" content="en_US">
+  ${shareImage ? `<meta property="og:image" content="${esc(shareImage)}">` : ""}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${pageTitle}">
+  <meta name="twitter:description" content="${pageDesc}">
+  ${shareImage ? `<meta name="twitter:image" content="${esc(shareImage)}">` : ""}
 <style>
     :root {
       --bg: ${esc(copy.palette.bg)};
