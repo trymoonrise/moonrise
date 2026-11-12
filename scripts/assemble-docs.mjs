@@ -161,7 +161,7 @@ document.documentElement.classList.add("ms-boot");
   <title>Docs - Moonrise</title>
   <meta name="description" content="Moonrise documentation: getting started, Studio UI, site features, domains, services, security, licenses, privacy, terms, and refunds.">
   <link rel="canonical" href="https://trymoonrise.com/docs">
-  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/fonts.css?v=20261111-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261109-crown">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261108-ink">
   <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">

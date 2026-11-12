@@ -6,7 +6,10 @@ change the MIT license for Moonrise code.
 
 ## Fonts (SIL Open Font License 1.1)
 
-Self-hosted under `assets/fonts/` and declared in `css/fonts.css`:
+Self-hosted under `assets/fonts/` and declared in `css/fonts.css` (and Newsreader in
+page CSS that needs it). Moonrise does **not** load fonts from Google Fonts,
+Adobe Fonts, Bunny Fonts, or other third-party font CDNs, so those providers do
+not receive visitor IP addresses from Moonrise font requests.
 
 | Family | License |
 |---|---|
@@ -15,6 +18,7 @@ Self-hosted under `assets/fonts/` and declared in `css/fonts.css`:
 | Syne | SIL Open Font License 1.1 |
 | Sora | SIL Open Font License 1.1 |
 | Fraunces | SIL Open Font License 1.1 |
+| Newsreader | SIL Open Font License 1.1 |
 
 OFL overview: https://openfontlicense.org
 

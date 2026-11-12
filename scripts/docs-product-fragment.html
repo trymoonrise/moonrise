@@ -14,14 +14,18 @@
 <section class="ms-doc-block" id="what-is-moonrise">
   <h2 class="ms-doc-title">What is Moonrise?</h2>
   <p class="ms-settings-hint">
-    Moonrise Studio is an AI-powered platform that helps creators build professional websites for local businesses
-    and earn when those businesses go live. You find a business that needs a site, generate a polished preview,
-    customize it, publish it with a Moonrise watermark, and share the live link. The business owner pays on the
+    Moonrise Studio is an open-source, AI-powered software platform that helps creators build professional websites for
+    local businesses and earn when those businesses go live. You find a business that needs a site, generate a polished
+    preview, customize it, publish it with a Moonrise watermark, and share the live link. The business owner pays on the
     watermark checkout. When they pay, the watermark is removed automatically and you earn your creator share.
   </p>
   <ul class="ms-help-list">
-    <li><strong>Creators / sellers</strong>, find local businesses, build sites, and earn when owners unlock.</li>
+    <li><strong>Open-source platform</strong>, Moonrise Studio source is public on
+      <a href="https://github.com/trymoonrise/moonrise" target="_blank" rel="noopener noreferrer">GitHub</a>
+      under the licenses listed in Docs. The live product is software tools, not a staffing or employment service.</li>
+    <li><strong>Creators / sellers</strong>, independent users who find local businesses, build sites, and earn when owners unlock. Creators are not Moonrise employees or agents.</li>
     <li><strong>Business owners</strong>, open the live preview link and pay on the watermark. They usually do not need a creator account to pay.</li>
+    <li><strong>Platform responsibility</strong>, Moonrise is not responsible for what creators say, sell, publish, collect, or promise. Creators own their sales and client relationships.</li>
     <li>Typical customers include plumbers, salons, restaurants, cleaners, contractors, clinics, and other local service businesses.</li>
   </ul>
 </section>
@@ -68,6 +72,7 @@
     <p><strong>2. Set Website Price before you publish.</strong> That is what the owner sees at checkout. You keep 90%; Moonrise keeps 10% of that go-live amount (subject to processor fees and Terms).</p>
     <p><strong>3. Do not remove or hide the watermark</strong> before the owner pays. Do not tell them to pay you instead of Moonrise checkout.</p>
     <p><strong>4. Optional features stay off until you enable them.</strong> Contact form, custom domain, and other widgets are manual toggles, not required to publish.</p>
+    <p><strong>5. You are responsible for your own work.</strong> Moonrise does not employ creators and is not responsible for creator sales, websites, outreach, or client disputes. An &ldquo;Employee ID&rdquo; in signup is only an invite code.</p>
     <p>Breaking the payment rules can lead to permanent ban, withheld payouts, site removal, and other consequences described in the <a href="#terms">Terms of Service</a>.</p>
   </div>
 </section>
@@ -579,6 +584,9 @@
     completely secure. You use the Service at your own risk and are responsible for protecting credentials and devices.
   </p>
   <ul class="ms-help-list">
+    <li>Moonrise is an open-source platform. Creators are independent users. Moonrise is not responsible for creator sales, websites, outreach, or client disputes.</li>
+    <li>Fonts are self-hosted from Moonrise. We do not load Google Fonts or other third-party font CDNs, so those providers do not receive IP addresses from Moonrise font requests.</li>
+    <li>Map UI may load MapLibre and OpenFreeMap / OpenStreetMap-derived tiles; those providers can receive technical data such as IP address when maps are shown.</li>
     <li>Production uses HTTPS with HSTS, plus security headers (CSP, frame protections, and related browser policies).</li>
     <li>Studio API routes use CORS allowlisting, auth lockouts, and per-route rate limits. Authenticated routes require a valid Supabase Bearer token.</li>
     <li>Stripe webhooks are verified with a signing secret. Secrets stay in host environment variables, not in client code.</li>

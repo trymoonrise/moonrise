@@ -32,7 +32,7 @@
 
   function css() {
     return `
-@import url("https://trymoonrise.com/css/fonts.css?v=20261003-fonts");
+@import url("https://trymoonrise.com/css/fonts.css?v=20261111-selfhost");
 .mr-wm{--mr-brand:#3b82f6;--mr-ink:#0f172a;--mr-muted:#64748b;--mr-line:#e8edf3;--mr-font:"DM Sans",system-ui,sans-serif;position:fixed;bottom:max(1.75rem,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:2147483000;pointer-events:none;font-family:var(--mr-font);width:max-content;max-width:calc(100vw - 1.5rem);box-sizing:border-box}
 .mr-wm.mr-wm--hosted{position:absolute;width:max-content;max-width:calc(100% - 1.5rem)}
 .mr-wm.is-hidden{visibility:hidden;opacity:0;pointer-events:none}

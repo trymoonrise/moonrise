@@ -43,7 +43,7 @@ document.documentElement.classList.add("ms-boot");
   <title>Docs - Moonrise</title>
   <meta name="description" content="Moonrise documentation: getting started, Studio UI, site features, domains, services, security, licenses, privacy, terms, and refunds.">
   <link rel="canonical" href="https://trymoonrise.com/docs">
-  <link rel="stylesheet" href="css/fonts.css?v=20261028-selfhost">
+  <link rel="stylesheet" href="css/fonts.css?v=20261111-selfhost">
   <link rel="stylesheet" href="css/studio.css?v=20261109-crown">
   <link rel="stylesheet" href="css/studio-ui.css?v=20261108-ink">
   <link rel="stylesheet" href="css/studio-mono.css?v=20261107-soft-radius">
@@ -98,14 +98,18 @@ document.documentElement.classList.add("ms-boot");
 <section class="ms-doc-block" id="what-is-moonrise">
   <h2 class="ms-doc-title">What is Moonrise?</h2>
   <p class="ms-settings-hint">
-    Moonrise Studio is an AI-powered platform that helps creators build professional websites for local businesses
-    and earn when those businesses go live. You find a business that needs a site, generate a polished preview,
-    customize it, publish it with a Moonrise watermark, and share the live link. The business owner pays on the
+    Moonrise Studio is an open-source, AI-powered software platform that helps creators build professional websites for
+    local businesses and earn when those businesses go live. You find a business that needs a site, generate a polished
+    preview, customize it, publish it with a Moonrise watermark, and share the live link. The business owner pays on the
     watermark checkout. When they pay, the watermark is removed automatically and you earn your creator share.
   </p>
   <ul class="ms-help-list">
-    <li><strong>Creators / sellers</strong>, find local businesses, build sites, and earn when owners unlock.</li>
+    <li><strong>Open-source platform</strong>, Moonrise Studio source is public on
+      <a href="https://github.com/trymoonrise/moonrise" target="_blank" rel="noopener noreferrer">GitHub</a>
+      under the licenses listed in Docs. The live product is software tools, not a staffing or employment service.</li>
+    <li><strong>Creators / sellers</strong>, independent users who find local businesses, build sites, and earn when owners unlock. Creators are not Moonrise employees or agents.</li>
     <li><strong>Business owners</strong>, open the live preview link and pay on the watermark. They usually do not need a creator account to pay.</li>
+    <li><strong>Platform responsibility</strong>, Moonrise is not responsible for what creators say, sell, publish, collect, or promise. Creators own their sales and client relationships.</li>
     <li>Typical customers include plumbers, salons, restaurants, cleaners, contractors, clinics, and other local service businesses.</li>
   </ul>
 </section>
@@ -152,6 +156,7 @@ document.documentElement.classList.add("ms-boot");
     <p><strong>2. Set Website Price before you publish.</strong> That is what the owner sees at checkout. You keep 90%; Moonrise keeps 10% of that go-live amount (subject to processor fees and Terms).</p>
     <p><strong>3. Do not remove or hide the watermark</strong> before the owner pays. Do not tell them to pay you instead of Moonrise checkout.</p>
     <p><strong>4. Optional features stay off until you enable them.</strong> Contact form, custom domain, and other widgets are manual toggles, not required to publish.</p>
+    <p><strong>5. You are responsible for your own work.</strong> Moonrise does not employ creators and is not responsible for creator sales, websites, outreach, or client disputes. An &ldquo;Employee ID&rdquo; in signup is only an invite code.</p>
     <p>Breaking the payment rules can lead to permanent ban, withheld payouts, site removal, and other consequences described in the <a href="#terms">Terms of Service</a>.</p>
   </div>
 </section>
@@ -663,6 +668,9 @@ document.documentElement.classList.add("ms-boot");
     completely secure. You use the Service at your own risk and are responsible for protecting credentials and devices.
   </p>
   <ul class="ms-help-list">
+    <li>Moonrise is an open-source platform. Creators are independent users. Moonrise is not responsible for creator sales, websites, outreach, or client disputes.</li>
+    <li>Fonts are self-hosted from Moonrise. We do not load Google Fonts or other third-party font CDNs, so those providers do not receive IP addresses from Moonrise font requests.</li>
+    <li>Map UI may load MapLibre and OpenFreeMap / OpenStreetMap-derived tiles; those providers can receive technical data such as IP address when maps are shown.</li>
     <li>Production uses HTTPS with HSTS, plus security headers (CSP, frame protections, and related browser policies).</li>
     <li>Studio API routes use CORS allowlisting, auth lockouts, and per-route rate limits. Authenticated routes require a valid Supabase Bearer token.</li>
     <li>Stripe webhooks are verified with a signing secret. Secrets stay in host environment variables, not in client code.</li>
@@ -721,7 +729,10 @@ change the MIT license for Moonrise code.
 
 <h3>Fonts (SIL Open Font License 1.1)</h3>
 
-Self-hosted under <code>assets/fonts/</code> and declared in <code>css/fonts.css</code>:
+Self-hosted under <code>assets/fonts/</code> and declared in <code>css/fonts.css</code> (and Newsreader in
+page CSS that needs it). Moonrise does <strong>not</strong> load fonts from Google Fonts,
+Adobe Fonts, Bunny Fonts, or other third-party font CDNs, so those providers do
+not receive visitor IP addresses from Moonrise font requests.
 
 <div class="ms-docs-table-row">| Family | License |</div>
 
@@ -730,6 +741,7 @@ Self-hosted under <code>assets/fonts/</code> and declared in <code>css/fonts.css
 <div class="ms-docs-table-row">| Syne | SIL Open Font License 1.1 |</div>
 <div class="ms-docs-table-row">| Sora | SIL Open Font License 1.1 |</div>
 <div class="ms-docs-table-row">| Fraunces | SIL Open Font License 1.1 |</div>
+<div class="ms-docs-table-row">| Newsreader | SIL Open Font License 1.1 |</div>
 
 OFL overview: https://openfontlicense.org
 
@@ -799,8 +811,14 @@ If you believe attribution is missing or incorrect, email
           acknowledge this Policy. If you do not agree, do not use the Service.
         </p>
         <p>
-          Moonrise provides software tools. How you use those tools, what you collect from third parties, what you publish,
-          and how you communicate with businesses or clients remain your responsibility.
+          Moonrise is an open-source software platform. How you use those tools, what you collect from third parties, what
+          you publish, and how you communicate with businesses or clients remain your responsibility. Moonrise is not
+          responsible for privacy practices or data handling by creators or other users, except to the limited extent
+          described in this Policy for systems we operate.
+        </p>
+        <p>
+          This Policy is issued by Moonrise Studio as platform operator. It is not a personal privacy notice of any
+          individual founder, owner, officer, employee, or contractor.
         </p>
 
         <h2>2. Who this Policy covers</h2>
@@ -882,6 +900,14 @@ If you believe attribution is missing or incorrect, email
           We may collect IP address, device and browser type, approximate location derived from network data, pages and
           features used, timestamps, diagnostic logs, error reports, performance metrics, cookies or similar storage, and
           security events. This helps us operate, secure, debug, and improve the Service.
+        </p>
+        <p>
+          Product fonts are self-hosted from Moonrise (see <code>css/fonts.css</code> and <code>assets/fonts/</code>). We
+          do not load fonts from Google Fonts or similar third-party font CDNs, so those providers do not receive your IP
+          address from Moonrise font requests. When Business Finder or other map UI loads, map libraries or tile providers
+          (for example MapLibre via a CDN, or OpenFreeMap / OpenStreetMap-derived tiles) may receive your IP address and
+          related technical data under their own terms. Payment, auth, hosting, and AI providers listed in this Policy may
+          also receive technical data needed to run those features.
         </p>
         <h3>3.11 Optional push notifications</h3>
         <p>
@@ -1035,7 +1061,7 @@ If you believe attribution is missing or incorrect, email
         <p>
           You can permanently delete your account and associated product data in
           <a href="settings">Settings &rarr; Delete account</a>. For other privacy assistance, email
-          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> or call
+          <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a> or call Moonrise support at
           <a href="tel:+14013000957">(401) 300-0957</a>. We may need to verify your identity before fulfilling a request.
           We may retain certain information when required or permitted by law (for example, security, fraud prevention,
           accounting, or disputes).
@@ -1087,10 +1113,12 @@ If you believe attribution is missing or incorrect, email
 
         <h2>16. No liability for outcomes of tool use</h2>
         <p>
-          To the fullest extent permitted by law, Moonrise is not responsible for damages, losses, claims, or disputes
-          arising from your use of the Service or from information you collect, generate, publish, or share using our
-          tools. We provide software utilities. We do not control your business practices, client relationships, marketing
-          campaigns, published websites, or third-party interactions.
+          To the fullest extent permitted by law, Moonrise and its owners, officers, employees, contractors, agents, and
+          affiliates are not responsible for damages, losses, claims, or disputes arising from your use of the Service or
+          from information you collect, generate, publish, or share using our tools, or from anything creators or other
+          users do with the platform. We provide open software utilities. We do not control creator business practices,
+          client relationships, marketing campaigns, published websites, employment arrangements among users, or
+          third-party interactions.
         </p>
 
         <h2>17. Enforcement and misuse</h2>
@@ -1111,21 +1139,28 @@ If you believe attribution is missing or incorrect, email
 
         <h2>19. Contact</h2>
         <p>
-          Privacy questions or requests:
+          Platform privacy questions or requests:
           <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
-          or <a href="tel:+14013000957">(401) 300-0957</a>.
+          or Moonrise support at <a href="tel:+14013000957">(401) 300-0957</a>.
+          These channels reach the Moonrise platform, not a personal legal practice.
         </p>
       </section>
 <section id="terms" class="ms-legal-article" aria-labelledby="terms-heading">
         <h2 class="ms-legal-section-head" id="terms-heading">Terms of Service</h2>
-        <p class="ms-legal-updated">Last updated: September 24, 2026</p>
+        <p class="ms-legal-updated">Last updated: November 11, 2026</p>
 <h2>1. Agreement to these Terms</h2>
         <p>
-          These Terms of Service (&ldquo;Terms&rdquo;) are a binding agreement between you and Moonrise Studio
-          (&ldquo;Moonrise,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;). They govern your access to and use of
-          Moonrise Studio, including trymoonrise.com, related domains, mobile or desktop apps, dashboards, Business Finder,
-          Builder and Editor tools, published websites, watermark checkout, payment and payout features, donations,
-          help materials, and any other products or services we offer (collectively, the &ldquo;Service&rdquo;).
+          These Terms of Service (&ldquo;Terms&rdquo;) are a binding agreement between you and <strong>Moonrise Studio</strong>
+          (&ldquo;Moonrise,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), the operator of the Moonrise
+          software platform. They govern your access to and use of Moonrise Studio, including trymoonrise.com, related
+          domains, mobile or desktop apps, dashboards, Business Finder, Builder and Editor tools, published websites,
+          watermark checkout, payment and payout features, donations, help materials, and any other products or services
+          we offer (collectively, the &ldquo;Service&rdquo;).
+        </p>
+        <p>
+          These Terms are with the Moonrise platform entity only. They are not a personal contract with any individual
+          founder, owner, officer, employee, contractor, or support agent, and nothing in the Service creates a personal
+          guarantee by any natural person.
         </p>
         <p>
           By creating an account, signing in, browsing authenticated areas, generating or editing a website, publishing
@@ -1140,12 +1175,13 @@ If you believe attribution is missing or incorrect, email
 
         <h2>2. Plain-language overview</h2>
         <p>
-          Moonrise is a software platform for creators who build websites for local businesses. Creators can find leads,
-          generate and edit sites with AI-assisted tools, publish a live preview with a Moonrise watermark, and share that
-          link with the business owner. The business owner pays Moonrise through the watermark checkout on the live site
-          to remove the watermark and keep the site live. Creators typically receive 90% of the go-live amount; Moonrise
-          retains 10% as a platform fee (subject to processor fees, taxes, chargebacks, and the other adjustments in these
-          Terms).
+          Moonrise is an <strong>open-source software platform</strong> (see the public
+          <a href="https://github.com/trymoonrise/moonrise">GitHub repository</a> and licenses in Docs) for creators who
+          build websites for local businesses. Creators can find leads, generate and edit sites with AI-assisted tools,
+          publish a live preview with a Moonrise watermark, and share that link with the business owner. The business
+          owner pays Moonrise through the watermark checkout on the live site to remove the watermark and keep the site
+          live. Creators typically receive 90% of the go-live amount; Moonrise retains 10% as a platform fee (subject to
+          processor fees, taxes, chargebacks, and the other adjustments in these Terms).
         </p>
         <p>
           Important: creators do not charge business owners directly for go-live, watermark removal, or the same unlock.
@@ -1159,14 +1195,22 @@ If you believe attribution is missing or incorrect, email
 
         <h2>3. Nature of the Service; tools only</h2>
         <p>
-          Moonrise provides software tools and related infrastructure. We do not operate your sales business, close your
-          deals, make promises to your prospects, supervise your client relationships, or guarantee income, conversions,
-          lead quality, search rankings, uptime of third-party systems, or any particular business outcome.
+          Moonrise provides open software tools and related infrastructure. We do not operate your sales business, close
+          your deals, make promises to your prospects, supervise your client relationships, employ you as staff for
+          client work, or guarantee income, conversions, lead quality, search rankings, uptime of third-party systems, or
+          any particular business outcome.
         </p>
         <p>
           You alone decide what information you enter, what content you generate or edit, what you publish, what Website
           Price you set, what you say to businesses, and how you fulfill any promises you make outside the scope of the
           watermark checkout. Any outcome of your use of the Service is your responsibility.
+        </p>
+        <p>
+          <strong>Moonrise is not responsible for anything creators or other users do.</strong> That includes sales
+          pitches, contracts, prices, websites, messages, claims, marketing, outreach, data collection, taxes, disputes
+          with businesses or clients, illegal or harmful conduct, intellectual-property infringement, and any other act
+          or omission by a creator, invitee, subcontractor, or anyone using an account. Product labels such as
+          &ldquo;Employee ID&rdquo; mean a one-time signup or invite code only; they do not mean employment by Moonrise.
         </p>
 
         <h2>4. Roles on the platform</h2>
@@ -1174,7 +1218,9 @@ If you believe attribution is missing or incorrect, email
         <p>
           A &ldquo;creator&rdquo; is a user who builds, edits, publishes, or manages websites through Moonrise with the
           intent of offering those sites to businesses or other clients. Creators are independent users of the Service,
-          not employees, partners, or agents of Moonrise unless we have a separate written agreement that says otherwise.
+          not employees, partners, joint venturers, or agents of Moonrise unless we have a separate written agreement that
+          says otherwise. Moonrise does not control how creators run their businesses, and creators do not speak for or
+          bind Moonrise.
         </p>
         <h3>4.2 Business owners / clients</h3>
         <p>
@@ -1417,10 +1463,12 @@ If you believe attribution is missing or incorrect, email
           TO THE SERVICE, REGARDLESS OF THEORY OF LIABILITY AND EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
         </p>
         <p>
-          Without limiting the foregoing, Moonrise is not liable for claims arising from your misuse of tools; websites
-          you create or publish; communications you send; deals you make or fail to make; client disputes; third-party
-          actions; payment-processor decisions; hosting or domain issues; downtime; data loss; unauthorized access caused
-          by your failure to secure credentials; AI or template output; or lead quality.
+          Without limiting the foregoing, Moonrise and its owners, officers, employees, contractors, agents, and
+          affiliates are not liable for claims arising from your misuse of tools; websites you create or publish;
+          communications you send; deals you make or fail to make; client disputes; employment or contractor claims by or
+          against creators; acts of any creator, invitee, or account user; third-party actions; payment-processor
+          decisions; hosting or domain issues; downtime; data loss; unauthorized access caused by your failure to secure
+          credentials; AI or template output; map or lead data; or lead quality.
         </p>
         <p>
           TO THE MAXIMUM EXTENT PERMITTED BY LAW, OUR TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF OR RELATING TO THE
@@ -1478,14 +1526,15 @@ If you believe attribution is missing or incorrect, email
 
         <h2>24. Contact</h2>
         <p>
-          Questions about these Terms:
+          Platform support for these Terms:
           <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
-          or <a href="tel:+14013000957">(401) 300-0957</a>.
+          or Moonrise support at <a href="tel:+14013000957">(401) 300-0957</a>.
+          Contact channels are for the Moonrise platform, not for personal legal service from any individual.
         </p>
       </section>
 <section id="refunds" class="ms-legal-article" aria-labelledby="refunds-heading">
         <h2 class="ms-legal-section-head" id="refunds-heading">Refund and cancellation</h2>
-        <p class="ms-legal-updated">Last updated: October 3, 2026</p>
+        <p class="ms-legal-updated">Last updated: November 11, 2026</p>
 <h2>1. One-time donations</h2>
         <p>
           Support donations are voluntary gifts that keep Moonrise running. They are not refunded after Stripe confirms
@@ -1508,9 +1557,9 @@ If you believe attribution is missing or incorrect, email
 
         <h2>4. Contact</h2>
         <p>
-          Questions about a charge or a cancellation:
+          Platform billing questions about a charge or a cancellation:
           <a href="mailto:trymoonrise@gmail.com">trymoonrise@gmail.com</a>
-          or <a href="tel:+14013000957">(401) 300-0957</a>.
+          or Moonrise support at <a href="tel:+14013000957">(401) 300-0957</a>.
         </p>
       </section>
 

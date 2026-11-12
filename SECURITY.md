@@ -85,6 +85,8 @@ We try to minimize what would identify a Moonrise creator if there is a data bre
 - Request body size limits + prompt/input sanitization
 - Secrets stay in server env (`.env` is gitignored); public anon keys only in the browser
 - Production `/health` does not expose filesystem paths or verbose internals
+- Product fonts are self-hosted (`assets/fonts/`, `css/fonts.css`); no Google Fonts or third-party font CDN requests
+- Open-source Studio code is published under the repo licenses; creators remain independent users, not Moonrise employees
 
 ## Scope
 

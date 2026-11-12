@@ -3,6 +3,29 @@
   "product": "Moonrise",
   "updates": [
     {
+      "version": "3.1.3",
+      "date": "2026-11-11",
+      "title": "Legal frames Moonrise as an open platform",
+      "sections": [
+        {
+          "heading": "Site",
+          "added": [
+            "Docs and the home FAQ describe Moonrise as an open-source platform where creators are independent users.",
+            "Product fonts cache is refreshed and still loads only from Moonrise, not a third-party font CDN."
+          ]
+        },
+        {
+          "heading": "Security",
+          "added": [
+            "Terms and Privacy say the agreement is with the Moonrise platform, not any individual person.",
+            "Terms and Privacy state Moonrise is not responsible for anything creators or other users do.",
+            "Privacy explains self-hosted fonts and that map or payment providers may still receive technical data when those features run.",
+            "SECURITY.md notes self-hosted fonts and that creators are not Moonrise employees."
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.1.2",
       "date": "2026-11-11",
       "title": "Home workspace tries Finder and Editor",

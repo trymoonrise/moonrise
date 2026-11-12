@@ -1,4 +1,6 @@
-/* DM Sans, IBM Plex Mono, Syne, Sora, and Fraunces. SIL Open Font License 1.1. https://openfontlicense.org */
+/* Self-hosted only (assets/fonts). No Google Fonts or third-party font CDN.
+   DM Sans, IBM Plex Mono, Syne, Sora, and Fraunces. SIL Open Font License 1.1.
+   https://openfontlicense.org */
 @font-face {
   font-family: 'DM Sans';
   font-style: normal;
