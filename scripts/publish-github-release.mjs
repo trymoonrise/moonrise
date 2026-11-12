@@ -55,23 +55,20 @@ function sectionMeta(heading) {
 }
 
 function formatReleaseBody(update) {
-  const tag = update.tag || `v${update.version}`;
-  const blobBase = `https://github.com/${OWNER}/${REPO}/blob/${tag}`;
   const lines = [`## ${update.title}`, "", `Release date: ${update.date}`, ""];
 
   for (const section of update.sections || []) {
     const notes = [...(section.added || []), ...(section.fixes || [])];
     if (!notes.length) continue;
     const meta = sectionMeta(section.heading);
-    const filePath = meta.file;
-    const fileLabel = filePath.replace(/\/$/, "") || filePath;
+    const fileLabel = String(meta.file || "log.json").replace(/\/$/, "") || "log.json";
     lines.push(`### ${meta.heading}`, "");
-    lines.push(`[${fileLabel}](${blobBase}/${filePath}) — modified`, "");
+    lines.push(`\`${fileLabel}\` (modified)`, "");
     for (const note of notes) lines.push(`- ${note}`);
     lines.push("");
   }
 
-  lines.push("---", "", "Source: `log.json`", "");
+  lines.push("Source: `log.json`", "");
   return lines.join("\n");
 }
 
